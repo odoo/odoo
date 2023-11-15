@@ -35,11 +35,13 @@
 // GRID LAYOUT
 .o_grid_mode {
     @include media-breakpoint-up(lg) {
-        display: grid !important;
-        grid-auto-rows: 50px;
-        grid-template-columns: repeat(12, 1fr);
-        row-gap: 0px;
-        column-gap: 0px;
+        &:not(.o_extra_menu_items .o_grid_mode) {
+            display: grid !important;
+            grid-auto-rows: 50px;
+            grid-template-columns: repeat(12, 1fr);
+            row-gap: 0px;
+            column-gap: 0px;
+        }
     }
     --gutter-x: 0px;
     --grid-item-padding-y: 10px;

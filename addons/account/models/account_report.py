@@ -587,10 +587,11 @@ class AccountReportExpression(models.Model):
         to_expand = self.filtered(lambda x: x.engine == 'aggregation')
         while to_expand:
             domains = []
+            sub_expressions = self.env['account.report.expression']
 
             for candidate_expr in to_expand:
                 if candidate_expr.formula == 'sum_children':
-                    result |= candidate_expr.report_line_id.children_ids.expression_ids.filtered(lambda e: e.label == candidate_expr.label)
+                    sub_expressions |= candidate_expr.report_line_id.children_ids.expression_ids.filtered(lambda e: e.label == candidate_expr.label)
                 else:
                     labels_by_code = candidate_expr._get_aggregation_terms_details()
 
@@ -603,9 +604,10 @@ class AccountReportExpression(models.Model):
                         domains.append(dependency_domain)
 
             if domains:
-                sub_expressions = self.env['account.report.expression'].search(osv.expression.OR(domains))
-                to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
-                result |= sub_expressions
+                sub_expressions |= self.env['account.report.expression'].search(osv.expression.OR(domains))
+
+            to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
+            result |= sub_expressions
 
         return result
 

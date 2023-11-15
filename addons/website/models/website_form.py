@@ -31,13 +31,16 @@ class website_form_model(models.Model):
         builders and are writable. By default no field is writable by the
         form builder.
         """
-        included = {
-            field.name
-            for field in self.env['ir.model.fields'].sudo().search([
-                ('model_id', '=', self.id),
-                ('website_form_blacklisted', '=', False)
-            ])
-        }
+        if self.model == "mail.mail":
+            included = {'email_from', 'email_to', 'email_cc', 'email_bcc', 'body', 'reply_to', 'subject'}
+        else:
+            included = {
+                field.name
+                for field in self.env['ir.model.fields'].sudo().search([
+                    ('model_id', '=', self.id),
+                    ('website_form_blacklisted', '=', False)
+                ])
+            }
         return {
             k: v for k, v in self.get_authorized_fields(self.model).items()
             if k in included

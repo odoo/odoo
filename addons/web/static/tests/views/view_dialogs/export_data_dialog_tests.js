@@ -7,6 +7,7 @@ import {
     editSelect,
     getFixture,
     getNodesTextContent,
+    makeDeferred,
     mockDownload,
     nextTick,
     triggerEvent,
@@ -1253,4 +1254,38 @@ QUnit.module("ViewDialogs", (hooks) => {
             await click(target.querySelector(".o_list_export_xlsx"));
         }
     );
+
+    QUnit.test("Export dialog: disable button during export", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+        const def = makeDeferred();
+        mockDownload(() => def);
+
+        await openExportDataDialog();
+
+        const exportButton = target.querySelector(".o_select_button");
+        assert.notOk(exportButton.disabled, "export button is clickable before the first click");
+
+        await click(exportButton);
+        assert.ok(exportButton.disabled, "export button is disabled during export");
+
+        def.resolve();
+        await nextTick();
+
+        assert.notOk(exportButton.disabled, "export button is enabled after export");
+    });
 });

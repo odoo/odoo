@@ -228,7 +228,10 @@ class AccountFiscalPosition(models.Model):
             delivery = partner
 
         # partner manually set fiscal position always win
-        manual_fiscal_position = delivery.property_account_position_id or partner.property_account_position_id
+        manual_fiscal_position = (
+            delivery.with_company(company).property_account_position_id
+            or partner.with_company(company).property_account_position_id
+        )
         if manual_fiscal_position:
             return manual_fiscal_position
 

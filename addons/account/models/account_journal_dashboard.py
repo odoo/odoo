@@ -441,7 +441,7 @@ class account_journal(models.Model):
             to_check = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': to_check.get('journal_id_count', 0),
-                'to_check_balance': to_check.get('amount_total_signed', 0),
+                'to_check_balance': currency.format(to_check.get('amount_total_signed', 0)),
                 'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
@@ -468,10 +468,11 @@ class account_journal(models.Model):
             )
         }
         for journal in general_journals:
+            currency = journal.currency_id or journal.company_id.currency_id
             vals = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': vals.get('__count', 0),
-                'to_check_balance': vals.get('amount_total_signed', 0),
+                'to_check_balance': currency.format(vals.get('amount_total_signed', 0)),
             })
 
     def _get_open_bills_to_pay_query(self):

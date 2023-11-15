@@ -219,7 +219,12 @@
                     <ul>
                         <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
                             <li>
-                                SN <t t-esc="lot.lot_name"/>
+                                <t t-if="lot.order_line.product.tracking == 'lot'">
+                                    Lot Number <t t-esc="lot.lot_name"/>
+                                </t>
+                                <t t-else="">
+                                    SN <t t-esc="lot.lot_name"/>
+                                </t>
                             </li>
                         </t>
                     </ul>

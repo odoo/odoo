@@ -14,10 +14,10 @@
 # Martin Trigaux, 2023
 # Luis D Lafaurie, 2023
 # Josep Anton Belchi, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # kikopeiro <francisco.peiro@factorlibre.com>, 2023
 # Ana Sanjuán, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
@@ -15062,7 +15062,7 @@ msgstr "Importa o exporta facturas desde XML/PDF"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Importar o exportar facturas electrónicas con UBL/CII"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -15640,6 +15640,15 @@ msgstr "Tipo invalido"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Valor no válido para %s.%s:%s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -24867,7 +24876,7 @@ msgstr "Nombre de etiqueta"
 #: model:ir.model.fields,field_description:base.field_res_partner__category_id
 #: model:ir.model.fields,field_description:base.field_res_users__category_id
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: base
 #: model:res.country,name:base.tw

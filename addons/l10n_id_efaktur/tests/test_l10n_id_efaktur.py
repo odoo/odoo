@@ -1,6 +1,7 @@
 import csv
 
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, common
 from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
 
@@ -160,3 +161,47 @@ class TestIndonesianEfaktur(common.TransactionCase):
 
         self.assertEqual(amount_untaxed_total, amount_untaxed_sum)
         self.assertEqual(amount_tax_total, amount_tax_sum)
+
+    def test_efaktur_do_not_consume_code(self):
+        """ Ensure that an invoice with no taxes at all will not consume a code. """
+        available_code = self.efaktur.available
+        # 1. No taxes
+        out_invoice_no_taxes = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": False}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice_no_taxes.action_post()
+        # The tax number is not set.
+        self.assertFalse(out_invoice_no_taxes.l10n_id_tax_number)
+        # No codes have been consumed.
+        self.assertEqual(self.efaktur.available, available_code)
+
+        with self.assertRaises(ValidationError, msg='E-faktur is not available for invoices without any taxes.'), self.cr.savepoint():
+            out_invoice_no_taxes.download_efaktur()
+
+    def test_efaktur_consume_code(self):
+        """ Ensure that an invoice with taxes will consume a code. """
+        available_code = self.efaktur.available
+        out_invoice_no_taxes = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice_no_taxes.action_post()
+        # The tax number is set.
+        self.assertEqual(out_invoice_no_taxes.l10n_id_tax_number, '0100000000000003')
+        # A code has been consumed.
+        self.assertEqual(self.efaktur.available, available_code - 1)
+        # No error is raised when downloading.
+        out_invoice_no_taxes.download_efaktur()

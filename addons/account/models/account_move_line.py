@@ -544,9 +544,9 @@ class AccountMoveLine(models.Model):
                 )
                 SELECT * FROM previous
                 UNION ALL
-                SELECT * FROM properties
-                UNION ALL
                 SELECT * FROM default_properties
+                UNION ALL
+                SELECT * FROM properties
                 UNION ALL
                 SELECT * FROM fallback
             """, {
@@ -1112,6 +1112,7 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         self._conditional_add_to_compute('account_id', lambda line: (
+            (self.product_id or not self.account_id) and
             line.display_type == 'product' and line.move_id.is_invoice(True)
         ))
 

@@ -269,6 +269,37 @@ class TestHttpStatic(TestHttpStaticCommon):
         res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
         self.assertEqual(res.status_code, 404)
 
+    def test_static17_content_missing_checksum(self):
+        att = self.env['ir.attachment'].create({
+            'name': 'testhttp.txt',
+            'db_datas': 'some data',
+            'public': True,
+        })
+        self.assertFalse(att.checksum)
+        self.assertDownload(
+            url=f'/web/content/{att.id}',
+            headers={},
+
+            assert_status_code=200,
+            assert_headers={
+                'Content-Length': '9',
+                'Content-Type': 'text/plain; charset=utf-8',
+                'Content-Disposition': 'inline; filename=testhttp.txt',
+            },
+            assert_content=b'some data',
+        )
+
+    def test_static18_image_missing_checksum(self):
+        with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
+            att = self.env['ir.attachment'].create({
+                'name': 'gizeh.png',
+                'db_datas': file.read(),
+                'mimetype': 'image/png',
+                'public': True,
+            })
+        self.assertFalse(att.checksum)
+        self.assertDownloadGizeh(f'/web/image/{att.id}')
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):

@@ -37,6 +37,7 @@
 # Sergey Vernyayev, 2023
 # valmasone, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
+# alenafairy, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
+"Last-Translator: alenafairy, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5531,7 +5532,7 @@ msgstr "-Этот модуль не исключает ни одного дру�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
 msgid "1 Day"
-msgstr ""
+msgstr "1 день"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__hours_1
@@ -7153,6 +7154,8 @@ msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
 msgstr ""
+"Все наши договорные отношения будут регулироваться исключительно "
+"законодательством страны."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -8200,6 +8203,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Приведенный ниже текст носит рекомендательный характер и не влечет за собой "
+"ответственности со стороны компании."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -11373,7 +11378,7 @@ msgstr "Контракты сотрудников"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
 msgid "Employee Hourly Cost"
-msgstr ""
+msgstr "Почасовая оплата сотрудника"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
@@ -14350,6 +14355,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Ошибочный параметр 'Группировать'"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -14507,6 +14518,15 @@ msgstr "Неправильный тип"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Недопустимое значение для %s . %s:%s "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -20885,7 +20905,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "СТАНДАРТНЫЕ ПОЛОЖЕНИЯ И УСЛОВИЯ ПРОДАЖИ"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -22803,6 +22823,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Клиент отказывается от собственных типовых условий, даже если они были "
+"сформированы после  выполнения условий продажи. Для того чтобы любое "
+"отступление было действительным, оно должно быть предварительно согласовано "
+"в письменной форме."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -25856,7 +25880,7 @@ msgstr "Вы должны попробовать другие критерии �
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "Вы должны обновить этот документ в соответствии с вашими Т&amp;С."
 
 #. module: base
 #. odoo-python
@@ -25907,7 +25931,7 @@ msgstr ""
 msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
-msgstr ""
+msgstr "Ваш обед доставлен. Приятного аппетита!"
 
 #. module: base
 #. odoo-python

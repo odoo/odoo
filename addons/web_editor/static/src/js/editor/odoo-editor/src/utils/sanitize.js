@@ -87,7 +87,7 @@ export function areSimilarElements(node, node2) {
  * @returns {String|null}
  */
 function deduceURLfromLabel(link) {
-    const label = link.innerText.trim();
+    const label = link.innerText.trim().replaceAll('\u200B', '');
     // Check first for e-mail.
     let match = label.match(EMAIL_REGEX);
     if (match) {
@@ -284,8 +284,26 @@ class Sanitize {
                 node.setAttribute('contenteditable', 'false');
             }
 
-            if (node.firstChild) {
-                this._parse(node.firstChild);
+            // Remove empty class/style attributes.
+            for (const attributeName of ['class', 'style']) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
+                    node.removeAttribute(attributeName);
+                }
+            }
+
+            let firstChild = node.firstChild;
+            // Unwrap the contents of SPAN and FONT elements without attributes.
+            if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
+                firstChild = unwrapContents(node)[0];
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            if (firstChild) {
+                this._parse(firstChild);
             }
 
             // Update link URL if label is a new valid link.

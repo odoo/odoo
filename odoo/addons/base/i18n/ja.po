@@ -8,8 +8,8 @@
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Tatsuki Kanda, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Tatsuki Kanda, 2023
 # Junko Augias, 2023
 # 
 msgid ""
@@ -7336,7 +7336,7 @@ msgid ""
 "A non-profit international educational and scientific organisation, hosting "
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
-msgstr ""
+msgstr "航空・宇宙、環境・応用流体力学、ターボ機械・推進の3部門を擁する非営利の国際教育科学団体。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -7350,7 +7350,7 @@ msgstr "同じ<span><span class=\"o_vat_label\">会社登録</span></span>の取
 msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
-msgstr "同じ<span><span class=\"o_vat_label\">納税者番号</span></span>を持つパートナーがすでに存在します("
+msgstr "同じ<span><span class=\"o_vat_label\">登録番号</span></span>を持つパートナーがすでに存在します("
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay
@@ -7392,6 +7392,7 @@ msgid ""
 "create his own holidays and manage the requests of the users he's manager "
 "of."
 msgstr ""
+"タイムオフの権限を持たないユーザは、アプリケーションを見ることができ、自分の休日を作成し、マネジャーであるユーザのリクエストを管理することができます。"
 
 #. module: base
 #. odoo-python
@@ -9895,6 +9896,9 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
+"一部の国では、国内法に従い、請求書の金額に対して源泉徴収が適用されます。源泉徴収は、クライアントが税務当局に支払うことになります。いかなる場合においても、My"
+" Company（San Francisco）は、その国の法律に関連する費用に関与することはできません。従って、請求書の金額は、その全額がMy "
+"Company (San Francisco)に対するものであり、顧客が所在する国の法律に関連する費用は含まれません。"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -15451,7 +15455,7 @@ msgstr "無効な グループ化 パラメーター"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid Expression while parsing xpath %r"
-msgstr ""
+msgstr "xpath %r の解析中に無効な式が発生しました。"
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -15607,6 +15611,15 @@ msgstr "無効な型"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "%s。%sの値が無効です:%s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -24464,7 +24477,7 @@ msgstr "タスクログ"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "事業者登録番号"
+msgstr "登録番号"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -24743,7 +24756,7 @@ msgid ""
 "to tax."
 msgstr ""
 "Tax Identification Number "
-"(納税者番号)。ここでの値は、国の形式に基づいて検証されます。パートナーに税金がかからないことを示すには、'/' を使用します。"
+"(登録番号)。ここでの値は、国の形式に基づいて検証されます。パートナーに税金がかからないことを示すには、'/' を使用します。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq

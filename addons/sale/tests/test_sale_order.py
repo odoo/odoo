@@ -165,7 +165,7 @@ class TestSaleOrder(SaleCommon):
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
-    def test_onchange_packaging_00(self):
+    def test_compute_packaging_00(self):
         """Create a SO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
@@ -245,6 +245,44 @@ class TestSaleOrder(SaleCommon):
         # we should have 1 pack of 20, as we've set the package type manually
         self.assertEqual(so2.order_line.product_packaging_qty, 1)
         self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
+    def test_compute_packaging_01(self):
+        """Create a SO and use packaging in a multicompany environment.
+        Ensure any suggested packaging matches the SO's.
+        """
+        company2 = self.env['res.company'].create([{'name': 'Company 2'}])
+        generic_single_pack = self.env['product.packaging'].create({
+            'name': "single pack",
+            'product_id': self.product.id,
+            'qty': 1.0,
+            'company_id': False,
+        })
+        company2_pack_of_10 = self.env['product.packaging'].create({
+            'name': "pack of 10 by Company 2",
+            'product_id': self.product.id,
+            'qty': 10.0,
+            'company_id': company2.id,
+        })
+
+        so1 = self.empty_order
+        so1_form = Form(so1)
+        with so1_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 10.0
+        so1_form.save()
+        self.assertEqual(so1.order_line.product_packaging_id, generic_single_pack)
+        self.assertEqual(so1.order_line.product_packaging_qty, 10.0)
+
+        so2 = self.env['sale.order'].with_company(company2).create({
+            'partner_id': self.partner.id,
+        })
+        so2_form = Form(so2)
+        with so2_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 10.0
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_id, company2_pack_of_10)
+        self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
 
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""

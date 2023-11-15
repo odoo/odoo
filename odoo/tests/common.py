@@ -1176,13 +1176,18 @@ class ChromeBrowser:
             message += '\n' + stack
 
         log_type = type
-        self._logger.getChild('browser').log(
+        _logger = self._logger.getChild('browser')
+        _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
-            "%s", message # might still have %<x> characters
+            "%s%s",
+            "Error received after termination: " if self._result.done() else "",
+            message # might still have %<x> characters
         )
 
         if log_type == 'error':
             self.had_failure = True
+            if self._result.done():
+                return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
@@ -1215,23 +1220,23 @@ class ChromeBrowser:
 
                 if node_id:
                     self.take_screenshot("unsaved_form_")
-                    self._result.set_exception(ChromeBrowserException("""\
+                    msg = """\
 Tour finished with an open form view in edition mode.
 
 Form views in edition mode are automatically saved when the page is closed, \
-which leads to stray network requests and inconsistencies."""))
+which leads to stray network requests and inconsistencies."""
+                    if self._result.done():
+                        _logger.error("%s", msg)
+                    else:
+                        self._result.set_exception(ChromeBrowserException(msg))
                     return
 
-                try:
+                if not self._result.done():
                     self._result.set_result(True)
-                except Exception:
+                elif self._result.exception() is None:
                     # if the future was already failed, we're happy,
                     # otherwise swap for a new failed
-                    if self._result.exception() is None:
-                        self._result = Future()
-                        self._result.set_exception(ChromeBrowserException(
-                            "Tried to make the tour successful twice."
-                        ))
+                    _logger.error("Tried to make the tour successful twice.")
 
 
     def _handle_exception(self, exceptionDetails, timestamp):
@@ -1243,6 +1248,11 @@ which leads to stray network requests and inconsistencies."""))
         stack = ''.join(self._format_stack(exceptionDetails))
         if stack:
             message += '\n' + stack
+
+        if self._result.done():
+            self._logger.getChild('browser').error(
+                "Exception received after termination: %s", message)
+            return
 
         self.take_screenshot()
         self._save_screencast()

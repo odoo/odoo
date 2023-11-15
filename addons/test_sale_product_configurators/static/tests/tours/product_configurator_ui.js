@@ -32,7 +32,8 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'input[data-value_name="Black"]'
 }, {
     trigger: '.btn-primary.disabled span:contains("Confirm")',
-    extra_trigger: '.show .modal-footer' // check confirm is disable and try to do it anyway
+    extra_trigger: '.show .modal-footer', // check confirm is disabled
+    run: () => {},
 }, {
     trigger: 'input[data-value_name="White"]'
 }, {

@@ -45,39 +45,33 @@ def get_quarter(date):
 def get_fiscal_year(date, day=31, month=12):
     ''' Compute the fiscal year dates range on which the 'date' parameter belongs to.
     A fiscal year is the period used by governments for accounting purposes and vary between countries.
-
     By default, calling this method with only one parameter gives the calendar year because the ending date of the
     fiscal year is set to the YYYY-12-31.
-
     :param date:    A datetime.datetime or datetime.date object.
     :param day:     The day of month the fiscal year ends.
     :param month:   The month of year the fiscal year ends.
     :return: A tuple (date_from, date_to) having the same object type as the 'date' parameter.
     '''
-    max_day = calendar.monthrange(date.year, month)[1]
-    date_to = type(date)(date.year, month, min(day, max_day))
 
-    # Force at 29 February instead of 28 in case of leap year.
-    if date_to.month == 2 and date_to.day == 28 and max_day == 29:
-        date_to = type(date)(date.year, 2, 29)
+    def fix_day(year, month, day):
+        max_day = calendar.monthrange(year, month)[1]
+        if (month == 2 and day in (28, max_day)) or (month != 2 and day in (30, max_day)):
+            return max_day
+        return min(day, max_day)
+
+    day = fix_day(date.year, month, day)
+    date_to = type(date)(date.year, month, day)
 
     if date <= date_to:
         date_from = date_to - relativedelta(years=1)
-        max_day = calendar.monthrange(date_from.year, date_from.month)[1]
-
-        # Force at 29 February instead of 28 in case of leap year.
-        if date_from.month == 2 and date_from.day == 28 and max_day == 29:
-            date_from = type(date)(date_from.year, 2, 29)
-
+        day = fix_day(date_from.year, date_from.month, date_from.day)
+        date_from = type(date)(date_from.year, date_from.month, day)
         date_from += relativedelta(days=1)
     else:
         date_from = date_to + relativedelta(days=1)
-        max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
-        date_to = type(date)(date.year + 1, month, min(day, max_day))
-
-        # Force at 29 February instead of 28 in case of leap year.
-        if date_to.month == 2 and date_to.day == 28 and max_day == 29:
-            date_to += relativedelta(days=1)
+        date_to = date_to + relativedelta(years=1)
+        day = fix_day(date_to.year, date_to.month, date_to.day)
+        date_to = type(date)(date_to.year, date_to.month, day)
     return date_from, date_to
 
 

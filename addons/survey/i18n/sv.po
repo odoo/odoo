@@ -17,11 +17,11 @@
 # Martin Trigaux, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2023
 # Levi Siuzdak (sile), 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Levi Siuzdak (sile), 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -407,7 +407,9 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Redigera undersökning"
 msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
 "                                        Download certification"
-msgstr "Ladda ner certifikat"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"                                        Ladda ner certifikat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -522,8 +524,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Fullföljda</span>\n"
-"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Examinerade</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Certifikationer </span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certifikat</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -531,8 +533,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Fullföljda</span>\n"
-"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Examinerade</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">Certifikationer </span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">Certifikat</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -587,7 +589,7 @@ msgstr "<span class=\"text-muted\">Framgång</span>"
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
-msgstr "<span>\"Red\" är inte en kategori, jag vet vad du försöker göra ;)</span>"
+msgstr "<span>\"Röd\" är inte en kategori, jag vet vad du försöker göra ;)</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -1453,7 +1455,7 @@ msgstr "Vi gratulerar! Du är nu redo att samla in feedback som ett proffs :-)"
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
 msgid "Congratulations, you are now official vendor of MyCompany"
-msgstr "Grattis, du är nu officiell säljare av MyCompany"
+msgstr "Grattis, du är nu officiell säljare av MittFöretag"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -1494,7 +1496,7 @@ msgstr "Fortsätt här"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug4
 msgid "Cookies"
-msgstr "Cookies"
+msgstr "Kakor"
 
 #. module: survey
 #. odoo-javascript
@@ -1600,7 +1602,7 @@ msgstr "Skapad"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating test token is not allowed for you."
-msgstr "Det är inte tillåtet för dig att skapa testtoken."
+msgstr "Det är inte tillåtet för dig att skapa testpollett."
 
 #. module: survey
 #. odoo-python
@@ -1610,7 +1612,7 @@ msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
 msgstr ""
-"Det är inte tillåtet att skapa token för andra än anställda för interna "
+"Det är inte tillåtet att skapa pollett för andra än anställda för interna "
 "enkäter."
 
 #. module: survey
@@ -3305,7 +3307,7 @@ msgstr "Annat (se kommentarer)"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2
 msgid "Our Company in a few questions ..."
-msgstr "VårtFöretag i några frågor ..."
+msgstr "Vårt Företag i några frågor ..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
@@ -3835,7 +3837,7 @@ msgstr "Uppnådde"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_type
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_type
 msgid "Scoring"
-msgstr "Scoring"
+msgstr "Poäng"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
@@ -3935,12 +3937,12 @@ msgstr "Sekvens"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
 msgid "Session Code"
-msgstr "Kod för sessionen"
+msgstr "Sessionskod"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
 msgid "Session Link"
-msgstr "Länk till sessionen"
+msgstr "Sessionslänk"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_state
@@ -4217,7 +4219,7 @@ msgstr "Guiden för inbjudan till enkätundersökningar"
 #: model:ir.model,name:survey.model_survey_question_answer
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_tree
 msgid "Survey Label"
-msgstr "Etikett"
+msgstr "Undersökningsetikett"
 
 #. module: survey
 #. odoo-python
@@ -4387,7 +4389,7 @@ msgstr "Svaret måste vara av rätt typ"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr "Ditt svar är inte giltig."
+msgstr "Svaret du angav är inte giltig."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check
@@ -5068,7 +5070,7 @@ msgstr "Vad står \"ODOO\" för?"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does one need to get to pass an Odoo Survey?"
-msgstr "Vad behöver man för att klara en Odoo Survey?"
+msgstr "Vad behöver man för att klara en Odoo undersökning?"
 
 #. module: survey
 #. odoo-python
@@ -5337,7 +5339,7 @@ msgstr "Du kan inte skicka inbjudningar till stängda enkäter."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You received the badge"
-msgstr "Du fick emblemet"
+msgstr "Du fick märket"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done

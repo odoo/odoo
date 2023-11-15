@@ -80,8 +80,10 @@ PKGS_TO_INSTALL="
     python3-tz \
     python3-urllib3 \
     python3-werkzeug \
+    python3-venv \
     rsync \
     screen \
+    swig \
     unclutter \
     vim \
     x11-utils \
@@ -114,9 +116,15 @@ PIP_TO_INSTALL="
     v4l2 \
     pysmb==1.2.9.1 \
     cryptocode==0.1 \
+    PyKCS11 \
+    vcgencmd \
+    RPi.GPIO \
     rjsmin==1.1.0"
 
-pip3 install ${PIP_TO_INSTALL}
+mkdir venv
+python3 -m venv venv
+venv/bin/pip3 install ${PIP_TO_INSTALL}
+rsync -avrhp venv/lib/python3.11/site-packages/* /usr/lib/python3/dist-packages/
 
 # Dowload MPD server and library for Six terminals
 wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/

@@ -235,6 +235,38 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "all measures should be displayed with a pivot_measures context",
+        async function (assert) {
+            assert.expect(1);
+
+            serverData.models.partner.fields.bouh = {
+                string: "bouh",
+                type: "integer",
+                group_operator: "sum",
+            };
+
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                context: { pivot_measures: ["foo"] },
+                arch: `
+                <pivot string="Partners">
+                    <field name="foo" type="measure"/>
+                    <field name="bouh" type="measure"/>
+                </pivot>`,
+            });
+
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            const measures = Array.from(
+                target.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")
+            ).map((e) => e.textContent);
+
+            assert.deepEqual(measures, ["bouh", "Foo", "Count"]);
+        }
+    );
+
     QUnit.test("pivot rendering with widget", async function (assert) {
         await makeView({
             type: "pivot",

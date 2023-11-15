@@ -326,6 +326,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         if ($codeview.hasClass('d-none')) {
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
+            this.wysiwyg.odooEditor.sanitize();
+            this.wysiwyg.odooEditor.historyStep(true);
         } else {
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();

@@ -681,9 +681,8 @@ export class PivotModel extends Model {
      */
     async load(searchParams) {
         this.searchParams = searchParams;
-
-        const activeMeasures =
-            processMeasure(searchParams.context.pivot_measures) || this.metaData.activeMeasures;
+        const processedMeasures = processMeasure(searchParams.context.pivot_measures);
+        const activeMeasures = processedMeasures || this.metaData.activeMeasures;
         const metaData = this._buildMetaData({ activeMeasures });
         if (!this.reload) {
             metaData.rowGroupBys =
@@ -705,11 +704,14 @@ export class PivotModel extends Model {
             metaData.expandedColGroupBys = [];
         }
 
-        metaData.measures = computeReportMeasures(
-            metaData.fields,
-            metaData.fieldAttrs,
-            metaData.activeMeasures
-        );
+        const allActivesMeasures = new Set(this.metaData.activeMeasures);
+        if (processedMeasures) {
+            processedMeasures.forEach((e) => allActivesMeasures.add(e));
+        }
+
+        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
+            ...allActivesMeasures,
+        ]);
         const config = { metaData, data: this.data };
         return this._loadData(config);
     }

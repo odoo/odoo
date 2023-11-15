@@ -27,6 +27,9 @@ msgid ""
 "                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + '：很高興通知你，你的訂單編號 ' + object.origin + ' 已發貨。' if object.origin else object.company_id.name + '：很高興通知你，你的訂單已發貨。') + ('你的追蹤參考是 ' + (object.carrier_tracking_ref) + '。' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -137,7 +140,7 @@ msgstr "通過庫存移動進行 SMS簡訊 驗證"
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is delivered."
-msgstr ""
+msgstr "訂單交貨後，已立即向客戶發送電話短訊。"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking

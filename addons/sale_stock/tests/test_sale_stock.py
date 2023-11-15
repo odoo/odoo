@@ -1590,3 +1590,45 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard = Form(self.env[(res_dict.get('res_model'))].with_user(inventory_admin_user).with_context(
             res_dict['context'])).save()
         wizard.with_user(inventory_admin_user).process_cancel_backorder()
+
+    def test_decrease_sol_qty_to_zero(self):
+        """
+        2 steps delivery.
+        SO with two products.
+        Set the done quantity on the first picking.
+        On the SO, cancel the qty of the first product:
+        On the first picking, since the done quantity is already defined, it
+        should only set the demand to zero. On the second picking, the SM should
+        be cancelled.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': p.name,
+                'product_id': p.id,
+                'product_uom_qty': 1,
+                'product_uom': p.uom_id.id,
+                'price_unit': p.list_price,
+            }) for p in (
+                self.product_a,
+                self.product_b,
+            )],
+        })
+        so.action_confirm()
+
+        pick_picking, ship_picking = so.picking_ids
+        pick_picking.move_ids.quantity_done = 1.0
+
+        so.order_line[0].product_uom_qty = 0
+
+        self.assertRecordValues(pick_picking.move_ids, [
+            {'product_id': self.product_a.id, 'product_uom_qty': 0, 'quantity_done': 1, 'state': 'assigned'},
+            {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity_done': 1, 'state': 'assigned'},
+        ])
+        self.assertRecordValues(ship_picking.move_ids, [
+            {'product_id': self.product_a.id, 'product_uom_qty': 0, 'quantity_done': 0, 'state': 'cancel'},
+            {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity_done': 0, 'state': 'waiting'},
+        ])
