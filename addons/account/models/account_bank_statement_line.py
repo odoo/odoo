@@ -182,6 +182,9 @@ class AccountBankStatementLine(models.Model):
         # we have to compute running balance for draft lines because they are visible and also
         # the user can split on that lines, but their balance should be the same as previous posted line
         # we do the same for the canceled lines, in order to keep using them as anchor points
+        if not self.ids:
+            self.running_balance = 0
+            return
 
         self.statement_id.flush_model(['balance_start', 'first_line_index'])
         self.flush_model(['internal_index', 'date', 'journal_id', 'statement_id', 'amount', 'state'])
