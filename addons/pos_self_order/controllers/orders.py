@@ -223,6 +223,8 @@ class PosSelfOrderController(http.Controller):
             line_qty = line.get('qty')
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
             lst_price = pricelist._get_product_price(product, quantity=line_qty) if pricelist else product.lst_price
+            selected_attributes = fetched_attributes.browse(line.get('attribute_value_ids', []))
+            lst_price += sum([attr.price_extra for attr in selected_attributes])
 
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
