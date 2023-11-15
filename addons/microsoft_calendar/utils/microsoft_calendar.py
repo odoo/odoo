@@ -92,6 +92,12 @@ class MicrosoftCalendarService():
 
         return events, next_sync_token
 
+    def _check_full_sync_required(self, response):
+        """ Checks if full sync is required according to the error code received. """
+        response_json = response.json()
+        response_code = response_json.get('error', {}).get('code', '')
+        return any(error_code in response_code for error_code in ['fullSyncRequired', 'SyncStateNotFound'])
+
     @requires_auth_token
     def _get_events_delta(self, sync_token=None, token=None, timeout=TIMEOUT):
         """
@@ -105,7 +111,8 @@ class MicrosoftCalendarService():
             events, next_sync_token = self._get_events_from_paginated_url(
                 url, params=params, token=token, timeout=timeout)
         except requests.HTTPError as e:
-            if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content) and sync_token:
+            full_sync_needed = self._check_full_sync_required(e.response)
+            if e.response.status_code == 410 and full_sync_needed and sync_token:
                 # retry with a full sync
                 return self._get_events_delta(token=token, timeout=timeout)
             raise e
