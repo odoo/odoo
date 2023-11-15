@@ -93,7 +93,7 @@ class WebsiteVisitor(models.Model):
     @api.depends('access_token')
     def _compute_partner_id(self):
         # The browse in the loop is fine, there is no SQL Query on partner here
-        for visitor in self:
+        for visitor in self.filtered('id'):
             # If the access_token is not a 32 length hexa string, it means that
             # the visitor is linked to a logged in user, in which case its
             # partner_id is used instead as the token.
