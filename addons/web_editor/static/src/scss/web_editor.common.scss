@@ -111,23 +111,6 @@ html, body {
 .editor_enable .css_editable_mode_hidden {
     display: none !important;
 }
-.note-toolbar {
-    margin-left: 0 !important;
-}
-.note-popover .popover > .arrow {
-    display: none;
-}
-
-.note-popover .popover, .note-editor {
-    .dropdown-menu .dropdown-item {
-        > i {
-            visibility: hidden;
-        }
-        &.checked > i {
-            visibility: visible;
-        }
-    }
-}
 
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* table */
@@ -482,9 +465,6 @@ a.o_underline {
 
 @include media-breakpoint-down(md) {
     odoo-wysiwyg-container {
-        .panel-heading.note-toolbar {
-            overflow-x: auto;
-        }
         .btn-group {
             position: static;
         }

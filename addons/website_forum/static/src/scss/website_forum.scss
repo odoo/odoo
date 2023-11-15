@@ -170,21 +170,6 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
 
     textarea.o_wysiwyg_loader + .note-editor {
         border: 0;
-
-        .note-toolbar {
-            @include border-top-radius($border-radius);
-            height: 32px;
-        }
-
-        .note-editable, .note-statusbar {
-            border: 1px solid $border-color;
-            border-width: 0 1px;
-        }
-
-        .note-statusbar {
-            display: block;
-            border-bottom-width: 1px;
-        }
     }
 
     .o_wforum_answer {
