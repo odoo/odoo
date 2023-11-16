@@ -46,7 +46,7 @@
                         </button>
                     </t>
                     <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
-                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(thread, store.self)"/>
+                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.personaAvatarUrl(store.self, thread)"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
                             <t t-if="store.user" t-esc="store.user.name"/>
                             <t t-else="">

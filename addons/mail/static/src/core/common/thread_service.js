@@ -854,45 +854,49 @@ export class ThreadService {
     }
 
     /**
-     * @param {{ persona: import("models").Persona, thread: import("models").Thread }}
+     * @param {thread: import("models").Thread } thread
      */
-    avatarUrl(thread, persona) {
-        if (thread && !persona) {
-            if (thread.type === "channel" || thread.type === "group") {
-                return url(
-                    `/discuss/channel/${thread.id}/avatar_128`,
-                    assignDefined({}, { unique: thread.avatarCacheKey })
-                );
+    avatarUrl(thread) {
+        if (thread.type === "channel" || thread.type === "group") {
+            return url(
+                `/discuss/channel/${thread.id}/avatar_128`,
+                assignDefined({}, { unique: thread.avatarCacheKey })
+            );
+        }
+        if (thread.type === "chat") {
+            return url(
+                `/web/image/res.partner/${thread.chatPartner.id}/avatar_128`,
+                assignDefined({}, { unique: thread.avatarCacheKey })
+            );
+        }
+        if (this.module_icon) {
+            return this.module_icon;
+        }
+        return DEFAULT_AVATAR;
+    }
+
+    /**
+     * @param {import("models").Persona} persona
+     * @param {import("models").Thread} thread
+     */
+    personaAvatarUrl(persona, thread) {
+        const urlParams = {};
+        if (persona.write_date) {
+            urlParams.unique = persona.write_date;
+        }
+        if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
+            this.personaService.fetchIsCompany(persona);
+        }
+        if (thread?.model === "discuss.channel") {
+            if (persona.type === "partner") {
+                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
             }
-            if (thread.type === "chat") {
-                return url(
-                    `/web/image/res.partner/${thread.chatPartner.id}/avatar_128`,
-                    assignDefined({}, { unique: thread.avatarCacheKey })
-                );
-            }
-            if (this.module_icon) {
-                return this.module_icon;
+            if (persona.type === "guest") {
+                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
             }
         }
-        if (persona) {
-            const urlParams = {};
-            if (persona.write_date) {
-                urlParams.unique = persona.write_date;
-            }
-            if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
-                this.personaService.fetchIsCompany(persona);
-            }
-            if (thread?.model === "discuss.channel") {
-                if (persona.type === "partner") {
-                    return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
-                }
-                if (persona.type === "guest") {
-                    return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
-                }
-            }
-            if (persona.avatarUrl) {
-                return persona.avatarUrl;
-            }
+        if (persona.avatarUrl) {
+            return persona.avatarUrl;
         }
         return DEFAULT_AVATAR;
     }
