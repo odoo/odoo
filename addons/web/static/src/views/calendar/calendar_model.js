@@ -234,7 +234,7 @@ export class CalendarModel extends Model {
                 end = start;
             } else {
                 // in week mode or day mode, convert allday event to event
-                end = start.plus({ hours: 1 });
+                end = start.plus({ hours: options.duration_hour || 1 });
             }
         }
 

@@ -4,16 +4,26 @@ import { _t } from "@web/core/l10n/translation";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { onWillStart } from "@odoo/owl";
 
 export class AttendeeCalendarModel extends CalendarModel {
     setup(params, { dialog, rpc }) {
         super.setup(...arguments);
         this.dialog = dialog;
         this.rpc = rpc;
-        onWillStart(async () => {
-            this.credentialStatus = await this.rpc("/calendar/check_credentials");
-        });
+    }
+
+    /**
+     * @override
+     */
+    async load() {
+        const res = await super.load(...arguments);
+        const [credentialStatus, defaultDuration] = await Promise.all([
+            this.rpc("/calendar/check_credentials"),
+            this.orm.call("calendar.event", "get_default_duration")
+        ]);
+        this.credentialStatus = credentialStatus;
+        this.defaultDuration = defaultDuration;
+        return res;
     }
 
     get attendees() {
@@ -41,7 +51,7 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     buildRawRecord(partialRecord, options = {}) {
-        const result = super.buildRawRecord(...arguments);
+        const result = super.buildRawRecord(partialRecord, {...options, duration_hour: this.defaultDuration});
         if (partialRecord.recurrenceUpdate) {
             result.recurrence_update = partialRecord.recurrenceUpdate;
         }
