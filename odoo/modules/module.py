@@ -312,6 +312,7 @@ def load_manifest(module, mod_path=None):
         return {}
 
     manifest = copy.deepcopy(_DEFAULT_MANIFEST)
+
     manifest['icon'] = get_module_icon(module)
 
     with tools.file_open(manifest_file, mode='r') as f:
@@ -352,7 +353,6 @@ def load_manifest(module, mod_path=None):
 
     return manifest
 
-@functools.lru_cache(maxsize=None)
 def get_manifest(module, mod_path=None):
     """
     Get the module manifest.
@@ -365,6 +365,10 @@ def get_manifest(module, mod_path=None):
         when the manifest was not found.
     :rtype: dict
     """
+    return copy.deepcopy(_get_manifest_cached(module, mod_path))
+
+@functools.lru_cache(maxsize=None)
+def _get_manifest_cached(module, mod_path=None):
     return load_manifest(module, mod_path)
 
 def load_information_from_description_file(module, mod_path=None):
