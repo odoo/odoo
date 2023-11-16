@@ -28,6 +28,10 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT + 1),
             pay(),
+            Dialog.confirm(),
+
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
             // verify that the pos requires the selection of a partner
             Dialog.confirm(),
             PartnerListScreen.clickPartner(""),

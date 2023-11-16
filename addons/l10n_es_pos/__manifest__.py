@@ -20,4 +20,5 @@
             'l10n_es_pos/static/tests/**/*',
         ],
     },
+    'post_init_hook': '_l10n_es_pos_post_init_hook',
 }
