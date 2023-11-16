@@ -21758,7 +21758,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       }
       .o-input-count {
         width: fit-content;
-        padding: 4 0 4 4;
+        padding: 4px 0 4px 4px;
       }
     }
   }
@@ -29757,6 +29757,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onDeleteColumnsRows(cmd) {
             for (const table of this.getFilterTables(cmd.sheetId)) {
+                // Remove the filter tables whose data filter headers are in the removed rows.
+                if (cmd.dimension === "ROW" && cmd.elements.includes(table.zone.top)) {
+                    const tables = { ...this.tables[cmd.sheetId] };
+                    delete tables[table.id];
+                    this.history.update("tables", cmd.sheetId, tables);
+                    continue;
+                }
                 const zone = reduceZoneOnDeletion(table.zone, cmd.dimension === "COL" ? "left" : "top", cmd.elements);
                 if (!zone) {
                     const tables = { ...this.tables[cmd.sheetId] };
@@ -33096,6 +33103,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "EVALUATE_CELLS":
                 case "ACTIVATE_SHEET":
                 case "REMOVE_FILTER_TABLE":
+                case "ADD_COLUMNS_ROWS":
+                case "REMOVE_COLUMNS_ROWS":
                     this.isEvaluationDirty = true;
                     break;
                 case "START":
@@ -44439,9 +44448,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.26';
-    __info__.date = '2023-11-02T09:45:34.991Z';
-    __info__.hash = '1ddd8d0';
+    __info__.version = '16.1.27';
+    __info__.date = '2023-11-16T13:23:20.660Z';
+    __info__.hash = '81f7214';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
