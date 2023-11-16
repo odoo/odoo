@@ -49,6 +49,18 @@ export const DiscussWidget = AbstractAction.extend({
                 if (!this.discuss.thread) {
                     this.discuss.openInitThread();
                 }
+            } else {
+                const thread = messaging.models["mail.thread"].findFromIdentifyingData(
+                    this.discuss.getThreadIdentifyingDataFromActiveId(initActiveId)
+                );
+                if (thread) {
+                    if (messaging.device.isMobile && thread.channel_type) {
+                        this.discuss.update({ activeMobileNavbarTabId: thread.channel_type });
+                        messaging.chatWindowManager.openThread(thread);
+                    } else {
+                        this.discuss.openThread(thread);
+                    }
+                }
             }
         });
     },
