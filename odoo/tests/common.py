@@ -29,6 +29,8 @@ import unittest
 import warnings
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
+from typing import Callable
+
 try:
     from concurrent.futures import InvalidStateError
 except ImportError:
@@ -873,9 +875,10 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_class, headless=True):
+    def __init__(self, test_class, success_signal: Callable[[str], bool], headless: bool = True):
         self._logger = test_class._logger
         self.test_class = test_class
+        self.success_signal = success_signal
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
@@ -1249,7 +1252,7 @@ class ChromeBrowser:
                         "Trying to set result to failed (%s) but found the future settled (%s)",
                         message, self._result
                     )
-        elif 'test successful' in message:
+        elif self.success_signal(message):
             if self.test_class.allow_end_on_form:
                 self._result.set_result(True)
                 return
@@ -1731,7 +1734,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=None, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1753,7 +1756,7 @@ class HttpCase(TransactionCase):
         if watch:
             _logger.warning('watch mode is only suitable for local testing')
 
-        browser = ChromeBrowser(type(self), headless=not watch)
+        browser = ChromeBrowser(type(self), headless=not watch, success_signal=success_signal or (lambda s: 'test successful' in s))
         try:
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
@@ -1808,12 +1811,12 @@ class HttpCase(TransactionCase):
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
         options = {
-            'stepDelay': step_delay if step_delay else 0,
+            'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
             'startUrl': url_path,
         }
-        code = kwargs.pop('code', "odoo.startTour('%s', %s)" % (tour_name, json.dumps(options)))
-        ready = kwargs.pop('ready', "odoo.isTourReady('%s')" % tour_name)
+        code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
+        ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
         return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
 
     def profile(self, **kwargs):
