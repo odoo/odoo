@@ -60,7 +60,7 @@
         <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
-            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="oi oi-chevron-left me-2"/>Back to All Posts</a>
+            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-angle-left me-2"/>Back to All Posts</a>
         </div>
 
         <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable mt-lg-3">
