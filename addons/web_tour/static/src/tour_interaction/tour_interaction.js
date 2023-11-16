@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component, useState, onWillUnmount } from "@odoo/owl";
+import { Component, useEffect, useRef, useState, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { Reactive } from "@web/core/utils/reactive";
@@ -161,6 +161,17 @@ class TourInteraction extends Component {
                 this.position.top += top;
             },
         });
+        const stepsContainer = useRef("stepsContainer");
+        const currentStepRef = {
+            get el() {
+                return stepsContainer.el?.querySelector(".o-tour-controller--current-step");
+            }
+        }
+        useEffect((currentStepEl) => {
+            if (currentStepEl) {
+                currentStepEl.scrollIntoView();
+            }
+        }, () => [currentStepRef.el])
 
         const overlay = useService("overlay");
         let currentOverlays = [];
@@ -179,7 +190,7 @@ class TourInteraction extends Component {
             this.removeOverlays();
         });
 
-        this.localState = useState({ shownTour: this.activeTours[0] })
+        this.localState = useState({ shownTour: this.activeTours[0], isExpanded: true })
     }
 
     get state() {
@@ -188,6 +199,10 @@ class TourInteraction extends Component {
 
     showTour(tourName) {
         this.localState.shownTour = tourName
+    }
+
+    toggleCollapse() {
+        this.localState.isExpanded = !this.localState.isExpanded;
     }
 
     get currentTour() {
@@ -208,7 +223,6 @@ class TourInteraction extends Component {
             left: `${left}px`,
             "z-index": "9999",
             opacity: "0.8",
-            cursor: "move",
             "max-height": `${this.maxContainerHeight}px`,
         }
         return objectToStyle(style);
@@ -231,7 +245,7 @@ class TourInteraction extends Component {
             return "bg-success";
         }
         if (step.isCurrent) {
-            return "bg-primary";
+            return "bg-primary o-tour-controller--current-step";
         }
         if (step.shouldStop) {
             return "bg-info";
