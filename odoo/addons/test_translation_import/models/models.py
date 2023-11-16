@@ -10,7 +10,7 @@ class TestTranslationImportModel1(models.Model):
     selection = fields.Selection([
         ('foo', 'Selection Foo'),
         ('bar', 'Selection Bar'),
-    ])
+    ], export_string_translation=False)
     xml = fields.Text('XML', translate=xml_translate)
 
     def get_code_translation(self):

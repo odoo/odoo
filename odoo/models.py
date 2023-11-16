@@ -3205,6 +3205,7 @@ class BaseModel(metaclass=MetaModel):
                     related_sudo=False,
                     copy=field.copy,
                     readonly=field.readonly,
+                    export_string_translation=field.export_string_translation,
                 ))
 
     @api.model

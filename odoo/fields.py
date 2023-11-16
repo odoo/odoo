@@ -310,6 +310,7 @@ class Field(MetaField('DummyField', (object,), {})):
     default = None                      # default(recs) returns the default value
 
     string = None                       # field label
+    export_string_translation = True    # whether the field label translations are exported
     help = None                         # field tooltip
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
