@@ -459,7 +459,7 @@ class PaymentTransaction(models.Model):
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
             'payment_method_id': self.payment_method_id.id,
-            'payment_details': payment_method[payment_method['type']]['last4'],
+            'payment_details': payment_method[payment_method['type']].get('last4'),
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
             'stripe_payment_method': payment_method['id'],
