@@ -9386,6 +9386,17 @@
     const IS_ONLY_ONE_RANGE = (env) => {
         return env.model.getters.getSelectedZones().length === 1;
     };
+    const CAN_INSERT_HEADER = (env, dimension) => {
+        if (!IS_ONLY_ONE_RANGE(env)) {
+            return false;
+        }
+        const activeHeaders = dimension === "COL" ? env.model.getters.getActiveCols() : env.model.getters.getActiveRows();
+        const ortogonalActiveHeaders = dimension === "COL" ? env.model.getters.getActiveRows() : env.model.getters.getActiveCols();
+        const sheetId = env.model.getters.getActiveSheetId();
+        const zone = env.model.getters.getSelectedZone();
+        const allSheetSelected = isEqual(zone, env.model.getters.getSheetZone(sheetId));
+        return isConsecutive(activeHeaders) && (ortogonalActiveHeaders.size === 0 || allSheetSelected);
+    };
 
     const undo = {
         name: _lt("Undo"),
@@ -16319,17 +16330,13 @@
 
     const insertRow = {
         name: MENU_INSERT_ROWS_NAME,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "ROW"),
         icon: "o-spreadsheet-Icon.INSERT_ROW",
     };
     const rowInsertRowBefore = {
         name: ROW_INSERT_ROWS_BEFORE_NAME,
         execute: INSERT_ROWS_BEFORE_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "ROW"),
         icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
     };
     const topBarInsertRowsBefore = {
@@ -16345,9 +16352,7 @@
     const rowInsertRowsAfter = {
         execute: INSERT_ROWS_AFTER_ACTION,
         name: ROW_INSERT_ROWS_AFTER_NAME,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "ROW"),
         icon: "o-spreadsheet-Icon.INSERT_ROW_AFTER",
     };
     const topBarInsertRowsAfter = {
@@ -16356,17 +16361,13 @@
     };
     const insertCol = {
         name: MENU_INSERT_COLUMNS_NAME,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "COL"),
         icon: "o-spreadsheet-Icon.INSERT_COL",
     };
     const colInsertColsBefore = {
         name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
         execute: INSERT_COLUMNS_BEFORE_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "COL"),
         icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
     };
     const topBarInsertColsBefore = {
@@ -16382,9 +16383,7 @@
     const colInsertColsAfter = {
         name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
         execute: INSERT_COLUMNS_AFTER_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
+        isVisible: (env) => CAN_INSERT_HEADER(env, "COL"),
         icon: "o-spreadsheet-Icon.INSERT_COL_AFTER",
     };
     const topBarInsertColsAfter = {
@@ -19711,7 +19710,7 @@
       }
       .o-input-count {
         width: fit-content;
-        padding: 4 0 4 4;
+        padding: 4px 0 4px 4px;
       }
     }
   }
@@ -30845,6 +30844,13 @@
         }
         onDeleteColumnsRows(cmd) {
             for (const table of this.getFilterTables(cmd.sheetId)) {
+                // Remove the filter tables whose data filter headers are in the removed rows.
+                if (cmd.dimension === "ROW" && cmd.elements.includes(table.zone.top)) {
+                    const tables = { ...this.tables[cmd.sheetId] };
+                    delete tables[table.id];
+                    this.history.update("tables", cmd.sheetId, tables);
+                    continue;
+                }
                 const zone = reduceZoneOnDeletion(table.zone, cmd.dimension === "COL" ? "left" : "top", cmd.elements);
                 if (!zone) {
                     const tables = { ...this.tables[cmd.sheetId] };
@@ -34193,6 +34199,8 @@
                 case "EVALUATE_CELLS":
                 case "ACTIVATE_SHEET":
                 case "REMOVE_FILTER_TABLE":
+                case "ADD_COLUMNS_ROWS":
+                case "REMOVE_COLUMNS_ROWS":
                     this.isEvaluationDirty = true;
                     break;
                 case "START":
@@ -47796,9 +47804,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.16';
-    __info__.date = '2023-11-02T09:47:14.707Z';
-    __info__.hash = '09607eb';
+    __info__.version = '16.3.17';
+    __info__.date = '2023-11-16T13:25:13.936Z';
+    __info__.hash = '4049460';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
