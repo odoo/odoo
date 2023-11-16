@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
+import { assignIn, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -59,74 +59,64 @@ export class Thread extends Record {
 
     /** @param {Object} data */
     update(data) {
-        const { id, name, attachments, description, ...serverData } = data;
-        assignDefined(this, { id, name, description });
-        if (attachments) {
-            this.attachments = attachments;
-            this.attachments.sort((a1, a2) => a2.id - a1.id);
+        assignIn(this, data, [
+            "uuid",
+            "attachments",
+            "authorizedGroupFullName",
+            "avatarCacheKey",
+            "description",
+            "hasWriteAccess",
+            "is_pinned",
+            "isLoaded",
+            "isLoadingAttachments",
+            "mainAttachment",
+            "message_unread_counter",
+            "message_needaction_counter",
+            "modelName",
+            "name",
+            "seen_message_id",
+            "state",
+            "type",
+            "selfFollower",
+            "status",
+            "group_based_subscription",
+            "last_interest_dt",
+            "custom_notifications",
+            "mute_until_dt",
+            "is_editable",
+            "defaultDisplayMode",
+            "custom_channel_name",
+            "memberCount",
+            "channelMembers",
+            "invitedMembers",
+        ]);
+        if ("channel_type" in data) {
+            this.type = data.channel_type;
         }
-        if (serverData) {
-            assignDefined(this, serverData, [
-                "uuid",
-                "authorizedGroupFullName",
-                "avatarCacheKey",
-                "description",
-                "hasWriteAccess",
-                "is_pinned",
-                "isLoaded",
-                "isLoadingAttachments",
-                "mainAttachment",
-                "message_unread_counter",
-                "message_needaction_counter",
-                "modelName",
-                "name",
-                "seen_message_id",
-                "state",
-                "type",
-                "selfFollower",
-                "status",
-                "group_based_subscription",
-                "last_interest_dt",
-                "custom_notifications",
-                "mute_until_dt",
-                "is_editable",
-                "defaultDisplayMode",
-            ]);
-            assignIn(this, data, [
-                "custom_channel_name",
-                "memberCount",
-                "channelMembers",
-                "invitedMembers",
-            ]);
-            if ("channel_type" in data) {
-                this.type = data.channel_type;
-            }
-            if ("channelMembers" in data) {
-                if (this.type === "chat") {
-                    for (const member of this.channelMembers) {
-                        if (
-                            member.persona.notEq(this._store.user) ||
-                            (this.channelMembers.length === 1 &&
-                                member.persona?.eq(this._store.user))
-                        ) {
-                            this.chatPartner = member.persona;
-                        }
+        if ("channelMembers" in data) {
+            if (this.type === "chat") {
+                for (const member of this.channelMembers) {
+                    if (
+                        member.persona.notEq(this._store.user) ||
+                        (this.channelMembers.length === 1 && member.persona?.eq(this._store.user))
+                    ) {
+                        this.chatPartner = member.persona;
                     }
                 }
             }
-            if ("seen_partners_info" in serverData) {
-                this.seenInfos = serverData.seen_partners_info.map(
-                    ({ fetched_message_id, partner_id, seen_message_id }) => {
-                        return {
-                            lastFetchedMessage: fetched_message_id
-                                ? { id: fetched_message_id }
-                                : undefined,
-                            lastSeenMessage: seen_message_id ? { id: seen_message_id } : undefined,
-                            partner: { id: partner_id, type: "partner" },
-                        };
-                    }
-                );
-            }
+        }
+        if ("seen_partners_info" in data) {
+            this.seenInfos = data.seen_partners_info.map(
+                ({ fetched_message_id, partner_id, seen_message_id }) => {
+                    return {
+                        lastFetchedMessage: fetched_message_id
+                            ? { id: fetched_message_id }
+                            : undefined,
+                        lastSeenMessage: seen_message_id ? { id: seen_message_id } : undefined,
+                        partner: { id: partner_id, type: "partner" },
+                    };
+                }
+            );
         }
         if (this.type === "channel") {
             this._store.discuss.channels.threads.add(this);
