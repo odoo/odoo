@@ -1383,6 +1383,9 @@ class ProductTemplate(models.Model):
             'template': '/product/static/xls/product_template.xls'
         }]
 
+    def get_contextual_price(self, product=None):
+        return self._get_contextual_price(product=product)
+
     def _get_contextual_price(self, product=None):
         self.ensure_one()
         pricelist = self._get_contextual_pricelist()
