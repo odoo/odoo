@@ -2628,7 +2628,7 @@ class BaseModel(metaclass=MetaModel):
         :param int limit: optional max number of groups to return
         :param str orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
-                             groups, see also :py:meth:`~osv.osv.osv.search`
+                             groups, see also :meth:`~.search`
                              (supported only for many2one fields currently)
         :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
