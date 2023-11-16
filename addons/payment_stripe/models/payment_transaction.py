@@ -443,7 +443,7 @@ class PaymentTransaction(models.Model):
         # Create the token.
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
-            'payment_details': payment_method[payment_method['type']]['last4'],
+            'payment_details': payment_method[payment_method['type']].get('last4'),
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
             'verified': True,
