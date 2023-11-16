@@ -12,6 +12,14 @@ class MenuItem extends Component {
     static template = "web.ProfilingQwebView.menuitem";
 }
 
+function processValue(value) {
+    const data = JSON.parse(value);
+    for (const line of data[0].results.data) {
+        line.xpath = line.xpath.replace(/([^\]])\//g, "$1[1]/").replace(/([^\]])$/g, "$1[1]");
+    }
+    return data;
+}
+
 /**
  * This widget is intended to be used on Text fields. It will provide Ace Editor
  * for display XML and Python profiling.
@@ -27,9 +35,7 @@ export class ProfilingQwebView extends Component {
         this.ace = useRef("ace");
         this.selector = useRef("selector");
 
-        for (const line of this.profile.data) {
-            line.xpath = line.xpath.replace(/([^\]])\//g, "$1[1]/").replace(/([^\]])$/g, "$1[1]");
-        }
+        this.value = processValue(this.props.record.data[this.props.name]);
         this.state = useState({
             viewID: this.profile.data.length ? this.profile.data[0].view_id : 0,
             view: null,
@@ -69,10 +75,7 @@ export class ProfilingQwebView extends Component {
      * @returns {archs, data: {template, xpath, directive, time, duration, query }[]}
      */
     get profile() {
-        if (this.props.record.data[this.props.name]) {
-            return JSON.parse(this.props.record.data[this.props.name])[0].results;
-        }
-        return { archs: {}, data: [] };
+        return this.value ? this.value[0].results : { archs: {}, data: [] };
     }
 
     //--------------------------------------------------------------------------
