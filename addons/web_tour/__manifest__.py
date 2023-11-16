@@ -20,6 +20,7 @@ Odoo Web tours.
         'web.assets_common': [
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
+            'web_tour/static/src/tour_interaction/**/*',
         ],
         'web.assets_backend': [
             'web_tour/static/src/debug/debug_manager.js',

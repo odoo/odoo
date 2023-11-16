@@ -1,0 +1,45 @@
+<templates>
+
+<t t-name="web_tour.TourInteraction" owl="1">
+  <div t-ref="tourController" t-if="activeTours.length"
+      class="o-tour-controller bg-black border border-2 text-white position-absolute p-3" t-att-style="contentStyle">
+      <div class="o-tour-controller--content d-flex flex-column" style="cursor: auto;">
+          <h2 class="text-100">Current Tours</h2>
+          <div t-foreach="activeTours" t-as="tourName" t-key="tourName" class="ms-2 me-1">
+              <div class="d-inline">Tour: "<t t-esc="tourName" />"
+                  <button class="btn btn-primary" t-on-click="() => this.getTour(tourName).nextStep()">Next</button>
+              </div>
+              <div class="overflow-auto d-flex flex-column gap-1" >
+                  <div class="p-1 d-flex flex-row gap-2"
+                      t-foreach="getTour(tourName).steps" t-as="step" t-key="step"
+                      t-att-class="getStepClass(step_value)">
+
+                      <div class="d-flex flex-column justify-content-around border-end align-items-center">
+                        <button t-on-click="() => this.toggleSuspend(tourName, step)" class="btn bg-transparent text-100 fs-5">
+                          <i class="fa" t-att-class="step_value.shouldStop ? 'fa-circle' : 'fa-circle-o'" />
+                        </button>
+
+                        <button t-on-click="() => this.playUntil(tourName, step)" class="btn bg-transparent text-100 fs-5">
+                          <i class="fa fa-fast-forward" style="rotate: 90deg;" />
+                        </button>
+                      </div>
+
+                      <div>
+                        <div>Absolute position: <t t-esc="step_value.step.absolutePosition" /></div>
+                        <div 
+                            t-on-mouseover="() => this.onStepTriggerMouseOver(step_value)"
+                            t-on-mouseout="() => this.onStepTriggerMouseOver(step_value, 'remove')" >
+                          <div class="text-wrap text-break">trigger: "<t t-esc="step_value.step.trigger" />"</div>
+                          <div t-if="step_value.step.extra_trigger" class="text-wrap text-break">extra_trigger: "<t t-esc="step_value.extra_trigger" />"</div>
+                        </div>
+                      </div>
+
+
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</t>
+
+</templates>
