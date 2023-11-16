@@ -47,8 +47,7 @@
 </template>
 
 <template id="event_track_content" name="Track: Main Description">
-    <div name="o_wesession_track_main"
-         t-att-class="'o_wesession_track_main col-12 border p-0 %s %s' % ('col-md-9 col-xl-10' if option_widescreen else 'col-md-8 col-xl-9', 'o_youtube_chat' if track.is_youtube_chat_available else '')">
+    <div name="o_wesession_track_main" t-attf-class="o_wesession_track_main col-12 border p-0 {{'col-md-9 col-xl-10' if option_widescreen else 'col-md-8 col-xl-9'}}">
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing and track.event_id.start_remaining" class="pt-3">
             <div class="mx-3 alert alert-warning">
@@ -165,7 +164,7 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div t-att-class="'o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 border %s %s' % ('col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3', 'o_youtube_chat' if track.is_youtube_chat_available else '')">
+    <div name="o_wevent_online_page_aside" t-attf-class="o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 border {{'col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3'}}">
         <div class="o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>

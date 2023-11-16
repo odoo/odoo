@@ -15,6 +15,9 @@
     <xpath expr="//div[@t-elif='track.track_start_remaining']" position="attributes">
         <attribute name="t-elif">track.track_start_remaining and not track.is_youtube_replay</attribute>
     </xpath>
+    <xpath expr="//div[@name='o_wesession_track_main']" position="attributes">
+        <attribute name="t-attf-class" add="{{'o_youtube_chat' if track.is_youtube_chat_available else ''}}" separator=" "/>
+    </xpath>
     <!-- Add video -->
     <xpath expr="//div[@name='o_wesession_track_main']//div" position="before">
         <t t-set="show_youtube_frame" t-value="track.youtube_video_url and (track.is_youtube_replay or track.is_track_soon or track.is_track_live or track.is_track_done)" />
@@ -34,6 +37,9 @@
 
 <!-- ASIDE: ADD CHAT TAB FOR VIDEOS -->
 <template id="event_track_aside" inherit_id="website_event_track.event_track_aside">
+    <xpath expr="//div[@name='o_wevent_online_page_aside']" position="attributes">
+        <attribute name="t-attf-class" add="{{'o_youtube_chat' if track.is_youtube_chat_available else ''}}" separator=" "/>
+    </xpath>
     <xpath expr="//ul[hasclass('o_wesession_track_aside_nav')]/li" position="before">
         <li t-if="track.is_youtube_chat_available and not is_mobile_chat_disabled" class="nav-item flex-grow-1">
             <a href="#track_chat" aria-controls="track_chat" class="nav-link active" role="tab" data-bs-toggle="tab">
