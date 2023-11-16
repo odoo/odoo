@@ -15,13 +15,9 @@
                 </setting>
             </xpath>
             <xpath expr="//setting[@id='pos_default_journals']" position="inside">
-                <div class="row">
-                    <label string="Facturas Simplficadas" for="pos_l10n_es_simplified_invoice_journal_id" class="col-lg-3 o_light_label"/>
-                    <field name="pos_l10n_es_simplified_invoice_journal_id"
-                        domain="[('company_id', '=', company_id), ('type', '=', 'sale')]"
-                        required="pos_is_spanish"
-                        invisible="not pos_is_spanish"
-                        context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                <div class="row" invisible="not pos_is_spanish">
+                    <label string="Simplified Invoice" for="pos_l10n_es_simplified_invoice_journal_id" class="col-lg-3 o_light_label"/>
+                    <field name="pos_l10n_es_simplified_invoice_journal_id"/>
                 </div>
             </xpath>
         </field>
