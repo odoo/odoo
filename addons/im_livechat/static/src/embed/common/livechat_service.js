@@ -214,7 +214,7 @@ export class LivechatService {
             ...threadData,
             id: threadData.id ?? this.TEMPORARY_ID,
             model: "discuss.channel",
-            type: "livechat",
+            channel_type: "livechat",
         });
         this.state = thread.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         if (this.state === SESSION_STATE.PERSISTED && !this.sessionInitialized) {

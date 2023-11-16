@@ -543,7 +543,7 @@ export class ThreadService {
             id,
             model: "discuss.channel",
             name,
-            type: "channel",
+            channel_type: "channel",
             channel: { avatarCacheKey: "hello" },
         });
         this.sortChannels();
@@ -558,7 +558,7 @@ export class ThreadService {
         const thread = this.store.Thread.insert({
             ...data,
             model: "discuss.channel",
-            type: "chat",
+            channel_type: "chat",
         });
         this.sortChannels();
         return thread;

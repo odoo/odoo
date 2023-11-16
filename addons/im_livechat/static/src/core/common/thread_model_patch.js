@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread, {
     _insert(data) {
         const thread = super._insert(...arguments);
-        if (thread.type === "livechat") {
+        if (thread.channel_type === "livechat") {
             if (data?.operator_pid) {
                 thread.operator = {
                     type: "partner",

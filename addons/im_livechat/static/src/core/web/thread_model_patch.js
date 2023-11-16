@@ -10,7 +10,6 @@ patch(Thread, {
         const thread = super._insert(...arguments);
         if (thread.type === "livechat") {
             assignIn(thread, data, ["anonymous_name", "anonymous_country"]);
-            this.store.discuss.livechat.threads.add(thread);
             this.env.services["mail.thread"].sortChannels();
         }
         return thread;
@@ -18,6 +17,12 @@ patch(Thread, {
 });
 
 patch(Thread.prototype, {
+    onUpdateType() {
+        super.onUpdateType();
+        this._store.discuss.livechat.threads = [
+            [this.type === "livechat" ? "ADD" : "DELETE", this],
+        ];
+    },
     get hasMemberList() {
         return this.type === "livechat" || super.hasMemberList;
     },

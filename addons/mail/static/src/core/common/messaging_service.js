@@ -29,20 +29,17 @@ export class Messaging {
             id: "inbox",
             model: "mail.box",
             name: _t("Inbox"),
-            type: "mailbox",
         };
         this.store.discuss.starred = {
             id: "starred",
             model: "mail.box",
             name: _t("Starred"),
-            type: "mailbox",
             counter: 0,
         };
         this.store.discuss.history = {
             id: "history",
             model: "mail.box",
             name: _t("History"),
-            type: "mailbox",
             counter: 0,
         };
     }

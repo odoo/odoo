@@ -14,7 +14,7 @@ patch(Thread, {
         const isUnknown = !this.get(data);
         const thread = super._insert(...arguments);
         const livechatService = this.env.services["im_livechat.livechat"];
-        if (thread.type === "livechat" && isUnknown) {
+        if (thread.channel_type === "livechat" && isUnknown) {
             onChange(
                 thread,
                 ["state", "seen_message_id", "message_unread_counter", "allow_public_upload"],

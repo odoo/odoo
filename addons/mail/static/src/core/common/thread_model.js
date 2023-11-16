@@ -76,7 +76,7 @@ export class Thread extends Record {
             "name",
             "seen_message_id",
             "state",
-            "type",
+            "channel_type",
             "selfFollower",
             "status",
             "group_based_subscription",
@@ -90,9 +90,6 @@ export class Thread extends Record {
             "channelMembers",
             "invitedMembers",
         ]);
-        if ("channel_type" in data) {
-            this.type = data.channel_type;
-        }
         if ("channelMembers" in data) {
             if (this.type === "chat") {
                 for (const member of this.channelMembers) {
@@ -118,14 +115,13 @@ export class Thread extends Record {
                 }
             );
         }
-        if (this.type === "channel") {
-            this._store.discuss.channels.threads.add(this);
-        } else if (this.type === "chat" || this.type === "group") {
-            this._store.discuss.chats.threads.add(this);
-        }
-        if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
-            this.type = "chatter";
-        }
+    }
+
+    onUpdateType() {
+        this._store.discuss.channels.threads = [[this.type === "channel" ? "ADD" : "DELETE", this]];
+        this._store.discuss.chats.threads = [
+            [["chat", "group"].includes(this.type) ? "ADD" : "DELETE", this],
+        ];
     }
 
     /** @type {number} */
@@ -235,7 +231,22 @@ export class Thread extends Record {
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
-    type;
+    type = Record.attr("", {
+        /** @this {import("models").Thread} */
+        compute() {
+            if (this.channel_type) {
+                return this.channel_type;
+            }
+            if (this.model === "mail.box") {
+                return "mailbox";
+            }
+            return "chatter";
+        },
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this.onUpdateType();
+        },
+    });
     /** @type {string} */
     defaultDisplayMode;
     /** @type {SeenInfo[]} */

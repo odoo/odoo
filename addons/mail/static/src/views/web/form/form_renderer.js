@@ -42,7 +42,6 @@ patch(FormRenderer.prototype, {
         this.messagingState.thread = this.mailStore.Thread.insert({
             id: this.props.record.resId,
             model: this.props.record.resModel,
-            type: "chatter",
         });
         return this.messagingState.thread.attachmentsInWebClientView.length > 0;
     },

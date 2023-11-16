@@ -63,10 +63,10 @@ export class RecordUses {
  */
 export class RecordList extends Array {
     static isOne(list) {
-        return Boolean(list[ONE_SYM]);
+        return Boolean(list?.[ONE_SYM]);
     }
     static isMany(list) {
-        return Boolean(list[MANY_SYM]);
+        return Boolean(list?.[MANY_SYM]);
     }
     /** @type {Record} */
     owner;
@@ -117,7 +117,7 @@ export class RecordList extends Array {
                         const { inverse, onDelete } = receiver.owner.Model._fields[receiver.name];
                         onDelete?.call(receiver.owner, r2);
                         if (inverse) {
-                            r2._fields[inverse].delete(receiver);
+                            r2._fields[inverse].value.delete(receiver);
                         }
                         receiver.data[index] = r3?.localId;
                         if (r3) {
@@ -125,7 +125,7 @@ export class RecordList extends Array {
                             const { inverse, onAdd } = receiver.owner.Model._fields[receiver.name];
                             onAdd?.call(receiver.owner, r3);
                             if (inverse) {
-                                r3._fields[inverse].add(receiver);
+                                r3._fields[inverse].value.add(receiver);
                             }
                         }
                     });
@@ -187,13 +187,14 @@ export class RecordList extends Array {
             const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r._fields[inverse].add(this.owner);
+                r._fields[inverse].value.add(this.owner);
             }
         }
         return this.data.length;
     }
     /** @returns {R} */
     pop() {
+        /** @type {R} */
         const r2 = this.at(-1);
         if (r2) {
             this.splice(this.length - 1, 1);
@@ -208,7 +209,7 @@ export class RecordList extends Array {
         if (r2) {
             onDelete?.call(this.owner, r2);
             if (inverse) {
-                r2._fields[inverse].delete(this.owner);
+                r2._fields[inverse].value.delete(this.owner);
             }
         }
         return r2;
@@ -223,7 +224,7 @@ export class RecordList extends Array {
             const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r._fields[inverse].add(this.owner);
+                r._fields[inverse].value.add(this.owner);
             }
         }
         return this.data.length;
@@ -247,7 +248,7 @@ export class RecordList extends Array {
             const { inverse, onDelete } = this.owner.Model._fields[this.name];
             onDelete?.call(this.owner, r);
             if (inverse) {
-                r._fields[inverse].delete(this.owner);
+                r._fields[inverse].value.delete(this.owner);
             }
         }
         for (const r of newRecords) {
@@ -255,7 +256,7 @@ export class RecordList extends Array {
             const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r._fields[inverse].add(this.owner);
+                r._fields[inverse].value.add(this.owner);
             }
         }
     }
@@ -408,12 +409,26 @@ export class RecordList extends Array {
  *   with a record being added. Callback param is record being added into relation.
  * @property {Function} [onDelete] hook that is called when relation is updated
  *   with a record being deleted. Callback param is record being deleted from relation.
+ * @property {Function} [onUpdate] hook that is called when field is updated.
+ */
+/**
+ * @typedef {Object} RecordField
+ * @property {boolean} [ATTR_SYM] true when this is an attribute, i.e. a non-relational field.
+ * @property {boolean} [MANY_SYM] true when this is a many relation.
+ * @property {boolean} [ONE_SYM] true when this is a one relation.
+ * @property {any} [default] the default value of this attribute.
+ * @property {Function} [compute] if set the field is computed based on provided function.
+ *   The `this` of function is the record, and the function is recalled whenever any field
+ *   in models used by this compute function is changed.
+ * @property {Function} [onUpdate] hook that is called when field is updated.
+ * @property {RecordList<Record>|any} [value] value of the field. Either its raw value if it's an attribute,
+ *   or a RecordList if it's a relational field.
  */
 
 export class Record {
     /** @param {FieldDefinition} */
     static isAttr(definition) {
-        return Boolean(definition[ATTR_SYM]);
+        return Boolean(definition?.[ATTR_SYM]);
     }
     /**
      * Determines whether the inserts are considered trusted or not.
@@ -583,13 +598,13 @@ export class Record {
             localId: this.localId(data),
             ...ids,
         });
-        for (const compute of Object.values(record.__computes__)) {
-            compute();
-        }
         Object.assign(record, { _store: this.store });
         this.records[record.localId] = record;
         // return reactive version
         record = this.records[record.localId];
+        for (const { compute } of Object.values(record._fields)) {
+            compute?.();
+        }
         return record;
     }
     /**
@@ -628,16 +643,19 @@ export class Record {
     }
     /**
      * @template T
-     * @param {T} def;
-     * @param {Function} [compute] if set, the value of this field is declarative and
+     * @param {T} def
+     * @param {Object} [param1={}]
+     * @param {Function} [param1.compute] if set, the value of this attr field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
-     * @param {boolean} [html] if set, the field value contains html value.
+     * @param {boolean} [param1.html] if set, the field value contains html value.
      *   Useful to automatically markup when the insert is trusted.
+     * @param {Function} [param1.onUpdate] function that is called when the field value is updated.
+     *   This is at least once at record creation.
      * @returns {T}
      */
-    static attr(def, { compute, html } = {}) {
-        return [ATTR_SYM, { compute, default: def, html }];
+    static attr(def, { compute, html, onUpdate } = {}) {
+        return [ATTR_SYM, { compute, default: def, html, onUpdate }];
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
@@ -670,32 +688,13 @@ export class Record {
     static isCommand(data) {
         return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
     }
-    /**
-     * Object that contains compute functions of computed fields, i.e. fields that have have
-     * a compute method. @see compute param in Record.one and Record.many. Key is field name
-     * and value is function. The function is the one from the definition. It is not bounded
-     * to the record nor its invoke does assign the value on the targeted field. See non-static
-     * __computes__ for bounded function whose call auto re-assign value on the field.
-     *
-     * @type {Object<string, Function>}
-     */
-    static __computes__ = {};
 
-    /**
-     * Object that contains bounded compute functions of computed fields. Equivalent to
-     * static `__computes__` but the functions are bounded to the current record, and
-     * invoking the function does automatically re-assign new value on the computed
-     * field.
-     *
-     * @type {Object<string, Function>}
-     */
-    __computes__ = {};
     /**
      * Raw relational values of the record, each of which contains object id(s)
      * rather than the record(s). This allows data in store and models being normalized,
      * which eases handling relations notably in when a record gets deleted.
      *
-     * @type {Object<string, RecordList>}
+     * @type {Object<string, RecordField>}
      */
     _fields = {};
     __uses__ = new RecordUses();
@@ -750,7 +749,7 @@ export class Record {
                     r1.__uses__.data.delete(localId);
                     continue;
                 }
-                const l2 = r2._fields[name2];
+                const l2 = r2._fields[name2].value;
                 if (RecordList.isMany(l2)) {
                     for (let c = 0; c < count; c++) {
                         r2[name2].delete(r1);
@@ -792,10 +791,10 @@ export class Record {
 
     toData() {
         const data = { ...this };
-        for (const [name, val] of Object.entries(this._fields)) {
-            if (RecordList.isMany(val)) {
-                data[name] = val.map((r) => r.toIdData());
-            } else if (RecordList.isOne(val)) {
+        for (const [name, { value }] of Object.entries(this._fields)) {
+            if (RecordList.isMany(value)) {
+                data[name] = value.map((r) => r.toIdData());
+            } else if (RecordList.isOne(value)) {
                 data[name] = this[name]?.toIdData();
             } else {
                 data[name] = this[name]; // Record.attr()

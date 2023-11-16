@@ -148,6 +148,7 @@ export function makeStore(env) {
         // classes cannot be made reactive because they are functions and they are not supported.
         // work-around: make an object whose prototype is the class, so that static props become
         // instance props.
+        /** @type {typeof Record} */
         const Model = Object.assign(Object.create(OgClass), { env, store: res.store });
         // Produce another class with changed prototype, so that there are automatic get/set on relational fields
         const Class = {
@@ -157,8 +158,12 @@ export function makeStore(env) {
                     const proxy = new Proxy(this, {
                         /** @param {Record} receiver */
                         get(target, name, receiver) {
-                            if (name !== "_fields" && name in receiver._fields) {
-                                const l1 = receiver._fields[name];
+                            if (
+                                name !== "_fields" &&
+                                name in receiver._fields &&
+                                Record.isRelation(receiver._fields[name])
+                            ) {
+                                const l1 = receiver._fields[name].value;
                                 if (RecordList.isMany(l1)) {
                                     return l1;
                                 }
@@ -167,9 +172,13 @@ export function makeStore(env) {
                             return Reflect.get(target, name, receiver);
                         },
                         deleteProperty(target, name) {
-                            if (name !== "_fields" && name in target._fields) {
+                            if (
+                                name !== "_fields" &&
+                                name in target._fields &&
+                                Record.isRelation(target._fields[name])
+                            ) {
                                 const r1 = target;
-                                const l1 = r1._fields[name];
+                                const l1 = r1._fields[name].value;
                                 l1.clear();
                                 return true;
                             }
@@ -196,7 +205,7 @@ export function makeStore(env) {
                                 return true;
                             }
                             /** @type {RecordList<Record>} */
-                            const l1 = receiver._fields[name];
+                            const l1 = receiver._fields[name].value;
                             if (RecordList.isMany(l1)) {
                                 // [Record.many] =
                                 if (Record.isCommand(val)) {
@@ -273,13 +282,15 @@ export function makeStore(env) {
                         res.store = proxy;
                     }
                     for (const name in Model._fields) {
-                        if (Record.isRelation(this[name]?.[0])) {
+                        const SYM = this[name]?.[0];
+                        this._fields[name] = { [SYM]: true };
+                        if (Record.isRelation(SYM)) {
                             // Relational fields contain symbols for detection in original class.
                             // This constructor is called on genuine records:
                             // - 'one' fields => undefined
                             // - 'many' fields => RecordList
                             // this[name]?.[0] is ONE_SYM or MANY_SYM
-                            const newVal = new RecordList(this[name]?.[0]);
+                            const newVal = new RecordList(SYM);
                             if (this instanceof BaseStore) {
                                 newVal.store = proxy;
                             } else {
@@ -287,18 +298,35 @@ export function makeStore(env) {
                             }
                             newVal.name = name;
                             newVal.owner = proxy;
-                            this._fields[name] = newVal;
+                            this._fields[name].value = newVal;
                             this.__uses__ = new RecordUses();
                             this[name] = newVal;
                         } else {
                             this[name] = Model._fields[name].default;
                         }
-                    }
-                    for (const [name, fn] of Object.entries(Model.__computes__)) {
-                        let boundFn;
-                        const proxy2 = reactive(proxy, () => boundFn());
-                        boundFn = () => (proxy[name] = fn.call(proxy2));
-                        this.__computes__[name] = boundFn;
+                        if (Model._fields[name].compute) {
+                            let boundFn;
+                            const proxy2 = reactive(proxy, () => boundFn());
+                            boundFn = () => {
+                                // store is wrapped in another reactive, hence proxy is not enough
+                                const exactProxy = res.store.get(proxy.localId);
+                                if (!exactProxy) {
+                                    return; // record was probably deleted;
+                                }
+                                exactProxy[name] = Model._fields[name].compute.call(proxy2);
+                            };
+                            this._fields[name].compute = boundFn;
+                        }
+                        if (Model._fields[name].onUpdate) {
+                            onChange(proxy, name, () => {
+                                // store is wrapped in another reactive, hence proxy is not enough
+                                const exactProxy = res.store.get(proxy.localId);
+                                if (!exactProxy) {
+                                    return; // record was probably deleted;
+                                }
+                                Model._fields[name].onUpdate.call(exactProxy);
+                            });
+                        }
                     }
                     return proxy;
                 }
@@ -308,7 +336,6 @@ export function makeStore(env) {
             Class,
             records: JSON.parse(JSON.stringify(OgClass.records)),
             _fields: {},
-            __computes__: {},
         });
         Models[name] = Model;
         res.store[name] = Model;
@@ -320,9 +347,6 @@ export function makeStore(env) {
                 continue;
             }
             Model._fields[name] = { [SYM]: true, ...val[1] };
-            if (val[1].compute) {
-                Model.__computes__[name] = val[1].compute;
-            }
         }
     }
     // Sync inverse fields
