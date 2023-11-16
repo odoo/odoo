@@ -3858,7 +3858,7 @@ export class OdooEditor extends EventTarget {
             } else {
                 this.historyStep();
             }
-        } else if (ev.inputType === 'insertCompositionText') {
+        } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
             this._fromCompositionText = true;
         }
         if (shouldOpenPowerbox) {
