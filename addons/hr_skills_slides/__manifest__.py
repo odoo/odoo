@@ -22,7 +22,6 @@ This module add completed courses to resume for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills_slides/static/src/scss/**/*',
             'hr_skills_slides/static/src/xml/**/*',
         ],
     },
