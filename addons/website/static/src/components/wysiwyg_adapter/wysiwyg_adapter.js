@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
+import wUtils from "@website/js/utils";
 import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
@@ -938,6 +939,14 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             field: $editable.data('oe-field'),
             type: $editable.data('oe-type'),
         };
+    }
+    /**
+     * @override
+     */
+    _updateEditorUI(e) {
+        super._updateEditorUI(...arguments);
+        const editedEl = this.odooEditor.document.getSelection().anchorNode?.parentNode;
+        wUtils.handleTextStyleVisibility(editedEl, this.el.querySelector("#style"))
     }
 
     //--------------------------------------------------------------------------

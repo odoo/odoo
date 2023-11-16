@@ -388,6 +388,22 @@ function isMobile(self) {
     return isMobile;
 }
 
+/**
+ * Handles the visibility of the text style dropdown.
+ *
+ * @param {HTMLElement} selectedEl - the currently edited element
+ * @param {HTMLElement} styleDropdownEl - the style dropdown
+ */
+function handleTextStyleVisibility(selectedEl, styleDropdownEl) {
+    // For the header text element, we don't want users to change the tag name.
+    let hideStyleDropdown;
+    if (selectedEl) {
+        hideStyleDropdown = selectedEl
+            .closest('[data-oe-model="ir.ui.view"][data-oe-field="arch"].s_text_block');
+    }
+    styleDropdownEl?.classList.toggle("d-none", !!hideStyleDropdown);
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -400,4 +416,5 @@ export default {
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
+    handleTextStyleVisibility: handleTextStyleVisibility,
 };
