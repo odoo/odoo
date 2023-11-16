@@ -5,8 +5,8 @@ import io
 from markupsafe import Markup
 
 from odoo.tests import common, tagged
-from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
+from odoo.tools.misc import file_open, mute_logger, file_path
+from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT, TranslationFileReader
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -230,6 +230,22 @@ class TestImport(common.TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestTranslationFlow(common.TransactionCase):
+
+    def test_export_pot(self):
+        module_name = 'test_translation_import'
+        module = self.env.ref('base.module_' + module_name)
+        export = self.env["base.language.export"].create({
+            'format': 'po',
+            'modules': [Command.set([module.id])]
+        })
+        export.act_getfile()
+        pot_file_data = export.data
+        self.assertIsNotNone(pot_file_data)
+
+        with io.BytesIO(base64.b64decode(pot_file_data)) as pot_file:
+            pot_file.name = f'{module_name}.pot'
+            for line1, line2 in zip(TranslationFileReader(pot_file, 'po'), TranslationFileReader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')):
+                self.assertEqual(line1, line2)
 
     def test_export_import(self):
         """ Ensure export+import gives the same result as loading a language """
