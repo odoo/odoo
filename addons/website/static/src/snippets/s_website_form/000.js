@@ -41,6 +41,7 @@ odoo.define('website.s_website_form', function (require) {
         xmlDependencies: ['/website/static/src/xml/website_form.xml'],
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
+            'submit': 'send',
         },
 
         /**
