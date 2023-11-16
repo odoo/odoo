@@ -1233,6 +1233,12 @@ class ChromeBrowser:
                         message, self._result
                     )
         elif self.success_signal(message):
+            @run
+            def _get_heap():
+                yield self._websocket_send("HeapProfiler.collectGarbage", with_future=True)
+                r = yield self._websocket_send("Runtime.getHeapUsage", with_future=True)
+                _logger.info("heap %d (allocated %d)", r['usedSize'], r['totalSize'])
+
             if self.test_class.allow_end_on_form:
                 self._result.set_result(True)
                 return

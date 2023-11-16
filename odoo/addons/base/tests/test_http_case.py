@@ -46,6 +46,8 @@ class TestHttpCase(HttpCase):
                 text = log.split('.browser:', 1)[1]
                 if text == 'test successful':
                     continue
+                if text.startswith('heap '):
+                    continue
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
                 console_log_count +=1
         self.assertEqual(console_log_count, 1)
