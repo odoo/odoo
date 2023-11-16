@@ -911,4 +911,29 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         assert.deepEqual(result.reasons, [CommandResult.InvalidNextId]);
     });
+
+    QUnit.test("isPivotUnused getter", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot();
+        const sheetId = model.getters.getActiveSheetId();
+        assert.equal(model.getters.isPivotUnused("1"), false);
+
+        model.dispatch("CREATE_SHEET", { sheetId: "2" });
+        model.dispatch("DELETE_SHEET", { sheetId: sheetId });
+        assert.equal(model.getters.isPivotUnused("1"), true);
+
+        setCellContent(model, "A1", "=ODOO.PIVOT.HEADER(1)");
+        assert.equal(model.getters.isPivotUnused("1"), false);
+
+        setCellContent(model, "A1", "=ODOO.PIVOT.HEADER(A2)");
+        assert.equal(model.getters.isPivotUnused("1"), true);
+
+        setCellContent(model, "A2", "1");
+        assert.equal(model.getters.isPivotUnused("1"), false);
+
+        model.dispatch("REQUEST_UNDO", {});
+        assert.equal(model.getters.isPivotUnused("1"), true);
+
+        setCellContent(model, "A1", "=ODOO.PIVOT.TABLE(1)");
+        assert.equal(model.getters.isPivotUnused("1"), false);
+    });
 });

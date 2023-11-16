@@ -85,7 +85,11 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                 this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
                 break;
             }
+            case "DELETE_SHEET":
+                this.unusedLists = undefined;
+                break;
             case "UPDATE_CELL":
+                this.unusedLists = undefined;
                 if (cmd.content) {
                     const position = { sheetId: cmd.sheetId, col: cmd.col, row: cmd.row };
                     const cell = this.getters.getCell(position);
@@ -96,6 +100,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                 break;
             case "UNDO":
             case "REDO": {
+                this.unusedLists = undefined;
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -223,6 +228,28 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         this.dataSources.get(dataSourceId).increaseMaxPosition(position);
     }
 
+    _getUnusedLists() {
+        if (this.unusedLists !== undefined) {
+            return this.unusedLists;
+        }
+        const unusedLists = new Set(this.getters.getListIds());
+        for (const sheetId of this.getters.getSheetIds()) {
+            for (const cellId in this.getters.getCells(sheetId)) {
+                const position = this.getters.getCellPosition(cellId);
+                const listId = this.getListIdFromPosition(position);
+                if (listId) {
+                    unusedLists.delete(listId);
+                    if (!unusedLists.size) {
+                        this.unusedLists = [];
+                        return this.unusedLists;
+                    }
+                }
+            }
+        }
+        this.unusedLists = [...unusedLists];
+        return this.unusedLists;
+    }
+
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
@@ -252,7 +279,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
             const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);
-                return this.getters.evaluateFormula(sheetId, content).toString();
+                return this.getters.evaluateFormula(sheetId, content)?.toString();
             }
         }
         return undefined;
@@ -308,6 +335,10 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
             .getListIds()
             .map((listId) => this.getListDataSource(listId).loadMetadata());
     }
+
+    isListUnused(listId) {
+        return this._getUnusedLists().includes(listId);
+    }
 }
 
 ListUIPlugin.getters = [
@@ -317,4 +348,5 @@ ListUIPlugin.getters = [
     "getListCellValue",
     "getListDataSource",
     "getAsyncListDataSource",
+    "isListUnused",
 ];
