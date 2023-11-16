@@ -88,6 +88,24 @@ class StockPutawayRule(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super(StockPutawayRule, self).write(vals)
 
+<<<<<<< HEAD
+||||||| parent of 8a51bdf28943 (temp)
+    def _enable_show_reserved(self):
+        out_locations = self.location_out_id
+        if out_locations:
+            self.env['stock.picking.type'].with_context(active_test=False)\
+                .search([('default_location_dest_id', 'in', out_locations.ids)])\
+                .write({'show_reserved': True})
+
+=======
+    def _enable_show_reserved(self):
+        out_locations = self.location_out_id
+        if out_locations:
+            self.env['stock.picking.type'].with_context(active_test=False)\
+                .search([('default_location_dest_id', 'in', out_locations.ids), ('show_reserved', '=', False)])\
+                .write({'show_reserved': True})
+
+>>>>>>> 8a51bdf28943 (temp)
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
