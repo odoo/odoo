@@ -275,6 +275,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 
+    _isPickupLocationSelected: function (ev) {
+        return !ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(".o_order_location").parentElement.classList.contains("d-none");
+    },
+
+    _shouldDisplayPickupLocations: function (ev) {
+        const pickupPointsAreNeeded = ev.currentTarget.querySelector('.o_show_pickup_locations');
+        const pickupPointsAreDisplayed = ev.currentTarget.querySelector('.o_list_pickup_locations')?.hasChildNodes();
+        return pickupPointsAreNeeded && !pickupPointsAreDisplayed && !this._isPickupLocationSelected(ev);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -302,7 +312,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onClickShowLocations: async function (ev) {
         // This checks if there is a pick up point already select with that carrier
-        if (!ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(".o_order_location").parentElement.classList.contains("d-none")) {
+        if (this._isPickupLocationSelected(ev)) {
             return;
         }
         const showPickupLocations = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('.o_show_pickup_locations');
@@ -351,10 +361,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onCarrierClick: async function (ev) {
-        const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(
-            'input[type="radio"]'
-        );
-        if (radio.checked) {
+        const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('input[type="radio"]');
+        if (radio.checked && !this._shouldDisplayPickupLocations(ev)) {
             return;
         }
 
