@@ -47,6 +47,7 @@ const { DateTime } = luxon;
         selector: '.s_website_form form, form.s_website_form', // !compatibility
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
+            'submit': 'send',
             "change input[type=file]": "_onFileChange",
             "click input.o_add_files_button": "_onAddFilesButtonClick",
             "click .o_file_delete": "_onFileDeleteClick",
