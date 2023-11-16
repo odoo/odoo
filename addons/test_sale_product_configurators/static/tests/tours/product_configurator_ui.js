@@ -61,7 +61,7 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
     run: function (){}
 }, {
-    trigger: 'span[name=amount_total]:contains("0.00")',
+    trigger: 'span[name=amount_total]:contains("960.60")',
     run: function (){}
 }, ...tour.stepUtils.discardForm()
 ]);
