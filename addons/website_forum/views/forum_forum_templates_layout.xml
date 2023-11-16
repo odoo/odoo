@@ -23,14 +23,14 @@
     <nav id="o_wforum_nav" t-attf-class="navbar d-flex align-items-baseline gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } px-0" aria-label="breadcrumb">
         <t t-if="_page_name == 'single_question'">
             <div class="flex-grow-1">
-                <div class="o_wforum_breadcrumb_root_single row g-0">
+                <div class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
                         <a class="btn btn-lg btn-link px-0 pb-2" t-attf-href="/forum/#{ slug(forum) }">
                             <i class="d-inline-block oi oi-chevron-left me-1 small lh-50"/><t t-out="forum.name"/>
                         </a>
                     </div>
                     <div class="d-lg-none col-2 text-end">
-                        <button class="btn position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
+                        <button class="btn btn-lg position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                             <i class="fa fa-navicon"/>
                         </button>
                     </div>
@@ -67,26 +67,26 @@
             <t t-set="target" t-value="post.parent_id if is_answer else post"/>
             <div class="o_wforum_breadcrumb_root_list_or_edit d-flex">
                 <div t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1">
-                    <h5 t-if="not is_edit" class="fw-bold mb-0" t-out="forum.name"/>
-                    <h5 t-elif="not is_answer" class="fw-bold mb-0">Edit Question</h5>
-                    <h5 t-else="is_answer" class="fw-bold mb-0">Edit Answer</h5>
+                    <span t-if="not is_edit" class="fw-bold" t-out="forum.name"/>
+                    <span t-elif="not is_answer" class="fw-bold">Edit Question</span>
+                    <span t-else="is_answer" class="fw-bold">Edit Answer</span>
                 </div>
             </div>
         </t>
-        <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 mb-0 p-0">
+        <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
             <li class="o_wforum_breadcrumb_root breadcrumb-item text-nowrap">
-                <h5 class="mb-0"><a t-attf-href="/forum/#{ slug(forum) }" t-out="forum.name"/></h5>
+                <a t-attf-href="/forum/#{ slug(forum) }" t-out="forum.name"/>
             </li>
             <li t-if="queue_type" class="breadcrumb-item text-nowrap d-none d-lg-flex">
-                <h5 class="mb-0">Moderation</h5>
+                <span>Moderation</span>
             </li>
-            <li class="breadcrumb-item text-nowrap">
-                <h5 class="fw-bold mb-0" t-out="_page_name_label"/>
+            <li class="breadcrumb-item text-nowrap text-truncate">
+                <span class="fw-bold text-truncate" t-out="_page_name_label"/>
             </li>
         </ol>
         <t t-if="_page_name != 'single_question'">
             <div class="d-lg-none text-end">
-                <button class="btn position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
+                <button class="btn btn-lg position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                     <i class="fa fa-navicon"/>
                 </button>
             </div>
