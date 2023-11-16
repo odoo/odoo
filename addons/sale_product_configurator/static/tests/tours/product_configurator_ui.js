@@ -85,7 +85,7 @@ tour.register('sale_product_configurator_tour', {
     in_modal: false,
     run: function (){}
 }, {
-    trigger: 'span[name=amount_total]:contains("0.00")',
+    trigger: 'span[name=amount_total]:contains("960.60")',
     in_modal: false,
     run: function (){}
 }
