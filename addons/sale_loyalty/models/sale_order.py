@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
         order_lines = self.order_line - self._get_no_effect_on_threshold_lines()
         remaining_amount_per_line = defaultdict(int)
         for line in order_lines:
-            if not line.product_uom_qty or not line.price_unit:
+            if not line.product_uom_qty or not line.price_total:
                 continue
             remaining_amount_per_line[line] = line.price_total
             domain = reward._get_discount_product_domain()
