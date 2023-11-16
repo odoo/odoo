@@ -2,7 +2,15 @@
 
 from collections import defaultdict
 
+<<<<<<< saas-17.4
 from odoo import _, api, fields, models
+||||||| 147701e7987d77367a45b76ece113fb226da4515
+from odoo import api, fields, models, _
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+=======
+from odoo import api, fields, models, _
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+>>>>>>> ad795c993e21887404a89d3e695646545c618f1d
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, format_list
 
@@ -116,6 +124,7 @@ class ProductTemplate(models.Model):
     def _check_sale_product_company(self):
         """Ensure the product is not being restricted to a single company while
         having been sold in another one in the past, as this could cause issues."""
+<<<<<<< saas-17.4
         products_by_compagny = defaultdict(lambda: self.env['product.template'])
         for product in self:
             if not product.product_variant_ids or not product.company_id:
@@ -125,10 +134,36 @@ class ProductTemplate(models.Model):
             products_by_compagny[product.company_id] |= product
 
         for target_company, products in products_by_compagny.items():
+||||||| 147701e7987d77367a45b76ece113fb226da4515
+        target_company = self.company_id
+        if target_company:  # don't prevent writing `False`, should always work
+            subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', self.ids)])
+=======
+        products_by_company = defaultdict(lambda: self.env['product.template'])
+        for product in self:
+            if not product.product_variant_ids or not product.company_id:
+                # No need to check if the product has just being created (`product_variant_ids` is
+                # still empty) or if we're writing `False` on its company (should always work.)
+                continue
+            products_by_company[product.company_id] |= product
+
+        for target_company, products in products_by_company.items():
+>>>>>>> ad795c993e21887404a89d3e695646545c618f1d
             subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', products.ids)])
             so_lines = self.env['sale.order.line'].sudo().search_read(
+<<<<<<< saas-17.4
                 [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.id)],
                 fields=['id', 'product_id'])
+||||||| 147701e7987d77367a45b76ece113fb226da4515
+                [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.root_id.id)],
+                fields=['id', 'product_id'],
+            )
+            used_products = list(map(lambda sol: sol['product_id'][1], so_lines))
+=======
+                [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.root_id.id)],
+                fields=['id', 'product_id'],
+            )
+>>>>>>> ad795c993e21887404a89d3e695646545c618f1d
             if so_lines:
                 used_products = [sol['product_id'][1] for sol in so_lines]
                 raise ValidationError(_('The following products cannot be restricted to the company'
