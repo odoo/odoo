@@ -2,11 +2,13 @@
 /* global Stripe */
 
 import core from 'web.core';
+import checkoutForm from 'payment.checkout_form';
+import manageForm from 'payment.manage_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
 const _t = core._t;
 
-export default {
+const stripeMixin = {
 
     /**
      * Prepare the inline form of Stripe for direct payment.
@@ -176,3 +178,74 @@ export default {
     async _stripeConfirmIntent(processingValues) {},
 
 };
+
+
+checkoutForm.include(stripeMixin);
+checkoutForm.include({
+
+    /**
+     * @override method from stripeMixin
+     * @private
+     */
+    _getElementsOptions() {
+        const elementsOptions = {
+            ...this._super(...arguments),
+            mode: 'payment',
+            amount: parseInt(this.stripeInlineFormValues['minor_amount']),
+        };
+        if (this.stripeInlineFormValues['is_tokenization_required']) {
+            elementsOptions.setupFutureUsage = 'off_session';
+        }
+        return elementsOptions;
+    },
+
+    /**
+     * @override method from stripeMixin
+     * @private
+     * @param {object} processingValues - The processing values of the transaction.
+     * @return {object} The processing error, if any.
+     */
+    async _stripeConfirmIntent(processingValues) {
+        await this._super(...arguments);
+        return await this.stripeJS.confirmPayment({
+            elements: this.stripeElements,
+            clientSecret: processingValues['client_secret'],
+            confirmParams: {
+                return_url: processingValues['return_url'],
+            },
+        });
+    },
+});
+
+manageForm.include(stripeMixin);
+manageForm.include({
+
+    /**
+     * @override method from stripeMixin
+     * @private
+     */
+    _getElementsOptions() {
+        return {
+            ...this._super(...arguments),
+            mode: 'setup',
+            setupFutureUsage: 'off_session',
+        };
+    },
+
+    /**
+     * @override method from stripeMixin
+     * @private
+     * @param {object} processingValues - The processing values of the transaction.
+     * @return {object} The processing error, if any.
+     */
+    async _stripeConfirmIntent(processingValues) {
+        await this._super(...arguments);
+        return await this.stripeJS.confirmSetup({
+            elements: this.stripeElements,
+            clientSecret: processingValues['client_secret'],
+            confirmParams: {
+                return_url: processingValues['return_url'],
+            },
+        });
+    }
+});
