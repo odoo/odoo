@@ -46,7 +46,8 @@
                 <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' else ''}"
                      t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
                      t-att-data-oe-model="o and o._name"
-                     t-att-data-oe-id="o and o.id">
+                     t-att-data-oe-id="o and o.id"
+                     t-if="not skip_headers">
                     <table class="din_company_info table-borderless">
                         <tr>
                             <td>
@@ -91,7 +92,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <div t-if="not skip_headers">
+                        <div>
                             <tr t-if="o and 'l10n_din5008_addresses' in o">
                                 <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
                                     <td>
