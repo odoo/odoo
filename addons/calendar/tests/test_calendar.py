@@ -498,3 +498,21 @@ class TestCalendarTours(HttpCase):
         self.start_tour(url, 'test_calendar_decline_with_everybody_filter_tour', login='demo')
         attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
         self.assertEqual(attendee.state, 'declined') # Check if the event has been correctly declined
+
+    def test_default_duration(self):
+        # Check the default duration depending on various parameters
+        user_demo = self.env.ref('base.user_demo')
+        second_company = self.env['res.company'].sudo().create({'name': "Second Company"})
+
+        duration = self.env['calendar.event'].get_default_duration()
+        self.assertEqual(duration, 1, "By default, the duration is 1 hour")
+
+        IrDefault = self.env['ir.default'].sudo()
+        IrDefault.with_user(user_demo).set('calendar.event', 'duration', 2, user_id=True, company_id=False)
+        IrDefault.with_company(second_company).set('calendar.event', 'duration', 8, company_id=True)
+
+        duration = self.env['calendar.event'].with_user(user_demo).get_default_duration()
+        self.assertEqual(duration, 2, "Custom duration is 2 hours")
+
+        duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
+        self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")

@@ -115,8 +115,9 @@ class Meeting(models.Model):
     @api.model
     def _default_stop(self):
         now = fields.Datetime.now()
+        duration_hours = self.get_default_duration()
         start = now + (datetime.min - now) % timedelta(minutes=30)
-        return start + timedelta(hours=1)
+        return start + timedelta(hours=duration_hours)
 
     # description
     name = fields.Char('Meeting Subject', required=True)
@@ -1443,3 +1444,12 @@ class Meeting(models.Model):
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval', 'partner_id',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
+
+    @api.model
+    def get_default_duration(self):
+        ir_default_get = self.env['ir.default'].sudo()._get
+        res = ir_default_get('calendar.event', 'duration', user_id=True, company_id=True)
+        res = res or ir_default_get('calendar.event', 'duration', user_id=True)
+        res = res or ir_default_get('calendar.event', 'duration', company_id=True)
+        res = res or ir_default_get('calendar.event', 'duration')
+        return res or 1

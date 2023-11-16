@@ -1,8 +1,21 @@
 /** @odoo-module **/
 
-import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick,
+    patchDate,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 
-import { changeScale, clickEvent } from "@web/../tests/views/calendar/helpers";
+import {
+    changeScale,
+    clickEvent,
+    findDateCol,
+    findTimeRow,
+    triggerEventForCalendar,
+} from "@web/../tests/views/calendar/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -12,6 +25,26 @@ const serviceRegistry = registry.category("services");
 let target;
 let serverData;
 const uid = -1;
+
+async function selectTimeStart(target, startDateTime) {
+    const [startDate, startTime] = startDateTime.split(" ");
+    const startCol = findDateCol(target, startDate);
+    const startRow = findTimeRow(target, startTime);
+    await scrollTo(startRow);
+
+    const startColRect = startCol.getBoundingClientRect();
+    const startRowRect = startRow.getBoundingClientRect();
+    await triggerEventForCalendar(startRow, "mousedown", {
+        x: startColRect.x + startColRect.width / 2,
+        y: startRowRect.y + 1,
+    });
+    await triggerEventForCalendar(startRow, "mouseup", {
+        x: startColRect.x + startColRect.width / 2,
+        y: startRowRect.y + 1,
+    });
+    await nextTick();
+}
+
 
 QUnit.module("CalendarView", ({ beforeEach }) => {
     beforeEach(() => {
@@ -95,7 +128,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                             partner_id: 1,
                             name: "event 1",
                             start: "2016-12-11 00:00:00",
-                            stop: "2016-12-11 00:00:00",
+                            stop: "2016-12-11 01:00:00",
                             allday: false,
                             partner_ids: [1, 2, 3],
                             type: 1,
@@ -189,11 +222,11 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar js_class="attendee_calendar" 
-                          event_open_popup="1" 
-                          date_start="start" 
-                          date_stop="stop" 
-                          all_day="allday" 
+                <calendar js_class="attendee_calendar"
+                          event_open_popup="1"
+                          date_start="start"
+                          date_stop="stop"
+                          all_day="allday"
                           mode="month">
                               <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
                                      filters="1" widget="many2manyattendeeexpandable" write_model="filter_partner"
@@ -204,7 +237,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                               <field name="start"/>
                               <field name="stop"/>
                               <field name="allday"/>
-                              <field name="res_model_name" invisible="not res_model_name" 
+                              <field name="res_model_name" invisible="not res_model_name"
                                      options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"
                               />
                           </calendar>
@@ -216,6 +249,8 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                     return Promise.resolve([]);
                 } else if (route === "/calendar/check_credentials") {
                     return Promise.resolve({});
+                } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
+                    return 3.25;
                 }
             },
         });
@@ -229,4 +264,52 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
         assert.containsOnce(target, ".fa-link", "A link icon should be present");
         assert.strictEqual(target.querySelector("li a[href='#']").textContent, "Time Off");
     });
+
+    QUnit.test(`Default duration rendering`, async (assert) => {
+        assert.expect(2);
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar js_class="attendee_calendar"
+                          event_open_popup="1"
+                          date_start="start"
+                          date_stop="stop"
+                          all_day="allday"
+                          mode="month">
+                              <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+                                     filters="1" widget="many2manyattendeeexpandable" write_model="filter_partner"
+                                     write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
+                              />
+                              <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
+                              <field name="user_id"/>
+                              <field name="start"/>
+                              <field name="stop"/>
+                              <field name="allday"/>
+                          </calendar>
+            `,
+            mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/res.users/has_group") {
+                    return Promise.resolve(true);
+                } else if (route === "/web/dataset/call_kw/res.partner/get_attendee_detail") {
+                    return Promise.resolve([]);
+                } else if (route === "/calendar/check_credentials") {
+                    return Promise.resolve({});
+                } else if (route === "/web/dataset/call_kw/calendar.event/get_default_duration") {
+                    return 3.25;
+                }
+            },
+        });
+        await changeScale(target, 'week');
+        await selectTimeStart(target, "2016-12-15 15:00:00");
+        await editInput(target, ".o-calendar-quick-create--input", "Event with new duration");
+        await click(target, ".o-calendar-quick-create--create-btn");
+        // This new event is the third
+        await clickEvent(target, 3);
+        assert.strictEqual(target.querySelector('div[name="start"] div').textContent, "12/15/2016 15:00:00");
+        assert.strictEqual(target.querySelector('div[name="stop"] div').textContent, "12/15/2016 18:15:00", "The duration should be 3.25 hours");
+    });
+
 });
