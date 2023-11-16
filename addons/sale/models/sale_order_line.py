@@ -1032,6 +1032,9 @@ class SaleOrderLine(models.Model):
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = Markup("<b>%s</b><ul>") % _("The ordered quantity has been updated.")
             for line in order_lines:
+                if 'product_id' in values and values['product_id'] != line.product_id.id:
+                    # tracking is meaningless if the product is changed as well.
+                    continue
                 msg += Markup("<li> %s: <br/>") % line.product_id.display_name
                 msg += _(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
