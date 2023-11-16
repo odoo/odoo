@@ -4,7 +4,7 @@ import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { nextTick } from "@web/../tests/helpers/utils";
 
 import { PivotDataSource } from "@spreadsheet/pivot/pivot_data_source";
-import { getBasicServerData } from "./data";
+import { getBasicServerData, getBasicPivotArch } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
@@ -16,7 +16,7 @@ import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
  * @param {[number, number]} [params.anchor]
  */
 export async function insertPivotInSpreadsheet(model, params) {
-    const archInfo = new PivotArchParser().parse(params.arch);
+    const archInfo = new PivotArchParser().parse(params.arch || getBasicPivotArch());
     const definition = {
         metaData: {
             colGroupBys: archInfo.colGroupBys,
@@ -50,7 +50,7 @@ export async function insertPivotInSpreadsheet(model, params) {
     const [col, row] = params.anchor || [0, 0];
     model.dispatch("INSERT_PIVOT", {
         id: model.getters.getNextPivotId(),
-        sheetId: model.getters.getActiveSheetId(),
+        sheetId: params.sheetId || model.getters.getActiveSheetId(),
         col,
         row,
         table,
