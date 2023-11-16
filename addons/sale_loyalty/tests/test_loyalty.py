@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, new_test_user
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.tools.float_utils import float_compare
@@ -430,3 +431,46 @@ class TestLoyalty(TestSaleCouponCommon):
         self._claim_reward(order, giftcard_program)
 
         self.assertEqual(giftcard_program.coupon_count, 0)
+
+    def test_ewallet_user_restriction(self):
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 150,
+            'taxes_id': [],
+        })
+
+        partner_b = self.env['res.partner'].create({'name': 'Jean Paul'})
+
+        ewallet_program = self.env['loyalty.program'].create([{
+            'name': 'E-wallet Card Program',
+            'program_type': 'ewallet',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 1,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+            })],
+        }])
+
+        self.env['loyalty.generate.wizard'].with_context(active_id=ewallet_program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 100,
+        }).generate_coupons()
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': partner_b.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_A.id,
+                }),
+            ],
+        })
+
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(order, ewallet_program.coupon_ids[0].code)
