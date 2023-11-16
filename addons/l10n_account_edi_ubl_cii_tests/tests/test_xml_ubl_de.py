@@ -226,7 +226,7 @@ class TestUBLDE(TestUBLCommon):
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, partner.ref)
         self.assertEqual(
             xml_etree.find('{*}CustomizationID').text,
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2#conformant#urn:xoev-de:kosit:extension:xrechnung_2.2'
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3'
         )
 
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})
