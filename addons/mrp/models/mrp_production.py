@@ -703,7 +703,8 @@ class MrpProduction(models.Model):
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.move_raw_ids = list_move_raw
-            if any(move.bom_line_id.bom_id != production.bom_id for move in production.move_raw_ids if move.bom_line_id):
+            if any(move.bom_line_id.bom_id != production.bom_id or move.bom_line_id._skip_bom_line(production.product_id)\
+                for move in production.move_raw_ids if move.bom_line_id):
                 production.move_raw_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
                 # keep manual entries
