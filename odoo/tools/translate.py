@@ -1017,6 +1017,7 @@ class TranslationReader:
         if not records:
             return
 
+        env = records.env
         for record in records.with_context(check_translations=True):
             module = imd_per_id[record.id].module
             xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
@@ -1026,7 +1027,15 @@ class TranslationReader:
                 # From our business perspective, the parent column is no need to be translated,
                 # but it is need to be set to jsonb column, since the child columns need to be translated
                 # And export the parent field may make one value to be translated twice in transifex
-                if not field.translate or not field.store or str(field) == 'ir.actions.actions.name':
+                #
+                # Some ir_model_fields.field_description are filtered
+                # because their fields have falsy attribute export_string_translation
+                if (
+                        not (field.translate and field.store)
+                        or str(field) == 'ir.actions.actions.name'
+                        or (str(field) == 'ir.model.fields.field_description'
+                            and not env[record.model]._fields[record.name].export_string_translation)
+                ):
                     continue
                 name = model + "," + field_name
                 value_en = record[field_name] or ''
