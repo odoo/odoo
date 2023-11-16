@@ -217,7 +217,6 @@ class EventTrackController(http.Controller):
         days.sort()
 
         # Create the dict that contains the tracks at the correct time_slots / locations coordinates
-        tracks_by_days = dict.fromkeys(days, 0)
         time_slots_by_day = dict((day, dict(start=set(), end=set())) for day in days)
         tracks_by_rounded_times = dict((time_slot, dict((location, {}) for location in locations)) for time_slot in track_time_slots)
         for track, time_slots in time_slots_by_tracks.items():
@@ -236,7 +235,6 @@ class EventTrackController(http.Controller):
                 day = time_slot.date()
                 time_slots_by_day[day]['start'].add(time_slot)
                 time_slots_by_day[day]['end'].add(time_slot+timedelta(minutes=15*duration))
-                tracks_by_days[day] += 1
 
         # split days into 15 minutes time slots
         global_time_slots_by_day = dict((day, {}) for day in days)
@@ -252,21 +250,30 @@ class EventTrackController(http.Controller):
                 current_time_slot = current_time_slot + timedelta(minutes=15)
 
         # count the number of tracks by days
-        tracks_by_days = dict.fromkeys(days, 0)
+        tracks_by_days = dict.fromkeys(days, request.env['event.track'].sudo())
         locations_by_days = defaultdict(list)
         for track in tracks_sudo:
             track_day = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz).date()
-            tracks_by_days[track_day] += 1
+            tracks_by_days[track_day] += track
             if track.location_id not in locations_by_days[track_day]:
                 locations_by_days[track_day].append(track.location_id)
 
         for used_locations in locations_by_days.values():
             used_locations.sort(key=operator.itemgetter('sequence', 'id'))
 
+        now_tz = utc.localize(fields.Datetime.now().replace(microsecond=0), is_dst=False).astimezone(local_tz)
+
+        default_collapse_by_days = {
+            day: max(time_slots_by_day[day]['end']) <= now_tz  and all(
+                track.is_track_done and not track.is_track_live for track in tracks_by_days[day]
+            ) for day in days
+        }
+
         return {
             'days': days,
-            'tracks_by_days': tracks_by_days,
+            'tracks_by_days': {day: len(tracks) for day, tracks in tracks_by_days.items()},
             'locations_by_days': locations_by_days,
+            'default_collapse_by_days': default_collapse_by_days,
             'time_slots': global_time_slots_by_day,
             'locations': locations  # TODO: clean me in master, kept for retro-compatibility
         }

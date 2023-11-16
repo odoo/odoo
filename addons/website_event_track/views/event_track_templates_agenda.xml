@@ -77,7 +77,7 @@
         <section t-foreach="days" t-as="day" class="accordion-item">
             <!-- DAY HEADER -->
             <div class="o_we_track_day_header accordion-header" t-attf-id="collapse_agenda_heading_{{day}}">
-                <button class="accordion-button collapsed px-0 shadow-none" aria-expanded="true" type="button" data-bs-toggle="collapse" t-attf-data-bs-target="#collapse_agenda_{{day}}"  t-attf-aria-controls="collapse_agenda_{{day}}">
+                <button t-attf-class="accordion-button {{'collapsed' if default_collapse_by_days[day] else ''}} px-0 shadow-none" t-att-aria-expanded="default_collapse_by_days[day] and 'false' or 'true'" type="button" data-bs-toggle="collapse" t-attf-data-bs-target="#collapse_agenda_{{day}}" t-attf-aria-controls="collapse_agenda_{{day}}">
                     <div class="d-flex flex-column flex-grow-1">
                         <strong t-out="day" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
                         <div class="d-flex align-items-center justify-content-start">
@@ -92,7 +92,7 @@
 
             <t t-set="locations" t-value="locations_by_days[day]"/>
             <!-- Day Agenda -->
-            <div t-attf-id="collapse_agenda_{{day}}" t-attf-class="accordion-collapse collapse show">
+            <div t-attf-id="collapse_agenda_{{day}}" t-attf-class="accordion-collapse collapse {{'show' if not default_collapse_by_days[day] else ''}}">
                 <div class="o_we_online_agenda accordion-body p-0">
                     <table t-attf-id="o_we_table_search_{{day}}" class="table table-sm h-100 border-0">
                         <!--Header-->
@@ -115,7 +115,6 @@
                                 <td class="active">
                                     <b class="rounded px-2 bg-white" t-if="is_round_hour" t-out="time_slots[day][time_slot]['formatted_time']"/>
                                 </td>
-
                                 <t t-foreach="locations" t-as="location">
                                     <t t-set="tracks" t-value="time_slots[day][time_slot].get(location, {})"/>
                                     <t t-if="tracks">
