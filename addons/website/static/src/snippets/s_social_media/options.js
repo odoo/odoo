@@ -122,7 +122,7 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl.classList.remove('d-none');// TODO remove in master.
                         this._removeSocialMediaClasses(anchorEl);
                     }
-                    const iEl = anchorEl.querySelector("i");
+                    const iEl = anchorEl.querySelector("i, span.fa");
                     if (iEl) {
                         const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
                         iEl.classList.add(faIcon);
@@ -152,7 +152,7 @@ options.registry.SocialMedia = options.Class.extend({
                         // Propose an icon only for valid URLs (no mailto).
                         const socialMedia = this._findRelevantSocialMedia(entry.display_name);
                         if (socialMedia) {
-                            const iEl = anchorEl.querySelector('i');
+                            const iEl = anchorEl.querySelector('i, span.fa');
                             this._removeSocialMediaClasses(anchorEl);
                             anchorEl.classList.add(`s_social_media_${socialMedia}`);
                             if (iEl) {
@@ -341,7 +341,7 @@ options.registry.SocialMedia = options.Class.extend({
     _removeSocialMediaClasses(anchorEl) {
         let regx = new RegExp('\\b' + 's_social_media_' + '[^1-9][^ ]*[ ]?\\b');
         anchorEl.className = anchorEl.className.replace(regx, '');
-        const iEl = anchorEl.querySelector('i');
+        const iEl = anchorEl.querySelector('i, span.fa');
         if (iEl) {
             regx = new RegExp('\\b' + 'fa-' + '[^1-9][^ ]*[ ]?\\b');
             // Remove every fa classes except fa-x sizes.
