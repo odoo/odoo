@@ -63,6 +63,12 @@ class PaymentLinkWizard(models.TransientModel):
             related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
             base_url = related_document.get_base_url()  # Don't generate links for the wrong website
             url_params = {
+<<<<<<< HEAD
+||||||| parent of 50fe6c0a5bd7 (temp)
+                'reference': urls.url_quote(payment_link.description),
+=======
+                'reference': payment_link.description,
+>>>>>>> 50fe6c0a5bd7 (temp)
                 'amount': self.amount,
                 'access_token': self._get_access_token(),
                 **self._get_additional_link_values(),
