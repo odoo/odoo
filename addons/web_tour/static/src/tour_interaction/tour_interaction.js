@@ -6,6 +6,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { TourCompiler, findStepTriggers } from "@web_tour/tour_service/tour_compilers";
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
+import { tourState } from '@web_tour/tour_service/tour_state';
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 function getAbsoluteElementPosition(element) {
@@ -54,31 +55,33 @@ const useDialogDraggable = makeDraggableHook({
 class InteractiveTour extends Reactive {
     constructor() {
         super();
-        this.steps = {
-            start: { shouldStop: true, isCurrent: true, step: { absolutePosition: "start"} }
-        };
-        this.currentStep = "start"
+
+        this.mapping = new Map();
+        this.mapping.set("start", { step: {}, display: false, shouldStop: true, isCurrent: true })
+        this.steps = [];
     }
 
-    registerStep(stepIndex, _step) {
-        this.steps[stepIndex] = { step: _step, shouldStop: true };
+    registerStep(_step, params={}) {
+        const step = { step: _step, shouldStop: true, ...params };
+        this.mapping.set(_step, step);
+        this.steps.push(step);
     }
 
-    setStepState(stepIndex, state) {
-        Object.assign(this.steps[stepIndex], state);
+    setStepState(_step, state) {
+        const step = this.mapping.get(_step);
+        Object.assign(step, state);
     }
 
     nextStep() {
-        this._current.resolve()
+        this._current.resolve?.()
     }
 
     get _current() {
-        const found = Object.entries(this.steps).find(([name, s]) => s.isCurrent && !s.isDone);
-        return this.steps[found[0]];
+        return this.steps.find(s => s.isCurrent && !s.isDone) || this.mapping.get("start");
     }
 
-    suspend(stepIndex) {
-        const step = this.steps[stepIndex];
+    suspend(_step) {
+        const step = this.mapping.get(_step);
         if (step.isDone) {
             return;
         }
@@ -151,7 +154,7 @@ class TourInteraction extends Component {
         useDialogDraggable({
             ref: { el: document },
             elements: ".o-tour-controller",
-            ignore: ".o-tour-controller--content",
+            ignore: ".o-tour-controller--active-tours, .o-tour-controller--current-tour-steps",
             edgeScrolling: { enabled: false },
             onDrop: ({ top, left }) => {
                 this.position.left += left;
@@ -175,10 +178,23 @@ class TourInteraction extends Component {
         onWillUnmount(() => {
             this.removeOverlays();
         });
+
+        this.localState = useState({ shownTour: this.activeTours[0] })
     }
 
     get state() {
         return this.props.interactiveState;
+    }
+
+    showTour(tourName) {
+        this.localState.shownTour = tourName
+    }
+
+    get currentTour() {
+        if (!this.localState.shownTour) {
+            return null;
+        }
+        return this.state.getTour(this.localState.shownTour)
     }
 
     get activeTours() {
@@ -190,7 +206,6 @@ class TourInteraction extends Component {
         const style = {
             top: `${top}px`,
             left: `${left}px`,
-            width: "300px",
             "z-index": "9999",
             opacity: "0.8",
             cursor: "move",
@@ -207,9 +222,7 @@ class TourInteraction extends Component {
         return 0.8 * window.innerHeight;
     }
 
-    toggleSuspend(tourName, stepIndex) {
-        const tour = this.getTour(tourName);
-        const step = tour.steps[stepIndex];
+    toggleSuspend(step) {
         step.shouldStop = !step.shouldStop;
     }
 
@@ -249,11 +262,15 @@ class TourInteraction extends Component {
         }
     }
 
-    playUntil(tourName, stepIndex) {
-        const tour = this.state.getTour(tourName);
-        Object.entries(tour.steps).forEach(([k, v]) => {
-            v.shouldStop = k >= stepIndex;
-        });
+    playUntil(_step) {
+        const tour = this.currentTour;
+        let shouldStop = false;
+        tour.steps.forEach(step => {
+            if (step === _step) {
+                shouldStop = true;
+            }
+            step.shouldStop = shouldStop;
+        })
     }
 }
 
@@ -282,42 +299,43 @@ const tourInteractionService = {
                 const compileStep = this.compileStep;
                 this.compileStep = (stepIndex, step) => {
                     const compiled = compileStep(stepIndex, step);
-                    this.interactiveTour.registerStep(stepIndex, step);
-
-                    compiled.unshift({
-                        action: () =>
-                            this.interactiveTour.setStepState(stepIndex, {
-                                isCurrent: true,
-                            }),
-                    }, {
-                        action: () => this.interactiveTour.suspend(stepIndex)
-                    });
-
-                    compiled.push({
-                        action: () => {
-                            this.interactiveTour.setStepState(stepIndex, {
-                                isDone: true,
-                                isCurrent: false,
-                            });
-                        },
-                    });
-                    return compiled;
+                    return this._bindMacroStepToState(step, compiled);
                 };
             },
 
             compileTourToMacro() {
-                const macro = super.compileTourToMacro(...arguments);
-                macro.steps.unshift({
-                    action: () => {
-                        return this.interactiveTour.suspend("start");
-                    },
-                }, {
-                    action: () => {
-                        this.interactiveTour.setStepState("start", { isDone: true, isCurrent: false})
-                    }
-                });
-                return macro;
+                const currentStepIndex = tourState.get(this.tour.name, "currentIndex");
+                if (currentStepIndex) {
+                    const { filteredSteps } = this.options;
+                    for (let i = 0; i < currentStepIndex; i++) {
+                        this.interactiveTour.registerStep(filteredSteps[i], { isDone: true, shouldStop: false })
+                    } 
+                }
+                return super.compileTourToMacro(...arguments);
             },
+
+            _bindMacroStepToState(tourStep, macroStep) {
+                this.interactiveTour.registerStep(tourStep);
+
+                macroStep.unshift({
+                    action: () =>
+                        this.interactiveTour.setStepState(tourStep, {
+                            isCurrent: true,
+                        }),
+                }, {
+                    action: () => this.interactiveTour.suspend(tourStep)
+                });
+
+                macroStep.push({
+                    action: () => {
+                        this.interactiveTour.setStepState(tourStep, {
+                            isDone: true,
+                            isCurrent: false,
+                        });
+                    },
+                });
+                return macroStep;
+            }
         });
     },
 };
