@@ -20,7 +20,7 @@ cellMenuRegistry.add("move_lines_see_records", {
         const position = env.model.getters.getActivePosition();
         const sheetId = position.sheetId;
         const cell = env.model.getters.getCell(position);
-        const { args } = getFirstAccountFunction(cell.content);
+        const { args } = getFirstAccountFunction(cell.compiledFormula.tokens);
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
@@ -46,7 +46,7 @@ cellMenuRegistry.add("move_lines_see_records", {
             !evaluatedCell.error &&
             evaluatedCell.value !== "" &&
             cell &&
-            getNumberOfAccountFormulas(cell.content) === 1
+            getNumberOfAccountFormulas(cell.compiledFormula.tokens) === 1
         );
     },
 });

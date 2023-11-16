@@ -3,6 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 
+/** @typedef {import("@spreadsheet/helpers/odoo_functions_helpers").Token} Token */
+
 export const pivotFormulaRegex = /^=.*PIVOT/;
 
 //--------------------------------------------------------------------------
@@ -13,12 +15,12 @@ export const pivotFormulaRegex = /^=.*PIVOT/;
  * Parse a spreadsheet formula and detect the number of PIVOT functions that are
  * present in the given formula.
  *
- * @param {string} formula
+ * @param {Token[]} tokens
  *
  * @returns {number}
  */
-export function getNumberOfPivotFormulas(formula) {
-    return getOdooFunctions(formula, [
+export function getNumberOfPivotFormulas(tokens) {
+    return getOdooFunctions(tokens, [
         "ODOO.PIVOT",
         "ODOO.PIVOT.HEADER",
         "ODOO.PIVOT.POSITION",
@@ -29,12 +31,12 @@ export function getNumberOfPivotFormulas(formula) {
 /**
  * Get the first Pivot function description of the given formula.
  *
- * @param {string} formula
+ * @param {Token[]} tokens
  *
  * @returns {import("../helpers/odoo_functions_helpers").OdooFunctionDescription|undefined}
  */
-export function getFirstPivotFunction(formula) {
-    return getOdooFunctions(formula, [
+export function getFirstPivotFunction(tokens) {
+    return getOdooFunctions(tokens, [
         "ODOO.PIVOT",
         "ODOO.PIVOT.HEADER",
         "ODOO.PIVOT.POSITION",

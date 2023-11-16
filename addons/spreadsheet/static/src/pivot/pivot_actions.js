@@ -32,7 +32,8 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
         evaluatedCell.type !== "error" &&
         argsDomain !== undefined &&
         cell &&
-        getNumberOfPivotFormulas(cell.content) === 1
+        cell.isFormula &&
+        getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
     );
 };
 
@@ -56,7 +57,7 @@ export function SET_FILTER_MATCHING_CONDITION(position, env) {
         return false;
     }
     const matchingFilters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
-    const pivotFunction = getFirstPivotFunction(cell.content).functionName;
+    const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
         SEE_RECORDS_PIVOT_VISIBLE(position, env) &&
         (pivotFunction === "ODOO.PIVOT" ||
