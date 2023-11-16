@@ -264,6 +264,7 @@ export const tourService = {
                         orm.call("web_tour.tour", "consume", [[name]]);
                     }
                     pointer.stop();
+                    bus.trigger("TOUR-FINISHED");
                     // Used to signal the python test runner that the tour finished without error.
                     browser.console.log("tour succeeded");
                     // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
