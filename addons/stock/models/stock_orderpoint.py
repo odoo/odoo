@@ -79,7 +79,6 @@ class StockWarehouseOrderpoint(models.Model):
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure')
 
-    #TODO: remove this field in master
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
         compute='_compute_visibility_days', inverse='_set_visibility_days', readonly=False,
