@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
@@ -26,7 +27,11 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
         ...ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT + 1),
         ...pay(),
+        ...ErrorPopup.isShown(),
+        ...ErrorPopup.clickConfirm(),
 
+        ...PaymentScreen.clickInvoiceButton(),
+        ...PaymentScreen.clickValidate(),
         {
             content: "verify that the pos requires the selection of a partner",
             trigger: `div.popup.popup-confirm .modal-header:contains('Please select the Customer') ~ footer div.button.confirm`,
