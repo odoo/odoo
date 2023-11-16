@@ -633,7 +633,7 @@ class SaleOrder(models.Model):
         if self._allow_nominative_programs():
             ewallet_coupons = self.env['loyalty.card'].search(
                 [('id', 'not in', self.applied_coupon_ids.ids), ('partner_id', '=', self.partner_id.id),
-                ('points', '>', 0), ('program_id.program_type', '=', 'ewallet')])
+                 ('points', '>', 0), ('program_id.program_type', '=', 'ewallet')])
             if ewallet_coupons:
                 self.applied_coupon_ids += ewallet_coupons
         # Programs that are applied to the order and count points
@@ -996,6 +996,8 @@ class SaleOrder(models.Model):
         elif (program.limit_usage and program.total_order_count >= program.max_usage) or\
             (program.date_to and program.date_to < fields.Date.context_today(self)):
             return {'error': _('This code is expired (%s).', code)}
+        elif program.program_type in ('loyalty', 'ewallet'):
+            return {'error': _("This program cannot be applied with code.")}
 
         # Rule will count the next time the points are updated
         if rule:

@@ -315,9 +315,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(len(claimable_rewards), 1)
         # Try to apply the loyalty card to the sale order
-        self._apply_promo_code(order, loyalty_card.code)
+        self.assertTrue(self._claim_reward(order, loyalty_program))
         # Check if there is an error in the sequence
-        # via `_apply_program_reward` in `apply_promo_code` method
+        # via `_apply_program_reward` in `_claim_reward` method
 
     def test_nothing_delivered_nothing_to_invoice(self):
         program = self.env['loyalty.program'].create({
