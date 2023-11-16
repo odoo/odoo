@@ -83,7 +83,7 @@ class ReturnPicking(models.TransientModel):
             if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                 continue
             if move.state in ('partially_available', 'assigned'):
-                quantity -= sum(move.move_line_ids.mapped('reserved_qty'))
+                quantity -= sum(move.move_line_ids.mapped('quantity'))
             elif move.state in ('done'):
                 quantity -= move.product_qty
         quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
