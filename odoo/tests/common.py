@@ -815,46 +815,26 @@ class SingleTransactionCase(BaseCase):
 class ChromeBrowserException(Exception):
     pass
 
-def fmap(future, map_fun):
-    """Maps a future's result through a callback.
-
-    Resolves to the application of ``map_fun`` to the result of ``future``.
-
-    .. warning:: this does *not* recursively resolve futures, if that's what
-                 you need see :func:`fchain`
-    """
-    fmap_future = Future()
-    @future.add_done_callback
-    def _(f):
+def run(gen_func):
+    def done(f):
         try:
-            fmap_future.set_result(map_fun(f.result()))
-        except Exception as e:
-            fmap_future.set_exception(e)
-    return fmap_future
+            try:
+                r = f.result()
+            except Exception as e:
+                f = coro.throw(e)
+            else:
+                f = coro.send(r)
+        except StopIteration:
+            return
 
-def fchain(future, next_callback):
-    """Chains a future's result to a new future through a callback.
+        assert isinstance(f, Future), f"coroutine must yield futures, got {f}"
+        f.add_done_callback(done)
 
-    Corresponds to the ``bind`` monadic operation (aka flatmap aka then...
-    kinda).
-    """
-    new_future = Future()
-    @future.add_done_callback
-    def _(f):
-        try:
-            n = next_callback(f.result())
-            @n.add_done_callback
-            def _(f):
-                try:
-                    new_future.set_result(f.result())
-                except Exception as e:
-                    new_future.set_exception(e)
-
-        except Exception as e:
-            new_future.set_exception(e)
-
-    return new_future
-
+    coro = gen_func()
+    try:
+        next(coro).add_done_callback(done)
+    except StopIteration:
+        return
 
 def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot'):
     assert re.fullmatch(r'\w*_', prefix)
@@ -1257,18 +1237,17 @@ class ChromeBrowser:
                 self._result.set_result(True)
                 return
 
-            qs = fchain(
-                self._websocket_send('DOM.getDocument', params={'depth': 0}, with_future=True),
-                lambda d: self._websocket_send("DOM.querySelector", params={
-                    'nodeId': d['root']['nodeId'],
-                    'selector': '.o_form_dirty',
-                }, with_future=True)
-            )
-            @qs.add_done_callback
-            def _qs_result(fut):
+            @run
+            def _check_form():
                 node_id = 0
+
                 with contextlib.suppress(Exception):
-                    node_id = fut.result()['nodeId']
+                    d = yield self._websocket_send('DOM.getDocument', params={'depth': 0}, with_future=True)
+                    form = yield self._websocket_send("DOM.querySelector", params={
+                        'nodeId': d['root']['nodeId'],
+                        'selector': '.o_form_dirty',
+                    }, with_future=True)
+                    node_id = form['nodeId']
 
                 if node_id:
                     self.take_screenshot("unsaved_form_")
