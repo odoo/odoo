@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
 import { parseArgs } from "./py_parser";
+import { error, isError, compose } from "@web/core/error";
 
-// -----------------------------------------------------------------------------
-// Errors
-// -----------------------------------------------------------------------------
-
-export class AssertionError extends Error {}
-export class ValueError extends Error {}
-export class NotSupportedError extends Error {}
+/**
+ * @typedef {import("@web/core/error").Err} Err
+ */
 
 // -----------------------------------------------------------------------------
 // helpers
@@ -34,12 +31,6 @@ function divmod(a, b, fn) {
         mod += b;
     }
     return fn(Math.floor(a / b), mod);
-}
-
-function assert(bool, message = "AssertionError") {
-    if (!bool) {
-        throw new AssertionError(message);
-    }
 }
 
 const DAYS_IN_MONTH = [null, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -74,7 +65,7 @@ function daysBeforeMonth(year, month) {
 function ymd2ord(year, month, day) {
     const dim = daysInMonth(year, month);
     if (!(1 <= day && day <= dim)) {
-        throw new ValueError(`day must be in 1..${dim}`);
+        return error(`day must be in 1..${dim}`);
     }
     return daysBeforeYear(year) + daysBeforeMonth(year, month) + day;
 }
@@ -103,7 +94,9 @@ function ord2ymd(n) {
     n = n0;
     const year = n400 * 400 + 1 + n100 * 100 + n4 * 4 + n1;
     if (n1 == 4 || n100 == 100) {
-        assert(n0 === 0);
+        if (n0 !== 0) {
+            return error("Assertion error");
+        }
         return {
             year: year - 1,
             month: 12,
@@ -112,7 +105,9 @@ function ord2ymd(n) {
     }
 
     const leapyear = n1 === 3 && (n4 !== 24 || n100 == 3);
-    assert(leapyear == isLeap(year));
+    if (leapyear !== isLeap(year)) {
+        return error("Assertion error");
+    }
     let month = (n + 50) >> 5;
     let preceding = DAYS_BEFORE_MONTH[month] + (month > 2 && leapyear ? 1 : 0);
     if (preceding > n) {
@@ -198,7 +193,10 @@ function tmxxx(year, month, day, hour, minute, second, microsecond) {
                 ++year;
             }
         } else {
-            const r = ord2ymd(ymd2ord(year, month, 1) + (day - 1));
+            const r = compose(ord2ymd, (r) => r + (day - 1))(ymd2ord(year, month, 1));
+            if (isError(r)) {
+                return r;
+            }
             year = r.year;
             month = r.month;
             day = r.day;
@@ -265,6 +263,9 @@ export class PyDate {
      */
     add(timedelta) {
         const s = tmxxx(this.year, this.month, this.day + timedelta.days);
+        if (isError(s)) {
+            return s;
+        }
         return new PyDate(s.year, s.month, s.day);
     }
 
@@ -293,13 +294,13 @@ export class PyDate {
                 case "d":
                     return fmt2(this.day);
             }
-            throw new ValueError(`No known conversion for ${m}`);
+            return error(`No known conversion for ${m}`);
         });
     }
 
     /**
      * @param {PyTimeDelta | PyDate} other
-     * @returns {PyDate | PyTimeDelta}
+     * @returns {PyDate | PyTimeDelta | Err}
      */
     substract(other) {
         if (other instanceof PyTimeDelta) {
@@ -308,7 +309,7 @@ export class PyDate {
         if (other instanceof PyDate) {
             return PyTimeDelta.create(this.toordinal() - other.toordinal());
         }
-        throw NotSupportedError();
+        return error("Not supported");
     }
 
     /**
@@ -423,6 +424,9 @@ export class PyDateTime {
             this.second + timedelta.seconds,
             this.microsecond + timedelta.microseconds
         );
+        if (isError(s)) {
+            return s;
+        }
         // does not seem to closely follow python implementation.
         return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, s.microsecond);
     }
@@ -466,7 +470,7 @@ export class PyDateTime {
                 case "S":
                     return fmt2(this.second);
             }
-            throw new ValueError(`No known conversion for ${m}`);
+            return error(`No known conversion for ${m}`);
         });
     }
 
@@ -489,7 +493,14 @@ export class PyDateTime {
      * @returns {PyDateTime}
      */
     to_utc() {
-        const d = new Date(this.year, this.month -1, this.day, this.hour, this.minute, this.second);
+        const d = new Date(
+            this.year,
+            this.month - 1,
+            this.day,
+            this.hour,
+            this.minute,
+            this.second
+        );
         const timedelta = PyTimeDelta.create({ minutes: d.getTimezoneOffset() });
         return this.add(timedelta);
     }
@@ -539,7 +550,7 @@ export class PyTime extends PyDate {
                 case "S":
                     return fmt2(this.second);
             }
-            throw new ValueError(`No known conversion for ${m}`);
+            return error(`No known conversion for ${m}`);
         });
     }
 
@@ -561,25 +572,26 @@ const PERIODS = ["year", "month", "day", ...TIME_PERIODS];
 const RELATIVE_KEYS = "years months weeks days hours minutes seconds microseconds leapdays".split(
     " "
 );
-const ABSOLUTE_KEYS = "year month day hour minute second microsecond weekday nlyearday yearday".split(
-    " "
-);
+const ABSOLUTE_KEYS =
+    "year month day hour minute second microsecond weekday nlyearday yearday".split(" ");
 
 const argsSpec = ["dt1", "dt2"]; // all other arguments are kwargs
 export class PyRelativeDelta {
     /**
      * @param  {...any} args
-     * @returns {PyRelativeDelta}
+     * @returns {PyRelativeDelta|Err}
      */
     static create(...args) {
         const params = parseArgs(args, argsSpec);
         if ("dt1" in params) {
-            throw new Error("relativedelta(dt1, dt2) is not supported for now");
+            return error("relativedelta(dt1, dt2) is not supported for now");
         }
         for (const period of PERIODS) {
             if (period in params) {
                 const val = params[period];
-                assert(val >= 0, `${period} ${val} is out of range`);
+                if (val < 0) {
+                    return error(`${period} ${val} is out of range`);
+                }
             }
         }
 
@@ -621,11 +633,11 @@ export class PyRelativeDelta {
     /**
      * @param {PyDateTime|PyDate} date
      * @param {PyRelativeDelta} delta
-     * @returns {PyDateTime|PyDate}
+     * @returns {PyDateTime|PyDate|Err}
      */
     static add(date, delta) {
         if (!(date instanceof PyDate || date instanceof PyDateTime)) {
-            throw NotSupportedError();
+            return error("Not supported");
         }
 
         // First pass: we want to determine which is our target year and if we will apply leap days
@@ -638,6 +650,9 @@ export class PyRelativeDelta {
             delta.second || date.seconds || 0,
             delta.microseconds || date.microseconds || 0
         );
+        if (isError(s)) {
+            return s;
+        }
 
         const newDateTime = new PyDateTime(
             s.year,
@@ -655,15 +670,21 @@ export class PyRelativeDelta {
         }
 
         // Second pass: apply the difference in days, and the difference in time values
-        const temp = newDateTime.add(
-            PyTimeDelta.create({
-                days: delta.days + leapDays,
-                hours: delta.hours,
-                minutes: delta.minutes,
-                seconds: delta.seconds,
-                microseconds: delta.microseconds,
-            })
-        );
+
+        const temp = compose(
+            (td) => newDateTime.add(td),
+            PyTimeDelta.create
+        )({
+            days: delta.days + leapDays,
+            hours: delta.hours,
+            minutes: delta.minutes,
+            seconds: delta.seconds,
+            microseconds: delta.microseconds,
+        });
+
+        if (isError(temp)) {
+            return temp;
+        }
 
         // Determine the right return type:
         // First we look at the type of the incoming date object,
@@ -728,7 +749,7 @@ export class PyRelativeDelta {
         // For now we don't do normalization in the constructor (or create method).
         // That is, we only compute the overflows at the time we add or substract.
         // This is why we can't support isEqual for now.
-        throw new NotSupportedError();
+        return error("Not supported");
     }
 }
 

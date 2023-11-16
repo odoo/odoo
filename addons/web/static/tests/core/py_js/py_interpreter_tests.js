@@ -158,6 +158,12 @@ QUnit.module("py", {}, () => {
             assert.throws(() => evaluateExpr("a"));
         });
 
+        QUnit.module("Functional call");
+
+        QUnit.test("call with kwargs", (assert) => {
+            assert.strictEqual(evaluateExpr("func(type=2)", { func: () => true }), true);
+        });
+
         QUnit.module("comparisons");
 
         QUnit.test("equality", (assert) => {
@@ -323,6 +329,7 @@ QUnit.module("py", {}, () => {
             assert.deepEqual(evaluateExpr("{}"), {});
             assert.deepEqual(evaluateExpr("{'foo': 1 + 2}"), { foo: 3 });
             assert.deepEqual(evaluateExpr("{'foo': 1, 'bar': 4}"), { foo: 1, bar: 4 });
+            assert.throws(() => evaluateExpr("{'a': a.b.c}", { a: {} }));
         });
 
         QUnit.test("lookup and definition", (assert) => {
@@ -357,6 +364,8 @@ QUnit.module("py", {}, () => {
         QUnit.test("can read values from object", (assert) => {
             assert.strictEqual(evaluateExpr("obj.a", { obj: { a: 123 } }), 123);
             assert.strictEqual(evaluateExpr("obj.a.b.c", { obj: { a: { b: { c: 321 } } } }), 321);
+            assert.strictEqual(evaluateExpr("obj.type.a", { obj: { type: { a: 55 } } }), 55);
+            assert.strictEqual(evaluateExpr("{ 'type': { 'a': 1 } }.type.a"), 1);
         });
 
         QUnit.test("can call function in object", (assert) => {

@@ -1,5 +1,11 @@
 /** @odoo-module **/
 
+import { error, isError, throwError } from "@web/core/error";
+
+/**
+ * @typedef {import("@web/core/error").Err} Err
+ */
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
@@ -17,8 +23,6 @@
  *
  * @typedef {TokenNumber | TokenString | TokenSymbol | TokenName | TokenConstant} Token
  */
-
-export class TokenizerError extends Error {}
 
 // -----------------------------------------------------------------------------
 // Helpers and Constants
@@ -57,9 +61,9 @@ const directMap = {
  *
  * @param {string} str
  * @param {boolean} unicode
- * @returns {string}
+ * @returns {string|Err}
  */
-function decodeStringLiteral(str, unicode) {
+function tryDecodeStringLiteral(str, unicode) {
     const out = [];
     let code;
     for (var i = 0; i < str.length; ++i) {
@@ -83,14 +87,14 @@ function decodeStringLiteral(str, unicode) {
                 if (!unicode) {
                     break;
                 }
-                throw new TokenizerError("SyntaxError: \\N{} escape not implemented");
+                return error("SyntaxError: \\N{} escape not implemented");
             case "u":
                 if (!unicode) {
                     break;
                 }
                 var uni = str.slice(i + 2, i + 6);
                 if (!/[0-9a-f]{4}/i.test(uni)) {
-                    throw new TokenizerError(
+                    return error(
                         [
                             "SyntaxError: (unicode error) 'unicodeescape' codec",
                             " can't decode bytes in position ",
@@ -111,15 +115,15 @@ function decodeStringLiteral(str, unicode) {
                     break;
                 }
                 // TODO: String.fromCodePoint
-                throw new TokenizerError("SyntaxError: \\U escape not implemented");
+                return error("SyntaxError: \\U escape not implemented");
             case "x":
                 // get 2 hex digits
                 var hex = str.slice(i + 2, i + 4);
                 if (!/[0-9a-f]{2}/i.test(hex)) {
                     if (!unicode) {
-                        throw new TokenizerError("ValueError: invalid \\x escape");
+                        return error("ValueError: invalid \\x escape");
                     }
-                    throw new TokenizerError(
+                    return error(
                         [
                             "SyntaxError: (unicode error) 'unicodeescape'",
                             " codec can't decode bytes in position ",
@@ -239,9 +243,9 @@ const strip = new RegExp("^" + Whitespace);
  * Transform a string into a list of tokens
  *
  * @param {string} str
- * @returns {Token[]}
+ * @returns {Token[]|Err}
  */
-export function tokenize(str) {
+export function tryTokenize(str) {
     const tokens = [];
     const max = str.length;
     let start = 0;
@@ -255,7 +259,7 @@ export function tokenize(str) {
             if (/^\s+$/.test(str.slice(end))) {
                 break;
             }
-            throw new TokenizerError(
+            return error(
                 "Failed to tokenize <<" +
                     str +
                     ">> at index " +
@@ -266,7 +270,7 @@ export function tokenize(str) {
         }
         if (pseudomatch.index > end) {
             if (str.slice(end, pseudomatch.index).trim()) {
-                throw new TokenizerError("Invalid expression");
+                return error("Invalid expression");
             }
         }
         start = pseudomatch.index;
@@ -279,9 +283,16 @@ export function tokenize(str) {
             });
         } else if (StringPattern.test(token)) {
             var m = StringPattern.exec(token);
+            const result = tryDecodeStringLiteral(
+                m[3] !== undefined ? m[3] : m[5],
+                !!(m[2] || m[4])
+            );
+            if (isError(result)) {
+                return result;
+            }
             tokens.push({
                 type: 1 /* String */,
-                value: decodeStringLiteral(m[3] !== undefined ? m[3] : m[5], !!(m[2] || m[4])),
+                value: result,
             });
         } else if (symbols.has(token)) {
             // transform 'not in' and 'is not' in a single token
@@ -311,8 +322,22 @@ export function tokenize(str) {
                 value: token,
             });
         } else {
-            throw new TokenizerError("Invalid expression");
+            return error("Invalid expression");
         }
     }
     return tokens;
+}
+
+/**
+ * Transform a string into a list of tokens
+ *
+ * @param {string} str
+ * @returns {Token[]}
+ */
+export function tokenize(str) {
+    const result = tryTokenize(str);
+    if (isError(result)) {
+        throwError(result);
+    }
+    return result;
 }

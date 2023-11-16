@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { isError } from "@web/core/error";
 import { tokenize } from "@web/core/py_js/py";
+import { tryTokenize } from "@web/core/py_js/py_tokenizer";
 
 QUnit.module("py", {}, () => {
     QUnit.module("tokenizer");
@@ -35,28 +37,27 @@ QUnit.module("py", {}, () => {
         assert.deepEqual(tokenize("12.0"), [{ type: 0 /* Number */, value: 12 }]);
         assert.deepEqual(tokenize("1.2"), [{ type: 0 /* Number */, value: 1.2 }]);
         assert.deepEqual(tokenize(".42"), [{ type: 0 /* Number */, value: 0.42 }]);
-        assert.deepEqual(tokenize("12."), [{type: 0 /* Number */, value: 12}]);
+        assert.deepEqual(tokenize("12."), [{ type: 0 /* Number */, value: 12 }]);
         assert.deepEqual(tokenize("-1.23"), [
             { type: 2 /* Symbol */, value: "-" },
             { type: 0 /* Number */, value: 1.23 },
         ]);
 
         /* With exponent */
-        assert.deepEqual(tokenize("1234e-3"), [{type: 0 /* Number */, value: 1.234}]);
-        assert.deepEqual(tokenize("1.23E-03"), [{type: 0 /* Number */, value: 0.00123}]);
-        assert.deepEqual(tokenize('.23e-3'), [{type: 0 /* Number */, value: 0.00023}]);
-        assert.deepEqual(tokenize('23.e-03'), [{type: 0 /* Number */, value: 0.023}]);
+        assert.deepEqual(tokenize("1234e-3"), [{ type: 0 /* Number */, value: 1.234 }]);
+        assert.deepEqual(tokenize("1.23E-03"), [{ type: 0 /* Number */, value: 0.00123 }]);
+        assert.deepEqual(tokenize(".23e-3"), [{ type: 0 /* Number */, value: 0.00023 }]);
+        assert.deepEqual(tokenize("23.e-03"), [{ type: 0 /* Number */, value: 0.023 }]);
 
-        assert.deepEqual(tokenize("12.1E2"), [{type: 0 /* Number */, value: 1210}]);
-        assert.deepEqual(tokenize("1.23e+03"), [{type: 0 /* Number */, value: 1230}]);
-        assert.deepEqual(tokenize('.23e2'), [{type: 0 /* Number */, value: 23}]);
-        assert.deepEqual(tokenize('15.E+02'), [{type: 0 /* Number */, value: 1500}]);
+        assert.deepEqual(tokenize("12.1E2"), [{ type: 0 /* Number */, value: 1210 }]);
+        assert.deepEqual(tokenize("1.23e+03"), [{ type: 0 /* Number */, value: 1230 }]);
+        assert.deepEqual(tokenize(".23e2"), [{ type: 0 /* Number */, value: 23 }]);
+        assert.deepEqual(tokenize("15.E+02"), [{ type: 0 /* Number */, value: 1500 }]);
 
         assert.deepEqual(tokenize("-23E02"), [
-            {type: 2 /* Symbol */, value: "-"},
-            {type: 0 /* Number */, value: 2300}
+            { type: 2 /* Symbol */, value: "-" },
+            { type: 0 /* Number */, value: 2300 },
         ]);
-
     });
 
     QUnit.test("can tokenize strings", (assert) => {
@@ -111,7 +112,11 @@ QUnit.module("py", {}, () => {
         ]);
     });
 
-    QUnit.test("sanity check: throw some errors", (assert) => {
+    QUnit.test("sanity check: tokenize throws some errors", (assert) => {
         assert.throws(() => tokenize("'asdf"));
+    });
+
+    QUnit.test("sanity check: tryTokenize returns some errors", (assert) => {
+        assert.ok(isError(tryTokenize("'asdf")));
     });
 });

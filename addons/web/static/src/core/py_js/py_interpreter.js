@@ -1,16 +1,10 @@
 /** @odoo-module **/
 
-import { BUILTINS, EvaluationError, execOnIterable } from "./py_builtin";
-import {
-    NotSupportedError,
-    PyDate,
-    PyDateTime,
-    PyRelativeDelta,
-    PyTime,
-    PyTimeDelta,
-} from "./py_date";
+import { BUILTINS, execOnIterable } from "./py_builtin";
+import { PyDate, PyDateTime, PyRelativeDelta, PyTime, PyTimeDelta } from "./py_date";
 import { PY_DICT, toPyDict } from "./py_utils";
 import { parseArgs } from "./py_parser";
+import { error, isError, map, mapObject, throwError } from "@web/core/error";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -20,6 +14,10 @@ import { parseArgs } from "./py_parser";
  * @typedef { import("./py_parser").AST } AST
  */
 
+/**
+ * @typedef {import("@web/core/error").Err} Err
+ */
+
 // -----------------------------------------------------------------------------
 // Constants and helpers
 // -----------------------------------------------------------------------------
@@ -27,24 +25,23 @@ import { parseArgs } from "./py_parser";
 const isTrue = BUILTINS.bool;
 
 /**
- * @param {AST} ast
- * @param {Object} context
- * @returns {any}
+ * @param {string} op
+ * @param {any} right
+ * @returns {any|Err}
  */
-function applyUnaryOp(ast, context) {
-    const value = evaluate(ast.right, context);
-    switch (ast.op) {
+function tryApplyUnaryOp(op, right) {
+    switch (op) {
         case "-":
-            if (value instanceof Object && value.negate) {
-                return value.negate();
+            if (right instanceof Object && right.negate) {
+                return right.negate();
             }
-            return -value;
+            return -right;
         case "+":
-            return value;
+            return right;
         case "not":
-            return !isTrue(value);
+            return !isTrue(right);
     }
-    throw new EvaluationError(`Unknown unary operator: ${ast.op}`);
+    return error(`Unknown unary operator: ${op}`);
 }
 
 /**
@@ -53,9 +50,9 @@ function applyUnaryOp(ast, context) {
  * So, each type is mapped to a number to represent that order
  *
  * @param {any} val
- * @returns {number} index type
+ * @returns {number|Err} index type
  */
-function pytypeIndex(val) {
+function tryPytypeIndex(val) {
     switch (typeof val) {
         case "object":
             // None, List, Object, Dict
@@ -65,7 +62,7 @@ function pytypeIndex(val) {
         case "string":
             return 4;
     }
-    throw new EvaluationError(`Unknown type: ${typeof val}`);
+    return error(`Unknown type: ${typeof val}`);
 }
 
 /**
@@ -81,9 +78,9 @@ function isConstructor(obj) {
  *
  * @param {any} left
  * @param {any} right
- * @returns {boolean}
+ * @returns {boolean|Err}
  */
-function isLess(left, right) {
+function tryIsLess(left, right) {
     if (typeof left === "number" && typeof right === "number") {
         return left < right;
     }
@@ -93,8 +90,11 @@ function isLess(left, right) {
     if (typeof right === "boolean") {
         right = right ? 1 : 0;
     }
-    const leftIndex = pytypeIndex(left);
-    const rightIndex = pytypeIndex(right);
+    const result = map(tryPytypeIndex)([left, right]);
+    if (isError(result)) {
+        return result;
+    }
+    const [leftIndex, rightIndex] = result;
     if (leftIndex === rightIndex) {
         return left < right;
     }
@@ -104,9 +104,9 @@ function isLess(left, right) {
 /**
  * @param {any} left
  * @param {any} right
- * @returns {boolean}
+ * @returns {boolean|Err}
  */
-function isEqual(left, right) {
+function tryIsEqual(left, right) {
     if (typeof left !== typeof right) {
         if (typeof left === "boolean" && typeof right === "number") {
             return right === (left ? 1 : 0);
@@ -141,14 +141,13 @@ function isIn(left, right) {
 }
 
 /**
- * @param {AST} ast
- * @param {object} context
- * @returns {any}
+ * @param {string} op
+ * @param {any} left
+ * @param {any} right
+ * @returns {any|Err}
  */
-function applyBinaryOp(ast, context) {
-    const left = evaluate(ast.left, context);
-    const right = evaluate(ast.right, context);
-    switch (ast.op) {
+function tryApplyBinaryOp(op, left, right) {
+    switch (op) {
         case "+": {
             const relativeDeltaOnLeft = left instanceof PyRelativeDelta;
             const relativeDeltaOnRight = right instanceof PyRelativeDelta;
@@ -167,14 +166,14 @@ function applyBinaryOp(ast, context) {
                 if (right instanceof PyDate || right instanceof PyDateTime) {
                     return right.add(left);
                 } else {
-                    throw NotSupportedError();
+                    return error("Not supported");
                 }
             }
             if (timeDeltaOnRight) {
                 if (left instanceof PyDate || left instanceof PyDateTime) {
                     return left.add(right);
                 } else {
-                    throw NotSupportedError();
+                    return error("Not supported");
                 }
             }
             if (left instanceof Array && right instanceof Array) {
@@ -196,7 +195,7 @@ function applyBinaryOp(ast, context) {
                 } else if (left instanceof PyDate || left instanceof PyDateTime) {
                     return left.substract(right);
                 } else {
-                    throw NotSupportedError();
+                    return error("Not supported");
                 }
             }
 
@@ -228,24 +227,24 @@ function applyBinaryOp(ast, context) {
         case "**":
             return left ** right;
         case "==":
-            return isEqual(left, right);
+            return tryIsEqual(left, right);
         case "<>":
         case "!=":
-            return !isEqual(left, right);
+            return !tryIsEqual(left, right);
         case "<":
-            return isLess(left, right);
+            return tryIsLess(left, right);
         case ">":
-            return isLess(right, left);
+            return tryIsLess(right, left);
         case ">=":
-            return isEqual(left, right) || isLess(right, left);
+            return tryIsEqual(left, right) || tryIsLess(right, left);
         case "<=":
-            return isEqual(left, right) || isLess(left, right);
+            return tryIsEqual(left, right) || tryIsLess(left, right);
         case "in":
             return isIn(left, right);
         case "not in":
             return !isIn(left, right);
     }
-    throw new EvaluationError(`Unknown binary operator: ${ast.op}`);
+    return error(`Unknown binary operator: ${op}`);
 }
 
 const DICT = {
@@ -278,9 +277,7 @@ function getModifiedFunc(key, func, set) {
             return new Set(set);
         }
         if (args.length > 2) {
-            throw new EvaluationError(
-                `${key}: py_js supports at most 1 argument, got (${args.length - 1})`
-            );
+            return error(`${key}: py_js supports at most 1 argument, got (${args.length - 1})`);
         }
         return execOnIterable(args[0], func);
     };
@@ -336,9 +333,9 @@ const SET = {
 /**
  * @param {AST} ast
  * @param {Object} context
- * @returns {any}
+ * @returns {any|Err}
  */
-export function evaluate(ast, context = {}) {
+export function tryEvaluate(ast, context = {}) {
     const dicts = new Set();
     let pyContext;
     const evalContext = Object.create(context);
@@ -353,56 +350,85 @@ export function evaluate(ast, context = {}) {
         });
     }
 
+    const evaluateSubASTs = mapObject((value) => {
+        if (typeof value !== "object" || value === null) {
+            return value;
+        }
+        if (Array.isArray(value)) {
+            /** array of ASTs */
+            return map(_tryEvaluate)(value);
+        }
+        /** AST */
+        return _tryEvaluate(value);
+    });
+
     /**
      * @param {AST} ast
+     * @returns {any|Err}
      */
-    function _evaluate(ast) {
+    function _tryEvaluate(ast) {
         switch (ast.type) {
             case 0 /* Number */:
             case 1 /* String */:
+            case 2 /* Boolean */:
                 return ast.value;
+            case 3 /* None */:
+                return null;
             case 5 /* Name */:
                 if (ast.value in evalContext) {
                     return evalContext[ast.value];
                 } else if (ast.value in BUILTINS) {
                     return BUILTINS[ast.value];
                 } else {
-                    throw new EvaluationError(`Name '${ast.value}' is not defined`);
+                    return error(`Name '${ast.value}' is not defined`);
                 }
-            case 3 /* None */:
-                return null;
-            case 2 /* Boolean */:
-                return ast.value;
-            case 6 /* UnaryOperator */:
-                return applyUnaryOp(ast, evalContext);
-            case 7 /* BinaryOperator */:
-                return applyBinaryOp(ast, evalContext);
+            case 6 /* UnaryOperator */: {
+                const result = evaluateSubASTs(ast);
+                if (isError(result)) {
+                    return result;
+                }
+                const { op, right } = result;
+                return tryApplyUnaryOp(op, right);
+            }
+            case 7 /* BinaryOperator */: {
+                const result = evaluateSubASTs(ast);
+                if (isError(result)) {
+                    return result;
+                }
+                const { op, left, right } = result;
+                return tryApplyBinaryOp(op, left, right);
+            }
             case 14 /* BooleanOperator */: {
-                const left = _evaluate(ast.left);
+                const left = _tryEvaluate(ast.left);
+                if (isError(left)) {
+                    return left;
+                }
                 if (ast.op === "and") {
-                    return isTrue(left) ? _evaluate(ast.right) : left;
+                    return isTrue(left) ? _tryEvaluate(ast.right) : left;
                 } else {
-                    return isTrue(left) ? left : _evaluate(ast.right);
+                    return isTrue(left) ? left : _tryEvaluate(ast.right);
                 }
             }
             case 4 /* List */:
-            case 10 /* Tuple */:
-                return ast.value.map(_evaluate);
+            case 10 /* Tuple */: {
+                return map(_tryEvaluate)(ast.value);
+            }
             case 11 /* Dictionary */: {
-                const dict = {};
-                for (const key in ast.value) {
-                    dict[key] = _evaluate(ast.value[key]);
-                }
-                dicts.add(dict);
-                return dict;
+                return mapObject(_tryEvaluate)(ast.value);
             }
             case 8 /* FunctionCall */: {
-                const fnValue = _evaluate(ast.fn);
-                const args = ast.args.map(_evaluate);
-                const kwargs = {};
-                for (const kwarg in ast.kwargs) {
-                    kwargs[kwarg] = _evaluate(ast.kwargs[kwarg]);
+                const result = evaluateSubASTs({
+                    ...ast,
+                    kwargs: null /** avoid confusion ast/object */,
+                });
+                if (isError(result)) {
+                    return result;
                 }
+                const kwargs = mapObject(_tryEvaluate)(ast.kwargs);
+                if (isError(result)) {
+                    return kwargs;
+                }
+                const { fn: fnValue, args } = result;
                 if (
                     fnValue === PyDate ||
                     fnValue === PyDateTime ||
@@ -415,19 +441,32 @@ export function evaluate(ast, context = {}) {
                 return fnValue(...args, kwargs);
             }
             case 12 /* Lookup */: {
-                const dict = _evaluate(ast.target);
-                const key = _evaluate(ast.key);
+                const result = evaluateSubASTs(ast);
+                if (isError(result)) {
+                    return result;
+                }
+                const { target: dict, key } = result;
+                if (dict === null || !["object", "function"].includes(typeof dict)) {
+                    return error("Cannot read property");
+                }
                 return dict[key];
             }
             case 13 /* If */: {
-                if (isTrue(_evaluate(ast.condition))) {
-                    return _evaluate(ast.ifTrue);
+                const cond = _tryEvaluate(ast.condition);
+                if (isError(cond)) {
+                    return cond;
+                }
+                if (isTrue(cond)) {
+                    return _tryEvaluate(ast.ifTrue);
                 } else {
-                    return _evaluate(ast.ifFalse);
+                    return _tryEvaluate(ast.ifFalse);
                 }
             }
             case 15 /* ObjLookup */: {
-                const left = _evaluate(ast.obj);
+                const left = _tryEvaluate(ast.obj);
+                if (isError(left)) {
+                    return left;
+                }
                 if (dicts.has(left) || Object.isPrototypeOf.call(PY_DICT, left)) {
                     // this is a dictionary => need to apply dict methods
                     return DICT[ast.key](left);
@@ -441,6 +480,9 @@ export function evaluate(ast, context = {}) {
                 if (ast.key == "get" && typeof left === "object") {
                     return DICT[ast.key](toPyDict(left));
                 }
+                if (left === null || !["object", "function"].includes(typeof left)) {
+                    return error("Cannot read property");
+                }
                 const result = left[ast.key];
                 if (typeof result === "function" && !isConstructor(result)) {
                     return result.bind(left);
@@ -448,7 +490,20 @@ export function evaluate(ast, context = {}) {
                 return result;
             }
         }
-        throw new EvaluationError(`AST of type ${ast.type} cannot be evaluated`);
+        return error(`AST of type ${ast.type} cannot be evaluated`);
     }
-    return _evaluate(ast);
+    return _tryEvaluate(ast);
+}
+
+/**
+ * @param {AST} ast
+ * @param {Object} context
+ * @returns {any}
+ */
+export function evaluate(ast, context = {}) {
+    const result = tryEvaluate(ast, context);
+    if (isError(result)) {
+        throwError(result);
+    }
+    return result;
 }

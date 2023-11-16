@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { bind, error, isError, throwError } from "@web/core/error";
 import { binaryOperators, comparators } from "./py_tokenizer";
 
 // -----------------------------------------------------------------------------
@@ -8,6 +9,10 @@ import { binaryOperators, comparators } from "./py_tokenizer";
 
 /**
  * @typedef { import("./py_tokenizer").Token } Token
+ */
+
+/**
+ * @typedef {import("@web/core/error").Err} Err
  */
 
 /**
@@ -30,8 +35,6 @@ import { binaryOperators, comparators } from "./py_tokenizer";
  *
  * @typedef { ASTNumber | ASTString | ASTBoolean | ASTNone | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup} AST
  */
-
-export class ParserError extends Error {}
 
 // -----------------------------------------------------------------------------
 // Constants and helpers
@@ -121,9 +124,9 @@ function isSymbol(token, value) {
 /**
  * @param {Token} current
  * @param {Token[]} tokens
- * @returns {AST}
+ * @returns {AST|Err}
  */
-function parsePrefix(current, tokens) {
+function tryParsePrefix(current, tokens) {
     switch (current.type) {
         case 0 /* Number */:
             return { type: 0 /* Number */, value: current.value };
@@ -142,35 +145,39 @@ function parsePrefix(current, tokens) {
                 case "-":
                 case "+":
                 case "~":
-                    return {
+                    return bind((right) => ({
                         type: 6 /* UnaryOperator */,
                         op: current.value,
-                        right: _parse(tokens, 130),
-                    };
+                        right,
+                    }))(_tryParse(tokens, 130));
                 case "not":
-                    return {
+                    return bind((right) => ({
                         type: 6 /* UnaryOperator */,
                         op: current.value,
-                        right: _parse(tokens, 50),
-                    };
+                        right,
+                    }))(_tryParse(tokens, 50));
                 case "(": {
                     const content = [];
                     let isTuple = false;
                     while (tokens[0] && !isSymbol(tokens[0], ")")) {
-                        content.push(_parse(tokens, 0));
+                        const result = _tryParse(tokens, 0);
+                        if (isError(result)) {
+                            return result;
+                        }
+                        content.push(result);
                         if (tokens[0]) {
                             if (tokens[0] && isSymbol(tokens[0], ",")) {
                                 isTuple = true;
                                 tokens.shift();
                             } else if (!isSymbol(tokens[0], ")")) {
-                                throw new ParserError("parsing error");
+                                return error("parsing error");
                             }
                         } else {
-                            throw new ParserError("parsing error");
+                            return error("parsing error");
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], ")")) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     tokens.shift();
                     isTuple = isTuple || content.length === 0;
@@ -179,17 +186,21 @@ function parsePrefix(current, tokens) {
                 case "[": {
                     const value = [];
                     while (tokens[0] && !isSymbol(tokens[0], "]")) {
-                        value.push(_parse(tokens, 0));
+                        const result = _tryParse(tokens, 0);
+                        if (isError(result)) {
+                            return result;
+                        }
+                        value.push(result);
                         if (tokens[0]) {
                             if (isSymbol(tokens[0], ",")) {
                                 tokens.shift();
                             } else if (!isSymbol(tokens[0], "]")) {
-                                throw new ParserError("parsing error");
+                                return error("parsing error");
                             }
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], "]")) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     tokens.shift();
                     return { type: 4 /* List */, value };
@@ -197,16 +208,22 @@ function parsePrefix(current, tokens) {
                 case "{": {
                     const dict = {};
                     while (tokens[0] && !isSymbol(tokens[0], "}")) {
-                        const key = _parse(tokens, 0);
+                        const key = _tryParse(tokens, 0);
+                        if (isError(key)) {
+                            return key;
+                        }
                         if (
                             (key.type !== 1 /* String */ && key.type !== 0) /* Number */ ||
                             !tokens[0] ||
                             !isSymbol(tokens[0], ":")
                         ) {
-                            throw new ParserError("parsing error");
+                            return error("parsing error");
                         }
                         tokens.shift();
-                        const value = _parse(tokens, 0);
+                        const value = _tryParse(tokens, 0);
+                        if (isError(value)) {
+                            return value;
+                        }
                         dict[key.value] = value;
                         if (isSymbol(tokens[0], ",")) {
                             tokens.shift();
@@ -214,26 +231,29 @@ function parsePrefix(current, tokens) {
                     }
                     // remove the } token
                     if (!tokens.shift()) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     return { type: 11 /* Dictionary */, value: dict };
                 }
             }
     }
-    throw new ParserError("Token cannot be parsed");
+    return error("Token cannot be parsed");
 }
 
 /**
  * @param {AST} ast
  * @param {Token} current
  * @param {Token[]} tokens
- * @returns {AST}
+ * @returns {AST|Err}
  */
-function parseInfix(left, current, tokens) {
+function tryParseInfix(left, current, tokens) {
     switch (current.type) {
         case 2 /* Symbol */:
             if (infixOperators.has(current.value)) {
-                let right = _parse(tokens, bindingPower(current));
+                let right = _tryParse(tokens, bindingPower(current));
+                if (isError(right)) {
+                    return right;
+                }
                 if (current.value === "and" || current.value === "or") {
                     return {
                         type: 14 /* BooleanOperator */,
@@ -249,7 +269,7 @@ function parseInfix(left, current, tokens) {
                             key: right.value,
                         };
                     } else {
-                        throw new ParserError("invalid obj lookup");
+                        return error("invalid obj lookup");
                     }
                 }
                 let op = {
@@ -265,6 +285,10 @@ function parseInfix(left, current, tokens) {
                     chainedOperators.has(tokens[0].value)
                 ) {
                     const nextToken = tokens.shift();
+                    const result = _tryParse(tokens, bindingPower(nextToken));
+                    if (isError(result)) {
+                        return result;
+                    }
                     op = {
                         type: 14 /* BooleanOperator */,
                         op: "and",
@@ -273,7 +297,7 @@ function parseInfix(left, current, tokens) {
                             type: 7 /* BinaryOperator */,
                             op: nextToken.value,
                             left: right,
-                            right: _parse(tokens, bindingPower(nextToken)),
+                            right: result,
                         },
                     };
                     right = op.right.right;
@@ -286,7 +310,10 @@ function parseInfix(left, current, tokens) {
                     const args = [];
                     const kwargs = {};
                     while (tokens[0] && !isSymbol(tokens[0], ")")) {
-                        const arg = _parse(tokens, 0);
+                        const arg = _tryParse(tokens, 0);
+                        if (isError(arg)) {
+                            return arg;
+                        }
                         if (arg.type === 9 /* Assignment */) {
                             kwargs[arg.name.value] = arg.value;
                         } else {
@@ -297,40 +324,53 @@ function parseInfix(left, current, tokens) {
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], ")")) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     tokens.shift();
                     return { type: 8 /* FunctionCall */, fn: left, args, kwargs };
                 }
                 case "=":
                     if (left.type === 5 /* Name */) {
+                        const value = _tryParse(tokens, 10);
+                        if (isError(value)) {
+                            return value;
+                        }
                         return {
                             type: 9 /* Assignment */,
                             name: left,
-                            value: _parse(tokens, 10),
+                            value,
                         };
                     }
                     break;
                 case "[": {
                     // lookup in dictionary
-                    const key = _parse(tokens);
+                    const key = _tryParse(tokens);
+                    if (isError(key)) {
+                        return key;
+                    }
                     if (!tokens[0] || !isSymbol(tokens[0], "]")) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     tokens.shift();
                     return {
                         type: 12 /* Lookup */,
                         target: left,
-                        key: key,
+                        key,
                     };
                 }
                 case "if": {
-                    const condition = _parse(tokens);
+                    const condition = _tryParse(tokens);
+                    if (isError(condition)) {
+                        return condition;
+                    }
                     if (!tokens[0] || !isSymbol(tokens[0], "else")) {
-                        throw new ParserError("parsing error");
+                        return error("parsing error");
                     }
                     tokens.shift();
-                    const ifFalse = _parse(tokens);
+                    const ifFalse = _tryParse(tokens);
+                    if (isError(ifFalse)) {
+                        return ifFalse;
+                    }
                     return {
                         type: 13 /* If */,
                         condition,
@@ -340,19 +380,22 @@ function parseInfix(left, current, tokens) {
                 }
             }
     }
-    throw new ParserError("Token cannot be parsed");
+    return error("Token cannot be parsed");
 }
 
 /**
  * @param {Token[]} tokens
  * @param {number} [bp]
- * @returns {AST}
+ * @returns {AST|Err}
  */
-function _parse(tokens, bp = 0) {
+function _tryParse(tokens, bp = 0) {
     const token = tokens.shift();
-    let expr = parsePrefix(token, tokens);
+    let expr = tryParsePrefix(token, tokens);
     while (tokens[0] && bindingPower(tokens[0]) > bp) {
-        expr = parseInfix(expr, tokens.shift(), tokens);
+        if (isError(expr)) {
+            return expr;
+        }
+        expr = tryParseInfix(expr, tokens.shift(), tokens);
     }
     return expr;
 }
@@ -365,13 +408,27 @@ function _parse(tokens, bp = 0) {
  * Parse a list of tokens
  *
  * @param {Token[]} tokens
+ * @returns {AST|Err}
+ */
+export function tryParse(tokens) {
+    if (tokens.length) {
+        return _tryParse(tokens, 0);
+    }
+    return error("Missing token");
+}
+
+/**
+ * Parse a list of tokens
+ *
+ * @param {Token[]} tokens
  * @returns {AST}
  */
 export function parse(tokens) {
-    if (tokens.length) {
-        return _parse(tokens, 0);
+    const result = tryParse(tokens);
+    if (isError(result)) {
+        throwError(result);
     }
-    throw new ParserError("Missing token");
+    return result;
 }
 
 /**
