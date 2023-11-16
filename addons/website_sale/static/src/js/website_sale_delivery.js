@@ -275,6 +275,10 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 
+    _arePickupLocationsDisplayed: function (ev) {
+        return !ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(".o_order_location").parentElement.classList.contains("d-none");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -302,7 +306,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onClickShowLocations: async function (ev) {
         // This checks if there is a pick up point already select with that carrier
-        if (!ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(".o_order_location").parentElement.classList.contains("d-none")) {
+        if (this._arePickupLocationsDisplayed(ev)) {
             return;
         }
         const showPickupLocations = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('.o_show_pickup_locations');
@@ -354,7 +358,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(
             'input[type="radio"]'
         );
-        if (radio.checked) {
+        if (radio.checked && this._arePickupLocationsDisplayed(ev)) {
             return;
         }
 
