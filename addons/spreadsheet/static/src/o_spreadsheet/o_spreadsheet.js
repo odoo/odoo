@@ -18733,7 +18733,7 @@
       }
       .o-input-count {
         width: fit-content;
-        padding: 4 0 4 4;
+        padding: 4px 0 4px 4px;
       }
     }
   }
@@ -29328,6 +29328,13 @@
         }
         onDeleteColumnsRows(cmd) {
             for (const table of this.getFilterTables(cmd.sheetId)) {
+                // Remove the filter tables whose data filter headers are in the removed rows.
+                if (cmd.dimension === "ROW" && cmd.elements.includes(table.zone.top)) {
+                    const tables = { ...this.tables[cmd.sheetId] };
+                    delete tables[table.id];
+                    this.history.update("tables", cmd.sheetId, tables);
+                    continue;
+                }
                 const zone = reduceZoneOnDeletion(table.zone, cmd.dimension === "COL" ? "left" : "top", cmd.elements);
                 if (!zone) {
                     const tables = { ...this.tables[cmd.sheetId] };
@@ -32700,6 +32707,8 @@
                 case "EVALUATE_CELLS":
                 case "ACTIVATE_SHEET":
                 case "REMOVE_FILTER_TABLE":
+                case "ADD_COLUMNS_ROWS":
+                case "REMOVE_COLUMNS_ROWS":
                     this.isEvaluationDirty = true;
                     break;
                 case "START":
@@ -45534,9 +45543,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.21';
-    __info__.date = '2023-11-02T09:46:21.826Z';
-    __info__.hash = 'cc30e85';
+    __info__.version = '16.2.22';
+    __info__.date = '2023-11-16T13:24:20.268Z';
+    __info__.hash = 'b78d5dd';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
