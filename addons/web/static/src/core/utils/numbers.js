@@ -189,7 +189,7 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = value.toFixed(precision).split(".");
+    const formatted = (value || 0).toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
