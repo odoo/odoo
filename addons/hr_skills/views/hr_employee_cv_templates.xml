@@ -4,18 +4,18 @@
         <t t-set="full_width" t-value="True"/>
         <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
-            <div class="o_employee_cv page">
+            <div class="o_employee_cv page position-relative m-0 p-0">
                 <t t-call="hr_skills.report_employee_cv_company"/>
                 <t t-call="hr_skills.report_employee_cv_sidepanel"/>
                 <t t-call="hr_skills.report_employee_cv_main_panel"/>
-                <p class="o_new_page"/>
+                <p class="o_new_page lh-base"/>
             </div>
         </t>
         </t>
     </template>
 
     <template id="report_employee_cv_company">
-        <div class="o_company row">
+        <div class="o_company d-inline-block row w-50">
             <div class="col-12 mb-4">
                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
                 <div class="oe_structure"></div>
@@ -31,28 +31,28 @@
 
     <template id="report_employee_cv_sidepanel">
         <div class="oe_structure"></div>
-        <div class="o_sidebar" t-attf-style="
+        <div class="o_sidebar d-inline-block w-50" t-attf-style="
             background: #{color_primary};
             background-color: #{color_primary};">
-            <div class="o_profile">
-                <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128}" alt="" t-if="o.image_128"/>
-                <h1 class="o_profile_name mt-2" t-field="o.name">Marc Demo</h1>
-                <h3 class="o_profile_job mb-2" t-field="o.job_id">Software Developer</h3>
+            <div class="o_profile px-4 py-3">
+                <img class="img img-fluid rounded-circle o_profile_image float-end mb-3" t-attf-src="data:image/png;base64,#{o.image_128}" alt="" t-if="o.image_128"/>
+                <h1 class="o_profile_name mt-2 fw-bolder" t-field="o.name">Marc Demo</h1>
+                <h3 class="o_profile_job mt-0 fw-bolder" t-field="o.job_id">Software Developer</h3>
             </div>
             <div class="oe_structure"></div>
-            <div class="o_sidebar_section" t-if="show_contact">
-                <ul class="o_social">
-                    <li class="email" t-if="o.company_id.email">
-                        <i class="fa fa-solid fa-envelope pe-2"/>
-                        <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email">demo@email.com</a>
+            <div class="o_sidebar_section px-4 py-3" t-if="show_contact">
+                <ul class="o_social list-unstyled">
+                    <li class="email mb-3" t-if="o.company_id.email">
+                        <i class="fa fa-solid fa-envelope me-2"/>
+                        <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email" class="text-decoration-none text-reset">demo@email.com</a>
                     </li>
-                    <li class="phone" t-if="o.company_id.mobile">
-                        <i class="fa fa-solid fa-phone pe-2"/>
-                        <a t-attf-href="tel:#{o.company_id.mobile}" t-field="o.company_id.mobile">+1234567890</a>
+                    <li class="phone mb-3" t-if="o.company_id.mobile">
+                        <i class="fa fa-solid fa-phone me-2"/>
+                        <a t-attf-href="tel:#{o.company_id.mobile}" t-field="o.company_id.mobile" class="text-decoration-none text-reset">+1234567890</a>
                     </li>
-                    <li class="website" t-if="o.company_id.website">
-                        <i class="fa fa-solid fa-globe pe-2"/>
-                        <a t-attf-href="tel:#{o.company_id.website}" t-field="o.company_id.website">www.demo.com</a>
+                    <li class="website mb-0" t-if="o.company_id.website">
+                        <i class="fa fa-solid fa-globe me-2"/>
+                        <a t-attf-href="tel:#{o.company_id.website}" t-field="o.company_id.website" class="text-decoration-none text-reset">www.demo.com</a>
                     </li>
                 </ul>
             </div>
@@ -63,28 +63,31 @@
     <template id="report_employee_cv_main_panel">
         <div class="oe_structure"></div>
         <t t-foreach="resume_lines[o]" t-as="line_type">
-            <div class="o_main_panel">
+            <div class="o_main_panel d-inline-block w-100">
                 <div class="o_main_panel_section">
-                    <h2 class="o_main_panel_title mt-4" t-attf-style="color: #{color_secondary};">
-                        <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                            <i class="fa fa-solid fa-briefcase"/>
+                    <div class="d-flex mt-4">
+                        <span class="fa-stack">
+                            <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                            <i class="fa fa-solid fa-briefcase fa-stack-1x fa-inverse"/>
                         </span>
-                        <span t-out="line_type">Experience</span>
-                    </h2>
+                        <h2 class="o_main_panel_title position-relative mb-3 text-uppercase fw-bolder" t-attf-style="color: #{color_secondary};">
+                            <span t-out="line_type">Experience</span>
+                        </h2>
+                    </div>
                     <t t-foreach="resume_lines[o][line_type]" t-as="resume_line">
-                        <div class="o_main_panel_resume_title ps-5">
-                            <div class="o_main_panel_resume_title_job">
-                                <h3 class="o_main_panel_resume_job" t-field="resume_line.name">Software Developer</h3>
+                        <div class="o_main_panel_resume_title position-relative w-100 overflow-hidden ps-5">
+                            <div class="o_main_panel_resume_title_job d-inline-block">
+                                <h3 class="o_main_panel_resume_job fw-bolder" t-field="resume_line.name">Software Developer</h3>
                             </div>
-                            <div class="o_main_panel_resume_title_dates">
+                            <div class="o_main_panel_resume_title_dates float-end text-nowrap">
                                 <t t-set="present">Present</t>
-                                <div class="o_main_panel_resume_year">
+                                <div class="o_main_panel_resume_year position-static top-0 end-0 d-block mt-1">
                                     <span t-out="resume_line.date_start.year">2022</span> - <span t-out="resume_line.date_end.year if resume_line.date_end else 'Present'">2023</span>
                                 </div>
                             </div>
                         </div>
                         <div class="o_main_panel_resume_description ps-5 w-auto">
-                            <p t-field="resume_line.description">Odoo India pvt. Ltd</p>
+                            <p t-field="resume_line.description" class="lh-base">Odoo India pvt. Ltd</p>
                         </div>
                     </t>
                 </div>
@@ -93,19 +96,22 @@
 
         <div class="oe_structure"></div>
         <t t-set="has_languages" t-value="skill_type_language and any(skill_line.skill_type_id == skill_type_language for skill_line in o.employee_skill_ids)"/>
-        <div class="o_main_panel mt-4" t-if="has_languages">
+        <div class="o_main_panel d-inline-block w-100" t-if="has_languages">
             <div class="o_main_panel_section" t-if="skill_type_language">
-                <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-language"/>
+                <div class="d-flex mt-4">
+                    <span class="fa-stack">
+                        <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                        <i class="fa fa-solid fa-language fa-stack-1x fa-inverse"/>
                     </span>
-                    Languages
-                </h2>
+                    <h2 class="o_main_panel_title position-relative text-uppercase fw-bolder" t-attf-style="color: #{color_secondary};">
+                        Languages
+                    </h2>
+                </div>
                 <t t-foreach="o.employee_skill_ids" t-as="skill_line">
                     <t t-if="skill_line.skill_type_id == skill_type_language">
-                        <div class="o_main_panel_resume_title ps-5 pb-2">
-                            <div class="o_main_panel_resume_title_job">
-                                <h3 class="o_main_panel_resume_job"><span t-out="skill_line.skill_id.name">English</span> - <span t-out="skill_line.skill_level_id.name">Fluent</span></h3>
+                        <div class="o_main_panel_resume_title position-relative w-100 overflow-hidden ps-5 pb-2">
+                            <div class="o_main_panel_resume_title_job d-inline-block">
+                                <h3 class="o_main_panel_resume_job m-0 fw-bolder"><span t-out="skill_line.skill_id.name">English</span> - <span t-out="skill_line.skill_level_id.name">Fluent</span></h3>
                             </div>
                         </div>
                     </t>
@@ -115,23 +121,26 @@
 
         <div class="oe_structure"></div>
         <t t-set="has_skills" t-value="show_skills and any(skill_line.skill_type_id != skill_type_language for skill_line in o.employee_skill_ids)"/>
-        <div class="o_main_panel mt-4" t-if="has_skills">
+        <div class="o_main_panel d-inline-block w-100" t-if="has_skills">
             <div class="o_main_panel_section">
-                <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-rocket"/>
+                <div class="d-flex mt-4">
+                    <span class="fa-stack">
+                        <i class="fa fa-solid fa-circle fa-stack-2x" t-attf-style="color: #{color_secondary};"/>
+                        <i class="fa fa-solid fa-rocket fa-stack-1x fa-inverse"/>
                     </span>
-                    Skills
-                </h2>
+                    <h2 class="o_main_panel_title position-relative text-uppercase fw-bolder" t-attf-style="color: #{color_secondary};">
+                        Skills
+                    </h2>
+                </div>
                 <t t-set="valid_skills" t-value="[skill for skill in o.employee_skill_ids if skill.skill_type_id != skill_type_language]"/>
                 <t t-foreach="[valid_skills[n:n+2] for n in range(0, len(valid_skills), 2)]" t-as="skills_pair">
                     <div class="o_main_panel_skills row ps-5">
                         <t t-foreach="skills_pair" t-as="skill_line">
                             <div class="o_main_panel_skill_line col-6 pe-4" t-if="skill_line.skill_type_id != skill_type_language">
-                                <h3 class="o_main_panel_skill_name" t-field="skill_line.skill_id">Python</h3>
-                                <div class="progress o_main_panel_skill_progress_bar">
+                                <h3 class="o_main_panel_skill_name mt-0 fw-bolder" t-field="skill_line.skill_id">Python</h3>
+                                <div class="progress">
                                     <div
-                                        class="o_main_panel_skill_progress_bar_color"
+                                        class=""
                                         role="progressbar"
                                         t-attf-style="width: #{skill_line.level_progress}%; background: #{color_primary};"
                                         t-att-aria-valuenow="skill_line.level_progress"
