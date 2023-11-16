@@ -9,7 +9,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
     if (!cell) {
         return;
     }
-    const { args } = getFirstListFunction(cell.content);
+    const { args } = getFirstListFunction(cell.compiledFormula.tokens);
     const evaluatedArgs = args
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
@@ -36,7 +36,8 @@ export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         cell &&
-        getNumberOfListFormulas(cell.content) === 1 &&
-        getFirstListFunction(cell.content).functionName === "ODOO.LIST"
+        cell.isFormula &&
+        getNumberOfListFormulas(cell.compiledFormula.tokens) === 1 &&
+        getFirstListFunction(cell.compiledFormula.tokens).functionName === "ODOO.LIST"
     );
 };
