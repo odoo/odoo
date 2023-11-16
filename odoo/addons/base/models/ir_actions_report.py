@@ -346,7 +346,7 @@ class IrActionsReport(models.Model):
             return {}
         base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
-        root = lxml.html.fromstring(html)
+        root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
