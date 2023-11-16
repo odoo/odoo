@@ -2158,22 +2158,22 @@
                     "content": "=_t(\"Current\")"
                 },
                 "B2": {
-                    "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"draft\")"
+                    "content": "=ODOO.PIVOT(11,\"order_id\",\"state\",\"draft\")"
                 },
                 "B3": {
-                    "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"sent\")"
+                    "content": "=ODOO.PIVOT(11,\"order_id\",\"state\",\"sent\")"
                 },
                 "B4": {
                     "content": "=B2+B3"
                 },
                 "B5": {
-                    "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(11,\"order_id\",\"state\",\"sale\")"
                 },
                 "B6": {
-                    "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(11,\"order_id\",\"state\",\"sale\")"
                 },
                 "B7": {
-                    "content": "=ODOO.PIVOT(11,\"amount_untaxed\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(11,\"price_subtotal\",\"state\",\"sale\")"
                 },
                 "B8": {
                     "content": "=IFERROR(B7/B6)"
@@ -2183,22 +2183,22 @@
                     "content": "=_t(\"Previous\")"
                 },
                 "C2": {
-                    "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"draft\")"
+                    "content": "=ODOO.PIVOT(12,\"order_id\",\"state\",\"draft\")"
                 },
                 "C3": {
-                    "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"sent\")"
+                    "content": "=ODOO.PIVOT(12,\"order_id\",\"state\",\"sent\")"
                 },
                 "C4": {
                     "content": "=C2+C3"
                 },
                 "C5": {
-                    "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(12,\"order_id\",\"state\",\"sale\")"
                 },
                 "C6": {
-                    "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(12,\"order_id\",\"state\",\"sale\")"
                 },
                 "C7": {
-                    "content": "=ODOO.PIVOT(12,\"amount_untaxed\",\"state\",\"sale\")"
+                    "content": "=ODOO.PIVOT(12,\"price_subtotal\",\"state\",\"sale\")"
                 },
                 "C8": {
                     "content": "=IFERROR(C7/C6)"
@@ -2876,13 +2876,13 @@
             "id": "11",
             "measures": [
                 {
-                    "field": "__count"
+                    "field": "order_id"
                 },
                 {
-                    "field": "amount_untaxed"
+                    "field": "price_subtotal"
                 }
             ],
-            "model": "sale.order",
+            "model": "sale.report",
             "rowGroupBys": [
                 "state"
             ],
@@ -2904,13 +2904,13 @@
             "id": "12",
             "measures": [
                 {
-                    "field": "__count"
+                    "field": "order_id"
                 },
                 {
-                    "field": "amount_untaxed"
+                    "field": "price_subtotal"
                 }
             ],
-            "model": "sale.order",
+            "model": "sale.report",
             "rowGroupBys": [
                 "state"
             ],
@@ -2969,12 +2969,12 @@
                     "offset": 0
                 },
                 "11": {
-                    "field": "date_order",
+                    "field": "date",
                     "type": "datetime",
                     "offset": 0
                 },
                 "12": {
-                    "field": "date_order",
+                    "field": "date",
                     "type": "datetime",
                     "offset": -1
                 }
@@ -3110,11 +3110,11 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line.product_id",
+                    "field": "product_id",
                     "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line.product_id",
+                    "field": "product_id",
                     "type": "many2one"
                 }
             },
@@ -3246,11 +3246,11 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line.product_id.categ_id",
+                    "field": "product_id.categ_id",
                     "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line.product_id.categ_id",
+                    "field": "product_id.categ_id",
                     "type": "many2one"
                 }
             },
