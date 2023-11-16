@@ -375,7 +375,7 @@
                                 data-bs-toggle="tooltip"
                                 t-attf-data-target="#answer-#{post_id.id}"
                                 t-attf-data-href="/forum/#{ slug(question.forum_id) }/post/#{ slug(answer) }/toggle_correct">
-                                <i t-attf-class="fa #{ 'fa-check-circle text-success' if answer.is_correct else 'fa-check-circle-o' } fs-5"/>
+                                <i t-attf-class="fa fa-lg #{ 'fa-check-circle text-success' if answer.is_correct else 'fa-check-circle-o' }"/>
                             </a>
                         </t>
                     </t>
