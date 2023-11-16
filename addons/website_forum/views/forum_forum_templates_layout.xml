@@ -26,7 +26,7 @@
                 <div class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
                         <a class="btn btn-lg btn-link px-0 pb-2" t-attf-href="/forum/#{ slug(forum) }">
-                            <i class="d-inline-block oi oi-chevron-left me-1 small lh-50"/><t t-out="forum.name"/>
+                            <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="forum.name"/>
                         </a>
                     </div>
                     <div class="d-lg-none col-2 text-end">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 align-items-baseline">
-                    <h3 t-attf-class="col-lg-10 mb-0" t-out="question.name"/>
+                    <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
                         <span t-elif="not question.active" class="badge bg-danger">
@@ -90,7 +90,7 @@
                     <i class="fa fa-navicon"/>
                 </button>
             </div>
-            <div t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
+            <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
                     <span t-if="tag"><i class="fa fa-tag me-1 text-muted"/><t t-out="tag.name"></t></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ slug(forum) }?#{ keep_query('search', 'sorting', 'my') }"
@@ -201,7 +201,7 @@
             <t t-call="website_forum.user_sidebar"/>
             <t t-call="website_forum.user_sidebar_mobile"/>
             <div class="o_wforum_content_wrapper w-100 w-xl-auto px-lg-3">
-                <div class="o_wprofile_email_validation_container row g-0 justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
+                <div class="o_wprofile_email_validation_container d-flex flex-column justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
                     <t t-call="website_profile.email_validation_banner">
                         <t t-set="redirect_url" t-value="'/forum/%s' % forum.id"/>
                         <t t-set="additional_validation_email_message"> and join this Forum</t>
@@ -269,8 +269,8 @@
             title="My profile">
             <img class="o_wforum_avatar rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
-                <h6 class="mb-1" t-out="user_id.name"/>
-                <small class="text-muted"><t t-out="user_id.karma"/> XP</small>
+                <h6 class="mt-0 mb-1" t-out="user_id.name"/>
+                <span class="fs-6 text-muted"><t t-out="user_id.karma"/> XP</span>
             </div>
         </a>
     </div>
