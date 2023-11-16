@@ -1,17 +1,18 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import {
     click,
     clickSave,
-    editInput,
     getFixture,
     patchWithCleanup,
     selectDropdownItem,
     triggerEvent,
+    editInput,
+    clickOpenedDropdownItem,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { triggerHotkey } from "../../helpers/utils";
-import { browser } from "@web/core/browser/browser";
 
 let serverData;
 let target;
@@ -661,4 +662,40 @@ QUnit.module("Fields", (hooks) => {
             ""
         );
     });
+
+    QUnit.test(
+        "Many2ManyTagsAvatarField: make sure that the arch context is passed to the form view call",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,form": `<form><field name="display_name"/></form>`,
+            };
+
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
+
+            await makeView({
+                type: "list",
+                resModel: "turtle",
+                serverData,
+                arch: `<list editable="top">
+                    <field name="partner_ids" widget="many2many_tags_avatar" context="{ 'append_coucou': 'test_value' }"/>
+                </list>`,
+                mockRPC(route, args) {
+                    if (args.method === "onchange" && args.model === "partner") {
+                        if (args.kwargs.context.append_coucou === "test_value") {
+                            assert.step("onchange with context given");
+                        }
+                    }
+                },
+            });
+
+            await click(target.querySelector("div[name=partner_ids]"));
+            await editInput(target, `div[name="partner_ids"] input`, "A new partner");
+            await clickOpenedDropdownItem(target, "partner_ids", "Create and edit...");
+
+            assert.containsOnce(target, ".modal .o_form_view", "Here we should have opened the modal form view");
+            assert.verifySteps(["onchange with context given"]);
+        }
+    );
 });
