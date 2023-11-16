@@ -504,9 +504,6 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
-    # To remove in Master
-    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
-    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
 
     picking_properties = fields.Properties(
         'Properties',
@@ -516,11 +513,6 @@ class Picking(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
-
-    @api.depends()
-    def _compute_show_qty_button(self):
-        self.show_set_qty_button = False
-        self.show_clear_qty_button = False
 
     def _compute_has_tracking(self):
         for picking in self:

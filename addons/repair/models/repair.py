@@ -164,8 +164,6 @@ class Repair(models.Model):
     picking_product_ids = fields.One2many('product.product', compute='compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
     # UI Fields
-    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')  # TODO: remove in master.
-    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')  # TODO: remove in master.
     unreserve_visible = fields.Boolean(
         'Allowed to Unreserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can unreserve')
@@ -251,17 +249,13 @@ class Repair(models.Model):
         returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
         returned.is_returned = True
 
-    @api.depends('state', 'move_ids.quantity', 'move_ids.product_uom_qty')
-    def _compute_show_qty_button(self):
-        self.show_set_qty_button = False
-        self.show_clear_qty_button = False
-
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
         for repair in self:
-            already_reserved = repair.state not in ('done', 'cancel') and any(repair.mapped('move_ids.move_line_ids.quantity'))
-
-            repair.unreserve_visible = already_reserved
+            repair.unreserve_visible = (
+                repair.state not in ('draft', 'done', 'cancel') and
+                any(repair.move_ids.move_line_ids.mapped('quantity'))
+            )
             repair.reserve_visible = (
                 repair.state in ('confirmed', 'under_repair') and
                 any(not move.picked and move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
