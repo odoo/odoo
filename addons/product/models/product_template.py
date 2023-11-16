@@ -1306,6 +1306,9 @@ class ProductTemplate(models.Model):
             'template': '/product/static/xls/product_template.xls'
         }]
 
+    def get_contextual_price(self, product=None):
+        return self._get_contextual_price(product=product)
+
     def _get_contextual_price(self, product=None):
         self.ensure_one()
         # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing

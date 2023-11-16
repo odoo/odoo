@@ -789,6 +789,40 @@ class PosGlobalState extends PosModel {
         });
     }
 
+    // To be used in the context of closing the POS
+    // Saves the order locally and try to send it to the backend.
+    // If there is an error show a popup and ask to continue the closing or not
+    // return a successful promise on sync or if user decides to contine else reject
+    async push_orders_with_closing_popup (order, opts) {
+        try {
+            return await this.push_orders(order, opts);
+        } catch (error) {
+            console.warn(error);
+            const reason = this.env.pos.failed
+                ? this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to configuration errors. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  )
+                : this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to internet connection issues. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  );
+            const { confirmed } =  await Gui.showPopup('ConfirmPopup', {
+                title: this.env._t('Offline Orders'),
+                body: reason,
+                confirmText: this.env._t('Close anyway'),
+                cancelText: this.env._t('Do not close'),
+            });
+            return confirmed ? Promise.resolve(true) : Promise.reject();
+        }
+    }
+
     // saves the order locally and try to send it to the backend.
     // it returns a promise that succeeds after having tried to send the order and all the other pending orders.
     push_orders (order, opts) {

@@ -10010,7 +10010,7 @@
       }
       .o-input-count {
         width: fit-content;
-        padding: 4 0 4 4;
+        padding: 4px 0 4px 4px;
       }
     }
   }
@@ -43010,9 +43010,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.23';
-    __info__.date = '2023-11-02T09:44:15.595Z';
-    __info__.hash = '06ef793';
+    __info__.version = '16.0.24';
+    __info__.date = '2023-11-16T13:22:10.042Z';
+    __info__.hash = 'e0d7313';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

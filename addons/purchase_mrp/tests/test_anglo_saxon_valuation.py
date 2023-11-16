@@ -178,3 +178,48 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
 
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
         self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75, 75])
+
+    def test_valuation_multicurrency_with_kits(self):
+        """ Purchase a Kit in multi-currency and verify that the amount_currency is correctly computed.
+        """
+
+        # Setup Kit
+        kit, cmp = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': 0,
+            'type': 'product',
+            'categ_id': self.avco_category.id,
+        } for name in ['Kit', 'Cmp']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': cmp.id, 'product_qty': 5})]
+        })
+
+        # Setup Currency
+        usd = self.env.ref('base.USD')
+        eur = self.env.ref('base.EUR')
+        self.env['res.currency.rate'].create({'currency_id': usd.id, 'rate': 1})
+        self.env['res.currency.rate'].create({'currency_id': eur.id, 'rate': 2})
+
+        # Create Purchase
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.vendor01
+        po_form.currency_id = eur
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit
+            pol_form.price_unit = 100  # $50
+        po = po_form.save()
+        po.button_confirm()
+
+        action = po.picking_ids.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        svl = po.order_line.move_ids.stock_valuation_layer_ids.ensure_one()
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+
+        self.assertEqual(svl.value, 50)  # USD
+        self.assertEqual(input_aml.amount_currency, 100)  # EUR
+        self.assertEqual(input_aml.balance, 50)  # USD
