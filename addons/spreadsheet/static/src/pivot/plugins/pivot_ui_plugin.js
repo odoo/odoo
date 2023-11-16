@@ -134,8 +134,14 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                 this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
                 break;
             }
+            case "DELETE_SHEET":
+            case "UPDATE_CELL": {
+                this.unusedPivots = undefined;
+                break;
+            }
             case "UNDO":
             case "REDO": {
+                this.unusedPivots = undefined;
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -182,7 +188,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         if (cell && cell.isFormula) {
             const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
             if (pivotFunction) {
-                return pivotFunction.args[0].toString();
+                return pivotFunction.args[0]?.toString();
             }
         }
         return undefined;
@@ -412,6 +418,10 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return `pivot-${pivotId}`;
     }
 
+    isPivotUnused(pivotId) {
+        return this._getUnusedPivots().includes(pivotId);
+    }
+
     /**
      * @param {string} pivotId
      * @returns {Promise<PivotDataSource>}
@@ -496,6 +506,28 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             this.dataSources.add(dataSourceId, PivotDataSource, definition);
         }
     }
+
+    _getUnusedPivots() {
+        if (this.unusedPivots !== undefined) {
+            return this.unusedPivots;
+        }
+        const unusedPivots = new Set(this.getters.getPivotIds());
+        for (const sheetId of this.getters.getSheetIds()) {
+            for (const cellId in this.getters.getCells(sheetId)) {
+                const position = this.getters.getCellPosition(cellId);
+                const pivotId = this.getPivotIdFromPosition(position);
+                if (pivotId) {
+                    unusedPivots.delete(pivotId);
+                    if (!unusedPivots.size) {
+                        this.unusedPivots = [];
+                        return [];
+                    }
+                }
+            }
+        }
+        this.unusedPivots = [...unusedPivots];
+        return this.unusedPivots;
+    }
 }
 
 PivotUIPlugin.getters = [
@@ -511,4 +543,5 @@ PivotUIPlugin.getters = [
     "getPivotDataSourceId",
     "getPivotTableStructure",
     "getPivotDomainArgsFromPosition",
+    "isPivotUnused",
 ];

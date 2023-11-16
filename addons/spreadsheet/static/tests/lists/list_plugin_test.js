@@ -702,4 +702,26 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         });
         assert.deepEqual(result.reasons, [CommandResult.InvalidNextId]);
     });
+
+    QUnit.test("isListUnused getter", async (assert) => {
+        const { model } = await createSpreadsheetWithList();
+        const sheetId = model.getters.getActiveSheetId();
+        assert.equal(model.getters.isListUnused("1"), false);
+
+        model.dispatch("CREATE_SHEET", { sheetId: "2" });
+        model.dispatch("DELETE_SHEET", { sheetId: sheetId });
+        assert.equal(model.getters.isListUnused("1"), true);
+
+        setCellContent(model, "A1", '=ODOO.LIST.HEADER(1, "foo")');
+        assert.equal(model.getters.isListUnused("1"), false);
+
+        setCellContent(model, "A1", '=ODOO.LIST.HEADER(A2, "foo")');
+        assert.equal(model.getters.isListUnused("1"), true);
+
+        setCellContent(model, "A2", "1");
+        assert.equal(model.getters.isListUnused("1"), false);
+
+        model.dispatch("REQUEST_UNDO", {});
+        assert.equal(model.getters.isListUnused("1"), true);
+    });
 });
