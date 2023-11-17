@@ -35,6 +35,7 @@ import {
     isHtmlContentSupported,
     rgbToHex,
     isFontAwesome,
+    ICON_SELECTOR,
     getInSelection,
     getDeepRange,
     getRowIndex,
@@ -4294,8 +4295,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // Remove Zero Width Spaces on Font awesome elements
-        const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
-        for (const el of element.querySelectorAll(faSelector)) {
+        for (const el of element.querySelectorAll(ICON_SELECTOR)) {
             cleanZWS(el);
         }
 
