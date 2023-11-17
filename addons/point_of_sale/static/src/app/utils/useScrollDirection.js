@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "@odoo/owl";
 
-export function useScrollDirection(refName) {
+export function useScrollDirection(refName, cb) {
     const scroll = useState({ down: false });
     const ref = useRef(refName);
     useEffect(
@@ -26,6 +26,7 @@ export function useScrollDirection(refName) {
                 }
                 lastScrollY = scrollY;
                 ticking = false;
+                cb && cb(scroll);
             };
 
             const onScroll = () => {

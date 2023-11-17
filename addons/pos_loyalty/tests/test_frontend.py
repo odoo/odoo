@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import date, timedelta
-
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests import tagged
 from odoo import Command
-
 
 @tagged("post_install", "-at_install")
 class TestUi(TestPointOfSaleHttpCommon):
@@ -145,7 +142,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour1",
-            login="pos_user"
+            login="pos_user",
         )
 
         # check coupon usage

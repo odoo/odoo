@@ -46,7 +46,7 @@
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
                     Inventory 
-                    <t t-if="pos.pos_session.update_stock_at_closing">(as of opening)</t>
+                    <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
                 </h3>
                 <div class="section-inventory-body">
                     <t t-foreach="props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">

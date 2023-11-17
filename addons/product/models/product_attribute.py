@@ -50,7 +50,10 @@ class ProductAttribute(models.Model):
         comodel_name='product.attribute.value',
         inverse_name='attribute_id',
         string="Values", copy=True)
-
+    template_value_ids = fields.One2many(
+        comodel_name='product.template.attribute.value',
+        inverse_name='attribute_id',
+        string="Template Values")
     attribute_line_ids = fields.One2many(
         comodel_name='product.template.attribute.line',
         inverse_name='attribute_id',

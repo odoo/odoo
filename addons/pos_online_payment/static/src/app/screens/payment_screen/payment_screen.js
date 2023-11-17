@@ -103,7 +103,6 @@ patch(PaymentScreen.prototype, {
                 });
                 return false;
             }
-
             let prevOnlinePaymentLine = null;
             let lastOrderServerOPData = null;
             for (const onlinePaymentLine of onlinePaymentLines) {
@@ -111,7 +110,6 @@ patch(PaymentScreen.prototype, {
                 // The local state is not aware if the online payment has already been done.
                 lastOrderServerOPData =
                     await this.currentOrder.update_online_payments_data_with_server(
-                        this.pos.orm,
                         onlinePaymentLineAmount
                     );
                 if (!lastOrderServerOPData) {
@@ -161,10 +159,7 @@ patch(PaymentScreen.prototype, {
 
             if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
                 lastOrderServerOPData =
-                    await this.currentOrder.update_online_payments_data_with_server(
-                        this.pos.orm,
-                        0
-                    );
+                    await this.currentOrder.update_online_payments_data_with_server(0);
             }
             if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
                 return false;
@@ -174,14 +169,14 @@ patch(PaymentScreen.prototype, {
             return false; // Cancel normal flow because the current order is already saved on the server.
         } else if (this.currentOrder.server_id) {
             const orderServerOPData =
-                await this.currentOrder.update_online_payments_data_with_server(this.pos.orm, 0);
-
+                await this.currentOrder.update_online_payments_data_with_server(0);
             if (!orderServerOPData) {
                 return ask(this.dialog, {
                     title: _t("Online payment unavailable"),
                     body: _t(
                         "There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"
                     ),
+                    confirmLabel: _t("Yes"),
                 });
             }
             if (orderServerOPData.is_paid) {
@@ -201,7 +196,7 @@ patch(PaymentScreen.prototype, {
     },
     cancelOnlinePayment(order) {
         // Remove the draft order from the server if there is no done online payment
-        order.update_online_payments_data_with_server(this.pos.orm, 0);
+        order.update_online_payments_data_with_server(0);
     },
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
@@ -231,7 +226,7 @@ patch(PaymentScreen.prototype, {
             });
             return;
         }
-        this.pos.orders.add(updatedOrder);
+        this.pos.orders.push(updatedOrder);
         const oldLocalOrder = this.currentOrder;
         this.pos.set_order(updatedOrder);
         this.pos.removeOrder(oldLocalOrder, false);

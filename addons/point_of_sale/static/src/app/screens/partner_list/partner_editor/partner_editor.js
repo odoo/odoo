@@ -15,7 +15,7 @@ export class PartnerEditor extends Component {
         partner: { type: Object, optional: true },
         missingFields: { type: Array, optional: true, element: String },
         closePartnerList: Function,
-        getPayload: Function,
+        getPayload: { type: Function, optional: true },
         close: Function,
     };
     static defaultProps = {
@@ -44,8 +44,8 @@ export class PartnerEditor extends Component {
                     "vat",
                 ].map((field) => [field, partner[field] || ""])
             ),
-            state_id: partner.state_id && partner.state_id[0],
-            country_id: partner.country_id && partner.country_id[0],
+            state_id: partner.state_id && partner.state_id.id,
+            country_id: partner.country_id && partner.country_id.id,
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
         this.confirm = useAsyncLockedMethod(this.confirm);
@@ -53,9 +53,9 @@ export class PartnerEditor extends Component {
     // FIXME POSREF naming
     setDefaultPricelist(partner) {
         if (partner.property_product_pricelist) {
-            return partner.property_product_pricelist[0];
+            return partner.property_product_pricelist.id;
         }
-        return this.pos.default_pricelist?.id ?? false;
+        return this.pos.config.pricelist_id?.id ?? false;
     }
     get partnerImageUrl() {
         // We prioritize image_1920 in the `changes` field because we want
@@ -95,8 +95,9 @@ export class PartnerEditor extends Component {
         }
         if (
             processedChanges.state_id &&
-            this.pos.states.find((state) => state.id === processedChanges.state_id)
-                .country_id[0] !== processedChanges.country_id
+            this.pos.models["res.country.state"].find(
+                (state) => state.id === processedChanges.state_id
+            ).country_id.id !== processedChanges.country_id
         ) {
             processedChanges.state_id = false;
         }

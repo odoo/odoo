@@ -8,7 +8,7 @@ patch(Order.prototype, {
         return {
             ...super.export_for_printing(),
             is_gcc_country: ["SA", "AE", "BH", "OM", "QA", "KW"].includes(
-                this.pos.company.country?.code
+                this.pos.company.country_id?.code
             ),
         };
     },

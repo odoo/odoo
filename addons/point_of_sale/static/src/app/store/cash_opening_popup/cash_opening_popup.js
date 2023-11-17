@@ -21,17 +21,16 @@ export class CashOpeningPopup extends Component {
         this.state = useState({
             notes: "",
             openingCash: this.env.utils.formatCurrency(
-                this.pos.pos_session.cash_register_balance_start || 0,
+                this.pos.session.cash_register_balance_start || 0,
                 false
             ),
         });
-        this.orm = useService("orm");
         this.hardwareProxy = useService("hardware_proxy");
     }
     confirm() {
-        this.pos.pos_session.state = "opened";
-        this.orm.call("pos.session", "set_cashbox_pos", [
-            this.pos.pos_session.id,
+        this.pos.session.state = "opened";
+        this.pos.data.call("pos.session", "set_cashbox_pos", [
+            this.pos.session.id,
             parseFloat(this.state.openingCash),
             this.state.notes,
         ]);

@@ -7,7 +7,6 @@ import {
     formatDate,
     formatDateTime,
     serializeDateTime,
-    deserializeDate,
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import {
@@ -17,45 +16,13 @@ import {
     floatIsZero,
 } from "@web/core/utils/numbers";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
-import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
-import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { ScaleScreen } from "../screens/scale_screen/scale_screen";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const { DateTime } = luxon;
-
-/**
- * If optimization is needed, then we should implement this
- * using a Balanced Binary Tree to behave like an Object and an Array.
- * But behaving like Object (indexed by cid) might not be
- * needed. Let's see how it turns out.
- */
-export class PosCollection extends Array {
-    getByCID(cid) {
-        return this.find((item) => item.cid == cid);
-    }
-    add(item) {
-        this.push(item);
-    }
-    remove(item) {
-        const index = this.findIndex((_item) => item.cid == _item.cid);
-        if (index < 0) {
-            return index;
-        }
-        this.splice(index, 1);
-        return index;
-    }
-    reset() {
-        this.length = 0;
-    }
-    at(index) {
-        return this[index];
-    }
-}
 
 let nextId = 0;
 class PosModel {
@@ -91,262 +58,6 @@ class PosModel {
         return `c${nextId++}`;
     }
 }
-export class Product extends PosModel {
-    constructor(obj) {
-        super(obj);
-        this.parent_category_ids = [];
-        let category = this.categ.parent;
-        while (category) {
-            this.parent_category_ids.push(category.id);
-            category = category.parent;
-        }
-    }
-    isAllowOnlyOneLot() {
-        const productUnit = this.get_unit();
-        return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
-    }
-    /**
-     * @returns {string}
-     */
-    getImageUrl() {
-        return (
-            (this.image_128 &&
-                `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
-            ""
-        );
-    }
-    isTracked() {
-        return (
-            ["serial", "lot"].includes(this.tracking) &&
-            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-        );
-    }
-    get_unit() {
-        var unit_id = this.uom_id;
-        if (!unit_id) {
-            return undefined;
-        }
-        unit_id = unit_id[0];
-        if (!this.pos) {
-            return undefined;
-        }
-        return this.pos.units_by_id[unit_id];
-    }
-    async _onScaleNotAvailable() {}
-    get isScaleAvailable() {
-        return true;
-    }
-    getFormattedUnitPrice() {
-        const formattedUnitPrice = this.env.utils.formatCurrency(this.get_display_price());
-        if (this.to_weight) {
-            return `${formattedUnitPrice}/${this.get_unit().name}`;
-        } else {
-            return formattedUnitPrice;
-        }
-    }
-
-    async openConfigurator({ initQuantity = 1 }) {
-        const attributes = this.attribute_line_ids
-            .map((id) => this.pos.attributes_by_ptal_id[id])
-            .filter((attr) => attr !== undefined);
-        return await makeAwaitable(this.env.services.dialog, ProductConfiguratorPopup, {
-            product: this,
-            attributes: attributes,
-        });
-    }
-
-    isConfigurable() {
-        return this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id);
-    }
-
-    async getAddProductOptions(code) {
-        let price_extra = 0.0;
-        let draftPackLotLines, packLotLinesToEdit, attribute_value_ids;
-        let quantity = 1;
-        let comboLines = [];
-        let attribute_custom_values = {};
-
-        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
-            quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
-        }
-
-        if (this.isConfigurable()) {
-            const payload = await this.openConfigurator({ initQuantity: quantity });
-            if (payload) {
-                attribute_value_ids = payload.attribute_value_ids;
-                attribute_custom_values = payload.attribute_custom_values;
-                price_extra += payload.price_extra;
-                quantity = payload.quantity;
-            } else {
-                return;
-            }
-        }
-        if (this.combo_ids.length) {
-            comboLines = await makeAwaitable(this.env.services.dialog, ComboConfiguratorPopup, {
-                product: this,
-                keepBehind: true,
-            });
-            if (!comboLines) {
-                return;
-            }
-        }
-        // Gather lot information if required.
-        if (this.isTracked()) {
-            packLotLinesToEdit =
-                (!this.isAllowOnlyOneLot() &&
-                    this.pos.selectedOrder
-                        .get_orderlines()
-                        .filter((line) => !line.get_discount())
-                        .find((line) => line.product.id === this.id)
-                        ?.getPackLotLinesToEdit()) ||
-                [];
-            // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === "lot") {
-                // consider the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = [{ lot_name: code.code }];
-                draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                draftPackLotLines = await this.pos.getEditedPackLotLines(
-                    this.isAllowOnlyOneLot(),
-                    packLotLinesToEdit,
-                    this.display_name
-                );
-            }
-            if (!draftPackLotLines) {
-                return;
-            }
-        }
-
-        // Take the weight if necessary.
-        if (this.to_weight && this.pos.config.iface_electronic_scale) {
-            if (this.isScaleAvailable) {
-                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen, {
-                    product: this,
-                });
-                if (!weight) {
-                    return;
-                }
-                quantity = weight;
-            } else {
-                await this._onScaleNotAvailable();
-            }
-        }
-
-        return {
-            draftPackLotLines,
-            quantity,
-            attribute_custom_values,
-            price_extra,
-            comboLines,
-            attribute_value_ids,
-        };
-    }
-    isPricelistItemUsable(item, date) {
-        const categories = this.parent_category_ids.concat(this.categ.id);
-        return (
-            (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
-        );
-    }
-    // Port of _get_product_price on product.pricelist.
-    //
-    // Anything related to UOM can be ignored, the POS will always use
-    // the default UOM set on the product and the user cannot change
-    // it.
-    //
-    // Pricelist items do not have to be sorted. All
-    // product.pricelist.item records are loaded with a search_read
-    // and were automatically sorted based on their _order by the
-    // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
-        const date = DateTime.now();
-
-        // In case of nested pricelists, it is necessary that all pricelists are made available in
-        // the POS. Display a basic alert to the user in the case where there is a pricelist item
-        // but we can't load the base pricelist to get the price when calling this method again.
-        // As this method is also call without pricelist available in the POS, we can't just check
-        // the absence of pricelist.
-        if (recurring && !pricelist) {
-            alert(
-                _t(
-                    "An error occurred when loading product prices. " +
-                        "Make sure all pricelists are available in the POS."
-                )
-            );
-        }
-
-        const rules = !pricelist
-            ? []
-            : (this.applicablePricelistItems[pricelist.id] || []).filter((item) =>
-                  this.isPricelistItemUsable(item, date)
-              );
-
-        let price = this.lst_price + (price_extra || 0);
-        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
-        if (!rule) {
-            return price;
-        }
-
-        if (rule.base === "pricelist") {
-            const base_pricelist = this.pos.pricelists.find(
-                (pricelist) => pricelist.id === rule.base_pricelist_id[0]
-            );
-            if (base_pricelist) {
-                price = this.get_price(base_pricelist, quantity, 0, true);
-            }
-        } else if (rule.base === "standard_price") {
-            price = this.standard_price;
-        }
-
-        if (rule.compute_price === "fixed") {
-            price = rule.fixed_price;
-        } else if (rule.compute_price === "percentage") {
-            price = price - price * (rule.percent_price / 100);
-        } else {
-            var price_limit = price;
-            price -= price * (rule.price_discount / 100);
-            if (rule.price_round) {
-                price = round_pr(price, rule.price_round);
-            }
-            if (rule.price_surcharge) {
-                price += rule.price_surcharge;
-            }
-            if (rule.price_min_margin) {
-                price = Math.max(price, price_limit + rule.price_min_margin);
-            }
-            if (rule.price_max_margin) {
-                price = Math.min(price, price_limit + rule.price_max_margin);
-            }
-        }
-
-        // This return value has to be rounded with round_di before
-        // being used further. Note that this cannot happen here,
-        // because it would cause inconsistencies with the backend for
-        // pricelist that have base == 'pricelist'.
-        return price;
-    }
-    get_display_price({
-        pricelist = this.pos.getDefaultPricelist(),
-        quantity = 1,
-        price = this.get_price(pricelist, quantity),
-        iface_tax_included = this.pos.config.iface_tax_included,
-    } = {}) {
-        const order = this.pos.get_order();
-        const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
-        const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
-        const priceAfterFp = this.pos.computePriceAfterFp(price, currentTaxes);
-        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
-        if (iface_tax_included === "total") {
-            return allPrices.total_included;
-        } else {
-            return allPrices.total_excluded;
-        }
-    }
-}
 
 var orderline_id = 1;
 
@@ -375,7 +86,6 @@ export class Orderline extends PosModel {
             return;
         }
         this.product = options.product;
-        this.tax_ids = options.tax_ids;
         this.set_product_lot(this.product);
         options.quantity ? this.set_quantity(options.quantity) : this.set_quantity(1);
         this.discount = 0;
@@ -391,14 +101,41 @@ export class Orderline extends PosModel {
         this.customerNote = this.customerNote || "";
         this.saved_quantity = 0;
 
+        if (options.tax_ids) {
+            this.compute_related_tax(options.tax_ids);
+        }
+
         if (options.price) {
             this.set_unit_price(options.price);
         } else {
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
         }
     }
+
+    // FIXME: this is a temporary solution. When order and orderline will use
+    // related models this will be removed.
+    compute_related_tax(tax_ids) {
+        if (Array.isArray(tax_ids)) {
+            const validTax = [];
+
+            for (let taxId of tax_ids) {
+                if (typeof taxId === "object") {
+                    taxId = taxId.id;
+                }
+
+                const tax = this.pos.models["account.tax"].get(taxId);
+
+                if (tax) {
+                    validTax.push(tax);
+                }
+            }
+
+            this.tax_ids = validTax.length > 0 ? validTax : undefined;
+        }
+    }
+
     init_from_JSON(json) {
-        this.product = this.pos.db.get_product_by_id(json.product_id);
+        this.product = this.pos.models["product.product"].get(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.price_type = json.price_type || "original";
@@ -422,18 +159,24 @@ export class Orderline extends PosModel {
                 { env: this.env },
                 { json: { ...packlotline, order_line: this } }
             );
-            this.pack_lot_lines.add(pack_lot_line);
+            this.pack_lot_lines.push(pack_lot_line);
         }
-        this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
+        this.tax_ids = this.compute_related_tax(
+            json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined
+        );
         this.set_customer_note(json.customer_note);
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
         this.saved_quantity = json.qty;
         this.uuid = json.uuid;
         this.skipChange = json.skip_change;
+        this.combo_line_id = json.combo_line_id;
+
+        // FIXME rename to orderline_children_ids
         this.combo_line_ids = json.combo_line_ids;
+
+        // FIXME rename to orderline_parent_id
         this.combo_parent_id = json.combo_parent_id;
-        this.comboLine = this.pos.db.combo_line_by_id[json.combo_line_id];
     }
     clone() {
         var orderline = new Orderline(
@@ -498,7 +241,7 @@ export class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
         // Set the new values for modified lot lines.
         const lotLinesToRemove = [];
         for (const lotLine of this.pack_lot_lines) {
@@ -514,7 +257,7 @@ export class Orderline extends PosModel {
 
         // Remove those that needed to be removed.
         for (const lotLine of lotLinesToRemove) {
-            this.pack_lot_lines.remove(lotLine);
+            this.pack_lot_lines = this.pack_lot_lines.filter((pll) => pll.cid !== lotLine.cid);
         }
 
         // Create new pack lot lines.
@@ -522,7 +265,7 @@ export class Orderline extends PosModel {
         for (const newLotLine of newPackLotLines) {
             newPackLotLine = new Packlotline({ env: this.env }, { order_line: this });
             newPackLotLine.lot_name = newLotLine.lot_name;
-            this.pack_lot_lines.add(newPackLotLine);
+            this.pack_lot_lines.push(newPackLotLine);
         }
 
         // Set the quantity of the line based on number of pack lots.
@@ -532,7 +275,7 @@ export class Orderline extends PosModel {
     }
     set_product_lot(product) {
         this.has_product_lot = product.tracking !== "none";
-        this.pack_lot_lines = this.has_product_lot && new PosCollection();
+        this.pack_lot_lines = this.has_product_lot && [];
     }
     getNote() {
         return this.note;
@@ -568,7 +311,7 @@ export class Orderline extends PosModel {
     set_full_product_name() {
         this.full_product_name = constructFullProductName(
             this,
-            this.pos.db.attribute_value_by_id,
+            this.pos.models["product.template.attribute.value"].getAllBy("id"),
             this.product.display_name
         );
     }
@@ -616,7 +359,9 @@ export class Orderline extends PosModel {
         var unit = this.get_unit();
         if (unit) {
             if (unit.rounding) {
-                var decimals = this.pos.dp["Product Unit of Measure"];
+                var decimals = this.pos.data.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit of Measure"
+                ).digits;
                 var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
                 this.quantity = round_pr(quant, rounding);
                 this.quantityStr = formatFloat(this.quantity, {
@@ -697,7 +442,7 @@ export class Orderline extends PosModel {
 
     // return the unit of measure of the product
     get_unit() {
-        return this.product.get_unit();
+        return this.product.uom_id;
     }
     // return the product of this orderline
     get_product() {
@@ -718,10 +463,11 @@ export class Orderline extends PosModel {
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with(orderline) {
+        const productPriceUnit = this.pos.data.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        ).digits;
         var price = parseFloat(
-            round_di(this.price || 0, this.pos.dp["Product Price"]).toFixed(
-                this.pos.dp["Product Price"]
-            )
+            round_di(this.price || 0, productPriceUnit).toFixed(productPriceUnit)
         );
         var order_line_price = orderline
             .get_product()
@@ -735,7 +481,6 @@ export class Orderline extends PosModel {
             !this.skipChange &&
             orderline.getNote() === this.getNote() &&
             this.get_product().id === orderline.get_product().id &&
-            this.get_unit() &&
             this.is_pos_groupable() &&
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
@@ -745,17 +490,17 @@ export class Orderline extends PosModel {
             ) &&
             !(
                 this.product.tracking === "lot" &&
-                (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+                (this.pos.pickingType.use_create_lots || this.pos.pickingType.use_existing_lots)
             ) &&
             this.full_product_name === orderline.full_product_name &&
             orderline.get_customer_note() === this.get_customer_note() &&
             !this.refunded_orderline_id &&
-            !this.isPartOfCombo() &&
             !orderline.isPartOfCombo()
         );
     }
     is_pos_groupable() {
-        return this.get_unit()?.is_pos_groupable && !this.isPartOfCombo();
+        const unit_groupable = this.product.uom_id ? this.product.uom_id.is_pos_groupable : false;
+        return unit_groupable && !this.isPartOfCombo();
     }
     merge(orderline) {
         this.order.assert_editable();
@@ -787,9 +532,9 @@ export class Orderline extends PosModel {
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
             price_type: this.price_type,
-            combo_line_ids: this.comboLines?.map((line) => line.id || line.cid),
-            combo_parent_id: this.comboParent?.id || this.comboParent?.cid,
-            combo_line_id: this.comboLine?.id,
+            combo_line_ids: this.combo_line_ids?.map((line) => line.id),
+            combo_parent_id: this.combo_parent_id?.id,
+            combo_line_id: this.combo_line_id?.id,
         };
     }
 
@@ -801,10 +546,16 @@ export class Orderline extends PosModel {
             : isNaN(parseFloat(price))
             ? 0
             : oParseFloat("" + price);
-        this.price = round_di(parsed_price || 0, this.pos.dp["Product Price"]);
+        this.price = round_di(
+            parsed_price || 0,
+            this.pos.data.models["decimal.precision"].find((dp) => dp.name === "Product Price")
+                .digits
+        );
     }
     get_unit_price() {
-        var digits = this.pos.dp["Product Price"];
+        var digits = this.pos.data.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        ).digits;
         // round and truncate to mimic _symbol_set behavior
         return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
     }
@@ -898,12 +649,13 @@ export class Orderline extends PosModel {
         var ptaxes_ids = this.tax_ids || this.get_product().taxes_id;
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
-            ptaxes_set[ptaxes_ids[i]] = true;
+            ptaxes_set[ptaxes_ids[i].id] = true;
         }
         var taxes = [];
-        for (i = 0; i < this.pos.taxes.length; i++) {
-            if (ptaxes_set[this.pos.taxes[i].id]) {
-                taxes.push(this.pos.taxes[i]);
+        const accountTax = this.pos.models["account.tax"].getAll();
+        for (i = 0; i < accountTax.length; i++) {
+            if (ptaxes_set[accountTax[i].id]) {
+                taxes.push(accountTax[i]);
             }
         }
         return taxes;
@@ -912,8 +664,11 @@ export class Orderline extends PosModel {
         return this.get_all_prices().taxDetails;
     }
     get_taxes() {
-        var taxes_ids = this.tax_ids || this.get_product().taxes_id;
-        return this.pos.getTaxesByIds(taxes_ids);
+        const taxes_ids =
+            this.tax_ids && this.tax_ids.length > 0
+                ? this.tax_ids.map((t) => t.id)
+                : this.get_product().taxes_id.map((t) => t.id);
+        return this.pos.models["account.tax"].filter((tax) => taxes_ids.includes(tax.id));
     }
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
@@ -959,25 +714,30 @@ export class Orderline extends PosModel {
     _getProductTaxesAfterFiscalPosition() {
         const product = this.get_product();
         let taxesIds = this.tax_ids || product.taxes_id;
-        taxesIds = taxesIds.filter((t) => t in this.pos.taxes_by_id);
+        taxesIds = taxesIds.filter((t) => t.id in this.pos.models["account.tax"].getAllBy("id"));
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
     }
     get_all_prices(qty = this.get_quantity()) {
         var price_unit = this.get_unit_price() * (1.0 - this.get_discount() / 100.0);
         var taxtotal = 0;
-
         var product = this.get_product();
-        var taxes_ids = this.tax_ids || product.taxes_id;
-        taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
+        var taxes_ids = [];
+
+        if (!this.tax_ids) {
+            taxes_ids = product.taxes_id;
+        } else {
+            taxes_ids = this.tax_ids;
+        }
+
         var taxdetail = {};
         var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
-
         var all_taxes = this.compute_all(
             product_taxes,
             price_unit,
             qty,
             this.pos.currency.rounding
         );
+
         var all_taxes_before_discount = this.compute_all(
             product_taxes,
             this.get_unit_price(),
@@ -1005,17 +765,21 @@ export class Orderline extends PosModel {
         return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
     compute_fixed_price(price) {
-        return this.pos.computePriceAfterFp(price, this.get_taxes());
+        return this.pos.computePriceAfterFp(price, this.get_taxes()).price;
     }
     get_fixed_lst_price() {
         return this.compute_fixed_price(this.get_lst_price());
     }
     get_lst_price() {
-        return this.product.get_price(this.pos.default_pricelist, 1, this.price_extra);
+        return this.product.get_price(this.pos.config.pricelist_id, 1, this.price_extra);
     }
     set_lst_price(price) {
         this.order.assert_editable();
-        this.product.lst_price = round_di(parseFloat(price) || 0, this.pos.dp["Product Price"]);
+        this.product.lst_price = round_di(
+            parseFloat(price) || 0,
+            this.pos.data.models["decimal.precision"].find((dp) => dp.name === "Product Price")
+                .digits
+        );
     }
     is_last_line() {
         var order = this.pos.get_order();
@@ -1040,7 +804,7 @@ export class Orderline extends PosModel {
      */
     isTipLine() {
         const tipProduct = this.pos.config.tip_product_id;
-        return tipProduct && this.product.id === tipProduct[0];
+        return tipProduct && this.product.id === tipProduct.id;
     }
 
     /**
@@ -1048,25 +812,25 @@ export class Orderline extends PosModel {
      * (including the given line), or just the given line if it is not part of a combo.
      */
     getAllLinesInCombo() {
-        if (this.comboParent) {
-            // having a `comboParent` means that we are not
+        if (this.combo_parent_id) {
+            // having a `combo_parent_id` means that we are not
             // at the root node of the combo tree.
             // Thus, we first navigate to the root
-            return this.comboParent.getAllLinesInCombo();
+            return this.combo_parent_id.getAllLinesInCombo();
         }
         const lines = [];
         const stack = [this];
         while (stack.length) {
             const n = stack.pop();
             lines.push(n);
-            if (n.comboLines) {
-                stack.push(...n.comboLines);
+            if (n.combo_line_ids) {
+                stack.push(...n.combo_line_ids);
             }
         }
         return lines;
     }
     isPartOfCombo() {
-        return Boolean(this.comboParent || this.comboLines?.length);
+        return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
     getDisplayData() {
         return {
@@ -1076,15 +840,19 @@ export class Orderline extends PosModel {
                     ? "free"
                     : this.env.utils.formatCurrency(this.get_display_price()),
             qty: this.get_quantity_str(),
-            unit: this.get_unit().name,
+            unit: this.product.uom_id ? this.product.uom_id.name : "",
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
             oldUnitPrice: this.env.utils.formatCurrency(this.get_old_unit_display_price()),
             discount: this.get_discount_str(),
             customerNote: this.get_customer_note(),
             internalNote: this.getNote(),
-            comboParent: this.comboParent?.get_full_product_name(),
+            combo_parent_id: this.combo_parent_id
+                ? this.combo_parent_id.get_full_product_name()
+                : "",
             pack_lot_lines: this.get_lot_lines(),
-            price_without_discount: this.env.utils.formatCurrency(this.getUnitDisplayPriceBeforeDiscount()),
+            price_without_discount: this.env.utils.formatCurrency(
+                this.getUnitDisplayPriceBeforeDiscount()
+            ),
         };
     }
 }
@@ -1147,7 +915,7 @@ export class Payment extends PosModel {
     }
     init_from_JSON(json) {
         this.amount = json.amount;
-        this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
+        this.payment_method = this.pos.models["pos.payment.method"].get(json.payment_method_id);
         this.can_be_reversed = json.can_be_reversed;
         this.name = this.payment_method.name;
         this.payment_status = json.payment_status;
@@ -1287,9 +1055,9 @@ export class Order extends PosModel {
         this.temporary = options.temporary || false;
         this.date_order = luxon.DateTime.now();
         this.to_invoice = false;
-        this.orderlines = new PosCollection();
-        this.paymentlines = new PosCollection();
-        this.pos_session_id = this.pos.pos_session.id;
+        this.orderlines = [];
+        this.paymentlines = [];
+        this.pos_session_id = this.pos.session.id;
         this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
         this.shippingDate = null;
@@ -1316,22 +1084,28 @@ export class Order extends PosModel {
             this.init_from_JSON(options.json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
-                line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);
-                const combo_parent_id = line.combo_parent_id?.[0] || line.combo_parent_id;
+                line.combo_line_ids = line.combo_line_ids?.map((id) => linesById[id]);
+                const combo_parent_id = linesById[line.combo_parent_id];
+
                 if (combo_parent_id) {
-                    line.comboParent = linesById[combo_parent_id];
+                    line.combo_parent_id = combo_parent_id;
                 }
             }
         } else {
-            this.set_pricelist(this.pos.default_pricelist);
-            this.sequence_number = this.pos.pos_session.sequence_number++;
+            this.set_pricelist(this.pos.config.pricelist_id);
+            this.sequence_number = this.pos.session.sequence_number++;
             this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
             this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
             this.uid = this.generate_unique_id();
             this.name = _t("Order %s", this.uid);
-            this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
-                return fp.id === self.pos.config.default_fiscal_position_id[0];
-            });
+
+            if (self.pos.config.default_fiscal_position_id) {
+                this.fiscal_position = this.pos.models["account.fiscal.position"].find(function (
+                    fp
+                ) {
+                    return fp.id === self.pos.config.default_fiscal_position_id.id;
+                });
+            }
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
@@ -1364,16 +1138,16 @@ export class Order extends PosModel {
         let partner;
         if (json.state && ["done", "invoiced", "paid"].includes(json.state)) {
             this.sequence_number = json.sequence_number;
-        } else if (json.pos_session_id !== this.pos.pos_session.id) {
-            this.sequence_number = this.pos.pos_session.sequence_number++;
+        } else if (json.pos_session_id !== this.pos.session.id) {
+            this.sequence_number = this.pos.session.sequence_number++;
         } else {
             this.sequence_number = json.sequence_number;
-            this.pos.pos_session.sequence_number = Math.max(
+            this.pos.session.sequence_number = Math.max(
                 this.sequence_number + 1,
-                this.pos.pos_session.sequence_number
+                this.pos.session.sequence_number
             );
         }
-        this.session_id = this.pos.pos_session.id;
+        this.session_id = this.pos.session.id;
         this.uid = json.uid;
         if (json.name) {
             this.name = json.name;
@@ -1386,7 +1160,7 @@ export class Order extends PosModel {
         this.firstDraft = false;
 
         if (json.fiscal_position_id) {
-            var fiscal_position = this.pos.fiscal_positions.find(function (fp) {
+            var fiscal_position = this.pos.models["account.fiscal.position"].find(function (fp) {
                 return fp.id === json.fiscal_position_id;
             });
 
@@ -1399,15 +1173,15 @@ export class Order extends PosModel {
         }
 
         if (json.pricelist_id) {
-            this.pricelist = this.pos.pricelists.find(function (pricelist) {
+            this.pricelist = this.pos.models["product.pricelist"].find(function (pricelist) {
                 return pricelist.id === json.pricelist_id;
             });
         } else {
-            this.pricelist = this.pos.default_pricelist;
+            this.pricelist = this.pos.config.pricelist_id;
         }
 
         if (json.partner_id) {
-            partner = this.pos.db.get_partner_by_id(json.partner_id);
+            partner = this.pos.models["res.partner"].get(json.partner_id);
             if (!partner) {
                 console.error("ERROR: trying to load a partner not available in the pos");
             }
@@ -1423,7 +1197,8 @@ export class Order extends PosModel {
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
-            if (orderline.product_id && this.pos.db.get_product_by_id(orderline.product_id)) {
+            const product = this.pos.models["product.product"].get(orderline.product_id);
+            if (orderline.product_id && product) {
                 this.add_orderline(
                     new Orderline(
                         { env: this.env },
@@ -1440,7 +1215,7 @@ export class Order extends PosModel {
                 { env: this.env },
                 { pos: this.pos, order: this, json: paymentline }
             );
-            this.paymentlines.add(newpaymentline);
+            this.paymentlines.push(newpaymentline);
 
             if (i === paymentlines.length - 1) {
                 this.select_paymentline(newpaymentline);
@@ -1566,7 +1341,7 @@ export class Order extends PosModel {
                         ? this.getTable().name
                         : false,
                     floor_name: this.pos.config.module_pos_restaurant
-                        ? this.getTable().floor.name
+                        ? this.getTable().floor_id.name
                         : false,
                     name: this.name || "unknown order",
                     time: {
@@ -1587,13 +1362,20 @@ export class Order extends PosModel {
         return isPrintSuccessful;
     }
     _getPrintingCategoriesChanges(categories, currentOrderChange) {
+        const filterFn = (change) => {
+            const product = this.pos.models["product.product"].get(change["product_id"]);
+            const categoryIds = product.parentPosCategIds;
+
+            for (const categoryId of categoryIds) {
+                if (categories.includes(categoryId)) {
+                    return true;
+                }
+            }
+        };
+
         return {
-            new: currentOrderChange["new"].filter((change) =>
-                this.pos.db.is_product_in_category(categories, change["product_id"])
-            ),
-            cancelled: currentOrderChange["cancelled"].filter((change) =>
-                this.pos.db.is_product_in_category(categories, change["product_id"])
-            ),
+            new: currentOrderChange["new"].filter(filterFn),
+            cancelled: currentOrderChange["cancelled"].filter(filterFn),
         };
     }
     /**
@@ -1655,10 +1437,11 @@ export class Order extends PosModel {
             const product = orderline.get_product();
             const note = orderline.getNote();
             const lineKey = `${orderline.uuid} - ${note}`;
-            if (
-                prepaCategoryIds.size === 0 ||
-                this.pos.db.any_of_is_subcategory(product.pos_categ_ids, [...prepaCategoryIds])
-            ) {
+            const productCategoryIds = product.parentPosCategIds.filter((id) =>
+                prepaCategoryIds.has(id)
+            );
+
+            if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
                 const quantity = orderline.get_quantity();
                 const quantityDiff = oldChanges[lineKey]
                     ? quantity - oldChanges[lineKey].quantity
@@ -1752,7 +1535,7 @@ export class Order extends PosModel {
             this.orderlines.some(
                 (line) => line.get_product().tracking !== "none" && !line.has_valid_product_lot()
             ) &&
-            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+            (this.pos.pickingType.use_create_lots || this.pos.pickingType.use_existing_lots)
         ) {
             const confirmed = await ask(this.env.services.dialog, {
                 title: _t("Some Serial/Lot Numbers are missing"),
@@ -1785,9 +1568,9 @@ export class Order extends PosModel {
             return s;
         }
         return (
-            zero_pad(this.pos.pos_session.id, 5) +
+            zero_pad(this.pos.session.id, 5) +
             "-" +
-            zero_pad(this.pos.pos_session.login_number, 3) +
+            zero_pad(this.pos.session.login_number, 3) +
             "-" +
             zero_pad(this.sequence_number, 4)
         );
@@ -1810,7 +1593,7 @@ export class Order extends PosModel {
             line.order._unlinkOrderline(line);
         }
         line.order = this;
-        this.orderlines.add(line);
+        this.orderlines.push(line);
         this.select_orderline(this.get_last_orderline());
     }
     get_orderline(id) {
@@ -1866,7 +1649,7 @@ export class Order extends PosModel {
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
         const has_taxes_included_in_price = tax_ids_array.filter(
-            (tax_id) => this.pos.taxes_by_id[tax_id].price_include
+            (tax_id) => this.pos.models["account.tax"].get(tax_id).price_include
         ).length;
 
         const base_amount = lines.reduce(
@@ -1883,8 +1666,8 @@ export class Order extends PosModel {
         return this.orderlines.at(orderlines.length - 1);
     }
     get_tip() {
-        var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
-        var lines = this.get_orderlines();
+        const tip_product = this.pos.config.tip_product_id;
+        const lines = this.get_orderlines();
         if (!tip_product) {
             return 0;
         } else {
@@ -1898,10 +1681,10 @@ export class Order extends PosModel {
     }
 
     set_tip(tip) {
-        var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
-        var lines = this.get_orderlines();
+        const tip_product = this.pos.config.tip_product_id;
+        const lines = this.get_orderlines();
         if (tip_product) {
-            for (var i = 0; i < lines.length; i++) {
+            for (let i = 0; i < lines.length; i++) {
                 if (lines[i].get_product() === tip_product) {
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
@@ -1930,7 +1713,8 @@ export class Order extends PosModel {
 
         const lines_to_recompute = orderlines.filter(
             (line) =>
-                line.price_type === "original" && !(line.comboLines?.length || line.comboParent)
+                line.price_type === "original" &&
+                !(line.combo_line_ids?.length || line.combo_parent_id)
         );
         lines_to_recompute.forEach((line) => {
             line.set_unit_price(
@@ -1939,14 +1723,14 @@ export class Order extends PosModel {
             self.fix_tax_included_price(line);
         });
         const combo_parent_lines = orderlines.filter(
-            (line) => line.price_type === "original" && line.comboLines?.length
+            (line) => line.price_type === "original" && line.combo_line_ids?.length
         );
         const attributes_prices = {};
         combo_parent_lines.forEach((parentLine) => {
             attributes_prices[parentLine.id] = this.compute_child_lines(
                 parentLine.product,
-                parentLine.comboLines.map((childLine) => {
-                    const comboLineCopy = { ...childLine.comboLine };
+                parentLine.combo_line_ids.map((childLine) => {
+                    const comboLineCopy = { ...childLine.combo_line_id };
                     if (childLine.attribute_value_ids) {
                         comboLineCopy.configuration = {
                             attribute_value_ids: childLine.attribute_value_ids,
@@ -1958,12 +1742,12 @@ export class Order extends PosModel {
             );
         });
         const combo_children_lines = orderlines.filter(
-            (line) => line.price_type === "original" && line.comboParent
+            (line) => line.price_type === "original" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
             line.set_unit_price(
-                attributes_prices[line.comboParent.id].find(
-                    (item) => item.comboLine.id === line.comboLine.id
+                attributes_prices[line.combo_parent_id.id].find(
+                    (item) => item.combo_line_id.id === line.combo_line_id.id
                 ).price
             );
             self.fix_tax_included_price(line);
@@ -1976,7 +1760,11 @@ export class Order extends PosModel {
      */
     _unlinkOrderline(line) {
         this.assert_editable();
-        this.orderlines.remove(line);
+        const index = this.orderlines.findIndex((_item) => line.cid == _item.cid);
+        if (index < 0) {
+            return index;
+        }
+        this.orderlines.splice(index, 1);
         line.order = null;
     }
 
@@ -2014,7 +1802,7 @@ export class Order extends PosModel {
         return false;
     }
 
-    async add_product(product, options) {
+    add_product(product, options) {
         if (
             this.pos.doNotAllowRefundAndSales() &&
             this._isRefundOrder() &&
@@ -2040,6 +1828,10 @@ export class Order extends PosModel {
         );
         this.fix_tax_included_price(line);
 
+        if (options.comboConfigurator?.length) {
+            options.price = 0;
+        }
+
         this.set_orderline_options(line, options);
         line.set_full_product_name();
         var to_merge_orderline;
@@ -2056,40 +1848,52 @@ export class Order extends PosModel {
             this.select_orderline(this.get_last_orderline());
         }
 
-        if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines({ ...options.draftPackLotLines, setQuantity: options.quantity === undefined });
-        }
+        if (options.comboConfigurator?.length) {
+            const childLines = this.addComboLines(line, options);
+            line.combo_line_ids = childLines;
 
-        if (options.comboLines?.length) {
-            await this.addComboLines(line, options);
-            // Make sure the combo parent is selected.
+            for (const child of childLines) {
+                child.combo_parent_id = line;
+            }
+
             this.select_orderline(line);
         }
+
+        if (options.draftPackLotLines) {
+            this.selected_orderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+        }
+
+        return this.selected_orderline;
     }
 
-    compute_child_lines(comboParentProduct, comboLines, pricelist) {
+    compute_child_lines(parentProduct, childLineConf, pricelist) {
         const combolines = [];
-        const parentLstPrice = comboParentProduct.get_price(pricelist, 1);
-        const originalTotal = comboLines.reduce((acc, comboLine) => {
-            const originalPrice = this.pos.db.combo_by_id[comboLine.combo_id[0]].base_price;
+        const parentLstPrice = parentProduct.get_price(pricelist, 1);
+        const originalTotal = childLineConf.reduce((acc, conf) => {
+            const originalPrice = conf.combo_line_id.combo_id.base_price;
             return acc + originalPrice;
         }, 0);
 
         let remainingTotal = parentLstPrice;
 
-        for (const comboLine of comboLines) {
-            const combo = this.pos.db.combo_by_id[comboLine.combo_id[0]];
+        for (const conf of childLineConf) {
+            const comboLine = conf.combo_line_id;
+            const combo = comboLine.combo_id;
             let priceUnit = round_di(
                 (combo.base_price * parentLstPrice) / originalTotal,
-                this.pos.dp["Product Price"]
+                this.pos.data.models["decimal.precision"].find((dp) => dp.name === "Product Price")
+                    .digits
             );
             remainingTotal -= priceUnit;
-            if (comboLine == comboLines[comboLines.length - 1]) {
+            if (comboLine == childLineConf[childLineConf.length - 1]) {
                 priceUnit += remainingTotal;
             }
             const attribute_value_ids = comboLine.configuration?.attribute_value_ids;
             const attributesPriceExtra = (attribute_value_ids ?? [])
-                .map((id) => this.pos.db.attribute_value_by_id[id]?.price_extra || 0)
+                .map((attr) => attr?.price_extra || 0)
                 .reduce((acc, price) => acc + price, 0);
             const totalPriceExtra = priceUnit + attributesPriceExtra + comboLine.combo_price;
             combolines.push({ comboLine: comboLine, price: totalPriceExtra, attribute_value_ids });
@@ -2097,37 +1901,31 @@ export class Order extends PosModel {
         return combolines;
     }
 
-    async addComboLines(comboParent, options) {
+    addComboLines(comboParent, options) {
         const comboLinesPrices = this.compute_child_lines(
             comboParent.product,
-            options.comboLines,
+            options.comboConfigurator,
             this.pricelist
         );
-        for (const line of comboLinesPrices) {
+
+        const comboLines = [];
+        for (const comboLine of comboLinesPrices) {
             // Important to call addProductFromUi instead of addProductToCurrentOrder
             // to avoid showing the ProductConfiguratorPopup.
             // Product configuration is already done during the setup of the combo.
-            await this.pos.addProductFromUi(
-                this.pos.db.product_by_id[line.comboLine.product_id[0]],
-                {
-                    price: line.price,
-                    comboParent,
-                    comboLine: line.comboLine,
-                    attribute_value_ids: line.attribute_value_ids,
-                }
-            );
+            const line = this.add_product(comboLine.comboLine.product_id, {
+                price: comboLine.price,
+                combo_parent_id: comboParent,
+                combo_line_id: comboLine.comboLine,
+                attribute_value_ids: comboLine.attribute_value_ids,
+            });
+
+            comboLines.push(line);
         }
+
+        return comboLines;
     }
     set_orderline_options(orderline, options) {
-        if (options.comboLines?.length) {
-            options.price = 0;
-            orderline.comboLines = [];
-        }
-        if (options.comboParent) {
-            orderline.comboParent = options.comboParent;
-            orderline.comboLine = options.comboLine;
-            orderline.comboParent.comboLines.push(orderline);
-        }
         if (options.quantity !== undefined) {
             orderline.set_quantity(options.quantity);
         }
@@ -2195,7 +1993,7 @@ export class Order extends PosModel {
             orderline.refunded_orderline_id = options.refunded_orderline_id;
         }
         if (options.tax_ids) {
-            orderline.tax_ids = options.tax_ids;
+            orderline.compute_related_tax(options.tax_ids);
         }
     }
     get_selected_orderline() {
@@ -2236,7 +2034,7 @@ export class Order extends PosModel {
                 { env: this.env },
                 { order: this, payment_method: payment_method, pos: this.pos }
             );
-            this.paymentlines.add(newPaymentline);
+            this.paymentlines.push(newPaymentline);
             this.select_paymentline(newPaymentline);
             if (this.pos.config.cash_rounding) {
                 this.selected_paymentline.set_amount(0);
@@ -2268,7 +2066,7 @@ export class Order extends PosModel {
         if (this.selected_paymentline === line) {
             this.select_paymentline(undefined);
         }
-        this.paymentlines.remove(line);
+        this.paymentlines = this.paymentlines.filter((l) => l.cid !== line.cid);
     }
     clean_empty_paymentlines() {
         var lines = this.paymentlines;
@@ -2440,11 +2238,12 @@ export class Order extends PosModel {
 
         for (var id in details) {
             if (Object.hasOwnProperty.call(details, id)) {
+                const tax = this.pos.models["account.tax"].get(id);
                 fulldetails.push({
                     amount: details[id].amount,
                     base: details[id].base,
-                    tax: this.pos.taxes_by_id[id],
-                    name: this.pos.taxes_by_id[id].name,
+                    tax: tax,
+                    name: tax.name,
                 });
             }
         }
@@ -2518,7 +2317,7 @@ export class Order extends PosModel {
                 ? last_line.payment_method.is_cash_count == true
                 : false;
             if (!only_cash || (only_cash && last_line_is_cash)) {
-                var rounding_method = this.pos.cash_rounding[0].rounding_method;
+                var rounding_method = this.pos.config.rounding_method.rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
                 if (
@@ -2530,7 +2329,7 @@ export class Order extends PosModel {
                 }
 
                 remaining *= sign;
-                var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
+                var total = round_pr(remaining, this.pos.config.rounding_method.rounding);
                 var rounding_applied = total - remaining;
 
                 // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
@@ -2538,22 +2337,22 @@ export class Order extends PosModel {
                     // https://xkcd.com/217/
                     return 0;
                 } else if (
-                    Math.abs(this.get_total_with_tax()) < this.pos.cash_rounding[0].rounding
+                    Math.abs(this.get_total_with_tax()) < this.pos.config.rounding_method.rounding
                 ) {
                     return 0;
                 } else if (rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
-                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                    rounding_applied += this.pos.config.rounding_method.rounding;
                 } else if (rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
-                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                    rounding_applied -= this.pos.config.rounding_method.rounding;
                 } else if (rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0) {
-                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                    rounding_applied -= this.pos.config.rounding_method.rounding;
                 } else if (rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0) {
-                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                    rounding_applied += this.pos.config.rounding_method.rounding;
                 } else if (
                     rounding_method === "HALF-UP" &&
-                    rounding_applied === this.pos.cash_rounding[0].rounding / -2
+                    rounding_applied === this.pos.config.rounding_method.rounding / -2
                 ) {
-                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                    rounding_applied += this.pos.config.rounding_method.rounding;
                 }
                 return sign * rounding_applied;
             } else {
@@ -2564,8 +2363,8 @@ export class Order extends PosModel {
     }
     has_not_valid_rounding() {
         if (
-            !this.pos.config.cash_rounding ||
-            this.get_total_with_tax() < this.pos.cash_rounding[0].rounding
+            !this.pos.config.rounding_method ||
+            this.get_total_with_tax() < this.pos.config.rounding_method.rounding
         ) {
             return false;
         }
@@ -2581,7 +2380,7 @@ export class Order extends PosModel {
 
             if (
                 !floatIsZero(
-                    line.amount - round_pr(line.amount, this.pos.cash_rounding[0].rounding),
+                    line.amount - round_pr(line.amount, this.pos.config.rounding_method.rounding),
                     6
                 )
             ) {
@@ -2600,7 +2399,7 @@ export class Order extends PosModel {
     }
     check_paymentlines_rounding() {
         if (this.pos.config.cash_rounding) {
-            var cash_rounding = this.pos.cash_rounding[0].rounding;
+            var cash_rounding = this.pos.config.rounding_method.rounding;
             var default_rounding = this.pos.currency.rounding;
             for (var id in this.get_paymentlines()) {
                 var line = this.get_paymentlines()[id];
@@ -2608,7 +2407,7 @@ export class Order extends PosModel {
                     round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding),
                     default_rounding
                 );
-                if (this.get_total_with_tax() < this.pos.cash_rounding[0].rounding) {
+                if (this.get_total_with_tax() < this.pos.config.rounding_method.rounding) {
                     return true;
                 }
                 if (diff && line.payment_method.is_cash_count) {
@@ -2684,22 +2483,23 @@ export class Order extends PosModel {
     }
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
-        const defaultFiscalPosition = this.pos.fiscal_positions.find(
-            (position) => position.id === this.pos.config.default_fiscal_position_id[0]
+        const defaultFiscalPosition = this.pos.models["account.fiscal.position"].find(
+            (position) => position.id === this.pos.config.default_fiscal_position_id?.id
         );
+
         if (newPartner) {
             newPartnerFiscalPosition = newPartner.property_account_position_id
-                ? this.pos.fiscal_positions.find(
-                      (position) => position.id === newPartner.property_account_position_id[0]
+                ? this.pos.models["account.fiscal.position"].find(
+                      (position) => position.id === newPartner.property_account_position_id?.id
                   )
                 : defaultFiscalPosition;
             newPartnerPricelist =
-                this.pos.pricelists.find(
-                    (pricelist) => pricelist.id === newPartner.property_product_pricelist[0]
-                ) || this.pos.default_pricelist;
+                this.pos.models["product.pricelist"].find(
+                    (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
+                ) || this.pos.config.pricelist_id;
         } else {
             newPartnerFiscalPosition = defaultFiscalPosition;
-            newPartnerPricelist = this.pos.default_pricelist;
+            newPartnerPricelist = this.pos.config.pricelist_id;
         }
         this.set_fiscal_position(newPartnerFiscalPosition);
         this.set_pricelist(newPartnerPricelist);

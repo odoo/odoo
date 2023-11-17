@@ -11,10 +11,11 @@
                         toggleEditMode.bind="toggleEditMode"
             />
             <div class="floor-selector d-flex text-center bg-100 fs-3 w-100 h-54">
-                <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
+                <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                     <button class="button button-floor btn p-3 rounded-0 flex-fill border-start shadow-none d-flex align-items-center justify-content-center" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary border-start-0' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
                         <t t-esc="floor.name" />
-                        <span t-if="activeFloor.id !== floor.id and floor.changes_count > 0" class="mx-1 badge bg-danger text-white rounded-pill py-1 px-2 fs-5" t-esc="floor.changes_count"/>
+                        <t t-set="changeCount" t-value="this.getFloorChangeCount(floor.id)"/>
+                        <span t-if="activeFloor?.id !== floor.id and changeCount > 0" class="mx-1 badge bg-danger text-white rounded-pill py-1 px-2 fs-5" t-esc="changeCount"/>
                     </button>
                 </t>
                 <button class="button button-add btn btn-secondary p-3 ms-auto rounded-0" t-ref="add-floor-ref" t-on-click="addFloor">
@@ -31,7 +32,7 @@
                 class="floor-map position-relative flex-grow-1 flex-shrink-1 flex-basis-0 w-auto h-100 overflow-auto"
                 t-ref="floor-map-ref"
             >
-                <t t-if="pos.floors.length > 0">
+                <t t-if="pos.models['restaurant.floor'].length > 0">
                     <div t-if="isFloorEmpty" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
                         <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                     </div>

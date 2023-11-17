@@ -10,11 +10,18 @@ export class SyncNotification extends Component {
         this.pos = usePos();
     }
     get sync() {
-        return this.pos.synch;
+        const pending =
+            this.pos.db.get_orders().length + this.pos.db.get_ids_to_remove_from_server().length;
+
+        return {
+            loading: this.pos.data.network.loading,
+            offline: this.pos.data.network.offline,
+            pending: this.pos.data.network.unsyncData.length + pending,
+        };
     }
     onClick() {
-        if (this.pos.synch.status !== "connected") {
-            this.pos.showOfflineWarning = true;
+        if (this.pos.data.network.offline) {
+            this.pos.data.network.warningTriggered = false;
         }
         this.pos.push_orders({ show_error: true });
     }

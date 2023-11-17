@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
         return {
             ...super.getReceiptHeaderData(...arguments),
             is_gcc_country: ["SA", "AE", "BH", "OM", "QA", "KW"].includes(
-                this.company.country?.code
+                this.company.country_id?.code
             ),
         };
     },

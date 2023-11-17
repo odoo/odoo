@@ -13,7 +13,7 @@ patch(Order.prototype, {
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
         if (this.pos.config.module_pos_hr && json.employee_id) {
-            this.cashier = this.pos.employee_by_id[json.employee_id];
+            this.cashier = this.pos.models["hr.employee"].get(json.employee_id);
         }
     },
     export_as_JSON() {

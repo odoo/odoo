@@ -253,7 +253,7 @@ patch(PaymentScreen.prototype, {
             });
         }
         // FIXME POSREF timeout
-        this.orm
+        this.pos.data
             .call("pos_mercury.mercury_transaction", "do_payment", [transaction])
             .then((data) => {
                 // if not receiving a response from Vantiv, we should retry
@@ -309,7 +309,9 @@ patch(PaymentScreen.prototype, {
                             order.select_paymentline(swipe_pending_line);
                         } else {
                             order.add_paymentline(
-                                this.payment_methods_by_id[parsed_result.payment_method_id]
+                                this.models["pos.payment.method"].get(
+                                    parsed_result.payment_method_id
+                                )
                             );
                         }
 
@@ -445,7 +447,7 @@ patch(PaymentScreen.prototype, {
             });
         }
         // FIXME POSREF timeout
-        this.orm
+        this.pos.data
             .call("pos_mercury.mercury_transaction", rpc_method, [request_data])
             .then(function (data) {
                 if (data === "timeout") {

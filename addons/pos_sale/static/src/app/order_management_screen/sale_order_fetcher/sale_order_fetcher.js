@@ -10,7 +10,6 @@ class SaleOrderFetcher extends EventBus {
         this.currentPage = 1;
         this.ordersToShow = [];
         this.totalCount = 0;
-        this.orm = orm;
         this.pos = pos;
     }
 
@@ -61,12 +60,9 @@ class SaleOrderFetcher extends EventBus {
         return sale_orders;
     }
     async _getOrderIdsForCurrentPage(limit, offset) {
-        const domain = [["currency_id", "=", this.pos.currency.id]].concat(
-            this.searchDomain || []
-        );
+        const domain = [["currency_id", "=", this.pos.currency.id]].concat(this.searchDomain || []);
 
-        this.pos.set_synch("connecting");
-        const saleOrders = await this.orm.searchRead(
+        const saleOrders = await this.pos.data.searchRead(
             "sale.order",
             domain,
             [
@@ -76,12 +72,12 @@ class SaleOrderFetcher extends EventBus {
                 "date_order",
                 "state",
                 "user_id",
+                "pricelist_id",
                 "amount_unpaid",
             ],
             { offset, limit }
         );
 
-        this.pos.set_synch("connected");
         return saleOrders;
     }
 

@@ -31,15 +31,12 @@ export class PaymentScreen extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.report = useService("report");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
-        this.payment_methods_from_config = this.pos.payment_methods.filter((method) =>
-            this.pos.config.payment_method_ids.includes(method.id)
-        );
+        this.payment_methods_from_config = this.pos.config.payment_method_ids;
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
         useErrorHandlers();
@@ -472,7 +469,7 @@ export class PaymentScreen extends Component {
                     this.currentOrder.get_rounding_applied()
             ) > 0.00001
         ) {
-            if (!this.pos.payment_methods.some((pm) => pm.is_cash_count)) {
+            if (!this.pos.models["pos.payment.method"].some((pm) => pm.is_cash_count)) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Cannot return change without a cash payment method"),
                     body: _t(
@@ -525,7 +522,8 @@ export class PaymentScreen extends Component {
         const isPaymentSuccessful = await line.pay();
         // Automatically validate the order when after an electronic payment,
         // the current order is fully paid and due is zero.
-        const { config, currency } = this.pos;
+        const config = this.pos.config;
+        const currency = this.pos.currency;
         const currentOrder = this.pos.get_order();
         if (
             isPaymentSuccessful &&

@@ -27,7 +27,9 @@ export class PaymentSix extends PaymentInterface {
         this.enable_reversals();
 
         var terminal_ip = this.payment_method.six_terminal_ip;
-        var instanced_payment_method = this.pos.payment_methods.find(function (payment_method) {
+        var instanced_payment_method = this.pos.models["pos.payment.method"].find(function (
+            payment_method
+        ) {
             return (
                 payment_method.use_payment_terminal === "six" &&
                 payment_method.six_terminal_ip === terminal_ip &&
@@ -49,8 +51,8 @@ export class PaymentSix extends PaymentInterface {
         settings.dcc = false;
 
         this.terminal = new timapi.Terminal(settings);
-        this.terminal.setPosId(this.pos.pos_session.name);
-        this.terminal.setUserId(this.pos.pos_session.user_id[0]);
+        this.terminal.setPosId(this.pos.session.name);
+        this.terminal.setUserId(this.pos.user.id);
 
         this.terminalListener = new timapi.DefaultTerminalListener();
         this.terminalListener.transactionCompleted = this._onTransactionComplete.bind(this);

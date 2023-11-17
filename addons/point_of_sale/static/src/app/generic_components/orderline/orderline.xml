@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <t t-set="line" t-value="props.line" />
-        <li class="orderline p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
+        <li class="orderline p-2 lh-sm cursor-pointer" t-attf-class="{{ line.combo_parent_id ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
             <div class="d-flex justify-content-between">
                 <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
                     <span class="text-wrap" t-esc="line.productName"/>

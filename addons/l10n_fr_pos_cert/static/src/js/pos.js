@@ -9,18 +9,18 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 patch(PosStore.prototype, {
     is_french_country() {
         var french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
-        if (!this.company.country) {
+        if (!this.company.country_id) {
             this.env.services.dialog.add(AlertDialog, {
                 title: _t("Missing Country"),
                 body: _t("The company %s doesn't have a country set.", this.company.name),
             });
             return false;
         }
-        return french_countries.includes(this.company.country?.code);
+        return french_countries.includes(this.company.country_id?.code);
     },
     disallowLineQuantityChange() {
         const result = super.disallowLineQuantityChange(...arguments);
-        let selectedOrderLine = this.selectedOrder.get_selected_orderline();
+        const selectedOrderLine = this.selectedOrder.get_selected_orderline();
         //Note: is_reward_line is a field in the pos_loyalty module
         if (selectedOrderLine?.is_reward_line) {
             //Always allow quantity change for reward lines

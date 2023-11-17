@@ -873,8 +873,8 @@ class TestPoSBasicConfig(TestPoSCommon):
         open_and_check(pos01_data)
         open_and_check(pos02_data)
 
-    def test_load_pos_data_should_not_fail(self):
-        """load_pos_data shouldn't fail
+    def test_load_data_should_not_fail(self):
+        """load_data shouldn't fail
 
         (Include test conditions here if possible)
 
@@ -890,8 +890,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         self.open_new_session()
 
-        # calling load_pos_data should not raise an error
-        self.pos_session.load_pos_data()
+        # calling load_data should not raise an error
+        self.pos_session.load_data([])
 
     def test_invoice_past_order(self):
         # create 1 uninvoiced order then close the session

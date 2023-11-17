@@ -104,7 +104,9 @@ patch(Orderline.prototype, {
         }
         this.giftBarcode = json.giftBarcode;
         this.giftCardId = json.giftCardId;
-        this.eWalletGiftCardProgram = this.pos.program_by_id[json.eWalletGiftCardProgramId];
+        this.eWalletGiftCardProgram = this.pos.models["loyalty.program"].get(
+            json.eWalletGiftCardProgramId
+        );
         super.init_from_JSON(...arguments);
     },
     getEWalletGiftCardProgramType() {
@@ -149,7 +151,7 @@ patch(Order.prototype, {
         this.oldCouponMapping = {};
         if (this.couponPointChanges) {
             for (const [key, pe] of Object.entries(this.couponPointChanges)) {
-                if (!this.pos.program_by_id[pe.program_id]) {
+                if (!this.pos.models["loyalty.program"].get(pe.program_id)) {
                     // Remove points changes for programs that are not available anymore.
                     delete this.couponPointChanges[key];
                     continue;
@@ -200,7 +202,7 @@ patch(Order.prototype, {
             // Remove couponPointChanges for cards in is_nominative programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after partner changes.
             const loyaltyProgramIds = new Set(
-                this.pos.programs
+                this.pos.models["loyalty.program"]
                     .filter((program) => program.is_nominative)
                     .map((program) => program.id)
             );
@@ -236,9 +238,11 @@ patch(Order.prototype, {
     //@override
     _get_ignored_product_ids_total_discount() {
         const productIds = super._get_ignored_product_ids_total_discount(...arguments);
-        const giftCardPrograms = this.pos.programs.filter((p) => p.program_type === "gift_card");
+        const giftCardPrograms = this.pos.models["loyalty.program"].filter(
+            (p) => p.program_type === "gift_card"
+        );
         for (const program of giftCardPrograms) {
-            const giftCardProductId = [...program.rules[0].valid_product_ids][0];
+            const giftCardProductId = [...program.rule_ids[0].valid_product_ids][0];
             if (giftCardProductId) {
                 productIds.push(giftCardProductId);
             }
@@ -283,7 +287,7 @@ patch(Order.prototype, {
             // Remove couponPointChanges for cards in no longer available programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after pricelist changes.
             const loyaltyProgramIds = new Set(
-                this.pos.programs
+                this.pos.models["loyalty.program"]
                     .filter(
                         (program) =>
                             program.pricelist_ids.length > 0 &&
@@ -339,12 +343,12 @@ patch(Order.prototype, {
         this.codeActivatedProgramRules = [];
         this.codeActivatedCoupons = [];
         this.couponPointChanges = {};
-        this.orderlines.remove(this._get_reward_lines());
+        this.orderlines = this.orderlines.filter((line) => !line.is_reward_line);
         this._updateRewards();
     },
     _updateRewards() {
         // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
-        if (this.pos.programs.length === 0) {
+        if (this.pos.models["loyalty.program"].length === 0) {
             return;
         }
 
@@ -355,7 +359,7 @@ patch(Order.prototype, {
                 let changed = false;
                 for (const { coupon_id, reward } of claimableRewards) {
                     if (
-                        reward.program_id.rewards.length === 1 &&
+                        reward.program_id.reward_ids.length === 1 &&
                         !reward.program_id.is_nominative &&
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
@@ -424,7 +428,7 @@ patch(Order.prototype, {
         const paymentRewards = []; // Gift card and ewallet rewards are considered payments and must stay at the end
         for (const line of rewardLines) {
             const claimedReward = {
-                reward: this.pos.reward_by_id[line.reward_id],
+                reward: this.pos.models["loyalty.reward"].get(line.reward_id),
                 coupon_id: line.coupon_id,
                 args: {
                     product: line.reward_product_id,
@@ -438,10 +442,15 @@ patch(Order.prototype, {
                 paymentRewards.push(claimedReward);
             } else if (claimedReward.reward.reward_type === "product") {
                 productRewards.push(claimedReward);
-            } else if (!otherRewards.some(reward => reward.reward_identifier_code === claimedReward.reward_identifier_code)) {
+            } else if (
+                !otherRewards.some(
+                    (reward) =>
+                        reward.reward_identifier_code === claimedReward.reward_identifier_code
+                )
+            ) {
                 otherRewards.push(claimedReward);
             }
-            this.orderlines.remove(line);
+            this._unlinkOrderline(line);
         }
         for (const claimedReward of productRewards.concat(otherRewards).concat(paymentRewards)) {
             // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `codeActivatedCoupons`
@@ -463,7 +472,7 @@ patch(Order.prototype, {
         const changesPerProgram = {};
         const programsToCheck = new Set();
         // By default include all programs that are considered 'applicable'
-        for (const program of this.pos.programs) {
+        for (const program of this.pos.models["loyalty.program"].getAll()) {
             if (this._programIsApplicable(program)) {
                 programsToCheck.add(program.id);
             }
@@ -478,9 +487,11 @@ patch(Order.prototype, {
         for (const coupon of this.codeActivatedCoupons) {
             programsToCheck.add(coupon.program_id);
         }
-        const programs = [...programsToCheck].map((programId) => this.pos.program_by_id[programId]);
+        const programs = [...programsToCheck].map((programId) =>
+            this.pos.models["loyalty.program"].get(programId)
+        );
         const pointsAddedPerProgram = this.pointsForPrograms(programs);
-        for (const program of this.pos.programs) {
+        for (const program of this.pos.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
             const pointsAdded = this._programIsApplicable(program)
                 ? pointsAddedPerProgram[program.id]
@@ -517,7 +528,7 @@ patch(Order.prototype, {
         }
         // Also remove coupons from codeActivatedCoupons if their program applies_on current orders and the program does not give any points
         this.codeActivatedCoupons = this.codeActivatedCoupons.filter((coupon) => {
-            const program = this.pos.program_by_id[coupon.program_id];
+            const program = this.pos.models["loyalty.program"].get(coupon.program_id);
             if (
                 program.applies_on === "current" &&
                 pointsAddedPerProgram[program.id].length === 0
@@ -537,7 +548,7 @@ patch(Order.prototype, {
         const loyaltyPoints = {};
         for (const pointChange of Object.values(this.couponPointChanges)) {
             const { coupon_id, points, program_id } = pointChange;
-            const program = this.pos.program_by_id[program_id];
+            const program = this.pos.models["loyalty.program"].get(program_id);
             if (program.program_type !== "loyalty") {
                 // Not a loyalty program, skip
                 continue;
@@ -585,9 +596,9 @@ patch(Order.prototype, {
     _getPointsCorrection(program) {
         const rewardLines = this.orderlines.filter((line) => line.is_reward_line);
         let res = 0;
-        for (const rule of program.rules) {
+        for (const rule of program.rule_ids) {
             for (const line of rewardLines) {
-                const reward = this.pos.reward_by_id[line.reward_id];
+                const reward = this.pos.models["loyalty.reward"].get(line.reward_id);
                 if (this._validForPointsCorrection(reward, line, rule)) {
                     if (rule.reward_point_mode === "order") {
                         res += rule.reward_point_amount;
@@ -619,7 +630,8 @@ patch(Order.prototype, {
         }
 
         // Check if the reward line is part of the rule
-        if (!(rule.any_product || rule.valid_product_ids.has(line.reward_product_id))) {
+        const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
+        if (!(rule.any_product || valid_product_ids.includes(line.reward_product_id))) {
             return false;
         }
 
@@ -640,7 +652,7 @@ patch(Order.prototype, {
         }
         Object.values(this.couponPointChanges).some((pe) => {
             if (pe.coupon_id === coupon_id) {
-                if (this.pos.program_by_id[pe.program_id].applies_on !== "future") {
+                if (this.pos.models["loyalty.program"].get(pe.program_id).applies_on !== "future") {
                     points += pe.points;
                 }
                 // couponPointChanges is not supposed to have a coupon multiple times
@@ -671,7 +683,7 @@ patch(Order.prototype, {
     _programIsApplicable(program) {
         if (
             program.trigger === "auto" &&
-            !program.rules.find(
+            !program.rule_ids.find(
                 (rule) => rule.mode === "auto" || this.codeActivatedProgramRules.includes(rule.id)
             )
         ) {
@@ -679,7 +691,7 @@ patch(Order.prototype, {
         }
         if (
             program.trigger === "with_code" &&
-            !program.rules.find((rule) => this.codeActivatedProgramRules.includes(rule.id))
+            !program.rule_ids.find((rule) => this.codeActivatedProgramRules.includes(rule.id))
         ) {
             return false;
         }
@@ -721,7 +733,7 @@ patch(Order.prototype, {
             if (!line.reward_id) {
                 continue;
             }
-            const reward = this.pos.reward_by_id[line.reward_id];
+            const reward = this.pos.models["loyalty.reward"].get(line.reward_id);
             if (reward.reward_type !== "discount") {
                 continue;
             }
@@ -738,7 +750,7 @@ patch(Order.prototype, {
         for (const program of programs) {
             let points = 0;
             const splitPoints = [];
-            for (const rule of program.rules) {
+            for (const rule of program.rule_ids) {
                 if (
                     rule.mode === "with_code" &&
                     !this.codeActivatedProgramRules.includes(rule.id)
@@ -758,18 +770,19 @@ patch(Order.prototype, {
                 const qtyPerProduct = {};
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
+                    const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
+
                     if (
                         ((!line.reward_product_id &&
-                            (rule.any_product ||
-                                rule.valid_product_ids.has(line.get_product().id))) ||
+                            (rule.any_product || valid_product_ids.includes(line.product.id))) ||
                             (line.reward_product_id &&
                                 (rule.any_product ||
-                                    rule.valid_product_ids.has(line.reward_product_id)))) &&
+                                    valid_product_ids.includes(line.reward_product_id)))) &&
                         !line.ignoreLoyaltyPoints({ program })
                     ) {
                         // We only count reward products from the same program to avoid unwanted feedback loops
                         if (line.reward_product_id) {
-                            const reward = this.pos.reward_by_id[line.reward_id];
+                            const reward = this.pos.models["loyalty.reward"].get(line.reward_id);
                             if (program.id !== reward.program_id) {
                                 continue;
                             }
@@ -813,9 +826,10 @@ patch(Order.prototype, {
                         );
                     } else if (rule.reward_point_mode === "money") {
                         for (const line of orderLines) {
+                            const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
                             if (
                                 line.is_reward_line ||
-                                !rule.valid_product_ids.has(line.get_product().id) ||
+                                !valid_product_ids.includes(line.product.id) ||
                                 line.get_quantity() <= 0 ||
                                 line.ignoreLoyaltyPoints({ program })
                             ) {
@@ -870,7 +884,9 @@ patch(Order.prototype, {
      */
     _getGlobalDiscountLines() {
         return this.get_orderlines().filter(
-            (line) => line.reward_id && this.pos.reward_by_id[line.reward_id].is_global_discount
+            (line) =>
+                line.reward_id &&
+                this.pos.models["loyalty.reward"].get(line.reward_id).is_global_discount
         );
     },
     /**
@@ -880,7 +896,7 @@ patch(Order.prototype, {
     _computeNItems(rule) {
         return this._get_regular_order_lines().reduce((nItems, line) => {
             let increment = 0;
-            if (rule.any_product || rule.valid_product_ids.has(line.product.id)) {
+            if (rule.any_product || rule.valid_product_ids.find((p) => p.id === line.product.id)) {
                 increment = line.get_quantity();
             }
             return nItems + increment;
@@ -892,7 +908,7 @@ patch(Order.prototype, {
      * @param {*} couponProgram
      */
     _canGenerateRewards(couponProgram, orderTotalWithTax, orderTotalWithoutTax) {
-        for (const rule of couponProgram.rules) {
+        for (const rule of couponProgram.rule_ids) {
             const amountToCompare =
                 rule.minimum_amount_tax_mode == "incl" ? orderTotalWithTax : orderTotalWithoutTax;
             if (rule.minimum_amount > amountToCompare) {
@@ -932,10 +948,10 @@ patch(Order.prototype, {
         const totalIsZero = totalWithTax === 0;
         const globalDiscountLines = this._getGlobalDiscountLines();
         const globalDiscountPercent = globalDiscountLines.length
-            ? this.pos.reward_by_id[globalDiscountLines[0].reward_id].discount
+            ? this.pos.models["loyalty.reward"].get(globalDiscountLines[0].reward_id).discount
             : 0;
         for (const couponProgram of allCouponPrograms) {
-            const program = this.pos.program_by_id[couponProgram.program_id];
+            const program = this.pos.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
                 (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))
@@ -956,7 +972,7 @@ patch(Order.prototype, {
                 continue;
             }
             const points = this._getRealCouponPoints(couponProgram.coupon_id);
-            for (const reward of program.rewards) {
+            for (const reward of program.reward_ids) {
                 if (points < reward.required_points) {
                     continue;
                 }
@@ -972,7 +988,7 @@ patch(Order.prototype, {
                 }
                 let unclaimedQty;
                 if (reward.reward_type === "product" && !reward.multi_product) {
-                    const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
+                    const product = reward.reward_product_ids[0];
                     unclaimedQty = this._computeUnclaimedFreeProductQty(
                         reward,
                         couponProgram.coupon_id,
@@ -1010,12 +1026,12 @@ patch(Order.prototype, {
                 const rewardId = globalDiscountLines[0].reward_id;
                 if (
                     rewardId != reward.id &&
-                    this.pos.reward_by_id[rewardId].discount >= reward.discount
+                    this.pos.models["loyalty.reward"].get(rewardId).discount >= reward.discount
                 ) {
                     return _t("A better global discount is already applied.");
                 } else if (rewardId != rewardId.id) {
                     for (const line of globalDiscountLines) {
-                        this.orderlines.remove(line);
+                        this._unlinkOrderline(line);
                     }
                 }
             }
@@ -1033,7 +1049,7 @@ patch(Order.prototype, {
             return _t("The reward could not be applied.");
         }
         for (const rewardLine of rewardLines) {
-            this.orderlines.add(this._createLineFromVals(rewardLine));
+            this.orderlines.push(this._createLineFromVals(rewardLine));
         }
         return true;
     },
@@ -1140,7 +1156,7 @@ patch(Order.prototype, {
             ) {
                 linesToDiscount.push(line);
             } else if (line.reward_id) {
-                const lineReward = this.pos.reward_by_id[line.reward_id];
+                const lineReward = this.pos.models["loyalty.reward"].get(line.reward_id);
                 if (lineReward.id === reward.id) {
                     linesToDiscount.push(line);
                 }
@@ -1153,7 +1169,7 @@ patch(Order.prototype, {
 
         let cheapestLine = false;
         for (const lines of Object.values(discountLinesPerReward)) {
-            const lineReward = this.pos.reward_by_id[lines[0].reward_id];
+            const lineReward = this.pos.models["loyalty.reward"].get(lines[0].reward_id);
             if (lineReward.reward_type !== "discount") {
                 continue;
             }
@@ -1236,6 +1252,7 @@ patch(Order.prototype, {
      * @returns {Array} List of values to create the discount lines
      */
     _getRewardLineValuesDiscount(args) {
+        //LINK
         const reward = args["reward"];
         const coupon_id = args["coupon_id"];
         const rewardAppliesTo = reward.discount_applicability;
@@ -1297,7 +1314,9 @@ patch(Order.prototype, {
             if (!entry[1]) {
                 return lst;
             }
-            const taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
+            let taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
+            taxIds = this.pos.models["account.tax"].filter((tax) => taxIds.includes(tax.id));
+
             lst.push({
                 product: discountProduct,
                 price: -(entry[1] * discountFactor),
@@ -1319,8 +1338,9 @@ patch(Order.prototype, {
     },
     _isRewardProductPartOfRules(reward, product) {
         return (
-            reward.program_id.rules.filter(
-                (rule) => rule.any_product || rule.valid_product_ids.has(product.id)
+            reward.program_id.rule_ids.filter(
+                (rule) =>
+                    rule.any_product || rule.valid_product_ids.find((p) => p.id === product.id)
             ).length > 0
         );
     },
@@ -1359,14 +1379,17 @@ patch(Order.prototype, {
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
                 const appliedRules =
                     appliedRulesIds !== undefined
-                        ? reward.program_id.rules.filter((rule) =>
+                        ? reward.program_id.rule_ids.filter((rule) =>
                               appliedRulesIds.includes(rule.id)
                           )
-                        : reward.program_id.rules;
+                        : reward.program_id.rule_ids;
                 let factor = 0;
                 let orderPoints = 0;
                 for (const rule of appliedRules) {
-                    if (rule.any_product || rule.valid_product_ids.has(product.id)) {
+                    if (
+                        rule.any_product ||
+                        rule.valid_product_ids.find((p) => p.id === product.id)
+                    ) {
                         if (rule.reward_point_mode === "order") {
                             orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
@@ -1438,9 +1461,13 @@ patch(Order.prototype, {
      */
     _getRewardLineValuesProduct(args) {
         const reward = args["reward"];
-        const product = this.pos.db.get_product_by_id(
-            args["product"] || reward.reward_product_ids[0]
-        );
+        const productId = args["product"];
+        let product = reward.reward_product_ids.filter((p) => p?.id === productId)[0];
+
+        if (!product) {
+            product = reward.reward_product_ids[0];
+        }
+
         const points = this._getRealCouponPoints(args["coupon_id"]);
         const unclaimedQty = this._computeUnclaimedFreeProductQty(
             reward,
@@ -1490,7 +1517,7 @@ patch(Order.prototype, {
      * @returns true if everything went right, error message if not.
      */
     async _activateCode(code) {
-        const rule = this.pos.rules.find((rule) => {
+        const rule = this.pos.models["loyalty.rule"].find((rule) => {
             return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
         });
         let claimableRewards = null;
@@ -1514,7 +1541,7 @@ patch(Order.prototype, {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customerId = this.get_partner() ? this.get_partner().id : false;
-            const { successful, payload } = await this.env.services.orm.call(
+            const { successful, payload } = await this.pos.data.call(
                 "pos.config",
                 "use_coupon_code",
                 [
@@ -1527,7 +1554,7 @@ patch(Order.prototype, {
             );
             if (successful) {
                 // Allow rejecting a gift card that is not yet paid.
-                const program = this.pos.program_by_id[payload.program_id];
+                const program = this.pos.models["loyalty.program"].get(payload.program_id);
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
                     const confirmed = await ask(this.env.services.dialog, {
                         title: _t("Unpaid gift card"),

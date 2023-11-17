@@ -129,8 +129,8 @@ export class EditableTable extends Component {
     _setElementStyle() {
         const table = this.props.table;
         if (this.pos.floorPlanStyle == "kanban") {
-            const floor = table.floor;
-            const index = floor.tables.indexOf(table);
+            const floor = table.floor_id;
+            const index = floor.table_ids.indexOf(table);
             const minWidth = 100 + 20;
             const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
             const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;

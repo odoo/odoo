@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
     getOnlinePaymentMethods() {
         var online_payment_methods = [];
 
-        $.each(this.payment_methods, function (i, payment_method) {
+        $.each(this.models["pos.payment.method"].getAll(), function (i, payment_method) {
             if (payment_method.pos_mercury_config_id) {
                 online_payment_methods.push({
                     label: payment_method.name,

@@ -9,8 +9,8 @@ patch(Navbar.prototype, {
      * is floor screen, then the order count should be based on all the orders.
      */
     get orderCount() {
-        if (this.pos.config.module_pos_restaurant && this.pos.table) {
-            return this.pos.getTableOrders(this.pos.table.id).length;
+        if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
+            return this.pos.getTableOrders(this.pos.selectedTable.id).length;
         }
         return super.orderCount;
     },

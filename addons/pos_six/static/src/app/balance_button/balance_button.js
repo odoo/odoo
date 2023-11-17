@@ -10,7 +10,7 @@ export class BalanceButton extends Component {
         this.pos = usePos();
     }
     sendBalance() {
-        this.pos.payment_methods.forEach((pm) => {
+        this.pos.models["pos.payment.method"].forEach((pm) => {
             if (pm.use_payment_terminal === "six") {
                 pm.payment_terminal.send_balance();
             }

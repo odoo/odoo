@@ -15,7 +15,7 @@ export class Orderline extends Component {
                 unit: { type: String, optional: true },
                 unitPrice: String,
                 discount: { type: String, optional: true },
-                comboParent: { type: String, optional: true },
+                combo_parent_id: { type: String, optional: true },
                 oldUnitPrice: { type: String, optional: true },
                 customerNote: { type: String, optional: true },
                 internalNote: { type: String, optional: true },

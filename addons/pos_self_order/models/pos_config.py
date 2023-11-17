@@ -322,8 +322,9 @@ class PosConfig(models.Model):
 
     def _get_self_ordering_data(self):
         self.ensure_one()
-        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self._get_allowed_payment_methods().read(payment_search_params['search_params']['fields'])
+        params = self.current_session_id._load_data_params(self)
+        payment_fields = params['pos.payment.method']['fields']
+        payment_methods = self._get_allowed_payment_methods().read(payment_fields)
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
 
         return {

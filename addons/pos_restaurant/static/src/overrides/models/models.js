@@ -9,7 +9,7 @@ patch(Order.prototype, {
         super.setup(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (this.defaultTableNeeded(options)) {
-                this.tableId = this.pos.table.id;
+                this.tableId = this.pos.selectedTable.id;
             }
             this.customerCount = this.customerCount || 1;
         }
@@ -40,12 +40,12 @@ patch(Order.prototype, {
     },
     getTable() {
         if (this.pos.config.module_pos_restaurant) {
-            return this.pos.tables_by_id[this.tableId];
+            return this.pos.models["restaurant.table"].get(this.tableId);
         }
         return null;
     },
     defaultTableNeeded(options) {
-        return !this.tableId && !options.json && this.pos.table;
+        return !this.tableId && !options.json && this.pos.selectedTable;
     },
     export_for_printing() {
         return {
@@ -98,8 +98,10 @@ patch(Orderline.prototype, {
     getDisplayClasses() {
         return {
             ...super.getDisplayClasses(),
-            "has-change text-success border-start border-success border-4": this.hasChange,
-            "skip-change text-primary border-start border-primary border-4": this.skipChange,
+            "has-change text-success border-start border-success border-4":
+                this.hasChange && this.pos.config.module_pos_restaurant,
+            "skip-change text-primary border-start border-primary border-4":
+                this.skipChange && this.pos.config.module_pos_restaurant,
         };
     },
 });

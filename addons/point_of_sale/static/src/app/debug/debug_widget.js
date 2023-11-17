@@ -100,7 +100,7 @@ export class DebugWidget extends Component {
             ),
             confirm: () => {
                 this.pos.db.remove_all_orders();
-                this.pos.set_synch("connected", 0);
+                this.data.resetUnsyncQueue();
             },
         });
     }

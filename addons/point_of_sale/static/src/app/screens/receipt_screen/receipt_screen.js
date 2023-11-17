@@ -19,7 +19,6 @@ export class ReceiptScreen extends Component {
         this.printer = useState(useService("printer"));
         useErrorHandlers();
         this.ui = useState(useService("ui"));
-        this.orm = useService("orm");
         this.renderer = useService("renderer");
         this.dialog = useService("dialog");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
@@ -80,7 +79,7 @@ export class ReceiptScreen extends Component {
     get orderAmountPlusTip() {
         const order = this.currentOrder;
         const orderTotalAmount = order.get_total_with_tax();
-        const tip_product_id = this.pos.config.tip_product_id?.[0];
+        const tip_product_id = this.pos.config.tip_product_id?.id;
         const tipLine = order
             .get_orderlines()
             .find((line) => tip_product_id && line.product.id === tip_product_id);
@@ -147,7 +146,7 @@ export class ReceiptScreen extends Component {
             });
             return Promise.reject();
         }
-        await this.orm.call("pos.order", methodName, [
+        await this.pos.data.call("pos.order", methodName, [
             [order_server_id],
             orderName,
             orderPartner,

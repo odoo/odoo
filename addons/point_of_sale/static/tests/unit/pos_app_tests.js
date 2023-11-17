@@ -9,6 +9,7 @@ import { barcodeReaderService } from "@point_of_sale/app/barcode/barcode_reader_
 import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { PosDataService } from "@point_of_sale/app/models/data_service";
 
 const mockContextualUtilsService = {
     dependencies: ["pos", "localization"],
@@ -30,6 +31,7 @@ QUnit.module("Chrome", {
     beforeEach() {
         registry
             .category("services")
+            .add("pos_data", PosDataService)
             .add("pos", posService)
             .add("number_buffer", numberBufferService)
             .add("barcode_reader", barcodeReaderService)
@@ -52,7 +54,14 @@ QUnit.module("Chrome", {
                 },
             });
 
-        for (const service of ["hardware_proxy", "debug", "pos_notification", "sound", "action"]) {
+        for (const service of [
+            "hardware_proxy",
+            "debug",
+            "pos_notification",
+            "sound",
+            "action",
+            "hotkey",
+        ]) {
             registry.category("services").add(service, {
                 start() {
                     return {};
@@ -62,11 +71,87 @@ QUnit.module("Chrome", {
     },
 });
 
-const serverData = {
-    models: { "product.product": { fields: {}, records: [] } },
-};
+export class MockPosData {
+    get data() {
+        return {
+            models: {
+                "product.product": { fields: {}, records: [] },
+                "product.pricelist": { fields: {}, records: [] },
+                "pos.session": {
+                    fields: {},
+                    records: [
+                        {
+                            name: "PoS Session",
+                        },
+                    ],
+                },
+                "res.company": {
+                    fields: {
+                        tax_calculation_rounding_method: {
+                            string: "Tax rounding method",
+                            type: "string",
+                        },
+                    },
+                    records: [
+                        {
+                            tax_calculation_rounding_method: "round_globally",
+                        },
+                    ],
+                },
+                "res.partner": { fields: {}, records: [] },
+                "stock.picking.type": { fields: {}, records: [] },
+                "pos.config": {
+                    fields: {
+                        iface_printer: { string: "Iface printer", type: "boolean" },
+                        trusted_config_ids: {
+                            string: "Trusted config ids",
+                            type: "many2many",
+                        },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            name: "PoS Config",
+                            iface_printer: false,
+                            trusted_config_ids: [2],
+                        },
+                        {
+                            id: 2,
+                            name: "PoS Config 2",
+                            iface_printer: true,
+                            trusted_config_ids: [1],
+                        },
+                    ],
+                },
+                "pos.printer": { fields: {}, records: [] },
+                "pos.payment.method": { fields: {}, records: [] },
+                "res.currency": {
+                    fields: { rounding: { string: "Rounding", type: "float" } },
+                    records: [
+                        {
+                            rounding: 0.01,
+                        },
+                    ],
+                },
+                "res.users": {
+                    fields: {},
+                    records: [
+                        {
+                            id: 1,
+                            name: "Administrator",
+                        },
+                    ],
+                },
+                "account.fiscal.position": { fields: {}, records: [] },
+                "pos.category": { fields: {}, records: [] },
+                "product.pricelist.item": { fields: {}, records: [] },
+            },
+        };
+    }
+}
 
 QUnit.test("mount the Chrome", async (assert) => {
+    const serverData = new MockPosData().data;
     const fixture = getFixture();
     assert.verifySteps([]);
     await mount(Chrome, fixture, {

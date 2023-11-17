@@ -45,9 +45,8 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     _call_adyen(data, operation = false) {
-        // FIXME POSREF TIMEOUT 10000
-        return this.env.services.orm.silent
-            .call("pos.payment.method", "proxy_adyen_request", [
+        return this.pos.data
+            .silentCall("pos.payment.method", "proxy_adyen_request", [
                 [this.payment_method.id],
                 data,
                 operation,
@@ -217,7 +216,7 @@ export class PaymentAdyen extends PaymentInterface {
      * confirmation from Adyen is received via the webhook.
      */
     async handleAdyenStatusResponse() {
-        const notification = await this.env.services.orm.silent.call(
+        const notification = await this.pos.data.silentCall(
             "pos.payment.method",
             "get_latest_adyen_status",
             [[this.payment_method.id]]

@@ -38,7 +38,7 @@ export class ControlButtons extends Component {
                 isSelected: !currentFiscalPosition,
             },
         ];
-        for (const fiscalPos of this.pos.fiscal_positions) {
+        for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,
@@ -65,7 +65,7 @@ export class ControlButtons extends Component {
         // Create the list to be passed to the SelectionPopup.
         // Pricelist object is passed as item in the list because it
         // is the object that will be returned when the popup is confirmed.
-        const selectionList = this.pos.pricelists.map((pricelist) => ({
+        const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
             isSelected:
