@@ -8,7 +8,10 @@ patch(PosBus.prototype, {
     dispatch(message) {
         super.dispatch(...arguments);
 
-        if (message.type === "VIVA_WALLET_LATEST_RESPONSE" && message.payload === this.pos.config.id) {
+        if (
+            message.type === "VIVA_WALLET_LATEST_RESPONSE" &&
+            message.payload === this.pos.config.id
+        ) {
             this.pos
                 .getPendingPaymentLine("viva_wallet")
                 .payment_method.payment_terminal.handleVivaWalletStatusResponse();

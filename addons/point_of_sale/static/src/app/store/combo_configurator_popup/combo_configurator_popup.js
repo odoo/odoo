@@ -12,7 +12,7 @@ export class ComboConfiguratorPopup extends Component {
     setup() {
         this.pos = usePos();
         this.state = useState({
-            combo: Object.fromEntries(this.props.product.combo_ids.map((elem) => [elem, 0])),
+            combo: Object.fromEntries(this.props.product.combo_ids.map((elem) => [elem.id, 0])),
             // configuration: id of combo_line -> ProductConfiguratorPopup payload
             configuration: {},
         });
@@ -27,25 +27,27 @@ export class ComboConfiguratorPopup extends Component {
         if (floatIsZero(combo_price)) {
             return "";
         } else {
-            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
-            return this.env.utils.formatCurrency(product.get_display_price({ price: combo_price }));
+            const product = comboLine.product_id;
+            const price = this.pos.getProductPrice(product, { price: combo_price });
+            return this.env.utils.formatCurrency(price);
         }
     }
+
     getSelectedComboLines() {
         return Object.values(this.state.combo)
             .filter((x) => x) // we only keep the non-zero values
             .map((x) => {
-                const combo_line = this.pos.db.combo_line_by_id[x];
+                const combo_line_id = this.pos.models["pos.combo.line"].get(x);
                 return {
-                    ...combo_line,
-                    configuration: this.state.configuration[combo_line.id],
+                    combo_line_id: combo_line_id,
+                    configuration: this.state.configuration[combo_line_id.id],
                 };
             });
     }
 
     async onClickProduct({ product, combo_line }, ev) {
         if (product.isConfigurable()) {
-            const payload = await product.openConfigurator({ initQuantity: 1 });
+            const payload = await this.pos.openConfigurator({ product, initQuantity: 1 });
             if (payload) {
                 this.state.configuration[combo_line.id] = payload;
             } else {

@@ -954,7 +954,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'product_id': product.id,
             'barcode': '12345610',
         })
-
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 

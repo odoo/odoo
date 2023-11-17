@@ -29,13 +29,14 @@ export class Table extends Component {
             containerHeight: 0,
             containerWidth: 0,
         });
+        this.table = this.props.table;
     }
     get fontSize() {
         const size = this.state.containerHeight / 3;
         return size > 20 ? 20 : size;
     }
     get badgeStyle() {
-        if (this.props.table.shape !== "round") {
+        if (this.table.shape !== "round") {
             return `top: -6px; right: -6px;`;
         }
 
@@ -68,15 +69,15 @@ export class Table extends Component {
         return { position_h, position_v };
     }
     get style() {
-        const table = this.props.table;
+        const table = this.table;
         let style = "";
         let background = table.color ? table.color : "rgb(53, 211, 116)";
         let textColor = "white";
 
         if (!this.isOccupied()) {
             background = "#00000020";
-            const rgb = table.floor.background_color
-                .substring(4, table.floor.background_color.length - 1)
+            const rgb = table.floor_id.background_color
+                .substring(4, table.floor_id.background_color.length - 1)
                 .replace(/ /g, "")
                 .split(",");
             textColor =
@@ -92,8 +93,8 @@ export class Table extends Component {
             color: ${textColor};`;
 
         if (this.pos.floorPlanStyle == "kanban") {
-            const floor = table.floor;
-            const index = floor.tables.indexOf(table);
+            const floor = table.floor_id;
+            const index = floor.table_ids.indexOf(table);
             const minWidth = 120;
             const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
             const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;
@@ -131,11 +132,12 @@ export class Table extends Component {
         return style;
     }
     get fill() {
-        const customerCount = this.pos.getCustomerCount(this.props.table.id);
-        return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
+        const customerCount = this.pos.getCustomerCount(this.table.id);
+        return Math.min(1, Math.max(0, customerCount / this.table.seats));
     }
     get orderCount() {
-        const table = this.props.table;
+        const table = this.table;
+        const tNotif = this.pos.tableNotifications[table.id];
         const unsynced_orders = this.pos.getTableOrders(table.id).filter(
             (o) =>
                 o.server_id === undefined &&
@@ -143,18 +145,32 @@ export class Table extends Component {
                 // do not count the orders that are already finalized
                 !o.finalized
         );
+
+        if (!tNotif) {
+            return 0;
+        }
+
         let result;
-        if (table.changes_count > 0) {
-            result = table.changes_count;
-        } else if (table.skip_changes > 0) {
-            result = table.skip_changes;
+        if (tNotif.changes_count > 0) {
+            result = tNotif.changes_count;
+        } else if (tNotif.skip_changes > 0) {
+            result = tNotif.skip_changes;
         } else {
-            result = table.order_count + unsynced_orders.length;
+            result = tNotif.order_count + unsynced_orders.length;
         }
         return !Number.isNaN(result) ? result : 0;
     }
     get orderCountClass() {
-        const notifications = this._getNotifications();
+        const table = this.table;
+        const tNotif = this.pos.tableNotifications[table.id];
+        const hasChangesCount = tNotif?.changes_count || 0;
+        const hasSkippedCount = tNotif?.skip_changes || 0;
+        const notifications = hasChangesCount
+            ? { printing: true }
+            : hasSkippedCount
+            ? { skipped: true }
+            : {};
+
         const countClass = {
             "order-count": true,
             "notify-printing text-bg-danger": notifications.printing,
@@ -164,24 +180,14 @@ export class Table extends Component {
         return countClass;
     }
     get customerCountDisplay() {
-        const customerCount = this.pos.getCustomerCount(this.props.table.id);
+        const customerCount = this.pos.getCustomerCount(this.table.id);
         if (customerCount == 0) {
-            return `${this.props.table.seats}`;
+            return `${this.table.seats}`;
         } else {
-            return `${customerCount}/${this.props.table.seats}`;
+            return `${customerCount}/${this.table.seats}`;
         }
     }
-    _getNotifications() {
-        const table = this.props.table;
-
-        const hasChangesCount = table.changes_count;
-        const hasSkippedCount = table.skip_changes;
-
-        return hasChangesCount ? { printing: true } : hasSkippedCount ? { skipped: true } : {};
-    }
     isOccupied() {
-        return (
-            this.pos.getCustomerCount(this.props.table.id) > 0 || this.props.table.order_count > 0
-        );
+        return this.pos.getCustomerCount(this.table.id) > 0 || this.table.order_count > 0;
     }
 }

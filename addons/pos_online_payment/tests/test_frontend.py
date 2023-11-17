@@ -104,6 +104,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('account.group_account_invoice').id),
             ],
         })
         cls.pos_user.partner_id.email = 'pos_op_user@test.com'
@@ -184,23 +185,24 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         # Checks that the products used in the tours are available in this pos_config.
         # This code is executed here because _loader_params_product_product is defined in pos.session
         # and not in pos.config.
-        params = self.pos_config.current_session_id._loader_params_product_product()
+        params = self.pos_config.current_session_id._load_data_params(self.pos_config)
         self.assertTrue(params)
-        pos_config_products_domain = params['search_params']['domain']
+        pos_config_products_domain = params['product.product']['domain']
         self.assertTrue(pos_config_products_domain)
         tests_products_domain = AND([pos_config_products_domain, ['&', '&', ('name', '=', 'Letter Tray'), ('list_price', '=', 4.8), ('available_in_pos', '=', True)]])
         # active_test=False to follow pos.config:get_pos_ui_product_product_by_params
         self.assertEqual(self.env['product.product'].with_context(active_test=False).search_count(tests_products_domain, limit=1), 1)
-
-    def _start_tour(self, tour_name):
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, tour_name, login="pos_op_user")
 
     def test_server_fake_payment_tour(self):
         self._open_session_ui()
 
         before_tour_datetime = fields.Datetime.now()
         with patch.object(PosOrder, 'get_and_set_online_payments_data', self._fake_get_and_set_online_payments_data):
-            self._start_tour('OnlinePaymentServerFakePaymentTour')
+            self.start_tour(
+                "/pos/ui?config_id=%d" % self.pos_config.id,
+                'OnlinePaymentServerFakePaymentTour',
+                login="pos_op_user"
+            )
 
         test_orders = self.env['pos.order'].search(['&', ('config_id', '=', self.pos_config.id), ('date_order', '>=', before_tour_datetime)])
         self.assertEqual(len(test_orders), 1)
@@ -209,7 +211,11 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
     def test_errors_tour(self):
         self._open_session_ui()
-        self._start_tour('OnlinePaymentErrorsTour')
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.pos_config.id,
+            'OnlinePaymentErrorsTour',
+            login="pos_op_user",
+        )
 
     @classmethod
     def tearDownClass(cls):

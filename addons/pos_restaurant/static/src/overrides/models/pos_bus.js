@@ -14,7 +14,7 @@ patch(PosBus.prototype, {
     },
 
     async initTableOrderCount() {
-        const result = await this.orm.call(
+        const result = await this.pos.data.call(
             "pos.config",
             "get_tables_order_count_and_printing_changes",
             [this.pos.config.id]
@@ -35,30 +35,25 @@ patch(PosBus.prototype, {
     // Sync the number of orders on each table with other PoS
     // using the same floorplan.
     async ws_syncTableCount(data) {
-        const missingTable = data.find((table) => !(table.id in this.pos.tables_by_id));
+        const missingTable = data.find(
+            (table) => !(table.id in this.pos.models["restaurant.table"].getAllBy("id"))
+        );
 
         if (missingTable) {
-            const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
-                [odoo.pos_session_id],
+            const response = await this.pos.data.searchRead("restaurant.floor", [
+                ["pos_config_ids", "in", this.pos.config.id],
             ]);
 
-            if (this.pos.config.module_pos_restaurant) {
-                this.pos.floors = result;
-                this.pos.loadRestaurantFloor();
-            }
+            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
+            await this.pos.data.read("restaurant.table", table_ids);
         }
 
-        for (const floor of this.pos.floors) {
-            floor.changes_count = 0;
-        }
         for (const table of data) {
-            const table_obj = this.pos.tables_by_id[table.id];
-            if (table_obj) {
-                table_obj.order_count = table.orders;
-                table_obj.changes_count = table.changes;
-                table_obj.skip_changes = table.skip_changes;
-                table_obj.floor.changes_count += table.changes;
-            }
+            this.pos.tableNotifications[table.id] = {
+                order_count: table.orders,
+                changes_count: table.changes,
+                skip_changes: table.skip_changes,
+            };
         }
     },
 });

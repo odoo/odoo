@@ -180,7 +180,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
         [
             Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
-
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickDisplayedProduct("Test Product C"),
             PosLoyalty.orderTotalIs("130.00"),

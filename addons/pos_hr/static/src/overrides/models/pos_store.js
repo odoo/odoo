@@ -10,12 +10,11 @@ patch(PosStore.prototype, {
             this.showScreen("LoginScreen");
         }
     },
-    async _processData(loadedData) {
-        await super._processData(...arguments);
+    async processServerData() {
+        await super.processServerData(...arguments);
         if (this.config.module_pos_hr) {
-            this.employees = loadedData["hr.employee"];
-            this.employee_by_id = loadedData["employee_by_id"];
             this.reset_cashier();
+            this.employee_security = this.data.custom.employee_security;
         }
     },
     async actionAfterIdle() {
@@ -23,8 +22,8 @@ patch(PosStore.prototype, {
             return super.actionAfterIdle();
         }
     },
-    async after_load_server_data() {
-        await super.after_load_server_data(...arguments);
+    async afterProcessServerData() {
+        await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
             this.hasLoggedIn = !this.config.module_pos_hr;
         }
@@ -72,8 +71,8 @@ patch(PosStore.prototype, {
             super.logEmployeeMessage(...arguments);
             return;
         }
-        await this.orm.call("pos.session", "log_partner_message", [
-            this.pos_session.id,
+        await this.data.call("pos.session", "log_partner_message", [
+            this.session.id,
             this.cashier.work_contact_id,
             action,
             message,

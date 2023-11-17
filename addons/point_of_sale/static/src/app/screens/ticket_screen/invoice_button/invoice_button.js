@@ -14,7 +14,6 @@ export class InvoiceButton extends Component {
         this.pos = usePos();
         this.invoiceButton = useRef("invoice-button");
         this.dialog = useService("dialog");
-        this.orm = useService("orm");
         this.report = useService("report");
     }
     get isAlreadyInvoiced() {
@@ -32,16 +31,13 @@ export class InvoiceButton extends Component {
     }
     async _downloadInvoice(orderId) {
         try {
-            const [orderWithInvoice] = await this.orm.read(
-                "pos.order",
-                [orderId],
-                ["account_move"],
-                { load: false }
-            );
-            if (orderWithInvoice?.account_move) {
-                await this.report.doAction("account.account_invoices", [
-                    orderWithInvoice.account_move,
-                ]);
+            const orderWithInvoice = await this.pos.data.read("pos.order", [orderId], [], {
+                load: false,
+            });
+            const order = orderWithInvoice[0];
+            const accountMove = order.raw.account_move;
+            if (accountMove) {
+                await this.report.doAction("account.account_invoices", [accountMove]);
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -65,7 +61,6 @@ export class InvoiceButton extends Component {
         }
 
         const orderId = order.backendId;
-
         // Part 0. If already invoiced, print the invoice.
         if (this.isAlreadyInvoiced) {
             await this._downloadInvoice(orderId);
@@ -86,7 +81,8 @@ export class InvoiceButton extends Component {
             if (!newPartner) {
                 return;
             }
-            await this.orm.write("pos.order", [orderId], { partner_id: newPartner.id });
+
+            await this.pos.data.ormWrite("pos.order", [orderId], { partner_id: newPartner.id });
         }
 
         const confirmed = await this.onWillInvoiceOrder(order);
@@ -96,7 +92,7 @@ export class InvoiceButton extends Component {
 
         // Part 2: Invoice the order.
         // FIXME POSREF timeout
-        await this.orm.silent.call("pos.order", "action_pos_order_invoice", [orderId]);
+        await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [orderId]);
 
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);

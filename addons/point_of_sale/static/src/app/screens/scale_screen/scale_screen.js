@@ -43,7 +43,7 @@ export class ScaleScreen extends Component {
     }
     get _activePricelist() {
         const current_order = this.pos.get_order();
-        let current_pricelist = this.pos.default_pricelist;
+        let current_pricelist = this.pos.config.pricelist_id;
         if (current_order) {
             current_pricelist = current_order.pricelist;
         }
@@ -54,11 +54,10 @@ export class ScaleScreen extends Component {
         if (!this.props.product) {
             return defaultstr;
         }
-        const unit_id = this.props.product.uom_id;
-        if (!unit_id) {
+        const unit = this.props.product.uom_id;
+        if (!unit) {
             return defaultstr;
         }
-        const unit = this.pos.units_by_id[unit_id[0]];
         const weight = round_pr(this.state.weight || 0, unit.rounding);
         let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
         weightstr += " " + unit.name;
@@ -72,9 +71,6 @@ export class ScaleScreen extends Component {
         return (product ? product.get_price(this._activePricelist, this.state.weight) : 0) || 0;
     }
     get productUom() {
-        if (!this.props.product) {
-            return "";
-        }
-        return this.pos.units_by_id[this.props.product.uom_id[0]].name;
+        return this.props.product?.uom_id?.name;
     }
 }

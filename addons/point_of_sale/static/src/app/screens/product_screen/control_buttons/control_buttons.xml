@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ControlButtons">
         <div t-attf-class="flex-{{props.wrapped ? 'wrap' : 'column'}}" class="control-buttons d-flex bg-300 border-bottom">
-            <button t-if="pos.fiscal_positions.length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
+            <button t-if="pos.models['account.fiscal.position'].length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
                 <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                 title="Set fiscal position" />
                 <t t-if="currentOrder?.fiscal_position" t-esc="currentOrder.fiscal_position.display_name" />

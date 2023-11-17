@@ -15,7 +15,7 @@ patch(ControlButtons.prototype, {
             .filter(({ reward }) => reward.program_id.program_type == "ewallet");
     },
     _getEWalletPrograms() {
-        return this.pos.programs.filter((p) => p.program_type == "ewallet");
+        return this.pos.models["loyalty.program"].filter((p) => p.program_type == "ewallet");
     },
     async onClickWallet() {
         const order = this.pos.get_order();
@@ -37,10 +37,7 @@ patch(ControlButtons.prototype, {
                 });
             }
             if (selectedProgram) {
-                const eWalletProduct = this.pos.db.get_product_by_id(
-                    selectedProgram.trigger_product_ids[0]
-                );
-                this.pos.addProductFromUi(eWalletProduct, {
+                this.pos.addProductFromUi(selectedProgram.trigger_product_ids[0], {
                     price: -orderTotal,
                     merge: false,
                     eWalletGiftCardProgram: selectedProgram,
@@ -135,8 +132,8 @@ patch(ControlButtons.prototype, {
         const args = {};
         if (reward.reward_type === "product" && reward.multi_product) {
             const productsList = reward.reward_product_ids.map((product_id) => ({
-                id: product_id,
-                label: this.pos.db.get_product_by_id(product_id).display_name,
+                id: product_id.id,
+                label: product_id.display_name,
                 item: product_id,
             }));
             const selectedProduct = await makeAwaitable(this.dialog, SelectionPopup, {

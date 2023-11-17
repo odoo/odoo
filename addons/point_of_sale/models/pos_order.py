@@ -1292,8 +1292,11 @@ class PosOrderLine(models.Model):
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
-    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent')
-    combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
+
+    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
+    combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
+
+    combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
 
     @api.model
     def _is_field_accepted(self, field):

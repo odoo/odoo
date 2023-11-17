@@ -2,30 +2,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100 bg-100">
-            <div t-if="!ui.isSmall || pos.mobile_pane === 'left'"
-                t-att-class="{'flex-grow-1': ui.isSmall}"
+            <div t-att-class="{'flex-grow-1': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
                 class="leftpane d-flex flex-column border-end bg-200" >
-                <OrderWidget lines="currentOrder.orderlines" t-slot-scope="scope"
-                    total="env.utils.formatCurrency(currentOrder.get_total_with_tax())"
-                    tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''">
-                    <t t-set="line" t-value="scope.line" />
-                    <Orderline line="line.getDisplayData()"
-                        t-on-click="() => this.selectLine(line)"
-                        class="{ ...line.getDisplayClasses(), 'selected' : line.selected }">
-                        <t t-set-slot="product-name">
-                            <i  t-if="line.get_product().isTracked()"
-                                t-on-click.stop="() => line.editPackLotLines()" role="img"
-                                t-attf-class="{{ line.has_valid_product_lot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
-                                t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />
-                        </t>
-                        <ul t-if="line.pack_lot_lines">
-                            <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
-                                SN <t t-esc="lot.lot_name"/>
-                            </li>
-                        </ul>
-                    </Orderline>
-                    <t t-set-slot="details" />
-                </OrderWidget>
+                <OrderSummary />
                 <div class="pads border-top">
                     <ControlButtons t-if="!ui.isSmall" />
                     <div class="subpads d-flex">
@@ -38,9 +17,23 @@
                     </div>
                 </div>
             </div>
-            <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
-                <div t-att-class="{'d-none': scrollDirection.down and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
-                    <CategorySelector categories="getCategories()" onClick="(id) => this.pos.setSelectedCategoryId(id)" />
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-att-class="{'d-none': ui.isSmall and pos.mobile_pane !== 'right'}">
+                <div t-att-class="{'d-none': state.scrollDown and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
+                    <div class="d-flex overflow-auto w-100">
+                        <div class="d-flex align-items-center">
+                            <button t-on-click="() => this.pos.setSelectedCategoryId(0)"
+                                class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100">
+                                <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div t-foreach="getCategories()" t-as="category" t-key="category.id" class="d-flex align-items-center">
+                            <i t-if="category.getAllChildren().includes(this.pos.selectedCategoryId) || this.pos.selectedCategoryId === category.id" t-attf-class="pe-2 fa fa-caret-right" aria-hidden="true" />
+                            <button t-on-click="() =>  this.pos.setSelectedCategoryId(category.id)" class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100" style="width: 3rem;">
+                                <img t-if="category.has_image" t-att-src="computeImageUrl(category)" style="height: 3rem;" alt="Category" />
+                                <span t-if="category.name" class="text-center fs-5" t-esc="category.name" />
+                            </button>
+                        </div>
+                    </div>
                     <Input tModel="[pos, 'searchProductWord']"
                         class="'p-2'"
                         isSmall="ui.isSmall"
@@ -50,16 +43,18 @@
                 </div>
                 <div t-ref="products" class="overflow-y-auto flex-grow-1">
                     <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
-                        <ProductCard t-foreach="productsToDisplay" t-as="product" t-key="product.id"
-                            class="pos.productViewMode"
-                            name="product.display_name"
-                            productId="product.id"
-                            price="product.getFormattedUnitPrice()"
-                            imageUrl="product.getImageUrl()"
-                            onClick="() =>this.pos.addProductToCurrentOrder(product)"
-                            productInfo="true"
-                            onProductInfoClick="() => this.onProductInfoClick(product)"
-                        />
+                        <t  t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                            <ProductCard
+                                class="pos.productViewMode"
+                                name="product.display_name"
+                                productId="product.id"
+                                price="pos.getProductPriceFormatted(product)"
+                                imageUrl="product.getImageUrl()"
+                                onClick.bind="() => this.addProductToOrder(product)"
+                                productInfo="true"
+                                onProductInfoClick.bind="() => this.onProductInfoClick(product)"
+                            />
+                        </t>
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>

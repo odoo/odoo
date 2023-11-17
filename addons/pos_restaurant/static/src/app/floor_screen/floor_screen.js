@@ -34,7 +34,6 @@ export class FloorScreen extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.orm = useService("orm");
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
@@ -56,7 +55,7 @@ export class FloorScreen extends Component {
     }
     onPatched() {
         this.floorMapRef.el.style.background = this.state.floorBackground;
-        if (!this.pos.isEditMode && this.pos.floors.length > 0) {
+        if (!this.pos.isEditMode && this.pos.config.floor_ids?.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -64,7 +63,7 @@ export class FloorScreen extends Component {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     async onWillStart() {
-        const table = this.pos.table;
+        const table = this.pos.selectedTable;
         if (table) {
             const orders = this.pos.get_order_list();
             const tableOrders = orders.filter(
@@ -81,15 +80,17 @@ export class FloorScreen extends Component {
                 { changed: 0, skipped: 0 }
             );
 
-            table.changes_count = qtyChange.changed;
-            table.skip_changes = qtyChange.skipped;
+            this.pos.tableNotifications[table.id] = {
+                changes_count: qtyChange.changed,
+                skip_changes: qtyChange.skipped,
+            };
         }
         await this.pos.unsetTable();
     }
     onMounted() {
         this.pos.openCashControl();
         this.floorMapRef.el.style.background = this.state.floorBackground;
-        if (!this.pos.isEditMode && this.pos.floors.length > 0) {
+        if (!this.pos.isEditMode && this.pos.config.floor_ids?.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -122,7 +123,7 @@ export class FloorScreen extends Component {
         this.state.selectedTableIds = [];
     }
     async _createTableHelper(copyTable, duplicateFloor = false) {
-        const existingTable = this.activeFloor.tables;
+        const existingTable = this.activeFloor.table_ids;
         let newTable;
         if (copyTable) {
             newTable = Object.assign({}, copyTable);
@@ -243,11 +244,9 @@ export class FloorScreen extends Component {
             newTable.name = this._getNewTableName();
         }
         newTable.floor_id = [this.activeFloor.id, ""];
-        newTable.floor = this.activeFloor;
-        await this._save(newTable);
-        this.activeTables.push(newTable);
-        this.activeFloor.table_ids.push(newTable.id);
-        return newTable;
+        newTable.floor_id = this.activeFloor;
+        const table = await this._save(newTable);
+        return table[0];
     }
     _getNewTableName() {
         let firstNum = 1;
@@ -268,7 +267,7 @@ export class FloorScreen extends Component {
     }
     async _save(table) {
         const tableCopy = {
-            floor_id: table.floor.id,
+            floor_id: table.floor_id,
             color: table.color,
             height: table.height,
             name: table.name,
@@ -277,24 +276,26 @@ export class FloorScreen extends Component {
             seats: table.seats,
             shape: table.shape,
             width: table.width,
+            active: true,
         };
 
         if (table.id) {
-            await this.orm.write("restaurant.table", [table.id], tableCopy);
+            return this.pos.data.write("restaurant.table", [table.id], tableCopy);
         } else {
-            const tableId = await this.orm.create("restaurant.table", [tableCopy]);
-
-            table.id = tableId[0];
-            this.pos.tables_by_id[tableId] = table;
+            tableCopy.floor_id = tableCopy.floor_id.id;
+            return await this.pos.data.create("restaurant.table", [tableCopy], false);
         }
+    }
+    async _renameFloor(floorId, newName) {
+        await this.pos.data.call("restaurant.floor", "rename_floor", [floorId, newName]);
     }
     get activeFloor() {
         return this.state.selectedFloorId
-            ? this.pos.floors_by_id[this.state.selectedFloorId]
+            ? this.pos.models["restaurant.floor"].get(this.state.selectedFloorId)
             : null;
     }
     get activeTables() {
-        return this.activeFloor ? this.activeFloor.tables : null;
+        return this.activeFloor ? this.activeFloor.table_ids : null;
     }
     get isFloorEmpty() {
         return this.activeTables ? this.activeTables.length === 0 : true;
@@ -302,12 +303,16 @@ export class FloorScreen extends Component {
     get selectedTables() {
         const tables = [];
         this.state.selectedTableIds.forEach((id) => {
-            tables.push(this.pos.tables_by_id[id]);
+            const table = this.pos.models["restaurant.table"].get(id);
+
+            if (table) {
+                tables.push(table);
+            }
         });
         return tables;
     }
     get nbrFloors() {
-        return this.pos.floors.length;
+        return this.pos.models["restaurant.floor"].length;
     }
     movePinch(hypot) {
         const delta = hypot / this.scalehypot;
@@ -337,7 +342,7 @@ export class FloorScreen extends Component {
     }
     toggleEditMode() {
         this.pos.toggleEditMode();
-        if (!this.pos.isEditMode && this.pos.floors.length > 0) {
+        if (!this.pos.isEditMode && this.pos.config.floor_ids?.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -371,7 +376,8 @@ export class FloorScreen extends Component {
         }
     }
     async onSaveTable(table) {
-        if (this.pos.tables_by_id[table.id] && this.pos.tables_by_id[table.id].active) {
+        const t = this.pos.models["restaurant.table"].get(table.id);
+        if (t && t.active) {
             await this._save(table);
         }
     }
@@ -380,23 +386,25 @@ export class FloorScreen extends Component {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
             getPayload: async (newName) => {
-                const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
-                    newName,
-                    "#ACADAD",
-                    this.pos.config.id,
-                ]);
-                this.pos.floors_by_id[floor.id] = floor;
-                this.pos.floors.push(floor);
-                this.selectFloor(floor);
+                const floor = await this.pos.data.create(
+                    "restaurant.floor",
+                    [
+                        {
+                            name: newName,
+                            background_color: "#ACADAD",
+                            pos_config_ids: [this.pos.config.id],
+                        },
+                    ],
+                    false
+                );
+
+                this.selectFloor(floor["restaurant.floor"][0]);
                 this.pos.isEditMode = true;
             },
         });
     }
     async createTable() {
         const newTable = await this._createTableHelper();
-        newTable.skip_changes = 0;
-        newTable.changes_count = 0;
-        newTable.order_count = 0;
         if (newTable) {
             this.state.selectedTableIds = [];
             this.state.selectedTableIds.push(newTable.id);
@@ -405,16 +413,19 @@ export class FloorScreen extends Component {
     async duplicateTableOrFloor() {
         if (this.selectedTables.length == 0) {
             const floor = this.activeFloor;
-            const tables = this.activeFloor.tables;
+            const tables = this.activeFloor.table_ids;
             const newFloorName = floor.name + " (copy)";
-            const newFloor = await this.orm.call("restaurant.floor", "create_from_ui", [
-                newFloorName,
-                floor.background_color,
-                this.pos.config.id,
+            const copyFloor = await this.pos.data.create("restaurant.floor", [
+                {
+                    name: newFloorName,
+                    background_color: "#ACADAD",
+                    pos_config_ids: [this.pos.config.id],
+                },
             ]);
-            this.pos.floors_by_id[newFloor.id] = newFloor;
-            this.pos.floors.push(newFloor);
-            this.selectFloor(newFloor);
+
+            this.selectFloor(copyFloor["restaurant.floor"][0]);
+            this.pos.isEditMode = true;
+
             for (const table of tables) {
                 await this._createTableHelper(table, true);
             }
@@ -453,10 +464,9 @@ export class FloorScreen extends Component {
                       getPayload: (newName) => {
                           if (newName !== this.activeFloor.name) {
                               this.activeFloor.name = newName;
-                              this.orm.call("restaurant.floor", "rename_floor", [
-                                  this.activeFloor.id,
-                                  newName,
-                              ]);
+                              this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+                                  name: newName,
+                              });
                           }
                       },
                   }
@@ -509,7 +519,7 @@ export class FloorScreen extends Component {
     async setFloorColor(color) {
         this.state.floorBackground = color;
         this.activeFloor.background_color = color;
-        await this.orm.write("restaurant.floor", [this.activeFloor.id], {
+        await this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
             background_color: color,
         });
         this.state.isColorPicker = false;
@@ -529,35 +539,47 @@ export class FloorScreen extends Component {
             if (!confirmed) {
                 return;
             }
-            const originalSelectedFloorId = this.activeFloor.id;
-            await this.orm.call("restaurant.floor", "deactivate_floor", [
-                originalSelectedFloorId,
-                this.pos.pos_session.id,
-            ]);
-            const floor = this.pos.floors_by_id[originalSelectedFloorId];
+            const activeFloor = this.activeFloor;
+            try {
+                await this.pos.data.call("restaurant.floor", "deactivate_floor", [
+                    activeFloor.id,
+                    this.pos.session.id,
+                ]);
+            } catch {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Delete Error"),
+                    body: _t(
+                        "You cannot delete a floor with orders still in draft for this floor."
+                    ),
+                });
+                return;
+            }
+
             const orderList = [...this.pos.get_order_list()];
             for (const order of orderList) {
-                if (floor.table_ids.includes(order.tableId)) {
+                if (activeFloor.table_ids.includes(order.tableId)) {
                     this.pos.removeOrder(order, false);
                 }
             }
-            floor.table_ids.forEach((tableId) => {
-                delete this.pos.tables_by_id[tableId];
-            });
-            delete this.pos.floors_by_id[originalSelectedFloorId];
-            this.pos.floors = this.pos.floors.filter(
-                (floor) => floor.id != originalSelectedFloorId
-            );
+
+            for (const table_id of activeFloor.table_ids) {
+                table_id.delete();
+            }
+
+            activeFloor.delete();
+
             this.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
-            if (this.pos.floors.length > 0) {
-                this.selectFloor(this.pos.floors[0]);
+            if (this.pos.models["restaurant.floor"].length > 0) {
+                this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
             } else {
                 this.pos.isEditMode = false;
                 this.pos.floorPlanStyle = "default";
                 this.state.floorBackground = null;
+                this.state.selectedFloorId = null;
             }
             return;
         }
+
         const confirmed = await ask(this.dialog, {
             title: _t("Are you sure?"),
             body: _t("Removing a table cannot be undone"),
@@ -566,28 +588,35 @@ export class FloorScreen extends Component {
             return;
         }
         const originalSelectedTableIds = [...this.state.selectedTableIds];
-        const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
-            originalSelectedTableIds,
-        ]);
-        if (!response) {
-            for (const id of originalSelectedTableIds) {
-                //remove order not send to server
-                for (const order of this.pos.get_order_list()) {
-                    if (order.tableId == id) {
-                        this.pos.removeOrder(order, false);
+
+        try {
+            const response = await this.pos.data.call(
+                "restaurant.table",
+                "are_orders_still_in_draft",
+                [originalSelectedTableIds]
+            );
+
+            if (response) {
+                for (const id of originalSelectedTableIds) {
+                    //remove order not send to server
+                    for (const order of this.pos.get_order_list()) {
+                        if (order.tableId == id) {
+                            this.pos.removeOrder(order, false);
+                        }
                     }
+                    const records = this.pos.data.write("restaurant.table", [id], {
+                        active: false,
+                    });
+                    records[0].delete();
                 }
-                this.pos.tables_by_id[id].active = false;
-                this.orm.write("restaurant.table", [id], { active: false });
-                this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
-                delete this.pos.tables_by_id[id];
             }
-        } else {
+        } catch {
             this.dialog.add(AlertDialog, {
                 title: _t("Delete Error"),
                 body: _t("You cannot delete a table with orders still in draft for this table."),
             });
         }
+
         // Value of an object can change inside async function call.
         //   Which means that in this code block, the value of `state.selectedTableId`
         //   before the await call can be different after the finishing the await call.
@@ -601,6 +630,25 @@ export class FloorScreen extends Component {
             this.state.selectedTableIds = [];
         }
         this.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
+    }
+    getFloorChangeCount(floorId) {
+        let changeCount = 0;
+        const floor = this.pos.models["restaurant.floor"].get(floorId);
+
+        if (!floor) {
+            return changeCount;
+        }
+
+        const table_ids = floor.table_ids;
+
+        for (const table of table_ids) {
+            const tNotif = this.pos.tableNotifications[table.id];
+            if (tNotif) {
+                changeCount += tNotif.changes_count;
+            }
+        }
+
+        return changeCount;
     }
 }
 

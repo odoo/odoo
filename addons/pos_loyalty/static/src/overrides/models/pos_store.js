@@ -15,8 +15,8 @@ const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long 
 patch(PosStore.prototype, {
     async addProductFromUi(product, options) {
         const order = this.get_order();
-        const linkedProgramIds = this.productId2ProgramIds[product.id] || [];
-        const linkedPrograms = linkedProgramIds.map((id) => this.program_by_id[id]);
+        const linkedPrograms =
+            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
@@ -56,7 +56,7 @@ patch(PosStore.prototype, {
         const rewardsToApply = [];
         for (const reward of potentialRewards) {
             for (const reward_product_id of reward.reward.reward_product_ids) {
-                if (reward_product_id == product.id) {
+                if (reward_product_id.id == product.id) {
                     rewardsToApply.push(reward);
                 }
             }
@@ -96,7 +96,7 @@ patch(PosStore.prototype, {
             if (trimmedCode && trimmedCode.startsWith("044")) {
                 // check if the code exist in the database
                 // if so, use its balance, otherwise, use the unit price of the gift card product
-                const fetchedGiftCard = await this.orm.searchRead(
+                const fetchedGiftCard = await this.data.searchRead(
                     "loyalty.card",
                     [
                         ["code", "=", trimmedCode],
@@ -104,6 +104,7 @@ patch(PosStore.prototype, {
                     ],
                     ["points", "source_pos_order_id"]
                 );
+
                 // There should be maximum one gift card for a given code.
                 const giftCard = fetchedGiftCard[0];
                 if (giftCard && giftCard.source_pos_order_id) {
@@ -158,7 +159,7 @@ patch(PosStore.prototype, {
             );
         const result = [];
         for (const couponProgram of allCouponPrograms) {
-            const program = this.program_by_id[couponProgram.program_id];
+            const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
                 (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))
@@ -168,7 +169,7 @@ patch(PosStore.prototype, {
 
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
             const hasLine = order.orderlines.filter((line) => !line.is_reward_line).length > 0;
-            for (const reward of program.rewards.filter(
+            for (const reward of program.reward_ids.filter(
                 (reward) => reward.reward_type == "product"
             )) {
                 if (points < reward.required_points) {
@@ -178,7 +179,9 @@ patch(PosStore.prototype, {
                 const considerTheReward =
                     program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
                 if (reward.reward_type === "product" && considerTheReward) {
-                    const product = this.db.get_product_by_id(reward.reward_product_ids[0]);
+                    const product = this.models["product.product"].get(
+                        reward.reward_product_ids[0].id
+                    );
                     const potentialQty = order._computePotentialFreeProductQty(
                         reward,
                         product,
@@ -197,32 +200,21 @@ patch(PosStore.prototype, {
         }
         return result;
     },
+
     //@override
-    async _processData(loadedData) {
+    async processServerData(loadedData) {
+        await super.processServerData(loadedData);
+
         this.couponCache = {};
         this.partnerId2CouponIds = {};
-        this.rewards = loadedData["loyalty.reward"] || [];
 
-        for (const reward of this.rewards) {
+        for (const reward of this.models["loyalty.reward"].getAll()) {
             reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
         }
 
-        this.fieldTypes = loadedData["field_types"];
-        await super._processData(loadedData);
-        this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
-        this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
-        this.rules = loadedData["loyalty.rule"] || [];
-        this._loadLoyaltyData();
-    },
-
-    _loadProductProduct(products) {
-        super._loadProductProduct(...arguments);
-
-        for (const reward of this.rewards) {
-            this.compute_discount_product_ids(reward, products);
+        for (const reward of this.models["loyalty.reward"].getAll()) {
+            this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
         }
-
-        this.rewards = this.rewards.filter(Boolean);
     },
 
     compute_discount_product_ids(reward, products) {
@@ -234,56 +226,33 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
-            products
-                .filter((product) => domain.contains(product))
-                .forEach((product) => reward.all_discount_product_ids.add(product.id));
+            for (const p of products) {
+                const serializedProduct = p.serialize();
+
+                if (domain.contains(serializedProduct)) {
+                    reward.all_discount_product_ids.add(p.id);
+                }
+            }
         } catch (error) {
             if (!(error instanceof InvalidDomainError)) {
                 throw error;
             }
-            const index = this.rewards.indexOf(reward);
+            const index = this.models["loyalty.reward"].indexOf(reward);
             if (index != -1) {
                 this.env.services.dialog.add(AlertDialog, {
                     title: _t("A reward could not be loaded"),
                     body: _t(
                         'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client',
-                        this.rewards[index].description
+                        this.models["loyalty.reward"].getAll()[index].description
                     ),
                 });
-                this.rewards[index] = null;
+
+                this.models["loyalty.reward"].delete(reward.id);
             }
         }
     },
-
-    _loadLoyaltyData() {
-        this.program_by_id = {};
-        this.reward_by_id = {};
-
-        for (const program of this.programs) {
-            this.program_by_id[program.id] = program;
-            if (program.date_to) {
-                program.date_to = new Date(program.date_to);
-            }
-            program.rules = [];
-            program.rewards = [];
-        }
-        for (const rule of this.rules) {
-            rule.valid_product_ids = new Set(rule.valid_product_ids);
-            rule.program_id = this.program_by_id[rule.program_id[0]];
-            rule.program_id.rules.push(rule);
-        }
-        for (const reward of this.rewards) {
-            this.reward_by_id[reward.id] = reward;
-            reward.program_id = this.program_by_id[reward.program_id[0]];
-            reward.discount_line_product_id = this.db.get_product_by_id(
-                reward.discount_line_product_id[0]
-            );
-            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
-            reward.program_id.rewards.push(reward);
-        }
-    },
-    async load_server_data() {
-        await super.load_server_data(...arguments);
+    async initServerData() {
+        await super.initServerData(...arguments);
         if (this.selectedOrder) {
             this.selectedOrder._updateRewards();
         }
@@ -306,7 +275,7 @@ patch(PosStore.prototype, {
      * @param {int} limit Default to 1
      */
     async fetchCoupons(domain, limit = 1) {
-        const result = await this.env.services.orm.searchRead(
+        const result = await this.data.searchRead(
             "loyalty.card",
             domain,
             ["id", "points", "code", "partner_id", "program_id"],
@@ -325,8 +294,8 @@ patch(PosStore.prototype, {
             const coupon = new PosLoyaltyCard(
                 dbCoupon.code,
                 dbCoupon.id,
-                dbCoupon.program_id[0],
-                dbCoupon.partner_id[0],
+                dbCoupon.program_id?.id,
+                dbCoupon.partner_id?.id,
                 dbCoupon.points
             );
             this.couponCache[coupon.id] = coupon;
@@ -366,26 +335,5 @@ patch(PosStore.prototype, {
             );
         }
         return loyaltyCards;
-    },
-    addPartners(partners) {
-        const result = super.addPartners(partners);
-        // cache the loyalty cards of the partners
-        for (const partner of partners) {
-            for (const [couponId, { code, program_id, points }] of Object.entries(
-                partner.loyalty_cards || {}
-            )) {
-                this.couponCache[couponId] = new PosLoyaltyCard(
-                    code,
-                    parseInt(couponId, 10),
-                    program_id,
-                    partner.id,
-                    points
-                );
-                this.partnerId2CouponIds[partner.id] =
-                    this.partnerId2CouponIds[partner.id] || new Set();
-                this.partnerId2CouponIds[partner.id].add(couponId);
-            }
-        }
-        return result;
     },
 });

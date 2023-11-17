@@ -3,23 +3,20 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
-import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
-import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc";
-import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
-import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
+import { Component, onMounted, useExternalListener, useState, reactive } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
-import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
+import { ProductInfoPopup } from "./product_info_popup/product_info_popup";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import {
     ControlButtons,
     ControlButtonsPopup,
@@ -34,8 +31,9 @@ export class ProductScreen extends Component {
         OrderWidget,
         CategorySelector,
         Input,
-        ProductCard,
         ControlButtons,
+        OrderSummary,
+        ProductCard,
     };
     static numpadActionName = _t("Payment");
 
@@ -43,18 +41,23 @@ export class ProductScreen extends Component {
         super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
             showProductReminder: false,
+            loadingDemo: false,
+            scrollDown: false,
             previousSearchWord: "",
             currentOffset: 0,
-            loadingDemo: false,
         });
         onMounted(() => {
             this.pos.openCashControl();
+
+            if (this.pos.config.iface_start_categ_id) {
+                this.pos.setSelectedCategoryId(this.pos.config.iface_start_categ_id.id);
+            }
+
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
@@ -74,38 +77,34 @@ export class ProductScreen extends Component {
         });
 
         this.numberBuffer.use({
-            triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
-        this.scrollDirection = useScrollDirection("products");
     }
-    /**
-     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
-     */
+    setScrollDirection(scroll) {
+        this.state.scrollDown = scroll.down;
+    }
     getCategories() {
-        return [
-            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
-            this.pos.selectedCategoryId,
-            ...this.pos.db.get_category_childs_ids(this.pos.selectedCategoryId),
-        ]
-            .map((id) => this.pos.db.category_by_id[id])
-            .map((category) => {
-                const isRootCategory = category.id === this.pos.db.root_category_id;
-                return {
-                    id: category.id,
-                    name: !isRootCategory ? category.name : "",
-                    icon: isRootCategory ? "fa-home fa-2x" : "",
-                    showSeparator:
-                        !isRootCategory &&
-                        [
-                            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
-                            this.pos.selectedCategoryId,
-                        ].includes(category.id),
-                    imageUrl:
-                        category?.has_image &&
-                        `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`,
-                };
-            });
+        if (this.pos.selectedCategoryId) {
+            const categoriesToDisplay = [];
+            const category = this.pos.models["pos.category"].get(this.pos.selectedCategoryId);
+
+            if (category.parent_id) {
+                categoriesToDisplay.push(...category.allParents);
+            }
+
+            categoriesToDisplay.push(category);
+
+            if (category.child_id) {
+                categoriesToDisplay.push(...category.child_id);
+            }
+
+            return categoriesToDisplay;
+        } else {
+            return this.pos.models["pos.category"].filter((category) => !category.parent_id);
+        }
+    }
+    computeImageUrl(category) {
+        return `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
     }
     getNumpadButtons() {
         return [
@@ -116,7 +115,11 @@ export class ProductScreen extends Component {
             { value: "4" },
             { value: "5" },
             { value: "6" },
-            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
+            {
+                value: "discount",
+                text: "% Disc",
+                disabled: !this.pos.config.manual_discount,
+            },
             { value: "7" },
             { value: "8" },
             { value: "9" },
@@ -139,11 +142,6 @@ export class ProductScreen extends Component {
             return;
         }
         this.numberBuffer.sendKey(buttonValue);
-    }
-
-    selectLine(orderline) {
-        this.numberBuffer.reset();
-        this.currentOrder.select_orderline(orderline);
     }
 
     clickEvent(e) {
@@ -188,108 +186,21 @@ export class ProductScreen extends Component {
     get items() {
         return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
-    async updateSelectedOrderline({ buffer, key }) {
-        const order = this.pos.get_order();
-        const selectedLine = order.get_selected_orderline();
-        // This validation must not be affected by `disallowLineQuantityChange`
-        if (selectedLine && selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
-            /**
-             * You can actually type numbers from your keyboard, while a popup is shown, causing
-             * the number buffer storage to be filled up with the data typed. So we force the
-             * clean-up of that buffer whenever we detect this illegal action.
-             */
-            this.numberBuffer.reset();
-            if (key === "Backspace") {
-                this._setValue("remove");
-            } else {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Cannot modify a tip"),
-                    body: _t("Customer tips, cannot be modified directly"),
-                });
-            }
-            return;
-        }
-        if (this.pos.numpadMode === "quantity" && selectedLine?.isPartOfCombo()) {
-            if (key === "Backspace") {
-                this._setValue("remove");
-            } else {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid action"),
-                    body: _t(
-                        "The quantity of a combo item cannot be changed. A combo can only be deleted."
-                    ),
-                });
-            }
-            return;
-        }
-        if (selectedLine && this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
-            const orderlines = order.orderlines;
-            const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
-            const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
-
-            if (selectedLine.noDecrease) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid action"),
-                    body: _t("You are not allowed to change this quantity"),
-                });
-                return;
-            }
-            const parsedInput = (buffer && parseFloat(buffer)) || 0;
-            if (lastId != selectedLine.cid) {
-                this._showDecreaseQuantityPopup();
-            } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
-            } else if (parsedInput < currentQuantity) {
-                this._showDecreaseQuantityPopup();
-            }
-            return;
-        }
-        const val = buffer === null ? "remove" : buffer;
-        this._setValue(val);
-        if (val == "remove") {
-            this.numberBuffer.reset();
-            this.pos.numpadMode = "quantity";
-        }
-    }
-    _setValue(val) {
-        const { numpadMode } = this.pos;
-        const selectedLine = this.currentOrder.get_selected_orderline();
-        if (selectedLine) {
-            if (numpadMode === "quantity") {
-                if (val === "remove") {
-                    this.currentOrder.removeOrderline(selectedLine);
-                } else {
-                    const result = selectedLine.set_quantity(val);
-                    if (!result) {
-                        this.numberBuffer.reset();
-                    }
-                }
-            } else if (numpadMode === "discount") {
-                selectedLine.set_discount(val);
-            } else if (numpadMode === "price") {
-                selectedLine.price_type = "manual";
-                selectedLine.set_unit_price(val);
-            }
-        }
-    }
     async _getProductByBarcode(code) {
-        let product = this.pos.db.get_product_by_barcode(code.base_code);
+        let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
+
         if (!product) {
-            // find the barcode in the backend
-            const { product_id = [], packaging = [] } = await this.orm.silent.call(
+            const records = await this.pos.data.callRelated(
                 "pos.session",
                 "find_product_by_barcode",
                 [odoo.pos_session_id, code.base_code]
             );
-            if (product_id.length) {
-                await this.pos._addProducts(product_id, false);
-                if (packaging.length) {
-                    this.pos.db.add_packagings(packaging);
-                }
-                // assume that the result is unique.
-                product = this.pos.db.get_product_by_id(product_id[0]);
+
+            if (records && records["product.product"].length > 0) {
+                product = records["product.product"][0];
             }
         }
+
         return product;
     }
     async _barcodeProductAction(code) {
@@ -302,7 +213,7 @@ export class ProductScreen extends Component {
                 ),
             });
         }
-        const options = await product.getAddProductOptions(code);
+        const options = await this.pos.getAddProductOptions(product, code);
         // Do not proceed on adding the product when no options is returned.
         // This is consistent with clickProduct.
         if (!options) {
@@ -332,17 +243,9 @@ export class ProductScreen extends Component {
         this.numberBuffer.reset();
     }
     async _getPartnerByBarcode(code) {
-        let partner = this.pos.db.get_partner_by_barcode(code.code);
+        let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
         if (!partner) {
-            // find the partner in the backend by the barcode
-            const foundPartnerIds = await this.orm.search("res.partner", [
-                ["barcode", "=", code.code],
-            ]);
-            if (foundPartnerIds.length) {
-                await this.pos._loadPartners(foundPartnerIds);
-                // assume that the result is unique.
-                partner = this.pos.db.get_partner_by_id(foundPartnerIds[0]);
-            }
+            partner = this.pos.data.searchRead("res.partner", ["barcode", "=", code.code]);
         }
         return partner;
     }
@@ -391,7 +294,7 @@ export class ProductScreen extends Component {
                 ),
             });
         }
-        const options = await product.getAddProductOptions(lotBarcode);
+        const options = await this.pos.getAddProductOptions(product, lotBarcode);
         await this.currentOrder.add_product(product, { ...options, ...customProductOptions });
         this.numberBuffer.reset();
     }
@@ -399,38 +302,6 @@ export class ProductScreen extends Component {
         this.dialog.add(ControlButtonsPopup, {
             controlButtons: this.controlButtons,
         });
-    }
-    async _showDecreaseQuantityPopup() {
-        this.numberBuffer.reset();
-        const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-            startingValue: 0,
-            title: _t("Set the new quantity"),
-        });
-        const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
-        if (newQuantity !== null) {
-            const order = this.pos.get_order();
-            const selectedLine = order.get_selected_orderline();
-            const currentQuantity = selectedLine.get_quantity();
-            if (newQuantity >= currentQuantity) {
-                selectedLine.set_quantity(newQuantity);
-                return true;
-            }
-            if (newQuantity >= selectedLine.saved_quantity) {
-                selectedLine.set_quantity(newQuantity);
-                if (newQuantity == 0) {
-                    order._unlinkOrderline(selectedLine);
-                }
-                return true;
-            }
-            const newLine = selectedLine.clone();
-            const decreasedQuantity = selectedLine.saved_quantity - newQuantity;
-            newLine.order = order;
-            newLine.set_quantity(-decreasedQuantity, true);
-            selectedLine.set_quantity(selectedLine.saved_quantity);
-            order.add_orderline(newLine);
-            return true;
-        }
-        return false;
     }
     get selectedOrderlineQuantity() {
         return this.currentOrder.get_selected_orderline()?.get_quantity_str();
@@ -471,22 +342,88 @@ export class ProductScreen extends Component {
     get searchWord() {
         return this.pos.searchProductWord.trim();
     }
-    getProductListToNotDisplay() {
-        return [this.pos.config.tip_product_id];
-    }
+
     get productsToDisplay() {
-        const { db } = this.pos;
         let list = [];
+
         if (this.searchWord !== "") {
-            list = db.search_product_in_category(this.selectedCategoryId, this.searchWord);
+            const product = this.pos.selectedCategoryId
+                ? this.pos.models["product.product"].getBy(
+                      "pos_categ_ids",
+                      this.pos.selectedCategoryId
+                  )
+                : this.pos.models["product.product"].getAll();
+            list = fuzzyLookup(
+                this.searchWord,
+                product,
+                (product) => product.display_name + product.description_sale
+            );
+        } else if (this.pos.selectedCategoryId) {
+            list = this.pos.models["product.product"].getBy(
+                "pos_categ_ids",
+                this.pos.selectedCategoryId
+            );
         } else {
-            list = db.get_product_by_category(this.selectedCategoryId);
+            list = this.pos.models["product.product"].getAll();
         }
-        list = list.filter((product) => !this.getProductListToNotDisplay().includes(product.id));
+
+        list = list
+            .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
+            .slice(0, 100);
+
         return list.sort(function (a, b) {
             return a.display_name.localeCompare(b.display_name);
         });
     }
+
+    getProductListToNotDisplay() {
+        return [this.pos.config.tip_product_id, ...this.pos.pos_special_products_ids];
+    }
+
+    async loadDemoDataProducts() {
+        this.state.loadingDemo = true;
+        try {
+            const result = await this.pos.data.loadServerMethodTemp(
+                "pos.session",
+                "load_product_frontend",
+                [odoo.pos_session_id]
+            );
+            const models = result.related;
+            const posOrder = result.posOrder;
+
+            if (!models) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Demo products are no longer available"),
+                    body: _t(
+                        "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
+                    ),
+                });
+            }
+
+            for (const dataName of ["pos.category", "product.product", "pos.order"]) {
+                if (!models[dataName] && Object.keys(posOrder).length === 0) {
+                    this._showLoadDemoDataMissingDataError(dataName);
+                }
+            }
+
+            if (this.pos.models["product.product"].length > 5) {
+                this.pos.has_available_products = true;
+            }
+
+            this.pos.loadOpenOrders(posOrder);
+        } finally {
+            this.state.loadingDemo = false;
+        }
+    }
+
+    _showLoadDemoDataMissingDataError(missingData) {
+        console.error(
+            "Missing '",
+            missingData,
+            "' in pos.session:load_product_frontend server answer."
+        );
+    }
+
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
@@ -511,96 +448,44 @@ export class ProductScreen extends Component {
             this.state.currentOffset = result.length;
         }
     }
+
     async loadProductFromDB() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
         }
 
-        try {
-            const limit = 30;
-            const ProductIds = await this.orm.call(
-                "product.product",
-                "search",
-                [
-                    [
-                        "&",
-                        ["available_in_pos", "=", true],
-                        "|",
-                        "|",
-                        ["name", "ilike", searchProductWord],
-                        ["default_code", "ilike", searchProductWord],
-                        ["barcode", "ilike", searchProductWord],
-                    ],
-                ],
-                {
-                    offset: this.state.currentOffset,
-                    limit: limit,
-                }
-            );
-            if (ProductIds.length) {
-                await this.pos._addProducts(ProductIds, false);
+        this.pos.selectedCategoryId = 0;
+        const product = await this.pos.data.searchRead(
+            "product.product",
+            [
+                "&",
+                ["available_in_pos", "=", true],
+                "|",
+                "|",
+                ["name", "ilike", searchProductWord],
+                ["default_code", "ilike", searchProductWord],
+                ["barcode", "ilike", searchProductWord],
+            ],
+            this.pos.data.fields["product.product"],
+            {
+                offset: this.state.currentOffset,
+                limit: 30,
             }
-            this.pos.setSelectedCategoryId(0);
-            return ProductIds;
-        } catch (error) {
-            if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {
-                return this.dialog.add(AlertDialog, {
-                    title: _t("Network Error"),
-                    body: _t(
-                        "Product is not loaded. Tried loading the product from the server but there is a network error."
-                    ),
-                });
-            } else {
-                throw error;
-            }
-        }
-    }
-    async loadDemoDataProducts() {
-        try {
-            this.state.loadingDemo = true;
-            const { models_data, successful } = await this.orm.call(
-                "pos.session",
-                "load_product_frontend",
-                [this.pos.pos_session.id]
-            );
-            if (!successful) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Demo products are no longer available"),
-                    body: _t(
-                        "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
-                    ),
-                });
-                // But the received models_data is still used to update the current session.
-            }
-            if (!models_data) {
-                this._showLoadDemoDataMissingDataError("models_data");
-                return;
-            }
-            for (const dataName of ["pos.category", "product.product", "pos.order"]) {
-                if (!models_data[dataName]) {
-                    this._showLoadDemoDataMissingDataError(dataName);
-                    return;
-                }
-            }
-            this.pos.updateModelsData(models_data);
-        } finally {
-            this.state.loadingDemo = false;
-        }
-    }
-    _showLoadDemoDataMissingDataError(missingData) {
-        console.error(
-            "Missing '",
-            missingData,
-            "' in pos.session:load_product_frontend server answer."
         );
+        return product;
     }
 
     createNewProducts() {
         window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
     }
+
+    addProductToOrder(product) {
+        reactive(this.pos).addProductToCurrentOrder(product);
+    }
+
     async onProductInfoClick(product) {
-        const info = await this.pos.getProductInfo(product, 1);
+        const info = await reactive(this.pos).getProductInfo(product, 1);
         this.dialog.add(ProductInfoPopup, { info: info, product: product });
     }
 }

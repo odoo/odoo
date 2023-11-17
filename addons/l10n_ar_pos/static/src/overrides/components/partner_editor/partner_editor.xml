@@ -9,7 +9,7 @@
                     <label class="form-label" for="art">AFIP Responsibility</label>
                     <select class="detail form-select" name="l10n_ar_afip_responsibility_type_id" id="art"
                         t-model="changes.l10n_ar_afip_responsibility_type_id">
-                        <t t-foreach="pos.l10n_ar_afip_responsibility_types" t-as="afip_responsibility" t-key="afip_responsibility.id">
+                        <t t-foreach="pos['l10n_ar.afip.responsibility.type']" t-as="afip_responsibility" t-key="afip_responsibility.id">
                             <option t-att-value="afip_responsibility.id">
                                 <t t-esc="afip_responsibility.name" />
                             </option>
@@ -21,7 +21,7 @@
                     <label class="form-label" for="id_type">Identification Type</label>
                     <select class="detail form-select" name="l10n_latam_identification_type_id" id="id_type"
                         t-model="changes.l10n_latam_identification_type_id">
-                        <t t-foreach="pos.l10n_latam_identification_types" t-as="l10n_latam_identification_type" t-key="l10n_latam_identification_type.id">
+                        <t t-foreach="pos['l10n_latam.identification.type']" t-as="l10n_latam_identification_type" t-key="l10n_latam_identification_type.id">
                             <option t-att-value="l10n_latam_identification_type.id">
                                 <t t-esc="l10n_latam_identification_type.name" />
                             </option>

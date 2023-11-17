@@ -23,9 +23,10 @@ export class ProductList extends Component {
     getFormattedTotal() {
         return formatCurrency(
             this.props.products.reduce(
-                (totalPrice, product) => totalPrice + product.price * product.quantity, 0
+                (totalPrice, product) => totalPrice + product.price * product.quantity,
+                0
             ),
-            this.env.currencyId,
-        )
+            this.env.currencyId
+        );
     }
 }

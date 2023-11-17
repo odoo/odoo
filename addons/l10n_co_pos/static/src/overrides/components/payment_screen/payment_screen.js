@@ -7,7 +7,7 @@ patch(PaymentScreen.prototype, {
     async _postPushOrderResolve(order, order_server_ids) {
         try {
             if (this.pos.is_colombian_country()) {
-                const result = await this.orm.searchRead(
+                const result = await this.pos.data.searchRead(
                     "pos.order",
                     [["id", "in", order_server_ids]],
                     ["name"]

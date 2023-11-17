@@ -22,16 +22,16 @@ patch(ReceiptScreen.prototype, {
         }
     },
     isResumeVisible() {
-        if (this.pos.config.module_pos_restaurant && this.pos.table) {
-            return this.pos.getTableOrders(this.pos.table.id).length > 1;
+        if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
+            return this.pos.getTableOrders(this.pos.selectedTable.id).length > 1;
         }
         return super.isResumeVisible(...arguments);
     },
     //@override
     get nextScreen() {
         if (this.pos.config.module_pos_restaurant) {
-            const table = this.pos.table;
-            return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
+            const table = this.pos.selectedTable;
+            return { name: "FloorScreen", props: { floor: table ? table.floor_id : null } };
         } else {
             return super.nextScreen;
         }

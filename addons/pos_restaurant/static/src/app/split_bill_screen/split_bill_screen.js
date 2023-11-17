@@ -81,7 +81,7 @@ export class SplitBillScreen extends Component {
             this.currentOrder.set_screen_data({ name: "ProductScreen" });
 
             const reactiveNewOrder = this.pos.makeOrderReactive(this.newOrder);
-            this.pos.orders.add(reactiveNewOrder);
+            this.pos.orders.push(reactiveNewOrder);
             this.pos.selectedOrder = reactiveNewOrder;
         }
         this.pos.showScreen("PaymentScreen");

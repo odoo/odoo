@@ -23,9 +23,6 @@ import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dial
  * @param {[id: number, display_name: string] | false} fieldVal many2one field value
  * @returns {number | false}
  */
-function getId(fieldVal) {
-    return fieldVal && fieldVal[0];
-}
 
 export class SaleOrderManagementScreen extends Component {
     static storeOnOrder = false;
@@ -35,7 +32,6 @@ export class SaleOrderManagementScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.root = useRef("root");
         this.numberBuffer = useService("number_buffer");
@@ -121,9 +117,9 @@ export class SaleOrderManagementScreen extends Component {
         if (currentSaleOriginId) {
             const linkedSO = await this._getSaleOrder(currentSaleOriginId);
             if (
-                getId(linkedSO.partner_id) !== getId(sale_order.partner_id) ||
-                getId(linkedSO.partner_invoice_id) !== getId(sale_order.partner_invoice_id) ||
-                getId(linkedSO.partner_shipping_id) !== getId(sale_order.partner_shipping_id)
+                linkedSO.partner_id !== sale_order.partner_id ||
+                linkedSO.partner_invoice_id !== sale_order.partner_invoice_id ||
+                linkedSO.partner_shipping_id !== sale_order.partner_shipping_id
             ) {
                 currentPOSOrder = this.pos.add_new_order();
                 this.notification.add(_t("A new order has been created."), 4000);
@@ -135,54 +131,48 @@ export class SaleOrderManagementScreen extends Component {
         } catch {
             // FIXME Universal catch seems ill advised
         }
-        const order_partner = this.pos.db.get_partner_by_id(sale_order.partner_id[0]);
+        const order_partner = this.pos.models["res.partner"].get(sale_order.partner_id);
         if (order_partner) {
             currentPOSOrder.set_partner(order_partner);
         } else {
             try {
-                await this.pos._loadPartners([sale_order.partner_id[0]]);
+                await this.pos._loadPartners([sale_order.partner_id]);
             } catch {
                 const title = _t("Customer loading error");
-                const body = _t(
-                    "There was a problem in loading the %s customer.",
-                    sale_order.partner_id[1]
-                );
+                const body = _t("There was a problem in loading the %s customer.");
                 this.dialog.add(AlertDialog, { title, body });
             }
-            currentPOSOrder.set_partner(this.pos.db.get_partner_by_id(sale_order.partner_id[0]));
+            currentPOSOrder.set_partner(this.pos.models["res.partner"].get(sale_order.partner_id));
         }
         const orderFiscalPos = sale_order.fiscal_position_id
-            ? this.pos.fiscal_positions.find(
-                  (position) => position.id === sale_order.fiscal_position_id[0]
+            ? this.pos.models["account.fiscal.position"].find(
+                  (position) => position.id === sale_order.fiscal_position_id
               )
             : false;
         if (orderFiscalPos) {
             currentPOSOrder.fiscal_position = orderFiscalPos;
-        }
-        const orderPricelist = sale_order.pricelist_id
-            ? this.pos.pricelists.find((pricelist) => pricelist.id === sale_order.pricelist_id[0])
-            : false;
-        if (orderPricelist) {
-            currentPOSOrder.set_pricelist(orderPricelist);
         }
 
         if (selectedOption == "settle") {
             // settle the order
             const lines = sale_order.order_line;
             const product_to_add_in_pos = lines
-                .filter((line) => !this.pos.db.get_product_by_id(line.product_id[0]))
-                .map((line) => line.product_id[0]);
+                .filter((line) => !this.pos.models["product.product"].get(line.product_id))
+                .map((line) => line.product_id);
             if (product_to_add_in_pos.length) {
                 const confirmed = await ask(this.dialog, {
                     title: _t("Products not available in POS"),
                     body: _t(
                         "Some of the products in your Sale Order are not available in POS, do you want to import them?"
                     ),
-                    confirmText: _t("Yes"),
-                    cancelText: _t("No"),
+                    confirmLabel: _t("Yes"),
+                    cancelLabel: _t("No"),
                 });
                 if (confirmed) {
-                    await this.pos._addProducts(product_to_add_in_pos);
+                    await this.pos.data.ormWrite("product.product", product_to_add_in_pos, {
+                        available_in_pos: true,
+                    });
+                    await this.pos.loadProducts([...product_to_add_in_pos]);
                 }
             }
 
@@ -200,14 +190,16 @@ export class SaleOrderManagementScreen extends Component {
 
             for (var i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                if (!this.pos.db.get_product_by_id(line.product_id[0])) {
+                const productProduct = this.pos.models["product.product"].get(line.product_id);
+
+                if (!productProduct) {
                     continue;
                 }
 
                 const line_values = {
                     pos: this.pos,
                     order: this.pos.get_order(),
-                    product: this.pos.db.get_product_by_id(line.product_id[0]),
+                    product: productProduct,
                     description: line.name,
                     price: line.price_unit,
                     tax_ids: orderFiscalPos ? undefined : line.tax_id,
@@ -220,8 +212,8 @@ export class SaleOrderManagementScreen extends Component {
 
                 if (
                     new_line.get_product().tracking !== "none" &&
-                    (this.pos.picking_type.use_create_lots ||
-                        this.pos.picking_type.use_existing_lots) &&
+                    (this.pos.pickingType.use_create_lots ||
+                        this.pos.pickingType.use_existing_lots) &&
                     line.lot_names.length > 0
                 ) {
                     // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
@@ -249,9 +241,9 @@ export class SaleOrderManagementScreen extends Component {
                 new_line.setQuantityFromSOL(line);
                 new_line.set_unit_price(line.price_unit);
                 new_line.set_discount(line.discount);
-                const product = this.pos.db.get_product_by_id(line.product_id[0]);
-                const product_unit = product.get_unit();
-                if (product_unit && !product.get_unit().is_pos_groupable) {
+                const product = line.product_id;
+                const product_unit = product.uom_id;
+                if (product_unit && !product_unit.is_pos_groupable) {
                     let remaining_quantity = new_line.quantity;
                     while (!floatIsZero(remaining_quantity, 6)) {
                         const splitted_line = new Orderline({ env: this.env }, line_values);
@@ -267,7 +259,7 @@ export class SaleOrderManagementScreen extends Component {
             // apply a downpayment
             if (this.pos.config.down_payment_product_id) {
                 const lines = sale_order.order_line.filter((line) => {
-                    return line.product_id[0] !== this.pos.config.down_payment_product_id[0];
+                    return line.product_id !== this.pos.config.down_payment_product_id.id;
                 });
                 const tab = lines.map((line) => ({
                     product_name: line.product_id[1],
@@ -275,17 +267,16 @@ export class SaleOrderManagementScreen extends Component {
                     price_unit: line.price_unit,
                     total: line.price_total,
                 }));
-                let down_payment_product = this.pos.db.get_product_by_id(
-                    this.pos.config.down_payment_product_id[0]
-                );
+                let down_payment_product = this.pos.config.down_payment_product_id;
+
                 if (!down_payment_product) {
-                    await this.pos._addProducts([this.pos.config.down_payment_product_id[0]]);
-                    down_payment_product = this.pos.db.get_product_by_id(
-                        this.pos.config.down_payment_product_id[0]
-                    );
+                    const dpId = this.pos.config.raw.down_payment_product_id;
+                    await this.pos.data.read("product.product", [dpId]);
+                    down_payment_product = this.pos.config.down_payment_product_id;
                 }
+
                 const down_payment_tax =
-                    this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
+                    this.pos.models["account.tax"].get(down_payment_product.taxes_id) || false;
                 let down_payment;
                 if (down_payment_tax) {
                     down_payment = down_payment_tax.price_include
@@ -380,11 +371,20 @@ export class SaleOrderManagementScreen extends Component {
             }
         }
 
+        const orderPricelist = sale_order.pricelist_id
+            ? this.pos.models["product.pricelist"].find(
+                  (pricelist) => pricelist.id === sale_order.pricelist_id
+              )
+            : false;
+        if (orderPricelist) {
+            currentPOSOrder.set_pricelist(orderPricelist);
+        }
+
         this.pos.closeScreen();
     }
 
     async _getSaleOrder(id) {
-        const [sale_order] = await this.orm.read(
+        const result = await this.pos.data.read(
             "sale.order",
             [id],
             [
@@ -401,15 +401,17 @@ export class SaleOrderManagementScreen extends Component {
             ]
         );
 
+        const sale_order = result[0];
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
 
         if (sale_order.picking_ids[0]) {
-            const [picking] = await this.orm.read(
+            const result = await this.pos.data.read(
                 "stock.picking",
                 [sale_order.picking_ids[0]],
                 ["scheduled_date"]
             );
+            const picking = result[0];
             sale_order.shipping_date = picking.scheduled_date;
         }
 
@@ -417,7 +419,7 @@ export class SaleOrderManagementScreen extends Component {
     }
 
     async _getSOLines(ids) {
-        const so_lines = await this.orm.call("sale.order.line", "read_converted", [ids]);
+        const so_lines = await this.pos.data.call("sale.order.line", "read_converted", [ids]);
         return so_lines;
     }
 }

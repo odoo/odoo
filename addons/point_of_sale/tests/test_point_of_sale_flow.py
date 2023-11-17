@@ -1849,6 +1849,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'use_pricelist': False,
         })
         self.pos_config.open_ui()
-        loaded_data = self.pos_config.current_session_id.load_pos_data()
+        loaded_data = self.pos_config.current_session_id.load_data([])
 
-        self.assertFalse(loaded_data.get('default_pricelist', False))
+        self.assertFalse(loaded_data['data']['pos.config'][0]['pricelist_id'], False)

@@ -7,7 +7,7 @@ from odoo import models
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    def _loader_params_pos_payment_method(self):
-        result = super()._loader_params_pos_payment_method()
-        result['search_params']['fields'].append('six_terminal_ip')
-        return result
+    def _load_data_params(self, config_id):
+        params = super()._load_data_params(config_id)
+        params['pos.payment.method']['fields'].append('six_terminal_ip')
+        return params

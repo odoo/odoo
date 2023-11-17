@@ -5,9 +5,9 @@ import { EpsonPrinter } from "@pos_epson_printer/app/epson_printer";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
-    after_load_server_data() {
+    afterProcessServerData() {
         var self = this;
-        return super.after_load_server_data(...arguments).then(function () {
+        return super.afterProcessServerData(...arguments).then(function () {
             if (self.config.other_devices && self.config.epson_printer_ip) {
                 self.hardwareProxy.printer = new EpsonPrinter({ ip: self.config.epson_printer_ip });
             }

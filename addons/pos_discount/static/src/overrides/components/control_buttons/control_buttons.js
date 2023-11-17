@@ -18,10 +18,12 @@ patch(ControlButtons.prototype, {
             },
         });
     },
+    // FIXME business method in a compoenent, maybe to move in pos_store
     async apply_discount(pc) {
         const order = this.pos.get_order();
         const lines = order.get_orderlines();
-        const product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+        const product = this.pos.config.discount_product_id;
+
         if (product === undefined) {
             this.dialog.add(AlertDialog, {
                 title: _t("No discount product found"),
@@ -51,23 +53,21 @@ patch(ControlButtons.prototype, {
                 lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 
+            const taxIds = this.pos.models["account.tax"].filter((tax) =>
+                tax_ids_array.includes(tax.id)
+            );
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
             if (discount < 0) {
                 order.add_product(product, {
                     price: discount,
                     lst_price: discount,
-                    tax_ids: tax_ids_array,
+                    tax_ids: taxIds,
                     merge: false,
                     description:
                         `${pc}%, ` +
                         (tax_ids_array.length
-                            ? _t(
-                                  "Tax: %s",
-                                  tax_ids_array
-                                      .map((taxId) => this.pos.taxes_by_id[taxId].amount + "%")
-                                      .join(", ")
-                              )
+                            ? _t("Tax: %s", taxIds.map((tax) => tax.amount + "%").join(", "))
                             : _t("No tax")),
                     extras: {
                         price_type: "automatic",

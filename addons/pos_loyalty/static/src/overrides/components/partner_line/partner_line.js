@@ -12,7 +12,7 @@ patch(PartnerLine.prototype, {
         this.pos = usePos();
     },
     _getLoyaltyPointsRepr(loyaltyCard) {
-        const program = this.pos.program_by_id[loyaltyCard.program_id];
+        const program = this.pos.models["loyalty.program"].get(loyaltyCard.program_id);
         if (program.program_type === "ewallet") {
             return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.balance)}`;
         }

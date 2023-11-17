@@ -6,7 +6,7 @@ export class BaseProductAttribute extends Component {
     setup() {
         this.env.attribute_components.push(this);
         this.attribute = this.props.attribute;
-        this.values = this.attribute.values;
+        this.values = this.attribute.template_value_ids;
         this.state = useState({
             attribute_value_ids: parseFloat(this.values[0].id),
             custom_value: "",
@@ -80,7 +80,7 @@ export class MultiProductAttribute extends BaseProductAttribute {
     initAttribute() {
         const attribute = this.props.attribute;
 
-        for (const value of attribute.values) {
+        for (const value of attribute.template_value_ids) {
             this.state.attribute_value_ids[value.id] = false;
         }
     }
@@ -98,6 +98,10 @@ export class ProductConfiguratorPopup extends Component {
 
     setup() {
         useSubEnv({ attribute_components: [] });
+    }
+
+    get attributes() {
+        return this.props.product.attribute_line_ids.map((attrLine) => attrLine.attribute_id);
     }
 
     computePayload() {

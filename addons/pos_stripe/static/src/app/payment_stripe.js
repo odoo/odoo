@@ -19,7 +19,7 @@ export class PaymentStripe extends PaymentInterface {
     async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
-            const data = await this.env.services.orm.silent.call(
+            const data = await this.pos.data.silentCall(
                 "pos.payment.method",
                 "stripe_connection_token",
                 []
@@ -30,7 +30,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.secret;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, 'Fetch Token');
+            this._showError(message, "Fetch Token");
             this.terminal = false;
         }
     }
@@ -164,7 +164,8 @@ export class PaymentStripe extends PaymentInterface {
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status("waitingCapture");
 
-                const [captured_card_type, captured_transaction_id] = this._getCapturedCardAndTransactionId(processPayment);
+                const [captured_card_type, captured_transaction_id] =
+                    this._getCapturedCardAndTransactionId(processPayment);
                 if (captured_card_type && captured_transaction_id) {
                     line.card_type = captured_card_type;
                     line.transaction_id = captured_transaction_id;
@@ -204,7 +205,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async capturePayment(paymentIntentId) {
         try {
-            const data = await this.env.services.orm.silent.call(
+            const data = await this.pos.data.silentCall(
                 "pos.payment.method",
                 "stripe_capture_payment",
                 [paymentIntentId]
@@ -215,14 +216,14 @@ export class PaymentStripe extends PaymentInterface {
             return data;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, 'Capture Payment');
+            this._showError(message, "Capture Payment");
             return false;
         }
     }
 
     async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await this.env.services.orm.silent.call(
+            const data = await this.pos.data.silentCall(
                 "pos.payment.method",
                 "stripe_payment_intent",
                 [[payment_method.id], amount]
@@ -233,7 +234,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.client_secret;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, 'Fetch Secret');
+            this._showError(message, "Fetch Secret");
             return false;
         }
     }

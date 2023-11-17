@@ -6,9 +6,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
     // @Override
-    async _processData(loadedData) {
-        await super._processData(...arguments);
-        this.company_has_self_ordering = loadedData["company_has_self_ordering"];
+    async processServerData(loadedData) {
+        await super.processServerData(...arguments);
+        this.self_ordering = this.data.custom.self_ordering;
     },
 });
 

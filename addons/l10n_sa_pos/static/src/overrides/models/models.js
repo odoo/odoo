@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Order.prototype, {
     export_for_printing() {
         const result = super.export_for_printing(...arguments);
-        if (this.pos.company.country && this.pos.company.country.code === "SA") {
+        if (this.pos.company.country_id?.code === "SA") {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
                 const company = this.pos.company;

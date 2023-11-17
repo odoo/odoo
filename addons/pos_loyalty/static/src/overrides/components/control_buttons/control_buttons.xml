@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_loyalty.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//OrderlineNoteButton" position="after">
-            <t t-if="pos.programs.some((p) => p.program_type == 'ewallet')">
+            <t t-if="pos.models['loyalty.program'].some((p) => p.program_type == 'ewallet')">
                 <t t-set="_orderTotal" t-value="pos.get_order().get_total_with_tax()" />
                 <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
                 <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.get_order())" />
@@ -14,18 +14,18 @@
                     <t t-else="">eWallet</t>
                 </button>
             </t>
-            <t t-if="pos.programs.some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
+            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPromoCode()">
                     <i class="fa fa-barcode me-1"/>Enter Code
                 </button>
             </t>
-            <t t-if="pos.programs.some((p) => ['coupons', 'promotion'].includes(p.program_type))">
+            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
                 <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
                     t-on-click="() => this.pos.get_order()._resetPrograms()">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>
             </t>
-            <t t-if="pos.programs.length">
+            <t t-if="pos.models['loyalty.program'].length">
                 <button class="control-button btn btn-light rounded-0 fw-bolder"
                     t-attf-class="{{getPotentialRewards().length ? 'highlight text-action' : 'disabled'}}"
                     t-on-click="() => this.clickRewards()">

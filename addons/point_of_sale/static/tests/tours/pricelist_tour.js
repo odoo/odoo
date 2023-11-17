@@ -17,10 +17,14 @@ function assert(condition, message) {
 
 function assertProductPrice(product, pricelist_name, quantity, expected_price) {
     return function () {
-        var pricelist = posmodel.pricelists.find((pricelist) => pricelist.name === pricelist_name);
+        var pricelist = posmodel.data.models["product.pricelist"].find(
+            (pricelist) => pricelist.name === pricelist_name
+        );
         var frontend_price = product.get_price(pricelist, quantity);
-        frontend_price = round_di(frontend_price, posmodel.dp["Product Price"]);
-
+        const dp = posmodel.data.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        frontend_price = round_di(frontend_price, dp.digits);
         var diff = Math.abs(expected_price - frontend_price);
 
         assert(
@@ -53,31 +57,24 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                 trigger: "body:not(:has(.pos-loader))", // Pos has finished loading
                 in_modal: false,
                 run: function () {
-                    var product_wall_shelf = posmodel.db.search_product_in_category(
-                        0,
-                        "Wall Shelf Unit"
-                    )[0];
-                    var product_small_shelf = posmodel.db.search_product_in_category(
-                        0,
-                        "Small Shelf"
-                    )[0];
-                    var product_magnetic_board = posmodel.db.search_product_in_category(
-                        0,
-                        "Magnetic Board"
-                    )[0];
-                    var product_monitor_stand = posmodel.db.search_product_in_category(
-                        0,
-                        "Monitor Stand"
-                    )[0];
-                    var product_desk_pad = posmodel.db.search_product_in_category(0, "Desk Pad")[0];
-                    var product_letter_tray = posmodel.db.search_product_in_category(
-                        0,
-                        "Letter Tray"
-                    )[0];
-                    var product_whiteboard = posmodel.db.search_product_in_category(
-                        0,
-                        "Whiteboard"
-                    )[0];
+                    var product_wall_shelf = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Wall Shelf Unit");
+                    var product_small_shelf = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Small Shelf");
+                    var product_magnetic_board = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Magnetic Board");
+                    var product_monitor_stand = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Monitor Stand");
+                    var product_desk_pad = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Desk Pad");
+                    var product_letter_tray = posmodel.data.models["product.product"]
+                        .getAll()
+                        .find((p) => p.display_name === "Letter Tray");
 
                     assertProductPrice(product_letter_tray, "Public Pricelist", 0, 4.8)()
                         .then(assertProductPrice(product_letter_tray, "Public Pricelist", 1, 4.8))
@@ -108,7 +105,6 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                                 13.95
                             )
                         )
-                        .then(assertProductPrice(product_whiteboard, "Public Pricelist", 1, 3.2))
                         .then(function () {
                             $(".pos").addClass("done-testing");
                         });

@@ -61,7 +61,7 @@ class SaleOrderLine(models.Model):
             if sale_line.product_type:
                 product_uom = sale_line.product_id.uom_id
                 sale_line_uom = sale_line.product_uom
-                item = sale_line.read(field_names)[0]
+                item = sale_line.read(field_names, load=False)[0]
                 if sale_line.product_id.tracking != 'none':
                     item['lot_names'] = sale_line.move_ids.move_line_ids.lot_id.mapped('name')
                 if product_uom == sale_line_uom:

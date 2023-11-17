@@ -10,6 +10,6 @@ patch(ProductCard.prototype, {
         this.pos = usePos();
     },
     isSelfOrderAvailable(product_id) {
-        return this.pos.db.product_by_id[product_id].self_order_available;
+        return this.pos.models["product.product"].get(product_id)?.self_order_available;
     },
 });

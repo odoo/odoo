@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
-patch(ProductScreen.prototype, {
+patch(OrderSummary.prototype, {
     releaseTable() {
         const orderOnTable = this.pos.orders.filter(
-            (o) => o.tableId === this.pos.table.id && o.finalized === false
+            (o) => o.tableId === this.pos.selectedTable.id && o.finalized === false
         );
         for (const order of orderOnTable) {
             this.pos.removeOrder(order);
@@ -16,10 +16,12 @@ patch(ProductScreen.prototype, {
     showReleaseBtn() {
         return (
             this.pos.config.module_pos_restaurant &&
-            this.pos.table &&
+            this.pos.selectedTable &&
             !this.pos.orders.some(
                 (o) =>
-                    o.tableId === this.pos.table.id && o.finalized === false && o.orderlines.length
+                    o.tableId === this.pos.selectedTable.id &&
+                    o.finalized === false &&
+                    o.orderlines.length
             )
         );
     },

@@ -33,6 +33,6 @@ export class Chrome extends Component {
     // GETTERS //
 
     get showCashMoveButton() {
-        return Boolean(this.pos?.config?.cash_control);
+        return Boolean(this.pos.config.cash_control);
     }
 }

@@ -16,8 +16,10 @@ import { parseFloat } from "@web/views/fields/parsers";
 export const contextualUtilsService = {
     dependencies: ["pos", "localization"],
     start(env, { pos, localization }) {
-        const currency = pos.currency;
-        const productUoMDecimals = pos.dp["Product Unit of Measure"];
+        const res_currency = pos.currency;
+        const productUoMDecimals = pos.data.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit of Measure"
+        ).digits;
         const decimalPoint = localization.decimalPoint;
         const thousandsSep = localization.thousandsSep;
         // Replace the thousands separator and decimal point with regex-escaped versions
@@ -42,16 +44,16 @@ export const contextualUtilsService = {
 
         const formatCurrency = (value, hasSymbol = true) => {
             return formatMonetary(value, {
-                currencyId: currency.id,
+                currencyId: res_currency.id,
                 noSymbol: !hasSymbol,
             });
         };
         const floatIsZero = (value) => {
-            return genericFloatIsZero(value, currency.decimal_places);
+            return genericFloatIsZero(value, res_currency.decimal_places);
         };
 
         const roundCurrency = (value) => {
-            return roundDecimals(value, currency.decimal_places);
+            return roundDecimals(value, res_currency.decimal_places);
         };
 
         const isValidFloat = (inputValue) => {

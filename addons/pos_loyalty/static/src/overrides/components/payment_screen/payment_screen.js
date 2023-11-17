@@ -35,7 +35,7 @@ patch(PaymentScreen.prototype, {
         // No need to do an rpc if no existing coupon is being used.
         if (Object.keys(pointChanges || {}).length > 0 || newCodes.length) {
             try {
-                const { successful, payload } = await this.orm.call(
+                const { successful, payload } = await this.pos.data.call(
                     "pos.order",
                     "validate_coupon_programs",
                     [[], pointChanges, newCodes]
@@ -79,7 +79,9 @@ patch(PaymentScreen.prototype, {
      */
     async _postPushOrderResolve(order, server_ids) {
         // Compile data for our function
-        const { program_by_id, reward_by_id, couponCache } = this.pos;
+        const { couponCache } = this.pos;
+        const reward_by_id = this.pos.models["loyalty.reward"].getAllBy("id");
+        const program_by_id = this.pos.models["loyalty.program"].getAllBy("id");
         const rewardLines = order._get_reward_lines();
         const partner = order.get_partner();
         let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
@@ -121,7 +123,7 @@ patch(PaymentScreen.prototype, {
             })
         );
         if (Object.keys(couponData || []).length > 0) {
-            const payload = await this.orm.call("pos.order", "confirm_coupon_programs", [
+            const payload = await this.pos.data.call("pos.order", "confirm_coupon_programs", [
                 server_ids,
                 couponData,
             ]);

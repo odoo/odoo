@@ -21,8 +21,8 @@ patch(TicketScreen.prototype, {
         if (table) {
             let floorAndTable = "";
 
-            if (this.pos.floors && this.pos.floors.length > 1) {
-                floorAndTable = `${table.floor.name}/`;
+            if (this.pos.models["restaurant.floor"].length > 0) {
+                floorAndTable = `${table.floor_id.name}/`;
             }
 
             floorAndTable += table.name;
@@ -43,7 +43,7 @@ patch(TicketScreen.prototype, {
         });
     },
     async _setOrder(order) {
-        if (!this.pos.config.module_pos_restaurant || this.pos.table || !order.tableId) {
+        if (!this.pos.config.module_pos_restaurant || this.pos.selectedTable || !order.tableId) {
             return super._setOrder(...arguments);
         }
         // we came from the FloorScreen
@@ -53,7 +53,7 @@ patch(TicketScreen.prototype, {
     },
     get allowNewOrders() {
         return this.pos.config.module_pos_restaurant
-            ? Boolean(this.pos.table)
+            ? Boolean(this.pos.selectedTable)
             : super.allowNewOrders;
     },
     async settleTips() {
@@ -93,7 +93,10 @@ patch(TicketScreen.prototype, {
                 order.set_tip(amount);
                 order.finalized = true;
                 const tip_line = order.selected_orderline;
-                await this.orm.call("pos.order", "set_tip", [serverId, tip_line.export_as_JSON()]);
+                await this.pos.data.call("pos.order", "set_tip", [
+                    serverId,
+                    tip_line.export_as_JSON(),
+                ]);
             }
             if (order === this.pos.get_order()) {
                 this._selectNextOrder(order);
@@ -109,7 +112,7 @@ patch(TicketScreen.prototype, {
         }
     },
     async setNoTip(serverId) {
-        await this.orm.call("pos.order", "set_no_tip", [serverId]);
+        await this.pos.data.call("pos.order", "set_no_tip", [serverId]);
     },
     _getOrderStates() {
         const result = super._getOrderStates(...arguments);
@@ -122,8 +125,10 @@ patch(TicketScreen.prototype, {
     },
     async onDoRefund() {
         const order = this.getSelectedOrder();
-        if (this.pos.config.module_pos_restaurant && order && !this.pos.table) {
-            this.pos.setTable(order.table ? order.table : Object.values(this.pos.tables_by_id)[0]);
+        if (this.pos.config.module_pos_restaurant && order && !this.pos.selectedTable) {
+            this.pos.setTable(
+                order.table ? order.table : this.pos.models["restaurant.table"].getAll()[0]
+            );
         }
         super.onDoRefund(...arguments);
     },
