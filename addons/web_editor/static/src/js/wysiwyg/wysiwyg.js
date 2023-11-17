@@ -17,7 +17,7 @@ import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "@web_editor/js/common/utils";
-import { isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { isIconElement, isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
@@ -1665,8 +1665,7 @@ export class Wysiwyg extends Component {
         }
 
         if (params.node) {
-            const isIcon = (el) => el.matches('i.fa, span.fa');
-            const changedIcon = isIcon(params.node) && isIcon(element);
+            const changedIcon = isIconElement(params.node) && isIconElement(element);
             if (changedIcon) {
                 // Preserve tag name when changing an icon and not recreate the
                 // editors unnecessarily.

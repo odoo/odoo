@@ -1410,13 +1410,29 @@ export function containsUnbreakable(node) {
     }
     return isUnbreakable(node) || containsUnbreakable(node.firstChild);
 }
-export function isFontAwesome(node) {
-    return (
+
+const iconTags = ['I', 'SPAN'];
+const iconClasses = ['fa', 'fab', 'fad', 'far', 'oi'];
+/**
+ * Indicates if the given node is an icon element.
+ *
+ * @see ICON_SELECTOR
+ * @param {?Node} [node]
+ * @returns {boolean}
+ */
+export function isIconElement(node) {
+    return !!(
         node &&
-        (node.nodeName === 'I' || node.nodeName === 'SPAN') &&
-        ['fa', 'fab', 'fad', 'far'].some(faClass => node.classList.contains(faClass))
+        iconTags.includes(node.nodeName) &&
+        iconClasses.some(cls => node.classList.contains(cls))
     );
 }
+export const ICON_SELECTOR = iconTags.map(tag => {
+    return iconClasses.map(cls => {
+        return `${tag}.${cls}`;
+    }).join(', ');
+}).join(', ');
+
 export function isZWS(node) {
     return (
         node &&
@@ -1432,7 +1448,7 @@ export function isEditorTab(node) {
 }
 export function isMediaElement(node) {
     return (
-        isFontAwesome(node) ||
+        isIconElement(node) ||
         (node.classList &&
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
     );
@@ -1802,7 +1818,7 @@ export function isEmptyBlock(blockEl) {
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isFontAwesome(node))) {
+        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isIconElement(node))) {
             return false;
         }
     }
