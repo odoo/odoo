@@ -81,7 +81,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         if (this.productCatalogData.readOnly) {
             return;
         }
-        this.productCatalogData.quantity = quantity;
+        this.productCatalogData.quantity = quantity || 0;
         this.debouncedUpdateQuantity();
     }
 
