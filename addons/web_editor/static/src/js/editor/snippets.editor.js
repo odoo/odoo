@@ -2873,6 +2873,10 @@ var SnippetsMenu = Widget.extend({
             if ($(this).is(exclude)) {
                 return false;
             }
+            if (noCheck) {
+                // When noCheck is true, we only check the exclude.
+                return true;
+            }
             // `o_editable_media` bypasses the `o_not_editable` class.
             if (this.classList.contains('o_editable_media')) {
                 return shouldEditableMediaBeEditable(this);
