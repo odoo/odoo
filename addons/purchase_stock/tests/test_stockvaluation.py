@@ -1840,6 +1840,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 - 2 x 50 (cost by hundred)
                 - 2 x 10 (the price diff from step "Bill 2 Hundred @ 60" and "Bill
                           4 Hundred @ 60")
+        On top of that, make sure that everything will still work if the option
+        "Lock Posted Entries with Hash" is enabled on the stock journal
         """
         expected_svl_values = [] # USD
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -1871,6 +1873,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.categ_id.property_stock_journal.restrict_mode_hash_table = True
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
@@ -2508,6 +2511,43 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill02.invoice_line_ids.price_unit = 12
 
         return po, refund, bill02
+
+    def test_pdiff_and_aml_labels(self):
+        """
+        When posting the bill, if an AML has a pdiff, it should not change any
+        label of the bill
+        """
+        self.product1.type = 'consu'
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_b
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.move_line_ids.qty_done = 1
+        receipt01.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        label01, label02 = bill.invoice_line_ids.mapped('name')
+        self.assertTrue(label01)
+        self.assertTrue(label02)
+
+        bill.invoice_line_ids.price_unit = 11.0
+        bill.action_post()
+        self.assertEqual(bill.invoice_line_ids.mapped('name'), [label01, label02])
 
     def test_pdiff_and_order_between_bills_01(self):
         """
