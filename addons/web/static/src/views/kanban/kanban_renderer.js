@@ -40,7 +40,7 @@ export class KanbanRenderer extends Component {
         this.state = useState({
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
-            isResequenceInprogress: false,
+                isResequencing: false,
         });
         this.dialog = useService("dialog");
         this.exampleData = registry
@@ -221,8 +221,11 @@ export class KanbanRenderer extends Component {
 
     get showNoContentHelper() {
         const { model, isGrouped, groups } = this.props.list;
+        if (this.state.isResequencing) {
+            return false;
+        }
         if (model.useSampleModel) {
-            return !this.state.isResequenceInprogress;
+            return true;
         }
         if (isGrouped) {
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
@@ -232,7 +235,7 @@ export class KanbanRenderer extends Component {
                 return !this.props.list.groupedBy("m2o");
             }
         }
-        return !model.hasData() && !this.state.isResequenceInprogress;
+        return !model.hasData();
     }
 
     /**
@@ -542,7 +545,10 @@ export class KanbanRenderer extends Component {
      */
     sortStart({ element }) {
         element.classList.add("o_dragged", "shadow");
-        this.state.isResequenceInprogress = true;
+        const { model } = this.props.list;
+        if (model.useSampleModel || !model.hasData()) {
+            this.state.isResequencing = true;
+        }
     }
 
     /**
@@ -555,7 +561,9 @@ export class KanbanRenderer extends Component {
         if (group) {
             group.classList.remove("o_kanban_hover");
         }
-        this.state.isResequenceInprogress = false;
+        if (this.state.isResequencing) {
+            this.state.isResequencing = false;
+        }
     }
 
     /**
