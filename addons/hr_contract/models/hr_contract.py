@@ -68,7 +68,7 @@ class Contract(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
-    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
+    visa_expire = fields.Date('Visa Expiration Date', related="employee_id.visa_expire", readonly=False)
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.')
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
