@@ -1032,15 +1032,14 @@ class TestCompute(common.TransactionCase):
 class TestHttp(common.HttpCase):
     def test_webhook_trigger(self):
         model = self.env["ir.model"]._get("base.automation.linked.test")
-        record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
-        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, _actions={
             "state": "object_write",
             "update_path": "another_field",
             "value": "written"
         })
 
         obj = self.env[model.model].create({"name": "some name"})
-        response = self.url_open(automation.url, data={"name": "some name"})
+        response = self.url_open(automation.url, data={"_model": model._name, "id": obj.id, "name": obj.name})
         self.assertEqual(response.json(), {"status": "ok"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(obj.another_field, "written")
