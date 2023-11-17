@@ -154,22 +154,6 @@ class MergePartnerAutomatic(models.TransientModel):
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
                         query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
                         self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
-
-                        # handle the recursivity with parent relation
-                        if column == Partner._parent_name and table == 'res_partner':
-                            query = """
-                                WITH RECURSIVE cycle(id, parent_id) AS (
-                                        SELECT id, parent_id FROM res_partner
-                                    UNION
-                                        SELECT  cycle.id, res_partner.parent_id
-                                        FROM    res_partner, cycle
-                                        WHERE   res_partner.id = cycle.parent_id AND
-                                                cycle.id != cycle.parent_id
-                                )
-                                SELECT id FROM cycle WHERE id = parent_id AND id = %s
-                            """
-                            self._cr.execute(query, (dst_partner.id,))
-                            # NOTE JEM : shouldn't we fetch the data ?
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
