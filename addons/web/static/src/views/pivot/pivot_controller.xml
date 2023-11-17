@@ -30,19 +30,9 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <t t-set="displayNoContent" t-value="
-                    props.info.noContentHelp !== false and (
-                        !(model.hasData() and model.metaData.activeMeasures.length) or
-                        model.useSampleModel
-                    )"
-                />
-                <t t-if="displayNoContent">
-                    <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
-                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
-                    </t>
-                    <t t-else="" t-call="web.NoContentHelper"/>
-                </t>
-                <t t-component="props.Renderer" model="model"/>
+                <t t-component="props.Renderer"
+                    model="model"
+                    noContentHelp="props.info.noContentHelp"/>
             </Layout>
         </div>
     </t>

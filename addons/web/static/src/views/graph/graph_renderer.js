@@ -759,8 +759,21 @@ export class GraphRenderer extends Component {
         const { cumulated } = this.model.metaData;
         this.model.updateMetaData({ cumulated: !cumulated });
     }
+
+    /**
+     * @returns {boolean}
+     */
+    get showNoContentHelper() {
+        return this.props.noContentHelp && (
+            !this.model.hasData() || this.model.useSampleModel
+        );
+    }
 }
 
 GraphRenderer.template = "web.GraphRenderer";
 GraphRenderer.components = { Dropdown, DropdownItem };
-GraphRenderer.props = ["class?", "model", "buttonTemplate"];
+GraphRenderer.props = [
+    "model",
+    "noContentHelp?",
+    "buttonTemplate"
+];

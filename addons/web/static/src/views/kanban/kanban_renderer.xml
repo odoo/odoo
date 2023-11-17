@@ -2,10 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer">
-        <div class="o_kanban_renderer o_renderer d-flex"
-            t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
-            t-ref="root"
-        >
+        <div t-ref="root" class="o_kanban_renderer o_renderer d-flex" t-att-class="{
+            'o_kanban_grouped align-content-stretch': props.list.isGrouped,
+            'o_kanban_ungrouped align-content-start flex-wrap justify-content-start': !props.list.isGrouped,
+            'o_empty': showNoContentHelper,
+        }">
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />

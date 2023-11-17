@@ -2,14 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListRenderer">
-        <div
-            class="o_list_renderer o_renderer table-responsive"
-            tabindex="-1"
-            t-ref="root"
-        >
-            <t t-if="showNoContentHelper" t-call="web.ActionHelper">
-                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
-            </t>
+        <div t-ref="root" tabindex="-1" class="o_list_renderer o_renderer table-responsive" t-att-class="{
+            o_empty: showNoContentHelper,
+        }">
             <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
@@ -93,6 +88,9 @@
                     </tr>
                 </tfoot>
             </table>
+            <t t-if="showNoContentHelper" t-call="web.ActionHelper">
+                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+            </t>
         </div>
     </t>
 

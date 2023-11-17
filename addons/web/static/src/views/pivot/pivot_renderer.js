@@ -238,7 +238,19 @@ export class PivotRenderer extends Component {
         };
         this.openView(this.model.getGroupDomain(group), this.views, context);
     }
+
+    /**
+     * @returns {boolean}
+     */
+    get showNoContentHelper() {
+        return this.props.noContentHelp && (
+            !(this.model.hasData() && this.model.metaData.activeMeasures.length) || this.model.useSampleModel
+        );
+    }
 }
 PivotRenderer.template = "web.PivotRenderer";
 PivotRenderer.components = { Dropdown, DropdownItem, CheckBox, PivotGroupByMenu };
-PivotRenderer.props = ["model"];
+PivotRenderer.props = [
+    "model",
+    "noContentHelp?",
+];
