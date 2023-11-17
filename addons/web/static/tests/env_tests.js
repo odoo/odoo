@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
-import { makeEnv, startServices } from "@web/env";
+import { makeEnv, mountComponent, startServices } from "@web/env";
 import { registry } from "@web/core/registry";
 import {
     clearRegistryWithCleanup,
     clearServicesMetadataWithCleanup,
     makeTestEnv,
 } from "./helpers/mock_env";
-import { makeDeferred, nextTick, patchWithCleanup } from "./helpers/utils";
+import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "./helpers/utils";
+import { Component, xml } from "@odoo/owl";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const serviceRegistry = registry.category("services");
 
@@ -245,3 +247,77 @@ QUnit.test(
         assert.deepEqual(env.services, { a: "a", b: "b" });
     }
 );
+
+QUnit.test(
+    "mountComponent creates an env and sets the application as root when no env is provided",
+    async function (assert) {
+        clearRegistryWithCleanup(serviceRegistry);
+        clearServicesMetadataWithCleanup();
+
+        const myService = {
+            start() {
+                return "a";
+            },
+        };
+        serviceRegistry.add("my_service", myService);
+
+        class Root extends Component {
+            static template = xml`Root`;
+        }
+        const app = await mountComponent(Root, getFixture());
+        registerCleanup(() => {
+            delete odoo.__WOWL_DEBUG__;
+        });
+        const { env } = app;
+
+        assert.deepEqual(env.services, { my_service: "a" });
+        assert.deepEqual(odoo.__WOWL_DEBUG__, { root: app.root.component });
+        assert.strictEqual(getFixture().textContent, "Root");
+    }
+);
+
+QUnit.test(
+    "mountComponent uses the env when provided and doesn't start the services",
+    async function (assert) {
+        clearRegistryWithCleanup(serviceRegistry);
+        clearServicesMetadataWithCleanup();
+
+        const myService = {
+            start() {
+                assert.step("starting myService");
+                return "a";
+            },
+        };
+        serviceRegistry.add("my_service", myService);
+        const env = makeEnv();
+        assert.verifySteps([]);
+        await startServices(env);
+        assert.verifySteps(["starting myService"]);
+
+        class Root extends Component {
+            static template = xml`Root`;
+        }
+
+        const app = await mountComponent(Root, getFixture(), { env });
+        assert.verifySteps([]);
+        assert.strictEqual(app.env.services, env.services);
+        assert.strictEqual(odoo.__WOWL_DEBUG__, undefined);
+        assert.strictEqual(getFixture().textContent, "Root");
+    }
+);
+
+QUnit.test("mountComponent: can pass props to the root component", async function (assert) {
+    clearRegistryWithCleanup(serviceRegistry);
+    clearServicesMetadataWithCleanup();
+
+    class Root extends Component {
+        static template = xml`<t t-esc="props.text"/>`;
+    }
+
+    await mountComponent(Root, getFixture(), { props: { text: "text from props" } });
+    registerCleanup(() => {
+        delete odoo.__WOWL_DEBUG__;
+    });
+
+    assert.strictEqual(getFixture().textContent, "text from props");
+});
