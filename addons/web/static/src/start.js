@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { makeEnv, startServices } from "./env";
+import { mountComponent } from "./env";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
-import { templates } from "@web/core/assets";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { App, Component, whenReady } from "@odoo/owl";
+import { Component, whenReady } from "@odoo/owl";
 
 /**
  * Function to start a webclient.
@@ -25,24 +23,11 @@ export async function startWebClient(Webclient) {
     };
     odoo.isReady = false;
 
-    // setup environment
     await whenReady();
-    const env = makeEnv();
-    await startServices(env);
-
+    const app = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
+    const { env } = app;
     Component.env = env;
 
-    // start web client
-    const app = new App(Webclient, {
-        name: "Odoo Web Client",
-        env,
-        templates,
-        dev: env.debug,
-        warnIfNoStaticProps: true,
-        translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
-    });
-    const root = await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
         classList.add("o_rtl");
@@ -57,6 +42,5 @@ export async function startWebClient(Webclient) {
         classList.add("o_touch_device");
     }
     // delete odoo.debug; // FIXME: some legacy code rely on this
-    odoo.__WOWL_DEBUG__ = { root };
     odoo.isReady = true;
 }
