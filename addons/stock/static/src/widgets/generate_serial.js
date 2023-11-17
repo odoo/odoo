@@ -53,17 +53,19 @@ export class GenerateDialog extends Component {
             );
         }
         if (!this.keepLines.el.checked) {
-            await lines._applyCommands(lines._currentIds.map((currentId) => [
+            lines._commands.push(...lines._currentIds.map((id) => [
                 x2ManyCommands.DELETE,
-                currentId,
+                id,
             ]));
+            lines.records = [];
+            lines._currentIds = [];
         }
-        lines.records.push(...newlines);
+        lines.records.push(...newlines.slice(0, lines.limit));
         lines._commands.push(...newlines.map((record) => [
             x2ManyCommands.CREATE,
             record._virtualId,
         ]));
-        lines._currentIds.push(...newlines.map((record) => record._virtualId));
+        lines._currentIds.push(...newlines.slice(0, lines.limit).map((record) => record._virtualId));
         await lines._onUpdate();
         this.props.close();
     }

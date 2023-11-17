@@ -576,15 +576,17 @@ class StockQuant(models.Model):
         if any(elem.product_id.type != 'product' for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.constrains('quantity')
-    def check_quantity(self):
+    @api.constrains('location_id')
+    def check_location_id(self):
+        for quant in self:
+            if quant.location_id.usage == 'view':
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
+
+    def _check_quantity(self):
         sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
         if not sn_quants:
             return
-        domain = expression.OR([
-            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
-            for q in sn_quants
-        ])
+        domain = [('product_id', 'in', sn_quants.product_id.ids), ('location_id', 'in', sn_quants.location_id.ids), ('lot_id', 'in', sn_quants.lot_id.ids)]
         groups = self._read_group(
             domain,
             ['product_id', 'location_id', 'lot_id'],
@@ -593,12 +595,6 @@ class StockQuant(models.Model):
         for product, _location, lot, qty in groups:
             if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s', product.display_name, lot.name))
-
-    @api.constrains('location_id')
-    def check_location_id(self):
-        for quant in self:
-            if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -763,23 +759,28 @@ class StockQuant(models.Model):
             domain = expression.AND([['|', ('expiration_date', '>=', self.env.context['with_expiration']), ('expiration_date', '=', False)], domain])
         return domain
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0, quants_cache=None):
         """ if records in self, the records are filtered based on the wanted characteristics passed to this function
             if not, a search is done with all the characteristics passed.
         """
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-        if self.ids:
-            sort_key = self._get_removal_strategy_sort_key(removal_strategy)
-            res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
+        if quants_cache is not None and strict:
+            res = self.env['stock.quant']
+            if lot_id:
+                res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id and package_id.id or False, owner_id and owner_id.id or False]
+            res |= quants_cache[product_id.id, location_id.id, False, package_id and package_id.id or False, owner_id and owner_id.id or False]
+        elif quants_cache is not None and not strict:
+            domain = expression.AND([domain, [('id', 'in', quants_cache[product_id.id].ids)]])
+            res = self.search(domain, order=order)
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
             res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
-        return res.sorted(lambda q: not q.lot_id)
+        return res
 
-    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
+    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False, quants_cache=None):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,
         location_id` if `strict` is set to False or sharing the *exact same characteristics*
@@ -799,7 +800,7 @@ class StockQuant(models.Model):
         :return: available quantity as a float
         """
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, quants_cache=quants_cache)
         rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
@@ -819,7 +820,7 @@ class StockQuant(models.Model):
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
-    def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False, quants_cache=None):
         """ Get the quantity available to reserve for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. If no quants are in self, `_gather` will do a search to fetch the quants
@@ -831,11 +832,10 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         rounding = product_id.uom_id.rounding
-
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity, quants_cache=quants_cache)
 
         # avoid quants with negative qty to not lower available_qty
-        available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
+        available_quantity = self.env['stock.quant']._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
 
         # do full packaging reservation when it's needed
         if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
@@ -991,19 +991,29 @@ class StockQuant(models.Model):
         self.write({'inventory_diff_quantity': 0})
 
     @api.model
-    def _get_quants_by_products_locations(self, product_ids, location_ids):
+    def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False, strict=True):
         quants_by_product = defaultdict(lambda: self.env['stock.quant'])
         if product_ids and location_ids:
-            needed_quants = self.env['stock.quant']._read_group([('product_id', 'in', product_ids.ids),
-                                                                ('location_id', 'child_of', location_ids.ids)],
-                                                            ['product_id'],
-                                                            ['id:recordset'])
-            for product, quants in needed_quants:
-                quants_by_product[product.id] = quants
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant'].search_fetch(domain, ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'])
+
+            if strict:
+                def groupby_func(q):
+                    return (q.product_id.id, q.location_id.id, q.lot_id.id, q.package_id.id, q.owner_id.id)
+            else:
+                def groupby_func(q):
+                    return (q.product_id.id)
+
+            for key, quants in groupby(needed_quants, groupby_func):
+                quants_by_product[key] = self.env['stock.quant'].browse({q.id for q in quants})
         return quants_by_product
 
-    @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):
+    def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None, quants_cache=None):
         """ Increase or decrease `quantity` or 'reserved quantity' of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -1019,9 +1029,9 @@ class StockQuant(models.Model):
         :return: tuple (available_quantity, in_date as a datetime)
         """
         if not (quantity or reserved_quantity):
-            raise ValidationError(_('Quantity or Reserved Quantity should be set.'))
+            return 0, fields.Datetime.now()
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, quants_cache=quants_cache)
         if lot_id and quantity > 0:
             quants = quants.filtered(lambda q: q.lot_id)
 
@@ -1067,11 +1077,13 @@ class StockQuant(models.Model):
                 vals['quantity'] = quantity
             if reserved_quantity:
                 vals['reserved_quantity'] = reserved_quantity
-            self.create(vals)
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
+            q = self.create(vals)
+            if quants_cache is not None:
+                quants_cache[q.product_id.id, q.location_id.id, q.lot_id.id, q.package_id.id, q.owner_id.id] |= q
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True, quants_cache=quants_cache), in_date
 
     @api.model
-    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True, quants_cache=None):
         """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -1083,7 +1095,7 @@ class StockQuant(models.Model):
         :param owner_id:
         :return: available_quantity
         """
-        self._update_available_quantity(product_id, location_id, reserved_quantity=quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
+        self._update_available_quantity(product_id, location_id, reserved_quantity=quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, quants_cache=quants_cache)
 
     @api.model
     def _unlink_zero_quants(self):

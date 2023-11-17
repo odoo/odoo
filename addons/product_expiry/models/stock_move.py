@@ -3,6 +3,7 @@
 
 import datetime
 import dateutil.parser as dparser
+from collections import defaultdict
 from re import findall as re_findall
 
 from odoo import fields, models
@@ -72,12 +73,13 @@ class StockMove(models.Model):
                     break
         return options
 
-    def _update_reserved_quantity(self, need, location_id, quant_ids=None, lot_id=None, package_id=None, owner_id=None, strict=True):
-        if self.product_id.use_expiration_date:
-            if not quant_ids:
-                quant_ids = self.env['stock.quant']
-            quant_ids = quant_ids.with_context(with_expiration=self.date)
-        return super()._update_reserved_quantity(need, location_id, quant_ids, lot_id, package_id, owner_id, strict)
+    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True, quants_cache=None):
+        if not self.product_id.use_expiration_date or not quants_cache:
+            return super()._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict, quants_cache=quants_cache)
+        quants_cache_expired = defaultdict(lambda: self.env['stock.quant'])
+        for key, quants in quants_cache.items():
+            quants_cache_expired[key] = quants.filtered(lambda q: not q.expiration_date or q.expiration_date >= self.date)
+        return super()._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict, quants_cache=quants_cache_expired)
 
     def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         if self.product_id.use_expiration_date:
