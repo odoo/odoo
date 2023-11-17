@@ -1120,6 +1120,7 @@ export class ListRenderer extends Component {
                 await this.props.list.enterEditMode(record);
                 this.cellToFocus = { column, record };
                 if (
+                    column.type === "field" &&
                     record.fields[column.name].type === "boolean" &&
                     (!column.widget || column.widget === "boolean")
                 ) {
