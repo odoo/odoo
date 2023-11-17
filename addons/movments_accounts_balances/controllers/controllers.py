@@ -100,47 +100,41 @@ class AccountBalance(models.Model):
     @api.model
     def get_bills(self, start_date, end_date, selected_account_id, selected_partner_id, selected_analytic_id):
         # Define search criteria to filter bills
-        domain = [('date', '>=', start_date),
-                  ('date', '<=', end_date),
-                  ('move_type', '=', 'in_invoice'),
-                  ]
+        domain = [
+            ('invoice_date', '>=', start_date),
+            ('invoice_date', '<=', end_date),
+            ('move_type', '=', 'in_invoice'),
+        ]
 
         # Retrieve bills based on the criteria
         bills = self.env['account.move'].search(domain, order='invoice_date')
 
         # Prepare a list to store bill data
         bill_data = []
-        move_lines = self.env['account.move'].search(domain)
-        for line in move_lines:
-            account_info = self.env['account.move.line'].search([('move_id', '=', line.id)], limit=1)
-            selected_account_id = account_info.account_id.name if account_info else False
 
-            # partner_name = account_info.name if account_info else False
-            # analytic_account_id = analytic_info.account_id if analytic_info else ""
-            # analytic_account_name = analytic_account_id.name if analytic_info else ""
-            # analytic_account_amount = analytic_info.amount if analytic_info else "",
-            # partner_id = line.partner_id.id if line.partner_id else ""
-            # partner_type = None
+        for bill in bills:
+            # Retrieve invoice lines for each bill
+            invoice_lines = bill.invoice_line_ids
+            selected_account_id = (
+                    invoice_lines and invoice_lines[0].account_id.name or False
+            )
 
-            # Iterate through the retrieved bills and assemble bill data
-            for bill in bills:
-                bill_data.append({
-                    'id': bill.id,
-                    'bill_number': bill.id,
-                    'bill_date': bill.date,
-                    'supplier_id': bill.partner_id.name,
-                    'amount': bill.amount_total,
-                    'state': bill.payment_state,
-                    'selected_account_id': selected_account_id
-                    # Add more bill details here as needed
-                })
+            # Assemble bill data
+            bill_data.append({
+                'id': bill.id,
+                'bill_number': bill.id,
+                'bill_date': bill.invoice_date,
+                'supplier_id': bill.partner_id.name,
+                'amount': bill.amount_total,
+                'state': bill.payment_state,
+                'selected_account_id': selected_account_id,
+                # Add more bill details here as needed
+            })
 
-            # Create a dictionary with a "bill_info" key
-            response = {
-                'bill_info': bill_data
-            }
+        # Create a dictionary with a "bill_info" key
+        response = {'bill_info': bill_data}
 
-            return response
+        return response
 
     @api.model
     # def create_bill(self, partner_id, invoice_date, due_date, reference, line_data, global_narration):
