@@ -903,7 +903,7 @@ class HrExpenseSheet(models.Model):
 
     # === Account fields === #
     payment_state = fields.Selection(
-        selection=lambda self: self.env["account.move"]._fields["payment_state"].selection,
+        selection=lambda self: self.env["account.move"]._fields["payment_state"]._description_selection(self.env),
         string="Payment Status",
         copy=False,
         tracking=True,
