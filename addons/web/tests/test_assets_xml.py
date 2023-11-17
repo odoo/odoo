@@ -10,7 +10,7 @@ import logging
 
 import odoo
 from odoo.tests.common import BaseCase, HttpCase, tagged
-from odoo.tools import topological_sort
+from odoo.tools import mute_logger
 from odoo.addons.base.models.assetsbundle import AssetsBundle, WebAsset
 
 
@@ -365,13 +365,12 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             '/module_2/static/xml/file_1.xml': files['/module_2/static/xml/file_1.xml'],
             '/module_1/static/xml/file_1.xml': files['/module_1/static/xml/file_1.xml'],
         }
-        with self.assertRaises(ValueError) as ve:
-            self.renderBundle(debug=False)
 
-        self.assertEqual(
-            str(ve.exception),
-            "Module 'module_1' not loaded or inexistent (try to inherit 'template_1_1'), or templates of addon being loaded 'module_2' are misordered (template 'template_2_1')"
-        )
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.assertEqual(
+                self.renderBundle(debug=False),
+                '<templates xml:space="preserve">\n<t t-name="parsing_error_module_2_static_xml_file_1.xml"><parsererror>&#34;Module &#39;module_1&#39; not loaded or inexistent (try to inherit &#39;template_1_1&#39;), or templates of addon being loaded &#39;module_2&#39; are misordered (template &#39;template_2_1&#39;)&#34; in file &#39;/module_2/static/xml/file_1.xml&#39;</parsererror></t>\n</templates>'
+            )
 
     def test_static_misordered_templates(self):
         self.template_files['/module_2/static/xml/file_1.xml'] = """
@@ -386,13 +385,12 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </div>
             </templates>
         """
-        with self.assertRaises(ValueError) as ve:
-            self.renderBundle(debug=False)
 
-        self.assertEqual(
-            str(ve.exception),
-            "Cannot create 'module_2.template_2_1' because the template to inherit 'module_2.template_2_2' is not found.",
-        )
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.assertEqual(
+                self.renderBundle(debug=False),
+                '<templates xml:space="preserve">\n<t t-name="parsing_error_module_2_static_xml_file_1.xml"><parsererror>&#34;Cannot create &#39;module_2.template_2_1&#39; because the template to inherit &#39;module_2.template_2_2&#39; is not found.&#34; in file &#39;/module_2/static/xml/file_1.xml&#39;</parsererror></t>\n</templates>'
+            )
 
     def test_replace_in_debug_mode(self):
         """

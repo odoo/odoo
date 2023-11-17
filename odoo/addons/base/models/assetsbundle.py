@@ -25,12 +25,14 @@ except ImportError:
     libsass = None
 
 from rjsmin import jsmin as rjsmin
+from markupsafe import Markup
 
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler,
     apply_inheritance_specs)
+from odoo.tools.json import scriptsafe
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, file_path
 from odoo.tools.pycompat import to_text
@@ -426,8 +428,7 @@ class AssetsBundle(object):
                 io_content = io.BytesIO(template.encode('utf-8'))
                 content_templates_tree = etree.parse(io_content, parser=parser).getroot()
             except etree.ParseError as e:
-                _logger.error("Could not parse file %s: %s", asset.url, e.msg)
-                raise
+                return asset.generate_error(f'Could not parse file: {e.msg}')
             addon = asset.url.split('/')[1]
             template_dict.setdefault(addon, OrderedDict())
             # Process every templates.
@@ -442,7 +443,7 @@ class AssetsBundle(object):
                 if 't-inherit' in template_tree.attrib:
                     inherit_mode = template_tree.attrib.get('t-inherit-mode', 'primary')
                     if inherit_mode not in ['primary', 'extension']:
-                        raise ValueError(_("Invalid inherit mode. Module %r and template name %r", addon, template_name))
+                        return asset.generate_error(_("Invalid inherit mode. Module %r and template name %r", addon, template_name))
 
                     # Get inherited template, the identifier can be "addon.name", just "name" or (silly) "just.name.with.dots"
                     parent_dotted_name = template_tree.attrib['t-inherit']
@@ -453,9 +454,9 @@ class AssetsBundle(object):
                             parent_addon = addon
                             parent_name = parent_dotted_name
                         else:
-                            raise ValueError(_("Module %r not loaded or inexistent (try to inherit %r), or templates of addon being loaded %r are misordered (template %r)", parent_addon, parent_name, addon, template_name))
+                            return asset.generate_error(_("Module %r not loaded or inexistent (try to inherit %r), or templates of addon being loaded %r are misordered (template %r)", parent_addon, parent_name, addon, template_name))
                     if parent_name not in template_dict[parent_addon]:
-                        raise ValueError(_("Cannot create %r because the template to inherit %r is not found.", '%s.%s' % (addon, template_name), '%s.%s' % (parent_addon, parent_name)))
+                        return asset.generate_error(_("Cannot create %r because the template to inherit %r is not found.", '%s.%s' % (addon, template_name), '%s.%s' % (parent_addon, parent_name)))
 
                     # After several performance tests, we found out that deepcopy is the most efficient
                     # solution in this case (compared with copy, xpath with '.' and stringifying).
@@ -496,19 +497,19 @@ class AssetsBundle(object):
                             if attr_name not in ('t-inherit', 't-inherit-mode'):
                                 inherited_template.set(attr_name, attr_val)
                         if not template_name:
-                            raise ValueError(_("Template name is missing in file %r.", asset.url))
+                            return asset.generate_error(_("Template name is missing."))
                         template_dict[addon][template_name] = (inherited_template, parent_urls + [asset.url])
                     else:  # Modifies original: A = B(A)
                         template_dict[parent_addon][parent_name] = (inherited_template, parent_urls + [asset.url])
                 elif template_name:
                     if template_name in template_dict[addon]:
-                        raise ValueError(_("Template %r already exists in module %r", template_name, addon))
+                        return asset.generate_error(_("Template %r already exists in module %r", template_name, addon))
                     template_dict[addon][template_name] = (template_tree, [asset.url])
                 elif template_tree.attrib.get('t-extend'):
                     template_name = '%s__extend_%s' % (template_tree.attrib.get('t-extend'), len(template_dict[addon]))
                     template_dict[addon][template_name] = (template_tree, [asset.url])
                 else:
-                    raise ValueError(_("Template name is missing in file %r.", asset.url))
+                    return asset.generate_error(_("Template name is missing."))
 
         # Concat and render inherited templates
         root = etree.Element('root')
@@ -764,6 +765,11 @@ class WebAsset(object):
         if not inline and not url:
             raise Exception("An asset should either be inlined or url linked, defined in bundle '%s'" % bundle.name)
 
+    def generate_error(self, msg):
+        msg = f'{msg!r} in file {self.url!r}'
+        _logger.error(msg)  # log it in the python console in all cases.
+        return msg
+
     @func.lazy_property
     def id(self):
         if self._id is None: self._id = str(uuid.uuid4())
@@ -839,6 +845,10 @@ class JavascriptAsset(WebAsset):
         self._is_transpiled = None
         self._converted_content = None
 
+    def generate_error(self, msg):
+        msg = super().generate_error(msg)
+        return f'console.error({scriptsafe.dumps(msg)});'
+
     @property
     def bundle_version(self):
         return self.bundle.get_version('js')
@@ -865,7 +875,7 @@ class JavascriptAsset(WebAsset):
         try:
             return super()._fetch_content()
         except AssetError as e:
-            return u"console.error(%s);" % json.dumps(to_text(e))
+            return self.generate_error(json.dumps(to_text(e)))
 
 
     def with_header(self, content=None, minimal=True):
@@ -897,16 +907,20 @@ class XMLAsset(WebAsset):
         try:
             content = super()._fetch_content()
         except AssetError as e:
-            return u"console.error(%s);" % json.dumps(to_text(e))
+            return self.generate_error(json.dumps(to_text(e)))
 
         parser = etree.XMLParser(ns_clean=True, remove_comments=True, resolve_entities=False)
         try:
             root = etree.fromstring(content.encode('utf-8'), parser=parser)
         except etree.XMLSyntaxError as e:
-            return f'<t t-name="parsing_error{self.url.replace("/","_")}"><parsererror>Invalid XML template: {self.url} \n {e.msg} </parsererror></t>'
+            return self.generate_error(f'Invalid XML template: {e.msg}')
         if root.tag in ('templates', 'template'):
             return ''.join(etree.tostring(el, encoding='unicode') for el in root)
         return etree.tostring(root, encoding='unicode')
+
+    def generate_error(self, msg):
+        msg = super().generate_error(msg)
+        return Markup('<t t-name="parsing_error{}"><parsererror>{}</parsererror></t>').format(self.url.replace("/", "_"), msg)
 
     @property
     def bundle_version(self):

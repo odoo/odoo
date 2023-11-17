@@ -636,25 +636,62 @@ class TestXMLAssetsBundle(FileTouchable):
         """ Checks that a bundle don't try hard to parse broken xml, and returns a comprehensive
         error message.
         """
-        self.bundle = self._get_asset('test_assetsbundle.broken_xml')
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle = self._get_asset('test_assetsbundle.broken_xml')
 
-        # there shouldn't be any test_assetsbundle.invalid_xml template.
-        # there should be an parsing_error template with the parsing error message.
-        self.assertEqual(self.bundle.xml(),
-                         '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t>',
-                         "the parsing error should be shown")
+            # there shouldn't be any test_assetsbundle.invalid_xml template.
+            # there should be an parsing_error template with the parsing error message.
+            self.assertEqual(self.bundle.xml(),
+                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>\'Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml\'</parsererror></t>',
+                            "the parsing error should be shown")
 
     def test_02_multiple_broken_xml(self):
         """ Checks that a bundle with multiple broken xml returns a comprehensive error message.
         """
-        self.bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
 
-        # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
-        # there should be two parsing_error templates with the parsing error message for each file.
-        self.assertEqual(self.bundle.xml(),
-                         '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t><t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_second_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/second_invalid_xml.xml \n XML declaration allowed only at the start of the document, line 2, column 6 </parsererror></t>',
-                         "the parsing error should be shown")
+            # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
+            # there should be two parsing_error templates with the parsing error message for each file.
+            self.assertEqual(self.bundle.xml(),
+                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>\'Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml\'</parsererror></t><t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_second_invalid_xml.xml"><parsererror>\'Invalid XML template: XML declaration allowed only at the start of the document, line 2, column 6\' in file \'/test_assetsbundle/static/invalid_src/xml/second_invalid_xml.xml\'</parsererror></t>',
+                            "the parsing error should be shown")
 
+    def test_03_multiple_xml_same_name(self):
+        """ Checks that a bundle with multiple templates with the same name returns a comprehensive error message.
+        """
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle = self._get_asset('test_assetsbundle.multiple_same_name')
+
+            # there shouldn't be raise a ValueError, there should a parsing_error template with
+            # the error message.
+            self.assertEqual(str(self.bundle.xml()),
+                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_multiple_same_name.xml"><parsererror>&#34;Template &#39;multiple_name_xml&#39; already exists in module &#39;test_assetsbundle&#39;&#34; in file &#39;/test_assetsbundle/static/invalid_src/xml/multiple_same_name.xml&#39;</parsererror></t>',
+                            "the parsing error should be shown")
+
+    def test_04_template_wo_name(self):
+        """ Checks that a bundle with template without name returns a comprehensive error message.
+        """
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle = self._get_asset('test_assetsbundle.wo_name')
+
+            # there shouldn't be raise a ValueError, there should a parsing_error template with
+            # the error message.
+            self.assertEqual(str(self.bundle.xml()),
+                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_template_wo_name.xml"><parsererror>&#39;Template name is missing.&#39; in file &#39;/test_assetsbundle/static/invalid_src/xml/template_wo_name.xml&#39;</parsererror></t>',
+                            "the parsing error should be shown")
+
+    def test_04_file_not_found(self):
+        """ Checks that a bundle with a file in error (file not found, encoding error, or other) returns a comprehensive error message.
+        """
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle = self._get_asset('test_assetsbundle.file_not_found')
+
+            # there shouldn't be raise a ValueError, there should a parsing_error template with
+            # the error message.
+            self.assertEqual(self.bundle.xml(),
+                            '<t t-name="parsing_errortest_assetsbundle_static_invalid_src_xml_file_not_found.xml"><parsererror>\'"Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."\' in file \'test_assetsbundle/static/invalid_src/xml/file_not_found.xml\'</parsererror></t>',
+                            "the parsing error should be shown")
 
 @tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):
@@ -1708,8 +1745,9 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irassetsec')
-        attach = bundle.js()
-        self.assertIn(b"Could not get content for /test_assetsbundle/../../tests/dummy.js", attach.exists().raw)
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            attach = bundle.js()
+            self.assertIn(b"Could not get content for /test_assetsbundle/../../tests/dummy.js", attach.exists().raw)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_32_a_relative_path_in_addon(self):
