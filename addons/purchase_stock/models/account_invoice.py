@@ -134,18 +134,17 @@ class AccountMove(models.Model):
             if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
-        if stock_valuation_layers:
-            stock_valuation_layers._validate_accounting_entries()
+        posted = super(AccountMove, self.with_context(skip_cogs_reconciliation=True))._post(soft)
 
-        posted = super()._post(soft)
         # The invoice reference is set during the super call
         for layer in stock_valuation_layers:
             description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}"
             layer.description = description
-            if layer.product_id.valuation != 'real_time':
-                continue
-            layer.account_move_id.ref = description
-            layer.account_move_id.line_ids.write({'name': description})
+
+        if stock_valuation_layers:
+            stock_valuation_layers._validate_accounting_entries()
+
+        self._stock_account_anglo_saxon_reconcile_valuation()
 
         return posted
 
