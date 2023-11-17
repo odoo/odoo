@@ -447,6 +447,25 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
         self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
 
+    def test_split_draft(self):
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom_1.product_id
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        self.assertEqual(mo.state, 'draft')
+
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 2
+        wizard.save().action_split()
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+
+        mo1 = mo.procurement_group_id.mrp_production_ids[0]
+        mo2 = mo.procurement_group_id.mrp_production_ids[1]
+        self.assertEqual(mo1.move_raw_ids.mapped('state'), ['draft', 'draft'])
+        self.assertEqual(mo2.move_raw_ids.mapped('state'), ['draft', 'draft'])
+
     def test_split_merge(self):
         # Change 'Units' rounding to 1 (integer only quantities)
         self.uom_unit.rounding = 1
