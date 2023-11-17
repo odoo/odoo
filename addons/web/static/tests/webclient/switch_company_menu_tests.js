@@ -14,6 +14,7 @@ const serviceRegistry = registry.category("services");
 
 let target;
 
+const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     patchWithCleanup(SwitchCompanyMenu, { toggleDelay });
     if (routerParams.onPushState) {
@@ -149,7 +150,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
             assert.step(url.split("#")[1]);
             prom.resolve();
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
         /**
          *   [x] **Hermit**
@@ -338,7 +339,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
         /**
          *   [x] **Hermit**
