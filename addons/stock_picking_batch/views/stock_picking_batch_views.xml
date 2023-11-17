@@ -274,4 +274,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="action_unreserve_batch_picking" model="ir.actions.server">
+        <field name="name">Unreserve</field>
+        <field name="model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+        <field name="binding_model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+        if records:
+            records.picking_ids.do_unreserve()
+        </field>
+    </record>
 </odoo>
