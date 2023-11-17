@@ -48,8 +48,13 @@ class StockMove(TransactionCase):
         picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
         with picking.move_ids_without_package.new() as move:
             move.product_id = self.product
-            move.product_uom_qty = 1.0
+            move.product_uom_qty = 2.0
         picking = picking.save()
+
+        # we check that changing the quantity while still in draft doesn't change the state of the move
+        picking.move_ids_without_package.write({'product_uom_qty': 1})
+        self.assertEqual(picking.move_ids_without_package.state, 'draft')
+
         self.env['stock.move.line'].create({
             'move_id': picking.move_ids_without_package.id,
             'product_id': self.product.id,
