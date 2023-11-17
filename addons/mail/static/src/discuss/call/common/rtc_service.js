@@ -99,6 +99,7 @@ export class Rtc {
         this.rpc = services.rpc;
         this.soundEffectsService = services["mail.sound_effects"];
         this.userSettingsService = services["mail.user_settings"];
+        this.pttExtService = services["discuss.ptt_extension"];
         this.state = reactive({
             hasPendingRequest: false,
             selfSession: undefined,
@@ -162,19 +163,10 @@ export class Rtc {
         browser.addEventListener(
             "keydown",
             (ev) => {
-                if (
-                    !this.state.channel ||
-                    this.userSettingsService.isRegisteringKey ||
-                    !this.userSettingsService.usePushToTalk ||
-                    !this.userSettingsService.isPushToTalkKey(ev)
-                ) {
+                if (!this.userSettingsService.isPushToTalkKey(ev)) {
                     return;
                 }
-                browser.clearTimeout(this.state.pttReleaseTimeout);
-                if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
-                    this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
-                }
-                this.setTalking(true);
+                this.onPushToTalk();
             },
             { capture: true }
         );
@@ -189,12 +181,7 @@ export class Rtc {
                 ) {
                     return;
                 }
-                this.state.pttReleaseTimeout = browser.setTimeout(() => {
-                    this.setTalking(false);
-                    if (!this.state.selfSession?.isMute) {
-                        this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
-                    }
-                }, Math.max(this.userSettingsService.voiceActiveDuration || 0, 200));
+                this.setPttReleaseTimeout();
             },
             { capture: true }
         );
@@ -231,6 +218,29 @@ export class Rtc {
         }, 30_000);
     }
 
+    setPttReleaseTimeout(duration = 200) {
+        this.state.pttReleaseTimeout = browser.setTimeout(() => {
+            this.setTalking(false);
+            if (!this.state.selfSession?.isMute) {
+                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+            }
+        }, Math.max(this.userSettingsService.voiceActiveDuration || 0, duration));
+    }
+
+    onPushToTalk() {
+        if (
+            !this.state.channel ||
+            this.userSettingsService.isRegisteringKey ||
+            !this.userSettingsService.usePushToTalk
+        ) {
+            return;
+        }
+        browser.clearTimeout(this.state.pttReleaseTimeout);
+        if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
+            this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+        }
+        this.setTalking(true);
+    }
     /**
      * @param {Object} param0
      * @param {any} param0.id
@@ -275,6 +285,7 @@ export class Rtc {
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
+            this.pttExtService.unsubscribe();
             this.clear();
             this.soundEffectsService.play("channel-leave");
         }
@@ -718,6 +729,7 @@ export class Rtc {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
+        this.pttExtService.subscribe();
         const { rtcSessions, iceServers, sessionId } = await this.rpc(
             "/mail/rtc/channel/join_call",
             {
@@ -1067,6 +1079,7 @@ export class Rtc {
         }
         this.state.selfSession.isTalking = isTalking;
         if (!this.state.selfSession.isMute) {
+            this.pttExtService.notifyIsTalking(isTalking);
             await this.refreshAudioStatus();
         }
     }
@@ -1552,6 +1565,7 @@ export class Rtc {
 export const rtcService = {
     dependencies: [
         "bus_service",
+        "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
         "mail.user_settings",
