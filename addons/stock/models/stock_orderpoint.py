@@ -309,8 +309,10 @@ class StockWarehouseOrderpoint(models.Model):
         to_refill = defaultdict(float)
         all_product_ids = []
         all_warehouse_ids = []
+        ConfigParameter = self.env['ir.config_parameter'].sudo()
+        forecast_forecast_interval = ConfigParameter.get_param("stock.forecast_interval", "3")
         # Take 3 months since it's the max for the forecast report
-        to_date = add(fields.date.today(), months=3)
+        to_date = add(fields.date.today(), months=int(forecast_forecast_interval))
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
             [('date', '=', to_date), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],

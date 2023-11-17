@@ -39,6 +39,7 @@ class ReportStockQuantity(models.Model):
         query = """
 CREATE or REPLACE VIEW report_stock_quantity AS (
 WITH
+	config_parameter (forecast_interval) as (select (coalesce((select value from ir_config_parameter where key = 'stock.forecast_interval'),'3') || ' month')::interval as forecast_interval),
     existing_sm (id, product_id, product_qty, date, state, company_id, whs_id, whd_id, ls_usage, ld_usage) AS (
         SELECT m.id, m.product_id, m.product_qty, m.date, m.state, m.company_id, whs.id, whd.id, ls.usage, ld.usage
         FROM stock_move m
@@ -53,7 +54,7 @@ WITH
             (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '3month'))
+            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - (select forecast_interval from config_parameter)::interval))
     ),
     all_sm (id, product_id, product_qty, date, state, company_id, whs_id, whd_id, ls_usage, ld_usage) AS (
         SELECT sm.id, sm.product_id, 
@@ -117,8 +118,8 @@ FROM (SELECT
         q.company_id,
         wh.id as warehouse_id
     FROM
-        GENERATE_SERIES((now() at time zone 'utc')::date - interval '3month',
-        (now() at time zone 'utc')::date + interval '3 month', '1 day'::interval) date,
+        GENERATE_SERIES((now() at time zone 'utc')::date - (select forecast_interval from config_parameter)::interval,
+        (now() at time zone 'utc')::date +  (select forecast_interval from config_parameter)::interval, '1 day'::interval) date,
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
@@ -132,11 +133,11 @@ FROM (SELECT
         'forecast' as state,
         GENERATE_SERIES(
         CASE
-            WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - interval '3month'
+            WHEN m.state = 'done' THEN (now() at time zone 'utc')::date - (select forecast_interval from config_parameter)::interval
             ELSE m.date::date
         END,
         CASE
-            WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '3 month'
+            WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + (select forecast_interval from config_parameter)::interval
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
