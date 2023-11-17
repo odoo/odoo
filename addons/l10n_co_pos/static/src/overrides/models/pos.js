@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
     is_colombian_country() {
-        return this.company.country?.code === "CO";
+        return this.company.country_id?.code === "CO";
     },
 });
 

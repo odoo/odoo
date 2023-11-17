@@ -16,7 +16,8 @@ const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 function isSyncStatusPending() {
     return [
         {
-            trigger: ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_msg)",
+            trigger:
+                ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_connecting)",
             run: () => {},
         },
     ];
@@ -103,10 +104,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
+                ...isSyncStatusPending(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            isSyncStatusPending(),
             isSyncStatusConnected(),
             TicketScreen.selectOrder("-0003"),
             TicketScreen.loadSelectedOrder(),

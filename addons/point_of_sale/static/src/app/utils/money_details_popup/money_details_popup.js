@@ -17,7 +17,7 @@ export class MoneyDetailsPopup extends Component {
         this.state = useState({
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
-                : Object.fromEntries(this.pos.bills.map((bill) => [bill.value, 0])),
+                : Object.fromEntries(this.pos.models["pos.bill"].map((bill) => [bill.value, 0])),
         });
         this.env.dialogData.dismiss = () => {
             if (
@@ -35,10 +35,13 @@ export class MoneyDetailsPopup extends Component {
         );
     }
     confirm() {
-        let moneyDetailsNotes = !floatIsZero(this.computeTotal(), this.currency.decimal_places)
+        let moneyDetailsNotes = !floatIsZero(
+            this.computeTotal(),
+            this.currency.decimal_places
+        )
             ? "Money details: \n"
             : null;
-        this.pos.bills.forEach((bill) => {
+        this.pos.models["pos.bill"].forEach((bill) => {
             if (this.state.moneyDetails[bill.value]) {
                 moneyDetailsNotes += `  - ${
                     this.state.moneyDetails[bill.value]

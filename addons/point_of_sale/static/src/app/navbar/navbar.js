@@ -48,9 +48,7 @@ export class Navbar extends Component {
         return this.pos.config.iface_customer_facing_display;
     }
     get showCashMoveButton() {
-        return Boolean(
-            this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission
-        );
+        return Boolean(this.pos.config.cash_control && this.pos.has_cash_move_perm);
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
@@ -103,7 +101,10 @@ export class Navbar extends Component {
 
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
-        this.dialog.add(ClosePosPopup, info);
+
+        if (info) {
+            this.dialog.add(ClosePosPopup, info);
+        }
     }
 
     showBackButton() {

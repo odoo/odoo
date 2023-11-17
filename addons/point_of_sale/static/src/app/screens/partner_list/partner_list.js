@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
+import { fuzzyLookup } from "@web/core/utils/search";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerEditor } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
@@ -30,7 +31,6 @@ export class PartnerList extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.dialog = useService("dialog");
 
@@ -55,15 +55,85 @@ export class PartnerList extends Component {
             this.notification.add(_t('No more customer found for "%s".', this.state.query), 3000);
         }
     }
+
+    goToOrders() {
+        this.back(true);
+        const partner = this.state.editModeProps.partner;
+        const partnerHasActiveOrders = this.pos
+            .get_order_list()
+            .some((order) => order.partner?.id === partner.id);
+        const ui = {
+            searchDetails: {
+                fieldName: "PARTNER",
+                searchTerm: partner.name,
+            },
+            filter: partnerHasActiveOrders ? "" : "SYNCED",
+        };
+        this.pos.showScreen("TicketScreen", { ui });
+    }
+
+    confirm() {
+        this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
+        this.pos.closeTempScreen();
+    }
+    activateEditMode() {
+        this.state.detailIsShown = true;
+    }
+    // Getters
+
+    get_partners_sorted(max_count) {
+        const partners = [];
+        const resPartner = this.pos.models["res.partner"].getAll();
+        max_count = max_count ? Math.min(resPartner.length, max_count) : resPartner.length;
+
+        for (var i = 0; i < max_count; i++) {
+            partners.push(this.pos.models["res.partner"].get(resPartner[i].id));
+        }
+
+        return partners;
+    }
+
+    partner_search_string(partner) {
+        var str = partner.name || "";
+        if (partner.barcode) {
+            str += "|" + partner.barcode;
+        }
+        if (partner.phone) {
+            str += "|" + partner.phone.split(" ").join("");
+        }
+        if (partner.mobile) {
+            str += "|" + partner.mobile.split(" ").join("");
+        }
+        if (partner.email) {
+            str += "|" + partner.email;
+        }
+        if (partner.vat) {
+            str += "|" + partner.vat;
+        }
+        if (partner.parent_name) {
+            str += "|" + partner.parent_name;
+        }
+        str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
+        return str;
+    }
+
+    get_partners_searched() {
+        return fuzzyLookup(
+            this.state.query.trim(),
+            this.pos.models["res.partner"].getAll(),
+            (partner) => this.partner_search_string(partner)
+        );
+    }
+
     get currentOrder() {
         return this.pos.get_order();
     }
     get partners() {
         let res;
         if (this.state.query && this.state.query.trim() !== "") {
-            res = this.pos.db.search_partner(this.state.query.trim());
+            res = this.get_partners_searched();
         } else {
-            res = this.pos.db.get_partners_sorted(1000);
+            res = this.get_partners_sorted(1000);
         }
         res.sort(function (a, b) {
             return (a.name || "").localeCompare(b.name || "");
@@ -102,19 +172,33 @@ export class PartnerList extends Component {
             lang: user.lang,
         });
     }
+    async saveChanges(processedChanges) {
+        let partner;
+
+        if (processedChanges.id) {
+            partner = this.pos.models["res.partner"].get(processedChanges["id"]);
+            this.pos.data.write("res.partner", [partner.id], processedChanges);
+        } else {
+            partner = await this.pos.data.create("res.partner", [processedChanges]);
+            partner = partner["res.partner"][0];
+        }
+
+        this.state.selectedPartner = partner;
+        this.confirm();
+    }
     async searchPartner() {
         if (this.state.previousQuery != this.state.query) {
             this.state.currentOffset = 0;
         }
-        const result = await this.getNewPartners();
-        this.pos.addPartners(result);
+        const partner = await this.getNewPartners();
+
         if (this.state.previousQuery == this.state.query) {
-            this.state.currentOffset += result.length;
+            this.state.currentOffset += partner.length;
         } else {
             this.state.previousQuery = this.state.query;
-            this.state.currentOffset = result.length;
+            this.state.currentOffset = partner.length;
         }
-        return result;
+        return partner;
     }
     async getNewPartners() {
         let domain = [];
@@ -126,12 +210,12 @@ export class PartnerList extends Component {
                 ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
             ];
         }
-        // FIXME POSREF timeout
-        const result = await this.orm.silent.call(
-            "pos.session",
-            "get_pos_ui_res_partner_by_params",
-            [[odoo.pos_session_id], { domain, limit: limit, offset: this.state.currentOffset }]
-        );
+
+        const result = await this.pos.data.searchRead("res.partner", domain, [], {
+            limit: limit,
+            offset: this.state.currentOffset,
+        });
+
         return result;
     }
 }

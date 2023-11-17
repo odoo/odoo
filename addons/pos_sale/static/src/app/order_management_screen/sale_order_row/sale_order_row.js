@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 /**
  * @props {models.Order} order
@@ -14,6 +15,7 @@ export class SaleOrderRow extends Component {
     static template = "pos_sale.SaleOrderRow";
 
     setup() {
+        this.pos = usePos();
         this.ui = useState(useService("ui"));
     }
     get order() {
@@ -35,8 +37,8 @@ export class SaleOrderRow extends Component {
         return deserializeDateTime(this.order.date_order).toFormat("yyyy-MM-dd HH:mm a");
     }
     get partner() {
-        const partner = this.order.partner_id;
-        return partner ? partner[1] : null;
+        const partner = this.pos.models["res.partner"].get(this.order.partner_id);
+        return partner?.name || null;
     }
     get total() {
         return this.env.utils.formatCurrency(this.order.amount_total);
@@ -64,7 +66,7 @@ export class SaleOrderRow extends Component {
         return state_mapping[this.order.state];
     }
     get salesman() {
-        const salesman = this.order.user_id;
-        return salesman ? salesman[1] : null;
+        const salesman = this.pos.models["res.users"].get(this.order.user_id);
+        return salesman?.name || null;
     }
 }

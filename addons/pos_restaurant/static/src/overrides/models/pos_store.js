@@ -25,6 +25,7 @@ patch(PosStore.prototype, {
      * @override
      */
     async setup() {
+        this.tableNotifications = {};
         this.orderToTransfer = null; // table transfer feature
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
         this.floorPlanStyle = "default";
@@ -32,9 +33,9 @@ patch(PosStore.prototype, {
         await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
-            this.showScreen("FloorScreen", { floor: this.table?.floor || null });
+            this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
         }
-        this.currentFloor = this.floors?.length > 0 ? this.floors[0] : null;
+        this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
@@ -50,7 +51,7 @@ patch(PosStore.prototype, {
     },
     async actionAfterIdle() {
         if (!document.querySelector(".modal-open")) {
-            const table = this.table;
+            const table = this.selectedTable;
             const order = this.get_order();
             if (order && order.get_screen_data().name === "ReceiptScreen") {
                 // When the order is finalized, we can safely remove it from the memory
@@ -63,8 +64,8 @@ patch(PosStore.prototype, {
     getReceiptHeaderData(order) {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
-            if (order.getTable()) {
-                json.table = order.getTable().name;
+            if (this.get_order().getTable()) {
+                json.table = this.get_order().getTable().name;
             }
             json.customer_count = order.getCustomerCount();
         }
@@ -115,18 +116,10 @@ patch(PosStore.prototype, {
         );
     },
     //@override
-    async _processData(loadedData) {
-        await super._processData(...arguments);
+    async afterProcessServerData() {
+        const res = await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_restaurant) {
-            this.floors = loadedData["restaurant.floor"];
-            this.loadRestaurantFloor();
-        }
-    },
-    //@override
-    async after_load_server_data() {
-        var res = await super.after_load_server_data(...arguments);
-        if (this.config.module_pos_restaurant) {
-            this.table = null;
+            this.selectedTable = null;
         }
         return res;
     },
@@ -145,20 +138,8 @@ patch(PosStore.prototype, {
         return order;
     },
     async _getTableOrdersFromServer(tableIds) {
-        this.set_synch("connecting", 1);
-        try {
-            // FIXME POSREF timeout
-            const orders = await this.env.services.orm.silent.call(
-                "pos.order",
-                "export_for_ui_table_draft",
-                [tableIds]
-            );
-            this.set_synch("connected");
-            return orders;
-        } catch (error) {
-            this.set_synch("error");
-            throw error;
-        }
+        const orders = await this.data.call("pos.order", "export_for_ui_table_draft", [tableIds]);
+        return orders;
     },
     /**
      * Sync orders that got updated to the back end
@@ -187,7 +168,9 @@ patch(PosStore.prototype, {
     async _getOrdersJson() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
-                ...this.floors.map((floor) => floor.tables.map((table) => table.id))
+                ...this.models["restaurant.floor"].map((floor) =>
+                    floor.table_ids.map((table) => table.id)
+                )
             );
             await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
             const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
@@ -228,29 +211,16 @@ patch(PosStore.prototype, {
         return super._createOrder(...arguments);
     },
     getDefaultSearchDetails() {
-        if (this.table && this.table.id) {
+        if (this.selectedTable && this.selectedTable.id) {
             return {
                 fieldName: "TABLE",
-                searchTerm: this.table.name,
+                searchTerm: this.selectedTable.name,
             };
         }
         return super.getDefaultSearchDetails();
     },
-    loadRestaurantFloor() {
-        // we do this in the front end due to the circular/recursive reference needed
-        // Ignore floorplan features if no floor specified.
-        this.floors_by_id = {};
-        this.tables_by_id = {};
-        for (const floor of this.floors) {
-            this.floors_by_id[floor.id] = floor;
-            for (const table of floor.tables) {
-                this.tables_by_id[table.id] = table;
-                table.floor = floor;
-            }
-        }
-    },
     async setTable(table, orderUid = null) {
-        this.table = table;
+        this.selectedTable = table;
         try {
             this.loadingOrderState = true;
             await this._syncTableOrdersFromServer(table.id);
@@ -278,14 +248,14 @@ patch(PosStore.prototype, {
             }
             Promise.reject(e);
         }
-        this.table = null;
+        this.selectedTable = null;
         this.set_order(null);
     },
     setCurrentOrderToTransfer() {
         this.orderToTransfer = this.selectedOrder;
     },
     async transferTable(table) {
-        this.table = table;
+        this.selectedTable = table;
         try {
             this.loadingOrderState = true;
             await this._syncTableOrdersFromServer(table.id);
@@ -306,26 +276,5 @@ patch(PosStore.prototype, {
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
-    },
-    async updateModelsData(models_data) {
-        const floors = models_data["restaurant.floor"];
-        if (floors) {
-            this.floors = floors;
-            this.loadRestaurantFloor();
-            const result = await this.orm.call(
-                "pos.config",
-                "get_tables_order_count_and_printing_changes",
-                [this.config.id]
-            );
-            for (const table of result) {
-                const table_obj = this.tables_by_id[table.id];
-                if (table_obj) {
-                    table_obj.order_count = table.orders;
-                    table_obj.changes_count = table.changes;
-                    table_obj.skip_changes = table.skip_changes;
-                }
-            }
-        }
-        return super.updateModelsData(models_data);
     },
 });

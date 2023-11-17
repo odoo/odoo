@@ -7,14 +7,20 @@ patch(Order.prototype, {
     //@override
     select_orderline(orderline) {
         super.select_orderline(...arguments);
-        if (orderline && orderline.product.id === this.pos.config.down_payment_product_id[0]) {
+        if (
+            orderline &&
+            this.pos.config.down_payment_product_id &&
+            orderline.product.id === this.pos.config.down_payment_product_id.id
+        ) {
             this.pos.numpadMode = "price";
         }
     },
     //@override
     _get_ignored_product_ids_total_discount() {
         const productIds = super._get_ignored_product_ids_total_discount(...arguments);
-        productIds.push(this.pos.config.down_payment_product_id[0]);
+        if (this.pos.config.down_payment_product_id) {
+            productIds.push(this.pos.config.down_payment_product_id.id);
+        }
         return productIds;
     },
 });

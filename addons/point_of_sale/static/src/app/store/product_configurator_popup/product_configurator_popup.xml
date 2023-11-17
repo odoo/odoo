@@ -79,7 +79,7 @@
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="props.product.display_name">
-            <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
+            <div t-foreach="attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
                 <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.name"/>
                 <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                 <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>

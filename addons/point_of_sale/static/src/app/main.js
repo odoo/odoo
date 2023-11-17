@@ -41,7 +41,7 @@ whenReady(() => {
         translateFn: _t,
         props: { disableLoader: () => (loader.isShown = false) },
     });
-    const root = await app.mount(document.body);
+    await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
         classList.add("o_rtl");
@@ -55,6 +55,4 @@ whenReady(() => {
     if (hasTouch()) {
         classList.add("o_touch_device");
     }
-    // delete odoo.debug; // FIXME: some legacy code rely on this
-    odoo.__WOWL_DEBUG__ = { root };
 })();

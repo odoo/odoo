@@ -28,7 +28,6 @@ export class ClosePosPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.orm = useService("orm");
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
         this.customerDisplay = useService("customer_display");
@@ -54,7 +53,10 @@ export class ClosePosPopup extends Component {
     }
 
     async confirm() {
-        if (!this.pos.config.cash_control || this.env.utils.floatIsZero(this.getMaxDifference())) {
+        if (
+            !this.pos.config.cash_control ||
+            this.env.utils.floatIsZero(this.getMaxDifference())
+        ) {
             await this.closeSession();
             return;
         }
@@ -104,7 +106,9 @@ export class ClosePosPopup extends Component {
         });
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
+        return this.report.doAction("point_of_sale.sale_details_report", [
+            this.pos.session.id,
+        ]);
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {
@@ -144,10 +148,10 @@ export class ClosePosPopup extends Component {
     async closeSession() {
         this.customerDisplay?.update({ closeUI: true });
         if (this.pos.config.cash_control) {
-            const response = await this.orm.call(
+            const response = await this.pos.data.call(
                 "pos.session",
                 "post_closing_cash_details",
-                [this.pos.pos_session.id],
+                [this.pos.session.id],
                 {
                     counted_cash: parseFloat(
                         this.state.payments[this.props.default_cash_details.id].counted
@@ -161,8 +165,8 @@ export class ClosePosPopup extends Component {
         }
 
         try {
-            await this.orm.call("pos.session", "update_closing_control_state_session", [
-                this.pos.pos_session.id,
+            await this.pos.data.call("pos.session", "update_closing_control_state_session", [
+                this.pos.session.id,
                 this.state.notes,
             ]);
         } catch (error) {
@@ -178,8 +182,8 @@ export class ClosePosPopup extends Component {
             const bankPaymentMethodDiffPairs = this.props.other_payment_methods
                 .filter((pm) => pm.type == "bank")
                 .map((pm) => [pm.id, this.getDifference(pm.id)]);
-            const response = await this.orm.call("pos.session", "close_session_from_ui", [
-                this.pos.pos_session.id,
+            const response = await this.pos.data.call("pos.session", "close_session_from_ui", [
+                this.pos.session.id,
                 bankPaymentMethodDiffPairs,
             ]);
             if (!response.successful) {

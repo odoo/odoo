@@ -17,7 +17,6 @@ export class CashMovePopup extends Component {
     setup() {
         super.setup();
         this.notification = useService("pos_notification");
-        this.orm = useService("orm");
         this.pos = usePos();
         this.dialog = useService("dialog");
         this.hardwareProxy = useService("hardware_proxy");
@@ -43,8 +42,8 @@ export class CashMovePopup extends Component {
         const translatedType = _t(type);
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
-        await this.orm.call("pos.session", "try_cash_in_out", [
-            [this.pos.pos_session.id],
+        await this.pos.data.call("pos.session", "try_cash_in_out", [
+            [this.pos.session.id],
             type,
             amount,
             reason,

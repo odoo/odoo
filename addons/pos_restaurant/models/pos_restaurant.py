@@ -69,6 +69,8 @@ class RestaurantFloor(models.Model):
             table.active = False
         self.active = False
 
+        return True
+
 class RestaurantTable(models.Model):
 
     _name = 'restaurant.table'
@@ -89,7 +91,11 @@ class RestaurantTable(models.Model):
 
     def are_orders_still_in_draft(self):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])
-        return draft_orders_count > 0
+
+        if draft_orders_count > 0:
+            raise UserError(_("You cannot delete a table when orders are still in draft for this table."))
+
+        return True
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):

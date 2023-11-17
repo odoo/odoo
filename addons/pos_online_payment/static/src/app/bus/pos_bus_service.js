@@ -15,7 +15,7 @@ patch(PosBus.prototype, {
             // the server to check the new state of the order.
             const currentOrder = this.pos.get_order();
             if (currentOrder && currentOrder.server_id === message.payload.id) {
-                currentOrder.update_online_payments_data_with_server(this.orm, false);
+                currentOrder.update_online_payments_data_with_server(false);
             }
         }
     },

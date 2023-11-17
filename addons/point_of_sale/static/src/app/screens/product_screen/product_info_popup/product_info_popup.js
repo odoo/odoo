@@ -15,10 +15,11 @@ export class ProductInfoPopup extends Component {
     searchProduct(productName) {
         this.pos.setSelectedCategoryId(0);
         this.pos.searchProductWord = productName;
-        this.cancel();
+        this.props.close();
     }
     _hasMarginsCostsAccessRights() {
-        const isAccessibleToEveryUser = this.pos.config.is_margins_costs_accessible_to_every_user;
+        const isAccessibleToEveryUser =
+            this.pos.config.is_margins_costs_accessible_to_every_user;
         const isCashierManager = this.pos.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }

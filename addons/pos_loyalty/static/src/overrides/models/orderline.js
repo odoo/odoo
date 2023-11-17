@@ -12,7 +12,7 @@ patch(Orderline.prototype, {
         if (!coupon || !this.is_reward_line) {
             return false;
         }
-        const program = this.pos.program_by_id[coupon.program_id];
+        const program = this.pos.models["loyalty.program"].get(coupon.program_id);
         return ["ewallet", "gift_card"].includes(program.program_type);
     },
     /**

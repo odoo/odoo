@@ -26,3 +26,6 @@ class PosOrder(models.Model):
         if self.config_id.is_spanish and self.is_l10n_es_simplified_invoice:
             res["journal_id"] = self.config_id.l10n_es_simplified_invoice_journal_id.id
         return res
+
+    def get_invoice_name(self):
+        return self.account_move.name
