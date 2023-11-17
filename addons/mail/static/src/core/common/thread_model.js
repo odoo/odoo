@@ -77,18 +77,6 @@ export class Thread extends Record {
             "channelMembers",
             "invitedMembers",
         ]);
-        if ("channelMembers" in data) {
-            if (this.type === "chat") {
-                for (const member of this.channelMembers) {
-                    if (
-                        member.persona.notEq(this._store.user) ||
-                        (this.channelMembers.length === 1 && member.persona?.eq(this._store.user))
-                    ) {
-                        this.chatPartner = member.persona;
-                    }
-                }
-            }
-        }
         if ("seen_partners_info" in data) {
             this.seenInfos = data.seen_partners_info.map(
                 ({ fetched_message_id, partner_id, seen_message_id }) => {
@@ -148,7 +136,22 @@ export class Thread extends Record {
         },
     });
     invitedMembers = Record.many("ChannelMember");
-    chatPartner = Record.one("Persona");
+    chatPartner = Record.one("Persona", {
+        /** @this {import("models").Thread} */
+        compute() {
+            if (this.type !== "chat") {
+                return undefined;
+            }
+            for (const member of this.channelMembers) {
+                if (
+                    !member.persona?.eq(this._store.user) ||
+                    (this.channelMembers.length === 1 && member.persona?.eq(this._store.user))
+                ) {
+                    return member.persona;
+                }
+            }
+        },
+    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
