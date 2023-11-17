@@ -6256,6 +6256,55 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("delete an empty column, then a column with records.", async (assert) => {
+        patchDialog((_cls, props) => props.confirm());
+        let firstLoad = true;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<kanban on_create="quick_create">' +
+                '<field name="product_id"/>' +
+                '<templates><t t-name="kanban-box">' +
+                '<div><field name="foo"/></div>' +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRpc) {
+                if (args.method === "web_read_group") {
+                    // override read_group to return an extra empty groups
+                    const result = await performRpc(...arguments);
+                    if (firstLoad) {
+                        result.groups.unshift({
+                            __domain: [["product_id", "=", 7]],
+                            product_id: [7, "empty group"],
+                            product_id_count: 0,
+                        });
+                        result.length = 3;
+                        firstLoad = false;
+                    }
+                    return result;
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_kanban_header span:contains('empty group')");
+        assert.containsOnce(target, ".o_kanban_header span:contains('hello')");
+        assert.containsNone(target, ".o_kanban_header .o_column_title:contains('None')");
+        // Delete the empty group
+        let clickColumnAction = await toggleColumnActions(target);
+        await clickColumnAction("Delete");
+        // Delete the group 'hello'
+        clickColumnAction = await toggleColumnActions(target);
+        await clickColumnAction("Delete");
+        // None of the previous groups should be present inside the view. Instead, a 'none' column should be displayed.
+        assert.containsNone(target, ".o_kanban_header span:contains('empty group')");
+        assert.containsNone(target, ".o_kanban_header span:contains('hello')");
+        assert.containsOnce(target, ".o_kanban_header .o_column_title:contains('None')");
+    });
+
     QUnit.test("edit a column in grouped on m2o", async (assert) => {
         serverData.views["product,false,form"] =
             '<form string="Product"><field name="display_name"/></form>';

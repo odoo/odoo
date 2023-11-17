@@ -249,11 +249,11 @@ export class DynamicGroupList extends DynamicList {
     async _deleteGroups(groups) {
         const shouldReload = groups.some((g) => g.count > 0);
         await this._unlinkGroups(groups);
+        const configGroups = { ...this.config.groups };
+        for (const group of groups) {
+            delete configGroups[group.value];
+        }
         if (shouldReload) {
-            const configGroups = { ...this.config.groups };
-            for (const group of groups) {
-                delete configGroups[group.value];
-            }
             await this.model._updateConfig(
                 this.config,
                 { groups: configGroups },
@@ -263,6 +263,7 @@ export class DynamicGroupList extends DynamicList {
             for (const group of groups) {
                 this._removeGroup(group);
             }
+            this.model._updateConfig(this.config, { groups: configGroups }, { reload: false });
         }
     }
 
