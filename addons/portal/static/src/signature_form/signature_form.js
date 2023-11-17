@@ -63,7 +63,7 @@ class SignatureForm extends Component {
      */
     async onClickSubmit() {
         const name = this.signature.name;
-        const signature = this.signature.getSignatureImage()[1];
+        const signature = this.signature.getSignatureImage().split(",")[1];
         const data = await rpc(this.props.callUrl, { name, signature });
         if (data.force_refresh) {
             if (data.redirect_url) {
