@@ -12,6 +12,7 @@
     </record>
     <record id="hr.job_ceo" model="hr.job">
         <field name="no_of_hired_employee">1</field>
+        <field name="user_id" ref="base.user_admin" />
     </record>
     <record id="hr.job_cto" model="hr.job">
         <field name="no_of_hired_employee">1</field>
@@ -25,6 +26,7 @@
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="no_of_hired_employee">5</field>
+        <field name="user_id" ref="base.user_admin" />
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="no_of_recruitment">3</field>
@@ -33,6 +35,7 @@
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="no_of_recruitment">6</field>
+        <field name="user_id" ref="base.user_admin" />
     </record>
 
     <record id="hr_recruitment_linkedin_developer" model="hr.recruitment.source">
