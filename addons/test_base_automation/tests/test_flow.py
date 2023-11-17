@@ -1032,25 +1032,35 @@ class TestCompute(common.TransactionCase):
 class TestHttp(common.HttpCase):
     def test_webhook_trigger(self):
         model = self.env["ir.model"]._get("base.automation.linked.test")
+
+        default_automation = create_automation(self, trigger="on_webhook", model_id=model.id, _actions={
+            "state": "object_write",
+            "update_path": "another_field",
+            "value": "written"
+        })
+
         record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
-        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
+        custom_automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
             "state": "object_write",
             "update_path": "another_field",
             "value": "written"
         })
 
         obj = self.env[model.model].create({"name": "some name"})
-        response = self.url_open(automation.url, data={"name": "some name"})
-        self.assertEqual(response.json(), {"status": "ok"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(obj.another_field, "written")
+        for automation in [default_automation, custom_automation]:
+            response = self.url_open(automation.url, data={"_model": model._name, "id": obj.id, "name": obj.name})
+            self.assertEqual(response.json(), {"status": "ok"})
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(obj.another_field, "written")
 
-        obj.another_field = False
-        with mute_logger("odoo.addons.base_automation.models.base_automation"):
-            response = self.url_open(automation.url, data={})
-        self.assertEqual(response.json(), {"status": "error"})
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual(obj.another_field, False)
+            obj.another_field = False
+            with mute_logger("odoo.addons.base_automation.models.base_automation"):
+                response = self.url_open(automation.url, data={})
+            self.assertEqual(response.json(), {"status": "error"})
+            self.assertEqual(response.status_code, 500)
+            self.assertEqual(obj.another_field, False)
+
+        # Test wrong url return error
 
         response = self.url_open("/web/hook/0123456789", data={"name": "some name"})
         self.assertEqual(response.json(), {"status": "error"})
