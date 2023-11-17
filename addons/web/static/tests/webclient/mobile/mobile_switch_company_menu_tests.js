@@ -19,6 +19,7 @@ import { session } from "@web/session";
 const serviceRegistry = registry.category("services");
 let target;
 
+const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     patchWithCleanup(MobileSwitchCompanyMenu, { toggleDelay });
     if (routerParams.onPushState) {
@@ -130,7 +131,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             assert.step(url.split("#")[1]);
             prom.resolve();
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
         /**
@@ -294,7 +295,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
         /**
