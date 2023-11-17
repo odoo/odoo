@@ -9,13 +9,14 @@ patch(PosStore.prototype, {
         if (this.company?.country?.code === "SA") {
             result.is_settlement = this.get_order().is_settlement();
             if (!result.is_settlement) {
+                const order = this.get_order();
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-                const qr_values = this.get_order().compute_sa_qr_code(
+                const qr_values = order.compute_sa_qr_code(
                     result.company.name,
                     result.company.vat,
-                    result.date.isostring,
-                    result.total_with_tax,
-                    result.total_tax
+                    order.date_order.toISO(),
+                    order.get_total_with_tax(),
+                    order.get_total_tax()
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 150, 150)
