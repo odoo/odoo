@@ -81,3 +81,12 @@ class ServerAction(models.Model):
         # Not sure, but IIRC assignation is mandatory and I don't want the name to be reset by accident
         for action in (self - to_update):
             action.name = action.name or ''
+
+    @api.model
+    def _get_eval_context(self, action=None):
+        eval_context = super()._get_eval_context(action=action)
+
+        if self._context.get('webhook_payload'):
+            eval_context['payload'] = self._context.get('webhook_payload')
+
+        return eval_context

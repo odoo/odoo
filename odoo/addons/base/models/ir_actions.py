@@ -458,6 +458,7 @@ class IrActionsServer(models.Model):
 #  - _logger: _logger.info(message): logger to emit messages in server logs
 #  - UserError: exception class for raising user-facing warning messages
 #  - Command: x2many commands namespace
+#  - payload: payload of the webhook request (only available if the action is triggered by a webhook)
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model

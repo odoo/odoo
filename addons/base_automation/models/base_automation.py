@@ -496,7 +496,7 @@ class BaseAutomation(models.Model):
             raise exceptions.ValidationError(_("No record to run the automation on was found."))
 
         try:
-            return self._process(record)
+            return self._process(record, payload=payload)
         except Exception as e: # noqa: BLE001
             msg = "Webhook #%s failed with error:\n%s"
             msg_args = (self.id, traceback.format_exc())
@@ -605,7 +605,7 @@ class BaseAutomation(models.Model):
                 'name': self.sudo().name,
             }
 
-    def _process(self, records, domain_post=None):
+    def _process(self, records, domain_post=None, payload=None):
         """ Process automation ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
         automation_done = self._context.get('__action_done', {})
@@ -634,6 +634,7 @@ class BaseAutomation(models.Model):
                     'active_ids': record.ids,
                     'active_id': record.id,
                     'domain_post': domain_post,
+                    'webhook_payload': payload,
                 })
 
         # execute server actions
