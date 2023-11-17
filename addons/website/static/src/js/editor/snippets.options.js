@@ -2745,8 +2745,7 @@ options.registry.anchor = options.Class.extend({
                 if (this.$target[0].id === anchorName) {
                     // If the chosen anchor name is already the one used by the
                     // element, close the dialog and do nothing else
-                    this.close();
-                    return;
+                    return true;
                 }
 
                 const alreadyExists = !!this.ownerDocument.getElementById(anchorName);
