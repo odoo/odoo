@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { evaluateExpr, parseExpr } from "./py_js/py";
+import { BUILTINS } from "./py_js/py_builtin";
 import { evaluate } from "./py_js/py_interpreter";
 
 /**
@@ -30,6 +31,30 @@ export function makeContext(contexts, initialEvaluationContext) {
 }
 
 /**
+ * Extract a partial list of variable names found in the AST.
+ * Note that it is not complete. It is used as an heuristic to avoid
+ * evaluating expressions that we know for sure will fail.
+ *
+ * @param {AST} ast
+ * @returns string[]
+ */
+function getPartialNames(ast) {
+    if (ast.type === 5) {
+        return [ast.value];
+    }
+    if (ast.type === 6) {
+        return getPartialNames(ast.right);
+    }
+    if (ast.type === 14 || ast.type === 7) {
+        return getPartialNames(ast.left).concat(getPartialNames(ast.right));
+    }
+    if (ast.type === 15) {
+        return getPartialNames(ast.obj);
+    }
+    return [];
+}
+
+/**
  * Allow to evaluate a context with an incomplete evaluation context. The evaluated context only
  * contains keys whose values are static or can be evaluated with the given evaluation context.
  *
@@ -42,6 +67,11 @@ export function evalPartialContext(_context, evaluationContext = {}) {
     const context = {};
     for (const key in ast.value) {
         const value = ast.value[key];
+        if (
+            getPartialNames(value).some((name) => !(name in evaluationContext || name in BUILTINS))
+        ) {
+            continue;
+        }
         try {
             context[key] = evaluate(value, evaluationContext);
         } catch {
