@@ -2369,11 +2369,15 @@ class AccountMove(models.Model):
         If a user is a Billing Administrator/Accountant or if fidu mode is activated, we show a warning,
         but they can delete the moves even if it creates a sequence gap.
         """
-        if not (
-            self.user_has_groups('account.group_account_manager')
-            or self.company_id.quick_edit_mode
-            or self._context.get('force_delete')
-            or self.check_move_sequence_chain()
+        if (
+            not self._context.get('force_delete')
+            and not (
+                self.user_has_groups('account.group_account_manager')
+                and (
+                    self.company_id.quick_edit_mode
+                    or self.check_move_sequence_chain()
+                )
+            )
         ):
             raise UserError(_(
                 "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. "
