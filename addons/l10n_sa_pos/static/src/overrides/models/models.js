@@ -9,13 +9,14 @@ patch(Order.prototype, {
         if (this.pos.company.country && this.pos.company.country.code === "SA") {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
+                const company = this.pos.company;
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
                 const qr_values = this.compute_sa_qr_code(
-                    result.company.name,
-                    result.company.vat,
-                    result.date.isostring,
-                    result.total_with_tax,
-                    result.total_tax
+                    company.name,
+                    company.vat,
+                    this.date_order.toISO(),
+                    this.get_total_with_tax(),
+                    this.get_total_tax()
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 150, 150)
