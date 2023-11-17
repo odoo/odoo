@@ -422,8 +422,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/ace/theme-monokai.js',
             'web/static/lib/stacktracejs/stacktrace.js',
             ('include', "web.chartjs_lib"),
-            'web/static/lib/jSignature/jSignatureCustom.js',
-            'web/static/src/libs/jSignatureCustom.js',
+            'web/static/lib/signature_pad/signature_pad.umd.js',
 
             'web/static/tests/legacy/helpers/**/*.js',
             'web/static/tests/legacy/views/helpers.js',
