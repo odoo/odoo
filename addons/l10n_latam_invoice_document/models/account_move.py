@@ -64,7 +64,7 @@ class AccountMove(models.Model):
            when we change the document type) """
         without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
         manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
-        (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
+        (without_doc_type + manual_documents.filtered(lambda x: not x.name)).name = '/'
         # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
         group_by_document_type = defaultdict(self.env['account.move'].browse)
         for move in (self - without_doc_type - manual_documents):
