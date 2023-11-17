@@ -135,6 +135,7 @@ class HrEmployeeBase(models.AbstractModel):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
+            ('holiday_status_id.time_type', '=', 'leave'),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
             ('state', '=', 'validate'),
