@@ -1,4 +1,5 @@
 from odoo import _, models, tools
+from odoo.tools import html2plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -61,9 +62,9 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_20
         vals = super()._export_invoice_vals(invoice)
+        vals['PaymentTermsType_template'] = 'l10n_dk_oioubl.oioubl_PaymentTermsType'
         vals['vals'].update({
             'customization_id': 'OIOUBL-2.01',
-            'AddressType_template': 'l10n_dk_oioubl.oioubl_201_AddressType',
             # ProfileID is the property that define which documents the company can send and receive
             # 'Procurement-BilSim-1.0' is the simplest one: invoice and bill
             # https://www.oioubl.info/documents/en/en/Guidelines/OIOUBL_GUIDE_PROFILES.pdf
@@ -211,9 +212,25 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_terms_vals_list(self, invoice):
-        # cleaned atm because it's not mandatory and the standard payment terms gets the document rejected for validation
-        # https://www.oioubl.info/Classes/en/PaymentTerms.html
-        return []
+        # OVERRIDES 'account_edi_ubl_cii'
+        if not invoice.invoice_payment_term_id:
+            return []
+
+        sign = 1 if invoice.is_inbound(include_receipts=True) else -1
+        return [
+            {
+                'id': line.id,
+                'amount': sign * line.amount_currency,
+                'currency_name': line.currency_id.name,
+                'currency_dp': self._get_currency_decimal_places(line.currency_id),
+                'note_vals': [{'note_vals': [{'note': html2plaintext(invoice.invoice_payment_term_id.note)}]}],
+                'settlement_period': {
+                    'start_date': invoice.invoice_date,
+                    'end_date': line.date_maturity,
+                }
+            }
+            for line in invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
+        ]
 
     def _get_tax_category_list(self, invoice, taxes):
         # EXTENDS account.edi.common
