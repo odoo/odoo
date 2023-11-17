@@ -1349,13 +1349,24 @@ export function containsUnbreakable(node) {
     }
     return isUnbreakable(node) || containsUnbreakable(node.firstChild);
 }
+// TODO rename this function in master: it also handles Odoo icons, not only
+// font awesome ones. Also maybe just use the ICON_SELECTOR and `matches`?
+const iconTags = ['I', 'SPAN'];
+const iconClasses = ['fa', 'fab', 'fad', 'far', 'oi'];
 export function isFontAwesome(node) {
+    // See ICON_SELECTOR
     return (
         node &&
-        (node.nodeName === 'I' || node.nodeName === 'SPAN') &&
-        ['fa', 'fab', 'fad', 'far'].some(faClass => node.classList.contains(faClass))
+        iconTags.includes(node.nodeName) &&
+        iconClasses.some(cls => node.classList.contains(cls))
     );
 }
+export const ICON_SELECTOR = iconTags.map(tag => {
+    return iconClasses.map(cls => {
+        return `${tag}.${cls}`;
+    }).join(', ');
+}).join(', ');
+
 export function isZWS(node) {
     return (
         node &&
@@ -2736,8 +2747,8 @@ export function peek(arr) {
     return arr[arr.length - 1];
 }
 /**
- * Check user OS 
- * @returns {boolean} 
+ * Check user OS
+ * @returns {boolean}
  */
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');
