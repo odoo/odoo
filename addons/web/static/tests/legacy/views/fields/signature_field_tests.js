@@ -4,7 +4,6 @@ import {
     clickSave,
     editInput,
     getFixture,
-    makeDeferred,
     nextTick,
     patchWithCleanup,
     triggerEvent,
@@ -92,18 +91,13 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".modal .btn.btn-primary:not([disabled])");
 
         // Use a drag&drop simulation to draw a signature
-        const def = makeDeferred();
-        const jSignatureEl = target.querySelector(".modal .o_web_sign_signature");
-        $(jSignatureEl).on("change", def.resolve);
-        const { x, y, width, height } = target
-            .querySelector("canvas.jSignature")
-            .getBoundingClientRect();
-        await triggerEvents(jSignatureEl, "canvas.jSignature", [
-            ["mousedown", { clientX: x + 1, clientY: y + 1 }],
-            ["mousemove", { clientX: x + width - 1, clientY: height + height - 1 }],
-            ["mouseup", { clientX: x + width - 1, clientY: height + height - 1 }],
+        const signatureCanvas = target.querySelector(".modal .o_web_sign_signature");
+        const { x, y, width, height } = signatureCanvas.getBoundingClientRect();
+        await triggerEvents(signatureCanvas, undefined, [
+            ["pointerdown", { clientX: x + 1, clientY: y + 1, pressure: 1 }],
+            ["pointermove", { clientX: x + width - 1, clientY: height + height - 1, pressure: 1 }],
+            ["pointerup", { clientX: x + width - 1, clientY: height + height - 1, pressure: 1 }],
         ]);
-        await def; // makes sure the signature stroke is taken into account by jSignature
         await nextTick(); // await owl rendering
         assert.containsOnce(target, ".modal .btn.btn-primary:not([disabled])");
 
