@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { assignIn, onChange } from "@mail/utils/common/misc";
+import { assignIn } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -27,19 +27,6 @@ export class Thread extends Record {
     /** @returns {import("models").Thread} */
     static get(data) {
         return super.get(data);
-    }
-    static new(data) {
-        /** @type {import("models").Thread} */
-        const thread = super.new(data);
-        thread.composer = {};
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
-                this.store.discuss.thread = undefined;
-            }
-        });
-        return thread;
     }
     /**
      * @param {string} localId
@@ -136,7 +123,13 @@ export class Thread extends Record {
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
-    channelMembers = Record.many("ChannelMember", { onDelete: (r) => r.delete() });
+    channelMembers = Record.many("ChannelMember", {
+        onDelete: (r) => r.delete(),
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this._store.updateBusSubscription();
+        },
+    });
     rtcSessions = Record.many("RtcSession", {
         /** @this {import("models").Thread} */
         onDelete(r) {
@@ -156,7 +149,11 @@ export class Thread extends Record {
     });
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");
-    composer = Record.one("Composer", { inverse: "thread", onDelete: (r) => r.delete() });
+    composer = Record.one("Composer", {
+        compute: () => ({}),
+        inverse: "thread",
+        onDelete: (r) => r.delete(),
+    });
     counter = 0;
     /** @type {string} */
     custom_channel_name;
@@ -177,7 +174,20 @@ export class Thread extends Record {
     loadNewer = false;
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
-    isLoaded = false;
+    isLoaded = Record.attr(false, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this.isLoadedDeferred.resolve();
+        },
+    });
+    is_pinned = Record.attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (!this.is_pinned && this.eq(this._store.discuss.thread)) {
+                this._store.discuss.thread = undefined;
+            }
+        },
+    });
     mainAttachment = Record.one("Attachment");
     memberCount = 0;
     message_needaction_counter = 0;

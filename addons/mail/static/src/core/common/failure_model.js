@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { onChange } from "@mail/utils/common/misc";
 import { markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -11,16 +10,6 @@ export class Failure extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Failure>} */
     static records = {};
-    static new(data) {
-        /** @type {import("models").Failure} */
-        const failure = super.new(data);
-        onChange(failure, "notifications", () => {
-            if (failure.notifications.length === 0) {
-                failure.delete();
-            }
-        });
-        return failure;
-    }
     /** @returns {import("models").Failure} */
     static get(data) {
         return super.get(data);
@@ -29,23 +18,17 @@ export class Failure extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static _insert() {
-        /** @type {import("models").Failure} */
-        const failure = super._insert(...arguments);
-        if (failure.notifications.length === 0) {
-            failure.delete();
-        } else {
-            this.store.failures.add(failure);
-        }
-        return failure;
-    }
 
-    delete() {
-        this._store.failures.delete(this);
-        super.delete();
-    }
-
-    notifications = Record.many("Notification");
+    notifications = Record.many("Notification", {
+        /** @this {import("models").Failure} */
+        onUpdate() {
+            if (this.notifications.length === 0) {
+                this.delete();
+            } else {
+                this._store.failures.add(this);
+            }
+        },
+    });
     get modelName() {
         return this.notifications?.[0]?.message?.originThread?.modelName;
     }

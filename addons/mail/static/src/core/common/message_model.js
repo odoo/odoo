@@ -2,7 +2,6 @@
 
 import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { onChange } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -17,18 +16,6 @@ export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
-    static new(data) {
-        const message = super.new(data);
-        onChange(message, "isEmpty", () => {
-            if (message.isEmpty && message.isStarred) {
-                message.starredPersonas.delete(this.store.self);
-                const starred = this.store.discuss.starred;
-                starred.counter--;
-                starred.messages.delete(message);
-            }
-        });
-        return message;
-    }
     /** @returns {import("models").Message} */
     static get(data) {
         return super.get(data);
@@ -152,7 +139,7 @@ export class Message extends Record {
     }
 
     get isStarred() {
-        return this._store.self.in(this.starredPersonas);
+        return this._store.self?.in(this.starredPersonas);
     }
 
     get isNeedaction() {
@@ -202,14 +189,26 @@ export class Message extends Record {
         return /*(this.editDate && this.attachments.length) || */ !this.isBodyEmpty;
     }
 
-    get isEmpty() {
-        return (
-            this.isBodyEmpty &&
-            this.attachments.length === 0 &&
-            this.trackingValues.length === 0 &&
-            !this.subtype_description
-        );
-    }
+    isEmpty = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            return (
+                this.isBodyEmpty &&
+                this.attachments.length === 0 &&
+                this.trackingValues.length === 0 &&
+                !this.subtype_description
+            );
+        },
+        /** @this {import("models").Message} */
+        onUpdate() {
+            if (this.isEmpty && this.isStarred) {
+                this.starredPersonas.delete(this._store.self);
+                const starred = this._store.discuss.starred;
+                starred.counter--;
+                starred.messages.delete(this);
+            }
+        },
+    });
     get isBodyEmpty() {
         return (
             !this.body ||

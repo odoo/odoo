@@ -619,10 +619,12 @@ export class Record {
      *   in the relation.
      * @param {(r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
+     * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel, { compute, inverse, onAdd, onDelete } = {}) {
-        return [ONE_SYM, { targetModel, compute, inverse, onAdd, onDelete }];
+    static one(targetModel, { compute, inverse, onAdd, onDelete, onUpdate } = {}) {
+        return [ONE_SYM, { targetModel, compute, inverse, onAdd, onDelete, onUpdate }];
     }
     /**
      * @template {keyof import("models").Models} M
@@ -636,10 +638,12 @@ export class Record {
      *   in the relation.
      * @param {(r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
+     * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { compute, inverse, onAdd, onDelete } = {}) {
-        return [MANY_SYM, { targetModel, compute, inverse, onAdd, onDelete }];
+    static many(targetModel, { compute, inverse, onAdd, onDelete, onUpdate } = {}) {
+        return [MANY_SYM, { targetModel, compute, inverse, onAdd, onDelete, onUpdate }];
     }
     /**
      * @template T
@@ -650,8 +654,8 @@ export class Record {
      *   the function is the record. Returned value is new value assigned to this field.
      * @param {boolean} [param1.html] if set, the field value contains html value.
      *   Useful to automatically markup when the insert is trusted.
-     * @param {Function} [param1.onUpdate] function that is called when the field value is updated.
-     *   This is at least once at record creation.
+     * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
+     *   This is called at least once at record creation.
      * @returns {T}
      */
     static attr(def, { compute, html, onUpdate } = {}) {
