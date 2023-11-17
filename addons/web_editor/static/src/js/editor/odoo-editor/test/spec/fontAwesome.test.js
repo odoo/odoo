@@ -54,6 +54,12 @@ describe('FontAwesome', () => {
                     '<p><span class="fa fa-pastafarianism" contenteditable="false">\u200b</span></p>',
                 contentAfter: '<p><span class="fa fa-pastafarianism"></span></p>',
             });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><span class="oi oi-pastafarianism"></span></p>',
+                contentBeforeEdit:
+                    '<p><span class="oi oi-pastafarianism" contenteditable="false">\u200b</span></p>',
+                contentAfter: '<p><span class="oi oi-pastafarianism"></span></p>',
+            });
         });
         it('should parse a fontawesome in a <i>', async () => {
             await testEditor(BasicEditor, {
@@ -61,6 +67,12 @@ describe('FontAwesome', () => {
                 contentBeforeEdit:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i></p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><i class="oi oi-pastafarianism"></i></i></p>',
+                contentBeforeEdit:
+                    '<p><i class="oi oi-pastafarianism" contenteditable="false">\u200b</i></p>',
+                contentAfter: '<p><i class="oi oi-pastafarianism"></i></p>',
             });
         });
         it('should parse a fontawesome with more classes', async () => {
@@ -300,6 +312,13 @@ describe('FontAwesome', () => {
                         contentBefore: '<p>ab<i class="fa fa-pastafarianism"></i>[]cd</p>',
                         contentBeforeEdit:
                             '<p>ab<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]cd</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>ab[]cd</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab<i class="oi oi-pastafarianism"></i>[]cd</p>',
+                        contentBeforeEdit:
+                            '<p>ab<i class="oi oi-pastafarianism" contenteditable="false">\u200b</i>[]cd</p>',
                         stepFunction: deleteBackward,
                         contentAfter: '<p>ab[]cd</p>',
                     });
