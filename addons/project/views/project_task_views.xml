@@ -772,22 +772,6 @@
             </field>
         </record>
 
-        <record id="view_task_tree_from_systray" model="ir.ui.view">
-            <field name="name">project.task.tree</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_task_tree2"/>
-            <field name="mode">primary</field>
-            <field name="priority">100</field>
-            <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="default_group_by"></attribute>
-                </tree>
-                <field name="my_activity_date_deadline" position="attributes">
-                    <attribute name="optional">show</attribute>
-                </field>
-            </field>
-        </record>
-
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
@@ -1070,14 +1054,6 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task_from_systray" model="ir.actions.act_window">
-            <field name="name">Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_mode">tree,kanban</field>
-            <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="view_id" ref="view_task_tree_from_systray"/>
         </record>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
