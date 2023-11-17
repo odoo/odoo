@@ -844,6 +844,8 @@ class SaleOrder(models.Model):
                 if rule_amount > (rule.minimum_amount_tax_mode == 'incl' and (untaxed_amount + tax_amount) or untaxed_amount):
                     continue
                 minimum_amount_matched = True
+                if not products_per_rule.get(rule):
+                    continue
                 rule_products = products_per_rule[rule]
                 ordered_rule_products_qty = sum(products_qties[product] for product in rule_products)
                 if ordered_rule_products_qty < rule.minimum_qty or not rule_products:
