@@ -123,6 +123,7 @@ class PaymentTransaction(models.Model):
                     'payment_intent_data[description]': self.reference,
                     'payment_intent_data[setup_future_usage]': future_usage,
                     'payment_intent_data[capture_method]': capture_method,
+                    'payment_method_options[card][installments][enabled]': True,
                 }
             )
             self.stripe_payment_intent = checkout_session['payment_intent']
