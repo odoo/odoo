@@ -633,13 +633,15 @@ class ResourceCalendar(models.Model):
         from_datetime, dummy = make_aware(from_datetime)
         to_datetime, dummy = make_aware(to_datetime)
 
+        day_total = self._get_resources_day_total(from_datetime, to_datetime)[False]
+
         # actual hours per day
         if compute_leaves:
             intervals = self._work_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
         else:
             intervals = self._attendance_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
 
-        return self._get_attendance_intervals_days_data(intervals)
+        return self._get_days_data(intervals, day_total)
 
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
