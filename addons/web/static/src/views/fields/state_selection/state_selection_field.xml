@@ -20,7 +20,7 @@
                     <DropdownItem
                         class="`d-flex align-items-center ${option[0] === currentValue ? 'active' : ''}`"
                         onSelected="() => this.updateRecord(option[0])">
-                            <span t-attf-class="o_status ms-3 {{ statusColor(option[0]) }} "/>
+                            <span t-attf-class="o_status ms-2 {{ statusColor(option[0]) }} "/>
                             <span t-esc="option[1]"/>
                     </DropdownItem>
                 </t>
