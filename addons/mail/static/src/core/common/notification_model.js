@@ -45,6 +45,7 @@ export class Notification extends Record {
                   }
                 : false;
         },
+        eager: true,
     });
     /** @type {string} */
     failure_type;

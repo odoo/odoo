@@ -158,16 +158,24 @@ export function makeStore(env) {
                     const proxy = new Proxy(this, {
                         /** @param {Record} receiver */
                         get(target, name, receiver) {
-                            if (
-                                name !== "_fields" &&
-                                name in receiver._fields &&
-                                Record.isRelation(receiver._fields[name])
-                            ) {
-                                const l1 = receiver._fields[name].value;
-                                if (RecordList.isMany(l1)) {
-                                    return l1;
+                            if (name !== "_fields" && name in receiver._fields) {
+                                if (
+                                    receiver._fields[name].compute &&
+                                    !receiver._fields[name].eager
+                                ) {
+                                    if (!receiver._fields[name].computed) {
+                                        receiver._fields[name].compute();
+                                    } else {
+                                        receiver._fields[name].probablyCompute();
+                                    }
                                 }
-                                return l1[0];
+                                if (Record.isRelation(receiver._fields[name])) {
+                                    const l1 = receiver._fields[name].value;
+                                    if (RecordList.isMany(l1)) {
+                                        return l1;
+                                    }
+                                    return l1[0];
+                                }
                             }
                             return Reflect.get(target, name, receiver);
                         },
@@ -282,8 +290,9 @@ export function makeStore(env) {
                         res.store = proxy;
                     }
                     for (const name in Model._fields) {
+                        const { compute, default: defaultVal, eager } = Model._fields[name];
                         const SYM = this[name]?.[0];
-                        this._fields[name] = { [SYM]: true };
+                        this._fields[name] = { [SYM]: true, eager };
                         if (Record.isRelation(SYM)) {
                             // Relational fields contain symbols for detection in original class.
                             // This constructor is called on genuine records:
@@ -302,20 +311,33 @@ export function makeStore(env) {
                             this.__uses__ = new RecordUses();
                             this[name] = newVal;
                         } else {
-                            this[name] = Model._fields[name].default;
+                            this[name] = defaultVal;
                         }
-                        if (Model._fields[name].compute) {
-                            let boundFn;
-                            const proxy2 = reactive(proxy, () => boundFn());
-                            boundFn = () => {
-                                // store is wrapped in another reactive, hence proxy is not enough
-                                const exactProxy = res.store.get(proxy.localId);
-                                if (!exactProxy) {
-                                    return; // record was probably deleted;
-                                }
-                                exactProxy[name] = Model._fields[name].compute.call(proxy2);
-                            };
-                            this._fields[name].compute = boundFn;
+                        if (compute) {
+                            const proxy2 = reactive(proxy, () => {
+                                return eager
+                                    ? this._fields[name].compute()
+                                    : (this._fields[name].shouldCompute = true);
+                            });
+                            Object.assign(this._fields[name], {
+                                compute: () => {
+                                    // store is wrapped in another reactive, hence proxy is not enough
+                                    const exactProxy = res.store.get(proxy.localId);
+                                    if (!exactProxy) {
+                                        return; // record was probably deleted;
+                                    }
+                                    this._fields[name].computed = true;
+                                    exactProxy[name] = compute.call(proxy2);
+                                },
+                                probablyCompute: () => {
+                                    if (eager) {
+                                        this._fields[name].compute();
+                                    } else if (this._fields[name].shouldCompute) {
+                                        this._fields[name].shouldCompute = false;
+                                        this._fields[name].compute();
+                                    }
+                                },
+                            });
                         }
                         if (Model._fields[name].onUpdate) {
                             onChange(proxy, name, () => {

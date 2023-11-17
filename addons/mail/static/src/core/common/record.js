@@ -401,15 +401,21 @@ export class RecordList extends Array {
  * @property {boolean} [html] whether the attribute is an html field. Useful to automatically markup
  *   when the insert is trusted.
  * @property {string} [targetModel] model name of records contained in this relational field.
- * @property {Function} [compute] if set the field is computed based on provided function.
+ * @property {() => any} [compute] if set the field is computed based on provided function.
  *   The `this` of function is the record, and the function is recalled whenever any field
- *   in models used by this compute function is changed.
+ *   in models used by this compute function is changed. The return value is the new value of
+ *   the field. On relational field, passing a (list of) record(s) or data work as expected.
+ * @property {boolean} [eager=false] when field is computed, determines whether the computation
+ *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+ *   they are computed when dependencies change AND when this field is being used. In eager mode,
+ *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+ *   behaviour of OWL reactive.
  * @property {string} [inverse] name of inverse relational field in targetModel.
- * @property {Function} [onAdd] hook that is called when relation is updated
+ * @property {(r: Record) => void} [onAdd] hook that is called when relation is updated
  *   with a record being added. Callback param is record being added into relation.
- * @property {Function} [onDelete] hook that is called when relation is updated
+ * @property {(r: Record) => void} [onDelete] hook that is called when relation is updated
  *   with a record being deleted. Callback param is record being deleted from relation.
- * @property {Function} [onUpdate] hook that is called when field is updated.
+ * @property {() => void} [onUpdate] hook that is called when field is updated.
  */
 /**
  * @typedef {Object} RecordField
@@ -417,10 +423,17 @@ export class RecordList extends Array {
  * @property {boolean} [MANY_SYM] true when this is a many relation.
  * @property {boolean} [ONE_SYM] true when this is a one relation.
  * @property {any} [default] the default value of this attribute.
- * @property {Function} [compute] if set the field is computed based on provided function.
+ * @property {() => any} [compute] if set the field is computed based on provided function.
  *   The `this` of function is the record, and the function is recalled whenever any field
- *   in models used by this compute function is changed.
- * @property {Function} [onUpdate] hook that is called when field is updated.
+ *   in models used by this compute function is changed. The return value is the new value of
+ *   the field. On relational field, passing a (list of) record(s) or data work as expected.
+ * @property {boolean} [computed] on a computed field, determines whether the field was computed at least
+ *   once. Useful for a getter of a lazy computed field to force a compute if the field was never computed
+ *   at least once.
+ * @property {() => void} [probablyCompute] when this is a computed field, invoking this function
+ *   will active compute or not the field depending on whether it's being used. This allow computed
+ *   fields to be lazy-computed, so that only when used the field is actually (re-)computed.
+ * @property {() => void} [onUpdate] hook that is called when field is updated.
  * @property {RecordList<Record>|any} [value] value of the field. Either its raw value if it's an attribute,
  *   or a RecordList if it's a relational field.
  */
@@ -602,8 +615,8 @@ export class Record {
         this.records[record.localId] = record;
         // return reactive version
         record = this.records[record.localId];
-        for (const { compute } of Object.values(record._fields)) {
-            compute?.();
+        for (const { probablyCompute } of Object.values(record._fields)) {
+            probablyCompute?.();
         }
         return record;
     }
@@ -614,6 +627,11 @@ export class Record {
      * @param {Function} [param1.compute] if set, the value of this relational field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
+     * * @property {boolean} [eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
      * @param {(r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
@@ -623,8 +641,8 @@ export class Record {
      *   This is called at least once at record creation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel, { compute, inverse, onAdd, onDelete, onUpdate } = {}) {
-        return [ONE_SYM, { targetModel, compute, inverse, onAdd, onDelete, onUpdate }];
+    static one(targetModel, { compute, eager = false, inverse, onAdd, onDelete, onUpdate } = {}) {
+        return [ONE_SYM, { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate }];
     }
     /**
      * @template {keyof import("models").Models} M
@@ -633,6 +651,11 @@ export class Record {
      * @param {Function} [param1.compute] if set, the value of this relational field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
+     * @property {boolean} [eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
      * @param {(r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
@@ -642,8 +665,8 @@ export class Record {
      *   This is called at least once at record creation.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { compute, inverse, onAdd, onDelete, onUpdate } = {}) {
-        return [MANY_SYM, { targetModel, compute, inverse, onAdd, onDelete, onUpdate }];
+    static many(targetModel, { compute, eager = false, inverse, onAdd, onDelete, onUpdate } = {}) {
+        return [MANY_SYM, { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate }];
     }
     /**
      * @template T
@@ -652,14 +675,19 @@ export class Record {
      * @param {Function} [param1.compute] if set, the value of this attr field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
+     * @property {boolean} [eager=false] when field is computed, determines whether the computation
+     *   of this field is eager or lazy. By default, fields are computed lazily, which means that
+     *   they are computed when dependencies change AND when this field is being used. In eager mode,
+     *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
+     *   behaviour of OWL reactive.
      * @param {boolean} [param1.html] if set, the field value contains html value.
      *   Useful to automatically markup when the insert is trusted.
      * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
      * @returns {T}
      */
-    static attr(def, { compute, html, onUpdate } = {}) {
-        return [ATTR_SYM, { compute, default: def, html, onUpdate }];
+    static attr(def, { compute, eager = false, html, onUpdate } = {}) {
+        return [ATTR_SYM, { compute, default: def, eager, html, onUpdate }];
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
