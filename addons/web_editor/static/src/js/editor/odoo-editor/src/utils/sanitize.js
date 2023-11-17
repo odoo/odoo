@@ -10,7 +10,7 @@ import {
     isSelfClosingElement,
     moveNodes,
     preserveCursor,
-    isFontAwesome,
+    isIconElement,
     getDeepRange,
     isUnbreakable,
     isEditorTab,
@@ -196,7 +196,7 @@ function sanitizeNode(node, root) {
         paragraph.replaceChildren(...node.childNodes);
         node.replaceWith(paragraph);
         node = paragraph; // The node has been removed, update the reference.
-    } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
+    } else if (isIconElement(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
         node.textContent = '\u200B';
     } else if (isEditorTab(node)) {
