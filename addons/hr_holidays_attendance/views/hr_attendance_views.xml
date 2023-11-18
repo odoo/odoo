@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_attendance_view_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.view.tree.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='worked_hours']" position="after">
+                <field name="time_off" optional="show" widget="float_time"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.view.form.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='overtime_hours']" position="after">
+                <field name="time_off" optional="show" widget="float_time"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
