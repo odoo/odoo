@@ -1,72 +1,75 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ingenico
-#
+# 	* payment_ogone
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-#
+# Martin Trigaux, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
 msgstr "ID користувача API "
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
 msgstr "Пароль користувача API"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
-#, python-format
-msgid "Could not establish the connection to the API."
-msgstr ""
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
+msgid "Code"
+msgstr "Код"
 
 #. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Не вдалося встановити з’єднання з API."
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
+msgstr "Функція хешу"
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Не знайдено жодної транзакції, що відповідає референсу %s."
 
 #. module: payment_ogone
-#: model:account.payment.method,name:payment_ogone.payment_method_ogone
-#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
 msgstr "PSPID"
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Платіжний еквайєр"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "Payment Token"
-msgstr "Токен оплати"
+#: model:ir.model,name:payment_ogone.model_payment_provider
+msgid "Payment Provider"
+msgstr "Провайдер платежу"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -74,67 +77,111 @@ msgid "Payment Transaction"
 msgstr "Платіжна операція"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Провайдер"
-
-#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Отримані дані з недійсним статусом платежу: %s"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr "SHA Key IN"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr "SHA Key OUT"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_token.py:0
-#, python-format
-msgid "Saved payment methods cannot be restored once they have been archived."
-msgstr ""
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
+msgstr "SHA1"
 
 #. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
+msgstr "SHA256"
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
+msgstr "SHA512"
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"Збереження ваших платіжних даних необхідне для подальшого використання."
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
+"Ідентифікатор використовується виключно для ідентифікації користувача API з "
+"Ogone"
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
 msgstr ""
+"Ідентифікатор використовується виключно для ідентифікації облікового запису "
+"в Ogone"
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "Зв'язок з API не вдався."
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Платіж відхилено: %s"
 
 #. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Технічний код цього провайдера платежу."
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
+msgstr "Транзакція не зв'язана з токеном."
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Stripe</strong>."
+msgstr ""
+"Цей провайдер не підтримується.\n"
+"                    Ви можете вимкнути його та перейти на <strong>Stripe</strong>."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr "Вашу оплату було авторизовано."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr "Ваш платіж скасовано."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Ваш платіж успішно оброблено, але очікує на затвердження."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed."
 msgstr ""

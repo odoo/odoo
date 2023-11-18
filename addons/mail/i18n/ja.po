@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Junko Augias, 2023
 # Wil Odoo, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +63,7 @@ msgstr "\"%(activity_name)s: %(summary)s\" があなたに割当てられまし�
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "\"%(hostname)s\" needs to access your microphone"
-msgstr ""
+msgstr "\"%(hostname)s\" はマイクへのアクセスが必要です"
 
 #. module: mail
 #. odoo-javascript
@@ -136,7 +136,7 @@ msgstr "%(user_name)sは、新しいドキュメントをフォローするよ�
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "%(user_name)s pinned a message to this channel."
-msgstr ""
+msgstr "%(user_name)sはこのチャネルにメッセージをピンしました "
 
 #. module: mail
 #. odoo-python
@@ -199,7 +199,7 @@ msgstr "%sにリクエストがあります"
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #, python-format
 msgid "%s has a suggestion"
-msgstr ""
+msgstr "%sは提案があります "
 
 #. module: mail
 #. odoo-javascript
@@ -220,7 +220,7 @@ msgstr "%sは入力中です..."
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 #, python-format
 msgid "%s messages found"
-msgstr ""
+msgstr "%sメッセージが見つかりました "
 
 #. module: mail
 #. odoo-javascript
@@ -288,14 +288,14 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #: code:addons/mail/static/src/core/common/message.js:0
 #, python-format
 msgid "(Translated from: %(language)s)"
-msgstr ""
+msgstr "(%(language)sから翻訳)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 #, python-format
 msgid "(Translation Failure: %(error)s)"
-msgstr ""
+msgstr "(翻訳に失敗しました: %(error)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -328,14 +328,14 @@ msgstr "。検索を狭めて、もっと選択肢を見ましょう。"
 #: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
 #, python-format
 msgid "1 Message"
-msgstr ""
+msgstr "1 メッセージ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
-msgstr ""
+msgstr "<b invisible=\"not no_record\" class=\"text-warning\">このモデルの記録はありません</b>"
 
 #. module: mail
 #. odoo-python
@@ -390,7 +390,7 @@ msgstr "<span class=\"d-block w-75 py-2\">ヘッダ色</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"me-1\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -425,6 +425,18 @@ msgid ""
 "                                notifying all followers. It will appear in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                メッセージはテンプレートの受信者にEメールとして送信され、\n"
+"メッセージ履歴には表示されません。\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != 'note'\">\n"
+"                                このメッセージは、社内メモとして投稿され、メッセージング履歴の社内ユーザ\n"
+"が閲覧できます。\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                このメッセージはレコード上のメッセージとして投稿され、\n"
+"　　　　　　　　　全フォロワーに通知されます。メッセージ履歴に表示されます。\n"
+"                            </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -432,6 +444,8 @@ msgid ""
 "<span name=\"document_followers_text\" invisible=\"not model or "
 "composition_mode == 'mass_mail'\">Followers of the document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" invisible=\"not model or "
+"composition_mode == 'mass_mail'\">ドキュメントのフォロワーおよび</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -529,6 +543,8 @@ msgid ""
 "A valid Google API key is required to enable message translation. "
 "https://cloud.google.com/translate/docs/setup"
 msgstr ""
+"メッセージ翻訳を有効にするにはGoogle "
+"APIキーが必要です。https://cloud.google.com/translate/docs/setup"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
@@ -701,7 +717,7 @@ msgstr "アクティビティ計画"
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "活動計画"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -767,7 +783,7 @@ msgstr "活動: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Add Context Action"
-msgstr ""
+msgstr "コンテキストアクションを追加"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -822,7 +838,7 @@ msgstr "説明を追加"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Add a description to your activity..."
-msgstr ""
+msgstr "活動に説明を追加"
 
 #. module: mail
 #. odoo-python
@@ -887,7 +903,7 @@ msgstr "チャネルにフォロワーを追加することができません。
 msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
-msgstr ""
+msgstr "このチャットにメンバを追加することはできません。2人用に設計されています。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -973,6 +989,8 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
+"エイリアス %(matching_name)s (%(current_id)s) は既に%(alias_model_name)s "
+"(%(matching_id)s)とリンクされており %(parent_name)s %(parent_model_name)sに使用されています。"
 
 #. module: mail
 #. odoo-python
@@ -982,6 +1000,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
+"エイリアス %(matching_name)s (%(current_id)s) はすでに %(alias_model_name)s "
+"(%(matching_id)s)とリンクされています。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1015,7 +1035,7 @@ msgstr "エイリアスドメイン名"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr ""
+msgstr "エイリアスドメイン"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
@@ -1037,7 +1057,7 @@ msgstr "エイリアスステータス"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr ""
+msgstr "エイリアスドメイン名"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -1063,6 +1083,7 @@ msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
 msgstr ""
+"エイリアス%(alias_names)sはすでにバウンスまたはキャッチオールアドレスとして使用されています。他のエイリアスを選択して下さい。"
 
 #. module: mail
 #. odoo-javascript
@@ -1077,12 +1098,12 @@ msgstr "全て"
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "All Messages"
-msgstr ""
+msgstr "全てのメッセージ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
 msgid "All Messages if not specified"
-msgstr ""
+msgstr "定義されていない場合は全てのメッセージ"
 
 #. module: mail
 #. odoo-python
@@ -1094,7 +1115,7 @@ msgstr "全てのパートナーは同じメッセージに属する必要があ
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__allow_public_upload
 msgid "Allow Public Upload"
-msgstr ""
+msgstr "公開アップロードの許可"
 
 #. module: mail
 #. odoo-python
@@ -1200,7 +1221,7 @@ msgstr "アーカイブされました。%(user_name)s (#%(user_id)s) がポー�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
 msgid "Are you sure you want to delete this Mail Template?"
-msgstr ""
+msgstr "このメールテンプレートを本当に削除しますか？"
 
 #. module: mail
 #. odoo-javascript
@@ -1228,7 +1249,7 @@ msgstr "本当にこのメールアドレスのブラックリストを解除し
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
-msgstr ""
+msgstr "ローンチ時に聞く"
 
 #. module: mail
 #. odoo-javascript
@@ -1494,7 +1515,7 @@ msgstr "ベーステンプレート"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__sfu_server_key
 msgid "Base64 encoded key"
-msgstr ""
+msgstr "Base64エンコード済キー"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
@@ -1590,13 +1611,13 @@ msgstr "バウンス"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_alias
 msgid "Bounce Alias"
-msgstr ""
+msgstr "バウンスエイリアス"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_email
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_email
 msgid "Bounce Email"
-msgstr ""
+msgstr "バウンスEメール"
 
 #. module: mail
 #. odoo-python
@@ -1606,11 +1627,12 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
+"バウンスエイリアス %(bounce)sは同じ名前で別のドメインに既に使用されています。他のバウンスを使用するか他のエイリアスドメインを使用して下さい。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
 msgid "Bounce emails should be unique"
-msgstr ""
+msgstr "バウンスEメールは一意である必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -1620,6 +1642,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
+"バウンス/キャッチオール '%(matching_alias_name)s' は既に "
+"%(document_name)sによって使用されています。他のエイリアスを選択するか、他のドキュメントで変更して下さい。"
 
 #. module: mail
 #. odoo-python
@@ -1629,6 +1653,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
 msgstr ""
+"バウンス/キャッチオール '%(matching_alias_name)s' "
+"は既に使用されています。他のエイリアスを選択するか、リンクしたモデルで変更して下さい。"
 
 #. module: mail
 #. odoo-javascript
@@ -1804,7 +1830,7 @@ msgstr "キャッチオール"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_alias
 msgid "Catchall Alias"
-msgstr ""
+msgstr "キャッチオールエイリアス"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_email
@@ -1820,11 +1846,13 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
+"キャッチオールエイリアス "
+"%(catchall)sは同じ名前で別のドメインに既に使用されています。他のキャッチオールを使用するか他のエイリアスドメインを使用して下さい。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
 msgid "Catchall emails should be unique"
-msgstr ""
+msgstr "キャッチオールEメールは一意である必要があります。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -1876,7 +1904,7 @@ msgstr "チャネルタイプ"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, python-format
 msgid "Channel members cannot include public users."
-msgstr ""
+msgstr "チャネルメンバは公開ユーザを含むことはできません。"
 
 #. module: mail
 #. odoo-javascript
@@ -1902,7 +1930,7 @@ msgstr "チャネル"
 #: model:ir.actions.act_window,name:mail.discuss_channel_member_action
 #: model:ir.ui.menu,name:mail.discuss_channel_member_menu
 msgid "Channels/Members"
-msgstr ""
+msgstr "チャネル/メンバ"
 
 #. module: mail
 #. odoo-javascript
@@ -1942,24 +1970,24 @@ msgstr "子メッセージ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template..."
-msgstr ""
+msgstr "テンプレートを選択..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a user..."
-msgstr ""
+msgstr "ユーザを選択..."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Choose another value or change it on the other document."
-msgstr ""
+msgstr "他の値を選ぶか他のドキュメントで変更して下さい。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
-msgstr ""
+msgstr "オンデマンド割当で活動の割当を選択します。"
 
 #. module: mail
 #. odoo-javascript
@@ -1996,14 +2024,14 @@ msgstr "チャットウィンドウを閉じる"
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #, python-format
 msgid "Close Search"
-msgstr ""
+msgstr "検索を終了"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Close button"
-msgstr ""
+msgstr "終了ボタン"
 
 #. module: mail
 #. odoo-javascript
@@ -2017,7 +2045,7 @@ msgstr "パネルを閉じる"
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Close search"
-msgstr ""
+msgstr "検索を終了"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__closed
@@ -2034,7 +2062,7 @@ msgstr "特定のメールアドレスで回答を集める"
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #, python-format
 msgid "Come here often? Install Odoo on your device!"
-msgstr ""
+msgstr "頻繁に訪れるであれば、デバイスにOdooをインストールしましょう！"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2281,7 +2309,7 @@ msgstr "国"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Activity"
-msgstr ""
+msgstr "活動を作成"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
@@ -2311,7 +2339,7 @@ msgstr "新しいレコードを作成する"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Create a new Mail Template"
-msgstr ""
+msgstr "新しいメールテンプレートを作成"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -2504,7 +2532,7 @@ msgstr "自動配信Eメールの外観と操作感のカスタマイズ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_notifications
 msgid "Customized Notifications"
-msgstr ""
+msgstr "カスタマイズ通知"
 
 #. module: mail
 #. odoo-javascript
@@ -2607,12 +2635,12 @@ msgstr "デフォルトの表示モード"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from_email
 #: model:ir.model.fields,field_description:mail.field_res_company__default_from_email
 msgid "Default From"
-msgstr ""
+msgstr "デフォルト送信元"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from
 msgid "Default From Alias"
-msgstr ""
+msgstr "デフォルト送信元エイリアス"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
@@ -2655,7 +2683,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr ""
+msgstr "デフォルトユーザ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -2812,7 +2840,7 @@ msgstr "ディスカスサイドバー"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
 msgid "Discuss: channel member unmute"
-msgstr ""
+msgstr "ディスカス: チャネルメンバミュート解除"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -2955,7 +2983,7 @@ msgstr "完了 & 次をスケジュール"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
 msgid "Done Date"
-msgstr ""
+msgstr "完了日"
 
 #. module: mail
 #. odoo-javascript
@@ -2979,7 +3007,7 @@ msgstr "ダウンロード"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Download Files"
-msgstr ""
+msgstr "ファイルをダウンロード"
 
 #. module: mail
 #. odoo-javascript
@@ -3052,7 +3080,7 @@ msgstr "ダイナミックレポート"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__generic
 msgid "Dynamic User (based on record)"
-msgstr ""
+msgstr "ダイナミックユーザ(レコードに基づく)"
 
 #. module: mail
 #. odoo-javascript
@@ -3143,7 +3171,7 @@ msgstr "メールエイリアスMixin"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin_optional
 msgid "Email Aliases Mixin (light)"
-msgstr ""
+msgstr "EメールエイリアスMixin(light)"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3171,7 +3199,7 @@ msgstr "Eメール設定"
 #: model:ir.model,name:mail.model_mail_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_id
 msgid "Email Domain"
-msgstr ""
+msgstr "Eメールドメイン"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
@@ -3267,7 +3295,7 @@ msgstr "ブラックリストに登録されたメールアドレスには、今
 msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
-msgstr ""
+msgstr "Eメールエイリアス %(alias_name)s は 複数レコードで同時に使用することはできません。レコードを1つ1つ更新して下さい。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3516,6 +3544,9 @@ msgid ""
 "\n"
 "%(template_traceback)s)"
 msgstr ""
+"QWebテンプレートのレンダリングに失敗しました: %(template_src)s\n"
+"\n"
+"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
@@ -3595,6 +3626,7 @@ msgid ""
 "Field \"(field)r on model %(model)r must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
+"フィールド \"(field)r モデル%(model)r 上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -3660,14 +3692,14 @@ msgstr "ファイルが大きすぎます。"
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "File upload is disabled for external users"
-msgstr ""
+msgstr "ファイルのアップロードは外部ユーザに対しては無効です。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "File upload is enabled for external users"
-msgstr ""
+msgstr "外部ユーザに対してファイルアップロードを有効化されました。"
 
 #. module: mail
 #. odoo-javascript
@@ -3735,12 +3767,12 @@ msgstr "フォロワーのみ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to add"
-msgstr ""
+msgstr "追加するフォロワー"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to remove"
-msgstr ""
+msgstr "削除するフォロワー"
 
 #. module: mail
 #. odoo-javascript
@@ -3774,35 +3806,35 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 1 hour"
-msgstr ""
+msgstr "1時間"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 15 minutes"
-msgstr ""
+msgstr "15分間"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 24 hours"
-msgstr ""
+msgstr "24時間"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 3 hours"
-msgstr ""
+msgstr "3時間"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 8 hours"
-msgstr ""
+msgstr "8時間"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -3918,7 +3950,7 @@ msgstr "会話へ行く"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Google Translate Integration"
-msgstr ""
+msgstr "Google翻訳統合"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -4016,7 +4048,7 @@ msgstr "Odoo内にとどめる"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
 msgid "Has Error"
-msgstr ""
+msgstr "エラーあり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
@@ -4065,7 +4097,7 @@ msgstr "エラーあり"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__has_user_on_demand
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_has_user_on_demand
 msgid "Has on demand responsible"
-msgstr ""
+msgstr "オンデマンド担当者あり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -4100,7 +4132,7 @@ msgstr "非表示テンプレート"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, python-format
 msgid "Hide Attachments"
-msgstr ""
+msgstr "添付を隠す"
 
 #. module: mail
 #. odoo-javascript
@@ -4331,21 +4363,21 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "If not set, shared with all users."
-msgstr ""
+msgstr "設定されていない場合、全てのユーザと共有されます"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_fields__tracking
 msgid ""
 "If set every modification done to this field is tracked. Value is used to "
 "order tracking values."
-msgstr ""
+msgstr "設定すると、このフィールドに加えられたすべての変更が追跡されます。値は、追跡値を指示するために使用されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__mute_until_dt
 msgid ""
 "If set, the member will not receive notifications from the channel until "
 "this date."
-msgstr ""
+msgstr "設定された場合、メンバはこの日付までチャネルからの通知を受取れません。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -4379,7 +4411,7 @@ msgid ""
 "If set, will restrict the template to this specific user."
 "                                                   If not set, shared with "
 "all users."
-msgstr ""
+msgstr "設定された場合、テンプレートはこの特定のユーザに制限されます。 設定されていない場合は、全てのユーザと共有されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -4497,7 +4529,7 @@ msgstr "着信..."
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
-msgstr ""
+msgstr "受信Eメール"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -4612,7 +4644,7 @@ msgstr "式が無効です。リテラルPython辞書定義でなければなり
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_invalid
 msgid "Invalid from address"
-msgstr ""
+msgstr "無効な送信元アドレス"
 
 #. module: mail
 #. odoo-python
@@ -4722,7 +4754,7 @@ msgstr "フォロワーを招待"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "Invite a User"
-msgstr ""
+msgstr "ユーザを招待"
 
 #. module: mail
 #. odoo-javascript
@@ -4797,12 +4829,12 @@ msgstr "既読"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_self
 msgid "Is Self"
-msgstr ""
+msgstr "自分自身"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__is_template_editor
 msgid "Is Template Editor"
-msgstr ""
+msgstr "テンプレートエディタ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_chat
@@ -4853,6 +4885,7 @@ msgid ""
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
 msgstr ""
+"チャンネルメンバを作成しようとしていますが、関連チャンネルを指定し忘れているようです。先に進むには、必要なチャンネル情報を必ず入力して下さい。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_partner_device__keys
@@ -4918,7 +4951,7 @@ msgstr "添付を保持する。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
 msgid "Keep Done"
-msgstr ""
+msgstr "完了のまま残す"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
@@ -4939,7 +4972,7 @@ msgstr "メールが削除された場合、メール内容のコピーを保管
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
 msgid "Keep activities marked as done in the activity view"
-msgstr ""
+msgstr "活動ビューで活動を完了のまま残す"
 
 #. module: mail
 #. odoo-python
@@ -5122,7 +5155,7 @@ msgstr "解除"
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.js:0
 #, python-format
 msgid "Leave Conversation"
-msgstr ""
+msgstr "会話から出る"
 
 #. module: mail
 #. odoo-javascript
@@ -5234,7 +5267,7 @@ msgstr "その活動を記録"
 #: code:addons/mail/static/src/views/web/composer_patch.js:0
 #, python-format
 msgid "Log an internal note…"
-msgstr ""
+msgstr "内部メモを記録する..."
 
 #. module: mail
 #. odoo-javascript
@@ -5420,7 +5453,7 @@ msgstr "既存のmail.messageを知らせるメールが作成されました"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "Mail template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "%(action_name)sのメールテンプレートモデルがアクションモデルと一致しません"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
@@ -5440,7 +5473,7 @@ msgstr "メール: フェッチメールサービス"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
 msgid "Mail: send web push notification"
-msgstr ""
+msgstr "メール: ウェブプッシュ通知を送信"
 
 #. module: mail
 #. odoo-python
@@ -5602,7 +5635,7 @@ msgstr "メンション"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__custom_notifications__mentions
 #, python-format
 msgid "Mentions Only"
-msgstr ""
+msgstr "メンションのみ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
@@ -5691,12 +5724,12 @@ msgstr "メッセージレコード名"
 #: model:ir.model,name:mail.model_mail_message_translation
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Message Translation"
-msgstr ""
+msgstr "メッセージ翻訳"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
 msgid "Message Translation API Key"
-msgstr ""
+msgstr "メッセージ翻訳APIキー"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__name
@@ -5824,7 +5857,7 @@ msgstr "トラッキング値を持つメッセージは変更できません。
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_voice_metadata
 msgid "Metadata for voice attachments"
-msgstr ""
+msgstr "音声添付用メタデータ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -5840,7 +5873,7 @@ msgstr "Eメールアドレスがありません"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_missing
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_missing
 msgid "Missing from address"
-msgstr ""
+msgstr "不明な送信元アドレス"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_duration_mixin
@@ -5917,12 +5950,12 @@ msgstr "ミュート"
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #, python-format
 msgid "Mute Channel"
-msgstr ""
+msgstr "チャネルをミュートする"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
 msgid "Mute notifications until"
-msgstr ""
+msgstr "以下まで通知をミュート:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6095,7 +6128,7 @@ msgstr "記録なし"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
 msgid "No activities."
-msgstr ""
+msgstr "活動がありません"
 
 #. module: mail
 #. odoo-javascript
@@ -6137,7 +6170,7 @@ msgstr "コンテキストにmessage_idが見つかりません"
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 #, python-format
 msgid "No messages found"
-msgstr ""
+msgstr "メッセージが見つかりません"
 
 #. module: mail
 #. odoo-python
@@ -6163,7 +6196,7 @@ msgstr ""
 #, python-format
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
-msgstr ""
+msgstr "%(activity_type_name)s: %(activity_summary)s用に担当者が定義されていません"
 
 #. module: mail
 #. odoo-javascript
@@ -6291,7 +6324,7 @@ msgstr "通知パラメータ"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, python-format
 msgid "Notification Settings"
-msgstr ""
+msgstr "通知設定"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
@@ -6585,7 +6618,7 @@ msgstr "オーナーを開く"
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 #, python-format
 msgid "Open card"
-msgstr ""
+msgstr "オープンカード"
 
 #. module: mail
 #. odoo-javascript
@@ -6669,7 +6702,7 @@ msgstr "出庫"
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email_outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing Email"
-msgstr ""
+msgstr "送信メール"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6893,7 +6926,7 @@ msgstr "ペイロード"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Permanently delete this template"
-msgstr ""
+msgstr "このテンプレートを完全に削除"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -6945,12 +6978,12 @@ msgstr "計画"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_available_ids
 msgid "Plan Available"
-msgstr ""
+msgstr "利用可能な計画"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
 msgid "Plan Date"
-msgstr ""
+msgstr "計画日"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -6961,12 +6994,12 @@ msgstr "計画名"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
 msgid "Plan Summary"
-msgstr ""
+msgstr "計画概要"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Plan summary"
-msgstr ""
+msgstr "計画概要"
 
 #. module: mail
 #. odoo-javascript
@@ -7523,12 +7556,12 @@ msgstr "削除"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
-msgstr ""
+msgstr "コンテキストアクションを削除"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__remove_followers
 msgid "Remove Followers"
-msgstr ""
+msgstr "フォロワーを削除"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
@@ -7551,7 +7584,7 @@ msgstr "このフォロワーを削除"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_info
 msgid "Removed field information"
-msgstr ""
+msgstr "削除済フィールド情報"
 
 #. module: mail
 #. odoo-javascript
@@ -7719,7 +7752,7 @@ msgstr "制限された添付"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__source_lang
 msgid "Result of the language detection based on its content."
-msgstr ""
+msgstr "コンテンツに基づく言語検出の結果"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -7732,7 +7765,7 @@ msgstr "再試行"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Revert"
-msgstr ""
+msgstr "復帰"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7762,12 +7795,12 @@ msgstr "RTCセッション"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_url
 msgid "SFU Server URL"
-msgstr ""
+msgstr "SFUサーバURL"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_key
 msgid "SFU Server key"
-msgstr ""
+msgstr "SFUサーバキー"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -7799,7 +7832,7 @@ msgstr "保存"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save Template"
-msgstr ""
+msgstr "テンプレートを保存"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -7821,7 +7854,7 @@ msgstr "スケジュール"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Schedule & Mark as Done"
-msgstr ""
+msgstr "予定＆完了済とする"
 
 #. module: mail
 #. odoo-python
@@ -7840,7 +7873,7 @@ msgstr "活動の予定"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity On Selected Records"
-msgstr ""
+msgstr "選択済レコード上で活動を予定"
 
 #. module: mail
 #. odoo-javascript
@@ -7875,7 +7908,7 @@ msgstr "アクティビティをスケジュールする"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule an activity on selected records"
-msgstr ""
+msgstr "選択済レコード上で活動を予定"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -7940,7 +7973,7 @@ msgstr "受信メールサーバを検索"
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Search Messages"
-msgstr ""
+msgstr "検索メッセージ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
@@ -7952,14 +7985,14 @@ msgstr "RTCセッション検索"
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Search button"
-msgstr ""
+msgstr "検索ボタン"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search for a GIF"
-msgstr ""
+msgstr "GIFを検索"
 
 #. module: mail
 #. odoo-javascript
@@ -7983,14 +8016,14 @@ msgstr "ユーザを検索..."
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Search in progress"
-msgstr ""
+msgstr "検索中"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 #, python-format
 msgid "Search messages"
-msgstr ""
+msgstr "メッセージ検索"
 
 #. module: mail
 #. odoo-javascript
@@ -8090,7 +8123,7 @@ msgstr "メールを送信"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send Email As"
-msgstr ""
+msgstr "Eメールを以下として送信: "
 
 #. module: mail
 #. odoo-python
@@ -8118,7 +8151,7 @@ msgstr "今すぐ送信"
 #: code:addons/mail/static/src/views/web/composer_patch.js:0
 #, python-format
 msgid "Send a message to followers…"
-msgstr ""
+msgstr "フォロワーにメッセージを送信..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8259,12 +8292,12 @@ msgstr "管理設定"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sfu_channel_uuid
 msgid "Sfu Channel Uuid"
-msgstr ""
+msgstr "SFUチャネルUuid"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sfu_server_url
 msgid "Sfu Server Url"
-msgstr ""
+msgstr "SFUサーバURL"
 
 #. module: mail
 #. odoo-javascript
@@ -8302,14 +8335,14 @@ msgstr "メッセージの長い部分を自動的に置換するショートカ
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
 msgid ""
 "Shortened language code used as the target for the translation request."
-msgstr ""
+msgstr "翻訳要求のターゲットとして使用される短縮言語コード。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, python-format
 msgid "Show Attachments"
-msgstr ""
+msgstr "添付を表示"
 
 #. module: mail
 #. odoo-javascript
@@ -8412,7 +8445,7 @@ msgstr "このテンプレートを関連ドキュメントモデルのレコー
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_site_name
 msgid "Site name"
-msgstr ""
+msgstr "サイト名"
 
 #. module: mail
 #. odoo-javascript
@@ -8429,7 +8462,7 @@ msgstr "情報源"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__source_lang
 msgid "Source Language"
-msgstr ""
+msgstr "ソース言語"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -8549,7 +8582,7 @@ msgstr "ユーザの追加を止める"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 #, python-format
 msgid "Stop Recording"
-msgstr ""
+msgstr "録画を停止"
 
 #. module: mail
 #. odoo-javascript
@@ -8593,7 +8626,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__body
 msgid "String received from the translation request."
-msgstr ""
+msgstr "翻訳要求から受信した文字列"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
@@ -8697,7 +8730,7 @@ msgstr "システム通知"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
 msgid "Target Language"
-msgstr ""
+msgstr "ターゲット言語"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
@@ -8760,7 +8793,7 @@ msgstr "テンプレート再設定Mixin"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Template creation from composer requires a valid model."
-msgstr ""
+msgstr "Composerからテンプレートを作成するには、有効なモデルが必要です。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
@@ -8873,7 +8906,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The activity cannot be launched:"
-msgstr ""
+msgstr "活動を開始できません"
 
 #. module: mail
 #. odoo-python
@@ -8884,6 +8917,8 @@ msgid ""
 " \"%(plan_name)s\" because it is limited to the model "
 "\"%(activity_type_model)s\"."
 msgstr ""
+"活動タイプ \"%(activity_type_name)s\" は計画性と互換性がありません。 \"%(plan_name)s\" "
+"なぜならモデル\"%(activity_type_model)s\"に限られているからです。"
 
 #. module: mail
 #. odoo-python
@@ -8927,7 +8962,7 @@ msgstr "現在のユーザはテンプレートを編集できます。"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "The duration of voice messages is limited to 1 minute."
-msgstr ""
+msgstr "ボイスメッセージの時間は1分間に制限されています。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -9013,14 +9048,14 @@ msgstr "eメールのエイリアス.例えば<jobs@example.odoo.com>のメー�
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The plan \"%(plan_name)s\" cannot be launched:"
-msgstr ""
+msgstr "プラン\"%(plan_name)s\"はローンチできませんでした。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The plan \"%(plan_name)s\" has been started"
-msgstr ""
+msgstr "プラン\"%(plan_name)s\"が開始されました。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -9032,7 +9067,7 @@ msgstr "キューマネージャーは、日付の後に電子メールを送信
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The records must belong to the same company."
-msgstr ""
+msgstr "レコードは同じ会社に属している必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -9065,7 +9100,7 @@ msgstr "サブスクリプション設定が正常に適用されました。"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__user_id
 msgid "The template belongs to this user"
-msgstr ""
+msgstr "テンプレートはこのユーザに属しています。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
@@ -9095,7 +9130,7 @@ msgstr "この"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "This action can only be done on a mail thread models"
-msgstr ""
+msgstr "このアクションはメールスレッドモデルでのみ行うことができます"
 
 #. module: mail
 #. odoo-python
@@ -9109,7 +9144,7 @@ msgstr "この操作はトランジェント・モデルではできません。
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This channel doesn't have any attachments."
-msgstr ""
+msgstr "このチャネルには添付はありません"
 
 #. module: mail
 #. odoo-javascript
@@ -9123,7 +9158,7 @@ msgstr "このチャネルにはピンされたメッセージはありません
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This conversation doesn't have any attachments."
-msgstr ""
+msgstr "この会話には添付はありません"
 
 #. module: mail
 #. odoo-javascript
@@ -9407,14 +9442,14 @@ msgstr "翻訳"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__body
 msgid "Translation Body"
-msgstr ""
+msgstr "翻訳本文"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Translation Failure"
-msgstr ""
+msgstr "翻訳失敗"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -9479,6 +9514,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"サーバーアクションのタイプ。以下の値があります:\n"
+"- レコードの更新: レコードの値を更新します。\n"
+"- アクティビティの作成: アクティビティを作成します(ディスカス)\n"
+"- メール送信: メッセージやメモを投稿したり、メールを送信したりします。\n"
+"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - 'フォロワーの追加/削除': レコードにフォロワーを追加または削除します(ディスカス)\n"
+"- レコードの作成': 新しい値で新しいレコードを作成します\n"
+"- コードの実行': 実行されるPythonコードのブロックします\n"
+"- 'Webhook通知の送信': Webhookとしても知られるPOSTリクエストを外部システムに送信します\n"
+"- '既存アクションの実行': 他のサーバーアクションをトリガするアクションを定義します\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -9543,7 +9587,7 @@ msgstr "未割当"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Unassign from me"
-msgstr ""
+msgstr "自分から割当解除"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -9600,7 +9644,7 @@ msgstr "ミュート解除"
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #, python-format
 msgid "Unmute Channel"
-msgstr ""
+msgstr "チャンネルをミュート解除"
 
 #. module: mail
 #. odoo-javascript
@@ -9658,14 +9702,14 @@ msgstr "サポートされていないレポートタイプ%sが見つかりま�
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.js:0
 #, python-format
 msgid "Until "
-msgstr ""
+msgstr "以下まで"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "Until I turn it back on"
-msgstr ""
+msgstr "再度有効化するまで"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9722,6 +9766,8 @@ msgid ""
 " 'Dynamic User' to specify the field name of the user to choose on the "
 "record."
 msgstr ""
+"'特定のユーザ'を使用して、次の活動で常に同じユーザを割当てます。 "
+"'ダイナミックユーザ'を使用して、レコードで選択するユーザのフィールド名を指定します。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -9753,12 +9799,12 @@ msgstr "Outlookサーバを使用"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use different domains for your mail aliases"
-msgstr ""
+msgstr "メールエイリアスに別のドメインを使用します"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
 msgid "Use in batch"
-msgstr ""
+msgstr "一括で使用"
 
 #. module: mail
 #. odoo-python
@@ -9824,7 +9870,7 @@ msgstr "ユーザ"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User Field"
-msgstr ""
+msgstr "ユーザフィールド"
 
 #. module: mail
 #: model:ir.model,name:mail.model_bus_presence
@@ -9951,6 +9997,8 @@ msgid ""
 "Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
+"`mail.catchall.domain.allowed`用の値 %(allowed_domains)sは検証できません。\n"
+"コンマで区切られたドメインのリストでなければなりません。例: example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -10019,7 +10067,7 @@ msgstr "ボイス"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 #, python-format
 msgid "Voice Message"
-msgstr ""
+msgstr "ボイスメッセージ"
 
 #. module: mail
 #. odoo-javascript
@@ -10042,7 +10090,7 @@ msgstr "音声検出のしきい値"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "Voice recording stopped"
-msgstr ""
+msgstr "ボイスレコード停止"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -10066,7 +10114,7 @@ msgstr "他のパートナの音量"
 msgid ""
 "Want to spice up your conversations with GIFs? Activate the feature in the "
 "settings!"
-msgstr ""
+msgstr "GIFを使って会話にスパイスを加えたいですか？設定でこの機能を有効化しましょう！"
 
 #. module: mail
 #. odoo-javascript
@@ -10085,6 +10133,8 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
+"エイリアス %(alias_name)s を作成できませんでした。なぜなら、ドメイン %(alias_domain_name)sは会社 "
+"%(alias_company_names)sに属し、オーナドキュメントは会社 %(company_name)sに属しているからです。"
 
 #. module: mail
 #. odoo-python
@@ -10095,6 +10145,8 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
+"エイリアス %(alias_name)s を作成できませんでした。なぜなら、ドメイン %(alias_domain_name)sは会社 "
+"%(alias_company_names)sに属し、ターゲットドキュメントは会社 %(company_name)sに属しているからです。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -10128,7 +10180,7 @@ msgstr "お名前を教えて下さい。"
 #, python-format
 msgid ""
 "When selecting \"Default user\" assignment, you must specify a responsible."
-msgstr ""
+msgstr "\"デフォルトユーザ\"割当を選択する時、担当者を定義する必要があります。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -10259,7 +10311,7 @@ msgstr "ここに添付をアップロードする権限がありません。"
 #: code:addons/mail/controllers/attachment.py:0
 #, python-format
 msgid "You are not allowed to upload attachments on this channel."
-msgstr ""
+msgstr "このチャネルに添付をアップロードする権限がありません。"
 
 #. module: mail
 #. odoo-javascript
@@ -10319,7 +10371,7 @@ msgstr "グループ全体が他のモジュールで必要とされるため、
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
-msgstr ""
+msgstr "エイリアスアドレス%(alias_name)sにはアクセント記号のないラテン文字以外は使用できません。"
 
 #. module: mail
 #. odoo-python
@@ -10328,7 +10380,7 @@ msgstr ""
 msgid ""
 "You cannot use anything else than unaccented latin characters in the domain "
 "name %(domain_name)s."
-msgstr ""
+msgstr "ドメイン名%(domain_name)sにはアクセント記号のないラテン文字以外は使用できません。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -10567,7 +10619,7 @@ msgstr "閉じる"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "created this channel."
-msgstr ""
+msgstr "このチャンネルを作成しました"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -10689,7 +10741,7 @@ msgstr "例: TRUE.TRUE...F"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. user_id"
-msgstr ""
+msgstr "例: user_id"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10822,7 +10874,7 @@ msgstr "ミュート中"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "new"
-msgstr ""
+msgstr "新規"
 
 #. module: mail
 #. odoo-javascript
@@ -11003,7 +11055,7 @@ msgstr "週"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "your alias"
-msgstr ""
+msgstr "あなたのエイリアス"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11015,4 +11067,4 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
-msgstr ""
+msgstr "“%(member_name)s” 、 “%(channel_name)s内”"

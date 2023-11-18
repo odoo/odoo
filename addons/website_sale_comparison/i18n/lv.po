@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Anzelika Adejanova, 2022
-# ievaputnina <ievai.putninai@gmail.com>, 2022
-# Arnis Putniņš <arnis@allegro.lv>, 2022
-# Martin Trigaux, 2022
-#
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Anzelika Adejanova, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Arnis Putniņš <arnis@allegro.lv>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Arnis Putniņš <arnis@allegro.lv>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
-"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: website_sale_comparison
@@ -34,7 +35,16 @@ msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid ""
+"<i class=\"fa fa-chevron-circle-down o_product_comparison_collpase\" "
+"role=\"img\" aria-label=\"Collapse\" title=\"Collapse\"/><span>Tags</span>"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -48,8 +58,14 @@ msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<span>Tags</span>"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -79,27 +95,23 @@ msgid "Bottom of Page"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
-msgid "Category"
-msgstr "Kategorija"
-
-#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__name
 msgid "Category Name"
 msgstr "Kategorijas Nosaukums"
 
 #. module: website_sale_comparison
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 #, python-format
 msgid "Compare"
 msgstr ""
 
 #. module: website_sale_comparison
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
@@ -135,7 +147,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Parādīt vārdu"
+msgstr "Attēlotais nosaukums"
 
 #. module: website_sale_comparison
 #: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
@@ -160,19 +172,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
-#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category____last_update
-msgid "Last Modified on"
-msgstr "Pēdējoreiz mainīts"
-
-#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
-msgstr "Pēdējoreiz atjaunoja"
+msgstr "Pēdējoreiz atjaunināja"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_date
 msgid "Last Updated on"
-msgstr "Pēdējoreiz atjaunots"
+msgstr "Pēdējoreiz atjaunināts"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
@@ -180,7 +187,8 @@ msgid "None"
 msgstr "Nav"
 
 #. module: website_sale_comparison
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Product"
@@ -205,7 +213,7 @@ msgstr "Produktu veidnes atribūtu rinda"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_product
 msgid "Product Variant"
-msgstr "Produkta Veids"
+msgstr "Produkta variants"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -226,11 +234,13 @@ msgstr "Noņemt"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__sequence
 msgid "Sequence"
-msgstr "Secība"
+msgstr "Sekvence"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,help:website_sale_comparison.field_product_attribute__category_id
-msgid "Set a category to regroup similar attributes under the same section in the Comparison page of eCommerce"
+msgid ""
+"Set a category to regroup similar attributes under the same section in the "
+"Comparison page of eCommerce."
 msgstr ""
 
 #. module: website_sale_comparison
@@ -255,7 +265,8 @@ msgid "Uncategorized"
 msgstr "Nešķirots"
 
 #. module: website_sale_comparison
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
@@ -267,10 +278,15 @@ msgid "Weight"
 msgstr "Svars"
 
 #. module: website_sale_comparison
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
+msgid "eCommerce Category"
 msgstr ""
 
 #. module: website_sale_comparison

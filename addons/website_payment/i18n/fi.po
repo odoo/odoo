@@ -1,31 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-#
+# 
 # Translators:
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Kari Lindgren <karisatu@gmail.com>, 2023
+# Jukka Paulin <jukka.paulin@gmail.com>, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_payment
@@ -74,9 +73,9 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>Maksutapa:</b>"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Maa...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -85,7 +84,7 @@ msgid ""
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Sopivaa maksuvaihtoehtoa ei löytynyt.</strong><br/>\n"
-"                                Jos uskot, että kyseessä on virhe, ota yhteyttä sivuston ylläpitäjään. "
+"                                Jos uskot, että kyseessä on virhe, ota yhteyttä sivuston ylläpitäjään."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -110,6 +109,7 @@ msgid "Activate Payments"
 msgstr "Aktivoi maksut"
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr "Aktivoi Stripe"
@@ -131,12 +131,13 @@ msgstr "Lisää uusi esitäytetty vaihtoehto"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #, python-format
 msgid "Amount"
 msgstr "Arvo"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Amount ("
 msgstr "Määrä ("
 
@@ -170,26 +171,19 @@ msgid "Configure %s"
 msgstr "Määritä %s"
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr "Yhdistä Stripeen"
-
-#. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #: model:ir.model,name:website_payment.model_res_country
 #, python-format
 msgid "Country"
 msgstr "Maa"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Country\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"Maa\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -200,6 +194,7 @@ msgstr "Maa on pakollinen."
 
 #. module: website_payment
 #. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -228,14 +223,20 @@ msgid "Display Options"
 msgstr "Näytä valinnat"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Donate"
+msgstr ""
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
 msgstr "Lahjoita nyt"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
 msgstr "Lahjoitus"
@@ -266,23 +267,21 @@ msgstr "Lahjoitusilmoitus"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Email"
 msgstr "Sähköposti"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Email\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"Sähköposti\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Email is invalid"
 msgstr "Sähköpostiosoite on virheellinen"
@@ -296,7 +295,7 @@ msgstr "Sähköpostiosoitteesi on pakollinen."
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Field '%s' is mandatory"
 msgstr "Kenttä '%s' on pakollinen"
@@ -344,19 +343,17 @@ msgstr "Vähimmäismäärä"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Name"
 msgstr "Nimi"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Name\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"Nimi\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -387,7 +384,7 @@ msgid "Other than Paypal"
 msgstr "Muut kuin Paypal"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Payment Details"
 msgstr "Maksun tiedot"
 
@@ -400,6 +397,13 @@ msgstr "Maksupalveluntarjoaja"
 #: model:ir.model,name:website_payment.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Maksutapahtuma"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr ""
 
 #. module: website_payment
 #. odoo-python
@@ -441,13 +445,6 @@ msgid "Recipient Email"
 msgstr "Vastaanottajan sähköposti"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "Server Error"
-msgstr "Palvelinvirhe"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
 msgstr "Kauppa - Maksaminen"
@@ -464,7 +461,7 @@ msgstr "Pieni tai suuri, panoksesi on olennainen."
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Some information is missing to process your payment."
 msgstr "Joitakin tietoja puuttuu maksun käsittelemiseksi."
@@ -476,13 +473,21 @@ msgstr "Vaihe"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
-msgstr "Stripe Connect ei ole saatavilla maassasi, käytä toista maksupalveluntarjoajaa."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect ei ole saatavilla maassasi, käytä toista "
+"maksupalveluntarjoajaa."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
-msgstr "Tukee useimpia maksutapoja: Visa, Mastercard, Maestro, Google Pay, Apple Pay jne. sekä toistuvia maksuja."
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"Tukee useimpia maksutapoja: Visa, Mastercard, Maestro, Google Pay, Apple Pay"
+" jne. sekä toistuvia maksuja."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -502,13 +507,6 @@ msgid "There is nothing to pay."
 msgstr "Ei ole mitään maksettavaa."
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "Validation Error"
-msgstr "Tarkistusvirhe"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
 msgstr "Näytä vaihtoehdot"
@@ -517,13 +515,6 @@ msgstr "Näytä vaihtoehdot"
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
 msgstr "Näytä muut palveluntarjoajat"
-
-#. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "We could not obtain payment fees."
-msgstr "Emme voineet saada maksuja."
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
@@ -536,12 +527,12 @@ msgid "Website: Donation"
 msgstr "Verkkosivusto: Lahjoitus"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
 msgstr "Kirjoita meille kommentti"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Your comment"
 msgstr "Kommenttisi"
 

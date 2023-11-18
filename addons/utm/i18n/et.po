@@ -1,35 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# Andre Roomet <andreroomet@gmail.com>, 2022
-# Oliver Ernest, 2022
-# Martin Aavastik <martin@avalah.ee>, 2022
-# Piia Paurson <piia@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Martin Trigaux, 2022
-# Egon Raamat <egon@avalah.ee>, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
-# Helen Sulaoja <helen@avalah.ee>, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
-# Anna, 2023
+# Patrick-Jordan Kiudorv, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Martin Aavastik <martin@avalah.ee>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Leaanika Randmets, 2023
+# Martin Trigaux, 2023
+# Egon Raamat <egon@avalah.ee>, 2023
+# Helen Sulaoja <helen@avalah.ee>, 2023
 # JanaAvalah, 2023
-#
+# Algo Kärp <algokarp@gmail.com>, 2023
+# Anna, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
@@ -43,7 +43,7 @@ msgstr "%(content)s (%(model_description)s loodud %(create_date)s)"
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
-msgstr "Tegev"
+msgstr "Aktiivne"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
@@ -67,7 +67,7 @@ msgstr "Kinnitatud"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Arhiveeri"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -130,8 +130,12 @@ msgstr "Kampaaniad"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
-msgstr "Kampaaniaid kasutatakse teie turundustegevuse tsentraliseerimiseks ja nende tulemuste jälgimiseks."
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"Kampaaniaid kasutatakse teie turundustegevuse tsentraliseerimiseks ja nende "
+"tulemuste jälgimiseks."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -190,7 +194,7 @@ msgstr "Looge oma kampaaniate jaoks etapp"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__create_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_uid
 msgid "Created by"
-msgstr "Loonud"
+msgstr "Loodud (kelle poolt?)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
@@ -199,7 +203,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__create_date
 #: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
 msgid "Created on"
-msgstr "Loomise kuupäev"
+msgstr "Loodud"
 
 #. module: utm
 #. odoo-javascript
@@ -230,6 +234,7 @@ msgstr "Tehtud"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
 #, python-format
 msgid "Design"
@@ -242,10 +247,12 @@ msgstr "Disain"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr "Kuvatav nimi"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Done"
@@ -284,13 +291,15 @@ msgstr "Andmete kogumine"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
 msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Group By"
-msgstr "Grupeeri"
+msgstr "Rühmitamine"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -309,6 +318,7 @@ msgstr "ID"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
 msgstr "Ideed"
@@ -320,7 +330,7 @@ msgstr "Ideed"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendas"
+msgstr "Viimati uuendatud"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
@@ -414,8 +424,12 @@ msgstr "Valmista kampaania ette ja kinnita enne avaldamist. "
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
-msgstr "Valmistage oma kampaania ette, testige seda osal oma sihtgrupist ja võtke see pärast kasutusse."
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+"Valmistage oma kampaania ette, testige seda osal oma sihtgrupist ja võtke "
+"see pärast kasutusse."
 
 #. module: utm
 #. odoo-javascript
@@ -433,10 +447,11 @@ msgstr "Vastutaja"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Taasta"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Review"
@@ -447,7 +462,7 @@ msgstr "Ülevaade"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Running"
-msgstr "Töös"
+msgstr "Pidev"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_fall_drive
@@ -457,7 +472,7 @@ msgstr "Müük"
 #. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
 msgid "Schedule"
-msgstr "Graafik"
+msgstr "Planeeri"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
@@ -467,12 +482,14 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Send"
 msgstr "Saada"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 #, python-format
@@ -482,7 +499,7 @@ msgstr "Saadetud"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
 msgid "Sequence"
-msgstr "Järjestus"
+msgstr "Jada"
 
 #. module: utm
 #. odoo-javascript
@@ -504,7 +521,7 @@ msgstr "Turundusspetsialisti töövoog"
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Alusdokument"
+msgstr "Kandideerimise allikad"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
@@ -532,18 +549,22 @@ msgstr "Etapid"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
 msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
 msgstr ""
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Sildi nimi on juba loodud!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -555,7 +576,9 @@ msgstr "Sildid"
 #. odoo-python
 #: code:addons/utm/models/utm_medium.py:0
 #, python-format
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
 msgstr ""
 
 #. module: utm
@@ -581,8 +604,11 @@ msgstr "See nädal"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "See nimetus aitab jälgida antud kampaania tulemusi, nt Jõulu_eripakkumine"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"See nimetus aitab jälgida antud kampaania tulemusi, nt Jõulu_eripakkumine"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
@@ -591,8 +617,12 @@ msgstr "See on postitamise viis, nt postkaart, e-kiri, bänner-reklaam"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "See on linki allikas, nt otsingumootor, teine ​​domeen või e-posti nimekirja nimi"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"See on linki allikas, nt otsingumootor, teine ​​domeen või e-posti nimekirja"
+" nimi"
 
 #. module: utm
 #. odoo-javascript
@@ -605,7 +635,9 @@ msgstr "Kinnitamiseks"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
 msgstr ""
 
 #. module: utm
@@ -627,7 +659,9 @@ msgstr "UTM keskmine"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
 msgstr ""
 
 #. module: utm
@@ -647,7 +681,9 @@ msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
 msgstr ""
 
 #. module: utm

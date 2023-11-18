@@ -1,59 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-#
+# 
 # Translators:
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Marko Happonen <marko.happonen@sprintit.fi>, 2022
-# Antti Oksman <antti.oksman@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Marko Happonen <marko.happonen@sprintit.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "4 Person Desk"
-msgstr "4 Hengen pöytä"
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "1.5"
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
 msgstr "<span>Vaihtoehdot</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Payment</span>"
-msgstr "<span>Maksu</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Signature</span>"
-msgstr "<span>Allekirjoitus</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -136,8 +128,12 @@ msgstr "Hyväksymissähköposti"
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. Konversio tehdään käyttäen kertoimena suhdetta."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. "
+"Konversio tehdään käyttäen kertoimena suhdetta."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -177,7 +173,9 @@ msgstr "Oletuspohja"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Default values will be overwritten by values provided by the quotation template."
+msgid ""
+"Default values will be overwritten by values provided by the quotation "
+"template."
 msgstr ""
 
 #. module: sale_management
@@ -188,11 +186,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "Kuvaus"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Design your quotation templates using building blocks"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -229,17 +222,27 @@ msgstr "Näyttötyyppi"
 #: code:addons/sale_management/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa käyttäjien  yhteenvetopostissa"
+msgstr ""
+"Sinulla ei ole oikeutta tähän toimintoon. Et voi käyttää tätä tietoa "
+"käyttäjien  yhteenvetopostissa"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "Extra Chips"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
-msgstr "Kielletty tuote, määrä ja mittayksikkö ei-kirjanpitokelpoisen myyntitarjousrivin yhteydessä"
+msgstr ""
+"Kielletty tuote, määrä ja mittayksikkö ei-kirjanpitokelpoisen "
+"myyntitarjousrivin yhteydessä"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr "Antaa sekvenssijärjestyksen, kun näyttöön tulee valinnaisia tuotteita."
+msgstr ""
+"Antaa sekvenssijärjestyksen, kun näyttöön tulee valinnaisia tuotteita."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -260,14 +263,34 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid "If unchecked, it will allow you to hide the quotation template without removing it."
-msgstr "Jos tätä ei ole valittu, voit piilottaa tarjousmallin poistamatta sitä."
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"Jos tätä ei ole valittu, voit piilottaa tarjousmallin poistamatta sitä."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
+msgid "Invoicing Journal"
+msgstr "Laskutuksen päiväkirja"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
 msgstr "Kpi Myyntien kokonaismäärä"
+
+#. module: sale_management
+#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
+msgid "Large Meeting Table"
+msgstr "Suuri kokouspöytä"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -328,11 +351,6 @@ msgid "Online Signature"
 msgstr "Allekirjoitus verkossa"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Online confirmation"
-msgstr "Online-vahvistus"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -349,6 +367,23 @@ msgstr "Lisätuotelinjat"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Options"
 msgstr "Vaihtoehdot"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Prepayment amount"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Prepayment percentage must be a valid percentage."
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -374,11 +409,6 @@ msgstr "Määrä"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Quantity:"
 msgstr "Määrä:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
-msgid "Quotation Builder"
-msgstr "Tarjousrakentaja"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -441,13 +471,20 @@ msgstr "Poista yksi"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
-msgid "Request a online signature to the customer in order to confirm orders automatically."
-msgstr "Pyydä online-allekirjoitusta asiakkaalle vahvistamaan tilaukset automaattisesti."
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Pyydä online-allekirjoitusta asiakkaalle vahvistamaan tilaukset "
+"automaattisesti."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
-msgid "Request an online payment to the customer in order to confirm orders automatically."
-msgstr "Pyydä online-maksu asiakkaalta vahvistaaksesi tilaukset automaattisesti."
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Pyydä online-maksu asiakkaalta vahvistaaksesi tilaukset automaattisesti."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -492,8 +529,14 @@ msgstr "Osa"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
-msgstr "Myytkö samaa tuotetta eri koossa tai eri väreissä? Kokeile tuoteruudukkoa ja täytä tilauksesi useilla eri määrillä kutakin muunnelmaa. Tämä ominaisuus on myös Ostosovelluksessa."
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Myytkö samaa tuotetta eri koossa tai eri väreissä? Kokeile tuoteruudukkoa ja"
+" täytä tilauksesi useilla eri määrillä kutakin muunnelmaa. Tämä ominaisuus "
+"on myös Ostosovelluksessa."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -503,13 +546,20 @@ msgstr "Järjestys"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr "Ongelmia monimutkaisen tuoteluettelon kanssa? Kokeile Tuotekonfiguraattoria, joka auttaa myyntiä tuotteen konfiguroinnissa eri vaihtoehdoilla: värit, koko, kapasiteetti jne. Helpota myyntitilausten koodausta ja tee siitä virheetöntä."
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Ongelmia monimutkaisen tuoteluettelon kanssa? Kokeile Tuotekonfiguraattoria,"
+" joka auttaa myyntiä tuotteen konfiguroinnissa eri vaihtoehdoilla: värit, "
+"koko, kapasiteetti jne. Helpota myyntitilausten koodausta ja tee siitä "
+"virheetöntä."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Terms & Conditions"
-msgstr "käyttöehdot"
+msgstr "Ehdot"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -518,17 +568,32 @@ msgstr "Toimitusehdot"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
-msgstr "Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Tässä asetetut ehdot näkyvät sen sijaan, jos valitset tämän tarjousmallin."
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Tässä asetetut ehdot "
+"näkyvät sen sijaan, jos valitset tämän tarjousmallin."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
-msgstr "Tämä sähköpostipohja lähetetään tarjouksen hyväksynnästä. Jätä tyhjäksi, jos et halua lähettää mitään."
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Tämä sähköpostipohja lähetetään tarjouksen hyväksynnästä. Jätä tyhjäksi, jos"
+" et halua lähettää mitään."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
-msgid "This field will be checked if the option line's product is already present in the quotation."
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
 msgstr "Tämä kenttä tarkistetaan, jos optiorivin tuote on jo tarjouksessa."
 
 #. module: sale_management
@@ -589,8 +654,12 @@ msgstr "Et voi lisätä vaihtoehtoja vahvistettuun tilaukseen."
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
 #, python-format
-msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
-msgstr "Et voi muuttaa myyntilainausrivin tyyppiä. Sen sijaan sinun pitäisi poistaa nykyinen rivi ja luoda uusi oikean tyyppinen rivi."
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Et voi muuttaa myyntilainausrivin tyyppiä. Sen sijaan sinun pitäisi poistaa "
+"nykyinen rivi ja luoda uusi oikean tyyppinen rivi."
 
 #. module: sale_management
 #. odoo-python

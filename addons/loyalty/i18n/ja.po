@@ -130,7 +130,7 @@ msgstr "注文の10%"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "1000"
-msgstr ""
+msgstr "1000"
 
 #. module: loyalty
 #. odoo-python
@@ -303,6 +303,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">クーポン</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'loyalty'\">ロイヤリティカード</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">プロモーション</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">値引</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">ギフトカード</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eウォレット</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -319,11 +325,13 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != "
+"'coupons'\">クーポンの値として定義されたクーポンポイント数を付与</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span invisible=\"not clear_wallet\"> (or more)</span>"
-msgstr ""
+msgstr "<span invisible=\"not clear_wallet\"> (またはさらに)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -335,6 +343,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            生成して送信 \n"
+"                        </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            生成 \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -502,7 +516,7 @@ msgstr "クーポンと同じコードを持つトリガが既に存在します
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "ABCDE12345"
-msgstr ""
+msgstr "ABCDE12345"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -873,12 +887,12 @@ msgstr "顧客"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_CODE"
-msgstr ""
+msgstr "DEMO_CODE"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_TEXT"
-msgstr ""
+msgstr "DEMO_TEXT"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -960,7 +974,7 @@ msgstr "値引ポイント"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "値引プロダクト"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -2077,7 +2091,7 @@ msgstr "購入済項目"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr ""
+msgstr "ロイヤリティ特典"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

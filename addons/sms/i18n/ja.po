@@ -223,7 +223,7 @@ msgstr "言語選択:"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "テンプレートを選択..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -256,13 +256,13 @@ msgstr "コンテンツ"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "国はサポートされていません"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "国別登録が必要です"
 
 #. module: sms
 #. odoo-python
@@ -557,7 +557,7 @@ msgstr "クレジット残高不足"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "無効な宛先"
 
 #. module: sms
 #. odoo-python
@@ -613,7 +613,7 @@ msgstr "最終更新日"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "SMSをメーリング/SMS追跡モデルにリンク"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -1056,7 +1056,7 @@ msgstr "SMSテンプレートが再設定されました"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "SMS追跡"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1341,6 +1341,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"サーバーアクションのタイプ。以下の値があります:\n"
+"- レコードの更新: レコードの値を更新します。\n"
+"- アクティビティの作成: アクティビティを作成します(ディスカス)\n"
+"- メール送信: メッセージやメモを投稿したり、メールを送信したりします。\n"
+"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - 'フォロワーの追加/削除': レコードにフォロワーを追加または削除します(ディスカス)\n"
+"- レコードの作成': 新しい値で新しいレコードを作成します\n"
+"- コードの実行': 実行されるPythonコードのブロックします\n"
+"- 'Webhook通知の送信': Webhookとしても知られるPOSTリクエストを外部システムに送信します\n"
+"- '既存アクションの実行': 他のサーバーアクションをトリガするアクションを定義します\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

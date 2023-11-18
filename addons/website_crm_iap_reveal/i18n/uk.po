@@ -1,29 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm_iap_reveal
-#
+# 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-# Martin Trigaux, 2022
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
-msgid "1 credit is consumed per visitor matching the website traffic conditions and whose company can be identified.<br/>"
-msgstr "1 кредит споживається на відвідувача, який відповідає умовам руху на веб-сайті і чию компанію можна ідентифікувати.<br/>"
+msgid ""
+"1 credit is consumed per visitor matching the website traffic conditions and"
+" whose company can be identified.<br/>"
+msgstr ""
+"1 кредит споживається на відвідувача, який відповідає умовам руху на веб-"
+"сайті і чию компанію можна ідентифікувати.<br/>"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -58,7 +62,8 @@ msgstr "Перегляд CRM Reveal"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
-msgstr "Виберіть, чи слід відстежувати лише компанії чи компанії та їхні контакти"
+msgstr ""
+"Виберіть, чи слід відстежувати лише компанії чи компанії та їхні контакти"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__companies
@@ -102,8 +107,11 @@ msgstr "Створіть правило конвертації"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
-msgid "Create rules to generate B2B leads/opportunities from your website visitors."
-msgstr "Створіть правила для генерації лідів/нагод B2B з відвідувачів вашого веб-сайту."
+msgid ""
+"Create rules to generate B2B leads/opportunities from your website visitors."
+msgstr ""
+"Створіть правила для генерації лідів/нагод B2B з відвідувачів вашого веб-"
+"сайту."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
@@ -128,6 +136,7 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -169,11 +178,6 @@ msgid "High"
 msgstr "Високий"
 
 #. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_iap_account
-msgid "IAP Account"
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
 msgstr "Кредити IAP "
@@ -194,12 +198,6 @@ msgstr "IP адреса"
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
 msgstr "Галузі"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule____last_update
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view____last_update
-msgid "Last Modified on"
-msgstr "Остання модифікація"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_uid
@@ -241,15 +239,7 @@ msgid "Lead Generation Views"
 msgstr "Види генерації ліда"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/."
-msgstr "Генерація лідів вимагає роздільника GeoIP, якого неможливо знайти у вашій системі. Будь ласка, проконсультуйтеся https://pypi.org/project/GeoIP/."
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
-#: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr "Генерація лідів: ліди/генерація нагод"
 
@@ -261,7 +251,9 @@ msgstr "Лід/Нагода"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
-msgstr "Залиште порожнім, щоб завжди співставляти. Odoo не буде створювати лід, якщо немає співставлення"
+msgstr ""
+"Залиште порожнім, щоб завжди співставляти. Odoo не буде створювати лід, якщо"
+" немає співставлення"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__0
@@ -270,8 +262,12 @@ msgstr "Низький"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
-msgid "Make sure you know if you have to be GDPR compliant for storing personal data."
-msgstr "Переконайтеся, що ви знаєте, чи маєте ви дотримуватись вимог GDPR для зберігання особистих даних."
+msgid ""
+"Make sure you know if you have to be GDPR compliant for storing personal "
+"data."
+msgstr ""
+"Переконайтеся, що ви знаєте, чи маєте ви дотримуватись вимог GDPR для "
+"зберігання особистих даних."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.constraint,message:website_crm_iap_reveal.constraint_crm_reveal_rule_limit_extra_contacts
@@ -281,13 +277,7 @@ msgstr "Дозволено максимально 5 контактів!"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
-msgstr "Канал"
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr "Відсутня бібліотека"
+msgstr "Середній"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
@@ -311,13 +301,20 @@ msgstr "Кількість створених нагод"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
-msgid "Only visitors of following countries will be converted into leads/opportunities (using GeoIP)."
-msgstr "Тільки відвідувачі наступних країн будуть конвертовані у ліди/нагоди (за допомогою GeoIP)."
+msgid ""
+"Only visitors of following countries will be converted into "
+"leads/opportunities (using GeoIP)."
+msgstr ""
+"Тільки відвідувачі наступних країн будуть конвертовані у ліди/нагоди (за "
+"допомогою GeoIP)."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
-msgid "Only visitors of following states will be converted into leads/opportunities."
-msgstr "Тільки відвідувачі з наступних країн будуть перетворені на ліди/нагоди."
+msgid ""
+"Only visitors of following states will be converted into "
+"leads/opportunities."
+msgstr ""
+"Тільки відвідувачі з наступних країн будуть перетворені на ліди/нагоди."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__opportunity
@@ -335,6 +332,7 @@ msgid "Opportunity Generation Conditions"
 msgstr "Умови створення нагод"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
@@ -357,8 +355,14 @@ msgstr "Пріоритет"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__regex_url
-msgid "Regex to track website pages. Leave empty to track the entire website, or / to target the homepage. Example: /page* to track all the pages which begin with /page"
-msgstr "Regex для відстеження сторінок веб-сайтів. Залиште порожнім, щоби відстежувати весь веб-сайт, або щоби націлити домашню сторінку. Приклад: /page* для відстеження всіх сторінок, які починаються з /page"
+msgid ""
+"Regex to track website pages. Leave empty to track the entire website, or / "
+"to target the homepage. Example: /page* to track all the pages which begin "
+"with /page"
+msgstr ""
+"Regex для відстеження сторінок веб-сайтів. Залиште порожнім, щоби "
+"відстежувати весь веб-сайт, або щоби націлити домашню сторінку. Приклад: "
+"/page* для відстеження всіх сторінок, які починаються з /page"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -409,7 +413,7 @@ msgstr "Послідовність"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_state
 msgid "State"
-msgstr "Область"
+msgstr "Статус"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
@@ -428,13 +432,24 @@ msgstr "Мітки"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__extra_contacts
-msgid "This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact."
-msgstr "Це кількість контактів для відстеження, якщо їхня роль/звання відповідає вашим критеріям. Їхні подробиці відображатимуться в потоці історії згенерованих лідів/нагод. Один кредит витрачається на один відстежений контакт."
+msgid ""
+"This is the number of contacts to track if their role/seniority match your "
+"criteria. Their details will show up in the history thread of generated "
+"leads/opportunities. One credit is consumed per tracked contact."
+msgstr ""
+"Це кількість контактів для відстеження, якщо їхня роль/звання відповідає "
+"вашим критеріям. Їхні подробиці відображатимуться в потоці історії "
+"згенерованих лідів/нагод. Один кредит витрачається на один відстежений "
+"контакт."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
-msgid "This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule"
-msgstr "Це буде додано до назви створеного ліда, так що ви можете визначити, що лід/нагода генерується за допомогою цього правила"
+msgid ""
+"This will be appended in name of generated lead so you can identify "
+"lead/opportunity is generated with this rule"
+msgstr ""
+"Це буде додано до назви створеного ліда, так що ви можете визначити, що "
+"лід/нагода генерується за допомогою цього правила"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process
@@ -458,8 +473,12 @@ msgstr "Збільшити"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__sequence
-msgid "Used to order the rules with same URL and countries. Rules with a lower sequence number will be processed first."
-msgstr "Використовується для замовлення правил з однаковою URL-адресою та країнами. Спочатку будуть оброблені правила з нижчим порядковим номером."
+msgid ""
+"Used to order the rules with same URL and countries. Rules with a lower "
+"sequence number will be processed first."
+msgstr ""
+"Використовується для замовлення правил з однаковою URL-адресою та країнами. "
+"Спочатку будуть оброблені правила з нижчим порядковим номером."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__3
@@ -485,7 +504,8 @@ msgstr "Умови трафіку веб-сайту"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
-msgstr "додаткові кредити споживаються, якщо компанія відповідає цьому правилу."
+msgstr ""
+"додаткові кредити споживаються, якщо компанія відповідає цьому правилу."
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

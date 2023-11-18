@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: utm
@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s створено %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -55,7 +55,7 @@ msgstr "Затверджено"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Архів"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -67,7 +67,9 @@ msgstr "Заархівовано"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Assign tags to your campaigns to organize, filter and track them."
-msgstr "Призначайте теги своїм кампаніям, щоб упорядковувати, фільтрувати та відстежувати їх."
+msgstr ""
+"Призначайте теги своїм кампаніям, щоб упорядковувати, фільтрувати та "
+"відстежувати їх."
 
 #. module: utm
 #. odoo-javascript
@@ -118,8 +120,12 @@ msgstr "Кампанії"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
-msgstr "Кампанії використовуються для централізації ваших маркетингових зусиль і відстеження їх результатів."
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"Кампанії використовуються для централізації ваших маркетингових зусиль і "
+"відстеження їх результатів."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -136,7 +142,9 @@ msgstr "Спеціальні різдвяні"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Collect ideas, design creative content and publish it once reviewed."
-msgstr "Збирайте ідеї, створюйте креативний контент і публікуйте його після перевірки."
+msgstr ""
+"Збирайте ідеї, створюйте креативний контент і публікуйте його після "
+"перевірки."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
@@ -218,6 +226,7 @@ msgstr "Завантажено"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
 #, python-format
 msgid "Design"
@@ -234,6 +243,8 @@ msgstr "Назва для відображення"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Done"
@@ -272,8 +283,12 @@ msgstr "Збирайте дані"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
-msgstr "Збирайте дані, створюйте список одержувачів і пишіть вміст на основі вашої маркетингової цілі."
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr ""
+"Збирайте дані, створюйте список одержувачів і пишіть вміст на основі вашої "
+"маркетингової цілі."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -296,6 +311,7 @@ msgstr "ID"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
@@ -347,7 +363,7 @@ msgstr "Маркетинг"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Канал"
+msgstr "Середній"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -372,7 +388,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Name"
-msgstr "Назва"
+msgstr "Ім'я"
 
 #. module: utm
 #: model:utm.stage,name:utm.default_utm_stage
@@ -402,8 +418,12 @@ msgstr "Підготуйте кампанії та отримайте їх сх�
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
-msgstr "Підготуйте свою кампанію, протестуйте її з частиною своєї аудиторії та повністю розгорніть її після цього."
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+"Підготуйте свою кампанію, протестуйте її з частиною своєї аудиторії та "
+"повністю розгорніть її після цього."
 
 #. module: utm
 #. odoo-javascript
@@ -421,10 +441,11 @@ msgstr "Відповідальний"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Відновлення"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Review"
@@ -455,12 +476,14 @@ msgstr "Пошук каналу UTM"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Send"
 msgstr "Надіслати"
 
 #. module: utm
 #. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 #, python-format
@@ -520,18 +543,24 @@ msgstr "Етапи"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
 msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
-msgstr "Колір тегу. Відсутність кольору означає відсутність відображення в канбані, щоб відрізнити внутрішні теги від загальнодоступних тегів категоризації."
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+"Колір тегу. Відсутність кольору означає відсутність відображення в канбані, "
+"щоб відрізнити внутрішні теги від загальнодоступних тегів категоризації."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Такий тег уже існує!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -543,15 +572,19 @@ msgstr "Мітки"
 #. odoo-python
 #: code:addons/utm/models/utm_medium.py:0
 #, python-format
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
 msgstr ""
+"Медіа UTM '%s' не можна видалити, оскільки використовується у деяких "
+"основних процесах, таких як рекрутинг та масова розсилка."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "Назва має бути унікальною"
 
 #. module: utm
 #. odoo-javascript
@@ -569,18 +602,28 @@ msgstr "Цього тижня"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "Це ім'я, яке допомагає вам стежити за різними зусиллями кампанії, напр. Fall_Drive, Christmas_Special"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Це ім'я, яке допомагає вам стежити за різними зусиллями кампанії, напр. "
+"Fall_Drive, Christmas_Special"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Це спосіб доставки, наприклад, листівка, електронна пошта або банерна реклама"
+msgstr ""
+"Це спосіб доставки, наприклад, листівка, електронна пошта або банерна "
+"реклама"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "Це джерело посилання, наприклад, пошукова система, інший домен або ім'я списку листів"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Це джерело посилання, наприклад, пошукова система, інший домен або ім'я "
+"списку листів"
 
 #. module: utm
 #. odoo-javascript
@@ -593,7 +636,9 @@ msgstr "Буде затверджено"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
 msgstr ""
 
 #. module: utm
@@ -615,8 +660,12 @@ msgstr "Канал UTM "
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
-msgstr "Канали UTM відстежують значення, яке було використано для залучення трафіку (наприклад, «Веб-сайт», «Твіттер», ...)."
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
+msgstr ""
+"Канали UTM відстежують значення, яке було використано для залучення трафіку "
+"(наприклад, «Веб-сайт», «Твіттер», ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -631,12 +680,16 @@ msgstr "Джерело UTM "
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "Джерело UTM Mixin"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
-msgstr "Джерела UTM відстежують, звідки надходить трафік (наприклад, \"Травень інформаційний бюлетень\", \"\", ...)."
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr ""
+"Джерела UTM відстежують, звідки надходить трафік (наприклад, \"Травень "
+"інформаційний бюлетень\", \"\", ...)."
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage

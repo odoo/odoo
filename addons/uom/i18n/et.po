@@ -1,31 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-#
+# 
 # Translators:
-# Andre Roomet <andreroomet@gmail.com>, 2022
-# Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Piia Paurson <piia@avalah.ee>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
-# Martin Trigaux, 2022
-# Martin Aavastik <martin@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
+# Patrick-Jordan Kiudorv, 2023
+# Birgit Vijar, 2023
+# Katrin Kampura, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# JanaAvalah, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Martin Aavastik <martin@avalah.ee>, 2023
+# Marten, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
 # Anna, 2023
 # Leaanika Randmets, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: uom
@@ -53,7 +57,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Tegev"
+msgstr "Aktiivne"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -98,31 +102,35 @@ msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Ühikute vaheline konversioon on võimalik ainult siis, kui ühikud kuuluvad samasse kategooriasse. Konverteerimist tehakse määrade järgi."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Ühikute vaheline konversioon on võimalik ainult siis, kui ühikud kuuluvad "
+"samasse kategooriasse. Konverteerimist tehakse määrade järgi."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "Loonud"
+msgstr "Loodud (kelle poolt?)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "Loomise kuupäev"
+msgstr "Loodud"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
 msgid "Days"
-msgstr "päev(a)"
+msgstr "päevad"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr "Kuvatav nimi"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -132,22 +140,30 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Group By"
-msgstr "Grupeeri"
+msgstr "Rühmitamine"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
 msgid "Hours"
-msgstr "Tunnid"
+msgstr "Tund(i)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
-msgid "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "Mitu korda on see mõõtühik suurem võrdlusühikust: 1 * (see ühik) = mitu korda väiksem? * (võrdlusühik)"
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Mitu korda on see mõõtühik suurem võrdlusühikust: 1 * (see ühik) = mitu "
+"korda väiksem? * (võrdlusühik)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
-msgid "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr "Kui palju on ühik suurem või väikem võrreldes kategooria võrdlusühikuga: 1* (kategooria võrdlusühik) = mitu korda suurem/väiksem? * (see ühik)"
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Kui palju on ühik suurem või väikem võrreldes kategooria võrdlusühikuga: 1* "
+"(kategooria võrdlusühik) = mitu korda suurem/väiksem? * (see ühik)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -156,16 +172,10 @@ msgid "ID"
 msgstr "ID"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
-#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "Viimati muudetud"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendas"
+msgstr "Viimati uuendatud"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
@@ -181,7 +191,7 @@ msgstr "Pikkus / vahemaa"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Manage Multiple Units of Measure"
+msgstr "Halda mitut mõõtühikut"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -230,6 +240,7 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Väiksem kui võrdlusühik"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -245,12 +256,16 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "Pindala"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
-msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
-msgstr "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -258,6 +273,7 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "The conversion ratio for a unit of measure cannot be 0!"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -276,9 +292,21 @@ msgid "The rounding precision must be strictly positive."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
-msgid "The unit of measure %s defined on the order line doesn't belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category."
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category as the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
 msgstr ""
 
 #. module: uom
@@ -288,8 +316,10 @@ msgstr "Tüüp"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
-msgid "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr "Uncheck the active field to disable a unit of measure without deleting it."
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Uncheck the active field to disable a unit of measure without deleting it."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -344,18 +374,21 @@ msgstr ""
 "            Hours, Days."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
@@ -372,6 +405,7 @@ msgid "Volume"
 msgstr "Ruumala"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"
@@ -429,7 +463,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "puhkused"
+msgstr "tollid"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch

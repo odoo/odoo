@@ -1,32 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-#
+# 
 # Translators:
-# MIka Pakkanen <mika.pakkanen@gmail.com>, 2022
-# Retropikzel, 2022
-# Marko Happonen <marko.happonen@sprintit.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Martin Trigaux, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Retropikzel, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Martin Trigaux, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Marko Happonen <marko.happonen@sprintit.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
@@ -51,8 +50,12 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
-msgstr "Viivakoodinimikkeistö määrittelee, miten kassa tunnistaa ja tulkitsee viivakoodit"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Viivakoodinimikkeistö määrittelee, miten kassa tunnistaa ja tulkitsee "
+"viivakoodit"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -90,7 +93,7 @@ msgstr "Mikä tahansa"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "Viivakoodi"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -253,7 +256,7 @@ msgstr "Pöydät"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Tap to scan"
-msgstr ""
+msgstr "Skannaa"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -274,27 +277,40 @@ msgstr "Sovitettu kuvio on alias tälle viivakoodille"
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "Viivakoodikuviossa %(pattern)s on syntaksivirhe: sääntö voi sisältää vain yhden aaltosuljeparin."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"Viivakoodikuviossa %(pattern)s on syntaksivirhe: sääntö voi sisältää vain "
+"yhden aaltosuljeparin."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
-msgstr "Viivakoodikuviossa %(pattern)s on syntaksivirhe: suluissa voi olla vain N-kirjaimia, joita seuraa D-kirjain."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"Viivakoodikuviossa %(pattern)s on syntaksivirhe: suluissa voi olla vain "
+"N-kirjaimia, joita seuraa D-kirjain."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr "Viivakoodikuviossa %(pattern)s on syntaksivirhe: tyhjät sulkeet."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
-msgstr "Tätä sääntöä sovelletaan vain, jos viivakoodi on koodattu määritetyllä koodauksella"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Tätä sääntöä sovelletaan vain, jos viivakoodi on koodattu määritetyllä "
+"koodauksella"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -303,8 +319,14 @@ msgstr "Tyyppi"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "UPC-koodit voidaan muuntaa EAN-koodeiksi lisäämällä niiden eteen nolla. Tämä asetus määrittää, muunnetaanko UPC/EAN-viivakoodi automaattisesti tavalla tai toisella, kun yritetään sovittaa sääntöä toiseen koodaukseen."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC-koodit voidaan muuntaa EAN-koodeiksi lisäämällä niiden eteen nolla. Tämä"
+" asetus määrittää, muunnetaanko UPC/EAN-viivakoodi automaattisesti tavalla "
+"tai toisella, kun yritetään sovittaa sääntöä toiseen koodaukseen."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -335,8 +357,11 @@ msgstr "Tuntematon viivakoodikomento"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "Järjestetään säännöt siten, että pienemmän sekvenssin omaavat säännöt täsmäävät ensin"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Järjestetään säännöt siten, että pienemmän sekvenssin omaavat säännöt "
+"täsmäävät ensin"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

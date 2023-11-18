@@ -79,7 +79,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr ""
+msgstr "<span class=\"text-warning\" invisible=\"not no_record\">기록 없음</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -129,7 +129,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "이 UUID에 대한 레코드가 이미 존재합니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -146,7 +146,7 @@ msgstr "이 서식을 사용하여 SMS 작성기를 열려면 관련 모델에 �
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
-msgstr ""
+msgstr "배송 보고서에 사용되는 SMS 레코드를 식별할 수 있는 다른 방법"
 
 #. module: sms
 #. odoo-javascript
@@ -283,7 +283,7 @@ msgstr "국가별로 등록해야 합니다."
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "Country-specific registration required."
-msgstr ""
+msgstr "국가별로 등록해야 합니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
@@ -641,7 +641,7 @@ msgstr "메일 메시지"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
 msgid "Mail Notification"
-msgstr ""
+msgstr "메일 알림"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
@@ -651,7 +651,7 @@ msgstr "메일 스레드 SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
 msgid "Marked for deletion"
-msgstr ""
+msgstr "삭제 표시"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -710,7 +710,7 @@ msgstr "미배송"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Note only"
-msgstr ""
+msgstr "메모만"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -883,7 +883,7 @@ msgstr "레코드 참조"
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "Register now."
-msgstr ""
+msgstr "지금 등록하세요."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -955,12 +955,12 @@ msgstr "SMS ("
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "SMS (with note)"
-msgstr ""
+msgstr "SMS (메모 포함)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
 msgid "SMS (without note)"
-msgstr ""
+msgstr "SMS (메모 포함하지 않음)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1085,17 +1085,17 @@ msgstr "SMS 내용"
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
 msgid "SMS template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "%(action_name)s의 SMS 서식 모델이 작업 모델과 일치하지 않습니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
 msgid "SMS trackers"
-msgstr ""
+msgstr "SMS 추적기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
 msgid "SMS uuid"
-msgstr ""
+msgstr "SMS uuid"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -1143,7 +1143,7 @@ msgstr "SMS 보내기 (%s)"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send SMS As"
-msgstr ""
+msgstr "다른 이름으로 SMS 보내기"
 
 #. module: sms
 #. odoo-javascript
@@ -1289,14 +1289,14 @@ msgstr "SMS 문자 메시지는 다시 전송할 수 없습니다."
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "The content of the message violates rules applied by our providers."
-msgstr ""
+msgstr "메시지 내용이 트위터에서 적용하는 규칙을 위반합니다."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "대상 국가는 지원되지 않습니다."
 
 #. module: sms
 #. odoo-python
@@ -1323,7 +1323,7 @@ msgstr "재전송할 SMS 문자 메시지가 없습니다."
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "이 번호는 이미 사용되었기 때문에 삭제되었습니다."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1376,7 +1376,7 @@ msgstr "UUID"
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
 msgid "UUID must be unique"
-msgstr ""
+msgstr "UUID는 고유해야 합니다."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
@@ -1411,6 +1411,13 @@ msgid ""
 "'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"메세지 작성을 분류하는 데 사용됩니다.\n"
+"'email': 수신 이메일에 의해 작성됩니다. (예: 메일 게이트웨이)\n"
+"'comment': 토론 또는 작성란을 통해 사용자가 입력할 수 있습니다.\n"
+"'email_outgoing': 메일링에 의해 작성됩니다.\n"
+"'notification': 시스템에서 생성됩니다. (예: 메시지 추적)\n"
+"'auto_comment': 자동화된 알림 메커니즘에 의해 생성됩니다. (예: 승인)\n"
+"'user_notification': 특정 수신자를 위해 생성됩니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
@@ -1444,7 +1451,7 @@ msgstr "이 모델이 SMS를 통한 메시지 및 알림을 지원하는지 여�
 msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
-msgstr ""
+msgstr "자동으로 삭제되며, 알림은 그 어떤 경우에도 삭제되지 않습니다."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format

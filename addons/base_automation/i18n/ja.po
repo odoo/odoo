@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "\"%s\"タグが追加されました。"
 
 #. module: base_automation
 #. odoo-python
@@ -45,21 +45,21 @@ msgstr ""
 msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
-msgstr ""
+msgstr "\"ライブアップデート時 \"の自動化規則は、\"Pythonコードの実行 \"アクションタイプでのみ使用できます。"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "%s actions"
-msgstr ""
+msgstr "%sアクション "
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "1 action"
-msgstr ""
+msgstr "1アクション"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -78,7 +78,7 @@ msgstr "<code>モデル</code>: アクションがトリガされるレコード
 msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
-msgstr ""
+msgstr "<code>ペイロード</code>: dictとしての呼出のペイロード(GETパラメータ、JSONボディ)"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -92,7 +92,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -100,6 +100,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-"
+"circle\"/>デフォルトのターゲットレコードゲッターは、他のOdooインスタンスからのWebhookに対してすぐに動作します。 "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -108,11 +110,13 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> "
+"UIの変更によってトリガされるオートメーションルールは監視されているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず</em>実行されます。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">利用可能なバリエーション : </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -120,6 +124,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
 "                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">から</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">以下として:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -128,31 +134,34 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">作成後</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">最終更新後</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">以下の後:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>以下を追加して</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>それをクリアすることで</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>削除することで</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>それを以下に設定することで:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
-msgstr ""
+msgstr "<strong><i class=\"fa fa-lock\"/>秘密にして、安全に保つ</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -168,7 +177,7 @@ msgstr "アクション"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "ToDoアクション"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -178,7 +187,7 @@ msgstr "有効化"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "アクションを追加"
 
 #. module: base_automation
 #. odoo-javascript
@@ -186,24 +195,24 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
-msgstr ""
+msgstr "フォロワーを追加"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "フォロワーを追加: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "作成後"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "最新更新後"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -220,7 +229,7 @@ msgstr "アーカイブ済"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "自動化規則で<em>全て</em>を自動化"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -234,7 +243,7 @@ msgstr "自動化規則"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "自動化規則名"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -247,7 +256,7 @@ msgstr "自動化規則"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "自動化規則:チェックして実行する"
 
 #. module: base_automation
 #. odoo-javascript
@@ -259,7 +268,7 @@ msgstr "自動化"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "日付フィールドに基づく"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -272,6 +281,7 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"URLがもはや安全でないと思われる場合は、URLのシークレットを変更して下さい。このWebhookを呼び出す自動システムを新しいURLに更新する必要があります。"
 
 #. module: base_automation
 #. odoo-python
@@ -285,7 +295,7 @@ msgstr "集計日"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "%(model_name)sを名前 %(value)sで作成"
 
 #. module: base_automation
 #. odoo-javascript
@@ -300,7 +310,7 @@ msgstr "レコードを新規作成"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "活動を作成: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -351,7 +361,7 @@ msgid ""
 "Delay after the trigger date. You can put a negative number if you need a "
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "トリガ日以降の遅延。トリガ日の15分前にリマインダを送信するなど、トリガ日よりも前に遅延が必要な場合は、負の数を入力することができます。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -366,14 +376,14 @@ msgstr "遅延タイプ"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "アクションを削除"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "非推奨(使用しない)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -385,7 +395,7 @@ msgstr "説明"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "自動化規則の無効化"
 
 #. module: base_automation
 #. odoo-javascript
@@ -397,6 +407,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"この自動化規則を無効にすると、ワークフローを継続することができます。\n"
+"しかし、この後に作成されたデータは破損する可能性があります。\n"
+"重要なおよび/または必要なフィールドを設定するカスタマイズを\n"
+"事実上無効にすることになるからです。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -408,7 +422,7 @@ msgstr "表示名"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "自動化規則の編集"
 
 #. module: base_automation
 #. odoo-javascript
@@ -422,7 +436,7 @@ msgstr "メール"
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Email Events"
-msgstr ""
+msgstr "Eメールイベント"
 
 #. module: base_automation
 #. odoo-python
@@ -431,7 +445,7 @@ msgstr ""
 msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
-msgstr ""
+msgstr "Eメール、フォロワー、または活動のアクションタイプは、レコードを削除する際には使用できません。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -459,7 +473,7 @@ msgstr "外部"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "追加条件"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -471,7 +485,7 @@ msgstr "変更があると発動する動作をトリガーするフィールド
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Generic User"
-msgstr ""
+msgstr "一般ユーザ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
@@ -493,7 +507,7 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the automation"
 " rule."
-msgstr ""
+msgstr "存在する場合、この条件は、自動化規則を実行する前に満たされなければなりません。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -505,7 +519,7 @@ msgstr "存在する場合、この条件は、レコードの更新前に満た
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "この自動化が何をするのか、なぜ存在するのかを把握しましょう。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -530,7 +544,7 @@ msgstr "最小遅延メッセージ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "ログコール"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -544,7 +558,7 @@ msgstr "ログ"
 msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
-msgstr ""
+msgstr "メールイベントはモデルには設定できません%s。ディスカッション機能を持つモデルのみ使用可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -568,12 +582,12 @@ msgstr "モデル名"
 msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
-msgstr ""
+msgstr "アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致する必要があります。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "自動化規則が実行されるモデル"
 
 #. module: base_automation
 #. odoo-javascript
@@ -588,7 +602,7 @@ msgstr "月"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "自動化を実行するレコードが見つかりません。"
 
 #. module: base_automation
 #. odoo-python
@@ -597,7 +611,7 @@ msgstr ""
 msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
-msgstr ""
+msgstr "この自動化規則は、スケジュールの%d分後までトリガ可能であることに注意して下さい。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -612,52 +626,52 @@ msgstr "オンチェンジ項目トリガ"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "UI変更時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "アーカイブ時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "作成時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "削除時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "メッセージ受信時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "メッセージ送信時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "保存時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "アーカイブ解除時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "更新時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Webhook上"
 
 #. module: base_automation
 #. odoo-javascript
@@ -676,12 +690,12 @@ msgstr "メモとして投稿"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "優先順位:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "レコードゲッター"
 
 #. module: base_automation
 #. odoo-javascript
@@ -689,34 +703,34 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Remove followers"
-msgstr ""
+msgstr "フォロワー削除"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "フォロワー削除: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "シークレットを回転"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "日付フィールドを選択"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "値を選択"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "フィールドを選択"
 
 #. module: base_automation
 #. odoo-javascript
@@ -731,14 +745,14 @@ msgstr "SMSテキストメッセージを送信"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "SMSを送信: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Webhook通知を送信"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -747,6 +761,9 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"オブジェクトの状態が変更されたときに電子メールを送信したり、1か月間\n"
+"　　　活動がない場合にアーカイブしたり、特定のタグが追加されたときに\n"
+"　　　タスクのフォローアップをリマインドしたりできます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -761,7 +778,7 @@ msgstr "メールを送る"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "Eメール送信: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -773,14 +790,14 @@ msgstr "サーバーアクション"
 msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
-msgstr ""
+msgstr "いくつかのトリガは選択フィールドへの参照を必要とします。このフィールドはそれを格納するために使用されます。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
-msgstr ""
+msgstr "いくつかのトリガは別のフィールドへの参照を必要とします。このフィールドはそれを格納するために使用されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -792,29 +809,29 @@ msgstr "特定のユーザー"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "ステージは以下に設定されます:"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "ステージは以下に設定されます:\"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "ステートは以下に設定されます:"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "タグが追加されました"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "ターゲットレコード"
 
 #. module: base_automation
 #. odoo-python
@@ -822,7 +839,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Target model of actions %(action_names)s are different from rule model."
-msgstr ""
+msgstr "アクション%(action_names)sのターゲットモデルは規則モデルとは異なります"
 
 #. module: base_automation
 #. odoo-python
@@ -838,7 +855,7 @@ msgstr " \"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" 動作�
 msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
-msgstr ""
+msgstr "これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空の場合、全てのフィールドが監視されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -848,20 +865,22 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"自動化されたアクションの実行中にエラーが発生しました\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
 msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
-msgstr ""
+msgstr "このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Timing Conditions"
-msgstr ""
+msgstr "タイミング条件"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -876,12 +895,12 @@ msgstr "トリガー日"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "フィールドをトリガ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "フィールドモデルをトリガ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -891,12 +910,12 @@ msgstr "トリガー領域"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "参照をトリガ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
 msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "参照表示名をトリガ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
@@ -911,7 +930,7 @@ msgstr "URL"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "規則が保存されたらURLが作成されます"
 
 #. module: base_automation
 #. odoo-python
@@ -947,14 +966,14 @@ msgstr "カレンダを使用"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "ユーザが設定されました"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Values Updated"
-msgstr ""
+msgstr "値が更新されました"
 
 #. module: base_automation
 #. odoo-python
@@ -969,19 +988,19 @@ msgstr "警告"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Log"
-msgstr ""
+msgstr "Webhookログ"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Webhookログ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "Webhook UUID"
 
 #. module: base_automation
 #. odoo-javascript
@@ -995,7 +1014,7 @@ msgstr "週"
 msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するために、カレンダを使用することが可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -1014,7 +1033,7 @@ msgstr "チェックを外すと、ルールが隠され、実行できません
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "更新時に"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -1022,6 +1041,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"自動化規則により、\n"
+"                <em>あらゆる</em>ワークフローを自動化できます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -1029,14 +1050,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
-msgstr ""
+msgstr "この自動化規則を無効にするか修正するように管理者に依頼できます。"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automation rule or edit it to solve the issue."
-msgstr ""
+msgstr "この自動化規則を無効にするか、編集して問題を解決できます。"
 
 #. module: base_automation
 #. odoo-python
@@ -1051,21 +1072,21 @@ msgstr "削除されたレコードに対して、メールを送信したり、
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
-msgstr ""
+msgstr "Webhook URLはシークレットを含んでいます。オンライン上や不用意に共有しないで下さい。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "以下に基づいて:"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "e.g. Support flow"
-msgstr ""
+msgstr "例: サポートフロー"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 #, python-format
 msgid "no action defined..."
-msgstr ""
+msgstr "アクションが定義されていません"

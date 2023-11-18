@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"POT-Creation-Date: 2023-11-14 13:53+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: payment
@@ -26,26 +26,24 @@ msgid " Data Fetched"
 msgstr "Дані отримано"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.pay
-msgid "<b>Amount:</b>"
-msgstr "<b>Сума:</b>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.pay
-msgid "<b>Reference:</b>"
-msgstr "<b>Референс:</b>"
-
-#. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
-msgid "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>"
-msgstr "<h3>Виконайте платіж на: </h3><ul><li>Банк: %s</li><li>Номер рахунку: %s</li><li>Власник рахунку: %s</li></ul>"
+msgid ""
+"<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
+"%s</li><li>Account Holder: %s</li></ul>"
+msgstr ""
+"<h3>Виконайте платіж на: </h3><ul><li>Банк: %s</li><li>Номер рахунку: "
+"%s</li><li>Власник рахунку: %s</li></ul>"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Повернутися до профілю"
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
+"                                match the behavior of providers and that of their integration with\n"
+"                                Odoo regarding this payment method. Any change may result in errors\n"
+"                                and should be tested on a test database first."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -54,29 +52,46 @@ msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
-msgid "<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': [('support_partial_capture', '!=', 'full_only')]}\" title=\"Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount.\"/>"
+msgid ""
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
+" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
+" only be captured in full. Handle the transactions individually to capture a"
+" partial amount.\"/>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr "<i class=\"fa fa-trash\"/> Видалити"
+#: model_terms:ir.ui.view,arch_db:payment.token_form
+msgid ""
+"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
+"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "<span class=\"fs-4\">Saved payment methods</span>"
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
+msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                                            Enable Payment Methods"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.method_form
+msgid "<small class=\"text-600\">Save my payment details</small>"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Неопубліковано</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Опубліковано</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -84,23 +99,49 @@ msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
 msgstr "<span class=\"o_stat_text\">Збережені способи оплати</span>"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
+"                                All countries are supported.\n"
+"                            </span>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
+"                                All currencies are supported.\n"
+"                            </span>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.method_form
+#: model_terms:ir.ui.view,arch_db:payment.token_form
+msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal account</span>"
+msgid ""
+"<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
+"account</span>"
+msgstr ""
+"<span><i class=\"oi oi-arrow-right\"/> Як налаштувати ваш рахунок "
+"PayPal</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "<span>Your payment methods</span>"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"<strong>Не вдалося знайти відповідний варіант оплати.</strong><br/>\n"
-"                                Якщо ви вважаєте, що це помилка, зверніться до адміністратора сайту."
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
-msgid "<strong>No suitable payment provider could be found.</strong>"
-msgstr "<strong>Не вдалося знайти відповідного платіжного постачальника.</strong>"
+msgid ""
+"<strong>No suitable payment method could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website\n"
+"                                administrator."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -109,6 +150,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>Увага!</strong> Очікується часткове отримання. Будь ласка, зачекайте \n"
+"деякий час, поки його буде оброблено. Перевірте конфігурацію провайдера платежів, \n"
+"якщо отримання буде все ще в очікуванні через кілька хвилин."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -116,6 +160,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>Увага!</strong> Ви не можете отримати негативну суму \n"
+"                    або більше ніж"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -128,8 +174,10 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
-msgid "<strong>Warning</strong> Make sure your are logged in as the right partner before making this payment."
-msgstr "<strong>Попередження</strong> Перш ніж здійснити цей платіж, переконайтеся, що ви ввійшли як потрібний партнер."
+msgid ""
+"<strong>Warning</strong> Make sure you are logged in as the\n"
+"                                    correct partner before making this payment."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -145,8 +193,12 @@ msgstr "<strong>Попередження</strong> Ви повинні увійт
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "A refund request of %(amount)s has been sent. The payment will be created soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
-msgstr "Запит на повернення %(amount)s надіслано. Платіж буде створено пізніше. Референс повернення транзакції: %(ref)s (%(provider_name)s)."
+msgid ""
+"A refund request of %(amount)s has been sent. The payment will be created "
+"soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
+msgstr ""
+"Запит на повернення %(amount)s надіслано. Платіж буде створено пізніше. "
+"Референс повернення транзакції: %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -159,22 +211,31 @@ msgstr "Токен не можна розархівувати після тог�
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
+msgid ""
+"A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
 msgstr "Транзакцію з референсом %(ref)s було ініційовано (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "A transaction with reference %(ref)s has been initiated to save a new payment method (%(provider_name)s)"
-msgstr "Транзакцію з референсом %(ref)s було ініційовано для збереження нового способу оплати (%(provider_name)s)"
+msgid ""
+"A transaction with reference %(ref)s has been initiated to save a new "
+"payment method (%(provider_name)s)"
+msgstr ""
+"Транзакцію з референсом %(ref)s було ініційовано для збереження нового "
+"способу оплати (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "A transaction with reference %(ref)s has been initiated using the payment method %(token)s (%(provider_name)s)."
-msgstr "Транзакцію з референсом %(ref)s було ініційовано використовуючи спосіб оплати %(token)s (%(provider_name)s)."
+msgid ""
+"A transaction with reference %(ref)s has been initiated using the payment "
+"method %(token)s (%(provider_name)s)."
+msgstr ""
+"Транзакцію з референсом %(ref)s було ініційовано використовуючи спосіб "
+"оплати %(token)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -194,19 +255,10 @@ msgid "Activate"
 msgstr "Активувати"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__active
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
 msgstr "Активно"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_active
-msgid "Add Extra Fees"
-msgstr "Додати комісію"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "Add new payment method"
-msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -225,11 +277,6 @@ msgid "Allow Express Checkout"
 msgstr "Дозволити експрес-чекаут"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
-msgid "Allow Payment Provider"
-msgstr "Дозволити провайдер платежу"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
 msgid "Allow Saving Payment Methods"
 msgstr "Дозволити збереження способів оплати"
@@ -237,23 +284,26 @@ msgstr "Дозволити збереження способів оплати"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Вже отримано"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Вже скасовано"
 
 #. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
 msgstr "Платіжні послуги Amazon"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
 #: model_terms:ir.ui.view,arch_db:payment.confirm
+#: model_terms:ir.ui.view,arch_db:payment.pay
+#, python-format
 msgid "Amount"
 msgstr "Сума"
 
@@ -265,14 +315,7 @@ msgstr "Максимальна сума"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "An error occurred during the processing of this payment."
-msgstr "Під час обробки цього платежу сталася помилка."
+msgstr "Сума до отримання"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
@@ -292,15 +335,19 @@ msgstr "Заархівовано"
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/xml/payment_form_templates.xml:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
 msgstr "Ви впевнені, що хочете видалити цей спосіб оплати?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
-msgstr "Ви дійсно хочете анулювати авторизовану транзакцію? Цю дію не можна скасувати."
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Ви дійсно хочете анулювати авторизовану транзакцію? Цю дію не можна "
+"скасувати."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -325,12 +372,17 @@ msgstr "Авторизований"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "Авторизована сума"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Availability"
 msgstr "Наявність"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_search
+msgid "Available methods"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -343,6 +395,12 @@ msgstr "Банк"
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Назва банку"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Brands"
+msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -375,10 +433,7 @@ msgid "Callback Record ID"
 msgstr "ID запису відкликання"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-#, python-format
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -394,10 +449,18 @@ msgstr "Скасоване повідомлення"
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
-msgid "Canceled operations"
-msgstr "Скасовані операції"
+msgid "Cannot delete payment method"
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Cannot save payment method"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -405,7 +468,7 @@ msgstr "Скасовані операції"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "Отримати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -436,12 +499,18 @@ msgstr "Дочірні транзакції"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "Дочірні транзакції"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
 msgstr "Виберіть метод оплати"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -450,22 +519,14 @@ msgid "City"
 msgstr "Місто"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Click here to be redirected to the confirmation page."
-msgstr "Натисніть тут, щоби перейти на сторінку підтвердження."
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
 msgstr "Закрити"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__code
 #: model:ir.model.fields,field_description:payment.field_payment_provider__code
-#: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
 msgid "Code"
 msgstr "Код"
 
@@ -491,13 +552,14 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Configuration"
 msgstr "Налаштування"
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Confirm Deletion"
 msgstr "Підтвердити видалення"
@@ -539,11 +601,6 @@ msgid "Create a new payment provider"
 msgstr "Створити новий провайдер платежу"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "Create a payment method"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_method__create_uid
@@ -578,54 +635,15 @@ msgid "Credentials"
 msgstr "Повноваження"
 
 #. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_stripe
-msgid "Credit & Debit Card"
-msgstr "Кредитна та дебетова картка"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_razorpay
-msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
-msgstr "Кредитна та дебтова картка, UPI (Зроблено Razorpay)"
-
-#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
 msgstr "Кредитова та дебетова картка (через Stripe)"
 
 #. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_adyen
-msgid "Credit Card (powered by Adyen)"
-msgstr "Кредитна картка (Adyen)"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_asiapay
-msgid "Credit Card (powered by Asiapay)"
-msgstr "Кредитна картка (зроблено Asiapay)"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_authorize
-msgid "Credit Card (powered by Authorize)"
-msgstr "Кредитна картка (Authorize)"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_buckaroo
-msgid "Credit Card (powered by Buckaroo)"
-msgstr "Кредитна картка (Buckaroo)"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_mercado_pago
-msgid "Credit Card (powered by Mercado Pago)"
-msgstr "Кредитна картка (зроблено Mercado Pago)"
-
-#. module: payment
-#: model:payment.provider,display_as:payment.payment_provider_sips
-msgid "Credit Card (powered by Sips)"
-msgstr "Кредитна картка (Sips)"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
 msgid "Currencies"
-msgstr ""
+msgstr "Валюти"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__currency_id
@@ -637,6 +655,7 @@ msgstr "Валюта"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
 msgstr "Спеціальні платіжні інструкції"
 
@@ -656,20 +675,10 @@ msgid "Demo"
 msgstr "Демо"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_provider__display_as
-msgid "Description of the provider for customers"
-msgstr "Опис провайдера для клієнтів"
-
-#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Disabled"
 msgstr "Відключено"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "Dismiss"
-msgstr "Відхилити"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
@@ -681,16 +690,6 @@ msgstr "Відхилити"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
-msgid "Displayed as"
-msgstr "Відображено як"
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__done
-msgid "Done"
-msgstr "Виконано"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -727,9 +726,7 @@ msgstr "Помилка"
 
 #. module: payment
 #. odoo-python
-#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
 msgstr "Помилка: %s"
@@ -740,38 +737,18 @@ msgid "Express Checkout Form Template"
 msgstr "Шаблон форми швидкої реєстрації"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
 msgstr "Підтримується швидка реєстрація"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Failed operations"
-msgstr "Невдалі операції"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
-msgid "Fees"
-msgstr "Комісія"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
-msgid "Fees Supported"
-msgstr "Підтримуються стягування"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
-msgid "Fixed domestic fees"
-msgstr "Фіксована домашня комісія"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_fixed
-msgid "Fixed international fees"
-msgstr "Фіксована міжнародна комісія"
+#: model:ir.model.fields,help:payment.field_payment_method__support_express_checkout
+msgid ""
+"Express checkout allows customers to pay faster by using a payment method "
+"that provides all required billing and shipping information, thus allowing "
+"to skip the checkout process."
+msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -779,11 +756,7 @@ msgid "Flutterwave"
 msgstr "Flutterwave"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "From"
-msgstr "Від"
-
-#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
@@ -802,6 +775,11 @@ msgstr "Створити посилання платежу продажів"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
+msgstr "Створити та копіювати посилання платежу"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
 msgstr ""
 
 #. module: payment
@@ -819,17 +797,12 @@ msgstr "Маршрутизація HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
-msgid "Has Multiple Providers"
-msgstr "Є кілька провайдерів"
+msgstr "Є дочірня чернетка"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Є сума боргу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -853,16 +826,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_link_wizard__payment_provider_selection
-msgid "If a specific payment provider is selected, customers will only be allowed to pay via this one. If 'All' is selected, customers can pay via any available payment provider."
-msgstr "Якщо вибрано певного постачальника платежів, клієнтам буде дозволено платити лише через нього. Якщо вибрано «Усі», клієнти можуть оплачувати через будь-якого доступного постачальника платежів."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
-msgid "If not defined, the provider name will be used."
-msgstr "Якщо не визначено, використовуватиметься ім’я постачальника."
-
-#. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
@@ -870,20 +833,10 @@ msgid "If the payment hasn't been confirmed you can contact us."
 msgstr "Ви можете зв'язатися з нами, якщо платіж не було підтверджено."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_methods
-msgid "If you believe that it is an error, please contact the website administrator."
-msgstr "Якщо ви вважаєте, що це помилка, зверніться до адміністратора сайту."
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Image"
 msgstr "Зображення"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
-msgid "Image displayed on the payment form"
-msgstr "Зображення відображається у формі оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__state
@@ -925,7 +878,7 @@ msgstr "Внутрішня помилка сервера"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Чи сума до отримання дійсна"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -933,16 +886,16 @@ msgid "Is Post-processed"
 msgstr "Пост-обробляється"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
+msgid "Is Primary Payment Method"
+msgstr ""
+
+#. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/xml/payment_form_templates.xml:0
 #, python-format
 msgid "It is currently linked to the following documents:"
 msgstr "Наразі він пов’язаний з такими документами:"
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__just_done
-msgid "Just done"
-msgstr "Щойно завершено"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
@@ -982,22 +935,23 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: payment
+#: model:onboarding.onboarding.step,button_text:payment.onboarding_onboarding_step_payment_provider
+msgid "Let's do it"
+msgstr "Давайте зробимо це"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "Making a request to the provider is not possible because the provider is disabled."
+msgid ""
+"Making a request to the provider is not possible because the provider is "
+"disabled."
 msgstr "Зробити запит до провайдера неможливо, оскільки провайдер вимкнено."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
-msgid "Manage payment methods"
-msgstr "Керуйте методами оплати"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "Managed by"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
+msgid "Manage your payment methods"
+msgstr "Керуйте своїми способами оплати"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1017,7 +971,7 @@ msgstr "Максимальна сума"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Максимально дозволена сума до отримання"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1046,19 +1000,13 @@ msgid "Mollie"
 msgstr "Mollie"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#, python-format
-msgid "Multiple payment options selected"
-msgstr "Вибрано опцію декількох платежів"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__name
 #: model:ir.model.fields,field_description:payment.field_payment_provider__name
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Name"
-msgstr "Назва"
+msgstr "Ім'я"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
@@ -1069,39 +1017,24 @@ msgstr "Не встановлено провайдера"
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
-msgid "No manual payment method could be found for this company. Please create one from the Payment Provider menu."
-msgstr "Для цієї компанії не вдалося знайти спосіб оплати вручну. Будь ласка, створіть його в меню постачальника платежів."
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Provider menu."
+msgstr ""
+"Для цієї компанії не вдалося знайти спосіб оплати вручну. Будь ласка, "
+"створіть його в меню постачальника платежів."
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "No payment has been processed."
-msgstr "Не оброблено жодного платежу."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#, python-format
-msgid "No payment option selected"
-msgstr "Не вибрано жодної опції платежу"
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
+msgid "No payment methods found for your payment providers."
+msgstr ""
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
-msgid "Not done"
-msgstr "Не завершено"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
-msgid "Not verified"
-msgstr "Не підтверджено"
+msgstr "Жоден токен не може бути призначений публічному партнеру."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
@@ -1114,12 +1047,19 @@ msgid "Offline payment by token"
 msgstr "Офлайновий платіж за токеном"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
-#, python-format
-msgid "Ok"
-msgstr "Гаразд"
+#: model:ir.model,name:payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Крок залучення"
+
+#. module: payment
+#: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Step Image"
+msgstr "Зображення кроку адаптації"
+
+#. module: payment
+#: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
+msgid "Online Payments"
+msgstr "Онлайн платежі"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1163,11 +1103,11 @@ msgid "Operation"
 msgstr "Операція"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
 #, python-format
-msgid "Operations in progress"
-msgstr "Операції в процесі"
+msgid "Operation not supported."
+msgstr "Операція не підтримується"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1175,9 +1115,9 @@ msgid "Other"
 msgstr "Інше"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Other payment methods"
-msgstr ""
+msgstr "Інші способи оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1185,6 +1125,7 @@ msgid "PDT Identity Token"
 msgstr "Токен ідентифікації PDT"
 
 #. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Partial"
@@ -1204,13 +1145,14 @@ msgid "Partner Name"
 msgstr "Назва партнера"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Pay"
 msgstr "Оплатити"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
 #: model:payment.provider,name:payment.payment_provider_paypal
 msgid "PayPal"
 msgstr "PayPal"
@@ -1218,7 +1160,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Помічник отримання оплати"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1248,12 +1190,25 @@ msgstr "Посилання платежу"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_id
+#: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Payment Method"
 msgstr "Спосіб оплати"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_code
+msgid "Payment Method Code"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#, python-format
 msgid "Payment Methods"
 msgstr "Способи оплати"
 
@@ -1267,16 +1222,6 @@ msgstr "Провайдер платежу"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
 msgstr "Провайдери платежу"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
-msgid "Payment Providers Available"
-msgstr "Доступна провайдери платежу"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
-msgid "Payment Ref"
-msgstr "Референс платежу"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1326,6 +1271,18 @@ msgid "Payment details saved on %(date)s"
 msgstr "Деталі платежу збережно на %(date)s"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
+msgid "Payment methods"
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
 msgstr "Провайдер платежу"
@@ -1356,37 +1313,35 @@ msgid "Phone"
 msgstr "Телефон"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
 #, python-format
-msgid "Please select a payment option."
-msgstr "Оберіть опцію платежу."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#, python-format
-msgid "Please select only one payment option."
-msgstr "Оберіть лише одну опцію оплати."
+msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
+msgstr ""
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
-msgid "Please set an amount smaller than %s."
-msgstr "Встановіть суму менше, ніж %s."
+msgid "Please set a positive amount."
+msgstr "Вкажіть суму більше нуля."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+#, python-format
+msgid "Please set an amount lower than %s."
+msgstr "Вкажіть суму меншу ніж %s."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr ""
+msgstr "Перемкніться на компанію"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Please wait ..."
-msgstr "Будь ласка, очікуйте ..."
+#: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
+msgid "Primary Payment Method"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1403,6 +1358,12 @@ msgid "Provider"
 msgstr "Провайдер"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
+msgid "Provider Code"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
@@ -1410,13 +1371,9 @@ msgstr "Референс провайдера"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__provider_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Providers"
 msgstr "Провайдери"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
-msgid "Providers list"
-msgstr "Список провайдерів"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
@@ -1428,13 +1385,6 @@ msgstr "Опубліковано"
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
 msgstr "Razorpay"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Reason:"
-msgstr "Причина:"
 
 #. module: payment
 #. odoo-python
@@ -1449,8 +1399,12 @@ msgid "Redirect Form Template"
 msgstr "Шаблон форми переадресації"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
+#: model_terms:ir.ui.view,arch_db:payment.pay
+#, python-format
 msgid "Reference"
 msgstr "Референс"
 
@@ -1466,6 +1420,13 @@ msgstr "Посилання має бути унікальним!"
 #, python-format
 msgid "Refund"
 msgstr "Відшкодування"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__support_refund
+msgid ""
+"Refund is a feature allowing to refund customers directly from the payment "
+"in Odoo."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1490,7 +1451,7 @@ msgstr "Пов'язана модель документа"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__require_currency
 msgid "Require Currency"
-msgstr ""
+msgstr "Необхідна валюта"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
@@ -1498,21 +1459,14 @@ msgid "SEPA Direct Debit"
 msgstr "Прямий дебет SEPA "
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "Save Payment Method"
-msgstr "Зберегти метод оплати"
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Save"
+msgstr "Зберегти"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-msgid "Save my payment details"
-msgstr "Зберегти мої деталі оплати"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Saving your payment method, please wait..."
-msgstr "Збереження вашого способу оплату, будь ласка, зачекайте..."
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Select countries. Leave empty to allow any."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1522,6 +1476,11 @@ msgstr "Виберіть країни. Залиште пустим, щоб зр�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
+msgstr "Оберіть валюти. Залиште порожнім, щоб нічого не обмежувати."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Select currencies. Leave empty to allow any."
 msgstr ""
 
 #. module: payment
@@ -1534,21 +1493,6 @@ msgstr "Вибраний залучений метод оплати"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
 msgid "Sequence"
 msgstr "Послідовність"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#, python-format
-msgid "Server Error"
-msgstr "Помилка сервера"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Server error:"
-msgstr "Помилка сервера:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
@@ -1581,11 +1525,6 @@ msgid "Show Done Msg"
 msgstr "Показати Виконано Msg"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
-msgid "Show Payment Method"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
 msgid "Show Pending Msg"
 msgstr "Показати повідомлення очікування"
@@ -1601,11 +1540,22 @@ msgid "Sips"
 msgstr "Sips"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Skip"
+msgstr "Пропустити"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
-msgid "Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount."
+msgid ""
+"Some of the transactions you intend to capture can only be captured in full."
+" Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Деякі транзакції, які ви збираєтеся зафіксувати, можна зафіксувати лише "
+"повністю. Обробляйте транзакції окремо, щоб отримати часткову суму."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1618,18 +1568,18 @@ msgstr "Джерело транзакції"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
-msgstr "Область"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
-msgid "State of the onboarding payment provider step"
-msgstr "Стан кроку постачальника платіжної системи"
+msgstr "Статус"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Status"
 msgstr "Статус"
+
+#. module: payment
+#: model:onboarding.onboarding.step,done_text:payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "Крок завершено!"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
@@ -1640,25 +1590,33 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
+msgstr "Підтримка часткового отримання"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
+msgid "Supported Countries"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
+msgid "Supported Currencies"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
+msgstr "Підтримувані способи оплати"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Supported by"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "Режим перевірки"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.test_token_badge
-msgid "Test Token"
-msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1672,12 +1630,25 @@ msgstr "Токен доступу недійсний."
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
+msgstr "Сума для отримання має бути позитивною та не може перевищувати %s."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__image
+#: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
+msgid "The base image used for this payment method; in a 64x64 px format."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__brand_ids
+msgid ""
+"The brands of the payment methods that will be displayed on the payment "
+"form."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "Дочірні транзакції."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1696,18 +1667,21 @@ msgstr "Додаткове інформаційне повідомлення п�
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_country_ids
-msgid "The countries in which this payment provider is available. Leave blank to make it available in all countries."
-msgstr "Країни, у яких доступний цей платіжний постачальник. Залиште поле порожнім, щоб воно було доступним у всіх країнах."
+msgid ""
+"The countries in which this payment provider is available. Leave blank to "
+"make it available in all countries."
+msgstr ""
+"Країни, у яких доступний цей платіжний постачальник. Залиште поле порожнім, "
+"щоб воно було доступним у всіх країнах."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
-msgid "The currencies available with this payment provider. Leave empty not to restrict any."
+msgid ""
+"The currencies available with this payment provider. Leave empty not to "
+"restrict any."
 msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction__fees
-msgid "The fees amount; set by the system as it depends on the provider"
-msgstr "Розмір стягування; встановлюється системою, оскільки це залежить від провайдера"
+"Валюти, доступні цьому постачальнику платежів. Залиште порожнім, щоб нічого "
+"не обмежувати."
 
 #. module: payment
 #. odoo-python
@@ -1717,24 +1691,53 @@ msgid "The following fields must be filled: %s"
 msgstr "Наступні поля повинні бути заповнені: %s"
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "The following kwargs are not whitelisted: %s"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "The internal reference of the transaction"
 msgstr "Внутрішній референс транзакції"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
+msgid ""
+"The list of countries in which this payment method can be used (if the "
+"provider allows it). In other countries, this payment method is not "
+"available to customers."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
+msgid ""
+"The list of currencies for that are supported by this payment method (if the"
+" provider allows it). When paying with another currency, this payment method"
+" is not available to customers."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
-msgid "The list of providers supporting this payment method"
+msgid "The list of providers supporting this payment method."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
-msgstr "Основна валюта компанії, яка використовується для відображення грошових полів."
+msgstr ""
+"Основна валюта компанії, яка використовується для відображення грошових "
+"полів."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
-msgid "The maximum payment amount that this payment provider is available for. Leave blank to make it available for any payment amount."
-msgstr "Максимальна сума платежу, доступна для цього постачальника платежів. Залиште поле порожнім, щоб зробити його доступним для будь-якої суми платежу."
+msgid ""
+"The maximum payment amount that this payment provider is available for. "
+"Leave blank to make it available for any payment amount."
+msgstr ""
+"Максимальна сума платежу, доступна для цього постачальника платежів. Залиште"
+" поле порожнім, щоб зробити його доступним для будь-якої суми платежу."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1743,18 +1746,27 @@ msgstr "Повідомлення відображається, якщо плат
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
-msgid "The message displayed if the order is canceled during the payment process"
-msgstr "Повідомлення відображається, якщо замовлення скасовано під час процесу оплати"
+msgid ""
+"The message displayed if the order is canceled during the payment process"
+msgstr ""
+"Повідомлення відображається, якщо замовлення скасовано під час процесу "
+"оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
-msgid "The message displayed if the order is successfully done after the payment process"
-msgstr "Повідомлення відображається, якщо замовлення успішно виконано після процесу оплати"
+msgid ""
+"The message displayed if the order is successfully done after the payment "
+"process"
+msgstr ""
+"Повідомлення відображається, якщо замовлення успішно виконано після процесу "
+"оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
-msgstr "Повідомлення відображається, якщо замовлення очікує на розгляд після процесу оплати"
+msgstr ""
+"Повідомлення відображається, якщо замовлення очікує на розгляд після процесу"
+" оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
@@ -1765,18 +1777,33 @@ msgstr "Відображається повідомлення, щоб поясн
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
-msgid "The payment should either be direct, with redirection, or made by a token."
-msgstr "Платіж має бути або прямим, з перенаправленням, або здійснюватися за допомогою токена."
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"Платіж має бути або прямим, з перенаправленням, або здійснюватися за "
+"допомогою токена."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
+msgid ""
+"The primary payment method of the current payment method, if the latter is a brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
-msgid "The provider reference of the token of the transaction"
-msgstr "Референс провайдера токена транзакції"
+msgid "The provider reference of the token of the transaction."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
 msgstr "Референс провайдера транзакції"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
+msgid "The resized image displayed on the payment form."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1786,6 +1813,13 @@ msgstr "Маршрут, на який користувач перенаправ�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
+msgstr "Вихідна транзакція пов’язаних дочірніх транзакцій"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__code
+#: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
+#: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
+msgid "The technical code of this payment method."
 msgstr ""
 
 #. module: payment
@@ -1797,8 +1831,12 @@ msgstr "Технічний код цього провайдера платежу
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
-msgid "The template rendering a form submitted to redirect the user when making a payment"
-msgstr "Шаблон, що відображає форму, надіслану для переспрямування користувача під час здійснення платежу"
+msgid ""
+"The template rendering a form submitted to redirect the user when making a "
+"payment"
+msgstr ""
+"Шаблон, що відображає форму, надіслану для переспрямування користувача під "
+"час здійснення платежу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
@@ -1807,41 +1845,53 @@ msgstr "Шаблон відтворення форми експрес-плате
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
-msgid "The template rendering the inline payment form when making a direct payment"
-msgstr "Шаблон відтворення форми вбудованого платежу під час здійснення прямого платежу"
+msgid ""
+"The template rendering the inline payment form when making a direct payment"
+msgstr ""
+"Шаблон відтворення форми вбудованого платежу під час здійснення прямого "
+"платежу"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__token_inline_form_view_id
-msgid "The template rendering the inline payment form when making a payment by token."
-msgstr "Шаблон, що відображає вбудовану платіжну форму при здійсненні платежу токеном."
+msgid ""
+"The template rendering the inline payment form when making a payment by "
+"token."
+msgstr ""
+"Шаблон, що відображає вбудовану платіжну форму при здійсненні платежу "
+"токеном."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "The transaction with reference %(ref)s for %(amount)s encountered an error (%(provider_name)s)."
-msgstr "Транзакція з референсом %(ref)s для %(amount)s викликала помилку (%(provider_name)s)."
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s encountered an error "
+"(%(provider_name)s)."
+msgstr ""
+"Транзакція з референсом %(ref)s для %(amount)s викликала помилку "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "The transaction with reference %(ref)s for %(amount)s has been authorized (%(provider_name)s)."
-msgstr "Транзакція з референсом %(ref)s на %(amount)s було авторизовано (%(provider_name)s)."
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s has been authorized "
+"(%(provider_name)s)."
+msgstr ""
+"Транзакція з референсом %(ref)s на %(amount)s було авторизовано "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "The transaction with reference %(ref)s for %(amount)s has been confirmed (%(provider_name)s)."
-msgstr "Транзакцію з референсом %(ref)s на %(amount)s було підтверджено (%(provider_name)s)."
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_link_wizard.py:0
-#, python-format
-msgid "The value of the payment amount must be positive."
-msgstr "Значення суми платежу повинне бути позитивним."
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s has been confirmed "
+"(%(provider_name)s)."
+msgstr ""
+"Транзакцію з референсом %(ref)s на %(amount)s було підтверджено "
+"(%(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -1851,7 +1901,14 @@ msgstr "Немає транзакції для показу"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr ""
+msgstr "Ще немає створеного токену."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+#, python-format
+msgid "There is nothing to be paid."
+msgstr "Ще немає нічого для оплати."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1860,10 +1917,23 @@ msgstr "Немає нічого для оплати."
 
 #. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#, python-format
+msgid ""
+"This action will also archive %s tokens that are registered with this "
+"payment method. Archiving tokens is irreversible."
+msgstr ""
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "This action will also archive %s tokens that are registered with this provider. Archiving tokens is irreversible."
-msgstr "Ця дія також архівує %s токени зареєстровані з цим провайдером. Архівація токенів необоротна."
+msgid ""
+"This action will also archive %s tokens that are registered with this "
+"provider. Archiving tokens is irreversible."
+msgstr ""
+"Ця дія також архівує %s токени зареєстровані з цим провайдером. Архівація "
+"токенів необоротна."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1878,14 +1948,14 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
-msgid "This controls whether customers can use express payment methods. Express checkout enables customers to pay with Google Pay and Apple Pay from which address information is collected at payment."
-msgstr "Це визначає, чи можуть клієнти використовувати експрес-платежі. Експрес-касса дозволяє клієнтам оплачувати за допомогою Google Pay і Apple Pay, інформація про адресу яких збирається під час оплати."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_method__image
-#: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
-msgid "This field holds the image used for this payment method, limited to 64x64 px"
+msgid ""
+"This controls whether customers can use express payment methods. Express "
+"checkout enables customers to pay with Google Pay and Apple Pay from which "
+"address information is collected at payment."
 msgstr ""
+"Це визначає, чи можуть клієнти використовувати експрес-платежі. Експрес-"
+"касса дозволяє клієнтам оплачувати за допомогою Google Pay і Apple Pay, "
+"інформація про адресу яких збирається під час оплати."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1897,28 +1967,24 @@ msgstr ""
 "                     Рекомендується встановити електронну адресу для цього партнера."
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
 #, python-format
-msgid "This payment has been canceled."
-msgstr "Цей платіж скасовано."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
-msgid "This payment method has been verified by our system."
-msgstr "Цей спосіб оплати перевірено нашою системою."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
-msgid "This payment method has not been verified by our system."
-msgstr "Цей метод оплати не підтверджений нашою системою."
+msgid ""
+"This payment method needs a partner in crime; you should enable a payment "
+"provider supporting this method first."
+msgstr ""
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "This transaction has been confirmed following the processing of its partial capture and partial void transactions (%(provider)s)."
+msgid ""
+"This transaction has been confirmed following the processing of its partial "
+"capture and partial void transactions (%(provider)s)."
 msgstr ""
+"Цю транзакцію було підтверджено після обробки її часткового отримання та "
+"частково недійсних транзакцій (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -1926,23 +1992,35 @@ msgid "Token Inline Form Template"
 msgstr "Шаблон форми вбудованого токена"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_tokenization
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
 msgid "Tokenization Supported"
 msgstr "Токенізація підтримується"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__support_tokenization
+msgid ""
+"Tokenization is the process of saving the payment details as a token that "
+"can later be reused without having to enter the payment details again."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
 msgid "Transaction"
-msgstr ""
+msgstr "Операція"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
-msgid "Transaction authorization is not supported by the following payment providers: %s"
-msgstr "Авторизація транзакцій не підтримується такими платіжними провайдерами: %s"
+msgid ""
+"Transaction authorization is not supported by the following payment "
+"providers: %s"
+msgstr ""
+"Авторизація транзакцій не підтримується такими платіжними провайдерами: %s"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 msgid "Type of Refund Supported"
 msgstr "Тип повернення підтримується"
@@ -1951,12 +2029,10 @@ msgstr "Тип повернення підтримується"
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
-msgid "Unable to contact the Odoo server."
-msgstr "Неможливо зв'язатися із сервером Odoo."
+msgid "Unable to contact the server. Please wait."
+msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Unpublished"
 msgstr "Неопубліковано"
@@ -1973,31 +2049,9 @@ msgid "Validation of the payment method"
 msgstr "Підтвердження методу оплати"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
-msgid "Variable domestic fees"
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_provider.py:0
-#, python-format
-msgid "Variable fees must always be positive and below 100%."
-msgstr "Змінні комісійні завжди мають бути додатними та не нижче 100%."
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
-msgid "Variable international fees"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token__verified
-msgid "Verified"
-msgstr "Підтверджено"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Недійсна сума боргу"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2005,32 +2059,25 @@ msgid "Void Transaction"
 msgstr "Недійсна транзакція"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Waiting for operations to process"
-msgstr "Очікування операції для обробки"
-
-#. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#: code:addons/payment/models/payment_method.py:0
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
-#, python-format
-msgid "Warning!"
-msgstr "Увага!"
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__warning_message
+msgid "Warning Message"
+msgstr "Повідомлення попередження"
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
-msgid "We are not able to delete your payment method."
-msgstr "Ми не можемо видалити ваш спосіб оплати."
+msgid "Warning!"
+msgstr "Увага!"
 
 #. module: payment
 #. odoo-javascript
@@ -2041,41 +2088,23 @@ msgstr "Ми не можемо знайти ваш платіж, але не х�
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#, python-format
-msgid "We are not able to process your payment."
-msgstr "Ми не можемо обробити цей платіж."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/manage_form.js:0
-#, python-format
-msgid "We are not able to save your payment method."
-msgstr "Ми не можемо зберегти ваш спосіб оплати."
-
-#. module: payment
-#. odoo-javascript
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
-msgid "We are processing your payment, please wait ..."
-msgstr "Ми обробляємо ваш платіж, будь ласка, зачекайте..."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "We are waiting for the payment provider to confirm the payment."
-msgstr "Ми чекаємо підтвердження платежу постачальником платіжних послуг."
+msgid "We are processing your payment. Please wait."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
-msgid "Whether a payment token should be created when post-processing the transaction"
+msgid ""
+"Whether a payment token should be created when post-processing the "
+"transaction"
 msgstr "Чи потрібно створювати токен платежу під час постобробки транзакції"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
-msgid "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgid ""
+"Whether each of the transactions' provider supports the partial capture."
+msgstr "Чи кожен із постачальників транзакцій підтримує часткове отримання."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2084,8 +2113,12 @@ msgstr "Чи був уже виконаний зворотний виклик"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_published
-msgid "Whether the provider is visible on the website or not. Tokens remain functional but are only visible on manage forms."
-msgstr "Відображається постачальник на веб-сайті чи ні. Токени залишаються функціональними, але видимі лише у формах керування."
+msgid ""
+"Whether the provider is visible on the website or not. Tokens remain "
+"functional but are only visible on manage forms."
+msgstr ""
+"Відображається постачальник на веб-сайті чи ні. Токени залишаються "
+"функціональними, але видимі лише у формах керування."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2096,8 +2129,10 @@ msgstr "Банківський переказ"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
-msgstr "Ви не можете видалити провайдера платежу %s; натомість архівуйте його."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -2118,21 +2153,9 @@ msgstr "У вас немає доступу до цього платіжного
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr "Через кілька хвилин ви повинні отримати електронний лист, що підтверджує оплату."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "You will be notified when the payment is confirmed."
-msgstr "Вас буде повідомлено, коли платіж буде підтверджено."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "You will be notified when the payment is fully confirmed."
-msgstr "Вас буде повідомлено, коли платіж буде повністю підтверджено."
+msgstr ""
+"Через кілька хвилин ви повинні отримати електронний лист, що підтверджує "
+"оплату."
 
 #. module: payment
 #. odoo-python
@@ -2179,20 +2202,6 @@ msgid "Your payment has been cancelled."
 msgstr "Ваш платіж скасовано."
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your payment has been processed."
-msgstr "Ваш платіж оброблено."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your payment has been received but need to be confirmed manually."
-msgstr "Ваш платіж отримано, але його потрібно підтвердити вручну."
-
-#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_adyen
@@ -2210,7 +2219,8 @@ msgstr "Ваш платіж отримано, але його потрібно �
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
 #, python-format
-msgid "Your payment has been successfully processed but is waiting for approval."
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
 msgstr "Ваш платіж успішно оброблено, але очікує на затвердження."
 
 #. module: payment
@@ -2232,34 +2242,13 @@ msgstr "Ваш платіж успішно оброблено, але очіку
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
 #, python-format
-msgid "Your payment has been successfully processed. Thank you!"
-msgstr "Ваш платіж успішно оброблено. Дякуємо!"
+msgid "Your payment has been successfully processed."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
 msgstr "Ваш платіж ще не оброблено."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your payment is being processed, please wait..."
-msgstr "Ваш платіж виконується, будь ласка, зачекайте..."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your payment is in pending state."
-msgstr "Ваш платіж перебуває у стані очікування."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your payment method has been saved."
-msgstr "Ваш спосіб оплати збережено."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2282,6 +2271,11 @@ msgid "info"
 msgstr "інфо"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+msgid "payment method"
+msgstr ""
+
+#. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 msgid "payment: post-process transactions"
 msgstr "платіж: операції після обробки"
@@ -2291,16 +2285,6 @@ msgstr "платіж: операції після обробки"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
 msgstr "провайдер"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.icon_list
-msgid "show less"
-msgstr "показувати менше"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.icon_list
-msgid "show more"
-msgstr "показувати більше"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
@@ -2313,18 +2297,10 @@ msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
+"зробити\n"
+"                    цей платіж."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
 msgstr "попередження"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.manage
-msgid "– created on"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-msgid "— created on"
-msgstr ""
