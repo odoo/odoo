@@ -18889,6 +18889,8 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"支払期日から 60日以上経過しても支払いが未納の場合、My Company (San Francisco) "
+"は債権回収会社に依頼する権利を有します。弁護士費用は全てお客様のご負担となります。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -19228,6 +19230,8 @@ msgid ""
 "registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"クレームが認められるためには、商品の引渡しまたはサービスの提供から8日以内に、配達記録郵便でMy Company (San "
+"Francisco)の登録事務所に送付された書簡により、クレームを通知する必要があります。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -22177,6 +22181,10 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"当社 (San Francisco) "
+"は、合意された時間枠に従い、履行可能なサービスを期限内に提供するよう最善を尽くすことを約束します。しかし、その義務はいずれも、結果を出す義務とはみなされません。当社"
+" (San Francisco) "
+"は、いかなる状況においても、最終消費者が顧客に対して行う損害賠償請求において、顧客が第三者として出廷することを要求されることはありません。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -25262,6 +25270,9 @@ msgid ""
 "due. My Company (San Francisco) will be authorized to suspend any provision "
 "of services without prior warning in the event of late payment."
 msgstr ""
+"当社の請求書は、請求書または注文書のいずれかに別の支払期限が記載されていない限り、21営業日以内に支払われるものとします。支払期日までにお支払いがない場合、当社"
+" (San Francisco) は、残額の10%に相当する固定金利の支払いを要求する権利を留保します。当社 (San Francisco) "
+"は、支払いが遅延した場合、事前の警告なしにサービスの提供を停止する権限を有します。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -28280,6 +28291,14 @@ msgstr "Fedexを介して配送を送信し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "UPSを介して出荷を送信し、オンラインで追跡します"
 
@@ -31170,6 +31189,11 @@ msgstr "UNSPSC 製品コード"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "UPS輸送"
 

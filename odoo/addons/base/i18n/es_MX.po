@@ -6,11 +6,11 @@
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Aimée Mendoza Sánchez, 2023
-# Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29781,6 +29781,18 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+"Esta es la integración de sistemas heredados con UPS que ya no es "
+"compatible. Instale el nuevo modulo de \"UPS Shipping\" y desinstale este "
+"tan pronto como le sea posible. Esta integración dejará de funcionar en el "
+"2024. "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr ""
 "Mande sus envíos a través de UPS y realice un seguimiento de ellos en línea"
@@ -32813,6 +32825,11 @@ msgstr "Código UNSPSC de productos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr "UPS Shipping (sistema heredado)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Envíos por UPS"
 

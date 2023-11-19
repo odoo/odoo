@@ -27,6 +27,7 @@
 # Matej Mijoč, 2022
 # Bole <bole@dajmi5.com>, 2023
 # Antonijo Kovacevic, 2023
+# Matija Gudlin, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Antonijo Kovacevic, 2023\n"
+"Last-Translator: Matija Gudlin, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7136,7 +7137,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr ""
+msgstr "jeste li sigurni da želite izraditi novog?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -17040,6 +17041,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Neispravan 'grupiraj po' parametar"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -24700,6 +24707,14 @@ msgstr "Otpremite vaše pakete preko FEDEX-a i pratite ih online."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Otpremite vaše pakete preko UPS-a i pratite ih online."
 
@@ -27557,6 +27572,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "UPS otprema"
 

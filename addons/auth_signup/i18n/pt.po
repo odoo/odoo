@@ -13,6 +13,7 @@
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -466,7 +467,7 @@ msgstr "Outro utilizador já está registado com este endereço de email"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Auth Signup: Odoo Account Created"
-msgstr ""
+msgstr "Registro de autenticação: Conta Odoo criada"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -586,6 +587,12 @@ msgstr "Código de registo inválido"
 msgid "Let your customers log in to see their documents"
 msgstr ""
 "Permita que os seus clientes iniciem a sessão para verem os seus documentos"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
