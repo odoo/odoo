@@ -268,3 +268,7 @@ export function slidingWindow(arr, width) {
     }
     return res;
 }
+
+export function rotate(i, arr, inc = 1) {
+    return (arr.length + i + inc) % arr.length;
+}

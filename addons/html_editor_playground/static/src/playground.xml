@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.Playground">
+      <div class="position-relative h-100">
+        <div class="d-flex h-100">
+            <div class="p-2 flex-shrink-0 h-100 overflow-auto user-select-none">
+                <div>
+                    <h3>Editor Config</h3>
+                    <select class="form-select" t-model="config.pluginSet">
+                        <option value="core">Core Plugins</option>
+                        <option value="base">Main Plugins</option>
+                        <option value="extras">Extras Plugins</option>
+                    </select>
+                    <div class="m-1 form-check"><input class="form-check-input" type="checkbox" id="showToolbar" t-model="config.showToolbar"/><label for="showToolbar" class="form-check-label">Show Toolbar</label></div>
+                    <div class="m-1 form-check"><input class="form-check-input" type="checkbox" id="inIframe" t-model="config.inIframe"/><label for="inIframe" class="form-check-label">in iframe</label></div>
+                </div>
+                <div class="">
+                    <h3>Playground Config</h3>
+                    <div class="m-1 form-check"><input class="form-check-input" type="checkbox" id="displayCurrentEditor" t-model="state.showWysiwyg"/><label for="displayCurrentEditor" class="form-check-label">Display Current Editor</label></div>
+                    <div class="m-1 form-check"><input class="form-check-input" type="checkbox" id="displayCurrentContent" t-att-checked="state.showContent" t-on-change="toggleShowContent"/><label for="displayCurrentContent" class="form-check-label">Display Current Content</label></div>
+                </div>
+            </div>
+            <div class="flex-grow-1 h-100 overflow-auto">
+                <div class="d-flex">
+                    <Wysiwyg
+                        config="getConfig()"
+                        class="'m-2'"
+                        contentClass="'py-1 ps-4'"
+                        style="`width:600px;border:1px solid lightgrey; min-height: 500px;max-height:500px;`"
+                        t-key="window.JSON.stringify(config)"
+                        iframe="config.inIframe"
+                        copyCss="true"
+                        onLoad.bind="setEditor"
+                        toolbar="config.showToolbar" />
+                </div>
+                <t t-if="state.showContent">
+                    <pre class="d-flex">
+                        <t t-esc="state.content"/>
+                    </pre>
+                </t>
+                <t t-if="state.showWysiwyg">
+                    <div class="d-flex">
+                        <div class="m-2 p-1" style="width:600px;min-height: 500px;max-height:500px;overflow:auto;">
+                            <WysiwygLoader />
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+      </div>
+    </t>
+</templates>

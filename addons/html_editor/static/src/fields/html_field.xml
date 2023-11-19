@@ -1,0 +1,15 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.HtmlField">
+        <t t-if="props.readonly">
+            <div  t-ref="readonlyElement" class="o_readonly" t-out="props.record.data[this.props.name]" />
+        </t>
+        <t t-else="">
+            <Wysiwyg
+                config="this.getConfig()"
+                onLoad.bind="onLoad"
+                contentClass="'note-editable p-1'"
+                onBlur.bind="onBlur"
+                t-key="wysiwygKey"/>
+        </t>
+    </t>
+</templates>

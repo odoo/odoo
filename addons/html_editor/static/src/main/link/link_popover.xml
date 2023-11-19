@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="html_editor.linkPopover">
+        <div class="o-we-linkpopover d-flex bg-white overflow-auto">
+            <div t-if="state.editing" class="m-3 container-fluid">
+                <div class="row d-flex" style="width: 300px">
+                    <input class="o_we_label_link col-8 m-1" t-model="state.label" placeholder="Type your link label"/>
+                    <input class="o_we_href_input_link col-8 align-self-stretch m-1" t-model="state.url" placeholder="Type your URL"/>
+                    <button class="o_we_apply_link btn btn-primary align-self-end col-3 m-1" t-on-click="onClickApply">Apply</button>
+                </div>
+            </div>
+            <div t-else="" class="d-flex">
+                <span class="me-2 o_we_preview_favicon">
+                    <i t-if="!state.previewImg" t-attf-class="fa {{state.faIcon}}"></i>
+                    <img t-if="state.previewImg" t-attf-src="{{state.imgSrc}}" class="align-baseline"></img>
+                </span>
+                <div class="w-100">
+                    <div class="d-flex">
+                        <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" title="Open in a new tab">
+                            <t t-esc="state.urlTitle"/>
+                        </a>
+                        <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                            <i class="fa fa-clone"></i>
+                        </a>
+                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                            <i class="fa fa-chain-broken"></i>
+                        </a>
+                    </div>
+                    <a t-if="state.showFullUrl" href="#" target="_blank" t-attf-href="{{state.url}}" t-attf-class="o_we_full_url mt-1 text-muted o_we_webkit_box" title="Open in a new tab">
+                        <t t-esc="state.url || 'No URL specified'"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -241,8 +241,7 @@ export const hotkeyService = {
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
                     (reg.global || reg.activeElement === activeElement) &&
                     (!reg.isAvailable || reg.isAvailable()) &&
-                    (!reg.area ||
-                        (target instanceof Node && reg.area() && reg.area().contains(target)))
+                    (!reg.area || (target && reg.area() && reg.area().contains(target)))
             );
 
             // First candidate
