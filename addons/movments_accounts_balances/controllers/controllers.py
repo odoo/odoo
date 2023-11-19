@@ -98,11 +98,10 @@ class AccountBalance(models.Model):
         }
 
     @api.model
-    def get_bills(self, start_date, end_date, selected_account_id, selected_partner_id, selected_analytic_id):
+    def get_bill(self, bill_id):
         # Define search criteria to filter bills
         domain = [
-            ('invoice_date', '>=', start_date),
-            ('invoice_date', '<=', end_date),
+            ('id', '=', bill_id),
             ('move_type', '=', 'in_invoice'),
         ]
 
@@ -175,90 +174,30 @@ class AccountBalance(models.Model):
 
         return bill
 
-
-
-    @api.model
-    def unpost_entry(self, entry):
-        if entry.state != 'posted':
-            return f"Journal entry (ID: {entry.id}) is not posted, no action required."
-
-        try:
-            # Unpost the entry
-            entry.button_cancel()
-
-            # You can now make changes to the entry or its related items
-            # ...
-
-            return f"Journal entry (ID: {entry.id}) unposted successfully."
-        except Exception as e:
-            return f"Failed to unpost the journal entry (ID: {entry.id}): {str(e)}"
-
-
-
-    @api.model
-    def delete_bills(self, start_date, end_date):
-        # Define the domain to select records for deletion
-        domain = [('date', '>=', start_date),
-                  ('date', '<=', end_date),
-                  ('move_type', '=', 'in_invoice')]
-
-        # Search for records in the 'account.move' model based on the domain
-        bills_to_delete = self.env['account.move'].search(domain)
-
-        deleted_entry_ids = []
-
-        for bill in bills_to_delete:
-            # Unreconcile the bill
-            if bill.line_ids:
-                for line in bill.line_ids:
-                    if line.reconciled:
-                        line.remove_move_reconcile()
-
-            try:
-                # Unpost the entry
-                bill.button_draft()
-            except Exception as e:
-                return f"Failed to unpost the journal entry (ID: {bill.id}): {str(e)}"
-
-            try:
-                # Delete the entry
-                bill.unlink()
-            except Exception as e:
-                return f"Failed to delete the journal entry (ID: {bill.id}): {str(e)}"
-
-            deleted_entry_ids.append(bill.id)
-
-        return f"{len(deleted_entry_ids)} bills un-reconciled and deleted successfully."
-
     @api.model
     def delete_bill(self, bill_id):
-        bill = self.env['account.move'].browse(bill_id)
-        deleted_entry_ids = []
+        Bill = self.env['account.move']
+        bill = Bill.search([('id', '=', bill_id), ('move_type', '=', 'in_invoice')])
 
-        if bill:
-            # Unreconcile the bill
-            if bill.line_ids:
-                for line in bill.line_ids:
-                    if line.reconciled:
-                        line.remove_move_reconcile()
-
-            try:
-                # Unpost the entry
-                bill.button_draft()
-            except Exception as e:
-                return f"Failed to unpost the journal entry (ID: {bill.id}): {str(e)}"
-
-            try:
-                # Delete the entry
-                bill.unlink()
-            except Exception as e:
-                return f"Failed to delete the journal entry (ID: {bill.id}): {str(e)}"
-
-            deleted_entry_ids.append(bill.id)
-
-            return f"Bill (ID: {bill.id}) un-reconciled and deleted successfully."
-        else:
+        if not bill:
             return "Bill not found."
+
+        # Check if the bill is posted (validated)
+        if bill.state == 'posted':
+            # Add logic to cancel related journal entries (if any)
+            # Example: bill.button_draft() or bill.button_cancel()
+            try:
+                bill.button_draft()  # Reset to draft
+            except Exception as e:
+                return "Failed to reset bill to draft: {}".format(e)
+
+        # Additional logic to unreconcile payments if the bill is reconciled
+
+        try:
+            bill.unlink()  # Delete the bill
+            return "Bill deleted successfully."
+        except Exception as e:
+            return "Failed to delete bill: {}".format(e)
 
 
 
