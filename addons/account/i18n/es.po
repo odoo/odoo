@@ -15,11 +15,12 @@
 # andrzej pian, 2023
 # Rolando Duarte [Vauxoo], 2023
 # Levi Siuzdak (sile), 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
-# Larissa Manderfeld, 2023
 # Mario Rodrigo Solis, 2023
+# Larissa Manderfeld, 2023
+# SAKodoo <sak@odoo.com>, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Mario Rodrigo Solis, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -784,6 +785,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Cancelled</span>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\">\n"
+"                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> Cancelado</span>\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -10152,12 +10157,12 @@ msgstr "Débitos pendientes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr "Atrasadas"
+msgstr "Vencidas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr "Facturas atrasadas, pasada la fecha de vencimiento"
+msgstr "Facturas vencidas, con fecha de vencimiento ya pasada"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10405,7 +10410,7 @@ msgstr "Importe de pago:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Comunicaciones de pago"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -11954,7 +11959,7 @@ msgstr "Sección"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_main_report_ids
 msgid "Section Of"
-msgstr ""
+msgstr "Sección de"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
@@ -12099,7 +12104,7 @@ msgstr "Enviar correo electrónico"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_readonly
 msgid "Send Mail Readonly"
-msgstr ""
+msgstr "Enviar correo electrónico solo de lectura "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_warning_message
