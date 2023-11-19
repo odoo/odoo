@@ -1953,7 +1953,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_state_to_write = defaultdict(set)
         for move in self:
             rounding = move.product_uom.rounding
-            if move.state in ('cancel', 'done'):
+            if move.state in ('draft', 'cancel', 'done'):
                 continue
             elif float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) >= 0:
                 moves_state_to_write['assigned'].add(move.id)
