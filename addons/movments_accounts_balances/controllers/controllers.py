@@ -106,29 +106,29 @@ class AccountBalance(models.Model):
         ]
 
         # Retrieve bills based on the criteria
-        bills = self.env['account.move'].search(domain, order='invoice_date')
+        bill = self.env['account.move'].search(domain, order='invoice_date')
 
         # Prepare a list to store bill data
         bill_data = []
 
-        for bill in bills:
-            # Retrieve invoice lines for each bill
-            invoice_lines = bill.invoice_line_ids
-            selected_account_id = (
-                    invoice_lines and invoice_lines[0].account_id.name or False
-            )
+        # for bill in bills:
+        # Retrieve invoice lines for each bill
+        invoice_lines = bill.invoice_line_ids
+        selected_account_id = (
+                invoice_lines and invoice_lines[0].account_id.name or False
+        )
 
-            # Assemble bill data
-            bill_data.append({
-                'id': bill.id,
-                'bill_number': bill.id,
-                'bill_date': bill.invoice_date,
-                'supplier_id': bill.partner_id.name,
-                'amount': bill.amount_total,
-                'state': bill.payment_state,
-                'selected_account_id': selected_account_id,
-                # Add more bill details here as needed
-            })
+        # Assemble bill data
+        bill_data.append({
+            'id': bill.id,
+            'bill_number': bill.id,
+            'bill_date': bill.invoice_date,
+            'supplier_id': bill.partner_id.name,
+            'amount': bill.amount_total,
+            'state': bill.payment_state,
+            'selected_account_id': selected_account_id,
+            # Add more bill details here as needed
+        })
 
         # Create a dictionary with a "bill_info" key
         response = {'bill_info': bill_data}
