@@ -98,7 +98,7 @@ msgstr "'Balení produktů - %s' % (object.name)"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- Čárový kód \"%s\" je již přiřazen k produktům: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -234,7 +234,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Čárový kód lze přiřadit pouze jednomu balení!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -253,7 +253,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Balení již používá čárový kód"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -261,13 +261,15 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Cena je souborem prodejních cen nebo pravidel pro výpočet ceny prodejních objednávek založených na produktech, kategoriích produktů, termínech a objednaných množstvích.\n"
+"            Toto je perfektní nástroj pro zpracování několika cen, sezónních slev atd."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Produkt již používá čárový kód"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -307,7 +309,7 @@ msgstr "Aktivní"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Aktivní produkty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -343,7 +345,7 @@ msgstr "Přidat množství"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Štítek dodatečného produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -359,12 +361,12 @@ msgstr "Pokročilá cenová pravidla (slevy, vzorce)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Všechny štítky produktů"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Všechny varianty produktu používající štítek"
 
 #. module: product
 #. odoo-python
@@ -519,6 +521,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Čárové kódy jsou již přiřazeny:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -902,7 +907,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Definovat nový štítek"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -2138,7 +2143,7 @@ msgstr "Obaly produktů"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 msgid "Product Product"
-msgstr ""
+msgstr "Produkt produktu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -2183,7 +2188,7 @@ msgstr "Hodnota atributu šablony produktu"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Štítky šablon produktů"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2290,7 +2295,7 @@ msgstr "Produkty: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Akce, kupóny, dárkové karty a věrnostní program"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2524,6 +2529,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Zadejte pevnou částku pro přičtení nebo odečtení (zápornou částku) od ceny "
+"vypočtené s touto slevou."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2602,7 +2609,7 @@ msgstr "Tagy"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Štítky se používají k vyhledání produktu pro dané téma."
 
 #. module: product
 #. odoo-python
