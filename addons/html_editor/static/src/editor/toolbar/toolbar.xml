@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.Toolbar">
+        <div t-ref="root" class="o-we-toolbar position-absolute bg-white d-flex align-items-center" style="width:300px;height:40px">
+            <div class="btn btn-light fa fa-bold fa-fw ps-1 pe-3 mx-1" title="Toggle bold" t-on-click="() => this.dispatch('TOGGLE_BOLD')"/>
+            <div class="btn btn-light fa fa-italic fa-fw ps-1 pe-3 mx-1" title="Toggle italic" t-on-click="() => this.dispatch('TOGGLE_ITALIC')"/>
+            <div class="btn btn-light fa fa-underline fa-fw ps-1 pe-3 mx-1" title="Toggle underline" t-on-click="() => this.dispatch('TOGGLE_UNDERLINE')"/>
+            <div class="btn btn-light fa fa-strikethrough fa-fw ps-1 pe-3 mx-1" title="Toggle strikethrough" t-on-click="() => this.dispatch('TOGGLE_STRIKETHROUGH')"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,11 @@
+<odoo>
+  <data>
+    <record model="ir.actions.client" id="playground">
+      <field name="name">Playground</field>
+      <field name="tag">html_editor.playground</field>
+    </record>
+
+    <menuitem name="Editor Playground" id="html_editor.menu_root" groups="base.group_user" web_icon="html_editor,static/description/icon.png"/>
+    <menuitem name="Editor Playground" id="html_editor.dashboard_menu" parent="html_editor.menu_root" action="html_editor.playground" sequence="1"/>
+  </data>
+</odoo>

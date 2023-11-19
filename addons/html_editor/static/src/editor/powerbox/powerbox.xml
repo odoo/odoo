@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.Powerbox">
+        <div t-ref="root" class="o-we-powerbox m-2 py-2 position-absolute bg-white overflow-auto" style="width:300px;max-height:40vh;" t-on-mousedown.stop="">
+            <t t-set="activeCmd" t-value="commands[cmdIndex]"/>
+            <t t-foreach="categories" t-as="category" t-key="category_index">
+                <t t-if="categories.length > 1">
+                    <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="category.name"/></div>
+                </t>
+                <t t-foreach="category.commands" t-as="command" t-key="command_index">
+                    <div class="o-we-command d-flex align-items-center px-3 py-2 cursor-pointer"
+                        t-att-class="{active: command === activeCmd}"
+                        t-on-mouseenter="() => this.activateCommand(command)"
+                        t-on-click="() => this.applyCommand(command)">
+                        <div class="border rounded">
+                            <i class="o-we-command-img d-flex align-items-center justify-content-center fa" t-att-class="command.fontawesome"/>
+                        </div>
+                        <div class="ms-3">
+                            <div class="o-we-command-name" t-esc="command.name"/>
+                            <div class="o-we-command-description" t-esc="command.description"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.TablePicker">
+        <div t-ref="root" class="o-we-tablepicker position-absolute bg-white p-1" t-on-click="insertTable" t-on-mousedown.stop="">
+            <t t-foreach="new Array(state.rows + 1)" t-as="row" t-key="row_index">
+                <div class="o-we-row">
+                    <t t-foreach="new Array(state.cols + 1)" t-as="col" t-key="col_index">
+                        <div
+                            class="o-we-cell"
+                            t-att-class="{'active': col_index lt state.cols and row_index lt state.rows}"
+                            t-on-mouseenter="() => this.updateSize(col_index + 1, row_index + 1)"/>
+                    </t>
+                </div>
+            </t>
+            <div class="text-center"><t t-esc="state.cols"/>x<t t-esc="state.rows"/></div>
+        </div>
+    </t>
+</templates>

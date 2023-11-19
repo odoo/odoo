@@ -1,0 +1,42 @@
+.o-we-powerbox {
+    box-shadow: $box-shadow;
+
+}
+.o-we-powerbox::-webkit-scrollbar {
+    background: transparent;
+}
+.o-we-powerbox::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.o-we-powerbox::-webkit-scrollbar-thumb {
+    background: var(--powerbox-scrollbar-thumb-background-color, #D3D1CB);
+}
+.o-we-powerbox::-webkit-scrollbar-track {
+    background: var(--powerbox-scrollbar-thumb-background-color, #EDECE9);
+}
+
+.o-we-category {
+    font-size: 11px;
+    color: $o-gray-600;
+}
+
+.o-we-command {
+    &.active {
+        background: $o-gray-100;
+    }
+}
+
+.o-we-command-img {
+    height: 35px;
+    width: 35px;
+    background-color: $o-gray-100;
+}
+.o-we-command-name {
+    font-size: 13px;
+}
+
+.o-we-command-description {
+    font-size: 12px;
+    color: $o-main-color-muted;
+}

@@ -254,3 +254,7 @@ export function zip(iter1, iter2, fill = false) {
 export function zipWith(iter1, iter2, mapFn) {
     return zip(iter1, iter2).map(([e1, e2]) => mapFn(e1, e2));
 }
+
+export function rotate(i, arr, inc = 1) {
+    return (arr.length + i + inc) % arr.length;
+}
