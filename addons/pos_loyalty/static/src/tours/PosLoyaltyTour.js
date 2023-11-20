@@ -258,3 +258,23 @@ ProductScreen.check.totalAmountIs('50.00');
 registry
     .category("web_tour.tours")
     .add('PosLoyaltyTour8', { test: true, url: '/pos/web', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.do.clickDisplayedProduct('Product A');
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 5");
+ProductScreen.check.totalAmountIs('205.00');
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 5");
+ProductScreen.check.totalAmountIs('200.00');
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour9', { test: true, url: '/pos/web', steps: getSteps(), watch: true });
