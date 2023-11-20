@@ -36,6 +36,23 @@ tour.register("snippet_image_gallery", {
     content: "Check that the Snippet Editor of the clicked image has been loaded",
     trigger: "we-customizeblock-options span:contains('Image'):not(:contains('Image Gallery'))",
     run: () => null,
+},
+    wTourUtils.changeOption('ImageOptimize', 'we-select:contains("Filter") we-toggler'),
+    wTourUtils.changeOption('ImageOptimize', '[data-gl-filter="blur"]'),
+{
+    content: "Check that the image has the correct filter",
+    trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-gallery_img we-button[data-position='next']",
+}, {
+    content: "Click on the moved image",
+    trigger: "#wrap .s_image_gallery .carousel-item.active img[data-index='1']",
+}, {
+    content: "Check that the image still has the correct filter",
+    trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
 }, {
     content: "Click on Remove Block",
     trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
