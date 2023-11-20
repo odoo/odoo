@@ -1,33 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event
-#
+# 
 # Translators:
-# Kari Lindgren <karisatu@gmail.com>, 2022
-# Tommi Rintala <tommi.rintala@gmail.com>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Martin Trigaux, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
+# Kari Lindgren <karisatu@gmail.com>, 2023
+# Tommi Rintala <tommi.rintala@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Sanna Edelman <direct@generare.com>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
@@ -46,7 +48,7 @@ msgid "(Ref:"
 msgstr "(viite:"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(only"
 msgstr "(vain"
 
@@ -54,10 +56,8 @@ msgstr "(vain"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
 ")\n"
-"                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
+"                                    <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 msgstr ""
-")\n"
-"                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 
 #. module: website_event
 #. odoo-javascript
@@ -78,16 +78,15 @@ msgstr "<b>Alkaa</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
-msgid "<em>Write here a quote from one of your attendees. It gives confidence in your events.</em>"
-msgstr "<em>Kirjoita tähän lainaus yhdeltä osallistujistasi. Se antaa luottamusta tapahtumiin.</em>"
+msgid ""
+"<em>Write here a quote from one of your attendees. It gives confidence in "
+"your events.</em>"
+msgstr ""
+"<em>Kirjoita tähän lainaus yhdeltä osallistujistasi. Se antaa luottamusta "
+"tapahtumiin.</em>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.template_intro
-msgid "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Introduction</font>"
-msgstr "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Esittely</font>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
 msgstr "<i class=\"fa fa-ban me-2\"/>Loppuunmyyty"
 
@@ -97,15 +96,31 @@ msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
 msgstr "<i class=\"fa fa-ban me-2\"/>Ei julkaistu"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-calendar me-2\"/>Add to Calendar"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr "<i class=\"fa fa-check me-2\"/>Ilmoittautunut"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"fa fa-chevron-left me-2\"/>\n"
+"            <span>Back to events</span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" title=\"Facebook\"/>"
-msgstr "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" title=\"Facebook\"/>"
+msgid ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
+msgstr ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -119,8 +134,12 @@ msgstr "<i class=\"fa fa-fw fa-calendar\"/> Lisää iCal/Outlookiin"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-msgid "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" title=\"Configure event tickets\"/><em>Configure Tickets</em>"
-msgstr "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" title=\"Configure event tickets\"/><em>Määritä liput</em>"
+msgid ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+msgstr ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Määritä liput</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -134,22 +153,26 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Verkkosivu\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" title=\"Instagram\"/>"
-msgstr "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" title=\"Instagram\"/>"
+msgid ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
+msgstr ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" title=\"LinkedIn\"/>"
-msgstr "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" title=\"LinkedIn\"/>"
+msgid ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
+msgstr ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid ""
-"<i class=\"fa fa-long-arrow-left me-2\"/>\n"
-"                            <span>All Events</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-map-marker fa-fw\" role=\"img\"/>Get the direction"
 msgstr ""
-"<i class=\"fa fa-long-arrow-left me-2\"/>\n"
-"                            <span>Kaikki tapahtumat</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -159,63 +182,76 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
-msgstr "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
+msgstr ""
+"<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" "
+"title=\"Twitter\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" title=\"Youtube\"/>"
-msgstr "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" title=\"Youtube\"/>"
+msgid ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
+msgstr ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Speaker</span>"
-msgstr "<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Esiintyjät</span>"
+msgid ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Speaker</span>"
+msgstr ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Esiintyjät</span>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0 me-auto pe-sm-4\">Events</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span class=\"o_countdown_metric pe-1\">days</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span class=\"o_countdown_metric pe-1\">päivää</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">days</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">päivää</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_hours\">00</span><span class=\"o_countdown_metric\">:</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_hours\">00</span><span class=\"o_countdown_metric\">:</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span class=\"o_countdown_metric\">:</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span class=\"o_countdown_metric\">:</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span class=\"o_countdown_metric\"/>"
-msgstr "<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span class=\"o_countdown_metric\"/>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"py-2 o_wevent_registration_title text-start\">Tickets</span>"
-msgstr "<span class=\"py-2 o_wevent_registration_title text-start\">Liput</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"text-dark fw-bold align-middle px-2\">Qty</span>"
-msgstr "<span class=\"text-dark fw-bold align-middle px-2\">Määrä</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban me-2\"/>Sold Out\n"
-"                                </span>"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
+"                                    </span>"
 msgstr ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban me-2\"/>Loppuunmyyty\n"
-"                                </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -223,23 +259,15 @@ msgid "<span>Online Events</span>"
 msgstr "<span>Verkkotapahtumat</span>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span>Tickets</span>\n"
-"                        <span class=\"btn p-0 close d-none\">×</span>"
-msgstr ""
-"<span>Liput</span>\n"
-"                        <span class=\"btn p-0 close d-none\">×</span>"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong> You ordered more tickets than available seats</strong>"
-msgstr "<strong> Tilasit enemmän lippuja kuin saatavilla olevia paikkoja</strong>"
+msgstr ""
+"<strong> Tilasit enemmän lippuja kuin saatavilla olevia paikkoja</strong>"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_2
 msgid "A friend"
-msgstr ""
+msgstr "Ystävä"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
@@ -255,11 +283,6 @@ msgstr "Tietoja meistä"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "About us"
 msgstr "Tietoa meistä"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Add to Calendar"
-msgstr "Lisää kalenteriin"
 
 #. module: website_event
 #. odoo-python
@@ -283,7 +306,7 @@ msgstr "Kaikki maat"
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_1
 msgid "Allergies"
-msgstr ""
+msgstr "Allergiat"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_menu
@@ -293,7 +316,7 @@ msgstr "Näytä ja hallitse tapahtumien menuja verkkosivulla."
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Vastaus"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.action_event_registration_report
@@ -302,28 +325,42 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Vastausten erittely"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__answer_ids
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "Vastaukset"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Kysy kerran per tilaus"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide."
-msgstr "Vain 13-vuotias Mattti Meikäläinen alkoi jo kehittää ensimmäisiä liiketoimintasovelluksiaan asiakkaille. Maa- ja vesirakentamisen maisterin tutkinnon jälkeen hän perusti TinyERP:n. Tämä oli OpenERP:n ensimmäinen vaihe, josta myöhemmin tuli Odoo, maailmanlaajuisesti asennetuin avoimen lähdekoodin yritysohjelmisto."
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
+msgstr ""
+"Vain 13-vuotias Mattti Meikäläinen alkoi jo kehittää ensimmäisiä "
+"liiketoimintasovelluksiaan asiakkaille. Maa- ja vesirakentamisen maisterin "
+"tutkinnon jälkeen hän perusti TinyERP:n. Tämä oli OpenERP:n ensimmäinen "
+"vaihe, josta myöhemmin tuli Odoo, maailmanlaajuisesti asennetuin avoimen "
+"lähdekoodin yritysohjelmisto."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
+msgstr "Osallistujien vastaukset"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
+msgid "Attendee Selection Answers"
 msgstr ""
 
 #. module: website_event
@@ -341,12 +378,12 @@ msgstr "Tekijä"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_1
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_1
 msgid "Blog Post"
-msgstr ""
+msgstr "Blogikirjoitus"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "Varaaja"
 
 #. module: website_event
 #. odoo-python
@@ -357,6 +394,7 @@ msgstr "Liiketoiminnan työpaja"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
+#: model:ir.model.fields,field_description:website_event.field_event_tag__can_publish
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Voi julkaista"
@@ -373,6 +411,8 @@ msgstr "Kortit"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Close"
 msgstr "Sulje"
@@ -385,7 +425,7 @@ msgstr ""
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_1
 msgid "Commercials"
-msgstr ""
+msgstr "Mainokset"
 
 #. module: website_event
 #. odoo-python
@@ -417,14 +457,19 @@ msgid "Conference For Architects"
 msgstr "Arkkitehtien konferenssi"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
+msgid "Configure event tickets"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Vahvista ilmoittautuminen"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_0
 msgid "Consumers"
-msgstr ""
+msgstr "Kuluttajat"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -453,6 +498,7 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Date"
 msgstr "Päivämäärä"
@@ -504,12 +550,22 @@ msgid "Don't forget to click <b>save</b> when you're done."
 msgstr "Älä unohda painaa <b>tallenna</b>, kun olet valmis."
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download All Tickets"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_type.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__email
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -562,12 +618,12 @@ msgstr "Tapahtumien sivut"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Tapahtuman kysymys"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Tapahtuman kysymyksen vastaus"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
@@ -577,7 +633,7 @@ msgstr "Tapahtuman ilmoittautuminen"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Tapahtuman rekisteröinnin vastaus"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
@@ -586,9 +642,14 @@ msgstr "Tapahtuman ilmoittautumiset"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
 msgstr "Tapahtuman alaotsikko"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_tag
+msgid "Event Tag"
+msgstr "Tapahtuman tunniste"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_tag_category
@@ -606,14 +667,14 @@ msgid "Event Template"
 msgstr "Tapahtuman mallipohja"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Title"
 msgstr "Tapahtuman otsikko"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "Tapahtumatyyppi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -638,6 +699,7 @@ msgstr "Tapahtuman julkaisu lopetettu"
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
@@ -649,7 +711,7 @@ msgid "Events Page"
 msgstr "Tapahtumien sivu"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Expired"
 msgstr "Vanhentunut"
 
@@ -661,9 +723,18 @@ msgid "Extra Register Button"
 msgstr "Tapahtuman rekisteröintinappi"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "Filters"
+msgstr "Suotimet"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Find out what people see and say about this event, and join the conversation."
-msgstr "Selvitä, mitä ihmiset näkevät ja sanovat tästä tapahtumasta, ja liity keskusteluun."
+msgid ""
+"Find out what people see and say about this event, and join the "
+"conversation."
+msgstr ""
+"Selvitä, mitä ihmiset näkevät ja sanovat tästä tapahtumasta, ja liity "
+"keskusteluun."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -684,12 +755,7 @@ msgstr "Seuraava sisältö näkyy kaikissa tapahtumissa."
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Get the direction"
-msgstr "Hanki reittiohjeet"
+msgstr "Yleiset kysymykset"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -726,7 +792,7 @@ msgstr ""
 #: model:event.question,title:website_event.event_5_question_0
 #: model:event.question,title:website_event.event_type_data_sports_question_0
 msgid "How did you learn about this event?"
-msgstr ""
+msgstr "Kuinka kuulit tästä tapahtumasta?"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__id
@@ -738,13 +804,19 @@ msgstr "ID"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_question__once_per_order
-msgid "If True, this question will be asked only once and its value will be propagated to every attendees.If not it will be asked for every attendee of a reservation."
+msgid ""
+"If True, this question will be asked only once and its value will be "
+"propagated to every attendees.If not it will be asked for every attendee of "
+"a reservation."
 msgstr ""
+"Jos arvo on tosi, tämä kysymys kysytään vain kerran ja sen arvo annetaan "
+"kaikille osallistujille, jos ei, sitä kysytään jokaiselta osallistujalta."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
 msgstr "Esittely"
@@ -776,6 +848,7 @@ msgstr "Ilmoittauduttu"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__is_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__is_published
 msgid "Is Published"
 msgstr "On julkaistu"
@@ -841,24 +914,28 @@ msgstr "Sijaintivalikot"
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!"
-msgstr "Näyttää hyvältä!<b>Julkaistaan</b> nyt tämä sivu, jotta se<b>näkyy</b> verkkosivullasi!"
+msgid ""
+"Looking great! Let's now <b>publish</b> this page so that it becomes "
+"<b>visible</b> on your website!"
+msgstr ""
+"Näyttää hyvältä!<b>Julkaistaan</b> nyt tämä sivu, jotta se<b>näkyy</b> "
+"verkkosivullasi!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Pakollinen"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Pakollinen vastaus"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_0
 msgid "Meal Type"
-msgstr ""
+msgstr "Ateriatyyppi"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -878,7 +955,7 @@ msgstr "Valikot"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_0
 msgid "Mixed"
-msgstr ""
+msgstr "Sekoitettu"
 
 #. module: website_event
 #. odoo-python
@@ -913,8 +990,13 @@ msgstr "Verkkosivun menukohteita ei ole vielä!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "No events found."
-msgstr "Tapahtumia ei löytynyt."
+msgid "No event matching your search criteria could be found."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No events scheduled yet"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
@@ -957,7 +1039,7 @@ msgstr "Koulutuksemme"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_0
 msgid "Our website"
-msgstr ""
+msgstr "Meidän verkkosivu"
 
 #. module: website_event
 #. odoo-python
@@ -969,7 +1051,7 @@ msgstr "Menneet tapahtumat"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_2
 msgid "Pastafarian"
-msgstr ""
+msgstr "Pastafarialainen"
 
 #. module: website_event
 #. odoo-python
@@ -986,13 +1068,6 @@ msgid "Photos"
 msgstr "Kuvat"
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/js/website_event.js:0
-#, python-format
-msgid "Please select at least one ticket."
-msgstr "Valitse ainakin yksi lippu."
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
@@ -1004,20 +1079,20 @@ msgstr "Julkaistu"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Question"
-msgstr ""
+msgstr "Kysymys"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Kysymyksen tyyppi"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
+msgstr "Kysymys ei voi kuulua sekä tapahtumakategoriaan että itseensä."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1051,7 +1126,8 @@ msgstr "Viite:"
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
@@ -1081,7 +1157,7 @@ msgstr "Ilmoittaudutut tapahtumat"
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__registration_id
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #, python-format
 msgid "Registration"
 msgstr "Ilmoittautuminen"
@@ -1090,6 +1166,11 @@ msgstr "Ilmoittautuminen"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
 msgstr "Ilmoittautuminen vahvistettu!"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid "Registration failed! These tickets are not available anymore."
+msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.event_registration_action_from_visitor
@@ -1127,10 +1208,12 @@ msgstr "Jäljellä oleva aika ennen tapahtuman alkua (minuutteina)"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_2
 msgid "Research"
-msgstr ""
+msgstr "Tutkimus"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_id
 msgid "Restrict publishing to this website."
 msgstr "Rajoita julkaisu tälle verkkosivustolle."
 
@@ -1152,15 +1235,15 @@ msgstr "JAA"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
-msgstr ""
+msgstr "Myynti"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales end on"
 msgstr "Myynnit loppuvat"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales start on"
 msgstr "Myynnit alkavat"
 
@@ -1179,17 +1262,17 @@ msgstr "Etsi tapahtumaa..."
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "Valitut vastaukset"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Valittu vastaus"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Valinta"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1200,7 +1283,7 @@ msgstr "SEO-nimi"
 #: model:ir.model.fields,field_description:website_event.field_event_question__sequence
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestys"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1218,10 +1301,11 @@ msgstr "Sivupalkki"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_0
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_0
 msgid "Social Media"
-msgstr ""
+msgstr "Sosiaalinen media"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Sold Out"
 msgstr "Loppuunmyyty"
@@ -1234,7 +1318,7 @@ msgstr "Valitettavasti tämä tapahtuma ei ole enää saatavilla."
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Erityskysymykset"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1259,7 +1343,7 @@ msgstr "Alkaa <span/>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Stats"
-msgstr ""
+msgstr "Tilastot"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1269,7 +1353,7 @@ msgstr "Alivalikko (Määritetty)"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "Ehdotettu vastaus"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1279,23 +1363,31 @@ msgstr "Mallit"
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Teksti"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_text_box
 msgid "Text answer"
-msgstr ""
+msgstr "Tekstimuotoinen vastaus"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
+#: model:ir.model.fields,help:website_event.field_event_tag__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Dokumentin URL-osoite verkkosivustolla."
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr "Verkkosivuston on oltava saman yrityksen kuin tapahtuma."
+
+#. module: website_event
 #: model:ir.model.constraint,message:website_event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Ehdotettu arvo tai tekstiarvo on oltava."
 
 #. module: website_event
 #. odoo-python
@@ -1314,14 +1406,15 @@ msgstr "Tämä pikanäppäin tuo sinut takaisin tapahtumalomakkeeseen."
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "This technical menu displays all event sub-menu items."
-msgstr "Tekninen valikko, joka näyttää kaikkien tapahtumien alivalikkojen kohteet."
+msgstr ""
+"Tekninen valikko, joka näyttää kaikkien tapahtumien alivalikkojen kohteet."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This ticket is not available for sale for this event"
-msgstr "Tähän tapahtumaan ei ole enää saatavilla lippuja."
+msgstr "Tähän tapahtumaan ei ole enää saatavilla lippuja"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1334,6 +1427,12 @@ msgid "Ticket Sales starting on"
 msgstr "Lipunmyynnit alkavat"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Tickets"
+msgstr "Tiketit"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr "Tämän tapahtuman liput ovat <b>Loppuunmyyty</b>"
@@ -1341,7 +1440,7 @@ msgstr "Tämän tapahtuman liput ovat <b>Loppuunmyyty</b>"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Otsikko"
 
 #. module: website_event
 #. odoo-python
@@ -1351,7 +1450,7 @@ msgid "Today"
 msgstr "Tänään"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Toggle navigation"
 msgstr "Kytke navigaatio päälle/pois"
 
@@ -1364,7 +1463,7 @@ msgstr "Yläpalkin suodatin"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #. module: website_event
 #. odoo-python
@@ -1376,21 +1475,19 @@ msgid "Upcoming Events"
 msgstr "Tulevat tapahtumat"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Use the top button '<b>+ New</b>' to create an event."
-msgstr "Käytä yläpainiketta '<b>+ Uusi</b>' luodaksesi tapahtuman."
-
-#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use this <b>shortcut</b> to easily access your event web page."
-msgstr "Käytä tätä <b>pikanäppäintä</b> päästäksesi helposti tapahtuman verkkosivulle."
+msgstr ""
+"Käytä tätä <b>pikanäppäintä</b> päästäksesi helposti tapahtuman "
+"verkkosivulle."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragraph to write a short text about your events or company."
-msgstr "Kirjoita tähän kappaleeseen lyhyt kuvaus tapahtumasta tai yrityksestä."
+msgstr ""
+"Kirjoita tähän kappaleeseen lyhyt kuvaus tapahtumasta tai yrityksestä."
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
@@ -1400,7 +1497,7 @@ msgstr "Käytetään, kun kohteena ei ole URL-pohjainen menu"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_1
 msgid "Vegetarian"
-msgstr ""
+msgstr "Kasvissyöjä"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
@@ -1409,6 +1506,7 @@ msgstr "Näytä"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
 msgstr "Näkyy nykysellä verkkosivulla"
@@ -1419,8 +1517,21 @@ msgid "Visitor"
 msgstr "Vierailija"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event matching your search for:"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event scheduled at this moment."
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_website
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_id
+#: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
 msgid "Website"
 msgstr "Verkkosivu"
 
@@ -1465,6 +1576,7 @@ msgstr "Verkkosivun alivalikko"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_url
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_url
 msgid "Website URL"
 msgstr "Verkkosivuston osoite"
@@ -1512,38 +1624,50 @@ msgstr "Joko tapahtuma alkaa tänään, jos se ei vielä ole käynnissä"
 #. module: website_event
 #: model:event.question,title:website_event.event_7_question_0
 msgid "Which field are you working in"
-msgstr ""
+msgstr "Millä alalla työskentelet"
 
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "With the Edit button, you can <b>customize</b> the web page visitors will see when registering."
-msgstr "Muokkaa-painikkeella voit <b>muokata</b> verkkosivuja, jotka vierailijat näkevät ilmoittautuessaan."
+msgid ""
+"With the Edit button, you can <b>customize</b> the web page visitors will "
+"see when registering."
+msgstr ""
+"Muokkaa-painikkeella voit <b>muokata</b> verkkosivuja, jotka vierailijat "
+"näkevät ilmoittautuessaan."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgid ""
+"You cannot change the question type of a question that already has answers!"
+msgstr "Et voi muuttaa kysymystyyppiä kysymykselle, jolla on jo vastauksia!"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
+msgstr "Et voi poistaa kysymystä, johon osallistujat ovat jo vastanneet."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question_answer.py:0
 #, python-format
-msgid "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
+msgstr "Et voi poistaa vastausta, jonka osallistujat ovat jo valinneet."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "alert-link my-3"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "available)"
 msgstr "saatavilla)"
 
@@ -1556,9 +1680,14 @@ msgstr "esim. konferenssi arkkitehdeille"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "esimerkiksi: \"Onko sinulla ruokavalion rajoituksia?\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "iCal/Outlook"
 msgstr "iCal/Outlook"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "ms-2"
+msgstr ""

@@ -162,10 +162,12 @@ export class Many2ManyTagsField extends Component {
     getDomain() {
         const domain =
             typeof this.props.domain === "function" ? this.props.domain() : this.props.domain;
-        return Domain.and([
-            domain,
-            Domain.not([["id", "in", this.props.record.data[this.props.name].currentIds]]),
-        ]).toList(this.props.context);
+        const currentIds = this.props.record.data[this.props.name].currentIds.filter(
+            (id) => typeof id === "number"
+        );
+        return Domain.and([domain, Domain.not([["id", "in", currentIds]])]).toList(
+            this.props.context
+        );
     }
 }
 
@@ -221,7 +223,9 @@ export const many2ManyTagsField = {
     },
     extractProps({ attrs, options, string }, dynamicInfo) {
         const noCreate = Boolean(options.no_create);
-        const canCreate = noCreate ? false : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
+        const canCreate = noCreate
+            ? false
+            : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {

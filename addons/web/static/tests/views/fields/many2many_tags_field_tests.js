@@ -4,6 +4,7 @@ import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import {
+    addRow,
     click,
     clickDiscard,
     clickDropdown,
@@ -37,7 +38,6 @@ QUnit.module("Fields", (hooks) => {
                             string: "one2many turtle field",
                             type: "one2many",
                             relation: "turtle",
-                            relation_field: "turtle_trululu",
                         },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
                     },
@@ -1945,5 +1945,54 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps(["name search with context given", "read with context given"]);
         assert.strictEqual(target.querySelector(".o_field_tags").innerText, "gold coucou");
+    });
+
+    QUnit.test("Many2ManyTagsField doesn't use virtualId for 'name_search'", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `<form>
+                <field name="turtles" widget="many2many_tags"/>
+                <field name="turtles">
+                    <tree>
+                        <field name="display_name"/>
+                    </tree>
+                    <form>
+                        <field name="display_name"/>
+                    </form>
+                </field>
+            </form>`,
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "name_search") {
+                    assert.step("name_search");
+                    // no virtualId in domain
+                    assert.deepEqual(kwargs.args, ["!", ["id", "in", [2]]]);
+                }
+            },
+        });
+
+        await addRow(target);
+        assert.containsOnce(target, ".modal");
+
+        await editInput(target, ".modal [name='display_name'] input", "yop");
+        await click(target.querySelector(".modal .o_form_button_save"));
+        assert.containsNone(target, ".modal");
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='turtles'] .o_tag_badge_text")].map(
+                (el) => el.textContent
+            ),
+            ["donatello", "yop"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='turtles'] .o_data_row")].map(
+                (el) => el.textContent
+            ),
+            ["donatello", "yop"]
+        );
+
+        await click(target.querySelector("[name='turtles'] input"));
+        assert.verifySteps(["name_search"]);
     });
 });

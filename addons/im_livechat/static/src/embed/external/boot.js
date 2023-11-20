@@ -24,6 +24,7 @@ import { session } from "@web/session";
     await mount(MainComponentsContainer, target, {
         env,
         templates,
+        translateFn: env._t,
         dev: env.debug,
     });
 })();

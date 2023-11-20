@@ -117,11 +117,10 @@ export class X2ManyField extends Component {
 
         this.selectCreate = (params) => {
             const p = Object.assign({}, params);
-            p.domain = [
-                ...(p.domain || []),
-                "!",
-                ["id", "in", this.props.record.data[this.props.name].currentIds],
-            ];
+            const currentIds = this.props.record.data[this.props.name].currentIds.filter(
+                (id) => typeof id === "number"
+            );
+            p.domain = [...(p.domain || []), "!", ["id", "in", currentIds]];
             return selectCreate(p);
         };
         this.action = useService("action");

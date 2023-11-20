@@ -35,8 +35,8 @@ export const cartHandlerMixin = {
         });
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
-            showCartNotification(this.call.bind(this), data.notification_info);
         };
+        showCartNotification(this.call.bind(this), data.notification_info);
         return data;
     },
 };
@@ -119,7 +119,14 @@ function showCartNotification(callService, props, options = {}) {
     // Show the notification about the cart
     if (props.lines) {
         callService("cartNotificationService", "add", "Item(s) added to your cart", {
-            ...props,
+            lines: props.lines,
+            currency_id: props.currency_id,
+            ...options,
+        });
+    }
+    if (props.warning) {
+        callService("cartNotificationService", "add", "Warning", {
+            warning: props.warning,
             ...options,
         });
     }
@@ -140,7 +147,7 @@ function showWarning(message) {
     if (!cart_alert.length) {
         cart_alert = $(
             '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button> ' +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
                 '<span></span>' +
             '</div>').prependTo($page);
     }

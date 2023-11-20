@@ -415,7 +415,7 @@ class MicrosoftSync(models.AbstractModel):
             if token:
                 self._ensure_attendees_have_email()
                 res = microsoft_service.patch(event_id, values, token=token, timeout=timeout)
-                self.write({
+                self.with_context(dont_notify=True).write({
                     'need_sync_m': not res,
                 })
 
@@ -431,7 +431,11 @@ class MicrosoftSync(models.AbstractModel):
         if not values:
             return
         microsoft_service = self._get_microsoft_service()
-        with microsoft_calendar_token(self.env.user.sudo()) as token:
+        # Insert using 'self.user_id' if synced with Outlook, otherwise use 'self.env.user'.
+        sender_user = self.env.user
+        if self.user_id and self.with_user(self.user_id)._check_microsoft_sync_status():
+            sender_user = self.user_id
+        with microsoft_calendar_token(sender_user.sudo()) as token:
             if token:
                 self._ensure_attendees_have_email()
                 event_id, uid = microsoft_service.insert(values, token=token, timeout=timeout)

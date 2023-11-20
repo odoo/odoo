@@ -3354,11 +3354,19 @@ export class Wysiwyg extends Component {
      * @param {number} resId
      */
     async _saveB64Image(el, resModel, resId) {
+        el.classList.remove('o_b64_image_to_save');
+        const imageData = el.getAttribute('src').split('base64,')[1];
+        if (!imageData) {
+            // Checks if the image is in base64 format for RPC call. Relying
+            // only on the presence of the class "o_b64_image_to_save" is not
+            // robust enough.
+            return;
+        }
         const attachment = await this._serviceRpc(
             '/web_editor/attachment/add_data',
             {
                 name: el.dataset.fileName || '',
-                data: el.getAttribute('src').split(',')[1],
+                data: imageData,
                 is_image: true,
                 res_model: resModel,
                 res_id: resId,
@@ -3385,7 +3393,6 @@ export class Wysiwyg extends Component {
             }
             el.setAttribute('src', src);
         }
-        el.classList.remove('o_b64_image_to_save');
     }
     /**
      * Saves a modified image as an attachment.

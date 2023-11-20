@@ -2749,11 +2749,10 @@ options.registry.anchor = options.Class.extend({
                 if (this.$target[0].id === anchorName) {
                     // If the chosen anchor name is already the one used by the
                     // element, close the dialog and do nothing else
-                    this.close();
-                    return;
+                    return true;
                 }
 
-                const alreadyExists = !!this.$target[0].ownerDocument.getElementById(anchorName);
+                const alreadyExists = !!this.ownerDocument.getElementById(anchorName);
                 modalRef.el.querySelector('.o_anchor_already_exists').classList.toggle('d-none', !alreadyExists);
                 inputEl.classList.toggle('is-invalid', alreadyExists);
                 if (!alreadyExists) {
@@ -2798,7 +2797,7 @@ options.registry.anchor = options.Class.extend({
             const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
             const anchorName = this._text2Anchor(title);
             let n = '';
-            while (document.getElementById(anchorName + n)) {
+            while (this.ownerDocument.getElementById(anchorName + n)) {
                 n = (n || 1) + 1;
             }
             this._setAnchorName(anchorName + n);

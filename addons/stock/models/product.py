@@ -551,7 +551,7 @@ class Product(models.Model):
             )
         else:
             self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
-        action = self.env['stock.quant'].action_view_inventory()
+        action = self.env['stock.quant'].action_view_quants()
         # note that this action is used by different views w/varying customizations
         if not self.env.context.get('is_stock_report'):
             action['domain'] = [('product_id', 'in', self.ids)]

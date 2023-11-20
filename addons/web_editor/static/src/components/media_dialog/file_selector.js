@@ -166,11 +166,6 @@ export class FileSelector extends Component {
             (modalEl) => {
                 if (modalEl) {
                     modalEl.addEventListener("scroll", this.debouncedOnScroll);
-                    // Positionning the bottom bar right above the footer.
-                    const footerEl = modalEl.parentElement.querySelector("footer");
-                    const {top, width} = footerEl.getBoundingClientRect();
-                    this.loadMoreButtonRef.el.style.setProperty("--footer-top", `${top}px`);
-                    this.loadMoreButtonRef.el.style.setProperty("--footer-width", `${width}px`);
                     return () => {
                         modalEl.removeEventListener("scroll", this.debouncedOnScroll);
                     };
@@ -181,14 +176,13 @@ export class FileSelector extends Component {
 
         useEffect(
             () => {
-                // Updating the bottom bar each time the attachments change.
+                // Updating the scroll button each time the attachments change.
+                // Hiding the "Load more" button to prevent it from flickering.
+                this.loadMoreButtonRef.el.classList.add("o_hide_loading");
+                this.state.canScrollAttachments = false;
                 this.debouncedScrollUpdate();
             },
             () => [this.allAttachments.length]);
-    }
-
-    get canScroll() {
-        return this.state.canScrollAttachments;
     }
 
     get canLoadMore() {
@@ -258,12 +252,6 @@ export class FileSelector extends Component {
         this.state.canLoadMoreAttachments = attachments.length >= this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this.state.isFetchingAttachments = false;
         return attachments;
-    }
-
-    async handleScrollAttachments() {
-        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
-        const scrollAmount = this.computeScroll();
-        modalEl.scrollBy({top: scrollAmount, behavior: "smooth"});
     }
 
     async handleLoadMore() {
@@ -352,49 +340,47 @@ export class FileSelector extends Component {
     }
 
     /**
-     * Updates the scroll button, depending on whether the last attachment is
+     * Updates the scroll button, depending on whether the "Load more" button is
      * fully visible or not.
      */
     updateScroll() {
-        const attachmentEls = [...this.existingAttachmentsRef.el.querySelectorAll(".o_existing_attachment_cell")];
-        if (!attachmentEls.length) {
-            this.state.canScrollAttachments = false;
-        } else {
-            const lastAttachmentEl = attachmentEls[attachmentEls.length - 1];
-            const canScroll = this.isElementHidden(lastAttachmentEl);
-            this.state.canScrollAttachments = canScroll;
-            this.loadMoreButtonRef.el.classList.toggle("o_can_scroll", canScroll);
-        }
-    }
-
-    /**
-     * Checks if the element is (partially) hidden by the bottom bar.
-     *
-     * @param {Element} element the element
-     * @returns {Boolean} true if the element is hidden, false otherwise.
-     */
-    isElementHidden(element) {
-        const elementBottom = element.getBoundingClientRect().bottom;
         const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
-        return elementBottom >= loadMoreTop;
+        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
+        const modalBottom = modalEl.getBoundingClientRect().bottom;
+        this.state.canScrollAttachments = loadMoreTop >= modalBottom;
+        this.loadMoreButtonRef.el.classList.remove("o_hide_loading");
     }
 
     /**
-     * Computes the number of pixels to scroll in order to make the first hidden
-     * attachment fully visible.
+     * Checks if the attachment is (partially) hidden.
      *
-     * @returns {Number} the amount to scroll
+     * @param {Element} attachmentEl the attachment "container"
+     * @returns {Boolean} true if the attachment is hidden, false otherwise.
      */
-    computeScroll() {
+    isAttachmentHidden(attachmentEl) {
+        const attachmentBottom = Math.round(attachmentEl.getBoundingClientRect().bottom);
+        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
+        const modalBottom = modalEl.getBoundingClientRect().bottom;
+        return attachmentBottom > modalBottom;
+    }
+
+    /**
+     * Scrolls two attachments rows at a time. If there are not enough rows,
+     * scrolls to the "Load more" button.
+     */
+    handleScrollAttachments() {
+        let scrollToEl = this.loadMoreButtonRef.el;
         const attachmentEls = [...this.existingAttachmentsRef.el.querySelectorAll(".o_existing_attachment_cell")];
-        const firstHiddenAttachmentEl = attachmentEls.find(el => this.isElementHidden(el));
-        let scrollAmount = 15; // Safety margin to still scroll if the arrow is displayed.
+        const firstHiddenAttachmentEl = attachmentEls.find(el => this.isAttachmentHidden(el));
         if (firstHiddenAttachmentEl) {
             const attachmentBottom = firstHiddenAttachmentEl.getBoundingClientRect().bottom;
-            const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
-            scrollAmount += Math.ceil(attachmentBottom - loadMoreTop);
+            const attachmentIndex = attachmentEls.indexOf(firstHiddenAttachmentEl);
+            const firstNextRowAttachmentEl = attachmentEls.slice(attachmentIndex).find(el => {
+                return el.getBoundingClientRect().bottom > attachmentBottom;
+            })
+            scrollToEl = firstNextRowAttachmentEl || scrollToEl;
         }
-        return scrollAmount;
+        scrollToEl.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
     }
 }
 FileSelector.template = 'web_editor.FileSelector';

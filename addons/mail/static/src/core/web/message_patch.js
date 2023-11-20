@@ -3,7 +3,12 @@
 import { Message } from "@mail/core/common/message";
 import { markEventHandled } from "@web/core/utils/misc";
 
-import { deserializeDateTime, formatDate, formatDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    formatDate,
+    formatDateTime,
+} from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import {
     formatChar,
@@ -69,13 +74,12 @@ patch(Message.prototype, {
             case "many2one":
             case "selection":
                 return formatChar(trackingValue.value);
-            case "date":
-                if (trackingValue.value) {
-                    return luxon.DateTime.fromISO(trackingValue.value, { zone: "utc" })
-                        .setZone("system")
-                        .toLocaleString({ locale: this.userService.lang.replace("_", "-") });
-                }
-                return formatDate(trackingValue.value);
+            case "date": {
+                const value = trackingValue.value
+                    ? deserializeDate(trackingValue.value)
+                    : trackingValue.value;
+                return formatDate(value);
+            }
             case "datetime": {
                 const value = trackingValue.value
                     ? deserializeDateTime(trackingValue.value)

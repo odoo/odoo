@@ -207,21 +207,19 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         continue;
                     }
 
-                    const new_line = new Orderline(
-                        { env: this.env },
-                        {
-                            pos: this.pos,
-                            order: this.pos.get_order(),
-                            product: this.pos.db.get_product_by_id(line.product_id[0]),
-                            description: line.name,
-                            price: line.price_unit,
-                            tax_ids: orderFiscalPos ? undefined : line.tax_id,
-                            price_type: "manual",
-                            sale_order_origin_id: clickedOrder,
-                            sale_order_line_id: line,
-                            customer_note: line.customer_note,
-                        }
-                    );
+                    const line_values = {
+                        pos: this.pos,
+                        order: this.pos.get_order(),
+                        product: this.pos.db.get_product_by_id(line.product_id[0]),
+                        description: line.name,
+                        price: line.price_unit,
+                        tax_ids: orderFiscalPos ? undefined : line.tax_id,
+                        price_manually_set: false,
+                        sale_order_origin_id: clickedOrder,
+                        sale_order_line_id: line,
+                        customer_note: line.customer_note,
+                    };
+                    const new_line = new Orderline({ env: this.env }, line_values);
 
                     if (
                         new_line.get_product().tracking !== "none" &&
@@ -254,7 +252,18 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
-                    this.pos.get_order().add_orderline(new_line);
+                    const product = this.pos.db.get_product_by_id(line.product_id[0]);
+                    const product_unit = product.get_unit();
+                    if (product_unit && !product.get_unit().is_pos_groupable) {
+                        //loop for value of quantity
+                        for (let j = 0; j < new_line.quantity; j++) {
+                            const splitted_line = new Orderline({ env: this.env }, line_values);
+                            splitted_line.quantity = 1;
+                            this.pos.get_order().add_orderline(splitted_line);
+                        }
+                    } else {
+                        this.pos.get_order().add_orderline(new_line);
+                    }
                 }
             } else {
                 // apply a downpayment

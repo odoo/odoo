@@ -4,19 +4,19 @@
     <t t-name="discuss.ChannelMemberList">
         <ActionPanel title="title">
             <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-secondary m-3 mt-0">Invite a User</button>
-            <t t-if="props.thread.onlineMembers.length > 0">
+            <t t-if="onlineMembers.length > 0">
                 <h6 class="mx-3 text-700">
                     Online -
-                    <t t-esc="props.thread.onlineMembers.length"/>
+                    <t t-esc="onlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <t t-foreach="onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
-            <t t-if="props.thread.offlineMembers.length > 0">
+            <t t-if="offlineMembers.length > 0">
                 <h6 class="mx-3 text-700">
                     Offline -
-                    <t t-esc="props.thread.offlineMembers.length"/>
+                    <t t-esc="offlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <t t-foreach="offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
             <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>

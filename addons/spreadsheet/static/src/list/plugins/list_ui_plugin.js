@@ -53,7 +53,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                     const cells = this.getters.getCells(sheetId);
                     for (const cell of Object.values(cells)) {
                         if (cell.isFormula) {
-                            this._addListPositionToDataSource(cell.content);
+                            this._addListPositionToDataSource(cell);
                         }
                     }
                 }
@@ -87,7 +87,11 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
             }
             case "UPDATE_CELL":
                 if (cmd.content) {
-                    this._addListPositionToDataSource(cmd.content);
+                    const position = { sheetId: cmd.sheetId, col: cmd.col, row: cmd.row };
+                    const cell = this.getters.getCell(position);
+                    if (cell && cell.isFormula) {
+                        this._addListPositionToDataSource(cell);
+                    }
                 }
                 break;
             case "UNDO":
@@ -204,11 +208,11 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
      *
      * @param {string} content Odoo list formula
      */
-    _addListPositionToDataSource(content) {
-        if (getNumberOfListFormulas(content) !== 1) {
+    _addListPositionToDataSource(cell) {
+        if (getNumberOfListFormulas(cell.compiledFormula.tokens) !== 1) {
             return;
         }
-        const { functionName, args } = getFirstListFunction(content);
+        const { functionName, args } = getFirstListFunction(cell.compiledFormula.tokens);
         if (functionName !== "ODOO.LIST") {
             return;
         }
@@ -254,7 +258,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         const cell = this.getters.getCell(position);
         const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
-            const listFunction = getFirstListFunction(cell.content);
+            const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);
                 return this.getters.evaluateFormula(sheetId, content).toString();

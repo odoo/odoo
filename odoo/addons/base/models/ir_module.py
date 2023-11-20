@@ -162,7 +162,7 @@ class Module(models.Model):
             if not module.name:
                 module.description_html = False
                 continue
-            path = os.path.join(module.name, '/static/description/index.html')
+            path = os.path.join(module.name, 'static/description/index.html')
             try:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()

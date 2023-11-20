@@ -1,35 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-#
+# 
 # Translators:
-# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2022
-# Tommi Rintala <tommi.rintala@gmail.com>, 2022
-# Joni Winsten, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Timo Koukkari <ti.ko@netikka.fi>, 2022
-# Marko Happonen <marko.happonen@sprintit.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2023
+# Tommi Rintala <tommi.rintala@gmail.com>, 2023
+# Joni Winsten, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Timo Koukkari <ti.ko@netikka.fi>, 2023
+# Marko Happonen <marko.happonen@sprintit.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Martin Trigaux, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_stock
@@ -40,14 +40,11 @@ msgstr "% Toimitusvarmuus"
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
 msgstr "+ %d päivä(ä)"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time Delivery Data</span>"
-msgstr "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Ei toimitusaikatilastoja</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -65,8 +62,18 @@ msgid "<span class=\"o_stat_value\">%</span>"
 msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "<span> days</span>"
+msgstr "<span> päivää</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span>Forecasted: </span>"
 msgstr ""
 
 #. module: purchase_stock
@@ -141,7 +148,7 @@ msgstr "Kontakti"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid "Corresponding receipt not found."
 msgstr "Vastaavaa kuittia ei löydy."
@@ -153,6 +160,7 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -172,7 +180,9 @@ msgstr "Tilausmääräyksen vahvistamiseen tarvittavat päivät"
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
-msgstr "Tilausmääräyksen vahvistamiseen tarvittavat päivät, määritä, milloin tilausvahvistus on vahvistettava"
+msgstr ""
+"Tilausmääräyksen vahvistamiseen tarvittavat päivät, määritä, milloin "
+"tilausvahvistus on vahvistettava"
 
 #. module: purchase_stock
 #. odoo-python
@@ -191,8 +201,13 @@ msgstr "Toimituspaikka"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
-msgid "Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc."
-msgstr "Asennetuista moduuleista riippuen voit määrittää tuotteen reitin: ostetaanko se, valmistetaanko sitä, täydennetäänkö sitä tilauksesta jne."
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
+"Asennetuista moduuleista riippuen voit määrittää tuotteen reitin: ostetaanko"
+" se, valmistetaanko sitä, täydennetäänkö sitä tilauksesta jne."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -242,10 +257,16 @@ msgstr "Poikkeukset:"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
-msgid "For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation."
-msgstr "Tuotteen %s osalta toimintatyypin varasto (%s) on ristiriidassa uudelleentilaussäännön (%s) sijainnin (%s) kanssa. Vaihda toimintatyyppiä tai peruuta tarjouspyyntö."
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"Tuotteen %s osalta toimintatyypin varasto (%s) on ristiriidassa "
+"uudelleentilaussäännön (%s) sijainnin (%s) kanssa. Vaihda toimintatyyppiä "
+"tai peruuta tarjouspyyntö."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -277,6 +298,13 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "Palaa ostotilaukseen ja luo toimittajan lasku."
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/wizard/product_replenish.py:0
+#, python-format
+msgid "Go on the product form and add the list of vendors"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
 msgid "ID"
 msgstr "ID"
@@ -292,19 +320,9 @@ msgid "Incoming Shipments"
 msgstr "Vastaanotot"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
 msgstr "Incotermin sijainti"
-
-#. module: purchase_stock
-#: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
-msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
-msgstr "International Commercial Terms are a series of predefined commercial terms used in international transactions."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -348,8 +366,15 @@ msgstr "Manuaalisia toimintoja saatetaan tarvita."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays."
-msgstr "Toimittajien toimitusaikojen virhemarginaali. Kun järjestelmä luo ostotilauksia tuotteiden uudelleen tilaamista varten, ne ajoitetaan näin monta päivää aikaisemmin, jotta voidaan varautua odottamattomiin toimittajien viivästyksiin."
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Toimittajien toimitusaikojen virhemarginaali. Kun järjestelmä luo "
+"ostotilauksia tuotteiden uudelleen tilaamista varten, ne ajoitetaan näin "
+"monta päivää aikaisemmin, jotta voidaan varautua odottamattomiin "
+"toimittajien viivästyksiin."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -380,8 +405,12 @@ msgstr "Ei vastaanotettu"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
-msgstr "Odoo ei pysty luomaan anglosaksisia merkintöjä. Kokonaisarvosana %s on nolla."
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo ei pysty luomaan anglosaksisia merkintöjä. Kokonaisarvosana %s on "
+"nolla."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -421,8 +450,11 @@ msgstr "Tilauspiste"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
-msgid "Over the past 12 months; the number of products received on time divided by the number of ordered products."
-msgstr "Viimeisten 12 kuukauden aikana; ajallaan vastaanotettujen tuotteiden määrä jaettuna tilattujen tuotteiden määrällä."
+msgid ""
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -439,7 +471,7 @@ msgstr "Osittain vastaanotettu"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__property_account_creditor_price_difference
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Hintaerotuksen tili"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -465,6 +497,11 @@ msgstr "Tuote"
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
 msgid "Product Category"
 msgstr "Tuotekategoria"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_replenish
+msgid "Product Replenish"
+msgstr "Tuotteen täydennystilaus"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -530,8 +567,12 @@ msgstr "Ostotilausten määrä"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
-msgid "Put an address if you want to deliver directly from the vendor to the customer. Otherwise, keep empty to deliver to your own company."
-msgstr "Anna osoite jos haluat toimittaa suoraan toimittajalta asiakkaalle. Jätä tyhjäksi toimittaaksesi yrityksen omasta varastosta."
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Anna osoite jos haluat toimittaa suoraan toimittajalta asiakkaalle. Jätä "
+"tyhjäksi toimittaaksesi yrityksen omasta varastosta."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -609,6 +650,12 @@ msgid "Show Set Supplier Button"
 msgstr "Näytä Aseta toimittajaksi -painike"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_product_replenish_form_inherit_stock
+msgid "Show Vendor"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
 msgstr "Näytä toimittaja-sarake"
@@ -635,6 +682,11 @@ msgid "Stock Rule"
 msgstr "Varaston sääntö"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Varaston arvostuskerros"
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Varastosääntöjen raportti"
@@ -643,6 +695,11 @@ msgstr "Varastosääntöjen raportti"
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
 msgstr "Varaston toimittajan täydennystiedot"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_option
+msgid "Stock warehouse replenishment option"
+msgstr "Varastovaraston täydennysvaihtoehto"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -657,7 +714,8 @@ msgstr "Toimittajatiedot"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "Tekninen kenttä, jota käytetään Drop Ship Address -osoitteen näyttämiseen"
+msgstr ""
+"Tekninen kenttä, jota käytetään Drop Ship Address -osoitteen näyttämiseen"
 
 #. module: purchase_stock
 #. odoo-python
@@ -668,33 +726,64 @@ msgstr "Seuraava täydennystilaus on luotu"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
-msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund."
-msgstr "Ostotilauksen määrät ovat pienemmät kuin laskutetut. Sinun pitäisi pyytää hyvitystä."
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+"Ostotilauksen määrät ovat pienemmät kuin laskutetut. Sinun pitäisi pyytää "
+"hyvitystä."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
-msgid "There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors."
-msgstr "Tuotteen %s ostotilausta varten ei ole olemassa vastaavaa myyjän hintaa (myyjää ei ole määritelty, vähimmäismäärää ei ole saavutettu, päivämäärät eivät ole voimassa, ...). Siirry tuotelomakkeelle ja täydennä toimittajaluetteloa."
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
+msgstr ""
+"Tuotteen %s ostotilausta varten ei ole olemassa vastaavaa myyjän hintaa "
+"(myyjää ei ole määritelty, vähimmäismäärää ei ole saavutettu, päivämäärät "
+"eivät ole voimassa, ...). Siirry tuotelomakkeelle ja täydennä "
+"toimittajaluetteloa."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
 #: model:ir.model.fields,help:purchase_stock.field_product_template__property_account_creditor_price_difference
-msgid "This account is used in automated inventory valuation to record the price difference between a purchase order and its related vendor bill when validating this vendor bill."
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
 msgstr ""
+"Tätä tiliä käytetään automatisoidussa varaston arvonmäärityksessä kirjaamaan"
+" ostotilauksen ja siihen liittyvän toimittajan laskun välinen hintaero, kun "
+"kyseinen toimittajan lasku vahvistetaan."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
-msgid "This account will be used to value price difference between purchase price and accounting cost."
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
 msgstr ""
+"Tätä tiliä käytetään ostohinnan ja kirjanpitokustannusten välisen hintaeron "
+"arvostamiseen."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
-msgid "This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse."
-msgstr "Tämä lisää dropshipping-reitin, jota voit soveltaa tuotteisiin, jotta voit pyytää myyjiäsi toimittamaan tuotteet asiakkaillesi. Dropship-tuote luo ostopyynnön tarjousta varten, kun myyntitilaus on vahvistettu. Tämä on tarpeen mukainen toimitusketju. Pyydetty toimitusosoite on asiakkaan toimitusosoite eikä varastosi."
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Tämä lisää dropshipping-reitin, jota voit soveltaa tuotteisiin, jotta voit "
+"pyytää myyjiäsi toimittamaan tuotteet asiakkaillesi. Dropship-tuote luo "
+"ostopyynnön tarjousta varten, kun myyntitilaus on vahvistettu. Tämä on "
+"tarpeen mukainen toimitusketju. Pyydetty toimitusosoite on asiakkaan "
+"toimitusosoite eikä varastosi."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -703,14 +792,18 @@ msgstr "Tämä määrittää saapuvan lähetyksen toimintatyypin"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
-msgid "Those dates couldn’t be modified accordingly on the receipt %s which had already been validated."
-msgstr "Näitä päivämääriä ei voitu muuttaa vastaavasti kuitissa %s, joka oli jo vahvistettu."
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+"Näitä päivämääriä ei voitu muuttaa vastaavasti kuitissa %s, joka oli jo "
+"vahvistettu."
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
 msgstr "Nämä päivämäärät on päivitetty vastaavasti kuitissa %s."
@@ -727,10 +820,14 @@ msgstr "Siirto"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
-msgid "Unable to cancel purchase order %s as some receptions have already been done."
-msgstr "Ostotilausta %s ei voida peruuttaa, koska joitakin vastaanottoja on jo tehty."
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Ostotilausta %s ei voida peruuttaa, koska joitakin vastaanottoja on jo "
+"tehty."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -740,6 +837,7 @@ msgid "Validate the receipt of all ordered products."
 msgstr "Vahvista kaikkien tilattujen tuotteiden vastaanotto."
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
@@ -757,6 +855,13 @@ msgstr "Toimittajan viivästysraportti"
 #, python-format
 msgid "Vendor Lead Time"
 msgstr "Toimittajan läpimenoaika"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/wizard/product_replenish.py:0
+#, python-format
+msgid "Vendor Not Found in Product %s"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
@@ -788,12 +893,19 @@ msgstr "Kun tuotteita ostetaan, ne voidaan toimittaa tähän varastoon"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
-msgid "When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.<br/>Note: This rule will be used in combination with the rules<br/>of the reception route(s)"
-msgstr "Kun tuotteita tarvitaan <b>%s</b>, <br/> luodaan tarjouspyyntö tarpeen täyttämiseksi.<br/>Huomautus: Tätä sääntöä käytetään yhdessä vastaanottoreitin (-reittien)<br/>sääntöjen kanssa. Huomautus: Tätä sääntöä käytetään yhdessä vastaanottoreitin (-reittien) sääntöjen kanssa"
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
+"Kun tuotteita tarvitaan <b>%s</b>, <br/> luodaan tarjouspyyntö tarpeen "
+"täyttämiseksi.<br/>Huomautus: Tätä sääntöä käytetään yhdessä "
+"vastaanottoreitin (-reittien)<br/>sääntöjen kanssa. Huomautus: Tätä sääntöä "
+"käytetään yhdessä vastaanottoreitin (-reittien) sääntöjen kanssa"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -804,7 +916,7 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase.py:0
+#: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Sinun on asetettava toimittajan fyysinen paikka tälle kumppanille %s"

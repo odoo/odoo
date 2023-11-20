@@ -1,26 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
+# 
 # Translators:
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Joakim Weckman, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
@@ -45,11 +44,10 @@ msgstr ""
 "        esim. 110 / (1 + 10%) = 100 (sisältää hinnan)\n"
 "    - Prosenttiosuus hinnasta vero huomioiden: veron määrä on jako-osuus hinnasta:\n"
 "        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
-"        esim. 200 * (1 - 10%) = 180 (sisältää hinnan)"
+"        esim. 200 * (1 - 10%) = 180 (sisältää hinnan) "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Soveltuva koodi"
 
@@ -75,25 +73,6 @@ msgstr ""
 ":param partner: res.partner recordset singleton tai None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Laske veron määrä asettamalla muuttuja \"result\".\n"
-"\n"
-":param base_amount: float, todellinen määrä, johon veroa sovelletaan\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton tai None\n"
-":param partner: res.partner recordset singleton tai None"
-
-#. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
@@ -113,27 +92,8 @@ msgstr ""
 ":param partner: res.partner recordset singleton tai None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Määritä, sovelletaanko veroa asettamalla muuttujan 'result' arvoksi True tai False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton tai None\n"
-":param partner: res.partner recordset singleton tai None"
-
-#. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Python-koodi"
 
@@ -144,11 +104,19 @@ msgstr "Vero"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "Verojen laskenta"
 
 #. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Verojen mallipohjat"
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""
+"Syötit virheellisen koodin %r käsiteltäessä %r veroja\n"
+"\n"
+"Virhe : %s"

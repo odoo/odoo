@@ -1,83 +1,78 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_alipay
-#
+# 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
-msgid ""
-"* Cross-border: For the overseas seller \n"
-"* Express Checkout: For the Chinese Seller"
-msgstr ""
-
-#. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_payment_method
 msgid "Account"
 msgstr "Рахунок"
 
 #. module: payment_alipay
-#: model:account.payment.method,name:payment_alipay.payment_method_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
+#: model:payment.provider,name:payment_alipay.payment_provider_alipay
 msgid "Alipay"
 msgstr "Alipay"
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "Alipay Seller Email"
 msgstr "Email продавця Alipay "
 
 #. module: payment_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
+msgid "Code"
+msgstr "Код"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
 msgid "Cross-border"
 msgstr "Транскордонний"
 
 #. module: payment_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Експрес-оплата (лише для китайський продавців)"
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
 msgid "MD5 Signature Key"
 msgstr "Ключ підпису MD5"
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
 msgstr "ID партнера продавця"
 
 #. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Не знайдено жодної транзакції, що відповідає референсу %s."
 
 #. module: payment_alipay
-#: model:ir.model,name:payment_alipay.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Платіжний еквайєр"
-
-#. module: payment_alipay
-#: model:ir.model,name:payment_alipay.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.model,name:payment_alipay.model_payment_provider
+msgid "Payment Provider"
+msgstr "Провайдер платежу"
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_transaction
@@ -85,33 +80,62 @@ msgid "Payment Transaction"
 msgstr "Платіжна операція"
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Провайдер"
-
-#. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Отримані дані з відстутнім референсом %(r)s або txn_id %(t)s."
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Електронна адреса публічного партнера Alipay"
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"ID публічного партнера, який використовується виключно для ідентифікації "
+"облікового запису в Alipay"
 
 #. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Технічний код цього провайдера платежу."
+
+#. module: payment_alipay
+#: model_terms:ir.ui.view,arch_db:payment_alipay.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Asiapay</strong>."
+msgstr ""
+"Цей провайдер не підтримується.\n"
+"                    Ви можете вимкнути його та перейти до <strong>Asiapay</strong>."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been authorized."
+msgstr "Вашу оплату було авторизовано."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,cancel_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been cancelled."
+msgstr "Ваш платіж скасовано."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,pending_msg:payment_alipay.payment_provider_alipay
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Ваш платіж успішно оброблено, але очікує на затвердження."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,done_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been successfully processed."
+msgstr ""
+
+#. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "статус недійсної отриманої транзакції: %s"

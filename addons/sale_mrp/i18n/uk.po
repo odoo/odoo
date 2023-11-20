@@ -1,38 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_mrp
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Manufactured</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Виготовлено</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Confirmed</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Підтверджено</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>In progress</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>В процесі</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
@@ -52,7 +53,7 @@ msgstr "<span class=\"o_stat_text\">Продаж</span>"
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<strong>Manufacturing Orders</strong>"
-msgstr ""
+msgstr "<strong>Замовлення на виробництво</strong>"
 
 #. module: sale_mrp
 #. odoo-python
@@ -62,11 +63,13 @@ msgid ""
 "As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
 "The error concerns these products: %s"
 msgstr ""
+"Поки існують деякі рядки замовлення на продаж, які мають бути доставлені/виставлені рахунки-фактури та пов’язані з цими описами матеріалів, їх не можна видалити.\n"
+"Помилка стосується цих товарів: %s"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Специфікація"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count
@@ -86,7 +89,7 @@ msgstr "Дата:"
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
 msgid "Journal Item"
-msgstr "Запис у журналі"
+msgstr "Елемент журналу"
 
 #. module: sale_mrp
 #. odoo-python
@@ -98,7 +101,7 @@ msgstr "Замовлення на виробництво створені %s"
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_ids
 msgid "Manufacturing orders associated with this sales order."
-msgstr ""
+msgstr "Виробничі замовлення, пов’язані з цим замовленням на продаж."
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move_line

@@ -1,37 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* board
-#
+# 
 # Translators:
-# Marek Pontus, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Marek Pontus, 2023
 # Anna, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#, python-format
-msgid "\"%s\" added to dashboard"
-msgstr "\"%s\" lisatud töölauale"
-
-#. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -42,35 +35,28 @@ msgstr ""
 "                 töölauale\""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
-#, python-format
-msgid "'%s' added to dashboard"
-msgstr "'%s' lisatud töölauale"
-
-#. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Lisa"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add to my dashboard"
 msgstr "Lisa minu töölauale"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.js:0
 #, python-format
 msgid "Are you sure that you want to remove this item?"
 msgstr "Olete kindel, et soovite seda üksust eemaldada?"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
@@ -78,19 +64,25 @@ msgid "Board"
 msgstr "Juhtkond"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Muuda paigutust"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Ei saa lisada filtrit töölauale"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+#, python-format
+msgid "Dashboard"
+msgstr "Töölaud"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -98,14 +90,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_action.xml:0
 #, python-format
 msgid "Invalid action"
 msgstr "Kehtetu toiming"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Layout"
@@ -119,15 +112,14 @@ msgid "My Dashboard"
 msgstr "Minu töölaud"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
 msgstr "Palun värskendage oma brauserit, et muutused jõustuksid."
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -138,7 +130,7 @@ msgstr ""
 "                  menüüsse, valige graafiline või listi vaade ja klõpsake"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -149,15 +141,22 @@ msgstr ""
 "                    enne töölauale sisestamist."
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
 msgstr "Teie isiklik töölaud on tühi"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
 msgstr "laiendatud otinguvalikutes."
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "“%s” added to dashboard"
+msgstr ""

@@ -3300,6 +3300,7 @@ msgstr "Entnahmestrategie erzwingen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Forecast"
 msgstr "Prognose"
 
@@ -7557,7 +7558,6 @@ msgstr "Vor dem geplanten Datum reservieren"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__assigned
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserved"
 msgstr "Reserviert"
 
@@ -10939,6 +10939,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Sie haben weniger Produkte verarbeitet als ursprünglich angefragt:"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sie haben Produkte auf Lager, für die die Nachverfolgung der Los-/Seriennummer aktiviert ist. \n"
+"Schalten Sie die Nachverfolgung bei allen Produkten aus, bevor Sie diese Einstellung deaktivieren."
 
 #. module: stock
 #. odoo-python

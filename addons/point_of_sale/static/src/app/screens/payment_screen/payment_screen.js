@@ -156,7 +156,6 @@ export class PaymentScreen extends Component {
         );
         if (
             !hasCashPaymentMethod &&
-            this.currentOrder.get_due() + this.selectedPaymentLine.amount > 0 &&
             amount > this.currentOrder.get_due() + this.selectedPaymentLine.amount
         ) {
             this.selectedPaymentLine.set_amount(0);
@@ -272,9 +271,9 @@ export class PaymentScreen extends Component {
         this.currentOrder.finalized = true;
 
         // 1. Save order to server.
-        this.env.services.ui.block()
+        this.env.services.ui.block();
         const syncOrderResult = await this.pos.push_single_order(this.currentOrder);
-        this.env.services.ui.unblock()
+        this.env.services.ui.unblock();
 
         if (syncOrderResult instanceof ConnectionLostError) {
             this.pos.showScreen(this.nextScreen);

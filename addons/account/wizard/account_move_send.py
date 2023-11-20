@@ -41,7 +41,7 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
     )
     display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    send_mail_warning_message = fields.Text(compute='_compute_send_mail_extra_fields')
+    send_mail_warning_message = fields.Boolean(compute='_compute_send_mail_extra_fields')
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
@@ -252,16 +252,9 @@ class AccountMoveSend(models.TransientModel):
     def _compute_send_mail_extra_fields(self):
         for wizard in self:
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
-            wizard.send_mail_warning_message = False
-
             invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
             wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
-
-            if wizard.mode == 'invoice_multi' and wizard.checkbox_send_mail and invoices_without_mail_data:
-                wizard.send_mail_warning_message = _(
-                    "The partners on the following invoices have no email address, "
-                    "so those invoices will not be sent: %s",
-                    ", ".join(invoices_without_mail_data.mapped('name')))
+            wizard.send_mail_warning_message = bool(invoices_without_mail_data) and (wizard.checkbox_send_mail or wizard.send_mail_readonly)
 
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
@@ -331,6 +324,27 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    def action_open_partners_without_email(self, res_ids=None):
+        partners = self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)
+        if len(partners) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'form',
+                'target': 'current',
+                'res_id': partners.id,
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'tree,form',
+                'target': 'current',
+                'name': _('Partners without email'),
+                'context': {'create': False, 'delete': False},
+                'domain': [('id', 'in', partners.ids)],
+            }
 
     @api.model
     def _need_invoice_document(self, invoice):

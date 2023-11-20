@@ -107,21 +107,15 @@ class IrAsset(models.Model):
         if not debug_assets:
             bundle_name, min_ = bundle_name.rsplit('.', 1)
             if min_ != 'min':
-                msg = "'min' expected in extension in non debug mode"
-                _logger.error(msg)
-                raise ValueError(msg)
+                raise ValueError("'min' expected in extension in non debug mode")
         if asset_type == 'css':
             if bundle_name.endswith('.rtl'):
                 bundle_name = bundle_name[:-4]
                 rtl = True
         elif asset_type != 'js':
-            msg = 'Only js and css assets bundle are supported for now'
-            _logger.error(msg)
-            raise ValueError(msg)
+            raise ValueError('Only js and css assets bundle are supported for now')
         if len(bundle_name.split('.')) != 2:
-            msg = f'{bundle_name} is not a valid bundle name, should have two parts'
-            _logger.error(msg)
-            raise ValueError(msg)
+            raise ValueError(f'{bundle_name} is not a valid bundle name, should have two parts')
         return bundle_name, rtl, asset_type
 
     @tools.conditional(

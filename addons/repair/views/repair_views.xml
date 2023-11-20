@@ -61,13 +61,10 @@
             <form string="Repair Order">
                 <field name="unreserve_visible" invisible="1"/>
                 <field name="reserve_visible" invisible="1"/>
-                <field name="show_set_qty_button" invisible="1"/>
-                <field name="show_clear_qty_button" invisible="1"/>
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
                    <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
-                   <button name="action_clear_quantities_to_zero" invisible="not show_clear_qty_button" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                    <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object"/>
                    <button name="action_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
                    <button name="action_create_sale_order" type="object" string="Create Quotation" invisible="state == 'cancel' or sale_order_id"/>
@@ -132,7 +129,7 @@
                 <notebook>
                     <page string="Parts" name="parts">
                         <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
-                        context="{'default_repair_id': id, 'default_product_uom_qty': product_qty, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
+                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
                             <tree string="Operations" editable="bottom">
                                 <field name="company_id" column_invisible="True"/>
                                 <field name="name" column_invisible="True"/>
@@ -160,7 +157,7 @@
                                 <field name="product_packaging_id" groups="product.group_stock_packaging"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
-                                <field name="forecast_availability" string="Reserved" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
+                                <field name="forecast_availability" string="Forecasted" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
                                 <field name="quantity" string="Done" readonly="not product_id"/>
                                 <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>

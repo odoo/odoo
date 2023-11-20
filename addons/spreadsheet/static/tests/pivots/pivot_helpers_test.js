@@ -3,7 +3,7 @@ import { getFirstPivotFunction, getNumberOfPivotFormulas } from "@spreadsheet/pi
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";
 import { pivotTimeAdapter } from "@spreadsheet/pivot/pivot_time_adapters";
-import { constants } from "@odoo/o-spreadsheet";
+import { constants, tokenize } from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE } = constants;
 
 function stringArg(value) {
@@ -13,14 +13,15 @@ function stringArg(value) {
 QUnit.module("spreadsheet > pivot_helpers", {}, () => {
     QUnit.test("Basic formula extractor", async function (assert) {
         const formula = `=ODOO.PIVOT("1", "test") + ODOO.LIST("2", "hello", "bla")`;
+        const tokens = tokenize(formula);
         let functionName;
         let args;
-        ({ functionName, args } = getFirstPivotFunction(formula));
+        ({ functionName, args } = getFirstPivotFunction(tokens));
         assert.strictEqual(functionName, "ODOO.PIVOT");
         assert.strictEqual(args.length, 2);
         assert.deepEqual(args[0], stringArg("1"));
         assert.deepEqual(args[1], stringArg("test"));
-        ({ functionName, args } = getFirstListFunction(formula));
+        ({ functionName, args } = getFirstListFunction(tokens));
         assert.strictEqual(functionName, "ODOO.LIST");
         assert.strictEqual(args.length, 3);
         assert.deepEqual(args[0], stringArg("2"));
@@ -30,33 +31,34 @@ QUnit.module("spreadsheet > pivot_helpers", {}, () => {
 
     QUnit.test("Extraction with two PIVOT formulas", async function (assert) {
         const formula = `=ODOO.PIVOT("1", "test") + ODOO.PIVOT("2", "hello", "bla")`;
-        const { functionName, args } = getFirstPivotFunction(formula);
+        const tokens = tokenize(formula);
+        const { functionName, args } = getFirstPivotFunction(tokens);
         assert.strictEqual(functionName, "ODOO.PIVOT");
         assert.strictEqual(args.length, 2);
         assert.deepEqual(args[0], stringArg("1"));
         assert.deepEqual(args[1], stringArg("test"));
-        assert.strictEqual(getFirstListFunction(formula), undefined);
+        assert.strictEqual(getFirstListFunction(tokens), undefined);
     });
 
     QUnit.test("Number of formulas", async function (assert) {
         const formula = `=ODOO.PIVOT("1", "test") + ODOO.PIVOT("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
-        assert.strictEqual(getNumberOfPivotFormulas(formula), 2);
-        assert.strictEqual(getNumberOfListFormulas(formula), 1);
-        assert.strictEqual(getNumberOfPivotFormulas("=1+1"), 0);
-        assert.strictEqual(getNumberOfListFormulas("=1+1"), 0);
-        assert.strictEqual(getNumberOfPivotFormulas("=bla"), 0);
-        assert.strictEqual(getNumberOfListFormulas("=bla"), 0);
+        assert.strictEqual(getNumberOfPivotFormulas(tokenize(formula)), 2);
+        assert.strictEqual(getNumberOfListFormulas(tokenize(formula)), 1);
+        assert.strictEqual(getNumberOfPivotFormulas(tokenize("=1+1")), 0);
+        assert.strictEqual(getNumberOfListFormulas(tokenize("=1+1")), 0);
+        assert.strictEqual(getNumberOfPivotFormulas(tokenize("=bla")), 0);
+        assert.strictEqual(getNumberOfListFormulas(tokenize("=bla")), 0);
     });
 
     QUnit.test("getFirstPivotFunction does not crash when given crap", async function (assert) {
-        assert.strictEqual(getFirstListFunction("=SUM(A1)"), undefined);
-        assert.strictEqual(getFirstPivotFunction("=SUM(A1)"), undefined);
-        assert.strictEqual(getFirstListFunction("=1+1"), undefined);
-        assert.strictEqual(getFirstPivotFunction("=1+1"), undefined);
-        assert.strictEqual(getFirstListFunction("=bla"), undefined);
-        assert.strictEqual(getFirstPivotFunction("=bla"), undefined);
-        assert.strictEqual(getFirstListFunction("bla"), undefined);
-        assert.strictEqual(getFirstPivotFunction("bla"), undefined);
+        assert.strictEqual(getFirstListFunction(tokenize("=SUM(A1)")), undefined);
+        assert.strictEqual(getFirstPivotFunction(tokenize("=SUM(A1)")), undefined);
+        assert.strictEqual(getFirstListFunction(tokenize("=1+1")), undefined);
+        assert.strictEqual(getFirstPivotFunction(tokenize("=1+1")), undefined);
+        assert.strictEqual(getFirstListFunction(tokenize("=bla")), undefined);
+        assert.strictEqual(getFirstPivotFunction(tokenize("=bla")), undefined);
+        assert.strictEqual(getFirstListFunction(tokenize("bla")), undefined);
+        assert.strictEqual(getFirstPivotFunction(tokenize("bla")), undefined);
     });
 });
 

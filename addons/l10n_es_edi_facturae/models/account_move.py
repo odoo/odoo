@@ -85,6 +85,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return not self.invoice_pdf_report_id \
             and not self.l10n_es_edi_facturae_xml_id \
+            and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
             and self.company_id.country_code == 'ES' \
             and self.company_id.currency_id.name == 'EUR'

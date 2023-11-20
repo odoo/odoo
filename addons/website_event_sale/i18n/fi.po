@@ -1,29 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_sale
-#
+# 
 # Translators:
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Martin Trigaux, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Martin Trigaux, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
@@ -38,15 +36,9 @@ msgstr ""
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
+"<i class=\"fa fa-check me-2\"/>\n"
+"                                            Registered"
 msgstr ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Ilmoittautunut\n"
-"                                        </small>"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -59,19 +51,32 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
-msgstr "Hinnaston kohde, jolle on asetettu vähimmäismäärä, ei sovellu käytettäväksi tapahtumalipputuotteessa."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Hinnaston kohde, jolle on asetettu vähimmäismäärä, ei sovellu käytettäväksi "
+"tapahtumalipputuotteessa."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
-msgstr "Hinnaston kohde, jolle on asetettu vähimmäismäärä, ei voida käyttää tapahtumalipputuotteessa."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Hinnaston kohde, jolle on asetettu vähimmäismäärä, ei voida käyttää "
+"tapahtumalipputuotteessa."
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
+msgstr "Vahvista ilmoittautuminen"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
 msgstr ""
 
 #. module: website_event_sale
@@ -85,12 +90,12 @@ msgid "Event Tickets"
 msgstr "Tapahtuman liput"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
 msgstr "Ilmainen"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Alkaa"
 
@@ -135,14 +140,19 @@ msgstr "Myyntitilausrivi"
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "Pahoittelemme, Liput %(ticket)s tapahtumaan %(event)s on myyty loppuun."
+msgstr ""
+"Pahoittelemme, Liput %(ticket)s tapahtumaan %(event)s on myyty loppuun."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
-msgstr "Pahoittelemme, mutta vain %(remaining_seats)d lipputyypin %(ticket)s paikkaa on vapaana tapahtumaan %(event)s."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
+msgstr ""
+"Pahoittelemme, mutta vain %(remaining_seats)d lipputyypin %(ticket)s paikkaa"
+" on vapaana tapahtumaan %(event)s."
 
 #. module: website_event_sale
 #. odoo-python
@@ -193,6 +203,6 @@ msgid "events"
 msgstr "tapahtumat"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
-msgstr " "
+msgstr "->"

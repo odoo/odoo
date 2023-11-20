@@ -791,12 +791,12 @@ class Meeting(models.Model):
         added_partner_ids = []
         for command in partner_commands:
             op = command[0]
-            if op in (2, 3):  # Remove partner
+            if op in (2, 3, Command.delete, Command.unlink):  # Remove partner
                 removed_partner_ids += [command[1]]
-            elif op == 6:  # Replace all
+            elif op in (6, Command.set):  # Replace all
                 removed_partner_ids += set(self.partner_ids.ids) - set(command[2])  # Don't recreate attendee if partner already attend the event
                 added_partner_ids += set(command[2]) - set(self.partner_ids.ids)
-            elif op == 4:
+            elif op in (4, Command.link):
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 

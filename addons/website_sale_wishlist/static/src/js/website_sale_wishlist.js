@@ -198,7 +198,6 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         }).then(function (data) {
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showCartNotification(callService, data.notification_info);
-            wSaleUtils.showWarning(data.warning);
         });
     },
     /**

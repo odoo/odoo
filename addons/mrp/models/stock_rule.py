@@ -63,8 +63,13 @@ class StockRule(models.Model):
                     ('user_id', '=', False),
                 )
                 if procurement.values.get('orderpoint_id'):
-                    procurement_date = fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay))
-                    domain += (('date_deadline', '<=', datetime.combine(procurement_date, datetime.max.time())),)
+                    procurement_date = datetime.combine(
+                        fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
+                        datetime.max.time()
+                    )
+                    domain += ('|',
+                               '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
+                               '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
                 if group:
                     domain += (('procurement_group_id', '=', group.id),)
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)

@@ -15,24 +15,11 @@
                         aria-label="Close"/>
             </div>
             <div class="toast-body">
-                <div class="row g-2 mb-2" t-foreach="props.lines" t-as="line" t-key="line.id">
-                    <div class="col-3">
-                        <img class="img o_image_64_max rounded mb-2 img-fluid"
-                             t-att-src="line.image_url"
-                             t-att-alt="line.name"/>
-                    </div>
-                    <div class="col-6 d-flex flex-column align-items-start">
-                        <span t-out="getProductSummary(line)"/>
-                        <span class="text-muted small"
-                              t-if="line.description"
-                              t-out="line.description"/>
-                    </div>
-                    <div class="col-3 d-flex flex-column align-items-end gap-1"
-                         t-out="getFormattedPrice(line)"/>
-                </div>
-                <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
-                    View cart
-                </a>
+                <WarningNotification t-if="this.props.warning" warning="this.props.warning"/>
+                <AddToCartNotification
+                    t-elif="this.props.lines.length"
+                    lines="this.props.lines"
+                    currency_id="this.props.currency_id"/>
             </div>
         </div>
     </t>
