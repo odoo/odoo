@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.DevtoolsButtons">
-        <div>
-            <div class="btn" t-att-class="'btn-primary me-1'" t-on-click="() => this.onClick(1)">
-                1
-            </div>
-            <div class="btn" t-att-class="'btn-primary me-1'" t-on-click="() => this.onClick(2)">
-                2
-            </div>
-            <div class="btn" t-att-class="'btn-primary me-1'" t-on-click="() => this.onClick(3)">
-                3
-            </div>
+        <div t-foreach="buttons" t-as="button" t-key="button_index">
+            <div t-esc="button_index + 1" class="btn btn-primary me-1" t-on-click="() => this.onClick(button_index)"/>
         </div>
     </t>
 </templates>
