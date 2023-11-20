@@ -221,11 +221,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
-
-                                // Add answer to selected answer
-                                self.selectedAnswers.push(parseInt($target.val()));
                             }
                         });
+                        // Add answer to selected answer
+                        self.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
             }
