@@ -1025,20 +1025,19 @@ class AccountMove(models.Model):
             if payment_terms_lines:
                 # Retrieve account from previous payment terms lines in order to allow the user to set a custom one.
                 return payment_terms_lines[0].account_id
-            elif self.partner_id:
-                # Retrieve account from partner.
-                if self.is_sale_document(include_receipts=True):
-                    return self.partner_id.property_account_receivable_id
-                else:
-                    return self.partner_id.property_account_payable_id
             else:
-                # Search new account.
-                domain = [
-                    ('company_id', '=', self.company_id.id),
-                    ('internal_type', '=', 'receivable' if self.move_type in ('out_invoice', 'out_refund', 'out_receipt') else 'payable'),
-                    ('deprecated', '=', False),
-                ]
-                return self.env['account.account'].search(domain, limit=1)
+                accounts = {
+                    account_type: acc or self.env['account.account'].search([
+                        ('company_id', '=', self.company_id.id),
+                        ('internal_type', '=', account_type),
+                        ('deprecated', '=', False),
+                    ], limit=1)
+                    for acc, account_type in [(self.partner_id.property_account_payable_id, 'payable'), (self.partner_id.property_account_receivable_id, 'receivable')]}
+                account_map = (self.fiscal_position_id or self.env['account.fiscal.position']).map_accounts(accounts)
+                if self.is_sale_document(include_receipts=True):
+                    return account_map['receivable']
+                elif self.is_purchase_document(include_receipts=True):
+                    return account_map['payable']
 
         def _compute_payment_terms(self, date, total_balance, total_amount_currency):
             ''' Compute the payment terms.
