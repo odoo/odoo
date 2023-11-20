@@ -17,7 +17,6 @@ import {
     addRow,
     click,
     clickDiscard,
-    clickOpenM2ODropdown,
     clickOpenedDropdownItem,
     clickSave,
     dragAndDrop,
@@ -4877,6 +4876,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test('buttons with attr "special" in dialog close the dialog', async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
         serverData.views = {
             "product,false,form": `
                 <form>
@@ -4916,7 +4919,6 @@ QUnit.module("Views", (hooks) => {
         });
 
         await editInput(target, "[name=product_id] input", "ABC");
-        await clickOpenM2ODropdown(target, "product_id");
         await clickOpenedDropdownItem(target, "product_id", "Create and edit...");
         assert.containsOnce(target, ".o_dialog", "dialog is present to create the product");
 
@@ -4939,7 +4941,6 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["write RPC"], "write RPC has been made");
 
         await editInput(target, "[name=product_id] input", "XYZ");
-        await clickOpenM2ODropdown(target, "product_id");
         await clickOpenedDropdownItem(target, "product_id", "Create and edit...");
         await click(target.querySelector("button[special=cancel]"));
         assert.containsNone(target, ".o_dialog", "dialog has been closed");
