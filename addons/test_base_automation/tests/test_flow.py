@@ -1077,3 +1077,26 @@ class TestHttp(common.HttpCase):
             "name": "some name",
             "test_param": "test_value",
         })
+
+    def test_webhook_send_and_receive(self):
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        obj = self.env[model.model].create({"name": "some name"})
+
+        automation_receiver = create_automation(self, trigger="on_webhook", model_id=model.id, _actions={
+            "state": "code",
+            "code": "record.write({'another_field': json.dumps(payload)})"
+        })
+        name_field_id = self.env.ref("test_base_automation.field_base_automation_linked_test__name")
+        automation_sender = create_automation(self, trigger="on_write", model_id=model.id, trigger_field_ids=[(6, 0, [name_field_id.id])], _actions={
+            "state": "webhook",
+            "webhook_url": automation_receiver.url,
+        })
+
+        obj.name = "new_name"
+        self.cr.flush()
+        self.cr.clear()
+        self.assertEqual(json.loads(obj.another_field), {
+            '_action': f'Send Webhook Notification(#{automation_sender.action_server_ids[0].id})',
+            "_id": obj.id,
+            "_model": obj._name,
+        })
