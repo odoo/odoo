@@ -10,9 +10,21 @@ from odoo.tools.misc import file_open
 class TestMassMailing(models.TransientModel):
     _name = 'mailing.mailing.test'
     _description = 'Sample Mail Wizard'
+    # allow mailing.mailing.test records to live for 10h (instead of 1h default)
+    # used for quality of life in combination with '_default_email_to'
+    _transient_max_hours = 10.0
+
+    def _default_email_to(self):
+        """ Fetch the last used 'email_to' to populate the email_to value, fallback to user email.
+         This enables a user to do quick successive tests without having to type it every time.
+         As this is a transient model, it will not always work, but is sufficient as just a default
+         value. """
+        return self.env['mailing.mailing.test'].search([
+            ('create_uid', '=', self.env.uid),
+        ], order='create_date desc', limit=1).email_to or self.env.user.email_formatted
 
     email_to = fields.Text(string='Recipients', required=True,
-                           help='Carriage-return-separated list of email addresses.', default=lambda self: self.env.user.email_formatted)
+                           help='Carriage-return-separated list of email addresses.', default=_default_email_to)
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', required=True, ondelete='cascade')
 
     def send_mail_test(self):
