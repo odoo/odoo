@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Sub-template used for every instance of AdministrativeCentresType -->
+        <template id="administrative_centers_type">
+            <AdministrativeCentres>
+                <AdministrativeCentre t-foreach="administrative_centers" t-as="ac">
+                    <CentreCode t-out="(ac.get('center_code') or '')[:10]"/>
+                    <RoleTypeCode t-out="ac.get('role_type_code')"/>
+                    <Name t-out="(ac.get('name') or '')[:40]"/>
+                    <t t-call="l10n_es_edi_facturae.address_type">
+                        <t t-set="partner" t-value="ac.get('partner')"/>
+                        <t t-set="partner_country_code" t-value="ac.get('partner_country_code')"/>
+                    </t>
+                    <t t-call="l10n_es_edi_facturae.contact_details_type">
+                        <t t-set="partner" t-value="ac.get('partner')"/>
+                        <t t-set="partner_phone" t-value="ac.get('partner_phone')"/>
+                    </t>
+                    <PhysicalGLN t-out="(ac.get('physical_gln') or '')[:14]"/>
+                    <LogicalOperationalPoint t-out="(ac.get('logical_operational_point') or '')[:14]"/>
+                </AdministrativeCentre>
+            </AdministrativeCentres>
+        </template>
+
+        <template id="business_type" inherit_id="l10n_es_edi_facturae.business_type">
+            <xpath expr="//t[@t-call='l10n_es_edi_facturae.tax_identification_type']" position="after">
+                <t t-call="l10n_es_edi_facturae_adm_centers.administrative_centers_type"/>
+            </xpath>
+        </template>
+
+        <template id="account_invoice_facturae_export" inherit_id="l10n_es_edi_facturae.account_invoice_facturae_export">
+            <xpath expr="//SellerParty//t[@t-set='partner_name']" position="after">
+                <t t-set="administrative_centers" t-value="self_party_administrative_centers if is_outstanding else other_party_administrative_centers"/>
+            </xpath>
+            <xpath expr="//BuyerParty//t[@t-set='partner_name']" position="after">
+                <t t-set="administrative_centers" t-value="other_party_administrative_centers if is_outstanding else self_party_administrative_centers"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
