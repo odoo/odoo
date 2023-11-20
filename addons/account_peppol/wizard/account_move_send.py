@@ -55,7 +55,7 @@ class AccountMoveSend(models.TransientModel):
     def _compute_peppol_warning(self):
         for wizard in self:
             invalid_partners = wizard.move_ids.partner_id.filtered(
-                lambda partner: not partner.account_peppol_is_endpoint_valid or partner.ubl_cii_format in {False, 'facturx'})
+                lambda partner: not partner.account_peppol_is_endpoint_valid)
             if not invalid_partners:
                 wizard.peppol_warning = False
             else:
@@ -68,13 +68,16 @@ class AccountMoveSend(models.TransientModel):
     def _compute_enable_peppol(self):
         for wizard in self:
             # show peppol option if either the ubl option is available or any move already has a ubl file generated
-            # and moves are not processing/done
+            # and moves are not processing/done and if partners have an edi format set to one that works for peppol
+            invalid_partners = wizard.move_ids.partner_id.filtered(
+                lambda partner: partner.ubl_cii_format in {False, 'facturx', 'oioubl_201'})
             wizard.enable_peppol = (
                 wizard.company_id.account_peppol_proxy_state == 'active' \
                 and (
                     wizard.enable_ubl_cii_xml
                     or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)
                 )
+                and not invalid_partners
             )
 
     @api.depends('company_id.account_edi_proxy_client_ids.edi_mode')
