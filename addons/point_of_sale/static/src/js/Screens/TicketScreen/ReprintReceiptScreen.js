@@ -15,7 +15,9 @@ export class ReprintReceiptScreen extends AbstractReceiptScreen {
         owl.onMounted(this.onMounted);
     }
     onMounted() {
-        this.printReceipt();
+        setTimeout(() => {
+            this.printReceipt();
+        }, 50);
     }
     confirm() {
         this.pos.showScreen("TicketScreen", { reuseSavedUIState: true });
