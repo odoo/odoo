@@ -224,6 +224,15 @@ class Lang(models.Model):
         """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
 
+    def _get_active(self, code):
+        """ Return the given language code if active, else return ``"en_US"``.
+        This method is convenient to retrieve a meaningful translated field
+        value from the database.
+        """
+        if not code or not self._lang_get_id(code):
+            return 'en_US'
+        return code
+
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
         thousands_sep = self.thousands_sep or ''

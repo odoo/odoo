@@ -264,7 +264,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             'default_res_ids': self.record_portal.ids,
             'default_template_id': template_id,
             'force_email': True,
-            'lang': '{{ object.partner_id.lang }}',
+            'lang': 'en_US',
         })
 
     def test_initial_data(self):

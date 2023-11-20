@@ -477,6 +477,7 @@ class test_convert_import_data(TransactionCase):
         self.assertItemsEqual(results['messages'], [])
 
     def test_date_fields_no_options(self):
+        self.env['res.lang']._activate_lang('de_DE')
         import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
             'res_model': 'res.partner',
             'file': 'name,date,create_date\n'

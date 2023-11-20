@@ -687,10 +687,7 @@ class Environment(Mapping):
 
         :rtype: str
         """
-        lang = self.context.get('lang')
-        # _lang_get_id is cached and used to validate lang before return,
-        # because 'env.lang' may be injected in SQL queries
-        return lang if lang and self['res.lang']._lang_get_id(lang) else None
+        return self.context.get('lang') or None
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -1086,10 +1083,12 @@ class Cache(object):
         existing values in cache.
         """
         field_cache = self._set_field_cache(records, field)
+        env = records.env
         if field.translate:
-            if records.env.context.get('prefetch_langs'):
-                langs = {lang for lang, _ in records.env['res.lang'].get_installed()} | {'en_US'}
-                _langs = {f'_{l}' for l in langs} if field._lang(records.env).startswith('_') else set()
+            if env.context.get('prefetch_langs'):
+                installed = [lang for lang, _ in env['res.lang'].get_installed()]
+                langs = OrderedSet(installed + ['en_US'])
+                _langs = [f'_{l}' for l in langs] if field._lang(env, validate=True).startswith('_') else []
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1102,7 +1101,7 @@ class Cache(object):
                             **val
                         }
             else:
-                lang = field._lang(records.env)
+                lang = field._lang(env, validate=True)
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
