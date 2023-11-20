@@ -19,7 +19,7 @@ class StockRule(models.Model):
     ], ondelete={'buy': 'cascade'})
 
     def _get_message_dict(self):
-        message_dict = super(StockRule, self)._get_message_dict()
+        message_dict = super()._get_message_dict()
         __, destination, __ = self._get_message_values()
         message_dict.update({
             'buy': _('When products are needed in <b>%s</b>, <br/> '
@@ -93,9 +93,9 @@ class StockRule(models.Model):
             procurements, rules = zip(*procurements_rules)
 
             # Get the set of procurement origin for the current domain.
-            origins = set([p.origin for p in procurements])
+            origins = {p.origin for p in procurements}
             # Check if a PO exists for the current domain.
-            po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
+            po = self.env['purchase.order'].sudo().search(list(domain), limit=1)
             company_id = procurements[0].company_id
             if not po:
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
@@ -122,7 +122,9 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
+            grouped_po_lines = groupby(
+                po.order_line.filtered(lambda pol: not pol.display_type and pol.product_uom == pol.product_id.uom_po_id),
+                key=lambda pol: pol.product_id.id)
             for product, po_lines in grouped_po_lines:
                 po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
             po_line_values = []
@@ -326,7 +328,7 @@ class StockRule(models.Model):
         return domain
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
-        res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
+        res = super()._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
         if self.location_dest_id.usage == "supplier":
             res['purchase_line_id'], res['partner_id'] = move_to_copy._get_purchase_line_and_partner_from_chain()
