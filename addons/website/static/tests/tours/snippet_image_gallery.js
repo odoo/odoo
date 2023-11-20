@@ -17,7 +17,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     {
         content: 'Check that the modal has opened properly',
         trigger: 'iframe .s_gallery_lightbox img',
-        run: () => {}, // This is a check.
+        isCheck: true,
     },
 ]);
 
@@ -52,12 +52,42 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
 }, {
     content: "Check that the Snippet Editor of the clicked image has been loaded",
     trigger: "we-customizeblock-options span:contains('Image'):not(:contains('Image Gallery'))",
-    run: () => null,
+    isCheck: true,
 }, {
     content: "Click on Remove Block",
     trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
 }, {
     content: "Check that the Image Gallery snippet has been removed",
     trigger: "iframe #wrap:not(:has(.s_image_gallery))",
-    run: () => null,
+    isCheck: true,
+}]);
+
+wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({
+        id: "s_image_gallery",
+        name: "Image Gallery",
+    }),
+{
+    content: "Click on the first image of the snippet",
+    trigger: "iframe .s_image_gallery .carousel-item.active img",
+},
+    wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
+    wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
+{
+    content: "Check that the image has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    isCheck: true,
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+}, {
+    content: "Check that the moved image still has the correct filter",
+    // FIXME somehow checking what the editor panel shows here is not reliable
+    // unless you add a big delay before checking.
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+    isCheck: true,
 }]);
