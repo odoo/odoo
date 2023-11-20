@@ -464,4 +464,27 @@ QUnit.module("Components", (hooks) => {
             ["Bar", "Foo"]
         );
     });
+
+    QUnit.test("between operator", async (assert) => {
+        await makeExpressionEditor({
+            expression: `id == 1`,
+            update(expression) {
+                assert.step(expression);
+            },
+        });
+        assert.deepEqual(getOperatorOptions(target), [
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "is between",
+            "is set",
+            "is not set",
+        ]);
+        assert.verifySteps([]);
+        await selectOperator(target, "between");
+        assert.verifySteps([`id >= 1 and id <= 1`]);
+    });
 });
