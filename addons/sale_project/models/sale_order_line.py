@@ -25,10 +25,7 @@ class SaleOrderLine(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
-            default_values = {
-                'name': _("New Sales Order Item"),
-            }
-
+            default_values = dict()
             # If we can't add order lines to the default order, discard it
             if 'order_id' in res:
                 try:
@@ -58,15 +55,42 @@ class SaleOrderLine(models.Model):
                     sale_order = self.env['sale.order'].create(so_create_values)
                     sale_order.action_confirm()
                 default_values['order_id'] = sale_order.id
-            if (name := self.env.context.get('default_name')):
+            if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search([
-                    ('name', 'ilike', name),
+                    ('name', 'ilike', product_name),
                     ('company_id', 'in', [False, self.env.company.id]),
                 ], limit=1)
                 if product:
                     default_values['product_id'] = product.id
+                    # We need to remove the name from the defaults so that the
+                    # name of the SOL is based on the full name of the product
+                    # and not overwritten by what was typed in the field.
+                    if "name" in res:
+                        del res["name"]
+            else:
+                default_values['name'] = _("New Sales Order Item")
             return {**res, **default_values}
         return res
+
+    @api.model
+    def name_create(self, name):
+        # To get the right product when creating a SOL on the fly, we need to get
+        # the name that was entered in the field from the `default_get` method.
+        # The easiest way of doing that is to store it in the context.
+        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
+            self = self.with_context(sol_product_name=name)
+        return super().name_create(name)
+
+    @api.model
+    def _add_missing_default_values(self, values):
+        # When creating a SOL through the quick create, the name_create will be
+        # called with whatever was typed in the field. However, we don't want
+        # that value to overwrite the computed SOL name if we find a product.
+        defaults = super()._add_missing_default_values(values)
+        if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
+            if "name" in defaults and "product_id" in defaults:
+                del defaults["name"]
+        return defaults
 
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
@@ -118,7 +142,7 @@ class SaleOrderLine(models.Model):
                     line.order_id.message_post(body=msg_body)
 
         # Set a service SOL on the project, if any is given
-        if (project_id := self.env.context.get('link_to_project')):
+        if project_id := self.env.context.get('link_to_project'):
             assert (service_line := next((line for line in lines if line.is_service), False))
             project = self.env['project.project'].browse(project_id)
             if not project.sale_line_id:

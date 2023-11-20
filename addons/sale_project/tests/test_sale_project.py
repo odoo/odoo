@@ -663,3 +663,24 @@ class TestSaleProject(TestSaleProjectCommon):
         names = ['To Do', 'In Progress', 'Done', 'Cancelled']
         project = sale_order_line._timesheet_create_project()
         self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
+
+    def test_quick_create_sol(self):
+        """
+        When creating a SOL on the fly through the quick create, use a product matching
+        what was typed in the field if there is one, and make sure the SOL name is computed correctly.
+        """
+        product_service = self.env['product.product'].create({
+            'name': 'Signage',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
+        })
+        sale_line_id, sale_line_name = self.env['sale.order.line'].with_context(
+            default_partner_id=self.partner.id,
+            form_view_ref='sale_project.sale_order_line_view_form_editable',
+        ).name_create('gnag')
+
+        sale_line = self.env['sale.order.line'].browse(sale_line_id)
+        self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
+        self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
