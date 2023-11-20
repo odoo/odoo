@@ -68,3 +68,20 @@ export function random5Chars() {
 export function qrCodeSrc(url, { size = 200 } = {}) {
     return `/report/barcode/QR/${encodeURIComponent(url)}?width=${size}&height=${size}`;
 }
+
+/**
+ * @template T
+ * @param {T[]} entries - The array of objects to search through.
+ * @param {Function} [criterion=(x) => x] - A function that returns a number for each entry. The entry with the highest value of this function will be returned. If not provided, defaults to an identity function that returns the entry itself.
+ * @param {boolean} [inverted=false] - If true, the entry with the lowest value of the criterion function will be returned instead.
+ * @returns {T} The entry with the highest or lowest value of the criterion function, depending on the value of `inverted`.
+ */
+export function getMax(entries, { criterion = (x) => x, inverted = false } = {}) {
+    return entries.reduce((prev, current) => {
+        const res = criterion(prev) > criterion(current);
+        return (inverted ? !res : res) ? prev : current;
+    });
+}
+export function getMin(entries, options) {
+    return getMax(entries, { ...options, inverted: true });
+}

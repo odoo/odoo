@@ -6,12 +6,6 @@ import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
 
 patch(BackButton.prototype, {
-    get floor() {
-        return this.table?.floor;
-    },
-    get hasTable() {
-        return this.table != null;
-    },
     /**
      * @override
      * If we have a floor screen,
