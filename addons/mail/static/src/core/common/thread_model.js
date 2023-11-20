@@ -228,8 +228,18 @@ export class Thread extends Record {
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
-    /** @type {ScrollPosition} */
+    /**
+     * @deprecated
+     * @type {ScrollPosition}
+     */
     scrollPosition = new ScrollPosition();
+    /** @type {number|'bottom'} */
+    scrollTop = Record.attr("bottom", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.type === "chatter" ? 0 : "bottom";
+        },
+    });
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
