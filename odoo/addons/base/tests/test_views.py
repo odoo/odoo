@@ -1553,7 +1553,7 @@ class TestViews(ViewCase):
                 kw['type'] = self.cr.fetchone()[0]
             else:
                 kw['type'] = etree.fromstring(arch_db).tag
-            kw['arch_db'] = Json({'en_US': arch_db}) if self.env.lang == 'en_US' else Json({'en_US': arch_db, self.env.lang: arch_db})
+            kw['arch_db'] = Json({'en_US': arch_db}) if self.env.lang in (None, 'en_US') else Json({'en_US': arch_db, self.env.lang: arch_db})
 
         keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)

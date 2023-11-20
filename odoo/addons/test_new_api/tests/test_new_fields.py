@@ -3794,7 +3794,7 @@ class TestSelectionUpdates(TransactionCase):
         super().setUpClass()
         # Specifying a lang in env/context should not increase query counts
         # of CRUD operations
-        cls.env = cls.env(context={'lang': 'en-US'})
+        cls.env = cls.env(context={'lang': 'en_US'})
 
     def test_selection(self):
         self.env[self.MODEL_BASE].create({})   # warming up

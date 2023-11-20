@@ -11,7 +11,7 @@
                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
             </t>
 
-            <t t-set="o_sec" t-value="o.with_context(lang='ar_001')"/>
+            <t t-set="o_sec" t-value="o.with_context(lang=o.env['res.lang']._get_active('ar_001'))"/>
             <t t-set="o" t-value="o.with_context(lang='en_US')"/>
 
             <div class="page">
@@ -282,10 +282,10 @@
                                     </td>
                                     <td name="account_invoice_line_name" class="text-end">
                                         <t t-if="line.product_id">
-                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+                                            <t t-set="arabic_name" t-value="line.with_context(lang=line.env['res.lang']._get_active('ar_001')).product_id.display_name"/>
                                             <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
 
-                                            <span t-out="line.with_context(lang='ar_001').product_id.name"
+                                            <span t-out="line.with_context(lang=line.env['res.lang']._get_active('ar_001')).product_id.name"
                                                   t-options="{'widget': 'text'}"/>
 
                                             <t t-if="arabic_name != english_name">

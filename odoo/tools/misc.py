@@ -1206,10 +1206,10 @@ def get_lang(env, lang_code=False):
     lang = 'en_US' if 'en_US' in langs else langs[0]
     if lang_code and lang_code in langs:
         lang = lang_code
-    elif env.context.get('lang') in langs:
-        lang = env.context.get('lang')
-    elif env.user.company_id.partner_id.lang in langs:
-        lang = env.user.company_id.partner_id.lang
+    elif (context_lang := env.context.get('lang')) in langs:
+        lang = context_lang
+    elif (company_lang := env.user.with_context(lang='en_US').company_id.partner_id.lang) in langs:
+        lang = company_lang
     return env['res.lang']._lang_get(lang)
 
 def babel_locale_parse(lang_code):
