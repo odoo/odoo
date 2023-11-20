@@ -11,6 +11,8 @@ import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
 import { getDefaultPath } from "@web/core/tree_editor/utils";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { _t } from "@web/core/l10n/translation";
 
 function getDefaultCondition(fieldDefs) {
     const defaultPath = getDefaultPath(fieldDefs);
@@ -18,15 +20,6 @@ function getDefaultCondition(fieldDefs) {
     const operator = getExpressionDisplayedOperators(fieldDef)[0];
     const value = getDefaultValue(fieldDef, operator);
     return condition(fieldDef.name, operator, value);
-}
-
-class ExpressionEditorFieldSelector extends Component {
-    static template = "web.ExpressionEditorFieldSelector";
-    static props = {
-        value: [String, { value: 1 }, { value: 0 }],
-        update: Function,
-        fields: Object,
-    };
 }
 
 export class ExpressionEditor extends Component {
@@ -45,7 +38,10 @@ export class ExpressionEditor extends Component {
     }
 
     async onPropsUpdated(props) {
-        this.defaultCondition = getDefaultCondition(props.fields);
+        this.filteredFields = Object.fromEntries(
+            Object.entries(props.fields).filter(([_, fieldDef]) => fieldDef.type !== "properties")
+        );
+        this.defaultCondition = getDefaultCondition(this.filteredFields);
         try {
             this.tree = treeFromExpression(props.expression, {
                 getFieldDef: (name) => this.getFieldDef(name, props),
@@ -75,14 +71,23 @@ export class ExpressionEditor extends Component {
 
     getPathEditorInfo() {
         return {
-            component: ExpressionEditorFieldSelector,
+            component: ModelFieldSelector,
             extractProps: ({ value, update }) => ({
-                value,
+                path: value,
                 update,
-                fields: this.props.fields,
+                resModel: this.props.resModel,
+                readonly: false,
+                filter: (fieldDef) => fieldDef.name in this.filteredFields,
+                showDebugInput: false,
+                followRelations: false,
+                isDebugMode: this.isDebugMode,
             }),
-            isSupported: (value) => [0, 1].includes(value) || this.getFieldDef(value),
-            // by construction, all values received by the path editor will be supported.
+            isSupported: (value) => [0, 1].includes(value) || value in this.filteredFields,
+            // by construction, all values received by the path editor are O/1 or a field (name) in this.props.fields.
+            // (see _leafFromAST in condition_tree.js)
+            stringify: (value) => this.props.fields[value].string,
+            defaultValue: () => this.defaultCondition.path,
+            message: _t("Field properties not supported"),
         };
     }
 
