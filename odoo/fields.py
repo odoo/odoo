@@ -1683,7 +1683,7 @@ class _String(Field):
         return func(term)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        cache_value = self.convert_to_cache(value, record)
+        cache_value = self.convert_to_cache(value, record, validate)
         if cache_value is None:
             return None
         if callable(self.translate):
@@ -1973,7 +1973,7 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return super().convert_to_column(self._convert(value, record, True), record, values, validate)
+        return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
         return self._convert(value, record, validate)
