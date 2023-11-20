@@ -173,14 +173,14 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "grid" layout.
      */
     grid: function () {
-        var imgs = this._getImages();
+        const imgs = this._getImgHolderEls();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         _.each(imgs, function (img, index) {
-            const $img = $(img.cloneNode());
+            const $img = $(img.cloneNode(true));
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
@@ -195,7 +195,7 @@ options.registry.gallery = options.Class.extend({
      */
     masonry: function () {
         var self = this;
-        var imgs = this._getImages();
+        const imgs = this._getImgHolderEls();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
@@ -227,7 +227,7 @@ options.registry.gallery = options.Class.extend({
                             smallestColEl = colEl;
                         }
                     }
-                    smallestColEl.append(imgEl.cloneNode());
+                    smallestColEl.append(imgEl.cloneNode(true));
                     await wUtils.onceAllImagesLoaded(this.$target);
                 }
                 resolve();
@@ -252,7 +252,7 @@ options.registry.gallery = options.Class.extend({
             // Only on Chrome: appended images are sometimes invisible and not
             // correctly loaded from cache, we use a clone of the image to force
             // the loading.
-            $lowest.append(imgs.shift().cloneNode());
+            $lowest.append(imgs.shift().cloneNode(true));
         }
     },
     /**
@@ -283,15 +283,16 @@ options.registry.gallery = options.Class.extend({
     nomode: function () {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var imgs = this._getImages();
+        const imgHolderEls = this._getImgHolderEls();
 
         this._replaceContent($row);
 
-        _.each(imgs, function (img) {
+        _.each(imgs, function (img, index) {
             var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(img);
+            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
             $row.append($wrap);
         });
     },
@@ -320,10 +321,14 @@ options.registry.gallery = options.Class.extend({
      */
     slideshow: function () {
         const imageEls = this._getImages();
+        const imgHolderEls = this._getImgHolderEls();
         const images = _.map(imageEls, img => ({
             // Use getAttribute to get the attribute value otherwise .src
             // returns the absolute url.
             src: img.getAttribute('src'),
+            // TODO: remove me in master. This is not needed anymore as the
+            // images of the rendered `website.gallery.slideshow` are replaced
+            // by the elements of `imgHolderEls`.
             alt: img.getAttribute('alt'),
         }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
@@ -333,10 +338,23 @@ options.registry.gallery = options.Class.extend({
             title: "",
             interval: currentInterval || 0,
             id: 'slideshow_' + new Date().getTime(),
+            // TODO: in master, remove `attrClass` and `attStyle` from `params`.
+            // This is not needed anymore as the images of the rendered
+            // `website.gallery.slideshow` are replaced by the elements of
+            // `imgHolderEls`.
             attrClass: imageEls.length > 0 ? imageEls[0].className : '',
             attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
         $slideshow = $(qweb.render('website.gallery.slideshow', params));
+        const imgSlideshowEls = $slideshow[0].querySelectorAll("img[data-o-main-image]");
+        imgSlideshowEls.forEach((imgSlideshowEl, index) => {
+            // Replace the template image by the original one. This is needed in
+            // order to keep the characteristics of the image such as the
+            // filter, the width, the quality, the link on which the users are
+            // redirected once they click on the image etc...
+            imgSlideshowEl.after(imgHolderEls[index]);
+            imgSlideshowEl.remove();
+        });
         this._replaceContent($slideshow);
         _.each(this.$('img'), function (img, index) {
             $(img).attr({contenteditable: true, 'data-index': index});
@@ -493,6 +511,17 @@ options.registry.gallery = options.Class.extend({
             return self._getIndex(a) - self._getIndex(b);
         });
         return imgs;
+    },
+    /**
+     * Returns the images, or the images holder if this holder is an anchor,
+     * sorted by index.
+     *
+     * @private
+     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     */
+    _getImgHolderEls: function () {
+        const imgEls = this._getImages();
+        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
     },
     /**
      * Returns the index associated to a given image.
