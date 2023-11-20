@@ -8,7 +8,7 @@
     'description': """
 This module create the Facturae file required to send the invoices information to the General State Administrations.
 It allows the export and signature of the signing of Facturae files.
-The current version of Facturae supported is the 3.2.1
+The current version of Facturae supported is the 3.2.2
 
 for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     """,
