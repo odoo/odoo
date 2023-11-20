@@ -28,20 +28,20 @@ registry.category("web_tour.tours").add('event_tour', {
     position: 'bottom',
     width: 175,
 }, {
-    trigger: '.o_event_form_view input[id="name"]',
+    trigger: '.o_event_form_view div[name="name"] textarea',
     content: markup(_t("This is the <b>name</b> your guests will see when registering.")),
     run: 'text Odoo Experience 2020',
 }, {
-    trigger: '.o_event_form_view div[name="date_end"]',
+    trigger: '.o_event_form_view div[name="date_begin"]',
     content: _t("Open date range picker. Pick a Start date for your event"),
     run: function () {
-        $('input[id="date_begin"]').val('09/30/2020 08:00:00').change();
-        $('input[id="date_end"]').val('10/02/2020 23:00:00').change();
-        $('.o_event_form_view input[id="date_end"]').click();
+        this.$anchor.find('input[data-field="date_begin"]').val('09/30/2020 08:00:00').change();
+        this.$anchor.find('input[data-field="date_end"]').val('10/02/2020 23:00:00').change();
+        this.$anchor.find('input[data-field="date_end"]').click();
     },
 }, {
     content: _t("Apply change."),
-    trigger: '.daterangepicker .applyBtn',
+    trigger: '.o_datetime_picker .o_datetime_buttons .o_apply',
     in_modal: false,
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
