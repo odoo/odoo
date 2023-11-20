@@ -172,10 +172,7 @@ export class Many2OneField extends Component {
     }
     get context() {
         const { context, record } = this.props;
-        const evalContext = record.getEvalContext
-            ? record.getEvalContext(false)
-            : record.evalContext;
-        return makeContext([context], evalContext);
+        return makeContext([context], record.evalContext);
     }
     get classFromDecoration() {
         const evalContext = this.props.record.evalContextWithVirtualIds;
