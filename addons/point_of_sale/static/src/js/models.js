@@ -1861,7 +1861,7 @@ export class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
         // Set the new values for modified lot lines.
         const lotLinesToRemove = [];
         for (const lotLine of this.pack_lot_lines) {
@@ -1889,7 +1889,7 @@ export class Orderline extends PosModel {
         }
 
         // Set the quantity of the line based on number of pack lots.
-        if (!this.product.to_weight) {
+        if (!this.product.to_weight && setQuantity) {
             this.set_quantity_by_lot();
         }
     }
@@ -3183,7 +3183,7 @@ export class Order extends PosModel {
         }
 
         if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines(options.draftPackLotLines);
+            this.selected_orderline.setPackLotLines({ ...options.draftPackLotLines, setQuantity: options.quantity === undefined });
         }
     }
     set_orderline_options(orderline, options) {
