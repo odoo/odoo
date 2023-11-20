@@ -269,7 +269,6 @@ registry.category("web_tour.tours").add('PosLoyaltyTour8', {
         ].flat(),
 });
 
-
 registry
     .category("web_tour.tours")
     .add("PosLoyaltySpecificDiscountCategoryTour", { 
@@ -288,3 +287,24 @@ registry
             PosLoyalty.orderTotalIs('40.00'),
         ].flat(),
     });
+
+registry.category("web_tour.tours").add('PosLoyaltyTour9', {
+    test: true,
+    url: '/pos/web',
+    steps: () =>
+        [
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            ProductScreen.clickDisplayedProduct('Product B'),
+            ProductScreen.clickDisplayedProduct('Product A'),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("$ 5"),
+            ProductScreen.totalAmountIs('205.00'),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("$ 5"),
+            ProductScreen.totalAmountIs('200.00'),
+        ].flat(),
+});
