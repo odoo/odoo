@@ -3192,25 +3192,25 @@ class TestHtmlField(common.TransactionCase):
 
         # in a perfect world this should be 1, but at the moment the value is
         # sanitized more than once during creation of the record
-        self.assertEqual(patch.call_count, 3)
+        self.assertEqual(patch.call_count, 2)
 
         # new value needs to be validated, so it is sanitized once more
         record.comment2 = '<p>comment</p>'
-        self.assertEqual(patch.call_count, 4)
+        self.assertEqual(patch.call_count, 3)
 
         # the value is already sanitized for flushing
         record.flush_recordset()
-        self.assertEqual(patch.call_count, 4)
+        self.assertEqual(patch.call_count, 3)
 
         # value coming from db does not need to be sanitized
         record.invalidate_recordset()
         record.comment2
-        self.assertEqual(patch.call_count, 4)
+        self.assertEqual(patch.call_count, 3)
 
         # value coming from db during an onchange does not need to be sanitized
         new_record = record.new(origin=record)
         new_record.comment2
-        self.assertEqual(patch.call_count, 4)
+        self.assertEqual(patch.call_count, 3)
 
     def test_read_sanitize_overridable(self):
         self.assertTrue(self.registry['test_new_api.mixed'].comment5.sanitize_overridable)
