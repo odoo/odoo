@@ -18,7 +18,19 @@ export class PrinterService {
         this.device = newDevice;
     }
     printWeb(el) {
-        this.renderer.whenMounted({ el, callback: window.print });
+        this.renderer.whenMounted({
+            el,
+            callback: () => {
+                var orig = document.querySelector(".pos-receipt");
+                if (orig) {
+                    orig.style.display = "none";
+                }
+                window.print();
+                if (orig) {
+                    orig.style.display = "";
+                }
+            },
+        });
         return true;
     }
     async printHtml(el, { webPrintFallback = false } = {}) {
