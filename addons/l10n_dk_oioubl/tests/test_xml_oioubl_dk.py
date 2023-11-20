@@ -103,7 +103,10 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         })
         invoice.action_post()
-        invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
+        self.env['account.move.send'] \
+            .with_context(active_model=invoice._name, active_ids=invoice.ids) \
+            .create({}) \
+            .action_send_and_print()
         return invoice
 
     #########
@@ -172,6 +175,17 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
         self.partner_c.company_registry = False
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_partner_without_vat_number(self):
+        """ This test verifies that we can't export an OIOUBL file for a partner
+            who doesn't have a tax ID. It verifies that we receive a UserError
+            telling to the user that this field is missing.
+        """
+        self.partner_b.vat = None
+        with self.assertRaises(UserError) as exception:
+            self.create_post_and_send_invoice(partner=self.partner_b)
+        self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])
 
     #########
     # IMPORT

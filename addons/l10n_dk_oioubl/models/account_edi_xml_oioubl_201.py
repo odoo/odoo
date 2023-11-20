@@ -32,7 +32,7 @@ TAX_POSSIBLE_VALUES = set(UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.values())
 
 
 def format_vat_number(partner):
-    vat = partner.vat.replace(' ', '')
+    vat = (partner.vat or '').replace(' ', '')
     if vat[:2].isnumeric():
         vat = partner.country_code.upper() + vat
     return vat
@@ -275,6 +275,7 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
             if partner.country_code == "FR" and not partner.company_registry:
                 constraints["oioubl201_company_registry_required_for_french_partner"] = \
                         _("The company registry is required for french partner: %s", partner.name)
+            constraints[f'oioubl201_{partner_type}_vat_required'] = self._check_required_fields(vals[partner_type], 'vat')
 
         return constraints
 
