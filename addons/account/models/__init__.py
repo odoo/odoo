@@ -34,6 +34,7 @@ from . import digest
 from . import res_users
 from . import ir_attachment
 from . import ir_actions_report
+from . import ir_demo
 from . import ir_module
 from . import res_currency
 from . import account_report
