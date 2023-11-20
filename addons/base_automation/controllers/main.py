@@ -1,6 +1,5 @@
 from odoo.http import request, route, Controller
-
-from json import JSONDecodeError
+from odoo.addons.base_automation.models.base_automation import get_webhook_request_payload
 
 class BaseAutomationController(Controller):
 
@@ -11,11 +10,7 @@ class BaseAutomationController(Controller):
         if not rule:
             return request.make_json_response({'status': 'error'}, status=404)
 
-        try:
-            data = request.get_json_data()
-        except JSONDecodeError:
-            data = kwargs or {}
-
+        data = get_webhook_request_payload()
         try:
             rule._execute_webhook(data)
         except Exception: # noqa: BLE001
