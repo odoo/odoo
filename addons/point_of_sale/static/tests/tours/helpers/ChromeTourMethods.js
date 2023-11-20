@@ -16,16 +16,14 @@ export function clickTicketButton() {
     ];
 }
 export function clickMenuButton() {
-    return [
-        {
-            content: "Click on the menu button",
-            trigger: ".menu-button",
-        },
-    ];
+    return {
+        content: "Click on the menu button",
+        trigger: ".menu-button",
+    };
 }
 export function closeSession() {
     return [
-        ...clickMenuButton(),
+        clickMenuButton(),
         {
             content: "click on the close session menu button",
             trigger: ".close-button",

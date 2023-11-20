@@ -18,12 +18,9 @@ patch(Navbar.prototype, {
         return super._shouldLoadOrders() || this.pos.config.module_pos_restaurant;
     },
     onSwitchButtonClick() {
-        const mode = this.pos.floorPlanStyle == "kanban" ? "default" : "kanban";
+        const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
         localStorage.setItem("floorPlanStyle", mode);
         this.pos.floorPlanStyle = mode;
-    },
-    toggleEditMode() {
-        this.pos.toggleEditMode();
     },
     showBackButton() {
         return (
