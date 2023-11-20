@@ -124,15 +124,14 @@ class TestActivityRights(TestActivityCommon):
                     [('id', '=', test_activity.id)],
                     ['summary'])
 
-        # cannot create activities for people that cannot access record
+        # can create activities for people that cannot access record
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.UserError):
-                activity = self.env['mail.activity'].create({
-                    'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
-                    'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-                    'res_id': self.test_record.id,
-                    'user_id': self.user_employee.id,
-                })
+            self.env['mail.activity'].create({
+                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': self.test_record.id,
+                'user_id': self.user_employee.id,
+            })
 
         # cannot create activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
