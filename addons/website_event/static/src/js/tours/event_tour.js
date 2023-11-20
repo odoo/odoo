@@ -8,9 +8,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(EventAdditionalTourSteps.prototype, {
 
-    _get_website_event_steps: function () {
-        this._super.apply(this, arguments);
-        return [{
+    _get_website_event_steps() {
+        return [
+            ...super._get_website_event_steps(), {
                 trigger: '.o_event_form_view button[title="Unpublished"]',
                 content: markup(_t("Use this <b>shortcut</b> to easily access your event web page.")),
                 position: 'bottom',
