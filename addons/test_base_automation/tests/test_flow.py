@@ -1,6 +1,6 @@
 # # -*- coding: utf-8 -*-
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json
 from unittest.mock import patch
 import sys
 
@@ -1040,18 +1040,40 @@ class TestHttp(common.HttpCase):
         })
 
         obj = self.env[model.model].create({"name": "some name"})
-        response = self.url_open(automation.url, data={"name": "some name"})
+        response = self.url_open(automation.url, data=json.dumps({"name": "some name"}))
         self.assertEqual(response.json(), {"status": "ok"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(obj.another_field, "written")
 
         obj.another_field = False
         with mute_logger("odoo.addons.base_automation.models.base_automation"):
-            response = self.url_open(automation.url, data={})
+            response = self.url_open(automation.url, data=json.dumps({}))
         self.assertEqual(response.json(), {"status": "error"})
         self.assertEqual(response.status_code, 500)
         self.assertEqual(obj.another_field, False)
 
-        response = self.url_open("/web/hook/0123456789", data={"name": "some name"})
+        response = self.url_open("/web/hook/0123456789", data=json.dumps({"name": "some name"}))
         self.assertEqual(response.json(), {"status": "error"})
         self.assertEqual(response.status_code, 404)
+
+    def test_payload_in_action_server(self):
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
+            "state": "code",
+            "code": "record.write({'another_field': json.dumps(payload)})"
+        })
+
+        obj = self.env[model.model].create({"name": "some name"})
+        self.url_open(automation.url, data=json.dumps({"name": "some name", "test_key": "test_value"}), headers={"Content-Type": "application/json"})
+        self.assertEqual(json.loads(obj.another_field), {
+            "name": "some name",
+            "test_key": "test_value",
+        })
+
+        obj.another_field = ""
+        self.url_open(automation.url + "?test_param=test_value&name=some%20name")
+        self.assertEqual(json.loads(obj.another_field), {
+            "name": "some name",
+            "test_param": "test_value",
+        })
