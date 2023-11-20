@@ -12,12 +12,12 @@
                     <field name="account_peppol_validity_last_check" invisible="1"/>
                     <label for="account_peppol_verification_label"
                            attrs="{'invisible': ['|',
-                                ('ubl_cii_format', 'in', (False, 'facturx')),
+                                ('ubl_cii_format', 'in', (False, 'facturx', 'oioubl_201')),
                                 ('peppol_endpoint', '=', False),
                            ]}"/>
                     <div class="row"
                         attrs="{'invisible': ['|',
-                            ('ubl_cii_format', 'in', (False, 'facturx')),
+                            ('ubl_cii_format', 'in', (False, 'facturx', 'oioubl_201')),
                             ('peppol_endpoint', '=', False),
                         ]}">
                         <div class="col-4">
