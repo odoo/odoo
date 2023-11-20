@@ -10,6 +10,7 @@ from . import test_payment_flow
 from . import test_reinvoice
 from . import test_access_rights
 from . import test_sale_refund
+from . import test_sale_report
 from . import test_sale_signature
 from . import test_sale_flow
 from . import test_accrued_sale_orders

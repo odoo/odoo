@@ -62,8 +62,8 @@ class SaleReport(models.Model):
     def _select_sale(self, fields=None):
         if not fields:
             fields = {}
-        select_ = """
-            min(l.id) as id,
+        select_ = f"""
+            COALESCE(min(l.id), -s.id) AS id,
             l.product_id as product_id,
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
@@ -71,10 +71,26 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END as qty_to_deliver,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END as qty_invoiced,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END as qty_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_total / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_total,
-            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_subtotal / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_subtotal,
-            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_to_invoice / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_invoiced / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS price_total,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS price_subtotal,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_to_invoice
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS untaxed_amount_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_invoiced
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS untaxed_amount_invoiced,
             count(*) as nbr,
             s.name as name,
             s.date_order as date,
@@ -97,7 +113,11 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN sum(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as weight,
             CASE WHEN l.product_id IS NOT NULL THEN sum(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as volume,
             l.discount as discount,
-            CASE WHEN l.product_id IS NOT NULL THEN sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END))ELSE 0 END as discount_amount,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS discount_amount,
             s.id as order_id
         """
 
@@ -105,19 +125,26 @@ class SaleReport(models.Model):
             select_ += field
         return select_
 
+    def _case_value_or_one(self, value):
+        return f"""CASE COALESCE({value}, 0) WHEN 0 THEN 1.0 ELSE {value} END"""
+
     def _from_sale(self, from_clause=''):
-        from_ = """
-                sale_order_line l
-                      left join sale_order s on (s.id=l.order_id)
-                      join res_partner partner on s.partner_id = partner.id
-                        left join product_product p on (l.product_id=p.id)
-                            left join product_template t on (p.product_tmpl_id=t.id)
-                    left join uom_uom u on (u.id=l.product_uom)
-                    left join uom_uom u2 on (u2.id=t.uom_id)
-                    left join product_pricelist pp on (s.pricelist_id = pp.id)
-                %s
-        """ % from_clause
-        return from_
+        return """
+            sale_order_line l
+            LEFT JOIN sale_order s ON s.id=l.order_id
+            JOIN res_partner partner ON s.partner_id = partner.id
+            LEFT JOIN product_product p ON l.product_id=p.id
+            LEFT JOIN product_template t ON p.product_tmpl_id=t.id
+            LEFT JOIN uom_uom u ON u.id=l.product_uom
+            LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
+            JOIN {currency_table} ON currency_table.company_id = s.company_id
+            """.format(
+            currency_table=self.env['res.currency']._get_query_currency_table(
+                {
+                    'multi_company': True,
+                    'date': {'date_to': fields.Date.today()}
+                }),
+            )
 
     def _group_by_sale(self, groupby=''):
         groupby_ = """
@@ -142,7 +169,8 @@ class SaleReport(models.Model):
             partner.industry_id,
             partner.commercial_partner_id,
             l.discount,
-            s.id %s
+            s.id,
+            currency_table.rate %s
         """ % (groupby)
         return groupby_
 
@@ -164,10 +192,9 @@ class SaleReport(models.Model):
         return '%s (SELECT %s FROM %s WHERE l.display_type IS NULL GROUP BY %s)' % \
                (with_, self._select_sale(sale_report_fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
-    def init(self):
-        # self._table = sale_report
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, self._query()))
+    @property
+    def _table_query(self):
+        return self._query()
 
 class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
