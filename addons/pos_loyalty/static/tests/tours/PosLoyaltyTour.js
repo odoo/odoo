@@ -269,7 +269,6 @@ registry.category("web_tour.tours").add('PosLoyaltyTour8', {
         ].flat(),
 });
 
-
 registry
     .category("web_tour.tours")
     .add("PosLoyaltySpecificDiscountCategoryTour", { 
@@ -286,5 +285,26 @@ registry
             ProductScreen.clickDisplayedProduct('Product B'),
             ProductScreen.selectedOrderlineHas('Product B', '1.00', '50.00'),
             PosLoyalty.orderTotalIs('40.00'),
+        ].flat(),
+    });
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour9', {
+        test: true,
+        url: '/pos/web',
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            ProductScreen.clickDisplayedProduct('Product B'),
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.totalAmountIs('210.00'),
+            PosLoyalty.claimReward("$ 5"),
+            ProductScreen.totalAmountIs('205.00'),
+            PosLoyalty.claimReward("$ 5"),
+            ProductScreen.totalAmountIs('200.00'),
         ].flat(),
     });
