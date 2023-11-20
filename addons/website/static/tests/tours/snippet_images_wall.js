@@ -35,6 +35,7 @@ const reselectSignImageSteps = [
     ...preventRaceConditionSteps,
 {
     content: "Select footer",
+    extra_trigger: "iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'])",
     trigger: "iframe footer",
 }, selectSignImageStep];
 
@@ -52,11 +53,18 @@ wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
 }),
 selectSignImageStep,
 {
+    content: "Click on add a link",
+    trigger: ".snippet-option-ReplaceMedia we-button[data-set-link]",
+}, {
+    content: "Change the link of the image",
+    trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
+    run: "text /contactus",
+}, {
     content: "Click on move to previous",
     trigger: ".snippet-option-gallery_img we-button[data-position='prev']",
 }, {
     content: "Check if sign is in second column",
-    trigger: "iframe .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'][data-original-src*='sign'])",
+    trigger: "iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='sign'])",
     isCheck: true,
 },
 ...reselectSignImageSteps,
