@@ -83,3 +83,9 @@ class AccountMoveSend(models.Model):
         if attachment_vals:
             self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_vals)
             invoice.invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])
+
+    def _get_available_field_values_in_multi(self, move):
+        # EXTENDS 'account'
+        res = super()._get_available_field_values_in_multi(move)
+        res['l10n_es_edi_facturae_checkbox_xml'] = self.l10n_es_edi_facturae_checkbox_xml
+        return res
