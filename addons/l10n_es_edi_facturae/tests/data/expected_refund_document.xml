@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
-<fac:Facturae xmlns:fac="http://www.facturae.es/Facturae/2014/v3.2.1/Facturae">
+<fac:Facturae xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
     <FileHeader>
-        <SchemaVersion>3.2.1</SchemaVersion>
+        <SchemaVersion>3.2.2</SchemaVersion>
         <Modality>I</Modality>
         <InvoiceIssuerType>EM</InvoiceIssuerType>
         <Batch>
@@ -64,15 +64,15 @@
                 <InvoiceClass>OO</InvoiceClass>
                 <Corrective>
                     <InvoiceNumber>INV/2023/00001</InvoiceNumber>
-                        <ReasonCode>10</ReasonCode>
-                        <ReasonDescription>Transaction Details</ReasonDescription>
-                        <TaxPeriod>
-                            <StartDate>2023-01-01</StartDate>
-                            <EndDate>2023-01-31</EndDate>
-                        </TaxPeriod>
-                        <CorrectionMethod>01</CorrectionMethod>
-                        <CorrectionMethodDescription>Rectificación modelo íntegro.</CorrectionMethodDescription>
-                    </Corrective>
+                    <ReasonCode>10</ReasonCode>
+                    <ReasonDescription>Item line</ReasonDescription>
+                    <TaxPeriod>
+                        <StartDate>2023-01-01</StartDate>
+                        <EndDate>2023-01-31</EndDate>
+                    </TaxPeriod>
+                    <CorrectionMethod>01</CorrectionMethod>
+                    <CorrectionMethodDescription>Rectificación modelo íntegro.</CorrectionMethodDescription>
+                </Corrective>
             </InvoiceHeader>
             <InvoiceIssueData>
                 <IssueDate>2023-01-01</IssueDate>
@@ -168,11 +168,11 @@
             </ds:Reference>
             <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                 <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ds:DigestValue>SpcFoWamxWQCsYjqZ/lsru5Ia4MaKBVgXiUWgKKBh2s=</ds:DigestValue>
+                <ds:DigestValue>xWymfRVUSeZuRVPTaTbaEwKo2L5VLUDeqVugfVoaLqY=</ds:DigestValue>
             </ds:Reference>
             <ds:Reference URI="#KeyInfo-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                 <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ds:DigestValue>wwDtGZ3EpRH8tRKQ8lKgbpfDkE1Zmza9QHkjJDN1Nmw=</ds:DigestValue>
+                <ds:DigestValue>ARCif8tQIKagVfeHX4Fit5ZfK3mXQCPclQISywh7h44=</ds:DigestValue>
             </ds:Reference>
         </ds:SignedInfo>
         <ds:SignatureValue>___ignore___</ds:SignatureValue>

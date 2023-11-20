@@ -5,18 +5,18 @@
         <template id="address_type">
             <t t-if="partner_country_code == 'ESP'">
                 <AddressInSpain>
-                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)"/>
+                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)[:80]"/>
                     <PostCode t-out="str(partner.zip)"/>
-                    <Town t-out="partner.city"/>
-                    <Province t-out="partner.state_id.name if partner.state_id else partner.country_id.name"/>
+                    <Town t-out="(partner.city or '')[:50]"/>
+                    <Province t-out="partner.state_id.name[:20] if partner.state_id else partner.country_id.name[:20]"/>
                     <CountryCode t-out="partner_country_code"/>
                 </AddressInSpain>
             </t>
             <t t-else="">
                 <OverseasAddress>
-                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)"/>
-                    <PostCodeAndTown t-out="' '.join(var for var in (str(partner.zip), partner.city) if var)"/>
-                    <Province t-out="partner.state_id.name if partner.state_id else partner.country_id.name"/>
+                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)[:80]"/>
+                    <PostCodeAndTown t-out="' '.join(var for var in (str(partner.zip), partner.city) if var)[:50]"/>
+                    <Province t-out="partner.state_id.name[:20] if partner.state_id else partner.country_id.name[:20]"/>
                     <CountryCode t-out="partner_country_code"/>
                 </OverseasAddress>
             </t>
@@ -25,17 +25,17 @@
         <!-- Sub-template used for every instance of ContactDetails -->
         <template id="contact_details_type">
             <ContactDetails>
-                <Telephone t-out="partner_phone"/>
-                <WebAddress t-out="partner.website"/>
-                <ElectronicMail t-out="partner.email"/>
+                <Telephone t-out="(partner_phone or '')[:15]"/>
+                <WebAddress t-out="(partner.website or '')[:60]"/>
+                <ElectronicMail t-out="(partner.email or '')[:60]"/>
             </ContactDetails>
         </template>
 
         <!-- Sub-template used for every instance of LegalEntityType -->
         <template id="legal_entity_type">
             <LegalEntity>
-                <CorporateName t-out="partner.name"/>
-                <TradeName t-out="partner.display_name"/>
+                <CorporateName t-out="partner.name[:80]"/>
+                <TradeName t-out="partner.display_name[:40]"/>
                 <t t-call="l10n_es_edi_facturae.address_type"/>
                 <t t-call="l10n_es_edi_facturae.contact_details_type"/>
             </LegalEntity>
@@ -44,9 +44,9 @@
         <!-- Sub-template used for every instance of IndividualType -->
         <template id="individual_type">
             <Individual>
-                <Name t-out="partner_name.get('firstname')"/>
-                <FirstSurname t-out="partner_name.get('surname')"/>
-                <SecondSurname t-out="partner_name.get('surname2')"/>
+                <Name t-out="(partner_name.get('firstname') or '')[:40]"/>
+                <FirstSurname t-out="(partner_name.get('surname') or '')[:40]"/>
+                <SecondSurname t-out="(partner_name.get('surname2') or '')[:40]"/>
                 <t t-call="l10n_es_edi_facturae.address_type"/>
                 <t t-call="l10n_es_edi_facturae.contact_details_type"/>
             </Individual>
@@ -245,9 +245,9 @@
 
         <!-- Main template used for the EDI -->
         <template id="account_invoice_facturae_export">
-            <fac:Facturae xmlns:fac="http://www.facturae.es/Facturae/2014/v3.2.1/Facturae">
+            <fac:Facturae xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
                 <FileHeader>
-                    <SchemaVersion>3.2.1</SchemaVersion>
+                    <SchemaVersion>3.2.2</SchemaVersion>
                     <Modality t-out="Modality"/>
                     <InvoiceIssuerType t-out="'EM' if is_outstanding else 'RE'"/>
                     <Batch>
