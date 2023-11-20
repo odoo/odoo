@@ -75,12 +75,26 @@ patch(PosStore.prototype, {
         ]);
     },
 
+<<<<<<< HEAD:addons/pos_hr/static/src/overrides/models/pos_store.js
     /**
      * @override
      */
     shouldShowCashControl() {
         if (this.config.module_pos_hr) {
             return super.shouldShowCashControl(...arguments) && this.hasLoggedIn;
+||||||| parent of 344744849008 (temp):addons/pos_hr/static/src/js/models.js
+patch(Order.prototype, "pos_hr.Order", {
+    setup(options) {
+        this._super(...arguments);
+        if (!options.json && this.pos.config.module_pos_hr) {
+            this.cashier = this.pos.get_cashier();
+=======
+patch(Order.prototype, "pos_hr.Order", {
+    setup(_defaultObj, options) {
+        this._super(...arguments);
+        if (!options.json && this.pos.config.module_pos_hr) {
+            this.cashier = this.pos.get_cashier();
+>>>>>>> 344744849008 (temp):addons/pos_hr/static/src/js/models.js
         }
         return super.shouldShowCashControl(...arguments);
     },
