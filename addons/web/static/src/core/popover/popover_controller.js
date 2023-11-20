@@ -20,6 +20,7 @@ export class PopoverController extends Component {
         "closeOnClickAway",
         "component",
         "componentProps",
+        "onClickAway?",
         "popoverProps",
         "subPopovers?",
     ];
@@ -55,8 +56,8 @@ export class PopoverController extends Component {
     onClickAway(ev) {
         const target = ev.composedPath()[0];
         if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
+            this.props.onClickAway?.(ev);
             this.props.close();
-            ev.preventDefault();
         }
     }
 

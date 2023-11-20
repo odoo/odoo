@@ -16,10 +16,14 @@ import {
     useRef,
 } from "@odoo/owl";
 
-export function useCalendarPopover(component) {
+export function useCalendarPopover(component, options = {}) {
     const owner = useComponent();
     let popoverClass = "";
-    const popoverOptions = { position: "right", onClose: cleanup };
+    const popoverOptions = {
+        position: "right",
+        onClose: cleanup,
+        onClickAway: (ev) => ev.preventDefault(),
+    };
     Object.defineProperty(popoverOptions, "popoverClass", { get: () => popoverClass });
     const popover = usePopover(component, popoverOptions);
     const dialog = useService("dialog");

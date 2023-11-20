@@ -7,6 +7,7 @@ import { POPOVER_SYMBOL, PopoverController } from "./popover_controller";
 /**
  * @typedef {{
  *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
+ *   onClickAway?: (event: Event) => void;
  *   onClose?: () => void;
  *   popoverClass?: string;
  *   animation?: Boolean;
@@ -40,6 +41,7 @@ export const popoverService = {
                     target,
                     close: () => remove(),
                     closeOnClickAway,
+                    onClickAway: options.onClickAway,
                     subPopovers: options[POPOVER_SYMBOL],
                     component,
                     componentProps: markRaw(props),
