@@ -214,17 +214,6 @@ class TestAPI(SavepointCaseWithUserDemo):
         with self.assertRaises(AccessError):
             demo_partner.company_id.name
 
-    @mute_logger('odoo.models')
-    def test_55_environment_lang(self):
-        """ Check the record env.lang behavior """
-        partner = self.partner_demo
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.assertEqual(partner.with_context(lang=None).env.lang, None, 'None lang context should have None env.lang')
-        self.assertEqual(partner.with_context(lang='en_US').env.lang, 'en_US', 'en_US active lang context should have en_US env.lang')
-        self.assertEqual(partner.with_context(lang='fr_FR').env.lang, 'fr_FR', 'fr_FR active lang context should have fr_FR env.lang')
-        self.assertEqual(partner.with_context(lang='nl_NL').env.lang, None, 'Inactive lang context lang should have None env.lang')
-        self.assertEqual(partner.with_context(lang='Dummy').env.lang, None, 'Ilegal lang context should have None env.lang')
-
     def test_56_environment_uid_origin(self):
         """Check the expected behavior of `env.uid_origin`"""
         user_demo = self.env.ref('base.user_demo')

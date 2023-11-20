@@ -376,6 +376,43 @@ class TestTranslation(TransactionCase):
             translation_importer.load(f, 'po', 'fr_FR')
             translation_importer.save(overwrite=True)
 
+    def test_101_translation_read(self):
+        """ Check the record env.lang behavior """
+        category = self.customers
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        category.with_context(lang='nl_NL').name = 'Klanten'
+        self.env.ref('base.lang_nl').active = False
+
+        category.invalidate_recordset()
+        self.assertEqual(category.with_context(lang=None).name, 'Customers')
+        category.invalidate_recordset()
+        self.assertEqual(category.with_context(lang='en_US').name, 'Customers')
+        category.invalidate_recordset()
+        self.assertEqual(category.with_context(lang='fr_FR').name, 'Clients')
+
+        with self.assertRaises(UserError):
+            # inactive language
+            category.with_context(lang='nl_NL').name
+        with self.assertRaises(UserError):
+            # non-existing language
+            category.with_context(lang='Dummy').name
+        with self.assertRaises(UserError):
+            # technical langauge starts with '_'
+            category.with_context(lang='_en_US').name
+        with self.assertRaises(UserError):
+            # SQL injection language
+            category.with_context(lang="'', NOW(").name
+
+        # lang as en_US and None are always readable even when en_US is not activated
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        category.invalidate_recordset()
+        self.assertEqual(category.with_context(lang=None).name, 'Customers')
+        category.invalidate_recordset()
+        self.assertEqual(category.with_context(lang='en_US').name, 'Customers')
+
     def test_101_create_translated_record(self):
         category = self.customers.with_context({})
         self.assertEqual(category.name, 'Customers', "Error in basic name")
@@ -502,16 +539,12 @@ class TestTranslation(TransactionCase):
         self.assertTrue(self.env.ref('base.lang_fr').active)
         category_fr = category_en.with_context(lang='fr_FR')
 
-        self.assertFalse(self.env.ref('base.lang_zh_CN').active)
-        category_zh = category_en.with_context(lang='zh_CN')
-
         self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env.ref('base.lang_en').active = False
 
         category_fr.with_context(prefetch_langs=True).name
         category_nl.name
         category_en.name
-        category_zh.name
         category_fr.invalidate_recordset()
 
         with self.assertQueryCount(1):
@@ -520,7 +553,6 @@ class TestTranslation(TransactionCase):
         with self.assertQueryCount(0):
             self.assertEqual(category_nl.name, 'Klanten')
             self.assertEqual(category_en.name, 'Customers')
-            self.assertEqual(category_zh.name, 'Customers')
 
 
     # TODO Currently, the unique constraint doesn't work for translatable field
@@ -573,6 +605,10 @@ class TestTranslationWrite(TransactionCase):
         category3.with_context(lang='fr_FR').name = 'French 2'
         category3.with_context(lang='en_US').name = 'English 2'
         self.assertEqual(category3.with_context(lang='fr_FR').name, 'French 2')
+
+        with self.assertRaises(UserError):
+            # Illegal context lang starts with "_" should raise UserError
+            category.with_context(lang='_en_US').name = '_Customers'
 
     def test_03_fr_single(self):
         self.env['res.lang']._activate_lang('fr_FR')

@@ -142,6 +142,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.env.flush_all()
         self.env.invalidate_all()
         self.authenticate(self.users[0].login, self.password)
+        self.env['res.lang']._lang_get_id('en_US')  # cache language for validation
         with self.assertQueryCount(emp=self._query_count):
             init_messaging = self.make_jsonrpc_request("/mail/action", {"init_messaging": True})
         self.assertEqual(init_messaging, self._get_init_messaging_result())
@@ -220,6 +221,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.env.flush_all()
         self.env.invalidate_all()
         self.authenticate(self.users[0].login, self.password)
+        self.env['res.lang']._lang_get_id('en_US')  # cache language for validation
         with self.assertQueryCount(emp=self._query_count_discuss_channels):
             discuss_channels = self.make_jsonrpc_request("/mail/data", {"channels_as_member": True})
         self.assertEqual(discuss_channels, self._get_discuss_channels_result())
