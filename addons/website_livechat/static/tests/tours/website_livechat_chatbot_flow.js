@@ -26,7 +26,17 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("How can I help you?"),
-            run: () => {}, // check question_selection message is posted
+            // check question_selection message is posted and reactions are not
+            // available since the thread is not yet persisted
+            run() {
+                if (
+                    this.$anchor[0].querySelector(
+                        ".o-mail-Message-actions [title='Add a Reaction']"
+                    )
+                ) {
+                    console.error("Reactions should not be available before thread is persisted.");
+                }
+            },
         },
         {
             trigger: 'li:contains("I want to buy the software")',
@@ -34,7 +44,17 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("I want to buy the software"),
-            run: () => {}, // check selected option is posted
+            // check selected option is posted and reactions are available since
+            // the thread has been persisted in the process
+            run() {
+                if (
+                    !this.$anchor[0].querySelector(
+                        ".o-mail-Message-actions [title='Add a Reaction']"
+                    )
+                ) {
+                    console.error("Reactions should be available since thread is persisted.");
+                }
+            },
         },
         {
             trigger: messagesContain("Can you give us your email please?"),
