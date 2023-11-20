@@ -627,6 +627,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 args: {
                     product: line.reward_product_id,
                 },
+                reward_identifier_code: line.reward_identifier_code,
             };
             if (
                 claimedReward.reward.program_id.program_type === "gift_card" ||
@@ -635,7 +636,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 paymentRewards.push(claimedReward);
             } else if (claimedReward.reward.reward_type === "product") {
                 productRewards.push(claimedReward);
-            } else {
+            } else if (!otherRewards.some(reward => reward.reward_identifier_code === claimedReward.reward_identifier_code)) {
                 otherRewards.push(claimedReward);
             }
             this.orderlines.remove(line);
