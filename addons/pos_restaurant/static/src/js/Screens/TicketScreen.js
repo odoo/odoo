@@ -160,10 +160,11 @@ const PosResTicketScreen = (TicketScreen) =>
             return result;
         }
         async _onDoRefund() {
-            if (this.env.pos.config.iface_floorplan && !this.env.pos.table) {
+            const order = this.getSelectedSyncedOrder();
+            if (order && this.env.pos.config.iface_floorplan && !this.env.pos.table) {
                 this.env.pos.setTable(
-                    this.getSelectedSyncedOrder().table
-                        ? this.getSelectedSyncedOrder().table
+                    order.table
+                        ? order.table
                         : Object.values(this.env.pos.tables_by_id)[0]
                 );
             }
