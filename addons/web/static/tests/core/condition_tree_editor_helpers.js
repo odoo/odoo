@@ -153,10 +153,6 @@ export function getCurrentPath(target, index = 0) {
     if (pathEditor) {
         if (pathEditor.querySelector(".o_model_field_selector")) {
             return getModelFieldSelectorValues(pathEditor).join(" > ");
-        } else if (pathEditor.querySelector("select")) {
-            const select = pathEditor.querySelector("select");
-            const option = [...select.children].find((child) => child.selected);
-            return option.textContent;
         }
         return pathEditor.textContent;
     }

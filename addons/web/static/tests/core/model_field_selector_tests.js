@@ -1001,4 +1001,19 @@ QUnit.module("Components", (hooks) => {
         assert.deepEqual(getModelFieldSelectorValues(target), ["foooooo"]);
         assert.verifySteps(["foooooo"]);
     });
+
+    QUnit.test("showDebugInput = false", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                path: "product_id",
+                resModel: "partner",
+                isDebugMode: true,
+                showDebugInput: false,
+            },
+        });
+
+        await openModelFieldSelectorPopover(target);
+        assert.containsNone(target, ".o_model_field_selector_debug");
+    });
 });
