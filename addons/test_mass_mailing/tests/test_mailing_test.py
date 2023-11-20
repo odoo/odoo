@@ -111,3 +111,11 @@ class TestMailingTest(TestMassMailCommon):
             subject=expected_subject,
             body_content=expected_body,
         )
+
+        self.assertEqual(
+            self.env['mailing.mailing.test'].create({
+                'mass_mailing_id': mailing.id,
+            }).email_to,
+            'test@test.com',
+            "Should use the value of the previous record's email_to as default",
+        )
