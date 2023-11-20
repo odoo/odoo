@@ -282,7 +282,7 @@ class ReportSaleDetails(models.AbstractModel):
 
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
-        keys1 = line.product_id.product_tmpl_id.pos_categ_ids.mapped("name")
+        keys1 = line.product_id.product_tmpl_id.pos_categ_ids.mapped("name") or [_('Not Categorized')]
         for key1 in keys1:
             products.setdefault(key1, {})
             products[key1].setdefault(key2, 0.0)
