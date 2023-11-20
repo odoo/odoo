@@ -475,7 +475,8 @@ class StockMoveLine(models.Model):
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves |= self.filtered(lambda ml: not ml.move_id.origin_returned_move_id and ml.move_id.state not in ('done', 'cancel')\
+                and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
