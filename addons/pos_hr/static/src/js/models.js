@@ -59,7 +59,7 @@ patch(PosGlobalState.prototype, "pos_hr.PosGlobalState", {
 });
 
 patch(Order.prototype, "pos_hr.Order", {
-    setup(options) {
+    setup(_defaultObj, options) {
         this._super(...arguments);
         if (!options.json && this.pos.config.module_pos_hr) {
             this.cashier = this.pos.get_cashier();
