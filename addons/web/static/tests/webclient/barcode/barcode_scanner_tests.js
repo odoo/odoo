@@ -47,6 +47,9 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
         );
         canvas.width = bitMatrix.width;
         canvas.height = bitMatrix.height;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (let x = 0; x < bitMatrix.width; x++) {
             for (let y = 0; y < bitMatrix.height; y++) {
                 if (bitMatrix.get(x, y)) {
