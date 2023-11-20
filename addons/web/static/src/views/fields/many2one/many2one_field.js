@@ -115,8 +115,9 @@ export class Many2OneField extends Component {
             onRecordSaved: async (record) => {
                 const resId = this.value[0];
                 const fields = ["display_name"];
-                const { context } = this.props;
-                const records = await this.orm.read(this.relation, [resId], fields, { context });
+                const records = await this.orm.read(this.relation, [resId], fields, {
+                    context: this.context,
+                });
                 await this.updateRecord(m2oTupleFromData(records[0]));
             },
             onClose: () => this.focusInput(),
