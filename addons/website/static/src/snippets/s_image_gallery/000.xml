@@ -14,7 +14,7 @@
             <div class="carousel-inner" style="padding: 0;">
                  <t t-foreach="images" t-as="image" t-key="image_index">
                     <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
-                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image"/>
+                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image" data-o-main-image="true"/>
                     </div>
                  </t>
             </div>
