@@ -627,3 +627,24 @@ class TestSaleProject(TestSaleProjectCommon):
             sol_form.qty_delivered = 1
             self.assertEqual(sol_form.qty_delivered_method, 'manual')
             self.assertEqual(sol_form.qty_delivered, 1, 'quantity delivered is editable')
+
+    def test_quick_create_sol(self):
+        """
+        When creating a SOL on the fly through the quick create, use a product matching
+        what was typed in the field if there is one, and make sure the SOL name is computed correctly.
+        """
+        product_service = self.env['product.product'].create({
+            'name': 'Signage',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
+        })
+        sale_line_id, sale_line_name = self.env['sale.order.line'].with_context(
+            default_partner_id=self.partner.id,
+            form_view_ref='sale_project.sale_order_line_view_form_editable',
+        ).name_create('gnag')
+
+        sale_line = self.env['sale.order.line'].browse(sale_line_id)
+        self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
+        self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
