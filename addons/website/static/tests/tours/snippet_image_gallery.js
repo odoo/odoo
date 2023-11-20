@@ -61,3 +61,34 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: "iframe #wrap:not(:has(.s_image_gallery))",
     run: () => null,
 }]);
+
+wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
+    test: true,
+    url: "/",
+    edition: true,
+}, [
+    wTourUtils.dragNDrop({
+        id: "s_image_gallery",
+        name: "Image Gallery",
+    }),
+{
+    content: "Click on the first image of the snippet",
+    trigger: "iframe .s_image_gallery .carousel-item.active img",
+},
+    wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
+    wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
+{
+    content: "Check that the image has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-gallery_img we-button[data-position='next']",
+}, {
+    content: "Click on the moved image",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1']",
+}, {
+    content: "Check that the image still has the correct filter",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}]);
