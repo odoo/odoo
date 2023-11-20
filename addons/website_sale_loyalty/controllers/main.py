@@ -31,11 +31,10 @@ class WebsiteSale(main.WebsiteSale):
     @http.route()
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
-        res = super(WebsiteSale, self).shop_payment(**post)
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
-        return res
+        return super(WebsiteSale, self).shop_payment(**post)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
