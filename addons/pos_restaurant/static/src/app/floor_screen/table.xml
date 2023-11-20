@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.Table">
-        <div class="table position-absolute d-flex flex-column align-items-center justify-content-between cursor-pointer" 
-            t-on-click.stop="(ev) => props.onClick(props.table, ev)" 
-            t-att-style="style">
-            <div class="infos d-flex align-items-center flex-grow-1">
-                <span class="label fw-bolder fs-4"
-                    t-esc="props.table.name" />
-                <span 
-                    t-att-class="orderCountClass" 
-                    class="badge d-flex align-items-center justify-content-center position-absolute rounded-pill" 
-                    t-attf-class="{{ orderCount === 0 or pos.isEditMode ? 'd-none' : ''}}"
-                    t-att-style="badgeStyle"
-                    t-esc="orderCount"/>
+        <t t-set="isSelected" t-value="props.selectedTables.some(t => t.id === props.table.id)"/>
+        <t t-set="isOccupied" t-value="pos.getCustomerCount(props.table.id) > 0 || tNotif?.order_count > 0"/>
+        <div class="table d-flex flex-column align-items-center justify-content-between cursor-pointer"
+            t-ref="root"
+            t-att-class="{'selected': isSelected}"
+            t-attf-class="{{props.class}}"
+            t-on-click.stop="(ev) => props.onClick(props.table, ev)"
+            t-attf-style="border: 3px solid {{props.table.color}};
+                        border-radius: {{props.table.shape === 'round' ? 1000 : 3}}px;
+                        background: {{isOccupied ? props.table.color || 'rgb(53, 211, 116)' : '#00000020'}};
+                        color: {{!isOccupied ? 'black' : 'white'}};
+                        box-shadow: {{isSelected ? '0px 0px 12px 7px #a0a0a0' : '0px 3px rgba(0,0,0,0.07)'}};
+                        {{props.style}}" >
+            <div class="info position-relative w-100 h-100">
+                <div class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" t-esc="props.table.name" />
+                <div  t-esc="orderCount" t-if="orderCount and !pos.isEditMode"
+                    t-att-class="{
+                        'text-bg-danger': tNotif.changes_count,
+                        'text-bg-info'  : !tNotif.changes_count and tNotif.skip_changes,
+                        'text-bg-dark'  : !tNotif.changes_count and !tNotif.skip_changes
+                    }"
+                    class="order-count d-flex align-items-center justify-content-center position-absolute rounded-circle"
+                    t-att-style="'width: 1.5rem; height: 1.5rem; ' + badgeStyle"/>
+                <div t-esc="pos.getCustomerCount(props.table.id) + '/' + this.props.table.seats" style="height: 2rem;" class="table-seats mb-1 position-absolute d-flex align-items-center justify-content-center bottom-0 start-50 translate-middle-x px-2 py-1 rounded text-bg-dark bg-opacity-25 fs-4" />
             </div>
-            <span class="table-seats position-absolute bottom-0 start-50 translate-middle-x mb-1 px-2 py-1 rounded text-bg-dark bg-opacity-25 fs-4">
-                <div class="cover" t-att-style="`width: ${Math.ceil(fill * 100)}%`" />
-                <t t-esc="customerCountDisplay" />
-            </span>
+            <t t-if="isSelected and !isKanban()" t-foreach="handles" t-as="handle" t-key="handle">
+                <span class="table-handle" t-ref="{{handle}}" t-att-style="computeHandleStyle(handle)"/>
+            </t>
         </div>
     </t>
 </templates>

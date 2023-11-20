@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
         <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
-            <button t-if="showReleaseBtn()" class="btn btn-primary py-2 rounded-0" style="border:none; font-size: 20px;" t-on-click="releaseTable">Release table</button>
+            <button t-if="pos.config.module_pos_restaurant and !pos.tableHasOrders(pos.models['restaurant.table'].get(pos.get_order().tableId))" class="btn btn-primary py-2 rounded-0" style="border:none; font-size: 20px;" t-on-click="releaseTable">Release table</button>
         </xpath>
     </t>
 </templates>

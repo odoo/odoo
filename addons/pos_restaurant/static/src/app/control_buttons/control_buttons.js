@@ -40,7 +40,7 @@ patch(ControlButtons.prototype, {
         });
     },
     clickTransferOrder() {
-        this.pos.setCurrentOrderToTransfer();
+        this.pos.orderToTransfer = this.pos.selectedOrder;
         this.pos.showScreen("FloorScreen");
     },
 });

@@ -251,8 +251,10 @@ patch(PosStore.prototype, {
         this.selectedTable = null;
         this.set_order(null);
     },
-    setCurrentOrderToTransfer() {
-        this.orderToTransfer = this.selectedOrder;
+    tableHasOrders(table) {
+        return this.orders.some(
+            (o) => o?.tableId === table.id && o.finalized === false && o.orderlines.length
+        );
     },
     async transferTable(table) {
         this.selectedTable = table;
@@ -266,6 +268,12 @@ patch(PosStore.prototype, {
             this.transferredOrdersSet.add(this.orderToTransfer);
             this.orderToTransfer = null;
         }
+    },
+    updateTables(...tables) {
+        this.data.call("restaurant.table", "update_tables", [
+            tables.map((t) => t.id),
+            Object.fromEntries(tables.map((t) => [t.id, t.serialize(true)])),
+        ]);
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
