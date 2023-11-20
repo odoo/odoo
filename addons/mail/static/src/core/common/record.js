@@ -144,7 +144,7 @@ export class RecordList extends Array {
     }
     /**
      * @param {R|any} val
-     * @param {(R) => void} fn function that is called in-between preinsert and
+     * @param {(R) => void} [fn] function that is called in-between preinsert and
      *   insert. Preinsert only inserted what's needed to make record, while
      *   insert finalize with all remaining data.
      * @param {boolean} [inv=true] whether the inverse should be added or not.
@@ -169,13 +169,32 @@ export class RecordList extends Array {
         } else {
             r3 = val;
         }
-        fn(r3);
+        fn?.(r3);
         if (!Record.isRecord(val)) {
             // was preinserted, fully insert now
             const { targetModel } = this.owner.Model._fields[this.name];
             this.owner.Model.store[targetModel].insert(val);
         }
         return r3;
+    }
+    /** @param {R[]|any[]} data */
+    assign(data) {
+        /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
+        const collection = Record.isRecord(data) ? [data] : data;
+        // l1 and collection could be same record list,
+        // save before clear to not push mutated recordlist that is empty
+        const vals = [...collection];
+        /** @type {R[]} */
+        const oldRecords = this.slice();
+        for (const r2 of oldRecords) {
+            r2.__uses__.delete(this);
+        }
+        const records = vals.map((val) =>
+            this._insert(val, (r3) => {
+                r3.__uses__.add(this);
+            })
+        );
+        this.data = records.map((r) => r.localId);
     }
     /** @param {R[]} records */
     push(...records) {

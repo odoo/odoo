@@ -251,17 +251,7 @@ export function makeStore(env) {
                                 if (!Array.isArray(val)) {
                                     val = [val];
                                 }
-                                /** @type {Record[]|Set<Record>|RecordList<Record>} */
-                                const collection = Record.isRecord(val) ? [val] : val;
-                                const oldRecords = l1.slice();
-                                for (const r2 of oldRecords) {
-                                    r2.__uses__.delete(l1);
-                                }
-                                // l1 and collection could be same record list,
-                                // save before clear to not push mutated recordlist that is empty
-                                const col = [...collection];
-                                l1.clear();
-                                l1.push(...col);
+                                l1.assign(val);
                             } else {
                                 // [Record.one] =
                                 if (Record.isCommand(val)) {
