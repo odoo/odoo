@@ -29,11 +29,6 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
-    update(data) {
-        super.update(data);
-        this.originThread?.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
-    }
-
     originThread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("Message");

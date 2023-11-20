@@ -107,7 +107,7 @@ export class Thread extends Record {
     model;
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    attachments = Record.many("Attachment");
+    attachments = Record.many("Attachment", { sort: (a1, a2) => (a1.id < a2.id ? 1 : -1) });
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
@@ -438,16 +438,9 @@ export class Thread extends Record {
     offlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
         compute() {
-            const orderedOnlineMembers = [];
-            for (const member of this.channelMembers) {
-                if (member.persona?.im_status !== "online") {
-                    orderedOnlineMembers.push(member);
-                }
-            }
-            return orderedOnlineMembers.sort((m1, m2) =>
-                m1.persona?.name < m2.persona?.name ? -1 : 1
-            );
+            return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
         },
+        sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
     });
 
     get nonEmptyMessages() {
@@ -488,31 +481,26 @@ export class Thread extends Record {
     onlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
         compute() {
-            const orderedOnlineMembers = [];
-            for (const member of this.channelMembers) {
-                if (member.persona.im_status === "online") {
-                    orderedOnlineMembers.push(member);
-                }
-            }
-            return orderedOnlineMembers.sort((m1, m2) => {
-                const m1HasRtc = Boolean(m1.rtcSession);
-                const m2HasRtc = Boolean(m2.rtcSession);
-                if (m1HasRtc === m2HasRtc) {
-                    /**
-                     * If raisingHand is falsy, it gets an Infinity value so that when
-                     * we sort by [oldest/lowest-value]-first, falsy values end up last.
-                     */
-                    const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
-                    const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
-                    if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
-                        return m1RaisingValue - m2RaisingValue;
-                    } else {
-                        return m1.persona.name?.localeCompare(m2.persona.name) ?? 1;
-                    }
+            return this.channelMembers.filter((member) => member.persona.im_status === "online");
+        },
+        sort: (m1, m2) => {
+            const m1HasRtc = Boolean(m1.rtcSession);
+            const m2HasRtc = Boolean(m2.rtcSession);
+            if (m1HasRtc === m2HasRtc) {
+                /**
+                 * If raisingHand is falsy, it gets an Infinity value so that when
+                 * we sort by [oldest/lowest-value]-first, falsy values end up last.
+                 */
+                const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
+                const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
+                if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
+                    return m1RaisingValue - m2RaisingValue;
                 } else {
-                    return m2HasRtc - m1HasRtc;
+                    return m1.persona.name?.localeCompare(m2.persona.name) ?? 1;
                 }
-            });
+            } else {
+                return m2HasRtc - m1HasRtc;
+            }
         },
     });
 

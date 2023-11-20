@@ -682,10 +682,18 @@ export class Record {
      *   from the relation.
      * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
+     * @property {(r1: import("models").Models[M], r2: import("models").Models[M]) => number} [sort] if defined, this field
+     *   is automatically sorted by this function.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { compute, eager = false, inverse, onAdd, onDelete, onUpdate } = {}) {
-        return [MANY_SYM, { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate }];
+    static many(
+        targetModel,
+        { compute, eager = false, inverse, onAdd, onDelete, onUpdate, sort } = {}
+    ) {
+        return [
+            MANY_SYM,
+            { targetModel, compute, eager, inverse, onAdd, onDelete, onUpdate, sort },
+        ];
     }
     /**
      * @template T

@@ -2,7 +2,7 @@
 
 import { onChange } from "@mail/utils/common/misc";
 
-import { markup, reactive } from "@odoo/owl";
+import { markup, reactive, toRaw } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
@@ -280,7 +280,7 @@ export function makeStore(env) {
                         res.store = proxy;
                     }
                     for (const name in Model._fields) {
-                        const { compute, default: defaultVal, eager } = Model._fields[name];
+                        const { compute, default: defaultVal, eager, sort } = Model._fields[name];
                         const SYM = this[name]?.[0];
                         this._fields[name] = { [SYM]: true, eager };
                         if (Record.isRelation(SYM)) {
@@ -329,14 +329,25 @@ export function makeStore(env) {
                                 },
                             });
                         }
+                        const onChangeFns = [];
+                        if (sort) {
+                            onChangeFns.push(() =>
+                                toRaw(this)[name].sort(Model._fields[name].sort)
+                            );
+                        }
                         if (Model._fields[name].onUpdate) {
+                            onChangeFns.push((record) => Model._fields[name].onUpdate.call(record));
+                        }
+                        if (onChangeFns.length > 0) {
                             onChange(proxy, name, () => {
                                 // store is wrapped in another reactive, hence proxy is not enough
                                 const exactProxy = res.store.get(proxy.localId);
                                 if (!exactProxy) {
                                     return; // record was probably deleted;
                                 }
-                                Model._fields[name].onUpdate.call(exactProxy);
+                                for (const fn of onChangeFns) {
+                                    fn(exactProxy);
+                                }
                             });
                         }
                     }
