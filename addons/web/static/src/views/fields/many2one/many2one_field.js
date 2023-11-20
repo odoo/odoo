@@ -170,10 +170,7 @@ export class Many2OneField extends Component {
     }
     get context() {
         const { context, record } = this.props;
-        const evalContext = record.getEvalContext
-            ? record.getEvalContext(false)
-            : record.evalContext;
-        return makeContext([context], evalContext);
+        return makeContext([context], record.evalContext);
     }
     get classFromDecoration() {
         const evalContext = this.props.record.evalContextWithVirtualIds;
@@ -365,8 +362,9 @@ export const many2OneField = {
     ],
     supportedTypes: ["many2one"],
     extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
-        const canCreate =
-            options.no_create ? false : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
+        const canCreate = options.no_create
+            ? false
+            : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
         return {
             placeholder: attrs.placeholder,
             canOpen: !options.no_open,
