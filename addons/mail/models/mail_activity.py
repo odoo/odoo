@@ -260,9 +260,8 @@ class MailActivity(models.Model):
         # if available; otherwise fall back on read for read, write for other operations.
         activity_to_documents = dict()
         for activity in remaining_sudo:
-            # write / unlink: if not updating self or assigned, limit to automated activities to avoid
-            # updating other people's activities. As unlinking a document bypasses access rights checks
-            # on related activities this will not prevent people from deleting documents with activities
+            # write / unlink: As unlinking a document bypasses access rights checks on related activities
+            # this will not prevent people from deleting documents with activities
             # create / read: just check rights on related document
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for doc_model, doc_ids in activity_to_documents.items():
@@ -283,7 +282,12 @@ class MailActivity(models.Model):
         """ Check assigned user (user_id field) has access to the document. Purpose
         is to allow assigned user to handle their activities. For that purpose
         assigned user should be able to at least read the document. We therefore
-        raise an UserError if the assigned user has no access to the document. """
+        raise an UserError if the assigned user has no access to the document.
+
+        .. deprecated:: 17.0
+            Deprecated method, we don't check access to the underlying records anymore
+            as user can new see activities without having access to the underlying records.
+        """
         for model, activity_data in self._classify_by_model().items():
             # group activities / user, in order to batch the check of ACLs
             per_user = dict()
@@ -327,14 +331,10 @@ class MailActivity(models.Model):
             readable_user_partners = self.env.user.partner_id
 
         # when creating activities for other: send a notification to assigned user;
-        # in case of manually done activity also check target has rights on document
-        # otherwise we prevent its creation. Automated activities are checked since
-        # they are integrated into business flows that should not crash.
         if self.env.context.get('mail_activity_quick_update'):
             activities_to_notify = self.env['mail.activity']
         else:
             activities_to_notify = activities.filtered(lambda act: act.user_id != self.env.user)
-        activities_to_notify.filtered(lambda act: not act.automated)._check_access_assignation()
         if activities_to_notify:
             to_sudo = activities_to_notify.filtered(lambda act: act.user_id.partner_id not in readable_user_partners)
             other = activities_to_notify - to_sudo
@@ -370,8 +370,6 @@ class MailActivity(models.Model):
 
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
-                to_check = user_changes.filtered(lambda act: not act.automated)
-                to_check._check_access_assignation()
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
             for activity in user_changes:
