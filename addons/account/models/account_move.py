@@ -3680,19 +3680,11 @@ class AccountMove(models.Model):
                     "Use the action menu to transform it into a credit note or refund."
                 ))
 
-            if not invoice.partner_id:
-                if invoice.is_sale_document():
-                    raise UserError(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
-                elif invoice.is_purchase_document():
-                    raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
-
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
             if not invoice.invoice_date:
                 if invoice.is_sale_document(include_receipts=True):
                     invoice.invoice_date = fields.Date.context_today(self)
-                elif invoice.is_purchase_document(include_receipts=True):
-                    raise UserError(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
             if move.state in ['posted', 'cancel']:

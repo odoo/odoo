@@ -20,6 +20,31 @@ export class AccountMoveController extends FormController {
             return super.deleteRecord(...arguments);
         }
     }
+
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.name === "action_post") {
+            if (!this.model.root.data.partner_id) {
+                this.model.root.setInvalidField("partner_id");
+            } else {
+                this.model.root._removeInvalidFields(["partner_id"]);
+            }
+
+            const isPurchaseDocument = ["in_invoice", "in_refund", "in_receipt"].includes(this.model.root.data.move_type);
+            if (!this.model.root.data.invoice_date && isPurchaseDocument) {
+                this.model.root.setInvalidField("invoice_date");
+            } else {
+                this.model.root._removeInvalidFields(["invoice_date"]);
+            }
+        }
+
+        /**
+        so right now the issue is the save icons and the red icon.
+        the red icon is due to  the fact that we now have something in the invalid fields.
+        the save icons are due to the fact that we have something in the invalid fields as well
+        */
+
+        return super.beforeExecuteActionButton(...arguments);
+    }
 };
 
 export class AccountMoveFormNotebook extends Notebook {
