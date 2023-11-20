@@ -551,10 +551,6 @@ export async function toggleBold() {
     return new Promise(resolve => setTimeout(() => resolve(), 200));
 }
 
-export async function createLink(editor, content) {
-    editor.execCommand('createLink', '#', content);
-}
-
 export async function insertText(editor, text) {
     // Create and dispatch events to mock text insertion. Unfortunatly, the
     // events will be flagged `isTrusted: false` by the browser, requiring
