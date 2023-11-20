@@ -870,20 +870,8 @@ function makeActionManager(env) {
         if (url && !(url.startsWith("http") || url.startsWith("/"))) {
             url = "/" + url;
         }
-        if (action.target === "download") {
+        if (action.target === "download" || action.target === "self") {
             browser.location.assign(url);
-        } else if (action.target === "self") {
-            let willUnload = false;
-            const onUnload = () => {
-                willUnload = true;
-            };
-            browser.addEventListener("beforeunload", onUnload);
-            env.services.ui.block();
-            browser.location.assign(url);
-            browser.removeEventListener("beforeunload", onUnload);
-            if (!willUnload) {
-                env.services.ui.unblock();
-            }
         } else {
             const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
