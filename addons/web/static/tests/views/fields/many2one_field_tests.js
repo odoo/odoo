@@ -377,15 +377,21 @@ QUnit.module("Fields", (hooks) => {
                 arch: `
                     <form>
                         <sheet>
-                            <field name="trululu"/>
+                            <field name="int_field" />
+                            <field name="trululu" context="{'blip': int_field, 'blop': 3}"/>
                         </sheet>
                     </form>`,
-                mockRPC(route, { method }) {
+                mockRPC(route, { args, method, model, kwargs }) {
                     if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
                     if (method === "write") {
                         assert.step("write");
+                    }
+                    if (method === "read" && model === "partner" && args[0][0] === 4) {
+                        assert.step(`read partner: ${args[1]}`);
+                        assert.strictEqual(kwargs.context.blip, 10);
+                        assert.strictEqual(kwargs.context.blop, 3);
                     }
                 },
             });
@@ -401,7 +407,11 @@ QUnit.module("Fields", (hooks) => {
 
             // save and close modal
             await clickSave(target.querySelectorAll(".modal")[1]);
-            assert.verifySteps(["write"]);
+            assert.verifySteps([
+                "read partner: foo,display_name",
+                "write",
+                "read partner: display_name",
+            ]);
             // save form
             await clickSave(target);
             assert.verifySteps([]);
