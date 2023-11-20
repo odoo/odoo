@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="mail.FollowerSubtypeDialog">
-        <Dialog bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="title">
+        <Dialog t-if="props.follower.partner" bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="title">
             <t t-set-slot="default">
                 <div
                     t-foreach="state.subtypes"
