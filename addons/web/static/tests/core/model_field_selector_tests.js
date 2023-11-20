@@ -775,7 +775,7 @@ QUnit.module("Components", (hooks) => {
             setup() {
                 this.state = useState({ path: `foo` });
             }
-            update() { }
+            update() {}
         }
         Parent.components = { ModelFieldSelector };
         Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
@@ -1000,5 +1000,20 @@ QUnit.module("Components", (hooks) => {
         await click(target);
         assert.deepEqual(getModelFieldSelectorValues(target), ["foooooo"]);
         assert.verifySteps(["foooooo"]);
+    });
+
+    QUnit.test("showDebugInput = false", async (assert) => {
+        await mountComponent(ModelFieldSelector, {
+            props: {
+                readonly: false,
+                path: "product_id",
+                resModel: "partner",
+                isDebugMode: true,
+                showDebugInput: false,
+            },
+        });
+
+        await openModelFieldSelectorPopover(target);
+        assert.containsNone(target, ".o_model_field_selector_debug");
     });
 });
