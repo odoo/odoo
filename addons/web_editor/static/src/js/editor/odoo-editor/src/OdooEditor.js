@@ -1808,13 +1808,9 @@ export class OdooEditor extends EventTarget {
             for (const link of links) {
                 if (
                     link &&
-                    !isBlock(link) &&
-                    link.textContent !== '' &&
-                    !(
-                        // Ignore links wrapped around a single image.
-                        link.children.length === 1 &&
-                        link.firstElementChild.nodeName === 'IMG'
-                    )
+                    link.textContent.trim() !== '' &&
+                    // Only add the ZWS for simple (possibly styled) text links.
+                    ![link, ...link.querySelectorAll('*')].some(isBlock)
                 ) {
                     this._insertLinkZws('start', link);
                     // Only add the ZWS at the end if the link is in selection.
