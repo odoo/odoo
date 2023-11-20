@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { toRaw } from "@odoo/owl";
+import { markRaw, toRaw } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
@@ -30,7 +30,7 @@ export class RecordUses {
      *
      * @type {Map<string, Map<string, number>>}}
      */
-    data = new Map();
+    data = markRaw(new Map());
     /** @param {RecordList} list */
     add(list) {
         if (!this.data.has(list.owner.localId)) {
