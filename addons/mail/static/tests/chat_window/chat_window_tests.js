@@ -19,6 +19,7 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
+import { contains, click as clickContains } from "@web/../tests/utils";
 import { nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
 
@@ -1244,3 +1245,42 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-ChatWindow");
     }
 );
+
+QUnit.test("hiding/swapping hidden chat windows does not update server state", async (assert) => {
+    patchUiSize({ size: SIZES.MD }); // only 2 chat window can be opened at a time
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }, { name: "D&D" }]);
+    await start({
+        mockRPC(route, args) {
+            if (args.method === "channel_fold") {
+                const [channel] = pyEnv["discuss.channel"].searchRead([
+                    ["id", "=", args.args[0][0]],
+                ]);
+                assert.step(`${channel.name} - ${args.kwargs.state}`);
+            }
+        },
+    });
+    await clickContains(".o_menu_systray i[aria-label='Messages']");
+    await clickContains(".o-mail-NotificationItem", { text: "General" });
+    await contains(".o-mail-ChatWindow", { text: "General" });
+    assert.verifySteps(["General - open"]);
+    await clickContains(".o_menu_systray i[aria-label='Messages']");
+    await clickContains(".o-mail-NotificationItem", { text: "Sales" });
+    await contains(".o-mail-ChatWindow", { text: "Sales" });
+    assert.verifySteps(["Sales - open"]);
+    // Sales chat window will be hidden since there is not enough space for the
+    // D&D one but Sales fold state should not be updated.
+    await clickContains(".o_menu_systray i[aria-label='Messages']");
+    await clickContains(".o-mail-NotificationItem", { text: "D&D" });
+    await contains(".o-mail-ChatWindow", { text: "D&D" });
+    assert.verifySteps(["D&D - open"]);
+    // D&D chat window will be hidden since there is not enough space for the
+    // Sales one, the server should not be notified as the state is up to date.
+    await clickContains(".o-mail-ChatWindowHiddenToggler");
+    await clickContains(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-name", {
+        text: "Sales",
+        visible: true,
+    });
+    await contains(".o-mail-ChatWindow", { text: "Sales" });
+    assert.verifySteps([]);
+});

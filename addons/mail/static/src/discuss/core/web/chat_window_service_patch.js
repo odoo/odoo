@@ -11,10 +11,6 @@ patch(ChatWindowService.prototype, "discuss/core/web", {
             this.notifyState(chatWindow);
         }
     },
-    hide(chatWindow) {
-        this._super(...arguments);
-        this.notifyState(chatWindow);
-    },
     notifyState(chatWindow) {
         if (this.ui.isSmall) {
             return;
@@ -36,9 +32,11 @@ patch(ChatWindowService.prototype, "discuss/core/web", {
         const chatWindow = this._super(...arguments);
         this.notifyState(chatWindow);
     },
-    show(chatWindow) {
+    show(chatWindow, { notifyState = true } = {}) {
         this._super(...arguments);
-        this.notifyState(chatWindow);
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
     },
     toggleFold(chatWindow) {
         this._super(...arguments);
