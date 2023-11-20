@@ -1169,6 +1169,9 @@ class Meeting(models.Model):
                 **self._get_remove_sync_id_values(),
                 **self._get_update_future_events_values()
             })
+            if time_values:
+                # Reset attendees state to pending and accept event for current user.
+                self._reset_attendees_status()
 
         # Combine parameters from previous recurrence with the new recurrence parameters.
         new_values = {
@@ -1202,6 +1205,10 @@ class Meeting(models.Model):
                 'recurrence_id': False,
                 **values, **time_values
             })
+
+            if time_values:
+                # Reset attendees state to pending and accept event for current user.
+                base_event._reset_attendees_status()
 
             # Combine parameters from previous recurrence with the new recurrence parameters.
             new_values = {
@@ -1248,6 +1255,14 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    def _reset_attendees_status(self):
+        """ Reset attendees status to pending and accept event for current user. """
+        for attendee in self.attendee_ids:
+            if attendee.partner_id == self.env.user.partner_id:
+                attendee.state = 'accepted'
+            else:
+                attendee.state = 'needsAction'
 
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
