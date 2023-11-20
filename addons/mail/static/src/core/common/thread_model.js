@@ -83,7 +83,7 @@ export class Thread extends Record {
                 "message_unread_counter",
                 "message_needaction_counter",
                 "name",
-                "readonly",
+                "hasNotSelfAsMember",
                 "seen_message_id",
                 "state",
                 "type",
@@ -211,7 +211,6 @@ export class Thread extends Record {
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
-    readonly = false;
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
@@ -359,6 +358,15 @@ export class Thread extends Record {
         return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
     }
 
+    get hasSelfAsMember() {
+        if (typeof this.hasNotSelfAsMember === "boolean") {
+            return !this.hasNotSelfAsMember;
+        }
+        return this.channelMembers.some((channelMember) =>
+            channelMember.persona?.eq(this._store.self)
+        );
+    }
+
     /** @type {import("models").Persona[]} */
     get correspondents() {
         return this.channelMembers
@@ -432,12 +440,6 @@ export class Thread extends Record {
 
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));
-    }
-
-    get hasSelfAsMember() {
-        return this.channelMembers.some((channelMember) =>
-            channelMember.persona?.eq(this._store.self)
-        );
     }
 
     get invitationLink() {

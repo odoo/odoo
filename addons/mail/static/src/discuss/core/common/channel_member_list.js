@@ -39,7 +39,7 @@ export class ChannelMemberList extends Component {
         if (member.persona.type === "guest") {
             return false;
         }
-        if (member.thread.readonly) {
+        if (member.thread.hasNotSelfAsMember) {
             return false;
         }
         return true;

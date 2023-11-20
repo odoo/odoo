@@ -15,7 +15,7 @@ patch(DiscussClientAction.prototype, {
         const menuId = this.props.action.params?.menu_id;
         const appData = this.menu.getCurrentApp() || this.menu.getMenu(menuId);
         const fromLivechatMenu = appData?.xmlid === "im_livechat.menu_livechat_root";
-        if (this.store.discuss.thread?.readonly && !fromLivechatMenu) {
+        if (this.store.discuss.thread?.hasNotSelfAsMember && !fromLivechatMenu) {
             this.threadService.setDiscussThread(this.store.discuss.inbox);
         }
     },

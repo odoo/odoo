@@ -41,7 +41,7 @@ export class DiscussCoreWeb {
                     this.store.odoobotOnboarding = false;
                     return;
                 }
-                if (!channel.readonly) {
+                if (!channel.hasNotSelfAsMember) {
                     this.threadService.notifyMessageToUser(channel, message);
                 }
             }

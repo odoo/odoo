@@ -59,7 +59,7 @@ export class DiscussClientAction extends Component {
         }
         if (!activeThread?.type && model === "discuss.channel") {
             activeThread = await this.threadService.fetchChannel(parseInt(id));
-            if (activeThread && !activeThread.is_pinned && !activeThread.readonly) {
+            if (activeThread && !activeThread.is_pinned && !activeThread.hasNotSelfAsMember) {
                 await this.threadService.pin(activeThread);
             }
         }

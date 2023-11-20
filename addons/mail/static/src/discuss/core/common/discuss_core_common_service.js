@@ -252,7 +252,7 @@ export class DiscussCoreCommon {
                 return;
             }
         }
-        if (!channel.is_pinned && !channel.readonly) {
+        if (!channel.is_pinned && !channel.hasNotSelfAsMember) {
             this.threadService.pin(channel);
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
@@ -267,7 +267,7 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
-                if (notif.id > this.store.initBusId && !channel.readonly) {
+                if (notif.id > this.store.initBusId && !channel.hasNotSelfAsMember) {
                     channel.message_unread_counter++;
                 }
                 if (message.isNeedaction) {
