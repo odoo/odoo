@@ -43,14 +43,14 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @private
      */
     _grid() {
-        const imgs = this._getItemsGallery();
+        const imgs = this._getImgHolderEls();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         imgs.forEach((img, index) => {
-            const $img = $(img.cloneNode());
+            const $img = $(img.cloneNode(true));
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
@@ -67,7 +67,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @returns {Promise}
      */
     _masonry() {
-        const imgs = this._getItemsGallery();
+        const imgs = this._getImgHolderEls();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
@@ -100,7 +100,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
                 // Only on Chrome: appended images are sometimes invisible
                 // and not correctly loaded from cache, we use a clone of the
                 // image to force the loading.
-                smallestColEl.append(imgEl.cloneNode());
+                smallestColEl.append(imgEl.cloneNode(true));
                 await wUtils.onceAllImagesLoaded(this.$target);
             }
             resolve();
@@ -138,15 +138,16 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     _nomode() {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         const imgs = this._getItemsGallery();
+        const imgHolderEls = this._getImgHolderEls();
 
         this._replaceContent($row);
 
-        imgs.forEach((img) => {
+        imgs.forEach((img, index) => {
             var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(img);
+            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
             $row.append($wrap);
         });
     },
@@ -157,23 +158,21 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     _slideshow() {
         const imageEls = this._getItemsGallery();
-        const images = Array.from(imageEls).map((img) => ({
-            // Use getAttribute to get the attribute value otherwise .src
-            // returns the absolute url.
-            src: img.getAttribute('src'),
-            alt: img.getAttribute('alt'),
-        }));
+        const imgHolderEls = this._getImgHolderEls();
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
-            images: images,
+            images: imageEls,
             index: 0,
-            title: "",
             interval: currentInterval || 0,
             id: 'slideshow_' + new Date().getTime(),
-            attrClass: imageEls.length > 0 ? imageEls[0].className : '',
-            attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
+            hideImage: true,
         },
         $slideshow = $(renderToElement('website.gallery.slideshow', params));
+        const carouselItemEls = $slideshow[0].querySelectorAll(".carousel-item");
+        carouselItemEls.forEach((carouselItemEl, index) => {
+            // Add the images in the carousel items.
+            carouselItemEl.appendChild(imgHolderEls[index]);
+        });
         this._replaceContent($slideshow);
         this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
@@ -191,6 +190,17 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         const imgs = this.$('img').get();
         imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
         return imgs;
+    },
+    /**
+     * Returns the images, or the images holder if this holder is an anchor,
+     * sorted by index.
+     *
+     * @private
+     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     */
+    _getImgHolderEls: function () {
+        const imgEls = this._getItemsGallery();
+        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
     },
     /**
      * Returns the index associated to a given image.
