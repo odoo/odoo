@@ -123,6 +123,7 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
     });
 }
 
+/** @deprecated */
 export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     const ref = useRef(refName);
     let el = null;
@@ -202,6 +203,7 @@ export function useVisible(refName, cb, { init = false } = {}) {
  * This hook eases adjusting scroll position by snapshotting scroll
  * properties of scrollable in onWillPatch / onPatched hooks.
  *
+ * @deprecated
  * @param {import("@web/core/utils/hooks").Ref} ref
  * @param {function} param1.onWillPatch
  * @param {function} param1.onPatched
@@ -327,6 +329,7 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
 }
 
 /**
+ * @deprecated
  * @param {string} refName
  * @param {ScrollPosition} [model] Model to store saved position.
  * @param {'bottom' | 'top'} [clearOn] Whether scroll

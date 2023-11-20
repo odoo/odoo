@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+/** @deprecated */
 export class ScrollPosition {
     /** @type {number|undefined} */
     top;
