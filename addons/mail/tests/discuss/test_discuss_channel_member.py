@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -20,19 +20,19 @@ class TestDiscussChannelMember(MailCommon):
             'model': cls.secret_group._name,
             'res_id': cls.secret_group.id,
         })
-        cls.user_1 = mail_new_test_user(
+        cls.user_1 = new_test_user(
             cls.env, login="user_1", name="User 1", groups="base.group_user,mail.secret_group"
         )
-        cls.user_2 = mail_new_test_user(
+        cls.user_2 = new_test_user(
             cls.env, login="user_2", name="User 2", groups="base.group_user,mail.secret_group"
         )
-        cls.user_3 = mail_new_test_user(
+        cls.user_3 = new_test_user(
             cls.env, login="user_3", name="User 3", groups="base.group_user,mail.secret_group"
         )
-        cls.user_portal = mail_new_test_user(
+        cls.user_portal = new_test_user(
             cls.env, login="user_portal", name="User Portal", groups="base.group_portal"
         )
-        cls.user_public = mail_new_test_user(
+        cls.user_public = new_test_user(
             cls.env, login="user_public", name="User Public", groups="base.group_public"
         )
 
@@ -75,7 +75,7 @@ class TestDiscussChannelMember(MailCommon):
             })
 
         # User 2 can not write on `discuss.channel.member` to join the group
-        channel_member = self.env['discuss.channel.member'].with_user(self.user_2).search([('partner_id', '=', self.user_2.partner_id.id)])[0]
+        channel_member = self.env['discuss.channel.member'].with_user(self.user_2).search([('is_self', '=', True)])[0]
         with self.assertRaises(AccessError):
             channel_member.channel_id = self.group.id
         with self.assertRaises(AccessError):
