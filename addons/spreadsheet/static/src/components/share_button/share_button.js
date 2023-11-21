@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { CopyButton } from "@web/views/fields/copy_clipboard/copy_button";
+import { CopyButton } from "@web/core/copy_button/copy_button";
 import { waitForDataLoaded, freezeOdooData } from "@spreadsheet/helpers/model";
 import { Model } from "@odoo/o-spreadsheet";
 
