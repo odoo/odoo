@@ -142,7 +142,6 @@ Featuring
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/animation.scss',
-            'web/static/src/legacy/scss/daterangepicker.scss',
             'web/static/src/legacy/scss/banner.scss',
             'web/static/src/legacy/scss/colorpicker.scss',
             'web/static/src/legacy/scss/popover.scss',
