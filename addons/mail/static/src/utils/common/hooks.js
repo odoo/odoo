@@ -1,14 +1,6 @@
 /* @odoo-module */
 
-import {
-    onMounted,
-    onPatched,
-    onWillPatch,
-    onWillUnmount,
-    useComponent,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, useComponent, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -123,40 +115,6 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
     });
 }
 
-export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
-    const ref = useRef(refName);
-    let el = null;
-    let isScrolled = true;
-    let lastSetValue;
-    const observer = new ResizeObserver(applyScroll);
-
-    function onScroll() {
-        isScrolled = Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < 1;
-    }
-    async function applyScroll() {
-        if (isScrolled && shouldScrollPredicate() && lastSetValue !== ref.el.scrollHeight) {
-            /**
-             * Avoid setting the same value 2 times in a row. This is not supposed to have an
-             * effect, unless the value was changed from outside in the meantime, in which case
-             * resetting the value would incorrectly override the other change.
-             */
-            lastSetValue = ref.el.scrollHeight;
-            ref.el.scrollTop = ref.el.scrollHeight;
-        }
-    }
-    onMounted(() => {
-        el = ref.el;
-        applyScroll();
-        observer.observe(el);
-        el.addEventListener("scroll", onScroll);
-    });
-    onWillUnmount(() => {
-        observer.unobserve(el);
-        el.removeEventListener("scroll", onScroll);
-    });
-    onPatched(applyScroll);
-}
-
 /**
  * @param {string} refName
  * @param {function} cb
@@ -196,48 +154,6 @@ export function useVisible(refName, cb, { init = false } = {}) {
         el = ref.el;
     }
     return state;
-}
-
-/**
- * This hook eases adjusting scroll position by snapshotting scroll
- * properties of scrollable in onWillPatch / onPatched hooks.
- *
- * @param {import("@web/core/utils/hooks").Ref} ref
- * @param {function} param1.onWillPatch
- * @param {function} param1.onPatched
- */
-export function useScrollSnapshot(ref, { onWillPatch: p_onWillPatch, onPatched: p_onPatched }) {
-    const snapshot = {
-        scrollHeight: null,
-        scrollTop: null,
-        clientHeight: null,
-    };
-    onMounted(() => {
-        const el = ref.el;
-        Object.assign(snapshot, {
-            scrollHeight: el.scrollHeight,
-            scrollTop: el.scrollTop,
-            clientHeight: el.clientHeight,
-        });
-    });
-    onWillPatch(() => {
-        const el = ref.el;
-        Object.assign(snapshot, {
-            scrollHeight: el.scrollHeight,
-            scrollTop: el.scrollTop,
-            clientHeight: el.clientHeight,
-            ...p_onWillPatch(),
-        });
-    });
-    onPatched(() => {
-        const el = ref.el;
-        Object.assign(snapshot, {
-            scrollHeight: el.scrollHeight,
-            scrollTop: el.scrollTop,
-            clientHeight: el.clientHeight,
-            ...p_onPatched(snapshot),
-        });
-    });
 }
 
 /**
@@ -324,71 +240,6 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
             }
         },
     };
-}
-
-/**
- * @param {string} refName
- * @param {ScrollPosition} [model] Model to store saved position.
- * @param {'bottom' | 'top'} [clearOn] Whether scroll
- * position should be cleared when reaching bottom or top.
- */
-export function useScrollPosition(refName, model, clearOn) {
-    const ref = useRef(refName);
-    let observeScroll = false;
-    const self = {
-        ref,
-        model,
-        restore() {
-            if (!self.model) {
-                return;
-            }
-            ref.el?.scrollTo({
-                left: self.model.left,
-                top: self.model.top,
-            });
-        },
-    };
-    function isScrolledToBottom() {
-        if (!ref.el) {
-            return false;
-        }
-        return Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) < 1;
-    }
-
-    function onScrolled() {
-        if (!self.model) {
-            return;
-        }
-        if (
-            (clearOn === "bottom" && isScrolledToBottom()) ||
-            (clearOn === "top" && ref.el.scrollTop === 0)
-        ) {
-            return self.model.clear();
-        }
-        Object.assign(self.model, {
-            top: ref.el.scrollTop,
-            left: ref.el.scrollLeft,
-        });
-    }
-
-    onMounted(() => {
-        if (ref.el) {
-            observeScroll = true;
-        }
-        ref.el?.addEventListener("scroll", onScrolled);
-    });
-
-    onPatched(() => {
-        if (!observeScroll && ref.el) {
-            observeScroll = true;
-            ref.el.addEventListener("scroll", onScrolled);
-        }
-    });
-
-    onWillUnmount(() => {
-        ref.el?.removeEventListener("scroll", onScrolled);
-    });
-    return self;
 }
 
 export function useMessageEdition() {

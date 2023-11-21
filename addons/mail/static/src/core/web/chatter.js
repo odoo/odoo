@@ -7,7 +7,7 @@ import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Thread } from "@mail/core/common/thread";
 import { Activity } from "@mail/core/web/activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
-import { useHover, useMessageHighlight, useScrollPosition } from "@mail/utils/common/hooks";
+import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
@@ -17,7 +17,6 @@ import {
     Component,
     markup,
     onMounted,
-    onPatched,
     onWillUpdateProps,
     useChildSubEnv,
     useEffect,
@@ -100,7 +99,6 @@ export class Chatter extends Component {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
-            scrollToAttachments: 0,
             showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("models").Thread} */
@@ -111,7 +109,6 @@ export class Chatter extends Component {
         this.attachmentUploader = useAttachmentUploader(
             this.threadService.getThread(this.props.threadModel, this.props.threadId)
         );
-        this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         this.recipientsPopover = usePopover(RecipientList);
@@ -154,9 +151,7 @@ export class Chatter extends Component {
                 "attachments",
                 "suggestedRecipients",
             ]);
-            this.scrollPosition.restore();
         });
-        onPatched(this.scrollPosition.restore);
         onWillUpdateProps((nextProps) => {
             this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
             if (nextProps.threadId === false) {
@@ -189,18 +184,6 @@ export class Chatter extends Component {
         );
         useEffect(
             () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.state.scrollToAttachments > 0
-                ) {
-                    this.attachmentBox.el.scrollIntoView({ block: "center" });
-                }
-            },
-            () => [this.state.thread?.status, this.state.scrollToAttachments]
-        );
-        useEffect(
-            () => {
                 if (!this.state.thread) {
                     return;
                 }
@@ -212,7 +195,8 @@ export class Chatter extends Component {
                     );
                 } else {
                     this.state.showAttachmentLoading = false;
-                    this.state.isAttachmentBoxOpened = this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0;
+                    this.state.isAttachmentBoxOpened =
+                        this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0;
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
@@ -278,7 +262,6 @@ export class Chatter extends Component {
     ) {
         const { threadModel } = this.props;
         this.state.thread = this.threadService.getThread(threadModel, threadId);
-        this.scrollPosition.model = this.state.thread?.scrollPosition;
         if (!threadId) {
             return;
         }
@@ -412,7 +395,8 @@ export class Chatter extends Component {
             this.reloadParentView();
         }
         this.state.isAttachmentBoxOpened = true;
-        this.scrollPosition.ref.el.scrollTop = 0;
+        this.rootRef.el.scrollTop = 0;
+        this.state.thread.scrollTop = 0;
     }
 
     onClickAddAttachments() {
@@ -421,7 +405,8 @@ export class Chatter extends Component {
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         if (this.state.isAttachmentBoxOpened) {
-            this.state.scrollToAttachments++;
+            this.rootRef.el.scrollTop = 0;
+            this.state.thread.scrollTop = 0;
         }
     }
 
