@@ -658,43 +658,50 @@
                     <input type="hidden" name="search" t-att-value="search"/>
 
                     <t t-foreach="attributes" t-as="a">
-                        <t t-set="_status" t-value="'inactive'"/>
-                        <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
+                        <t t-cache="a,attrib_set">
+                            <t t-set="_status" t-value="'inactive'"/>
+                            <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
 
-                        <div t-if="a.value_ids and len(a.value_ids) &gt; 1"
-                             t-attf-class="accordion-item border-top-0 {{(_status == 'active') and 'order-1' or 'order-2'}}">
-                            <h2 class="accordion-header mb-0" t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header">
-                                <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{ not attrib_values and 'collapsed'}}"
-                                        type="button"
-                                        t-att-data-status="_status"
-                                        data-bs-toggle="collapse"
-                                        t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
-                                        t-att-aria-expanded="_status == 'active' and 'True' or 'False'"
-                                        t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}">
-                                        <b t-out="a.name"/>
-                                </button>
-                            </h2>
-                            <div t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}"
-                                 t-attf-class="accordion-collapse collapse {{ (_status == 'active') and 'show'}}"
-                                 t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
-                                 t-attf-aria-labelledby="o_wsale_offcanvas_attribute_{{a.id}}_header">
+                            <div t-if="a.value_ids and len(a.value_ids) &gt; 1"
+                                 t-attf-class="accordion-item border-top-0 {{(_status == 'active') and 'order-1' or 'order-2'}}">
+                                <h2 class="accordion-header mb-0" t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header">
+                                    <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{ not attrib_values and 'collapsed'}}"
+                                            type="button"
+                                            t-att-data-status="_status"
+                                            data-bs-toggle="collapse"
+                                            t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
+                                            t-att-aria-expanded="_status == 'active' and 'True' or 'False'"
+                                            t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}">
+                                            <b t-out="a.name"/>
+                                    </button>
+                                </h2>
+                                <div t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}"
+                                     t-attf-class="accordion-collapse collapse {{ (_status == 'active') and 'show'}}"
+                                     t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
+                                     t-attf-aria-labelledby="o_wsale_offcanvas_attribute_{{a.id}}_header">
 
-                                <div class="accordion-body pt-0">
-                                    <div class="list-group list-group-flush"
-                                         t-if="a.display_type == 'radio' or a.display_type == 'pills' or a.display_type == 'select'">
-                                        <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
-                                            <div class="form-check mb-1">
-                                                <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
-                                                <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                    <div class="accordion-body pt-0">
+                                        <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
+                                            <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
+                                        </div>
+                                        <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                                             class="list-group list-group-flush">
+                                            <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                                                <div class="form-check mb-1">
+                                                    <input type="checkbox"
+                                                           name="attrib"
+                                                           class="form-check-input"
+                                                           t-att-id="'%s-%s' % (a.id,v.id)"
+                                                           t-att-value="'%s-%s' % (a.id,v.id)"
+                                                           t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                                    <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
-                                        <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </t>
                     </t>
                     <t t-if="opt_wsale_filter_tags and (opt_wsale_attributes or opt_wsale_attributes_top)">
                         <t t-set="_status" t-value="'inactive'"/>
@@ -887,34 +894,39 @@
                         <i class="oi oi-close"/>
                     </a>
                     <t t-foreach="attributes" t-as="a">
-                        <div class="accordion-item nav-item mb-1 border-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
-                            <h6 class="mb-3">
-                                <b class="o_products_attributes_title d-none d-lg-block" t-field="a.name"/>
-                            </h6>
-                            <div t-attf-id="o_products_attributes_{{a.id}}" class="">
-                                <t t-if="a.display_type == 'select'">
-                                    <select class="form-select css_attribute_select mb-2" name="attrib">
-                                        <option value="" selected="true">-</option>
-                                        <t t-foreach="a.value_ids" t-as="v">
-                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
-                                        </t>
-                                    </select>
-                                </t>
-                                <t t-if="a.display_type in ('radio', 'pills', 'multi')">
-                                    <div class="flex-column mb-3">
+                        <t t-cache="a,attrib_set">
+                            <div class="accordion-item nav-item mb-1 border-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                                <h6 class="mb-3">
+                                    <b class="o_products_attributes_title d-none d-lg-block" t-field="a.name"/>
+                                </h6>
+                                <div t-attf-id="o_products_attributes_{{a.id}}" class="">
+                                    <t t-if="a.display_type == 'select'">
+                                        <select class="form-select css_attribute_select mb-2" name="attrib">
+                                            <option value="" selected="true">-</option>
+                                            <t t-foreach="a.value_ids" t-as="v">
+                                                <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+                                            </t>
+                                        </select>
+                                    </t>
+                                    <div t-elif="a.display_type == 'color'" class="mb-3">
+                                        <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
+                                    </div>
+                                    <div t-elif="a.display_type in ('radio', 'pills', 'multi')" class="flex-column mb-3">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <div class="form-check mb-1">
-                                                <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                                <input type="checkbox"
+                                                       name="attrib"
+                                                       class="form-check-input"
+                                                       t-att-id="'%s-%s' % (a.id,v.id)"
+                                                       t-att-value="'%s-%s' % (a.id,v.id)"
+                                                       t-att-checked="'checked' if v.id in attrib_set else None"/>
                                                 <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
                                             </div>
                                         </t>
                                     </div>
-                                </t>
-                                <div t-if="a.display_type == 'color'" class="mb-3">
-                                    <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                 </div>
                             </div>
-                        </div>
+                        </t>
                     </t>
                     <t t-if="opt_wsale_filter_tags and opt_wsale_attributes"
                        t-call="website_sale.filter_products_tags"
@@ -989,6 +1001,7 @@
         <t t-set="navClass" t-valuef="light"/>
 
     <t t-cache="pricelist,product,fiscal_position">
+        <!-- TODO drop _get_first_possible_combination here -->
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
