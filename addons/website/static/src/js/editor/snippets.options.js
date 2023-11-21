@@ -3344,6 +3344,9 @@ options.registry.WebsiteAnimate = options.Class.extend({
         await this._super(...arguments);
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
+        if (this.isAnimatedText) {
+            this.$overlay[0].querySelector(".o_handles").style.pointerEvents = "none";
+        }
     },
     /**
      * @override
