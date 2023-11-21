@@ -74,7 +74,7 @@
                                 <div class="d-flex align-items-center">
                                     <t t-call="website_slides.slides_misc_user_image">
                                         <t t-set="img_class" t-value="'rounded-circle me-1'"/>
-                                        <t t-set="img_style" t-value="'width: 22px; height: 22px; object-fit: cover;'"/>
+                                        <t t-set="img_style" t-value="'width: 22px; height: 22px;'"/>
                                     </t>
                                     <h5 t-esc="user.name" class="d-flex flex-grow-1 mb-0"/>
                                     <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
@@ -507,8 +507,8 @@
 </template>
 
 <template id='slides_misc_user_image' name="User Avatar">
-    <img t-att-class="img_class if img_class else 'rounded-circle float-start'"
-        t-att-style="img_style if img_style else 'width: 32px; height: 32px; object-fit: cover;'"
+    <img t-attf-class="o_avatar {{img_class or 'rounded-circle float-start'}}"
+        t-att-style="img_style if img_style else 'width: 32px; height: 32px;'"
         t-att-src="'/profile/avatar/%s?field=avatar_128' % user.id"
         t-att-alt="user.name"/>
 </template>
