@@ -801,7 +801,7 @@ class JavascriptAsset(WebAsset):
     @property
     def is_transpiled(self):
         if self._is_transpiled is None:
-            self._is_transpiled = bool(is_odoo_module(super().content))
+            self._is_transpiled = bool(is_odoo_module(self.url, super().content))
         return self._is_transpiled
 
     @property
