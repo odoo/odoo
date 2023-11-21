@@ -70,7 +70,7 @@ class Meeting(models.Model):
         Returns True if synchronization with Outlook Calendar is active and False otherwise.
         The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
         """
-        outlook_connected = self.env.user._get_microsoft_calendar_token() and self.env.user._is_microsoft_calendar_valid()
+        outlook_connected = self.env.user._get_microsoft_calendar_token()
         return outlook_connected and self.env.user.microsoft_synchronization_stopped is False
 
     @api.model_create_multi
