@@ -5,7 +5,7 @@
 # Translators:
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2022
 # Deddy Ddr <deddy.ddr@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
@@ -13,6 +13,7 @@
 # Martin Trigaux, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Febrasari Almania <febrasari.almania@gmail.com>, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Febrasari Almania <febrasari.almania@gmail.com>, 2022\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,6 +43,10 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>Tata Nama Barcode</i> menentukan bagaimana barcode dikenali dan dikategorikan.\n"
+"                                Saat barcode di-scan barcode akan dihubungkan dengan peraturan <i>pertama</i> dalam pencocokkan\n"
+"                                pola. Syntax pola adalah expression reguler, dan barcode akan cocok\n"
+"                                bila expression reguler cocok dengan prefix barcode."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -49,11 +54,13 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
+"Tata nama barcode mendefinisikan bagaimana POS mengidentifikasi dan "
+"menginterpretasikan barcode"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "Tambahkan tata nama barcode baru"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -69,12 +76,12 @@ msgstr "Selalu"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "Identifikasi internal untuk peraturan tata nama barcode ini"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "Identifikasi internal untuk tata nama barcode ini"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -84,7 +91,7 @@ msgstr "Banyak"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Barcode Event Mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -149,7 +156,7 @@ msgstr "Nama Tampilan"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
 msgid "EAN-13"
-msgstr ""
+msgstr "EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
@@ -159,7 +166,7 @@ msgstr "EAN-13 ke UPC-A"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
-msgstr ""
+msgstr "EAN-8"
 
 #. module: barcodes
 #. openerp-web
@@ -210,7 +217,7 @@ msgstr "Tidak pernah"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "Tata Nama"
 
 #. module: barcodes
 #. openerp-web
@@ -274,7 +281,7 @@ msgstr "Tabel"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "Pola barcode cocok"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -284,7 +291,7 @@ msgstr "Daftar peraturan barcode"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "Pola yang cocok dengan alias ke barcode ini"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -293,6 +300,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"Terdapat syntax error di pola barcode %(pattern)s: peraturan hanya dapat "
+"memiliki satu pair of braces."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -301,6 +310,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"Terdapat syntax error di pola barcode %(pattern)s: braces hanya dapat "
+"memiliki N diikuti D."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -308,6 +319,7 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -330,11 +342,14 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"Kode UPC dapat dikonversi menjadi EAN dengan mengawali mereka dengan nol. "
+"Pengaturan ini menentukan apakah barcode UPC/EAN harus secara otomatis "
+"dikonversi saat melakukan pencocokkan peraturan dengan encode lain."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
 msgid "UPC-A"
-msgstr ""
+msgstr "UPC-A"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
@@ -356,7 +371,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
-msgstr ""
+msgstr "Produk Satuan"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

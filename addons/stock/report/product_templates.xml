@@ -21,10 +21,10 @@
 ^FO600,100,1
 ^CI28
 <t t-if="product.currency_id.position == 'after'">
-^A0N,66,48^FH^FD<t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
+^A0N,66,48^FH^FD<t t-esc="product.lst_price if 'lst_price' in product else product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
 </t>
 <t t-if="product.currency_id.position == 'before'">
-^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
+^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.lst_price if 'lst_price' in product else product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
 </t>
 </t>
 <t t-if="barcode">

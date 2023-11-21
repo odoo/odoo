@@ -6,6 +6,7 @@ var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const weUtils = require('web_editor.utils');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -32,6 +33,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @override
      */
     start: function () {
+        // Used to prevent the editor's unbreakable protection from restoring
+        // the menu's auto-hide updates in edit mode.
+        this.el.addEventListener("autoMoreMenu.willAdapt", () => this.options.wysiwyg
+            && this.options.wysiwyg.odooEditor.unbreakableStepUnactive());
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
@@ -484,7 +489,10 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? 'right' : 'left';
+        const isRTL = !!this.el.closest('#wrapwrap.o_rtl');
+        this.right = isRTL ? 'left' : 'right';
+        this.left = isRTL ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? this.right : this.left;
         return this._super.apply(this, arguments);
     },
 
@@ -502,7 +510,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'left') {
+        if (alignment === this.left) {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -530,8 +538,9 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
         var alignment = this.defaultAlignment;
         if ($li.nextAll(':visible').length === 0) {
-            // The dropdown is the last menu item, open to the left
-            alignment = 'right';
+            // The dropdown is the last menu item, open to the left side
+            // (right side with rtl languages).
+            alignment = this.right;
         }
 
         // If can't open in the current direction because it would overflow the
@@ -539,7 +548,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
-                alignment = (alignment === 'left' ? 'right' : 'left');
+                alignment = (alignment === this.left ? this.right : this.left);
             }
         }
 
@@ -595,28 +604,24 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        // The user must click on the dropdown if he is on mobile (no way to
+        // hover) or if the dropdown is the extra menu ('+').
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.addClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
-        $dropdown.find(this.$dropdownMenus).addClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('show');
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.removeClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
-        $dropdown.find(this.$dropdownMenus).removeClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('hide');
     },
 });
 
@@ -659,6 +664,13 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
                     this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
                 }
             }
+            // Specific case with the "boxed" header template where the "call to
+            // action" button is inaccessible in the "off-canvas" mobile menu.
+            this.offcanvasAndBoxedHeader = false;
+            if (weUtils.getCSSVariableValue('header-template').includes('boxed')) {
+                this.boxedHeaderCallToActionEl = this.$target[0].querySelector('#top_menu_collapse .oe_structure_solo');
+                this.offcanvasAndBoxedHeader = !!this.boxedHeaderCallToActionEl;
+            }
         }
         return this._super(...arguments);
     },
@@ -678,6 +690,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.navbarEl.append(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.add('nav-item');
+            this.navbarEl.append(this.boxedHeaderCallToActionEl);
+        }
     },
     /**
      * @private
@@ -689,6 +705,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.languageSelectorEl.classList.remove('nav-item');
             this.navbarEl.after(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.remove('nav-item');
+            this.navbarEl.after(this.boxedHeaderCallToActionEl);
         }
     },
 });

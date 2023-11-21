@@ -7,6 +7,7 @@
 # Manuela Silva <mmsrs@sky.com>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
+# Daniel Reis, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +15,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2021\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"Last-Translator: Daniel Reis, 2023\n"
+"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -38,6 +39,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filtro usado para encontrar contas de utilizador na base de dados LDAP. É um filtro LDAP arbitrário representado em forma de texto. Qualquer ocorrência de `%s` será substituída pelo login (identificador) do utilizador, o filtro deve conter pelo menos uma ocorrêcnia deste elemento a ser substituído.\n"
+"\n"
+"    O filtro tem que retornar exatamente um (1) resultado, caso contrário o login será considerado inválido.\n"
+"\n"
+"    Exemplo (atributos reais dependem do serviço LDAP usado e sua confoguração):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    ou\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -61,7 +74,7 @@ msgstr "Empresa"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Configuração LDAP da empresa"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -89,6 +102,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN para a busca ao utilizador: todos os descendentes desta base irão ser "
+"pesquisados para encontrar utilizadores"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -172,6 +187,8 @@ msgstr "Informação da Sessão"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Nenhum utilizador local encontrado para a conexão LDAP e não existe "
+"configuração para criar um"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

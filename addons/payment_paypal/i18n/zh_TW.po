@@ -4,15 +4,16 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2023-01-31 17:26+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +40,7 @@ msgstr "將您的 PayPal 帳戶加入到 Odoo"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -154,6 +155,24 @@ msgstr "與此收單行一起使用的支付服務供應商"
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr "僅用於識別 PayPal 帳戶的公共企業電子郵件"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type

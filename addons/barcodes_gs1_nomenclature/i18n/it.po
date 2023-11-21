@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -32,6 +33,9 @@ msgid ""
 " ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
+"Delimitatore regex alternativo per FNC1 (per impostazione predefinita, se "
+"non configurato, è <GS> ASCII 29 char). Il separatore non deve corrispondere"
+" all'inizio/fine di qualsiasi modello di regola correlato."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -81,7 +85,7 @@ msgstr "Data di scadenza"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "Separatore FNC1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -165,7 +169,7 @@ msgstr "Quantità"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "L'alternativa al separatore FNC1 non è un Regex valido:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -176,6 +180,12 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Il tipo di contenuto GS1 definisce in quale tipo di dati verrà elaborato il "
+"codice a barre dalla regola:        *Data: il codice a barre verrà "
+"convertito in un valore datetime Odoo;        *Misura: il valore del codice "
+"a barre è legato ad una specifica UdM;        *Identificatore numerico: "
+"codice a barre a lunghezza fissa che segue una codifica specifica;        "
+"*Nome alfanumerico: codice a barre dalla lunghezza variabile."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
@@ -203,6 +213,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"C'è qualcosa che non va con il modello di regola del codice a barre \"%s\".\n"
+"Se la regola utilizza decimali, verifica che non sia possibile ottenere qualcosa di diverso da una cifra come ultimo carattere per l'Identificatore di applicazione.\n"
+"Verifica anche che i possibili valori abbinati possano essere solo cifre, altrimenti il valore non può essere espresso come misura."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

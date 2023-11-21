@@ -5,6 +5,7 @@ import json
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
 from odoo.exceptions import UserError
+from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
 class AccruedExpenseRevenue(models.TransientModel):
@@ -26,6 +27,9 @@ class AccruedExpenseRevenue(models.TransientModel):
     def _get_default_journal(self):
         return self.env['account.journal'].search([('company_id', '=', self.env.company.id), ('type', '=', 'general')], limit=1)
 
+    def _get_default_date(self):
+        return date_utils.get_month(fields.Date.context_today(self))[0] - relativedelta(days=1)
+
     company_id = fields.Many2one('res.company', default=_get_default_company)
     journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -38,7 +42,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         company_dependent=True,
         string='Journal',
     )
-    date = fields.Date(default=fields.Date.today, required=True)
+    date = fields.Date(default=_get_default_date, required=True)
     reversal_date = fields.Date(
         compute="_compute_reversal_date",
         required=True,
@@ -102,6 +106,12 @@ class AccruedExpenseRevenue(models.TransientModel):
                     'columns': preview_columns,
                 },
             })
+    def _get_computed_account(self, order, product, is_purchase):
+        accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+        if is_purchase:
+            return accounts['expense']
+        else:
+            return accounts['income']
 
     def _compute_move_vals(self):
         def _get_aml_vals(order, balance, amount_currency, account_id, label=""):
@@ -138,13 +148,10 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount:
+            if len(orders) == 1 and self.amount and order.order_line:
                 total_balance = self.amount
                 order_line = order.order_line[0]
-                if is_purchase:
-                    account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
-                else:
-                    account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
+                account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'))
                 move_lines.append(Command.create(values))
             else:
@@ -171,13 +178,13 @@ class AccruedExpenseRevenue(models.TransientModel):
                 )
                 for order_line in lines:
                     if is_purchase:
-                        account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
+                        account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     else:
-                        account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
+                        account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount = self.company_id.currency_id.round(order_line.untaxed_amount_to_invoice / rate)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']

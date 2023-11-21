@@ -48,3 +48,9 @@ class SaleOrder(models.Model):
             else:
                 data.append((_("Shipping Address:"), record.partner_shipping_id))
                 data.append((_("Invoicing Address:"), record.partner_invoice_id))
+
+    def check_field_access_rights(self, operation, field_names):
+        field_names = super().check_field_access_rights(operation, field_names)
+        return [field_name for field_name in field_names if field_name not in {
+            'l10n_de_addresses',
+        }]

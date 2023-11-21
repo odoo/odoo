@@ -66,6 +66,7 @@
                 });
             } else {
                 eventsData.forEach(event => {
+                    event.attendee_id = event.record.partner_id && event.record.partner_id[0];
                     const attendee_info = self.attendees.find(a => a.id === self.getSession().partner_id && a.event_id === event.record.id);
                     if (attendee_info) {
                         event.record.is_alone = attendee_info.is_alone;

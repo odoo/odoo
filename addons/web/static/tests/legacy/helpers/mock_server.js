@@ -1623,11 +1623,11 @@ var MockServer = Class.extend({
                             }
                         }
                         const from = type === "date"
-                            ? startDate.format("YYYY-MM-DD")
-                            : startDate.format("YYYY-MM-DD HH:mm:ss");
+                            ? startDate.locale('en').format("YYYY-MM-DD")
+                            : startDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
                         const to = type === "date"
-                            ? endDate.format("YYYY-MM-DD")
-                            : endDate.format("YYYY-MM-DD HH:mm:ss");
+                            ? endDate.locale('en').format("YYYY-MM-DD")
+                            : endDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
                         group.__range[fieldName] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],

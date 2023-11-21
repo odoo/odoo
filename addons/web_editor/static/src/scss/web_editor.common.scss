@@ -134,6 +134,7 @@ ul.o_checklist {
         list-style: none;
         position: relative;
         margin-left: $o-checklist-margin-left;
+        margin-right: $o-checklist-margin-left;
 
         &:not(.oe-nested)::before {
             content: '';
@@ -159,6 +160,11 @@ ul.o_checklist {
             }
         }
     }
+}
+ul.o_checklist[dir="rtl"] > li:not(.oe-nested)::before {
+    left: auto;
+    right: - $o-checklist-margin-left;
+    text-align: right;
 }
 ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
@@ -212,6 +218,9 @@ img.ml-auto, img.mx-auto {
 .fa.mx-auto {
     display: block;
     text-align: center;
+}
+.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+    width: auto;
 }
 
 div.media_iframe_video {

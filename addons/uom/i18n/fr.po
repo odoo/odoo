@@ -7,7 +7,7 @@
 # Alexandra Jubert, 2021
 # Sebastien LANGE, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -73,7 +73,7 @@ msgstr "Ratio supérieur"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Plus grand que l'unité de mesure de référence"
+msgstr "Plus grande que l'unité de mesure de référence"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -122,7 +122,7 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom d'affichage"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -244,7 +244,7 @@ msgstr "Rechercher une catégorie d'UdM"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Plus petit que l'unité de référence"
+msgstr "Plus petite que l'unité de mesure de référence"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -318,6 +318,12 @@ msgstr ""
 "même catégorie que l'unité de mesure %s définie sur le produit. Merci de "
 "corriger l'unité de mesure définie sur la ligne de commande ou sur le "
 "produit, ils doivent appartenir à la même catégorie."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
+msgstr "La valeur du ratio ne peut pas être zéro"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -471,7 +477,7 @@ msgstr "gallon (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "dans"
+msgstr "pouce"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch

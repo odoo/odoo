@@ -18,7 +18,7 @@ TYPE_TAX_USE = [
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
     _description = 'Tax Group'
-    _order = 'sequence asc'
+    _order = 'sequence asc, id'
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
@@ -168,6 +168,12 @@ class AccountTax(models.Model):
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
+            # if the tax is an aggregation of its sub-taxes (group) it can have no repartition lines
+            if record.amount_type == 'group' and \
+                    not record.invoice_repartition_line_ids and \
+                    not record.refund_repartition_line_ids:
+                continue
+
             invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted()
             refund_repartition_line_ids = record.refund_repartition_line_ids.sorted()
             record._check_repartition_lines(invoice_repartition_line_ids)
@@ -337,7 +343,11 @@ class AccountTax(models.Model):
 
         # We first need to find out whether this tax computation is made for a refund
         tax_type = self and self[0].type_tax_use
-        is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
+
+        if self._context.get('manual_reco_widget'):
+            is_refund = is_refund or (tax_type == 'sale' and price_unit > 0) or (tax_type == 'purchase' and price_unit < 0)
+        else:
+            is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
         rslt = self.with_context(caba_no_transition_account=True)\
                    .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
@@ -710,6 +720,14 @@ class AccountTaxRepartitionLine(models.Model):
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry", default=True)
 
+    tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
+
+    @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
+    def _compute_tag_ids_domain(self):
+        for rep_line in self:
+            allowed_country_ids = (False, rep_line.company_id.account_fiscal_country_id.id, *rep_line.company_id.multi_vat_foreign_country_ids.ids,)
+            rep_line.tag_ids_domain = [('applicability', '=', 'taxes'), ('country_id', 'in', allowed_country_ids)]
+
     @api.onchange('account_id', 'repartition_type')
     def _on_change_account_id(self):
         if not self.account_id or self.repartition_type == 'base':
@@ -722,12 +740,6 @@ class AccountTaxRepartitionLine(models.Model):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
                 raise ValidationError(_("Tax distribution lines should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
-
-    @api.constrains('invoice_tax_id', 'refund_tax_id', 'tag_ids')
-    def validate_tags_country(self):
-        for record in self:
-            if record.tag_ids.country_id and record.tax_id.country_id != record.tag_ids.country_id:
-                raise ValidationError(_("A tax should only use tags from its country. You should use another tax and a fiscal position if you wish to uses the tags from foreign tax reports."))
 
     @api.depends('factor_percent')
     def _compute_factor(self):

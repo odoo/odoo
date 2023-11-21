@@ -23,10 +23,10 @@
 # Umur Akın <umura@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Murat Durmuş <muratd@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Murat Durmuş <muratd@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,8 +34,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -959,6 +959,12 @@ msgstr "Rumuzlar"
 #, python-format
 msgid "All"
 msgstr "Tümü"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Her ek için bir erişim belirteci sağlanmalıdır."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -2240,6 +2246,7 @@ msgstr "Sunucu tarafından RTC çağrısıyla bağlantısı kesildi"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3400,6 +3407,9 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Ayarlanırsa, kuyruk yöneticisi e-postayı tarihten sonra gönderir. "
+"Ayarlanmazsa, e-posta mümkün olan en kısa sürede gönderilecektir. Bir saat "
+"dilimi belirtilmediği sürece, UTC saat diliminde olduğu kabul edilir."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -6762,7 +6772,7 @@ msgstr "Targeted model"
 #: model:ir.model.fields,field_description:mail.field_res_partner__vat
 #: model:ir.model.fields,field_description:mail.field_res_users__vat
 msgid "Tax ID"
-msgstr "Vergi No"
+msgstr "VKN/TCKN"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -6875,6 +6885,19 @@ msgid ""
 msgstr ""
 "Vergi Kimlik Numarası. İlgili kişi devlet vergilerine tabi ise bu işlemi "
 "tamamlayın. Bazı yasal beyanlarda kullanılmaktadır."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "%s eki mevcut değil veya buna erişim hakkınız yok."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -7641,6 +7664,14 @@ msgstr ""
 "E-Posta sunucusu tanımlamanız gerekir."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7798,7 +7829,7 @@ msgstr "Yanlış işlem adı (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "YYYY-AA-GG SS:DD:SS"
 
 #. module: mail
 #. openerp-web

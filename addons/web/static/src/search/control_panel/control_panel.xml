@@ -34,6 +34,7 @@
                         <nav class="btn-group o_cp_switch_buttons">
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-light fa fa-lg o_switch_view "
+                                    t-att-data-hotkey="view.accessKey"
                                     t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
                                     t-att-data-tooltip="view.name"
                                     t-on-click="onViewClicked(view.type)"

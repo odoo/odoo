@@ -3,8 +3,9 @@
 # 	* crm_iap_enrich
 # 
 # Translators:
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,6 +27,9 @@ msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
+"<span> Žádné údaje o společnosti nebo nalezené na základě e-mailové adresy "
+"nebo e-mailové adresy nejsou poskytovateli e-mailových služeb. Žádný kredit "
+"nebyl spotřebován.</span>"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
@@ -39,14 +43,14 @@ msgstr ""
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
 msgid "Allow manual enrich"
-msgstr ""
+msgstr "Umožnit manuální rozšíření"
 
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr ""
+msgstr "CRM: Obohatit potenciální zákazníky (IAP)"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -57,7 +61,7 @@ msgstr "Nastavení konfigurace"
 #: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich"
-msgstr ""
+msgstr "Rozšíření"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
@@ -94,7 +98,7 @@ msgstr ""
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr ""
+msgstr "Rozšíření potenciálních zákazníků o e-mailovou adresu"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_crm_lead
@@ -107,11 +111,15 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
+"Služba IAP byla poskytnuta na rozšíření Potenciálních zákazníků na základě "
+"e-mailu."
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
 msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
 msgstr ""
+"Váš zůstatek na rozšíření Potenciálních zákazníků není dostatečný. Přejděte "
+"na vaši"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit

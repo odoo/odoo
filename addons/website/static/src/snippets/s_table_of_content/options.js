@@ -18,7 +18,18 @@ options.registry.TableOfContent = options.Class.extend({
         const config = {attributes: false, childList: true, subtree: true, characterData: true};
         this.observer = new MutationObserver(() => this._generateNav());
         this.observer.observe(targetNode, config);
+        // The mutation observer doesn't observe the attributes change, it would
+        // be too much. Adding content_changed "listener" instead.
+        this.$target.on('content_changed', () => this._generateNav());
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        // The observer needs to be disconnected first.
+        this.observer.disconnect();
+        this._super(...arguments);
     },
     /**
      * @override
@@ -42,14 +53,22 @@ options.registry.TableOfContent = options.Class.extend({
         _.each($headings, el => {
             const $el = $(el);
             const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
-            $('<a>').attr('href', "#" + id)
+            const visibilityId = $el.closest('[data-visibility-id]').data('visibility-id');
+            $('<a>').attr({ 'href': "#" + id, 'data-visibility-id': visibilityId })
                     .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
                     .text($el.text())
                     .appendTo($nav);
             $el.attr('id', id);
             $el[0].dataset.anchor = 'true';
         });
-        $nav.find('a:first').addClass('active');
+        const tocAnchorEl = this.$target[0].querySelector('a.table_of_content_link');
+        if (!tocAnchorEl) {
+            // destroy public widget and remove the ToC since there are no more
+            // child elements.
+            this.trigger_up('remove_snippet', {$snippet: this.$target});
+        } else {
+            $nav.find('a:first').addClass('active');
+        }
     },
 });
 

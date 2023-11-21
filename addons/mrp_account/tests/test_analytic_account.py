@@ -202,6 +202,13 @@ class TestAnalyticAccount(TransactionCase):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+
+        # Change duration to 60
+        with mo_form.workorder_ids.edit(0) as line_edit:
+            line_edit.duration = 60.0
+        mo_form.save()
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id, self.analytic_account)
 
         # Mark as done
         wizard_dict = mo.button_mark_done()
@@ -214,13 +221,93 @@ class TestAnalyticAccount(TransactionCase):
         # Change the MO analytic account
         mo.analytic_account_id = new_analytic_account
         self.assertEqual(mo.move_raw_ids.analytic_account_line_id.account_id.id, new_analytic_account.id)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_id.account_id.id, new_analytic_account.id)
 
         #Get the MO analytic account lines
-        mo_analytic_account_lines = mo.move_raw_ids.analytic_account_line_id
+        mo_analytic_account_raw_lines = mo.move_raw_ids.analytic_account_line_id
+        mo_analytic_account_wc_lines = mo.workorder_ids.mo_analytic_account_line_id
         mo.analytic_account_id = False
         # Check that the MO analytic account lines are deleted
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
-        self.assertFalse(mo_analytic_account_lines.exists())
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 0)
+        self.assertFalse(mo_analytic_account_raw_lines.exists())
+        self.assertFalse(mo_analytic_account_wc_lines.exists())
         # Check that the AA lines are recreated correctly if we delete the AA, save the MO, and assign a new one
         mo.analytic_account_id = self.analytic_account
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
+        self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 1)
+
+    def test_add_wo_analytic_no_company(self):
+        """Test the addition of work orders to a MO linked to
+        an analytic account that has no company associated
+        """
+        # Create an analytic account and remove the company
+        analytic_account_no_company = self.env['account.analytic.account'].create({
+            'name': 'test_analytic_account_no_company',
+        })
+        analytic_account_no_company.company_id = False
+
+        # Create a mo linked to an analytic account with no associated company
+        mo_no_company = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'analytic_account_id': analytic_account_no_company.id,
+            'product_uom_id': self.bom.product_uom_id.id,
+        })
+
+        mo_no_c_form = Form(mo_no_company)
+        self.env['mrp.workorder'].create({
+            'name': 'Work_order',
+            'workcenter_id': self.workcenter.id,
+            'product_uom_id': self.bom.product_uom_id.id,
+            'production_id': mo_no_c_form.id,
+        })
+        mo_no_c_form.save()
+        self.assertTrue(mo_no_company.workorder_ids)
+
+    def test_update_components_qty_to_0(self):
+        """ Test that the analytic lines are deleted when the quantity of the component is set to 0.
+            Create a Mo with analytic account and a component, confirm and validate it,
+            set the quantity of the component to 0, the analytic lines should be deleted.
+        """
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+            'standard_price': 100,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1,
+                'product_uom_id': product.uom_id.id,
+                'type': 'normal',
+                'bom_line_ids': [(0, 0, {
+                    'product_id': component.id,
+                    'product_qty': 1,
+                    'product_uom_id': component.uom_id.id,
+                })],
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': "Test Account",
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1.0
+        mo_form.analytic_account_id = analytic_account
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        self.assertEqual(mo.state, 'to_close')
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(analytic_account.debit, 100)
+        mo.move_raw_ids[0].quantity_done = 0
+        self.assertEqual(analytic_account.debit, 0)
+        self.assertFalse(analytic_account.line_ids)

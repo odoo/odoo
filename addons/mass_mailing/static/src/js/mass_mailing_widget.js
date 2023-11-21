@@ -55,11 +55,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         var fieldName = this.nodeOptions['inline-field'];
 
+        var $editable = this.wysiwyg.getEditable();
+        if (this._$codeview && !this._$codeview.hasClass('d-none')) {
+            $editable.html(self.value);
+        }
+
         if (this.$content.find('.o_basic_theme').length) {
             this.$content.find('*').css('font-family', '');
         }
 
-        var $editable = this.wysiwyg.getEditable();
         await this.wysiwyg.cleanForSave();
         return this.wysiwyg.saveModifiedImages(this.$content).then(async function () {
             self._isDirty = self.wysiwyg.isDirty();
@@ -161,6 +165,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        if (!this.value) {
+            this.value = this.recordData[this.nodeOptions['inline-field']];
+        }
+        return this._super.apply(this, arguments);
+    },
     /**
      * @override
      * @returns {JQuery}

@@ -2,11 +2,12 @@
 import datetime
 import json
 import logging
+import os
 import random
 import select
 import threading
 import time
-from psycopg2 import InterfaceError
+from psycopg2 import InterfaceError, sql
 
 import odoo
 import odoo.service.server as servermod
@@ -18,6 +19,9 @@ _logger = logging.getLogger(__name__)
 
 # longpolling timeout connection
 TIMEOUT = 50
+
+# custom function to call instead of NOTIFY postgresql command (opt-in)
+ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
 #----------------------------------------------------------
 # Bus
@@ -77,7 +81,11 @@ class ImBus(models.Model):
             @self.env.cr.postcommit.add
             def notify():
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
-                    cr.execute("notify imbus, %s", (json_dump(list(channels)),))
+                    if ODOO_NOTIFY_FUNCTION:
+                        query = sql.SQL("SELECT {}('imbus', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+                    else:
+                        query = "NOTIFY imbus, %s"
+                    cr.execute(query, (json_dump(list(channels)), ))
 
     @api.model
     def _sendone(self, channel, notification_type, message):
@@ -218,11 +226,12 @@ class ImDispatch:
         self.started = True
         return self
 
-dispatch = None
+
+# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
+# IMDispatch has a lazy start, so we could initialize it anyway
+# And this avoids the Bus unavailable error messages
+dispatch = ImDispatch()
 stop_event = threading.Event()
-if not odoo.multi_process or odoo.evented:
-    # We only use the event dispatcher in threaded and gevent mode
-    dispatch = ImDispatch()
-    if servermod.server:
-        servermod.server.on_stop(stop_event.set)
-        servermod.server.on_stop(dispatch.wakeup_workers)
+if servermod.server:
+    servermod.server.on_stop(stop_event.set)
+    servermod.server.on_stop(dispatch.wakeup_workers)

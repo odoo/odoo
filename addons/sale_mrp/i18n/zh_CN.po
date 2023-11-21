@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Chloe Wang, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,6 +30,16 @@ msgstr "<span class=\"o_stat_text\">制造</span>"
 #: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">销售</span>"
+
+#. module: sale_mrp
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
+msgstr ""
+"只要有必须交付/开票的销售订单行与这些物料清单相关，就无法删除它们。\n"
+"错误涉及以下产品：%s"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count

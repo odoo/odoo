@@ -6,6 +6,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -102,7 +103,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr "<strong>Er is geen geschikte betalingsprovider gevonden.</strong>"
+msgstr "<strong>Er is geen geschikte betaalprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -122,7 +123,7 @@ msgid ""
 msgstr ""
 "<strong>Waarschuwing!</strong> Er is een terugbetaling in behandeling voor deze betaling.\n"
 "                        Wacht even totdat het is verwerkt. Als de terugbetaling nog steeds in behandeling is over een\n"
-"                        enkele minuten, controleer de configuratie van je betalingsprovider."
+"                        enkele minuten, controleer de configuratie van je betaalprovider."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -130,7 +131,7 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"<strong>Waarschuwing</strong> Het maken van een betaalprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
 "                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
@@ -571,7 +572,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Maak een nieuwe betalingsprovider aan"
+msgstr "Maak een nieuwe betaalprovider aan"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -798,7 +799,7 @@ msgid ""
 "Force the customer to pay via the specified payment acquirer. Leave empty to"
 " allow the customer to choose among all acquirers."
 msgstr ""
-"Dwing de klant om te betalen via de opgegeven betalingsprovider. Laat leeg "
+"Dwing de klant om te betalen via de opgegeven betaalprovider. Laat leeg "
 "zodat de klant kan kiezen uit alle acquirers."
 
 #. module: payment
@@ -831,7 +832,7 @@ msgstr "Genereer een betaallink"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -1304,7 +1305,7 @@ msgstr "Betaling"
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
@@ -1316,7 +1317,7 @@ msgstr "Betaalproviders"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
-msgstr "Betalingsprovider beschikbaar"
+msgstr "Betaalprovider beschikbaar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
@@ -1428,7 +1429,7 @@ msgstr "Betalingstransacties gekoppeld aan token"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr "Betalingsprovider onboarding wizard"
+msgstr "Betaalprovider onboarding wizard"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
@@ -1849,7 +1850,7 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
-"De landen waarvoor deze betalingsprovider beschikbaar is.\n"
+"De landen waarvoor deze betaalprovider beschikbaar is.\n"
 "Als er geen is ingesteld, is deze beschikbaar voor alle landen."
 
 #. module: payment
@@ -2059,7 +2060,7 @@ msgid ""
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
 "Deze partner heeft geen e-mailadres, wat problemen kan veroorzaken bij "
-"sommige betalingsproviders. Het instellen van een e-mail voor deze partner "
+"sommige betaalproviders. Het instellen van een e-mail voor deze partner "
 "wordt aangeraden."
 
 #. module: payment
@@ -2098,7 +2099,7 @@ msgid ""
 "acquirers: %s"
 msgstr ""
 "Transactieautorisatie wordt niet ondersteund door de volgende "
-"betalingsproviders: %s"
+"betaalproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2224,7 +2225,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
+msgstr "We wachten op de betaalprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2268,7 +2269,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
-"Je kunt een weergave die wordt gebruikt door een betalingsprovider niet "
+"Je kunt een weergave die wordt gebruikt door een betaalprovider niet "
 "verwijderen."
 
 #. module: payment

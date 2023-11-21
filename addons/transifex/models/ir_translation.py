@@ -49,12 +49,17 @@ class IrTranslation(models.Model):
             language_codes = dict((l.code, l.iso_code) for l in languages)
 
             # .tx/config files contains the project reference
-            # using ini files like '[odoo-master.website_sale]'
+            # using ini files
             translation_modules = set(self.mapped('module'))
             project_modules = {}
             for module in translation_modules:
                 for section in tx_sections:
-                    tx_project, tx_mod = section.split('.')
+                    if len(section.split(':')) != 6:
+                        # old format ['main', 'odoo-16.base', ...]
+                        tx_project, tx_mod = section.split(".")
+                    else:
+                        # tx_config_file.sections(): ['main', 'o:odoo:p:odoo-16:r:base', ...]
+                        _, _, _, tx_project, _, tx_mod = section.split(':')
                     if tx_mod == module:
                         project_modules[module] = tx_project
 

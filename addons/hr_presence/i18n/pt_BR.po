@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Maitê Dietze, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -115,7 +116,7 @@ msgstr ""
 #: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
 #: model:ir.cron,name:hr_presence.ir_cron_presence_control
 msgid "HR Presence: cron"
-msgstr ""
+msgstr "Presença – RH: Cronologia"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -174,7 +175,7 @@ msgstr "SMS"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as absent"
-msgstr ""
+msgstr "Definir como ausente"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -224,3 +225,9 @@ msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
 "Você não possui direitos para fazer isso. Por favor, entre em contato com um"
 " Administrador."
+
+#. module: hr_presence
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, python-format
+msgid "Employee's Presence to Define"
+msgstr "Presença do funcionário a definir"

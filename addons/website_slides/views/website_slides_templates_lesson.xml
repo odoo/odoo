@@ -151,7 +151,7 @@
                                 t-att-class="'mr-1 fa fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
                             </i>
                         </div>
-                        <div class="o_wslides_lesson_link_name">
+                        <div class="o_wslides_lesson_link_name text-truncate">
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="aside_slide"/>
                             </t>
@@ -207,8 +207,8 @@
 <template id="slide_content_detailed" name="Slide: Detailed Content">
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
-            <div class="d-flex align-items-center">
-                <h1 class="h4 my-0">
+            <div class="d-flex align-items-center overflow-hidden">
+                <h1 class="h4 my-0 text-truncate">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class" t-valuef="mr-1"/>
                     </t>

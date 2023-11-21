@@ -7,10 +7,9 @@
 # Martin Trigaux, 2021
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2021
 # Antonio Trueba, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Pascual Lorente, 2021
 # juankfj, 2022
-# ramiadavid, 2022
+# David Ramia, 2022
 # Jonatan Gk, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2022
@@ -18,6 +17,9 @@
 # Hugo Adan <hugo@vauxoo.com>, 2022
 # Jairo Llopis <yajo.sk8@gmail.com>, 2022
 # Michael Epstein, 2022
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Michael Epstein, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -717,8 +719,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Agregar información cuando hacemos la descripción de un cliente potencial para incluir\n"
-"        las preguntas y respuestas vinculadas a los registros.\n"
+"        Agregar información cuando hacemos la descripción de una oportunidad para incluir\n"
+"        las preguntas y respuestas vinculadas a las inscripciones.\n"
 "    "
 
 #. module: base
@@ -4115,16 +4117,16 @@ msgid ""
 "this event.\n"
 msgstr ""
 "\n"
-"Crear registros con ordenes de venta.\n"
-"========================================\n"
+"Crear inscripciones con pedidos de venta.\n"
+"=========================================\n"
 "\n"
-"Este módulo permite automatizar y conectar la creación del registro con el flujo de venta\n"
-"principal y, por tanto, disponer de la opción de facturación de los registros.\n"
+"Este módulo permite automatizar y conectar la creación de la inscripción con el flujo de venta\n"
+"principal y, por tanto, disponer de la opción de facturación de las inscripciones.\n"
 "\n"
-"Indica un nuevo tipo de productos de servicio que te ofrece la posibilidad de\n"
-"elegir una categoría de un evento asociado a este. Cuando codifique un pedido para\n"
+"Indica un nuevo tipo de productos de servicio que le ofrece la posibilidad de\n"
+"elegir una categoría de un evento asociado al mismo. Cuando introduzca un pedido para\n"
 "ese producto, podrá elegir un evento existente de esa categoría y,\n"
-"cuando confirme su pedido automáticamente, se creará un registro para\n"
+"cuando confirme su pedido automáticamente, se creará una inscripción para\n"
 "este evento.\n"
 
 #. module: base
@@ -8603,7 +8605,7 @@ msgid ""
 msgstr ""
 "\n"
 "Este módulo permite usar el escaneado de códigos de barras en el sistema de gestión de\n"
-"eventos. Se genera un código de barras para cada asistente y se imprime en la insignia. Una vez escaneado, se confirma el registro.\n"
+"eventos. Se genera un código de barras para cada asistente y se imprime en la credencial. Una vez escaneado, se confirma la inscripción.\n"
 "    "
 
 #. module: base
@@ -11752,8 +11754,8 @@ msgid ""
 "Add information of sale order linked to the registration for the creation of"
 " the lead."
 msgstr ""
-"Agrega información de la orden de venta para el registro de la creación del "
-"cliente potencial."
+"Agrega información del pedido de venta enlazado a la inscripción en la "
+"creación de la oportunidad."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
@@ -13807,7 +13809,7 @@ msgstr "Construir campañas automatizadas de correo"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_quotation_builder
 msgid "Build great quotation templates"
-msgstr "Construya grandes plantillas de cotizaciones"
+msgstr "Construya grandes plantillas de presupuestos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
@@ -14752,6 +14754,12 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "El método compute no puede depender del campo 'id'"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -15186,6 +15194,12 @@ msgid "Country Name"
 msgstr "Nombre del país"
 
 #. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "El código de país no puede estar vacío"
+
+#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "Provincia"
@@ -15380,7 +15394,7 @@ msgstr "Crear una nueva iniciativa desde una conversación de chat "
 #. module: base
 #: model:ir.module.module,description:base.module_event_crm
 msgid "Create leads from event registrations."
-msgstr "Crea leads a partir de los registros de un evento"
+msgstr "Crea oportunidades a partir de las inscripciones de un evento"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
@@ -16056,7 +16070,7 @@ msgstr "Deduplicar los otros contactos"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr "Empresa predeterminada"
+msgstr "Compañía predeterminada"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -17298,6 +17312,18 @@ msgstr "Error"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Mensaje de error devuelto cuando se viola la restricción."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Ocurrió un error al procesar la vista:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20633,6 +20659,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Expresión no válida al procesar el xpath %r"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Formato JSON no válido en el campo \"valor predeterminado\"."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -20891,7 +20929,7 @@ msgstr "Es la divisa actual de la empresa"
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
 #: model:ir.model.fields,field_description:base.field_res_users__is_company
 msgid "Is a Company"
-msgstr "Es una compañia"
+msgstr "Es una empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__public
@@ -21130,8 +21168,8 @@ msgstr "LGPL versión 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Informes contables"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lituania - Informes contables "
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -23227,7 +23265,7 @@ msgstr "Sra."
 #: model:res.groups,name:base.group_multi_company
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Multi Companies"
-msgstr "Multicompañía"
+msgstr "Multi-compañía"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
@@ -26263,7 +26301,7 @@ msgstr "Opciones"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
 msgid "Order"
-msgstr "Pedido"
+msgstr "Orden"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -28523,7 +28561,7 @@ msgstr "Registro: %s"
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment"
-msgstr "Proceso de Selección"
+msgstr "Proceso de selección"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
@@ -29747,6 +29785,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr ""
 "Envíe sus envíos a través de UPS y realice un seguimiento de ellos en línea"
@@ -30870,7 +30916,7 @@ msgstr "Nombre de etiqueta"
 #: model:ir.model.fields,field_description:base.field_res_partner__category_id
 #: model:ir.model.fields,field_description:base.field_res_users__category_id
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -30928,7 +30974,7 @@ msgstr "Registros de tareas"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
 msgid "Tax ID"
-msgstr "NIF"
+msgstr "Identificación fiscal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -31153,6 +31199,12 @@ msgstr "Tailandia - Contabilidad"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inicio."
 
@@ -31239,8 +31291,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "El modulo \"base\" no se puede desinstalar"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Estos módulos no pueden ser desinstalados: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31260,6 +31312,16 @@ msgstr ""
 "estándar, incluso si éstas se redactaron después de los presentes términos y"
 " condiciones estándar de venta. Para que sea válida, se debe acordar "
 "cualquier derogación expresamente por escrito y con antelación."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"El nombre para la tasa de moneda está vacío.\n"
+"Por favor establezca uno."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31309,7 +31371,6 @@ msgstr "¡El código de moneda debe ser único!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "La moneda del tipo 1 al tipo de la moneda."
 
@@ -31605,8 +31666,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "La tasa de cambio de la moneda respecto a la moneda de tasa 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -32135,7 +32197,7 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"Este módulo ayuda a analizar los registros de los eventos..\n"
+"Este módulo ayuda a analizar las inscripciones de los eventos..\n"
 "Para lograrlo, agrega\n"
 "\n"
 "  * un análisis cohort en los asistentes;\n"
@@ -32763,6 +32825,11 @@ msgstr "Código UNSPSC de productos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Envíos por UPS"
 
@@ -33475,7 +33542,7 @@ msgstr "Validación de número de NIF"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "VAT/Tax ID"
-msgstr "RFC/Identificación fiscal"
+msgstr "NIF/Identificación fiscal"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_voip
@@ -34443,6 +34510,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "No puede desactivar el usuario que está usando ahora mismo."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34471,6 +34544,12 @@ msgstr ""
 "Mejor debería archivarlos después de archivar al usuario vinculado.\n"
 "\n"
 "Usuarios vinculados activos: %(names)s"
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "No puede eliminar el registro %s."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -34502,6 +34581,14 @@ msgid ""
 msgstr ""
 "No puede reducir el número de decimales de una divisa que ya se ha utilizado"
 " para realizar asientos contables."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
+"No puede cambiar el nombre de los parámetros de configuración con las claves"
+" %s"
 
 #. module: base
 #: code:addons/models.py:0
@@ -35286,3 +35373,11 @@ msgstr "año"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Islas Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"La moneda está establecida en una compañía y por ello no se puede "
+"desactivar."

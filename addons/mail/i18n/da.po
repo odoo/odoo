@@ -6,11 +6,12 @@
 # Joe Hansen <joedalton2@yahoo.dk>, 2021
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2021
 # Sanne Kristensen <sanne@vkdata.dk>, 2021
-# Martin Trigaux, 2022
 # Walther Barnett <walther@gundogpro.dk>, 2022
 # Mads Søndergaard, 2022
 # Mads Søndergaard, 2022
-# lhmflexerp <lhm@flexerp.dk>, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2023
+# Martin Trigaux, 2023
+# JonathanStein <jstein@image.dk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2022\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: JonathanStein <jstein@image.dk>, 2023\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -227,7 +228,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr ", eller Enter for at"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -921,6 +922,12 @@ msgstr "Aliaser"
 #, python-format
 msgid "All"
 msgstr "Alle"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "En adgangs token skal angives for hver vedhæftning."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -2189,6 +2196,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3713,7 +3721,7 @@ msgstr "Deltag i kanal"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr ""
+msgstr "Deltag i videoopkald"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -3977,7 +3985,7 @@ msgstr "Log en intern note..."
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Log in the original discussion thread"
-msgstr ""
+msgstr "Gem svar i den oprindelige besked-tråd"
 
 #. module: mail
 #. openerp-web
@@ -5743,7 +5751,7 @@ msgstr "Datasæt:"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Redirect to another email address"
-msgstr ""
+msgstr "Svar direkte til email-adresse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -6513,7 +6521,7 @@ msgstr "Start en samtale"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Start a meeting"
-msgstr ""
+msgstr "Start et møde"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -6802,6 +6810,21 @@ msgstr ""
 "i visse juridiske udtog."
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"Vedhæftningen %s eksisterer ikke, eller også har du ikke rettighederne til "
+"at tilgå den."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr ""
@@ -7006,6 +7029,13 @@ msgstr ""
 #, python-format
 msgid "This record has an exception activity."
 msgstr "Dette datasæt har en undtagelses aktivitet."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/activity.js:0
+#, python-format
+msgid "Save the record before scheduling an activity!"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel_partner.py:0
@@ -7557,6 +7587,14 @@ msgstr ""
 "Brug af din egen email server er påkrævet for at sende/modtage emails i "
 "Community og Enterprise udgaverne. Online brugere drager allerede fordel af "
 "en klar-til-brug email server (@mitfirma.odoo.com)."
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -8361,7 +8399,7 @@ msgstr "salg"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "save"
-msgstr ""
+msgstr "gemme"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0

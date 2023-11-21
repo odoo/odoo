@@ -6,16 +6,17 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Martin Trigaux, 2022
 # Randall Castro, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2022
+# Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"POT-Creation-Date: 2023-01-27 15:59+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +32,7 @@ msgstr "Conectar a Stripe"
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr "No se ha podido establecer la conexión con la API."
+msgstr "No se pudo establecer la conexión con la API."
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
@@ -207,6 +208,16 @@ msgid ""
 msgstr ""
 "No puede crear un webhook de Stripe si no ha establecido su clave secreta de"
 " Stripe."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer state to Enabled until your onboarding to Stripe"
+" is completed."
+msgstr ""
+"No es posible establecer el estado del método de pago como habilitado hasta "
+"que termine su integración con Stripe."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0

@@ -30,7 +30,7 @@
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
                         </t>
                         <t t-else="">
-                            <t t-if="not answer.is_session_answer">
+                            <t t-if="not answer.is_session_answer and survey.questions_selection == 'random'">
                                 <t t-set="page_ids" t-value="answer.predefined_question_ids.ids"/>
                             </t>
                             <t t-else="">
@@ -298,6 +298,7 @@
     <template id="question_container" name="Survey: question container">
         <t t-set="display_question"
            t-value="survey.questions_layout == 'page_per_question'
+                    or survey.questions_selection == 'random'
                     or (survey.questions_layout == 'one_page' and not question.is_conditional)
                     or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or triggering_answer_by_question[question.id] in selected_answers))"/>
 
@@ -409,7 +410,7 @@
                 <t t-foreach='question.suggested_answer_ids' t-as='label'>
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
@@ -472,7 +473,7 @@
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # manas yapeng <manas@torheng.com>, 2021
-# Amin Cheloh <nineamin@hotmail.com>, 2021
+# Amin Cheloh <amincheloh@gmail.com>, 2021
 # Seksan Poltree <seksan.poltree@gmail.com>, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
@@ -12,6 +12,7 @@
 # Martin Trigaux, 2021
 # Krisa C, 2021
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2261,6 +2262,8 @@ msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
+"ไม่สามารถยกเลิกการวางแผนใบสั่งงานเดียวได้ คุณควรยกเลิกการวางแผนใบสั่งผลิตแทน"
+" เพื่อยกเลิกการวางแผนการดำเนินงานที่เชื่อมโยงทั้งหมด"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -2966,6 +2969,16 @@ msgstr ""
 "โปรดทราบว่าศูนย์งานที่เก็บถาวร: '%s' ยังคงเชื่อมโยงกับบิลวัสดุที่ใช้งานอยู่ "
 "ซึ่งหมายความว่ายังคงสามารถวางแผนการปฏิบัติการได้ เพื่อป้องกันสิ่งนี้ "
 "ขอแนะนำให้ลบศูนย์งานแทน"
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+"โปรดทราบว่าสินค้า: '%s' ยังคงเชื่อมโยงกับรายการวัสดุที่ใช้งานอยู่ "
+"ซึ่งหมายความว่าสินค้ายังคงสามารถใช้กับสินค้านั้นได้"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -4452,7 +4465,7 @@ msgstr "หน่วยวัดสินค้าที่คุณเลือ
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "ลำดับงาน (%s) ไม่สามารถเริ่มได้สองครั้ง!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4469,6 +4482,22 @@ msgstr ""
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "ความจุจำเป็นต้องเป็นบวก"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "The component %s should not be the same as the product to produce."
+msgstr "ส่วนประกอบ %s ไม่ควรเหมือนกับสินค้าที่ผลิต"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"การกำหนดค่าปัจจุบันไม่ถูกต้อง "
+"เนื่องจากจะสร้างการหมุนเวียนระหว่างสินค้าเหล่านี้: %s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
@@ -4531,6 +4560,9 @@ msgid ""
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
+"สินค้ามีการใช้งานมาแล้วอย่างน้อยหนึ่งครั้ง "
+"การแก้ไขโครงสร้างอาจทำให้เกิดพฤติกรรมที่ไม่พึงประสงค์ได้ "
+"คุณควรเก็บถาวรสินค้าและสร้างสินค้าใหม่โดยใช้รายการวัสดุใหม่"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

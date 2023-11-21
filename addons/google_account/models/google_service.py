@@ -78,7 +78,7 @@ class GoogleService(models.AbstractModel):
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
+        base_url = self._context.get('base_url') or self.env.user.get_base_url()
         client_id = get_param('google_%s_client_id' % (service,), default=False)
 
         encoded_params = urls.url_encode({
@@ -98,7 +98,7 @@ class GoogleService(models.AbstractModel):
             not be redirected.
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
+        base_url = self._context.get('base_url') or self.env.user.get_base_url()
         client_id = get_param('google_%s_client_id' % (service,), default=False)
         client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
@@ -157,7 +157,7 @@ class GoogleService(models.AbstractModel):
         return json_result.get('access_token'), json_result.get('expires_in')
 
     @api.model
-    def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://www.googleapis.com", timeout=TIMEOUT):
+    def _do_request(self, uri, params=None, headers=None, method='POST', preuri=GOOGLE_API_BASE_URL, timeout=TIMEOUT):
         """ Execute the request to Google API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
             :param uri : the url to contact
             :param params : dict or already encoded parameters for the request to make
@@ -169,6 +169,10 @@ class GoogleService(models.AbstractModel):
             params = {}
         if headers is None:
             headers = {}
+
+        assert urls.url_parse(preuri + uri).host in [
+            urls.url_parse(url).host for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
+        ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !", uri, method, headers, params)
 

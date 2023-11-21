@@ -532,6 +532,10 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def reroute(cls, path):
+        if isinstance(path, str):
+            path = path.encode("utf-8")
+        path = path.decode("latin1", "replace")
+
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:

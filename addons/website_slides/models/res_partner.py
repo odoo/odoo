@@ -9,7 +9,7 @@ class ResPartner(models.Model):
 
     slide_channel_ids = fields.Many2many(
         'slide.channel', 'slide_channel_partner', 'partner_id', 'channel_id',
-        string='eLearning Courses', groups="website_slides.group_website_slides_officer")
+        string='eLearning Courses', groups="website_slides.group_website_slides_officer", copy=False)
     slide_channel_completed_ids = fields.One2many(
         'slide.channel', string='Completed Courses',
         compute='_compute_slide_channel_completed_ids',

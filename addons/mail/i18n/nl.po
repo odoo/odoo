@@ -4,10 +4,10 @@
 # 
 # Translators:
 # 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2021
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -943,6 +943,12 @@ msgid "All"
 msgstr "Alle"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Een toegangstoken moet opgegeven zijn voor elke bijlage."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -1647,7 +1653,7 @@ msgstr "Gesloten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr "Komma gescheiden adressen van cc ontvangende relaties"
+msgstr "Komma gescheiden adressen van cc ontvangers"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1666,7 +1672,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr "Komma gescheiden  adressen van de ontvangende"
+msgstr "Komma gescheiden adressen van de ontvangers"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
@@ -2227,6 +2233,7 @@ msgstr "Verbinding verbroken met de RTC-oproep door de server"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -2293,7 +2300,7 @@ msgid ""
 "this template"
 msgstr ""
 "Geef een optie op gerelateerde documenten om een ​​samenstelling wizard te "
-"openen met dit sjabloon"
+"openen met deze sjabloon"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__res_name
@@ -2567,7 +2574,7 @@ msgstr "E-mail sjabloon voorbeeld"
 #: model:ir.model,name:mail.model_mail_template
 #: model:ir.ui.menu,name:mail.menu_email_templates
 msgid "Email Templates"
-msgstr "E-mail-sjablonen"
+msgstr "E-mailsjablonen"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -3077,7 +3084,7 @@ msgstr "Groep"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3087,7 +3094,7 @@ msgstr "Groepsnaam"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
-msgstr "Groepeer op..."
+msgstr "Groeperen op..."
 
 #. module: mail
 #. openerp-web
@@ -3673,7 +3680,7 @@ msgstr "Uitnodigingswizard"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__private
 msgid "Invited people only"
-msgstr "Alleen uitgenodigde mensen"
+msgstr "Alleen uitgenodigde personen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -5908,7 +5915,7 @@ msgstr "Gekoppelde relatie"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
 msgid "Relation field"
-msgstr "Gerelateerd veld"
+msgstr "Relatieveld"
 
 #. module: mail
 #. openerp-web
@@ -5929,7 +5936,7 @@ msgstr "Verwijder email van blacklist wizard"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
-"Verwijder de contextuele actie om dit sjabloon te gebruiken op documenten"
+"Verwijder de contextuele actie om deze sjabloon te gebruiken op documenten"
 
 #. module: mail
 #. openerp-web
@@ -6527,7 +6534,7 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van "
+"Navigatiekolom-actie om deze sjabloon beschikbaar te maken op de regels van "
 "het gerelateerde documentmodel"
 
 #. module: mail
@@ -6755,7 +6762,7 @@ msgstr "Samenvatting"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
 msgid "System Parameter"
-msgstr "Systeem parameter"
+msgstr "Systeemparameter"
 
 #. module: mail
 #. openerp-web
@@ -6893,6 +6900,19 @@ msgstr ""
 "in sommige rapportages"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "De bijlage %s bestaat niet of je hebt geen rechten om ze te bekijken."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "De bijlage %s bestaat niet."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "De kanaal-UUID moet uniek zijn"
@@ -7023,7 +7043,7 @@ msgstr "De abonnementsvoorkeuren zijn succesvol toegepast."
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
+msgstr "Het soort document waarvoor deze sjabloon kan worden gebruikt"
 
 #. module: mail
 #. openerp-web
@@ -7107,6 +7127,13 @@ msgstr ""
 #, python-format
 msgid "This record has an exception activity."
 msgstr "Dit record heeft een activiteit met uitzondering."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/activity.js:0
+#, python-format
+msgid "Save the record before scheduling an activity!"
+msgstr "Sla het record op voor je een activiteit plant!"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel_partner.py:0
@@ -7664,6 +7691,16 @@ msgstr ""
 " profiteren van een kant-en-klare e-mailserver (@ mijnbedrijf.odoo.com)."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
+"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -7714,7 +7751,7 @@ msgstr "Kanalen bekijken of eraan deelnemen"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Viewer"
-msgstr "Toeschouwer"
+msgstr "Viewer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
@@ -7993,8 +8030,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Je kunt bestanden toevoegen aan dit sjabloon. Deze worden vervolgens "
-"toegevoegd aan alle e-mails op basis van dit sjabloon"
+"Je kunt bestanden toevoegen aan deze sjabloon. Deze worden vervolgens "
+"toegevoegd aan alle e-mails op basis van deze sjabloon"
 
 #. module: mail
 #. openerp-web

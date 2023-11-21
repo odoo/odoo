@@ -85,8 +85,7 @@ class AccountEdiFormat(models.Model):
         return error_message
 
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
-        base_url = "https://iap-sandbox.odoo.com/iap/1/credit" if not company.sudo().l10n_in_edi_production_env else ""
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=base_url)
+        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
             _("Please buy more credits and retry: "),
@@ -260,10 +259,11 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
+        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
-            "Pin": int(self._l10n_in_edi_extract_digits(partner.zip)),
+            "Pin": zip_digits and int(zip_digits) or "",
             "Stcd": partner.state_id.l10n_in_tin or "",
         }
         if partner.street2:
@@ -281,7 +281,7 @@ class AccountEdiFormat(models.Model):
                 "GSTIN": partner.vat or "URP",
             })
         else:
-            partner_details.update({"Nm": partner.name})
+            partner_details.update({"Nm": partner.name or partner.commercial_partner_id.name})
         # For no country I would suppose it is India, so not sure this is super right
         if is_overseas and (not partner.country_id or partner.country_id.code != 'IN'):
             partner_details.update({

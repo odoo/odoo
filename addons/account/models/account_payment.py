@@ -186,7 +186,7 @@ class AccountPayment(models.Model):
         for line in self.move_id.line_ids:
             if line.account_id in self._get_valid_liquidity_accounts():
                 liquidity_lines += line
-            elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
+            elif line.account_id.internal_type in ('receivable', 'payable') or line.account_id == line.company_id.transfer_account_id:
                 counterpart_lines += line
             else:
                 writeoff_lines += line
@@ -195,12 +195,12 @@ class AccountPayment(models.Model):
 
     def _get_valid_liquidity_accounts(self):
         return (
-            self.journal_id.default_account_id,
-            self.payment_method_line_id.payment_account_id,
-            self.journal_id.company_id.account_journal_payment_debit_account_id,
-            self.journal_id.company_id.account_journal_payment_credit_account_id,
-            self.journal_id.inbound_payment_method_line_ids.payment_account_id,
-            self.journal_id.outbound_payment_method_line_ids.payment_account_id,
+            self.journal_id.default_account_id |
+            self.payment_method_line_id.payment_account_id |
+            self.journal_id.company_id.account_journal_payment_debit_account_id |
+            self.journal_id.company_id.account_journal_payment_credit_account_id |
+            self.journal_id.inbound_payment_method_line_ids.payment_account_id |
+            self.journal_id.outbound_payment_method_line_ids.payment_account_id
         )
 
     def _prepare_payment_display_name(self):
@@ -418,7 +418,7 @@ class AccountPayment(models.Model):
             else:
                 pay.payment_method_line_id = False
 
-    @api.depends('payment_type', 'journal_id')
+    @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
         for pay in self:
             pay.available_payment_method_line_ids = pay.journal_id._get_available_payment_method_lines(pay.payment_type)
@@ -532,9 +532,10 @@ class AccountPayment(models.Model):
             self.reconciled_statements_count = 0
             return
 
-        self.env['account.move'].flush()
-        self.env['account.move.line'].flush()
-        self.env['account.partial.reconcile'].flush()
+        self.env['account.payment'].flush(fnames=['move_id', 'outstanding_account_id'])
+        self.env['account.move'].flush(fnames=['move_type', 'payment_id', 'statement_line_id'])
+        self.env['account.move.line'].flush(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush(fnames=['debit_move_id', 'credit_move_id'])
 
         self._cr.execute('''
             SELECT
@@ -580,7 +581,6 @@ class AccountPayment(models.Model):
                 ARRAY_AGG(DISTINCT counterpart_line.statement_id) AS statement_ids
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
-            JOIN account_journal journal ON journal.id = move.journal_id
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
             JOIN account_partial_reconcile part ON

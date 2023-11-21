@@ -12,10 +12,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def setUp(self):
         super().setUp()
-        # todo 15.0: move in `mrp_subcontracting_purchase`
-        if 'purchase.order' not in self.env:
-            self.skipTest('`purchase` is not installed')
-
         self.finished2, self.comp3 = self.env['product.product'].create([{
             'name': 'SuperProduct',
             'type': 'product',
@@ -190,3 +186,46 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(self.finished2.qty_available, 7.0)
         self.assertEqual(po.order_line.qty_received, 10.0)
+
+    def test_return_and_decrease_pol_qty(self):
+        """
+        Buy and receive 10 subcontracted products. Return one. Then adapt the
+        demand on the PO to 9.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_lines.quantity_done = 10
+        receipt.button_validate()
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
+        wizard = return_form.save()
+        wizard.product_return_moves.quantity = 1.0
+        return_picking_id, _pick_type_id = wizard._create_returns()
+
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_lines.quantity_done = 1.0
+        return_picking.button_validate()
+
+        pol = po.order_line
+        pol.product_qty = 9.0
+
+        stock_location_id = self.warehouse.lot_stock_id
+        subco_location_id = self.env.company.subcontracting_location_id
+        self.assertEqual(pol.qty_received, 9.0)
+        self.assertEqual(pol.product_qty, 9.0)
+        self.assertEqual(len(po.picking_ids), 2)
+        self.assertRecordValues(po.picking_ids.move_lines, [
+            {'location_dest_id': stock_location_id.id, 'quantity_done': 10.0, 'state': 'done'},
+            {'location_dest_id': subco_location_id.id, 'quantity_done': 1.0, 'state': 'done'},
+        ])

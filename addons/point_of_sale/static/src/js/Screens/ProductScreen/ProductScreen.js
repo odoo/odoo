@@ -22,11 +22,13 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
+                quantity: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
                 client: this._barcodeClientAction,
                 discount: this._barcodeDiscountAction,
                 error: this._barcodeErrorAction,
+                gs1: this._barcodeGS1Action,
             })
             onChangeOrder(null, (newOrder) => newOrder && this.render());
             NumberBuffer.use({
@@ -64,7 +66,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
-        async _getAddProductOptions(product, base_code) {
+        async _getAddProductOptions(product, code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -100,24 +102,36 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         packLotLinesToEdit = [];
                     }
                 }
-                const { confirmed, payload } = await this.showPopup('EditListPopup', {
-                    title: this.env._t('Lot/Serial Number(s) Required'),
-                    isSingleItem: isAllowOnlyOneLot,
-                    array: packLotLinesToEdit,
-                });
-                if (confirmed) {
-                    // Segregate the old and new packlot lines
+                // if the lot information exists in the barcode, we don't need to ask it from the user.
+                if (code && code.type === 'lot') {
+                    // consider the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
-                        payload.newArray.filter(item => item.id).map(item => [item.id, item.text])
+                        packLotLinesToEdit.filter(item => item.id).map(item => [item.id, item.text])
                     );
-                    const newPackLotLines = payload.newArray
-                        .filter(item => !item.id)
-                        .map(item => ({ lot_name: item.text }));
-
+                    const newPackLotLines = [
+                        { lot_name: code.code },
+                    ];
                     draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
                 } else {
-                    // We don't proceed on adding product.
-                    return;
+                    const { confirmed, payload } = await this.showPopup('EditListPopup', {
+                        title: this.env._t('Lot/Serial Number(s) Required'),
+                        isSingleItem: isAllowOnlyOneLot,
+                        array: packLotLinesToEdit,
+                    });
+                    if (confirmed) {
+                        // Segregate the old and new packlot lines
+                        const modifiedPackLotLines = Object.fromEntries(
+                            payload.newArray.filter(item => item.id).map(item => [item.id, item.text])
+                        );
+                        const newPackLotLines = payload.newArray
+                            .filter(item => !item.id)
+                            .map(item => ({ lot_name: item.text }));
+
+                        draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
+                    } else {
+                        // We don't proceed on adding product.
+                        return;
+                    }
                 }
             }
 
@@ -139,8 +153,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
 
-            if (base_code && this.env.pos.db.product_packaging_by_barcode[base_code.code]) {
-                weight = this.env.pos.db.product_packaging_by_barcode[base_code.code].qty;
+            if (code && this.env.pos.db.product_packaging_by_barcode[code.code]) {
+                weight = this.env.pos.db.product_packaging_by_barcode[code.code].qty;
             }
 
             return { draftPackLotLines, quantity: weight, description, price_extra };
@@ -164,11 +178,27 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this.state.numpadMode = mode;
         }
         async _updateSelectedOrderline(event) {
-            if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
-                let order = this.env.pos.get_order();
+            const order = this.env.pos.get_order();
+            const selectedLine = order.get_selected_orderline();
+            // This validation must not be affected by `disallowLineQuantityChange`
+            if (selectedLine && selectedLine.isTipLine() && this.state.numpadMode !== "price") {
+                /**
+                 * You can actually type numbers from your keyboard, while a popup is shown, causing
+                 * the number buffer storage to be filled up with the data typed. So we force the
+                 * clean-up of that buffer whenever we detect this illegal action.
+                 */
+                NumberBuffer.reset();
+                if (event.detail.key === "Backspace") {
+                    this._setValue("remove");
+                } else {
+                    this.showPopup("ErrorPopup", {
+                        title: this.env._t("Cannot modify a tip"),
+                        body: this.env._t("Customer tips, cannot be modified directly"),
+                    });
+                }
+            } else if (this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 if(!order.orderlines.length)
                     return;
-                let selectedLine = order.get_selected_orderline();
                 let lastId = order.orderlines.last().cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
 
@@ -213,7 +243,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        async _barcodeProductAction(code) {
+        async _getProductByBarcode(code) {
             let product = this.env.pos.db.get_product_by_barcode(code.base_code);
             if (!product) {
                 // find the barcode in the backend
@@ -222,7 +252,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     foundProductIds = await this.rpc({
                         model: 'product.product',
                         method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
+                        args: [[
+                            ['barcode', '=', code.base_code],
+                            ['sale_ok', '=', true],
+                            ['available_in_pos', '=', true]
+                        ]],
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
@@ -236,12 +270,17 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     }
                 }
                 if (foundProductIds.length) {
-                    await this.env.pos._addProducts(foundProductIds);
+                    await this.env.pos._addProducts(foundProductIds, false);
                     // assume that the result is unique.
                     product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
-                } else {
-                    return this._barcodeErrorAction(code);
                 }
+            }
+            return product
+        }
+        async _barcodeProductAction(code) {
+            const product = await this._getProductByBarcode(code);
+            if (!product) {
+                return this._barcodeErrorAction(code);
             }
             const options = await this._getAddProductOptions(product, code);
             // Do not proceed on adding the product when no options is returned.
@@ -256,7 +295,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         price_manually_set: true,
                     },
                 });
-            } else if (code.type === 'weight') {
+            } else if (code.type === 'weight' || code.type === 'quantity') {
                 Object.assign(options, {
                     quantity: code.value,
                     merge: false,
@@ -286,6 +325,22 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             if (last_orderline) {
                 last_orderline.set_discount(code.value);
             }
+        }
+         /**
+         * Add a product to the current order using the product identifier and lot number from parsed results.
+         * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
+         * It then uses these values to retrieve the product and add it to the current order.
+         */
+         async _barcodeGS1Action(parsed_results) {
+            const productBarcode = parsed_results.find(element => element.type === 'product');
+            const lotBarcode = parsed_results.find(element => element.type === 'lot');
+            const product = await this._getProductByBarcode(productBarcode);
+            if (!product) {
+                return this._barcodeErrorAction(productBarcode);
+            }
+            const options = await this._getAddProductOptions(product, lotBarcode);
+            await this.currentOrder.add_product(product, options);
+            NumberBuffer.reset();
         }
         // IMPROVEMENT: The following two methods should be in PosScreenComponent?
         // Why? Because once we start declaring barcode actions in different

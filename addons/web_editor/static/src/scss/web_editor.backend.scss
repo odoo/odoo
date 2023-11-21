@@ -38,10 +38,9 @@
     table.table.table-bordered {
         table-layout: fixed;
     }
-    a {
-        // Ensure the link is visible enough in the editor.
-        $oe-link-color: o-color('o-cc3-link');
-        color: if($oe-link-color, $oe-link-color, #008f8c);
+    a:not(.btn) {
+        // Ensure non-button links are visible enough in the editor.
+        color: #008f8c;
     }
 }
 

@@ -47,7 +47,8 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'input[data-value_name="Black"]'
 }, {
     trigger: '.btn-primary.disabled',
-    extra_trigger: '.show .modal-footer'
+    extra_trigger: '.show .modal-footer',
+    run: function () {}, // check submit button is disabled
 }, {
     trigger: 'input[data-value_name="White"]'
 }, {

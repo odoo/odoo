@@ -122,6 +122,13 @@ class Assets(models.AbstractModel):
         updatedFileContent = self.get_asset_content(custom_url) or self.get_asset_content(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
         for name, value in values.items():
+            # Protect variable names so they cannot be computed as numbers
+            # on SCSS compilation (e.g. var(--700) => var(700)).
+            if isinstance(value, str):
+                value = re.sub(
+                    r"var\(--([0-9]+)\)",
+                    lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
+                    value)
             pattern = "'%s': %%s,\n" % name
             regex = re.compile(pattern % ".+")
             replacement = pattern % value

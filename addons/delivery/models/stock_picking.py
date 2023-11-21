@@ -77,13 +77,17 @@ class StockPicking(models.Model):
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
-        for package in self:
-            packs = set()
-            if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
-                for move_line in package.move_line_ids:
-                    if move_line.result_package_id:
-                        packs.add(move_line.result_package_id.id)
-            package.package_ids = list(packs)
+        packages = {
+            res["picking_id"][0]: set(res["result_package_id"])
+            for res in self.env["stock.move.line"].read_group(
+                [("picking_id", "in", self.ids), ("result_package_id", "!=", False)],
+                ["result_package_id:array_agg"],
+                ["picking_id"],
+                lazy=False, orderby="picking_id asc",
+            )
+        }
+        for picking in self:
+            picking.package_ids = list(packages.get(picking.id, []))
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
@@ -219,16 +223,18 @@ class StockPicking(models.Model):
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
-        amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
-        if self.carrier_id.free_over and self.sale_id and self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
-            res['exact_price'] = 0.0
+        if self.carrier_id.free_over and self.sale_id:
+            amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
+            if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
+                res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
             previous_pickings = self.env['stock.picking']
-            previous_moves = self.move_lines.move_orig_ids
+            accessed_moves = previous_moves = self.move_lines.move_orig_ids
             while previous_moves:
                 previous_pickings |= previous_moves.picking_id
-                previous_moves = previous_moves.move_orig_ids
+                previous_moves = previous_moves.move_orig_ids - accessed_moves
+                accessed_moves |= previous_moves
             without_tracking = previous_pickings.filtered(lambda p: not p.carrier_tracking_ref)
             (self + without_tracking).carrier_tracking_ref = res['tracking_number']
             for p in previous_pickings - without_tracking:
@@ -258,12 +264,11 @@ class StockPicking(models.Model):
         sale_order = self.sale_id
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
-            carrier_price = self.carrier_price * (1.0 + (float(self.carrier_id.margin) / 100.0))
             if not delivery_lines:
-                delivery_lines = [sale_order._create_delivery_line(self.carrier_id, carrier_price)]
+                delivery_lines = [sale_order._create_delivery_line(self.carrier_id, self.carrier_price)]
             delivery_line = delivery_lines[0]
             delivery_line[0].write({
-                'price_unit': carrier_price,
+                'price_unit': self.carrier_price,
                 # remove the estimated price from the description
                 'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
             })

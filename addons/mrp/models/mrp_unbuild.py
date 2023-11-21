@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round
 from odoo.osv import expression
 
@@ -121,7 +121,7 @@ class MrpUnbuild(models.Model):
     def _check_qty(self):
         for unbuild in self:
             if unbuild.product_qty <= 0:
-                raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
+                raise ValidationError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model
     def create(self, vals):
@@ -259,6 +259,7 @@ class MrpUnbuild(models.Model):
             'warehouse_id': location_dest_id.warehouse_id.id,
             'unbuild_id': self.id,
             'company_id': move.company_id.id,
+            'origin_returned_move_id': move.id,
         })
 
     def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, byproduct_id=False):

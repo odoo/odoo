@@ -185,16 +185,14 @@ function makeActionManager(env) {
     function _preprocessAction(action, context = {}) {
         action._originalAction = JSON.stringify(action);
         action.context = makeContext([context, action.context], env.services.user.context);
-        if (action.domain) {
-            const domain = action.domain || [];
-            action.domain =
-                typeof domain === "string"
-                    ? evaluateExpr(
-                          domain,
-                          Object.assign({}, env.services.user.context, action.context)
-                      )
-                    : domain;
-        }
+        const domain = action.domain || [];
+        action.domain =
+            typeof domain === "string"
+                ? evaluateExpr(
+                        domain,
+                        Object.assign({}, env.services.user.context, action.context)
+                    )
+                : domain;
         action = { ...action }; // manipulate a copy to keep cached action unmodified
         action.jsId = `action_${++id}`;
         if (action.type === "ir.actions.act_window" || action.type === "ir.actions.client") {
@@ -398,6 +396,7 @@ function makeActionManager(env) {
                     name: v.display_name.toString(),
                     type: v.type,
                     multiRecord: v.multiRecord,
+                    accessKey: v.accessKey,
                 };
                 if (view.type === v.type) {
                     viewSwitcherEntry.active = true;
@@ -757,10 +756,13 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     function _executeActURLAction(action, options) {
+        let url = action.url;
+        if (url && !(url.startsWith('http') || url.startsWith('/')))
+            url = '/' + url;
         if (action.target === "self") {
-            env.services.router.redirect(action.url);
+            env.services.router.redirect(url);
         } else {
-            const w = browser.open(action.url, "_blank");
+            const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
                 const msg = env._t(
                     "A popup window has been blocked. You may need to change your " +

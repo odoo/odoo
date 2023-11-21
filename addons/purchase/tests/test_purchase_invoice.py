@@ -334,7 +334,6 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
         super_product = self.env['product.product'].create({'name': 'Super Product'})
         great_product = self.env['product.product'].create({'name': 'Great Product'})
-        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
         self.env['account.analytic.default'].create([
             {
                 'analytic_id': analytic_account_super.id,
@@ -357,8 +356,17 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_super.id, "The analytic account should be set to 'Super Account'")
         purchase_order_line.write({'product_id': great_product.id})
         self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_great.id, "The analytic account should be set to 'Great Account'")
-        purchase_order_line.write({'product_id': product_no_account.id})
-        self.assertFalse(purchase_order_line.account_analytic_id.id, "The analytic account should not be set")
+
+        other_analytic_account = self.env['account.analytic.account'].create({'name': 'Other Account'})
+        other_product = self.env['product.product'].create({'name': 'Other Product'})
+        other_purchase_order_line = self.env['purchase.order.line'].create({
+            'name': other_product.name,
+            'product_id': other_product.id,
+            'order_id': purchase_order.id,
+        })
+        other_purchase_order_line.write({'account_analytic_id': other_analytic_account})
+        purchase_order.write({'date_order': '2019-01-01'})
+        self.assertEqual(other_purchase_order_line.account_analytic_id.id, other_analytic_account.id, "The analytic account should still be set to 'Other Account'")
 
         po_no_analytic_account = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
@@ -612,3 +620,144 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         po_line.write({'product_qty': 4})
         po_line._onchange_quantity()
         self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")
+
+    def test_onchange_partner_currency(self):
+        """
+        Test that the currency of the Bill is correctly set when the partner is changed
+        as well as the currency of the Bill lines
+        """
+
+        vendor_eur = self.env['res.partner'].create({
+            'name': 'Vendor EUR',
+            'property_purchase_currency_id': self.env.ref('base.EUR').id,
+        })
+        vendor_us = self.env['res.partner'].create({
+            'name': 'Vendor USD',
+            'property_purchase_currency_id': self.env.ref('base.USD').id,
+        })
+        vendor_no_currency = self.env['res.partner'].create({
+            'name': 'Vendor No Currency',
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = vendor_eur
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_order
+            line_form.quantity = 1
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.EUR'), "The currency of the Bill should be the same as the currency of the partner")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.EUR'), "The currency of the Bill lines should be the same as the currency of the partner")
+
+        move_form.partner_id = vendor_us
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.USD'), "The currency of the Bill should be the same as the currency of the partner")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.USD'), "The currency of the Bill lines should be the same as the currency of the partner")
+
+        move_form.partner_id = vendor_no_currency
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.company.currency_id, "The currency of the Bill should be the same as the currency of the company")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.company.currency_id, "The currency of the Bill lines should be the same as the currency of the company")
+
+    def test_onchange_partner_no_currency(self):
+        """
+        Test that the currency of the Bill is correctly set when the partner is changed
+        as well as the currency of the Bill lines even if the partner has no property_purchase_currency_id set
+        or when and the `default_currency_id` is defined in the context
+        """
+
+        vendor_a = self.env['res.partner'].create({
+            'name': 'Vendor A with No Currency',
+        })
+        vendor_b = self.env['res.partner'].create({
+            'name': 'Vendor B with No Currency',
+        })
+
+        ctx = {'default_move_type': 'in_invoice'}
+        move_form = Form(self.env['account.move'].with_context(ctx))
+        move_form.partner_id = vendor_a
+        move_form.currency_id = self.env.ref('base.EUR')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_order
+            line_form.quantity = 1
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.EUR'), "The currency of the Bill should be the one set on the Bill")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.EUR'), "The currency of the Bill lines should be the same as the currency of the Bill")
+
+        move_form.partner_id = vendor_b
+        bill = move_form.save()
+
+        self.assertEqual(bill.currency_id, self.env.ref('base.EUR'), "The currency of the Bill should be the one set on the Bill")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.EUR'), "The currency of the Bill lines should be the same as the currency of the Bill")
+
+        ctx['default_currency_id'] = self.currency_data['currency'].id
+        move_form_currency_in_context = Form(self.env['account.move'].with_context(ctx))
+        move_form_currency_in_context.currency_id = self.env.ref('base.EUR')
+        with move_form_currency_in_context.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_order
+            line_form.quantity = 1
+        move_form_currency_in_context.partner_id = vendor_a
+        bill = move_form_currency_in_context.save()
+
+        self.assertEqual(bill.currency_id, self.currency_data['currency'], "The currency of the Bill should be the one of the context")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.currency_data['currency'], "The currency of the Bill lines should be the same as the currency of the Bill")
+
+    def test_payment_reference_autocomplete_invoice(self):
+        """
+        Test that the payment_reference field is not replaced when selected a purchase order
+        We test the flow for 8 use cases:
+        - Purchase order with partner ref:
+            - Bill with ref:
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the po.partner_ref
+            - Bill without ref:
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the po.partner_ref
+        - Purchase order without partner ref:
+            - Bill with ref
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the bill ref
+            - Bill with ref
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be empty
+        """
+        purchase_order_w_ref, purchase_order_wo_ref = self.env['purchase.order'].with_context(tracking_disable=True).create([
+            {
+                'partner_id': self.partner_a.id,
+                'partner_ref': partner_ref,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_order.id,
+                        'product_qty': 1.0,
+                        'price_unit': self.product_order.list_price,
+                        'taxes_id': False,
+                    }),
+                ]
+            } for partner_ref in ('PO-001', False)
+        ])
+        (purchase_order_w_ref + purchase_order_wo_ref).button_confirm()
+
+        expected_values_dict = {
+            purchase_order_w_ref: {
+                'w_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': purchase_order_w_ref.partner_ref},
+                'wo_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': purchase_order_w_ref.partner_ref},
+            },
+            purchase_order_wo_ref: {
+                'w_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': '111'},
+                'wo_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': ''},
+            }
+        }
+
+        for purchase_order, purchase_expected_values in expected_values_dict.items():
+            for w_bill_ref, expected_values in purchase_expected_values.items():
+                for w_payment_reference, expected_value in expected_values.items():
+                    with self.subTest(po_partner_ref=purchase_order.partner_ref, w_bill_ref=w_bill_ref, w_payment_reference=w_payment_reference, expected_value=expected_value):
+                        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+                        move_form.ref = '111' if w_bill_ref == 'w_bill_ref' else ''
+                        move_form.payment_reference = '222' if w_payment_reference == 'w_payment_reference' else ''
+                        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
+                        payment_reference = move_form._values['payment_reference']
+                        self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)

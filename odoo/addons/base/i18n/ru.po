@@ -34,8 +34,9 @@
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2021
 # Иван Дроздов <hiraetari@gmail.com>, 2022
 # valmasone, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Alena Vlasova, 2022
+# Alena Vlasova, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# alenafairy, 2023
 # 
 msgid ""
 msgstr ""
@@ -43,8 +44,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Alena Vlasova, 2022\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: alenafairy, 2023\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -8118,7 +8119,7 @@ msgstr "-Этот модуль не исключает ни одного дру�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
 msgid "1 Day"
-msgstr ""
+msgstr "1 день"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__hours_1
@@ -9872,6 +9873,8 @@ msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
 msgstr ""
+"Все наши договорные отношения будут регулироваться исключительно "
+"законодательством страны."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -11115,6 +11118,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Приведенный ниже текст носит рекомендательный характер и не влечет за собой "
+"ответственности со стороны компании."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -12353,6 +12358,12 @@ msgid "Compute"
 msgstr "Вычислить"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Считайте налоги с TaxCloud после автоматического создания акта."
@@ -12603,7 +12614,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Contact your administrator to request access if necessary."
-msgstr ""
+msgstr "Свяжитесь с администратором, если необходимо получить доступ."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -12780,6 +12791,12 @@ msgstr "Группы стран"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Название страны"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -13645,7 +13662,7 @@ msgstr "Дедуплицировать другие контакты"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "Компания по умолчанию"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -14846,6 +14863,15 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -15473,6 +15499,8 @@ msgid ""
 "Field %s is not a stored field, only stored fields (regular or many2many) "
 "are valid for the 'groupby' parameter"
 msgstr ""
+"Поле %s не является сохраняемым полем, для параметра 'groupby' действительны"
+" только сохраняемые поля (обычные или many2many)"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18081,6 +18109,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Ошибочный параметр 'Группировать'"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -18573,8 +18613,8 @@ msgstr "LGPL Версия 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Бухгалтерские отчеты"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -21020,7 +21060,7 @@ msgstr "Недостаточно прав доступа для внешнего
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "Возможно у вас не включена соответствующая объекту компания."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -24592,7 +24632,7 @@ msgstr "Сообщений:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Records: %s"
-msgstr ""
+msgstr "Записи: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -25193,7 +25233,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "СТАНДАРТНЫЕ ПОЛОЖЕНИЯ И УСЛОВИЯ ПРОДАЖИ"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -25808,6 +25848,14 @@ msgstr "Отправляйте свои посылки через Fedex и от�
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Отправляйте свои посылки через UPS и отслеживайте их онлайн"
 
@@ -27198,6 +27246,12 @@ msgstr "Таиланд - Учет"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "Действие \"App Switcher\" не может быть выбрано в качестве домашнего "
@@ -27283,8 +27337,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Базовый модуль нельзя удалить"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -27298,6 +27352,18 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
+msgstr ""
+"Клиент отказывается от собственных типовых условий, даже если они были "
+"сформированы после  выполнения условий продажи. Для того чтобы любое "
+"отступление было действительным, оно должно быть предварительно согласовано "
+"в письменной форме."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
 msgstr ""
 
 #. module: base
@@ -27348,7 +27414,6 @@ msgstr "Код валюты должен быть уникальным!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -27632,8 +27697,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Курс валюты к валюте с курсом 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -28128,6 +28194,8 @@ msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
 msgstr ""
+"Это ограничение сработало из-за следующих правил доступа:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -28179,7 +28247,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Таймер"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -28704,6 +28772,11 @@ msgstr "Коды товара UNSPSC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Доставка UPS"
 
@@ -28949,7 +29022,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown field %r in 'groupby'"
-msgstr ""
+msgstr "Неизвестное поле"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29319,7 +29392,7 @@ msgstr "Пользователь:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Пользователь: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -30341,6 +30414,12 @@ msgstr ""
 "систему."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -30359,6 +30438,12 @@ msgid ""
 "You should rather archive them after archiving their associated user.\n"
 "\n"
 "Linked active users : %(names)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
 msgstr ""
 
 #. module: base
@@ -30388,6 +30473,12 @@ msgstr "Нельзя объединить контакт со своим род�
 msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
 msgstr ""
 
 #. module: base
@@ -30427,7 +30518,7 @@ msgstr "Вы должны попробовать другие критерии �
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "Вы должны обновить этот документ в соответствии с вашими Т&amp;С."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -31166,3 +31257,9 @@ msgstr "год"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Аландские острова"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

@@ -298,3 +298,42 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         }
 
         self._check_results(expected_aml, 4, all_amls_return - all_amls)
+
+    def test_dropship_fifo_return(self):
+        """Test the return of a dropship order with a product set to FIFO costing
+        method. The unit price is correctly computed on the return picking svl.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'order'
+
+        self._dropship_product1()
+        self.assertTrue(8 in self.purchase_order1.picking_ids.move_lines.stock_valuation_layer_ids.mapped('value'))
+        self.assertTrue(-8 in self.purchase_order1.picking_ids.move_lines.stock_valuation_layer_ids.mapped('value'))
+
+        # return what we've done
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick._action_done()
+
+        self.assertTrue(8 in return_pick.move_lines.stock_valuation_layer_ids.mapped('value'))
+        self.assertTrue(-8 in return_pick.move_lines.stock_valuation_layer_ids.mapped('value'))
+
+        # return again to have a new dropship picking from a dropship return
+        stock_return_picking_form_2 = Form(self.env['stock.return.picking']
+            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking_2 = stock_return_picking_form_2.save()
+        stock_return_picking_action_2 = stock_return_picking_2.create_returns()
+        return_pick_2 = self.env['stock.picking'].browse(stock_return_picking_action_2['res_id'])
+        return_pick_2.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick_2._action_done()
+
+        self.assertTrue(8 in return_pick_2.move_lines.stock_valuation_layer_ids.mapped('value'))
+        self.assertTrue(-8 in return_pick_2.move_lines.stock_valuation_layer_ids.mapped('value'))

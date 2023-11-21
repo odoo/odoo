@@ -418,6 +418,39 @@ class TestPacking(TestPackingCommon):
         with self.assertRaises(UserError):
             picking._action_done()
 
+    def test_pack_delivery_three_step_propagate_package_consumable(self):
+        """ Checks all works right in the following case:
+          * For a three-step delivery
+          * Put products in a package then validate the receipt.
+          * The automatically generated internal transfer should have package set by default.
+        """
+        prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
+        ship_move = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': prod.id,
+            'product_uom_qty': 5.0,
+            'product_uom': prod.uom_id.id,
+            'location_id': self.warehouse.wh_output_stock_loc_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'warehouse_id':  self.warehouse.id,
+            'picking_type_id':  self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
+        })
+
+        # create chained pick/pack moves to test with
+        ship_move._assign_picking()
+        ship_move._action_confirm()
+        pack_move = ship_move.move_orig_ids[0]
+        pick_move = pack_move.move_orig_ids[0]
+
+        picking = pick_move.picking_id
+        picking.action_confirm()
+        picking.action_put_in_pack()
+        self.assertTrue(picking.move_line_ids.result_package_id)
+        picking.button_validate()
+        self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
+
     def test_pack_in_receipt_two_step_single_putway(self):
         """ Checks all works right in the following specific corner case:
 
@@ -1195,6 +1228,158 @@ class TestPacking(TestPackingCommon):
         self.assertRecordValues(internal_picking.move_line_ids, [
             {'product_id': self.productA.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
             {'product_id': self.productB.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
+        ])
+
+    def test_pack_in_receipt_two_step_multi_putaway_04(self):
+        """
+        Create a putaway rules for package type T and storage category SC. SC
+        only allows same products and has a maximum of 2 x T. Four SC locations
+        L1, L2, L3 and L4.
+        First, move a package that contains two different products: should not
+        redirect to L1/L2 because of the "same products" contraint.
+        Then, add one T-package (with product P01) at L1 and move 2 T-packages
+        (both with product P01): one should be redirected to L1 and the second
+        one to L2
+        Finally, move 3 T-packages (two with 1xP01, one with 1xP02): one P01
+        should be redirected to L2 and the second one to L3 (because of capacity
+        constraint), then P02 should be redirected to L4 (because of "same
+        product" policy)
+        """
+        self.warehouse.reception_steps = "two_steps"
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        input_location = self.warehouse.wh_input_stock_loc_id
+
+        package_type = self.env['stock.package.type'].create({
+            'name': "package type",
+        })
+
+        storage_category = self.env['stock.storage.category'].create({
+            'name': "storage category",
+            'allow_new_product': "same",
+            'max_weight': 1000,
+            'package_capacity_ids': [(0, 0, {
+                'package_type_id': package_type.id,
+                'quantity': 2,
+            })],
+        })
+
+        loc01, loc02, loc03, loc04 = self.env['stock.location'].create([{
+            'name': 'loc 0%d' % i,
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'storage_category_id': storage_category.id,
+        } for i in range(1, 5)])
+
+        self.env['stock.putaway.rule'].create({
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.stock_location.id,
+            'storage_category_id': storage_category.id,
+            'package_type_ids': [(4, package_type.id, 0)],
+        })
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': input_location.id,
+            'move_lines': [(0, 0, {
+                'name': p.name,
+                'location_id': supplier_location.id,
+                'location_dest_id': input_location.id,
+                'product_id': p.id,
+                'product_uom': p.uom_id.id,
+                'product_uom_qty': 1.0,
+            }) for p in (self.productA, self.productB)],
+        })
+        receipt.action_confirm()
+
+        moves = receipt.move_lines
+        moves.move_line_ids.qty_done = 1
+        moves.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        receipt.button_validate()
+        internal_picking = moves.move_dest_ids.picking_id
+        self.assertEqual(internal_picking.move_line_ids.location_dest_id, self.stock_location,
+                         'Storage location only accepts one same product. Here the package contains two different '
+                         'products so it should not be redirected.')
+        internal_picking.action_cancel()
+
+        # Second test part
+        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        self.env['stock.quant']._update_available_quantity(self.productA, loc01, 1.0, package_id=package)
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': input_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'location_id': supplier_location.id,
+                'location_dest_id': input_location.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        receipt.action_confirm()
+
+        receipt.do_unreserve()
+        self.env['stock.move.line'].create([{
+            'move_id': receipt.move_lines.id,
+            'qty_done': 1,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': input_location.id,
+            'result_package_id': self.env['stock.quant.package'].create({'package_type_id': package_type.id}).id,
+            'picking_id': receipt.id,
+        } for _ in range(2)])
+        receipt.button_validate()
+
+        internal_transfer = receipt.move_lines.move_dest_ids.picking_id
+        self.assertEqual(internal_transfer.move_line_ids.location_dest_id, loc01 | loc02,
+                         'There is already one package at L1, so the first SML should be redirected to L1 '
+                         'and the second one to L2')
+        internal_transfer.move_line_ids.qty_done = 1
+        internal_transfer.button_validate()
+
+        # Third part (move 3 packages, 2 x P01 and 1 x P02)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': input_location.id,
+            'move_lines': [(0, 0, {
+                'name': product.name,
+                'location_id': supplier_location.id,
+                'location_dest_id': input_location.id,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': qty,
+            }) for qty, product in [(2.0, self.productA), (1.0, self.productB)]],
+        })
+        receipt.action_confirm()
+
+        receipt.do_unreserve()
+        moves = receipt.move_lines
+        self.env['stock.move.line'].create([{
+            'move_id': move.id,
+            'qty_done': 1,
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': input_location.id,
+            'result_package_id': self.env['stock.quant.package'].create({'package_type_id': package_type.id}).id,
+            'picking_id': receipt.id,
+        } for product, move in [
+            (self.productA, moves[0]),
+            (self.productA, moves[0]),
+            (self.productB, moves[1]),
+        ]])
+        receipt.button_validate()
+
+        internal_transfer = receipt.move_lines.move_dest_ids.picking_id
+        self.assertRecordValues(internal_transfer.move_line_ids, [
+            {'product_id': self.productA.id, 'product_uom_qty': 1.0, 'location_dest_id': loc02.id},
+            {'product_id': self.productA.id, 'product_uom_qty': 1.0, 'location_dest_id': loc03.id},
+            {'product_id': self.productB.id, 'product_uom_qty': 1.0, 'location_dest_id': loc04.id},
         ])
 
     def test_rounding_and_reserved_qty(self):

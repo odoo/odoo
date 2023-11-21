@@ -1,16 +1,14 @@
 .din_page {
-    width: 180mm;
-    margin-left: -1rem;
     font-size: 9pt;
 
     &.header {
         table {
             width: 100%;
-            img, h3, td, tr {
+            img, h3, div.h3, td, tr {
                 padding: 0;
                 margin: 0;
             }
-            h3 {
+            h3, div.h3 {
                 color: $o-default-report-primary-color;
                 position: relative;
                 top: -10mm;
@@ -107,6 +105,11 @@
             }
         }
     }
+}
+
+.din_page_pdf {
+    width: 180mm;
+    margin-left: -1rem;
 }
 
 

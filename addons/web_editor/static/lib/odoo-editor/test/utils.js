@@ -10,6 +10,11 @@ export const Direction = {
     FORWARD: 'FORWARD',
 };
 
+// True iff test is being run with its mobile implementation.
+let isMobileTest = false;
+// True iff test has mobile implementation for any called method.
+let hasMobileTest = false;
+
 function _nextNode(node) {
     let next = node.firstChild || node.nextSibling;
     if (!next) {
@@ -86,6 +91,13 @@ export function parseTextualSelection(testContainer) {
         node = next;
     }
     if (anchorNode && focusNode) {
+        // Correct for the addition of the link ZWS start characters.
+        if (anchorNode.nodeName === 'A' && anchorOffset) {
+            anchorOffset += 1;
+        }
+        if (focusNode.nodeName === 'A' && focusOffset) {
+            focusOffset += 1;
+        }
         return {
             anchorNode: anchorNode,
             anchorOffset: anchorOffset,
@@ -142,7 +154,7 @@ export function parseMultipleTextualSelection(testContainer) {
  *
  * @param selection
  */
-export function setTestSelection(selection, doc = document) {
+export async function setTestSelection(selection, doc = document) {
     const domRange = doc.createRange();
     if (selection.direction === Direction.FORWARD) {
         domRange.setStart(selection.anchorNode, selection.anchorOffset);
@@ -161,6 +173,7 @@ export function setTestSelection(selection, doc = document) {
         // with contentEditable=false for no valid reason since non-editable
         // content are selectable by the user anyway.
     }
+    await nextTick(); // Wait a tick for selectionchange events.
 }
 
 /**
@@ -269,10 +282,13 @@ export function customErrorMessage(assertLocation, value, expected) {
     value = value.replaceAll('\u200B', zws);
     expected = expected.replaceAll('\u200B', zws);
 
-    return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
+    return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
+    hasMobileTest = false;
+    isMobileTest = options.isMobile;
+
     const testNode = document.createElement('div');
     document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
@@ -287,13 +303,19 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     // the editor as otherwise those would genererate mutations the editor would
     // consider and the tests would make no sense.
     testNode.innerHTML = spec.contentBefore;
+    // Setting a selection in the DOM before initializing the editor to ensure
+    // every test is run with the same preconditions.
+    await setTestSelection({
+        anchorNode: testNode.parentElement, anchorOffset: 0,
+        focusNode: testNode.parentElement, focusOffset: 0,
+    });
     const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
     editor.keyboardType = 'PHYSICAL';
     editor.testMode = true;
     if (selection) {
-        setTestSelection(selection);
+        await setTestSelection(selection);
         editor._recordHistorySelection();
     } else {
         document.getSelection().removeAllRanges();
@@ -311,13 +333,18 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             customErrorMessage('contentBeforeEdit', beforeEditValue, spec.contentBeforeEdit));
         const selection = parseTextualSelection(testNode);
         if (selection) {
-            setTestSelection(selection);
+            await setTestSelection(selection);
         }
     }
 
     if (spec.stepFunction) {
         editor.observerActive('beforeUnitTests');
-        await spec.stepFunction(editor);
+        try {
+            await spec.stepFunction(editor);
+        } catch (e) {
+            e.message = (isMobileTest ? '[MOBILE VERSION] ' : '') + e.message;
+            throw e;
+        }
         editor.observerUnactive('afterUnitTests');
     }
 
@@ -329,7 +356,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             customErrorMessage('contentAfterEdit', afterEditValue, spec.contentAfterEdit));
         const selection = parseTextualSelection(testNode);
         if (selection) {
-            setTestSelection(selection);
+            await setTestSelection(selection);
         }
     }
 
@@ -354,6 +381,21 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             customErrorMessage('contentAfter', value, spec.contentAfter));
     }
     await testNode.remove();
+    if (hasMobileTest && !isMobileTest) {
+        const li = document.createElement('li');
+        li.classList.add('test', 'pass', 'pending');
+        const h2 = document.createElement('h2');
+        h2.textContent = 'FIXME: [Mobile Test] skipped';
+        li.append(h2);
+        const mochaSuite = [...document.querySelectorAll('#mocha-report li.suite > ul')].pop();
+        if (mochaSuite) {
+            mochaSuite.append(li);
+        }
+        // Mobile tests are temporarily disabled because they are not
+        // representative of reality. They will be re-enabled when the mobile
+        // editor will be ready.
+        // await testEditor(Editor, spec, { ...options, isMobile: true });
+    }
 }
 
 /**
@@ -424,19 +466,21 @@ export async function deleteForward(editor) {
 }
 
 export async function deleteBackward(editor) {
-    editor.execCommand('oDeleteBackward');
-}
-
-export async function deleteBackwardMobile(editor) {
-    // Some mobile keyboard use input event to trigger delete.
-    // This is a way to simulate this behavior.
-    const inputEvent = new InputEvent('input', {
-        inputType: 'deleteContentBackward',
-        data: null,
-        bubbles: true,
-        cancelable: false,
-    });
-    editor._onInput(inputEvent);
+    // This method has two implementations (desktop and mobile)
+    if (isMobileTest) {
+        // Some mobile keyboards use input event to trigger delete. 
+        // This is a way to simulate this behavior.
+        const inputEvent = new InputEvent('input', {
+            inputType: 'deleteContentBackward',
+            data: null,
+            bubbles: true,
+            cancelable: false,
+        });
+        editor._onInput(inputEvent);
+    } else {
+        hasMobileTest = true; // flag test for a re-run as mobile
+        editor.execCommand('oDeleteBackward');
+    }
 }
 
 export async function insertParagraphBreak(editor) {
@@ -599,5 +643,23 @@ export function triggerEvent(
     currentElement.dispatchEvent(ev);
     return ev;
 }
+
+// Mock an paste event and send it to the editor.
+async function pasteData (editor, text, type) {
+    var mockEvent = {
+        dataType: 'text/plain',
+        data: text,
+        clipboardData: {
+            getData: (datatype) => type === datatype ? text : null,
+            files: [],
+            items: [],
+        },
+        preventDefault: () => { },
+    };
+    await editor._onPaste(mockEvent);
+};
+
+export const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
+export const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
 
 export class BasicEditor extends OdooEditor {}

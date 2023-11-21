@@ -105,19 +105,19 @@
     </t>
 
     <t t-name="project.OpenMilestone" owl="1">
-        <div class="o_open_milestone" t-att-class="state.colorClass">
-            <span class="o_milestone_checkbox" t-on-click="onMilestoneClick">
+        <div class="o_open_milestone row" t-att-class="state.colorClass">
+            <span class="o_milestone_checkbox col-1" t-on-click="onMilestoneClick">
                 <i class="fa" t-att-class="state.checkboxIcon"></i>
             </span>
-            <div class="o_milestone_detail" t-on-click="onOpenMilestone">
-                <span style="flex: 10%">
+            <div class="o_milestone_detail col-10 p-0" t-on-click="onOpenMilestone">
+                <span class="text-truncate col-8 px-0" t-att-title="milestone.name" style="flex: 10%">
                     <t t-esc="milestone.name"/>
                 </span>
-                <span class="o_rightpanel_center_col">
+                <span class="o_rightpanel_center_col col-4">
                     <t t-esc="deadline"/>
                 </span>
             </div>
-            <span class="o_rightpanel_right_col">
+            <span class="o_rightpanel_right_col col-1 px-0">
                 <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
             </span>
             <span t-if="state.openDialog" class="o_rightpanel_hidden">

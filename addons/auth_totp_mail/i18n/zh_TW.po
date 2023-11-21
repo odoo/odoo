@@ -4,6 +4,7 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,6 +40,22 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\"/> 你好！<br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> 要求你啟用雙重要素身份驗證，以保護你的帳戶。<br/><br/>\n"
+"        雙重要素身份驗證（two-factor authentication，簡稱 2FA）是一種對身份進行雙重驗證的系統。\n"
+"        第一重驗證是核對個人密碼；第二重驗證是利用你指定的流動裝置上專用的應用程式，產生臨時代碼，以驗證身份。\n"
+"        目前較流行的專用驗證程式包括：Authy、Google Authenticator 以及 Microsoft Authenticator。\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                啟用雙重驗證\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: code:addons/auth_totp_mail/models/res_users.py:0
@@ -49,7 +66,7 @@ msgstr "賬戶安全"
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr ""
+msgstr "邀請在您的Odoo帳戶上激活雙因素身份驗證"
 
 #. module: auth_totp_mail
 #: code:addons/auth_totp_mail/models/res_users.py:0
@@ -57,17 +74,17 @@ msgstr ""
 msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
-msgstr ""
+msgstr "為以下用戶發送了使用雙因素身份驗證的邀請: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "邀請使用 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "邀請使用雙重身份驗證"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -77,7 +94,7 @@ msgstr "名稱"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "打開雙因素身份驗證配置"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite

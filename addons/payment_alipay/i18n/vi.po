@@ -7,6 +7,7 @@
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -59,7 +60,7 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Thanh toán nhanh (chỉ dành cho người bán Trung Quốc)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -75,7 +76,7 @@ msgstr "Merchant Partner ID"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
@@ -101,7 +102,7 @@ msgstr "Nhà cung cấp"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã %(r)s hoặc txn_id %(t)s."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -141,12 +142,13 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Email đối tác Alipay công khai"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"ID đối tác công khai chỉ được sử dụng để xác định tài khoản với Alipay"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -158,4 +160,4 @@ msgstr ""
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "đã nhận trạng thái giao dịch không hợp lệ: %s"

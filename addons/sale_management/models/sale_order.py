@@ -58,7 +58,6 @@ class SaleOrder(models.Model):
 
     def _compute_line_data_for_template_change(self, line):
         return {
-            'sequence': line.sequence,
             'display_type': line.display_type,
             'name': line.name,
             'state': 'draft',
@@ -128,6 +127,11 @@ class SaleOrder(models.Model):
                 })
 
             order_lines.append((0, 0, data))
+
+        # set first line to sequence -99, so a resequence on first page doesn't cause following page
+        # lines (that all have sequence 10 by default) to get mixed in the first page
+        if len(order_lines) >= 2:
+            order_lines[1][2]['sequence'] = -99
 
         self.order_line = order_lines
         self.order_line._compute_tax_id()

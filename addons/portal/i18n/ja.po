@@ -7,11 +7,13 @@
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Wil Odoo, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -72,7 +74,17 @@ msgstr "<i class=\"fa fa-pencil\"/> 編集"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr ""
+msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">国...</option>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "<option value=\"\">select...</option>"
+msgstr "<option value=\"\">選択...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -81,6 +93,8 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">会社名やVAT番号の変更は、一度発行された書類ではできません。<br/> "
+"この操作については、直接お問い合わせ下さい。</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -190,7 +204,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "APIキーが準備できました"
 
 #. module: portal
 #. openerp-web
@@ -235,7 +249,7 @@ msgstr "メールに表示するコンテンツを追加する"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
-msgstr ""
+msgstr "以下に追加"
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -367,11 +381,6 @@ msgstr " ファイル <strong>%s</strong>を保存できませんでした"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
 msgstr "国"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Country..."
-msgstr "国..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
@@ -511,7 +520,7 @@ msgstr "パスワードを忘れましたか？"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "アクセス付与"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -537,6 +546,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"これが新しいAPIキーです。RPCアクセスにはパスワードの代わりにこれを使用して下さい。\n"
+"　　　　インタラクティブな使用にはログインが必要です。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -555,7 +566,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "重要:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -574,7 +585,7 @@ msgstr "内部注釈"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "内部メモは内部ユーザにのみ表示されます。"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -596,12 +607,12 @@ msgstr "招待メッセージ"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "内部か"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "ポータルか"
 
 #. module: portal
 #. openerp-web
@@ -611,6 +622,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"この記述が明確で完全であることが非常に\n"
+"　　　　重要です、"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -636,7 +649,7 @@ msgstr "最終更新日"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "最新の認証"
 
 #. module: portal
 #. openerp-web
@@ -726,7 +739,7 @@ msgstr "Odooロゴ"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "内部かつポータルユーザのみAPIキーを作成することができます"
 
 #. module: portal
 #. openerp-web
@@ -767,7 +780,7 @@ msgstr "あなた自身のアカウントであることを確認するために
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Portal Access Management"
-msgstr ""
+msgstr "ポータルアクセス管理"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -822,7 +835,7 @@ msgstr " %sに公開済"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "再招待"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -832,7 +845,7 @@ msgstr "宛先"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "関連ドキュメント"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -847,7 +860,7 @@ msgstr "関連ドキュメントモデル"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "アクセスの取消"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -918,7 +931,7 @@ msgstr "サインイン"
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
-msgstr ""
+msgstr "入力必須項目があります。必ずメッセージをご記入下さい。"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -974,7 +987,7 @@ msgstr "添付ファイルが存在しないか、添付ファイルにアクセ
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "連絡先 \"%s\"は有効なEメールを持っていません。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -994,7 +1007,7 @@ msgstr "ドキュメントが存在しないか、ドキュメントにアクセ
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "このキーは後で取り出すことはできず、以下を提供します:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1013,7 +1026,7 @@ msgstr "入力した古いパスワードが間違っています。パスワー
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "取引先\"%s\"は既にポータルアクセス権を持っています。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1027,7 +1040,7 @@ msgstr ""
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
-msgstr ""
+msgstr "ポータルユーザに電子メールを送信するためのテンプレート \"ポータル: 新規ユーザ\"が見つかりません。"
 
 #. module: portal
 #. openerp-web
@@ -1052,13 +1065,13 @@ msgstr "こちらは顧客ポータルのプレビューです。"
 msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
-msgstr ""
+msgstr "この取引先は内部ユーザにリンクされており、既にポータルへのアクセス権を持っています。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
-msgstr ""
+msgstr "このテキストは、新規ポータルユーザに送信されるEメールの最後に記載されます。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1227,12 +1240,12 @@ msgstr "すべきです"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "まず、取引先 \"%s\"にポータルアクセスを許可する必要があります。"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "あなたのアカウント {{ object.user_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1270,7 +1283,7 @@ msgstr "コメント"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "完全アクセス"
 
 #. module: portal
 #. openerp-web
@@ -1280,6 +1293,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"それは、一度作成された\n"
+"　　　　キーを識別する唯一の方法となります。"
 
 #. module: portal
 #. openerp-web
@@ -1304,11 +1319,6 @@ msgid "res.users.apikeys.description"
 msgstr "res.users.apikeys.description"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "select..."
-msgstr "選択..."
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
@@ -1320,4 +1330,4 @@ msgstr "コメントを投稿"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "をユーザアカウントに追加する場合は、それを安全に保管することが非常に重要です。"

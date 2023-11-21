@@ -118,7 +118,7 @@ class CouponProgram(models.Model):
         i.e Buy 1 imac + get 1 ipad mini free then check 1 imac is on cart or not
         or  Buy 1 coke + get 1 coke free then check 2 cokes are on cart or not
         """
-        order_lines = order.order_line.filtered(lambda line: line.product_id) - order._get_reward_lines()
+        order_lines = self._get_lines_suitable_for_program(order)
         products = order_lines.mapped('product_id')
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
@@ -140,6 +140,9 @@ class CouponProgram(models.Model):
             if ordered_rule_products_qty >= program.rule_min_quantity:
                 valid_program_ids.append(program.id)
         return self.browse(valid_program_ids)
+
+    def _get_lines_suitable_for_program(self, order):
+        return order.order_line.filtered(lambda line: line.product_id) - order._get_reward_lines()
 
     def _filter_not_ordered_reward_programs(self, order):
         """

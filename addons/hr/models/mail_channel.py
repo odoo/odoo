@@ -17,7 +17,7 @@ class Channel(models.Model):
         for channel in self:
             new_members[channel.id] = list(
                 set(new_members[channel.id]) |
-                set((channel.subscription_department_ids.member_ids.user_id.partner_id - channel.channel_partner_ids).ids)
+                set((channel.subscription_department_ids.member_ids.user_id.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids)
             )
         return new_members
 

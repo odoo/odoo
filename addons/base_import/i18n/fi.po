@@ -11,6 +11,7 @@
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2021
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -50,7 +51,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Additional Fields"
-msgstr ""
+msgstr "Lisäkentät"
 
 #. module: base_import
 #. openerp-web
@@ -76,6 +77,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Latauksessa tapahtui tunnistamaton virhe. Mahdollisesti yhteys katkesi, "
+"suurin käsiteltävä tietuemäärä ylittyi tai muisti loppui kesken. Yritä "
+"kertaalleen uudestaan. Mikäli ongelma toistuu, pilko tiedosto pienempiin "
+"eriin sen sijaan, että lataat sen kerralla."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -85,26 +90,26 @@ msgstr "Perus"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Perustuonti"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Perustan tuonnin täsmäys"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Eräanjotuonti"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Eräajon rajoitus"
 
 #. module: base_import
 #. openerp-web
@@ -118,24 +123,24 @@ msgstr "Peruuta"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr ""
+msgstr "Valitse 'Jatka' jatkaaksesi tuonnin käsittelyä, riviltä"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Sarakkeessa %s on vääriä arvoja (arvo: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Sarakkeessa %s on vääriä arvoja. Virhe on rivillä %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Sarakkeen nimi"
 
 #. module: base_import
 #. openerp-web
@@ -159,13 +164,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Ei pysty lataamaan URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "Luo uudet arvot"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -227,21 +234,21 @@ msgstr "Tietokannan tunnus"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "Päivämäärän muoto:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Päivämäärän ja ajan muoto:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "Desimaalierotin:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -269,7 +276,7 @@ msgstr "Näyttönimi"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Piste"
 
 #. module: base_import
 #. openerp-web
@@ -286,12 +293,12 @@ msgstr "Lataa"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
-msgstr ""
+msgstr "Latausmalli"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -304,14 +311,34 @@ msgstr "Merkistö:"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr "Virhe käsitellessä päivämäärää [%s:L%d]: %s"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Virhe tietueiden tuonnissa: Tekstin erottimena saa olla vain yksi merkki."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Virhe tietueiden tuonnin aikana: kaikkien rivien pitäisi olla samankokoisia,"
+" mutta otsikkorivillä on %d merkintää, kun taas ensimmäisellä rivillä on %d."
+" Sinun on ehkä muutettava erotinmerkkiäs."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Arvioitu valmistuminen:"
 
 #. module: base_import
 #. openerp-web
@@ -382,7 +409,7 @@ msgstr "Tarkistettava ja/tai tuotava tiedosto, raaka binääri (ei base64)"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Käsittele nykyinen eräajo loppuun ennen keskeyttämistä..."
 
 #. module: base_import
 #. openerp-web
@@ -396,7 +423,7 @@ msgstr "CSV-tiedostojen kanssa voit joutua valitsemaan oikean erottimen."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "Muotoilu"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -405,13 +432,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Havaittu väärän muotoinen kuvadata. Kuvien tulisi olla koodattuna "
+"base64-muotoon tai URLeja."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Mene latauksen UKK:hon"
 
 #. module: base_import
 #. openerp-web
@@ -458,6 +487,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Jos tiedosto sisältää\n"
+"                    sarakkeiden nimet, Odoo voi auatomaattisesti yrittää tunnistaa niitä\n"
+"                    vastaavat kentätä. Tämä tekee latauksesta yksinkertaista, erityisesti\n"
+"\\v                    jos tiedostossa on useita sarakkeita."
 
 #. module: base_import
 #. openerp-web
@@ -467,6 +500,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Jos malli käyttää openchatteria, historian seuranta asettaa tilauksen ja "
+"lähettää huomautuksia latauksen aikana. Tämä hidastaa latausta."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -474,6 +509,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Valtavan suuri kuvan koko. Ladattavien kuvien tulee olla pienempiä kuin 42 "
+"miljoonaa pikseliä"
 
 #. module: base_import
 #. openerp-web
@@ -525,6 +562,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Latauksen aikakatkaisu. Ole hyvä, ja yritä uudelleen. Mikäli virhe toistuu, "
+"tiedosto voi olla liian suuri. Yritä jakaa ladattava tiedosto useisiin "
+"osiin. (Vähemmän kerralla)."
 
 #. module: base_import
 #. openerp-web
@@ -545,6 +585,7 @@ msgstr "Tuodaan tietoja"
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Virheellinen solu rivillä %(row)s, sarakkeessa %(col)s: %(cell_value)s"
 
 #. module: base_import
 #. openerp-web
@@ -643,7 +684,7 @@ msgstr "Malli"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Tapahtui useita virheitä"
 
 #. module: base_import
 #. openerp-web
@@ -666,21 +707,21 @@ msgstr "Tarvitsetko apua?"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Ei erotinta"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
-msgstr ""
+msgstr "Vastaavia tietueita ei löytynyt"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
-msgstr ""
+msgstr "Vastaavia tietueita ei löytynyt seuraavalle"
 
 #. module: base_import
 #. openerp-web
@@ -723,7 +764,7 @@ msgstr "Relaatiokentät"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "Res-malli"
 
 #. module: base_import
 #. openerp-web
@@ -745,14 +786,14 @@ msgstr "Etsi kenttää..."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Näytä mahdolliset arvot"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "Valittu sivu:"
 
 #. module: base_import
 #. openerp-web
@@ -773,42 +814,42 @@ msgstr "Erotin:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
-msgstr ""
+msgstr "Aseta:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "Aseta: False"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "Aseta: True"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "Aseta arvo tyhjäksi"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "Sivu:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "Hyppää tietueen yli"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -834,7 +875,7 @@ msgstr "Vakiokentät"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Aloita riviltä"
 
 #. module: base_import
 #. openerp-web
@@ -874,98 +915,98 @@ msgstr "Testaus"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Testit: Perustuontimallin esikatselu"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Kirjain"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Kirjain, ei vain-luku"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Kirjain, vain luku"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Tarvitsee kirjaimia"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Kirjainten tilat"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Kirjain edelleen vain-luku"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Many to One"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Many to One viitaus"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Testit: Perustuontimalli, May to One vaaditaan"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Many to One vaaditaan viittaus"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Testit: Perustuontimalli, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Testit: Perustuontimalli, One to Many alaosa"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Complex"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Testit: Perustuontimalli, Liukuluku"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Tekstierotin:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Tiedostossa on jatkon estäviä virheitä (ks. alla)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr ""
+msgstr "Tiedostossa on virheitä, jotka eivät estä jatkoa (ks. alla)"
 
 #. module: base_import
 #. openerp-web
@@ -979,7 +1020,7 @@ msgstr "Tiedosto tuodaan erissä"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Sarake yhdistetään kenttään"
 
 #. module: base_import
 #. openerp-web
@@ -993,7 +1034,7 @@ msgstr "Tiedosto on tuotu onnistuneesti riviin asti: %d."
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Tuhaterotin:"
 
 #. module: base_import
 #. openerp-web
@@ -1028,6 +1069,8 @@ msgstr "Tyyppi"
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Ei voi ladata \"{extension}\" tiedosto: tarvitsee Python-moduulin "
+"\"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1089,7 +1132,7 @@ msgstr "Arvo"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "Arvo2"
 
 #. module: base_import
 #. openerp-web
@@ -1099,13 +1142,15 @@ msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
 msgstr ""
+"Varoitus: jättää huomiotta otsikkorivin, tyhjät rivit ja rivit, joissa on "
+"vain tyhjiä soluja"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Kun arvoa ei voida täsmätä:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1114,6 +1159,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Et voi ladata kuvia URL:n kautta, ota yhteyttä järjestelmävalvojaan tai "
+"tukeen syyn selvittämiseksi."
 
 #. module: base_import
 #. openerp-web
@@ -1121,6 +1168,8 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Voit joko testata tai ladata uudelleen tiedostosi ennen lataamisen "
+"jatkamista."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1133,21 +1182,21 @@ msgstr "Sinun pitää asettaa ainakin yksi kenttä joka tuodaan"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "useilla riveillä"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "rivillä"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
-msgstr ""
+msgstr "eräajo"
 
 #. module: base_import
 #. openerp-web
@@ -1155,7 +1204,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "kentässä"
 
 #. module: base_import
 #. openerp-web
@@ -1169,17 +1218,17 @@ msgstr "minuutit"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
-msgstr ""
+msgstr "lisää)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "josta"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "tuntematon virhekoodi %s"

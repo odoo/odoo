@@ -288,3 +288,26 @@ class TestMicrosoftEvent(TestCommon):
 
         # assert
         self.assertEqual(len(matched._events), 0)
+
+    def test_search_set_ms_universal_event_id(self):
+        not_synced_events = self.env['calendar.event'].search([('ms_universal_event_id', '=', False)])
+        synced_events = self.env['calendar.event'].search([('ms_universal_event_id', '!=', False)])
+
+        self.assertIn(self.simple_event, synced_events)
+        self.assertNotIn(self.simple_event, not_synced_events)
+
+        self.simple_event.ms_universal_event_id = ''
+        not_synced_events = self.env['calendar.event'].search([('ms_universal_event_id', '=', False)])
+        synced_events = self.env['calendar.event'].search([('ms_universal_event_id', '!=', False)])
+
+        self.assertNotIn(self.simple_event, synced_events)
+        self.assertIn(self.simple_event, not_synced_events)
+
+    def test_microsoft_event_readonly(self):
+        event = MicrosoftEvent()
+        with self.assertRaises(TypeError):
+            event._events['foo'] = 'bar'
+        with self.assertRaises(AttributeError):
+            event._events.update({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            dict.update(event._events, {'foo': 'bar'})

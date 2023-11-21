@@ -119,7 +119,7 @@ class PhoneBlackList(models.Model):
 
     def phone_action_blacklist_remove(self):
         return {
-            'name': 'Are you sure you want to unblacklist this Phone Number?',
+            'name': _('Are you sure you want to unblacklist this Phone Number?'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'phone.blacklist.remove',

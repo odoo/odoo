@@ -7,6 +7,8 @@
 # Goh Gangtai <gangtai.goh@gmail.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,7 +46,7 @@ msgstr "파일에 단 하나의 열만 있는데, 이는 보통 파일 구분자
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Additional Fields"
-msgstr ""
+msgstr "추가 필드"
 
 #. module: base_import
 #. openerp-web
@@ -58,7 +60,7 @@ msgstr "고급"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "하위 필드와 일치하도록 허용합니다."
 
 #. module: base_import
 #. openerp-web
@@ -93,7 +95,7 @@ msgstr "기본 가져 오기 매핑"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "일괄 가져오기"
 
 #. module: base_import
 #. openerp-web
@@ -162,7 +164,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "새로운 값 생성"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -304,11 +306,29 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "날짜 구문 오류 [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "레코드를 가져오는 동안 오류가 발생했습니다. 텍스트 구분 기호는 단일 문자여야 합니다."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"레코드를 가져오는 동안 오류가 발생했습니다. 모든 행은 크기가 같아야 합니다. 제목 행에 %d개 및 첫 번째 행에 %d개가 입력되어 "
+"있습니다. 구문 문자를 변경해야 하는지 확인하세요."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "남은 예상 시간:"
 
 #. module: base_import
 #. openerp-web
@@ -322,7 +342,7 @@ msgstr "모든 것이 적절합니다."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
-msgstr ""
+msgstr "서식이 자동 지정되므로 엑셀 파일 사용을 권장합니다."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -349,7 +369,7 @@ msgstr "파일"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
-msgstr ""
+msgstr "파일 열"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -378,7 +398,7 @@ msgstr "raw 바이너리(base64 아님)로 가져오거나 검사할 파일"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "중단하기 전에 현재 배치를 완료하고 있습니다."
 
 #. module: base_import
 #. openerp-web
@@ -392,7 +412,7 @@ msgstr "CSV 파일의 경우 올바른 구분 기호를 선택해야 사용할 �
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "서식"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -407,7 +427,7 @@ msgstr "사용불가능한 이미지 정보가 발견되었습니다, 이미지�
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "가져오기 FAQ로 이동"
 
 #. module: base_import
 #. openerp-web
@@ -454,6 +474,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"파일에 열 이름이\n"
+"                    포함되어 있는 경우, Odoo는 열에 해당하는 필드를\n"
+"                    자동으로 감지할 수 있습니다. 이렇게 하면 특히 열이 많은 파일의 경우\n"
+"                    더 간편하게 가져오기를 할 수 있습니다."
 
 #. module: base_import
 #. openerp-web
@@ -470,7 +494,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
+msgstr "이미지 크기가 초과되었습니다. 4,200만 픽셀보다 작은 이미지만 가져올 수 있습니다. "
 
 #. module: base_import
 #. openerp-web
@@ -497,7 +521,7 @@ msgstr "파일 가져오기"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "가져오기 파일에 내용이 없거나 손상된 파일입니다."
 
 #. module: base_import
 #. openerp-web
@@ -530,14 +554,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
-msgstr ""
+msgstr "가져온 파일"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "가져오기"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -627,7 +651,7 @@ msgstr "파일 불러오기"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "파일을 불러오는 중"
 
 #. module: base_import
 #. openerp-web
@@ -642,7 +666,7 @@ msgstr "모델"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "여러 개의 오류가 발생했습니다."
 
 #. module: base_import
 #. openerp-web
@@ -686,7 +710,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
-msgstr ""
+msgstr "Odoo 필드"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -703,7 +727,7 @@ msgstr "상위"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "가져오기 방지"
 
 #. module: base_import
 #. openerp-web
@@ -779,35 +803,35 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "설정: 거짓"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "설정: 참"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "빈 값으로 설정"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "시트:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "레코드 건너뛰기"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -826,7 +850,7 @@ msgstr "스페이스"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "기본 필드"
 
 #. module: base_import
 #. openerp-web
@@ -840,14 +864,14 @@ msgstr "줄에서 시작"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "가져오기 중지"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "권장 필드"
 
 #. module: base_import
 #. openerp-web
@@ -957,7 +981,7 @@ msgstr "텍스트 구분 기호 :"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "파일에 차단 오류가 있습니다 (아래 참조)."
 
 #. module: base_import
 #. openerp-web
@@ -971,14 +995,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "파일을 일괄 가져오기 합니다."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "이 열은 필드에서 연결됩니다."
 
 #. module: base_import
 #. openerp-web
@@ -1006,7 +1030,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
-msgstr ""
+msgstr "가져오기를 하려면 필드를 선택하세요."
 
 #. module: base_import
 #. openerp-web
@@ -1047,21 +1071,21 @@ msgstr "제목 없음"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "파일 업로드"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
-msgstr ""
+msgstr "가져오기 할 Excel이나 CSV 파일 업로드"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
-msgstr ""
+msgstr "첫 번째 행을 머리글로 사용"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -1104,7 +1128,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "값이 일치하지 않는 경우:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1132,14 +1156,14 @@ msgstr " 가져올 필드를 하나 이상 구성해야합니다."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "여러 개의 행에서"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "열에서"
 
 #. module: base_import
 #. openerp-web
@@ -1154,7 +1178,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "필드에"
 
 #. module: base_import
 #. openerp-web
@@ -1175,7 +1199,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "다음에서"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

@@ -311,10 +311,10 @@ odoo.define('pos_coupon.pos', function (require) {
         },
         _getRegularOrderlines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
-            const is_discount_product = (line) => this.pos.config.discount_product_id && line.product.id === this.pos.config.discount_product_id[0];
             const is_gift_card_product = (line) => this.pos.config.gift_card_product_id && line.product.id === this.pos.config.gift_card_product_id[0];
             const is_tips_product = (line) => this.pos.config.tip_product_id && line.product.id === this.pos.config.tip_product_id[0];
-            return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id && !is_discount_product(line) && !is_gift_card_product(line) && !is_tips_product(line));
+            //reward_id is always false unless the line is a reward from pos_loyalty
+            return orderlines.filter((line) => !line.is_program_reward && !line.reward_id && !line.refunded_orderline_id && !is_gift_card_product(line) && !is_tips_product(line));
         },
         _getRewardLines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
@@ -473,7 +473,25 @@ odoo.define('pos_coupon.pos', function (require) {
             return rewardsContainer
                 .getAwarded()
                 .map(({ product, unit_price, quantity, program, tax_ids, coupon_id }) => {
+                    let description;
+                    /**
+                     * Improved description only aplicable for rewards of type discount, and the discount is a percentage
+                     * of the price, those are:
+                     * - % discount on specific products.
+                     * - % discount on the whole order.
+                     * - % discount on the cheapest product.
+                     */
+                    if (tax_ids && program.reward_type === "discount" && program.discount_type === "percentage") {
+                        description =
+                            tax_ids.length > 0
+                                ? _.str.sprintf(
+                                    this.pos.env._t("Tax: %s"),
+                                    tax_ids.map((tax_id) => `%${this.pos.taxes_by_id[tax_id].amount}`).join(", ")
+                                )
+                                : this.pos.env._t("No tax");
+                    }
                     const options = {
+                        description,
                         quantity: quantity,
                         price: unit_price,
                         lst_price: unit_price,
@@ -1116,6 +1134,12 @@ odoo.define('pos_coupon.pos', function (require) {
                 if (reward.rewardedProductId && productIdsToAccount.has(reward.rewardedProductId)) {
                     const key = reward.tax_ids.join(',');
                     amountsToDiscount[key] += reward.quantity * reward.unit_price;
+                }
+            }
+            //Remove entries from amountsToDiscount that are 0
+            for (let key in amountsToDiscount) {
+                if (amountsToDiscount[key] === 0) {
+                    delete amountsToDiscount[key];
                 }
             }
         },

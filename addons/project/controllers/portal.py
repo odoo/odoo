@@ -24,7 +24,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -71,7 +71,7 @@ class ProjectCustomerPortal(CustomerPortal):
         url = "/my/project/%s" % project.id
         pager = portal_pager(
             url=url,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search, 'access_token': access_token},
             total=task_count,
             page=page,
             step=self._items_per_page
@@ -117,7 +117,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
         }
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -151,13 +151,13 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/project/<int:project_id>', '/my/project/<int:project_id>/page/<int:page>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             return request.render("project.project_sharing_portal", {'project_id': project_id})
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
@@ -353,7 +353,7 @@ class ProjectCustomerPortal(CustomerPortal):
                                          key=lambda item: item[1]["sequence"]))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         searchbar_inputs = self._task_get_searchbar_inputs()
@@ -422,7 +422,7 @@ class ProjectCustomerPortal(CustomerPortal):
         if group:
             grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
         else:
-            grouped_tasks = [tasks]
+            grouped_tasks = [tasks] if tasks else []
 
         task_states = dict(request.env['project.task']._fields['kanban_state']._description_selection(request.env))
         if sortby == 'status':

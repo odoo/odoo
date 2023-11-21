@@ -22,6 +22,7 @@ DEFAULT_EXCLUDE = [
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
+MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
 
 class Cloc(object):
@@ -62,6 +63,10 @@ class Cloc(object):
         # Based on https://stackoverflow.com/questions/241327
         s = s.strip() + "\n"
         total = s.count("\n")
+        # To avoid to use too much memory we don't try to count file
+        # with very large line, usually minified file
+        if max(len(l) for l in s.split('\n')) > MAX_LINE_SIZE:
+            return -1, "Max line size exceeded"
 
         def replacer(match):
             s = match.group(0)

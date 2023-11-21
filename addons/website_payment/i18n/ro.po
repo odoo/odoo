@@ -17,7 +17,7 @@ msgstr ""
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
 "Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -68,6 +68,11 @@ msgstr "<b>ID plată:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Payment Method:</b>"
 msgstr "<b>Metodă plată:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -159,11 +164,6 @@ msgstr ""
 #, python-format
 msgid "Country is required."
 msgstr "Țara este necesară."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Țara..."
 
 #. module: website_payment
 #. openerp-web
@@ -275,7 +275,7 @@ msgstr "Este donație"
 #: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
 #: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
 msgid "Is the payment a donation"
-msgstr ""
+msgstr "Plata este o donație"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -440,19 +440,19 @@ msgstr "făcut pe"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Descriptions"
-msgstr ""
+msgstr "⌙ Descrieri"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Maximum"
-msgstr ""
+msgstr "⌙ Maximum"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Minimum"
-msgstr ""
+msgstr "⌙ Minimum"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Step"
-msgstr ""
+msgstr "⌙ Pas"

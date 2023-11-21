@@ -230,7 +230,7 @@
                                             'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
                                         }"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
@@ -274,6 +274,7 @@
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('qty_received_method', '!=', 'manual')]}"/>
                                                 <field name="qty_invoiced" string="Billed Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                                                <field name="product_packaging_qty" attrs="{'invisible': ['|', ('product_id', '=', False), ('product_packaging_id', '=', False)]}" groups="product.group_stock_packaging"/>
                                                 <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
@@ -477,7 +478,7 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1">
+                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1" quick_create="false">
                     <field name="name"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
@@ -517,10 +518,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" decoration-bf="message_unread==True"
+                <tree string="Purchase Order"
                       decoration-muted="state=='cancel'" sample="1">
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
@@ -549,13 +549,12 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
-                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True"
+                decoration-muted="state == 'cancel'"
                 class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
@@ -582,8 +581,7 @@
             <field name="name">purchase.order.view.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True"
-                    decoration-muted="state == 'cancel'"
+                <tree decoration-muted="state == 'cancel'"
                     decoration-info="invoice_status == 'to invoice'"
                     string="Purchase Order"
                     class="o_purchase_order"
@@ -592,7 +590,6 @@
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>

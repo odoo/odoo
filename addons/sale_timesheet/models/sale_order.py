@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
             self.update({'timesheet_total_duration': 0})
             return
         group_data = self.env['account.analytic.line'].sudo().read_group([
-            ('order_id', 'in', self.ids)
+            ('order_id', 'in', self.ids), ('project_id', '!=', False)
         ], ['order_id', 'unit_amount'], ['order_id'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
@@ -55,9 +55,8 @@ class SaleOrder(models.Model):
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
-        super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
-            return
+            return super()._compute_field_value(field)
 
         # Get SOs which their state is not equal to upselling or invoied and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
         upsellable_orders = self.filtered(lambda so:
@@ -65,12 +64,14 @@ class SaleOrder(models.Model):
             and so.invoice_status not in ('upselling', 'invoiced')
             and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
         )
+        super(SaleOrder, upsellable_orders.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
         for order in upsellable_orders:
             upsellable_lines = order._get_prepaid_service_lines_to_upsell()
             if upsellable_lines:
                 order._create_upsell_activity()
                 # We want to display only one time the warning for each SOL
                 upsellable_lines.write({'has_displayed_warning_upsell': True})
+        super(SaleOrder, self - upsellable_orders)._compute_field_value(field)
 
     def _get_prepaid_service_lines_to_upsell(self):
         """ Retrieve all sols which need to display an upsell activity warning in the SO
@@ -99,7 +100,7 @@ class SaleOrder(models.Model):
             'search_default_billable_timesheet': True
         }  # erase default filters
         if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+            action['domain'] = [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)]
         else:
             action = {'type': 'ir.actions.act_window_close'}
         return action

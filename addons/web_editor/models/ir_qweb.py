@@ -64,7 +64,7 @@ class QWeb(models.AbstractModel):
                 sub_call = el.get('t-call')
                 if sub_call:
                     el.set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-                # If it already has a data-snippet it is a saved snippet.
+                # If it already has a data-snippet it is a saved or an inherited snippet.
                 # Do not override it.
                 elif 'data-snippet' not in el.attrib:
                     el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
@@ -175,7 +175,7 @@ class Integer(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        return int(value.replace(lang.thousands_sep, ''))
+        return int(value.replace(lang.thousands_sep or '', ''))
 
 
 class Float(models.AbstractModel):
@@ -187,7 +187,7 @@ class Float(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        return float(value.replace(lang.thousands_sep, '')
+        return float(value.replace(lang.thousands_sep or '', '')
                           .replace(lang.decimal_point, '.'))
 
 
@@ -474,7 +474,7 @@ class Image(models.AbstractModel):
             # force a complete load of the image data to validate it
             image.load()
         except Exception:
-            logger.exception("Failed to load remote image %r", url)
+            logger.warning("Failed to load remote image %r", url, exc_info=True)
             return None
 
         # don't use original data in case weird stuff was smuggled in, with
@@ -494,7 +494,7 @@ class Monetary(models.AbstractModel):
 
         value = element.find('span').text.strip()
 
-        return float(value.replace(lang.thousands_sep, '')
+        return float(value.replace(lang.thousands_sep or '', '')
                           .replace(lang.decimal_point, '.'))
 
 

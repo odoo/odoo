@@ -3,8 +3,8 @@
 # 	* pos_adyen
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,19 +23,19 @@ msgstr ""
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr "Geben Sie ein Trinkgeld über das Zahlungsterminal (Adyen)"
+msgstr "Trinkgeld über das Zahlungsterminal hinzufügen (Adyen)"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr "Adyen API-Schlüssel"
+msgstr "Adyen-API-Schlüssel"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr "Adyen Fehler"
+msgstr "Adyen-Fehler"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
@@ -50,12 +50,12 @@ msgstr "Adyen Letzte Antwort"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr "Adyen Terminal Identifier"
+msgstr "Adyen-Terminal-ID"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr "Adyen Testmodus"
+msgstr "Adyen-Testmodus"
 
 #. module: pos_adyen
 #. openerp-web
@@ -67,7 +67,7 @@ msgstr "Ein unerwarteter Fehler ist aufgetreten. Nachricht von Adyen: %s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr "Fragen Sie Kunden nach einem Trinkgeld"
+msgstr "Kunden nach einem Trinkgeld fragen"
 
 #. module: pos_adyen
 #. openerp-web
@@ -120,18 +120,18 @@ msgstr "Nachricht von Adyen: %s"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
-"Bitte konfigurieren Sie ein Trinkgeldprodukt für PoS %sum Trinkgeld mit "
-"Adyen zu unterstützen."
+"Bitte konfigurieren Sie ein Trinkgeldprodukt für Kassensystem %s, um "
+"Trinkgeld mit Adyen zu unterstützen."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Point Of Sale Konfiguration"
+msgstr "Kassensystem-Konfiguration"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Point of Sale Zahlungsmethoden"
+msgstr "Zahlungsmethoden des Kassensystems"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
@@ -141,7 +141,7 @@ msgstr "Fordern Sie Kunden dazu auf, Trinkgeld zu geben."
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr "Führen Sie Transaktionen in der Testumgebung aus."
+msgstr "Transaktionen in der Testumgebung ausführen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
@@ -162,7 +162,14 @@ msgstr ""
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr "Terminal %s wird schon für Zahlungsmethode %sverwendet."
+msgstr "Terminal %s wird schon für Zahlungsmethode %s verwendet."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Terminal %s wird schon in Unternehmen %s für Zahlungsmethode %s verwendet."
 
 #. module: pos_adyen
 #. openerp-web
@@ -187,4 +194,4 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr "[Terminal model]-[Serial number], zum Beispiel: P400Plus-123456789"
+msgstr "[Terminalmodell]-[Seriennummer], zum Beispiel: P400Plus-123456789"

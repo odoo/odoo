@@ -6,7 +6,8 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1193,7 +1194,7 @@ msgstr "Google afbeeldingen"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1834,7 +1835,7 @@ msgstr "Percentage prijs"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Pillen"
+msgstr "Vierkante selectievakjes"
 
 #. module: product
 #. openerp-web
@@ -2493,11 +2494,11 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Specificeer het vaste bedrag wat moet moet worden opgeteld (of afgetrokken, "
-"indien negatief) bij het bedrag berekend met de  korting."
+"Specificeer het vaste bedrag dat moeten worden opgeteld bij (of afgetrokken "
+"van, indien negatief) het bedrag berekend met de korting."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2686,7 +2687,7 @@ msgstr "De prijs om een product te kopen"
 #, python-format
 msgid "The product template is archived so no combination is possible."
 msgstr ""
-"Het  productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
+"De productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2704,6 +2705,12 @@ msgstr ""
 "De hoeveelheid in te kopen van deze leverancier om van de prijs te "
 "profiteren, uitgedrukt in de eventuele producteenheid van de leverancier, "
 "anders in de standaard maateenheid van het product."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "De afrondingsmethode moet altijd positief zijn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3309,10 +3316,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Je kunt de waarde  %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
-"%s"
+"Je kan de waarde %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s\n"
+" Als de waarde in het verleden aan een product is gekoppeld, kan je deze niet verwijderen."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3340,10 +3349,10 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
-"Je kunt het kenmerk %s niet van het product %s naar product %s verplaatsen."
+"Je kunt waarde %s niet verwijderen omdat deze in sommige producten is "
+"gebruikt."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3354,6 +3363,14 @@ msgid ""
 msgstr ""
 "Je kunt een prijslijstregel niet uitschakelen, verwijder deze of archiveer "
 "in plaats daarvan de prijslijst."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr ""
+"Je kunt het kenmerk %s niet van het product %s naar product %s verplaatsen."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3454,7 +3471,7 @@ msgstr "het bovenliggende bedrijf"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "het productsjabloon."
+msgstr "de productsjabloon."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

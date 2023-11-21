@@ -8,7 +8,8 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Maruan Aguerdouh, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,7 +33,7 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'brouillon' et 'Devis de réparation - %s' % (object.name) ou\n"
+"                object.state == 'brouillon' and 'Devis de réparation - %s' % (object.name) or\n"
 "                'Ordre de réparation - %s' % (object.name))"
 
 #. module: repair
@@ -135,7 +136,7 @@ msgstr "<span class=\"o_stat_text\">Réparations</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Lot/Numéro de série :</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -195,7 +196,7 @@ msgstr "Activités"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -407,7 +408,7 @@ msgstr "Emplacement de dest"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom d'affichage"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -908,7 +909,7 @@ msgstr "Devis / Commande"
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quotation Notes"
-msgstr "Notes du devis"
+msgstr "Notes sur le devis"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -967,7 +968,7 @@ msgstr "Ligne de réparation (pièces)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr "Notes de la répartion"
+msgstr "Notes de réparation"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1015,7 +1016,7 @@ msgstr "Devis de réparation: Envoyer par email"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
-msgstr "Référence de la réparation"
+msgstr "Référence de réparation"
 
 #. module: repair
 #: model:product.product,name:repair.product_service_order_repair
@@ -1406,6 +1407,18 @@ msgstr ""
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "Vous ne pouvez pas entrer des quantités négatives."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot cancel a completed repair order."
+msgstr "Vous ne pouvez pas annuler un ordre de réparation complété."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
+msgstr "Vous ne pouvez pas supprimer un ordre de réparation complété."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0

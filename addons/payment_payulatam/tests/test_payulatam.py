@@ -31,6 +31,9 @@ class PayULatamTest(PayULatamCommon, HttpCase):
             'value': str(cls.amount)
         }
 
+        cls.payulatam_post_confirmation_approved_data_webhook = cls.payulatam_post_confirmation_approved_data.copy()
+        cls.payulatam_post_confirmation_approved_data_webhook["sign"] = 'e227f90e64808320953dbbcb5ee96c9f'
+
     def test_compatibility_with_supported_currencies(self):
         """ Test that the PayULatam acquirer is compatible with all supported currencies. """
         for supported_currency_code in SUPPORTED_CURRENCIES:
@@ -168,7 +171,7 @@ class PayULatamTest(PayULatamCommon, HttpCase):
         self.assertEqual(tx.state, 'draft')
 
         res = self.url_open(PayuLatamController._webhook_url,
-                            self.payulatam_post_confirmation_approved_data)
+                            self.payulatam_post_confirmation_approved_data_webhook)
         self.assertEqual(res.status_code, 200, 'Should be OK')
         self.assertEqual(res.text, '', "Body should be empty")
         self.assertEqual(tx.state, 'done')
@@ -194,7 +197,7 @@ class PayULatamTest(PayULatamCommon, HttpCase):
         post_data = self.payulatam_post_confirmation_approved_data
         post_data['state_pol'] = '6'
         post_data['response_message_pol'] = 'DECLINED'
-        post_data['sign'] = '98af78d27847dcb5120b1dabd9208a43'
+        post_data['sign'] = '28a1a45b1362a4096cf71357204e0256'
         res = self.url_open(PayuLatamController._webhook_url,
                             post_data)
         self.assertEqual(res.status_code, 200, 'Should be OK')
@@ -209,7 +212,7 @@ class PayULatamTest(PayULatamCommon, HttpCase):
         post_data = self.payulatam_post_confirmation_approved_data
         post_data['state_pol'] = '5'
         post_data['response_message_pol'] = 'EXPIRED'
-        post_data['sign'] = 'bde4704e76963d2a8cb6f7bce84b1391'
+        post_data['sign'] = '4d43432f81d68c046a14d44fa7e235da'
         res = self.url_open(PayuLatamController._webhook_url,
                             post_data)
         self.assertEqual(res.status_code, 200, 'Should be OK')

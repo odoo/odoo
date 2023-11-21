@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_gift_card
 #: model:mail.template,body_html:sale_gift_card.mail_template_gift_card
@@ -52,7 +54,7 @@ msgstr ""
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr ""
+msgstr "<span class=\"fa fa-clipboard\"/> Cópia"
 
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_sale_order_line__generated_gift_card_ids
@@ -77,23 +79,23 @@ msgstr ""
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.used_gift_card
 msgid "Expired Date:"
-msgstr ""
+msgstr "Data de expiração:"
 
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "Gift #"
-msgstr ""
+msgstr "Presente #"
 
 #. module: sale_gift_card
 #: model:ir.model,name:sale_gift_card.model_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_sale_order_line__gift_card_id
 msgid "Gift Card"
-msgstr ""
+msgstr "Gift Card"
 
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "Gift Card Code"
-msgstr ""
+msgstr "Código do vale-presente"
 
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_sale_order__gift_card_count
@@ -121,7 +123,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_gift_card.gift_card_sale_order_action
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_order_view_extend_gift_card_form
 msgid "Gift Cards"
-msgstr ""
+msgstr "Gift Cards"
 
 #. module: sale_gift_card
 #: code:addons/sale_gift_card/models/sale_order.py:0
@@ -155,6 +157,8 @@ msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
 msgstr ""
+"Você encontrará abaixo o código de seus cartões-presente. Um e-mail foi "
+"enviado com ele. Você pode usá-lo a partir de agora."
 
 #. module: sale_gift_card
 #: model:mail.template,subject:sale_gift_card.mail_template_gift_card

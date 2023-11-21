@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -64,6 +64,12 @@ class SlideChannelInvite(models.TransientModel):
         if not self.partner_ids:
             raise UserError(_("Please select at least one recipient."))
 
+        try:
+            self.channel_id.check_access_rights('write')
+            self.channel_id.check_access_rule('write')
+        except AccessError:
+            raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
+
         mail_values = []
         for partner_id in self.partner_ids:
             slide_channel_partner = self.channel_id._action_add_members(partner_id)
@@ -87,7 +93,7 @@ class SlideChannelInvite(models.TransientModel):
             'subject': subject,
             'body_html': body,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
+            'auto_delete': self.template_id.auto_delete if self.template_id else True,
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 

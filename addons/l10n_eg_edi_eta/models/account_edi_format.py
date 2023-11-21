@@ -7,6 +7,7 @@ import logging
 import requests
 from werkzeug.urls import url_quote
 from base64 import b64encode
+from json.decoder import JSONDecodeError
 from urllib3.util.ssl_ import create_urllib3_context
 
 from odoo import api, models, _
@@ -18,6 +19,8 @@ _logger = logging.getLogger(__name__)
 ETA_DOMAINS = {
     'preproduction': 'https://api.preprod.invoicing.eta.gov.eg',
     'production': 'https://api.invoicing.eta.gov.eg',
+    'invoice.preproduction': 'https://preprod.invoicing.eta.gov.eg/',
+    'invoice.production': 'https://invoicing.eta.gov.eg',
     'token.preproduction': 'https://id.preprod.eta.gov.eg',
     'token.production': 'https://id.eta.gov.eg',
 }
@@ -42,6 +45,10 @@ class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
     @api.model
+    def _l10n_eg_get_eta_qr_domain(self, production_enviroment=False):
+        return production_enviroment and ETA_DOMAINS['invoice.production'] or ETA_DOMAINS['invoice.preproduction']
+
+    @api.model
     def _l10n_eg_get_eta_api_domain(self, production_enviroment=False):
         return production_enviroment and ETA_DOMAINS['production'] or ETA_DOMAINS['preproduction']
 
@@ -63,16 +70,18 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'warning'
             }
         if not request_response.ok:
-            response_data = request_response.json()
-            if isinstance(response_data, dict) and response_data.get('error'):
+            try:
+                response_data = request_response.json()
+            except JSONDecodeError as ex:
                 return {
-                    'error': response_data.get('error', _('Unknown error')),
+                    'error': str(ex),
                     'blocking_level': 'error'
                 }
-            return {
-                'error': request_response.reason,
-                'blocking_level': 'error'
-            }
+            if response_data and response_data.get('error'):
+                return {
+                    'error': response_data.get('error'),
+                    'blocking_level': 'error'
+                }
         return {'response': request_response}
 
     @api.model
@@ -280,7 +289,7 @@ class AccountEdiFormat(models.Model):
                         'taxType': tax['tax_id'].l10n_eg_eta_code.split('_')[0].upper().upper(),
                         'amount': self._l10n_eg_edi_round(abs(tax['tax_amount'])),
                         'subType': tax['tax_id'].l10n_eg_eta_code.split('_')[1].upper(),
-                        'rate': abs(tax['tax_id'].amount),
+                        **({'rate': abs(tax['tax_id'].amount)} if tax['tax_id'].amount_type != 'fixed' else {}),
                     }
                 for tax_details in line_tax_details.get('tax_details', {}).values() for tax in tax_details.get('group_tax_details')
                 ],

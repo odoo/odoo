@@ -6,13 +6,16 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
 from odoo.tools import html_escape
 from odoo.exceptions import RedirectWarning
+from PyPDF2.utils import PdfReadError
 
 from lxml import etree
+from struct import error as StructError
 import base64
 import io
 import logging
 import pathlib
 import re
+
 
 _logger = logging.getLogger(__name__)
 
@@ -37,15 +40,32 @@ class AccountEdiFormat(models.Model):
     def create(self, vals_list):
         edi_formats = super().create(vals_list)
 
+        if not edi_formats:
+            return edi_formats
+
         # activate by default on journal
-        journals = self.env['account.journal'].search([])
-        journals._compute_edi_format_ids()
+        if not self.pool.loaded:
+            # The registry is not totally loaded. We cannot yet recompute the field on jourals as
+            # The helper methods aren't yet overwritten by all installed `l10n_` modules.
+            # Delay it in the register hook
+            self.pool._delay_compute_edi_format_ids = True
+        else:
+            journals = self.env['account.journal'].search([])
+            journals._compute_edi_format_ids()
 
         # activate cron
         if any(edi_format._needs_web_services() for edi_format in edi_formats):
             self.env.ref('account_edi.ir_cron_edi_network').active = True
 
         return edi_formats
+
+    def _register_hook(self):
+        if hasattr(self.pool, "_delay_compute_edi_format_ids"):
+            del self.pool._delay_compute_edi_format_ids
+            journals = self.env['account.journal'].search([])
+            journals._compute_edi_format_ids()
+
+        return super()._register_hook()
 
     ####################################################
     # Export method to override based on EDI Format
@@ -393,7 +413,7 @@ class AccountEdiFormat(models.Model):
         try:
             for xml_name, content in pdf_reader.getAttachments():
                 to_process.extend(self._decode_xml(xml_name, content))
-        except NotImplementedError as e:
+        except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
@@ -438,12 +458,12 @@ class AccountEdiFormat(models.Model):
         content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         to_process = []
 
-        # XML attachments received by mail have a 'text/plain' mimetype.
-        # Therefore, if content start with '<?xml', it is considered as XML.
-        is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
+        # XML attachments received by mail have a 'text/plain' mimetype (cfr. context key: 'attachments_mime_plainxml')
+        # Therefore, if content start with '<?xml', or if the filename ends with '.xml', it is considered as XML.
+        is_text_plain_xml = 'text/plain' in attachment.mimetype and (content.startswith(b'<?xml') or attachment.name.endswith('.xml'))
         if 'pdf' in attachment.mimetype:
             to_process.extend(self._decode_pdf(attachment.name, content))
-        elif 'xml' in attachment.mimetype or is_text_plain_xml:
+        elif attachment.mimetype.endswith('/xml') or is_text_plain_xml:
             to_process.extend(self._decode_xml(attachment.name, content))
         else:
             to_process.extend(self._decode_binary(attachment.name, content))
@@ -470,7 +490,7 @@ class AccountEdiFormat(models.Model):
                 except RedirectWarning as rw:
                     raise rw
                 except Exception as e:
-                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, exc_info=True)
                 if res:
                     return res
         return self.env['account.move']
@@ -493,7 +513,7 @@ class AccountEdiFormat(models.Model):
                     else:  # file_data['type'] == 'binary'
                         res = edi_format._update_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'], invoice)
                 except Exception as e:
-                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, exc_info=True)
                 if res:
                     return res
         return self.env['account.move']
@@ -626,19 +646,24 @@ class AccountEdiFormat(models.Model):
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        for value, domain in (
-            (name, ('name', 'ilike', name)),
-            (default_code, ('default_code', '=', default_code)),
-            (barcode, ('barcode', '=', barcode)),
-        ):
-            if value is not None:
-                domains.append([domain])
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if barcode:
+            domains.append([('barcode', '=', barcode)])
 
-        domain = expression.AND([
-            expression.OR(domains),
-            [('company_id', 'in', [False, self.env.company.id])],
-        ])
-        return self.env['product.product'].search(domain, limit=1)
+        # Search for the product with the exact name, then ilike the name
+        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        for name_domain in name_domains:
+            product = self.env['product.product'].search(
+                expression.AND([
+                    expression.OR(domains + [name_domain]),
+                    [('company_id', 'in', [False, self.env.company.id])],
+                ]),
+                limit=1,
+            )
+            if product:
+                return product
+        return self.env['product.product']
 
     def _retrieve_tax(self, amount, type_tax_use):
         '''Search all taxes and find one that matches all of the parameters.

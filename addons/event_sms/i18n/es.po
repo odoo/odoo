@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # marcescu, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: marcescu, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -28,12 +29,12 @@ msgstr "Envío automático de correo electronico para eventos"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "Registro de eventos"
+msgstr "Inscripción del evento"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr "Evento: registro"
+msgstr "Evento: Inscripción"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
@@ -48,7 +49,7 @@ msgstr "Programación de correo en la categoría de eventos"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Registro de programador de correo electrónico"
+msgstr "Programador de correos de inscripciones"
 
 #. module: event_sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
@@ -77,8 +78,8 @@ msgid ""
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
 "user.env.company.name }}: Nos complace recordarle que el evento {{ "
-"object.event_id.name }} está iniciando {{ object.get_date_range_str() }}. "
-"Confirmamos su registro y esperamos verlo."
+"object.event_id.name }} comienza el {{ object.get_date_range_str() }}. "
+"Confirmamos su inscripción y esperamos verlo."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -88,5 +89,5 @@ msgid ""
 "{{ object.event_id.name }} event."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: Nos complace confirmar su registro para el evento "
-"{{ object.event_id.name }}."
+"user.env.company.name }}: Nos complace confirmar su inscripción para el "
+"evento {{ object.event_id.name }}."

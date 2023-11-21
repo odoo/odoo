@@ -138,7 +138,7 @@
                                 </td>
                                 <td name="project_portal_assignees">
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <span t-if="assignees" t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
+                                    <span t-if="assignees" t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees.mapped('name'))"/>
                                 </td>
                                 <td t-if="groupby != 'status'">
                                     <t t-call="project.portal_my_tasks_state_widget_template">

@@ -3,9 +3,9 @@
 # 	* project_timesheet_holidays
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Philipp Köhler <philipp.koehler@manatec.de>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,13 +24,13 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenstellen-Buchungen"
+msgstr "Kostenstellenbuchung"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__timesheet_ids
 msgid "Analytic Lines"
-msgstr "Kostenstellen Buchungen"
+msgstr "Kostenstellenbuchungen"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
@@ -41,8 +41,9 @@ msgid ""
 "internal project and task empty."
 msgstr ""
 "Sowohl das interne Projekt als auch die Aufgabe sind erforderlich, um einen "
-"Stundenzettel für die Abwesenheit zu erstellen%s. Wenn Sie keinen "
-"Stundenzettel wünschen, lassen Sie das interne Projekt und die Aufgabe leer."
+"Zeiterfassungsbogen für die Abwesenheit %s zu erstellen. Wenn Sie keinen "
+"Zeiterfassungsbogen wünschen, lassen Sie das interne Projekt und die Aufgabe"
+" leer."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -58,8 +59,8 @@ msgstr "Konfigurationseinstellungen"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
-"Standardprojektwert für den aus der Abwesenheitsart generierten "
-"Stundenzettel."
+"Standardprojektwert für die aus der Abwesenheitsart generierte "
+"Zeiterfassung."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -74,7 +75,7 @@ msgstr "Zeiterfassung erstellen"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr "Unternehmensweite freie Zeit"
+msgstr "Globale Abwesenheit"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -82,8 +83,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
-"Wenn diese Option aktiviert ist, wird bei der Validierung einer Freistellung"
-" ein Stundenzettel im Urlaubsprojekt des Unternehmens erstellt."
+"Wenn diese Option aktiviert ist, wird bei der Validierung einer Abwesenheit "
+"ein Zeiterfassungsbogen im Urlaubsprojekt des Unternehmens erstellt."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -111,7 +112,7 @@ msgstr "Projekt"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Ressourcen Abwesenheitsdetail"
+msgstr "Abwesenheitsdetails der Ressource"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
@@ -134,30 +135,30 @@ msgstr ""
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
-msgstr "Abwesenheiten"
+msgstr "Abwesenheit"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr "Abwesenheiten (%s/%s)"
+msgstr "Abwesenheit (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Abwesenheitsgrund"
+msgstr "Abwesenheitsaufgabe"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr "Abwesenheitstyp"
+msgstr "Abwesenheitsart"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Timesheets"
-msgstr "Zeiterfassung"
+msgstr "Zeiterfassungen"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
@@ -166,5 +167,5 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
-"Sie können keine Stundenzettel löschen, die mit einer Abwesenheit verbunden "
-"sind. Bitte stornieren Sie stattdessen die Freistellung."
+"Sie können keine Zeiterfassungen löschen, die mit einer Abwesenheit "
+"verbunden sind. Bitte stornieren Sie stattdessen die Abwesenheit."

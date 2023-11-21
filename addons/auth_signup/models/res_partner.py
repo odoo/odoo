@@ -43,6 +43,8 @@ class ResPartner(models.Model):
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
+            if any(u.has_group('base.group_portal') for u in partner.user_ids if u != self.env.user):
+                self.env['res.partner'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):

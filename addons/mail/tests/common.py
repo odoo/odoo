@@ -226,7 +226,7 @@ class MockEmail(common.BaseCase):
             raise AssertionError('sent mail not found for email_to %s' % (email_to))
         return sent_email
 
-    def _filter_mail(self, status=None, mail_message=None, author=None):
+    def _filter_mail(self, status=None, mail_message=None, author=None, email_from=None):
         """ Filter mail generated during mock, based on common parameters
 
         :param status: state of mail.mail. If not void use it to filter mail.mail
@@ -235,6 +235,8 @@ class MockEmail(common.BaseCase):
           a ``mail.message`` record;
         :param author: optional check/filter on author_id field aka a ``res.partner``
           record;
+        :param email_from: optional check/filter on email_from field (may differ from
+          author, used notably in case of concurrent mailings to distinguish emails);
         """
         filtered = self._new_mails.env['mail.mail']
         for mail in self._new_mails:
@@ -244,25 +246,33 @@ class MockEmail(common.BaseCase):
                 continue
             if author is not None and mail.author_id != author:
                 continue
+            if email_from is not None and mail.email_from != email_from:
+                continue
             filtered += mail
         return filtered
 
-    def _find_mail_mail_wid(self, mail_id, status=None, mail_message=None, author=None):
+    def _find_mail_mail_wid(self, mail_id, status=None, mail_message=None, author=None, email_from=None):
         """ Find a ``mail.mail`` record based on a given ID (used notably when having
         mail ID in mailing traces).
 
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given ID;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
         for mail in filtered:
             if mail.id == mail_id:
                 break
         else:
-            raise AssertionError('mail.mail not found for ID %s' % (mail_id))
+            debug_info = '\n'.join(
+                f'From: {mail.author_id} ({mail.email_from}) - ID {mail.id} (State: {mail.state})'
+                for mail in self._new_mails
+            )
+            raise AssertionError(
+                f'mail.mail not found for ID {mail_id} / message {mail_message} / status {status} / author {author}\n{debug_info}'
+            )
         return mail
 
-    def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None):
+    def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None, email_from=None):
         """ Find a mail.mail record based on various parameters, notably a list
         of recipients (partners).
 
@@ -272,15 +282,22 @@ class MockEmail(common.BaseCase):
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given parameters and filters;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
         for mail in filtered:
             if all(p in mail.recipient_ids for p in recipients):
                 break
         else:
-            raise AssertionError('mail.mail not found for message %s / status %s / recipients %s / author %s' % (mail_message, status, recipients.ids, author))
+            debug_info = '\n'.join(
+                f'From: {mail.author_id} ({mail.email_from}) - To: {sorted(mail.recipient_ids.ids)} (State: {mail.state})'
+                for mail in self._new_mails
+            )
+            recipients_info = f'Missing: {[r.name for r in recipients if r.id not in filtered.recipient_ids.ids]}'
+            raise AssertionError(
+                f'mail.mail not found for message {mail_message} / status {status} / recipients {sorted(recipients.ids)} / author {author}\n{recipients_info}\n{debug_info}'
+            )
         return mail
 
-    def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None):
+    def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None, email_from=None):
         """ Find a mail.mail record based on various parameters, notably a list
         of email to (string emails).
 
@@ -290,43 +307,76 @@ class MockEmail(common.BaseCase):
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given parameters and filters;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
         for mail in filtered:
             if (mail.email_to == email_to and not mail.recipient_ids) or (not mail.email_to and mail.recipient_ids.email == email_to):
                 break
         else:
-            raise AssertionError('mail.mail not found for email_to %s / status %s in %s' % (email_to, status, repr([m.email_to for m in self._new_mails])))
+            debug_info = '\n'.join(
+                f'From: {mail.author_id} ({mail.email_from}) - To: {mail.email_to} / {sorted(mail.recipient_ids.mapped("email"))} (State: {mail.state})'
+                for mail in self._new_mails
+            )
+            raise AssertionError(
+                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / author {author}\n{debug_info}'
+            )
         return mail
 
-    def _find_mail_mail_wrecord(self, record, status=None, mail_message=None, author=None):
+    def _find_mail_mail_wrecord(self, record, status=None, mail_message=None, author=None, email_from=None):
         """ Find a mail.mail record based on model / res_id of a record.
 
         :return mail: a ``mail.mail`` record generated during the mock;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
         for mail in filtered:
             if mail.model == record._name and mail.res_id == record.id:
                 break
         else:
-            raise AssertionError('mail.mail not found for record %s in %s' % (record, repr([m.email_to for m in self._new_mails])))
+            debug_info = '\n'.join(
+                f'From: {mail.author_id} ({mail.email_from}) - Model{mail.model} / ResId {mail.res_id} (State: {mail.state})'
+                for mail in self._new_mails
+            )
+            raise AssertionError(
+                f'mail.mail not found for message {mail_message} / status {status} / record {record.model}, {record.id} / author {author}\n{debug_info}'
+            )
         return mail
+
+    def _find_sent_email(self, email_from, emails_to, subject=None):
+        """ Find an outgoing email based on from / to and optional subject when
+        having a conflict.
+
+        :return sent_email: an outgoing email generated during the mock;
+        """
+        sent_emails = [
+            mail for mail in self._mails
+            if set(mail['email_to']) == set(emails_to) and mail['email_from'] == email_from
+        ]
+        if len(sent_emails) > 1 and subject:
+            # try to better filter
+            sent_email = next((mail for mail in sent_emails if mail['subject'] == subject), False)
+        else:
+            sent_email = sent_emails[0] if sent_emails else False
+        return sent_email
 
     # ------------------------------------------------------------
     # GATEWAY ASSERTS
     # ------------------------------------------------------------
 
-    def assertMailMail(self, recipients, status,
-                       check_mail_mail=True, mail_message=None, author=None,
-                       content=None, fields_values=None, email_values=None):
-        """ Assert mail.mail records are created and maybe sent as emails. Allow
+    def _assertMailMail(self, mail, recipients_list, status,
+                        email_to_recipients=None, author=None,
+                        content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail record values and maybe related emails. Allow
         asserting their content. Records to check are the one generated when
-        using mock (mail.mail and outgoing emails). This method takes partners
-        as source of record fetch and assert.
+        using mock (mail.mail and outgoing emails).
 
-        :param recipients: a ``res.partner`` recordset. See ``_find_mail_mail_wpartners``;
+        :param mail: a ``mail.mail`` record;
+        :param recipients_list: an ``res.partner`` recordset or a list of
+          emails (both are supported, see ``_find_mail_mail_wpartners`` and
+          ``_find_mail_mail_wemail``);
         :param status: mail.mail state used to filter mails. If ``sent`` this method
           also check that emails have been sent trough gateway;
-        :param mail_message: see ``_find_mail_mail_wpartners``;
+        :param email_to_recipients: used for assertSentEmail to find email based
+          on 'email_to' when doing the match directly based on recipients_list
+          being partners it nos easy (e.g. multi emails, ...);
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
         :param fields_values: if given, should be a dictionary of field names /
@@ -338,54 +388,107 @@ class MockEmail(common.BaseCase):
 
         :param check_mail_mail: deprecated, use ``assertSentEmail`` if False
         """
+        self.assertTrue(bool(mail))
+        if content:
+            self.assertIn(content, mail.body_html)
+        for fname, fvalue in (fields_values or {}).items():
+            with self.subTest(fname=fname, fvalue=fvalue):
+                self.assertEqual(
+                    mail[fname], fvalue,
+                    'Mail: expected %s for %s, got %s' % (fvalue, fname, mail[fname])
+                )
+        if status == 'sent':
+            if email_to_recipients:
+                recipients = email_to_recipients  # already formatted
+            else:
+                recipients = [[r] for r in recipients_list]  # one partner -> list of a single email
+            for recipient in recipients:
+                with self.subTest(recipient=recipient):
+                    self.assertSentEmail(
+                        email_values['email_from'] if email_values and email_values.get('email_from') else author,
+                        recipient,
+                        **(email_values or {})
+                    )
+
+    def assertMailMail(self, recipients, status,
+                       email_to_recipients=None,
+                       check_mail_mail=True, mail_message=None, author=None,
+                       content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail records are created and maybe sent as emails. This
+        method takes partners as source to find mails and check their content.
+        See '_assertMailMail' for more details.
+
+        :param recipients: a ``res.partner`` recordset. See
+          ``_find_mail_mail_wpartners``;
+        :param mail_message: used to find the related email;
+
+        See '_assertMailMail' for more details about other parameters.
+        """
         found_mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
         self.assertTrue(bool(found_mail))
-        if content:
-            self.assertIn(content, found_mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            self.assertEqual(
-                found_mail[fname], fvalue,
-                'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
-        if status == 'sent':
-            for recipient in recipients:
-                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [recipient], **(email_values or {}))
+        self._assertMailMail(
+            found_mail, recipients, status,
+            email_to_recipients=email_to_recipients,
+            author=author, content=content,
+            fields_values=fields_values, email_values=email_values,
+        )
+        return found_mail
 
     def assertMailMailWEmails(self, emails, status,
+                              email_to_recipients=None,
                               mail_message=None, author=None,
                               content=None, fields_values=None, email_values=None):
-        """ Assert mail.mail records are created and maybe sent as emails. Allow
-        asserting their content. Records to check are the one generated when
-        using mock (mail.mail and outgoing emails). This method takes emails
-        as source of record fetch and assert.
+        """ Assert mail.mail records are created and maybe sent as emails. This
+        method takes emails as source to find mails and check their content.
+        See '_assertMailMail' for more details.
 
         :param emails: a list of emails. See ``_find_mail_mail_wemail``;
-        :param status: mail.mail state used to filter mails. If ``sent`` this method
-          also check that emails have been sent trough gateway;
-        :param mail_message: see ``_find_mail_mail_wemail``;
-        :param author: see ``_find_mail_mail_wemail``;;
-        :param content: if given, check it is contained within mail html body;
-        :param fields_values: if given, should be a dictionary of field names /
-          values allowing to check ``mail.mail`` additional values (subject,
-          reply_to, ...);
-        :param email_values: if given, should be a dictionary of keys / values
-          allowing to check sent email additional values (if any).
-          See ``assertSentEmail``;
+        :param mail_message: used to find the related email;
 
-        :param check_mail_mail: deprecated, use ``assertSentEmail`` if False
+        See '_assertMailMail' for more details about other parameters.
         """
+        found_mail = False
         for email_to in emails:
-            found_mail = self._find_mail_mail_wemail(email_to, status, mail_message=mail_message, author=author)
-            if content:
-                self.assertIn(content, found_mail.body_html)
-            for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(
-                    found_mail[fname], fvalue,
-                    'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
-        if status == 'sent':
-            for email_to in emails:
-                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [email_to], **(email_values or {}))
+            found_mail = self._find_mail_mail_wemail(
+                email_to, status, mail_message=mail_message,
+                author=author, email_from=fields_values.get('email_from')
+            )
+            self.assertTrue(bool(found_mail))
+            self._assertMailMail(
+                found_mail, [email_to], status,
+                email_to_recipients=email_to_recipients,
+                author=author, content=content,
+                fields_values=fields_values, email_values=email_values,
+            )
+        return found_mail
+
+    def assertMailMailWRecord(self, record, recipients, status,
+                              email_to_recipients=None,
+                              mail_message=None, author=None,
+                              content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail records are created and maybe sent as emails.  This
+        method takes a record as source to find mails and check their content
+        using model / res_id. See '_assertMailMail' for more details.
+
+        :param record: a record used to find emails sent related on it.
+          See ``_find_mail_mail_wrecord``;
+        :param mail_message: used to find the related email;
+
+        See '_assertMailMail' for more details about other parameters.
+        """
+        found_mail = self._find_mail_mail_wrecord(record, mail_message=mail_message, author=author)
+        self.assertTrue(bool(found_mail))
+        self._assertMailMail(
+            found_mail, recipients, status,
+            email_to_recipients=email_to_recipients,
+            author=author, content=content,
+            fields_values=fields_values, email_values=email_values,
+        )
+        return found_mail
 
     def assertMailMailWId(self, mail_id, status,
+                          email_to_recipients=None,
+                          author=None,
                           content=None, fields_values=None):
         """ Assert mail.mail records are created and maybe sent as emails. Allow
         asserting their content. Records to check are the one generated when
@@ -393,22 +496,19 @@ class MockEmail(common.BaseCase):
         as source of record fetch and assert.
 
         :param mail_id: a ``mail.mail`` DB ID. See ``_find_mail_mail_wid``;
-        :param status: mail.mail state to check upon found mail;
-        :param content: if given, check it is contained within mail html body;
-        :param fields_values: if given, should be a dictionary of field names /
-          values allowing to check ``mail.mail`` additional values (subject,
-          reply_to, ...);
+
+        For other parameters, see ``_assertMailMail``.
         """
         found_mail = self._find_mail_mail_wid(mail_id)
         self.assertTrue(bool(found_mail))
-        if status:
-            self.assertEqual(found_mail.state, status)
-        if content:
-            self.assertIn(content, found_mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            self.assertEqual(
-                found_mail[fname], fvalue,
-                'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
+        self._assertMailMail(
+            found_mail, [],  # generally used when recipients are Falsy
+            status,
+            email_to_recipients=email_to_recipients,
+            author=author, content=content,
+            fields_values=fields_values,
+        )
+        return found_mail
 
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
@@ -457,7 +557,7 @@ class MockEmail(common.BaseCase):
         """
         direct_check = ['attachments', 'body_alternative', 'email_from', 'references', 'reply_to', 'subject']
         content_check = ['body_alternative_content', 'body_content', 'references_content']
-        other_check = ['body', 'attachments_info']
+        other_check = ['body', 'attachments_info', 'email_to']
 
         expected = {}
         for fname in direct_check + content_check + other_check:
@@ -472,20 +572,30 @@ class MockEmail(common.BaseCase):
         else:
             expected['email_from'] = author
 
-        email_to_list = []
-        for email_to in recipients:
-            if isinstance(email_to, self.env['res.partner'].__class__):
-                email_to_list.append(formataddr((email_to.name, email_to.email)))
-            else:
-                email_to_list.append(email_to)
+        if 'email_to' in values:
+            email_to_list = values['email_to']
+        else:
+            email_to_list = []
+            for email_to in recipients:
+                if isinstance(email_to, self.env['res.partner'].__class__):
+                    email_to_list.append(formataddr((email_to.name, email_to.email or 'False')))
+                else:
+                    email_to_list.append(email_to)
         expected['email_to'] = email_to_list
 
-        sent_mail = next(
-            (mail for mail in self._mails
-             if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
-             ), False)
-        debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails) if not bool(sent_mail) else ''
-        self.assertTrue(bool(sent_mail), 'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info))
+        # fetch mail
+        sent_mail = self._find_sent_email(
+            expected['email_from'],
+            expected['email_to'],
+            values.get('subject'),
+        )
+        debug_info = ''
+        if not sent_mail:
+            debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
+        self.assertTrue(
+            bool(sent_mail),
+            'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info)
+        )
 
         for val in direct_check:
             if val in expected:
@@ -493,7 +603,11 @@ class MockEmail(common.BaseCase):
         if 'attachments_info' in expected:
             attachments = sent_mail['attachments']
             for attachment_info in expected['attachments_info']:
-                attachment = next(attach for attach in attachments if attach[0] == attachment_info['name'])
+                attachment = next((attach for attach in attachments if attach[0] == attachment_info['name']), False)
+                self.assertTrue(
+                    bool(attachment),
+                    f'Attachment {attachment_info["name"]} not found in attachments',
+                )
                 if attachment_info.get('raw'):
                     self.assertEqual(attachment[1], attachment_info['raw'])
                 if attachment_info.get('type'):
@@ -504,6 +618,8 @@ class MockEmail(common.BaseCase):
         for val in content_check:
             if val in expected:
                 self.assertIn(expected[val], sent_mail[val[:-8]], 'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val]))
+
+        return sent_mail
 
 
 class MailCase(MockEmail):
@@ -805,9 +921,10 @@ class MailCase(MockEmail):
                 if not self.mail_unlink_sent:
                     self.assertMailMail(
                         partners, mail_status,
-                        author=message.author_id if message.author_id else message.email_from,
+                        author=message_info.get('fields_values', {}).get('author_id') or message.author_id or message.email_from,
                         mail_message=message,
                         email_values=email_values,
+                        fields_values=message_info.get('fields_values'),
                     )
                 else:
                     for recipient in partners:

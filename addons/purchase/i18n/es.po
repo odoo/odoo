@@ -9,6 +9,7 @@
 # Francisco J. Luna Vázquez, 2021
 # marcescu, 2022
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Víctor Martínez <victor.martinez@tecnativa.com>, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -63,8 +64,7 @@ msgstr "%s confirmó que la recolección será en %s."
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
-"%s se modificaron las fechas de recolección de los siguientes productos:"
+msgstr "%s modificó las fechas de recepción de los siguientes productos:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -538,8 +538,8 @@ msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Permite seleccionar un tipo de paquete en las órdenes de venta y forzar una "
-"cantidad que sea un múltiplo del número de unidades por paquete."
+"Permite seleccionar un tipo de empaquetado en los pedidos de compra y forzar"
+" una cantidad que sea un múltiplo del número de unidades por empaquetado."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -867,10 +867,10 @@ msgid ""
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
 "Las convocatorias de ofertas se utilizan cuando desea generar solicitudes de"
-" cotizaciones a varios proveedores para un conjunto determinado de "
-"productos. Puede configurar por producto si realiza directamente una "
-"Solicitud de oferta a un proveedor o si desea que una Convocatoria de "
-"ofertas compare las ofertas de varios proveedores."
+" presupuesto a varios proveedores para un conjunto determinado de productos."
+" Puede configurar por producto si realiza directamente una solicitud de "
+"presupuesto a un proveedor o si desea que una licitación compare los "
+"presupuestos de varios proveedores."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1349,7 +1349,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
 msgid "If true, the packaging can be used for purchase orders"
-msgstr "Si es verdad, el embalaje se puede usar para órdenes de compra"
+msgstr "Si se activa, el empaquetado se puede usar para los pedidos de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1884,7 +1884,7 @@ msgstr "Empaquetado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Cantidad de embalaje"
+msgstr "Cantidad de empaquetado"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2165,6 +2165,7 @@ msgid "Purchase Order: Vendor Reminder"
 msgstr "Orden de compra: recordar al proveedor"
 
 #. module: purchase
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2174,6 +2175,7 @@ msgstr "Orden de compra: recordar al proveedor"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Pedidos de compra"
 
@@ -2209,7 +2211,7 @@ msgstr "Pedidos de compra que incluyen líneas no facturadas."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "Comprar productos por múltiplo de unidad # por paquete"
+msgstr "Comprar productos por múltiplo de nº de unidades por empaquetado"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2865,8 +2867,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"Este producto se empaquetó en %(pack_size).2f %(pack_name)s. Debería comprar"
-" %(quantity).2f%(unit)s"
+"Este producto se envasa en %(pack_name)s, en múltiplos de %(pack_size).2f. "
+"Debería comprar %(quantity).2f %(unit)s."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0

@@ -138,6 +138,16 @@ var BoardRenderer = FormRenderer.extend({
         this._boardFormViewIDs = {}; // for board: mapping subview controller to form view id
     },
     /**
+     * @override
+     * @return {Promise<void>}
+     */
+    async start() {
+        await this._super.apply(this, arguments);
+        if (config.device.isMobile) {
+            this.changeLayout("1");
+        }
+    },
+    /**
      * Call `on_attach_callback` for each subview
      *
      * @override
@@ -171,6 +181,9 @@ var BoardRenderer = FormRenderer.extend({
      */
     changeLayout: function (layout) {
         var $dashboard = this.$('.oe_dashboard');
+        if (!$dashboard.length) {
+            return;
+        }
         var current_layout = $dashboard.attr('data-layout');
         if (current_layout !== layout) {
             var clayout = current_layout.split('-').length,
@@ -395,7 +408,9 @@ var BoardRenderer = FormRenderer.extend({
         Dialog.confirm(this, (_t("Are you sure you want to remove this item?")), {
             confirm_callback: function () {
                 $container.remove();
-                self.trigger_up('save_dashboard');
+                if (!config.device.isMobile) {
+                    self.trigger_up('save_dashboard');
+                }
             },
         });
     },
@@ -416,7 +431,9 @@ var BoardRenderer = FormRenderer.extend({
         }
         $e.toggleClass('oe_minimize oe_maximize');
         $action.find('.oe_content').toggle();
-        this.trigger_up('save_dashboard');
+        if (!config.device.isMobile) {
+            this.trigger_up('save_dashboard');
+        }
     },
     /**
      * Let FormController know which form view it should display based on the

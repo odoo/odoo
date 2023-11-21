@@ -6,7 +6,7 @@
 # Somchart Jabsung <jabsung.s@gmail.com>, 2021
 # surapas haemaprasertsuk <surapas@gmail.com>, 2021
 # monchai7 <montchye@gmail.com>, 2021
-# Amin Cheloh <nineamin@hotmail.com>, 2021
+# Amin Cheloh <amincheloh@gmail.com>, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
@@ -14,15 +14,16 @@
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
 # Desausoi Laurent, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2023-03-10 09:48+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Desausoi Laurent, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1361,7 +1362,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "บัตรเครดิตและเดบิต (ผ่าน Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1712,7 +1713,7 @@ msgstr "เงินดาวน์"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "เงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -4206,14 +4207,14 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
 "ไม่มีรายการให้ออกใบแจ้งหนี้!\n"
 "\n"
 "สาเหตุของพฤติกรรมนี้อาจเป็น:\n"
-"- คุณควรส่งสินค้าของคุณก่อนที่จะออกใบแจ้งหนี้: คลิกที่ไอคอน \"รถบรรทุก\" (ด้านบนขวาของหน้าจอของคุณ) และปฏิบัติตามคำแนะนำ\n"
-"- คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้ของสินค้าของคุณ: เปิดสินค้า ไปที่แท็บ \"การขาย\" และแก้ไขนโยบายการออกใบแจ้งหนี้จาก \"จำนวนที่จัดส่ง\" เป็น \"จำนวนคำสั่ง\" สำหรับบริการ คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้บริการเป็น 'ชำระล่วงหน้า'"
+"- คุณควรส่งสินค้าของคุณก่อนที่จะออกใบแจ้งหนี้\n"
+"- คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้ของสินค้าของคุณ: เปิดสินค้า ไปที่แท็บ \"การขาย\" และแก้ไขนโยบายการออกใบแจ้งหนี้จาก \"จำนวนที่จัดส่ง\" เป็น \"จำนวนคำสั่งซื้อ\" สำหรับบริการ คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้บริการเป็น 'ชำระล่วงหน้า'"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4673,7 +4674,7 @@ msgstr ""
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
-msgstr ""
+msgstr "คุณไม่สามารถเปลี่ยนประเภทสินค้าได้เนื่องจากมีการใช้งานในใบสั่งขายแล้ว"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4734,7 +4735,7 @@ msgstr ""
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 #: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้อัตโนมัติ: ส่งใบแจ้งหนี้ที่พร้อม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

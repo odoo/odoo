@@ -10,537 +10,522 @@
     <record id="tax_report_de_tag_01" model="account.tax.report.line">
         <field name="name">Bemessungsgrundlage</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
+        <field name="formula">None</field>
     </record>
     <record id="tax_report_de_tag_02" model="account.tax.report.line">
         <field name="name">Steuer</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
+        <field name="sequence">20</field>
+        <field name="formula">None</field>
     </record>
 
 
     <!-- BASE -->
     <record id="tax_report_de_tag_17" model="account.tax.report.line">
-        <field name="name">I. Anmeldung der Umsatzsteuer-Vorauszahlung (zeile 17)</field>
+        <field name="name">I. Anmeldung der Umsatzsteuer-Vorauszahlung</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_01"/>
+        <field name="formula">None</field>
     </record>
-
-    <!-- Row 18 - 31 - 37 - 46 -->
 
     <record id="tax_report_de_tag_18" model="account.tax.report.line">
-        <field name="name">Lieferungen und sonstige Leistungen (zeile 18)</field>
+        <field name="name">Lieferungen und sonstige Leistungen</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_17"/>
     </record>
-    <record id="tax_report_de_tag_31" model="account.tax.report.line">
-        <field name="name">Innergemeinschaftliche Erwerbe (zeile 31)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_17"/>
-    </record>
-    <record id="tax_report_de_tag_37" model="account.tax.report.line">
-        <field name="name">Ergänzende Angaben zu Umsätzen (zeile 37)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tag_17"/>
-    </record>
-    <record id="tax_report_de_tag_46" model="account.tax.report.line">
-        <field name="name">Leistungsempfänger als Steuerschuldner (zeile 46)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tag_17"/>
-    </record>
-
-    <!-- Row 19 - 24 - 25 -->
 
     <record id="tax_report_de_tag_19" model="account.tax.report.line">
-        <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug (zeile 19)</field>
+        <field name="name">Steuerpflichtige Umsätze</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_18"/>
-    </record>
-    <record id="tax_report_de_tag_24" model="account.tax.report.line">
-        <field name="name">48. Steuerfreie Umsätze ohne Vorsteuerabzug (zeile 24)</field>
-        <field name="tag_name">48</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_18"/>
-        <field name="code">48</field>
-    </record>
-    <record id="tax_report_de_tag_25" model="account.tax.report.line">
-        <field name="name">Steuerpflichtige Umsätze (zeile 25)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tag_18"/>
-    </record>
-
-
-    <record id="tax_report_de_tag_41" model="account.tax.report.line">
-        <field name="name">41. an Abnehmer mit USt-IdNr (zeile 20)</field>
-        <field name="tag_name">41</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tag_19"/>
-        <field name="code">41</field>
-    </record>
-    <record id="tax_report_de_tag_44" model="account.tax.report.line">
-        <field name="name">44. neuer Fahrzeuge an Abnehmer ohne USt-IdNr (zeile 21)</field>
-        <field name="tag_name">44</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_19"/>
-        <field name="code">44</field>
-    </record>
-    <record id="tax_report_de_tag_49" model="account.tax.report.line">
-        <field name="name">49. neuer Fahrzeuge außerhalb eines Unternehmens (zeile 22)</field>
-        <field name="tag_name">49</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tag_19"/>
-        <field name="code">49</field>
-    </record>
-    <record id="tax_report_de_tag_43" model="account.tax.report.line">
-        <field name="name">43. Weitere steuerfreie Umsätze mit Vorsteuerabzug (zeile 23)</field>
-        <field name="tag_name">43</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tag_19"/>
-        <field name="code">43</field>
     </record>
 
     <record id="tax_report_de_tag_81" model="account.tax.report.line">
-        <field name="name">81. zum Steuersatz von 19 % (zeile 26)</field>
+        <field name="name">81. zum Steuersatz von 19 % (zeile 12)</field>
         <field name="tag_name">81_BASE</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
+        <field name="code">81</field>
     </record>
     <record id="tax_report_de_tag_86" model="account.tax.report.line">
-        <field name="name">86. zum Steuersatz von 7 % (zeile 27)</field>
+        <field name="name">86. zum Steuersatz von 7 % (zeile 13)</field>
         <field name="tag_name">86_BASE</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
+        <field name="code">86</field>
+    </record>
+    <record id="tax_report_de_tag_87" model="account.tax.report.line">
+        <field name="name">87. zum Steuersatz von 0 % (zeile 14)</field>
+        <field name="tag_name">87_BASE</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
+        <field name="code">87</field>
     </record>
     <record id="tax_report_de_tag_35" model="account.tax.report.line">
-        <field name="name">35. zu anderen Steuersätzen (zeile 28)</field>
+        <field name="name">35. zu anderen Steuersätzen (zeile 15)</field>
         <field name="tag_name">35</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
         <field name="code">35</field>
     </record>
     <record id="tax_report_de_tag_77" model="account.tax.report.line">
-        <field name="name">77. Lieferungen land- und forstwirtschaftlicher Betriebe nach § 24 UStG an Abnehmer mit USt-IdNr. (zeile 29)</field>
+        <field name="name">77. Lieferungen land- und forstwirtschaftlicher Betriebe nach § 24 UStG an Abnehmer mit USt-IdNr. (zeile 16)</field>
         <field name="tag_name">77</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="sequence">50</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
         <field name="code">77</field>
     </record>
     <record id="tax_report_de_tag_76" model="account.tax.report.line">
-        <field name="name">76. Umsätze, für die eine Steuer nach § 24 UStG zu entrichten ist (zeile 30)</field>
+        <field name="name">76. Umsätze, für die eine Steuer nach § 24 UStG zu entrichten ist (zeile 17)</field>
         <field name="tag_name">76</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
-        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="sequence">60</field>
+        <field name="parent_id" ref="tax_report_de_tag_19"/>
         <field name="code">76</field>
     </record>
 
+    <record id="tax_report_de_tag_25" model="account.tax.report.line">
+        <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_18"/>
+    </record>
+
+    <record id="tax_report_de_tag_41" model="account.tax.report.line">
+        <field name="name">41. an Abnehmer mit USt-IdNr (zeile 18)</field>
+        <field name="tag_name">41</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="code">41</field>
+    </record>
+    <record id="tax_report_de_tag_44" model="account.tax.report.line">
+        <field name="name">44. neuer Fahrzeuge an Abnehmer ohne USt-IdNr (zeile 19)</field>
+        <field name="tag_name">44</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="code">44</field>
+    </record>
+    <record id="tax_report_de_tag_49" model="account.tax.report.line">
+        <field name="name">49. neuer Fahrzeuge außerhalb eines Unternehmens (zeile 20)</field>
+        <field name="tag_name">49</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="code">49</field>
+    </record>
+    <record id="tax_report_de_tag_43" model="account.tax.report.line">
+        <field name="name">43. Weitere steuerfreie Umsätze mit Vorsteuerabzug (zeile 21)</field>
+        <field name="tag_name">43</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tag_25"/>
+        <field name="code">43</field>
+    </record>
+
+    <record id="tax_report_de_tag_24" model="account.tax.report.line">
+        <field name="name">48. Steuerfreie Umsätze ohne Vorsteuerabzug (zeile 22)</field>
+        <field name="tag_name">48</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tag_18"/>
+        <field name="code">48</field>
+    </record>
+
+    <record id="tax_report_de_tag_31" model="account.tax.report.line">
+        <field name="name">Innergemeinschaftliche Erwerbe</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tag_18"/>
+    </record>
 
     <record id="tax_report_de_tag_91" model="account.tax.report.line">
-        <field name="name">91. Steuerfreie innergemeinschaftliche Erwerbe (zeile 32)</field>
+        <field name="name">91. Steuerfreie innergemeinschaftliche Erwerbe (zeile 23)</field>
         <field name="tag_name">91</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_31"/>
         <field name="code">91</field>
     </record>
     <record id="tax_report_de_tag_89" model="account.tax.report.line">
-        <field name="name">89. Steuerpflichtige innergemeinschaftliche Erwerbe zum Steuersatz von 19 % (zeile 33)</field>
+        <field name="name">89. Steuerpflichtige innergemeinschaftliche Erwerbe zum Steuersatz von 19 % (zeile 24)</field>
         <field name="tag_name">89_BASE</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tag_31"/>
+        <field name="code">89</field>
     </record>
     <record id="tax_report_de_tag_93" model="account.tax.report.line">
-        <field name="name">93. zum Steuersatz von 7 % (zeile 34)</field>
+        <field name="name">93. zum Steuersatz von 7 % (zeile 25)</field>
         <field name="tag_name">93_BASE</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
+        <field name="sequence">30</field>
         <field name="parent_id" ref="tax_report_de_tag_31"/>
+        <field name="code">93</field>
+    </record>
+    <record id="tax_report_de_tag_90" model="account.tax.report.line">
+        <field name="name">90. zum Steuersatz von 0 % (zeile 26)</field>
+        <field name="tag_name">90_BASE</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tag_31"/>
+        <field name="code">90</field>
     </record>
     <record id="tax_report_de_tag_95" model="account.tax.report.line">
-        <field name="name">95. zu anderen Steuersätzen (zeile 35)</field>
+        <field name="name">95. zu anderen Steuersätzen (zeile 27)</field>
         <field name="tag_name">95</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
+        <field name="sequence">50</field>
         <field name="parent_id" ref="tax_report_de_tag_31"/>
         <field name="code">95</field>
     </record>
     <record id="tax_report_de_tag_94" model="account.tax.report.line">
-        <field name="name">94. neuer Fahrzeuge von Lieferern ohne (zeile 36)</field>
+        <field name="name">94. neuer Fahrzeuge von Lieferern ohne (zeile 28)</field>
         <field name="tag_name">94</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
+        <field name="sequence">60</field>
         <field name="parent_id" ref="tax_report_de_tag_31"/>
         <field name="code">94</field>
     </record>
 
-
-    <record id="tax_report_de_tag_42" model="account.tax.report.line">
-        <field name="name">42. Dreiecksgeschäften (zeile 38)</field>
-        <field name="tag_name">42</field>
+    <record id="tax_report_de_tag_46" model="account.tax.report.line">
+        <field name="name">Leistungsempfänger als Steuerschuldner</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tag_37"/>
-        <field name="code">42</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_17"/>
     </record>
-    <record id="tax_report_de_tag_68" model="account.tax.report.line">
-        <field name="name">68. Steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 Satz 1 i.V.m. Abs. 2 Nr. 10 UStG schuldet (zeile 39)</field>
-        <field name="tag_name">68</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_37"/>
-        <field name="code">68</field>
-    </record>
-    <record id="tax_report_de_tag_60" model="account.tax.report.line">
-        <field name="name">60. Übrige steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 UStG schuldet (zeile 40)</field>
-        <field name="tag_name">60</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tag_37"/>
-        <field name="code">60</field>
-    </record>
-    <record id="tax_report_de_tag_21" model="account.tax.report.line">
-        <field name="name">21. Nicht steuerbare sonstige Leistungen (zeile 41)</field>
-        <field name="tag_name">21</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tag_37"/>
-        <field name="code">21</field>
-    </record>
-    <record id="tax_report_de_tag_45" model="account.tax.report.line">
-        <field name="name">45. Übrige nicht steuerbare Umsätze (zeile 42)</field>
-        <field name="tag_name">45_BASE</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
-        <field name="parent_id" ref="tax_report_de_tag_37"/>
-    </record>
-
 
     <record id="tax_report_de_tag_48" model="account.tax.report.line">
-        <field name="name">46. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebiet ansässigen Unternehmers (zeile 48)</field>
+        <field name="name">46. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebiet ansässigen Unternehmers (zeile 29)</field>
         <field name="tag_name">46</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_46"/>
         <field name="code">46</field>
     </record>
-    <record id="tax_report_de_tag_52" model="account.tax.report.line">
-        <field name="name">52. Andere Leistungen eines im Ausland ansässigen Unternehmers (zeile 49)</field>
-        <field name="tag_name">52</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tag_46"/>
-        <field name="code">52</field>
-    </record>
     <record id="tax_report_de_tag_73" model="account.tax.report.line">
-        <field name="name">73. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 50)</field>
+        <field name="name">73. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 30)</field>
         <field name="tag_name">73</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tag_46"/>
         <field name="code">73</field>
     </record>
-    <record id="tax_report_de_tag_78" model="account.tax.report.line">
-        <field name="name">78. Lieferungen von Mobilfunkgeräten, Tablet-Computern, Spielekonsolen und integrierten Schaltkreisen (zeile 51)</field>
-        <field name="tag_name">78</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tag_46"/>
-        <field name="code">78</field>
-    </record>
     <record id="tax_report_de_tag_84" model="account.tax.report.line">
-        <field name="name">84. Andere Leistungen (zeile 52)</field>
+        <field name="name">84. Andere Leistungen (zeile 31)</field>
         <field name="tag_name">84</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
+        <field name="sequence">30</field>
         <field name="parent_id" ref="tax_report_de_tag_46"/>
         <field name="code">84</field>
     </record>
 
+    <record id="tax_report_de_tag_37" model="account.tax.report.line">
+        <field name="name">Ergänzende Angaben zu Umsätzen</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tag_17"/>
+    </record>
+
+    <record id="tax_report_de_tag_42" model="account.tax.report.line">
+        <field name="name">42. Dreiecksgeschäften (zeile 32)</field>
+        <field name="tag_name">42</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tag_37"/>
+        <field name="code">42</field>
+    </record>
+    <record id="tax_report_de_tag_60" model="account.tax.report.line">
+        <field name="name">60. Übrige steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 UStG schuldet (zeile 33)</field>
+        <field name="tag_name">60</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_37"/>
+        <field name="code">60</field>
+    </record>
+    <record id="tax_report_de_tag_21" model="account.tax.report.line">
+        <field name="name">21. Nicht steuerbare sonstige Leistungen (zeile 34)</field>
+        <field name="tag_name">21</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tag_37"/>
+        <field name="code">21</field>
+    </record>
+    <record id="tax_report_de_tag_45" model="account.tax.report.line">
+        <field name="name">45. Übrige nicht steuerbare Umsätze (zeile 35)</field>
+        <field name="tag_name">45_BASE</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tag_37"/>
+        <field name="code">45</field>
+    </record>
 
     <!-- TAX -->
 
     <record id="tax_report_de_tax_tag_17" model="account.tax.report.line">
-        <field name="name">I. Anmeldung der Umsatzsteuer-Vorauszahlung (zeile 17)</field>
+        <field name="name">Anmeldung der Umsatzsteuer-Vorauszahlung</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_02"/>
+        <field name="code"></field>
     </record>
 
-
-    <!-- Row 18 - 31 - 37 - 46 - 55 - 64 - 66 -->
     <record id="tax_report_de_tax_tag_18" model="account.tax.report.line">
-        <field name="name">Lieferungen und sonstige Leistungen (zeile 18)</field>
+        <field name="name">Lieferungen und sonstige Leistungen</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_31" model="account.tax.report.line">
-        <field name="name">Innergemeinschaftliche Erwerbe (zeile 31)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_37" model="account.tax.report.line">
-        <field name="name">Erganzende Angaben zu Umsatzen (zeile 37)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_46" model="account.tax.report.line">
-        <field name="name">Leistungsempfanger als Steuerschuldner (zeile 46)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_55" model="account.tax.report.line">
-        <field name="name">Abziehbare Vorsteuerbetrage (zeile 55)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_64" model="account.tax.report.line">
-        <field name="name">Andere Steuerbetrage (zeile 64)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">6</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
-    </record>
-    <record id="tax_report_de_tax_tag_66" model="account.tax.report.line">
-        <field name="name">Umsatzsteuer-Vorauszahlung/Uberschuss (zeile 66)</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">7</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
     </record>
 
-    <!-- Row 26 - 27 - 28 - 30 -->
+    <record id="tax_report_de_tax_tag_19" model="account.tax.report.line">
+        <field name="name">Steuerpflichtige Umsätze</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
+    </record>
+    <!-- Row 20 - 21 - 22 - 24 -->
     <record id="tax_report_de_tag_26" model="account.tax.report.line">
-        <field name="name">81. zum Steuersatz von 19 % (zeile 26)</field>
+        <field name="name">zum Steuersatz von 19 % (zeile 12)</field>
         <field name="tag_name">81_TAX</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
-        <field name="code">81</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_19"/>
+        <field name="code"></field>
     </record>
     <record id="tax_report_de_tag_27" model="account.tax.report.line">
-        <field name="name">86. zum Steuersatz von 7 % (zeile 27)</field>
+        <field name="name">zum Steuersatz von 7 % (zeile 13)</field>
         <field name="tag_name">86_TAX</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
-        <field name="code">86</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_19"/>
+        <field name="code"></field>
     </record>
     <record id="tax_report_de_tag_36" model="account.tax.report.line">
-        <field name="name">36. zu anderen Steuersatzen (zeile 28)</field>
+        <field name="name">36. zu anderen Steuersatzen (zeile 15)</field>
         <field name="tag_name">36</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_19"/>
         <field name="code">36</field>
     </record>
     <record id="tax_report_de_tag_80" model="account.tax.report.line">
-        <field name="name">80. Umsatze, fur die eine Steuer nach § 24 UStG zu entrichten ist (zeile 30)</field>
+        <field name="name">80. Umsatze, fur die eine Steuer nach § 24 UStG zu entrichten ist (zeile 17)</field>
         <field name="tag_name">80</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_19"/>
         <field name="code">80</field>
     </record>
 
-     <!-- Row 33 - 34 - 35 - 36 -->
+    <record id="tax_report_de_tax_tag_31" model="account.tax.report.line">
+        <field name="name">Innergemeinschaftliche Erwerbe</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_18"/>
+    </record>
+
     <record id="tax_report_de_tag_33" model="account.tax.report.line">
-        <field name="name">89. zum Steuersatz von 19 % (zeile 33)</field>
+        <field name="name">89. zum Steuersatz von 19 % (zeile 24)</field>
         <field name="tag_name">89_TAX</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_31"/>
-        <field name="code">89</field>
+        <field name="code"></field>
     </record>
     <record id="tax_report_de_tag_34" model="account.tax.report.line">
-        <field name="name">93. zum Steuersatz von 7 % (zeile 34)</field>
+        <field name="name">93. zum Steuersatz von 7 % (zeile 25)</field>
         <field name="tag_name">93_TAX</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_31"/>
-        <field name="code">93</field>
+        <field name="code"></field>
     </record>
     <record id="tax_report_de_tag_98" model="account.tax.report.line">
-        <field name="name">98. zu anderen Steuersatzen (zeile 35)</field>
+        <field name="name">98. zu anderen Steuersatzen (zeile 27)</field>
         <field name="tag_name">98</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
+        <field name="sequence">30</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_31"/>
         <field name="code">98</field>
     </record>
     <record id="tax_report_de_tag_96" model="account.tax.report.line">
-        <field name="name">96. neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allgemeinen Steuersatz (zeile 36)</field>
+        <field name="name">96. neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allgemeinen Steuersatz (zeile 28)</field>
         <field name="tag_name">96</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
+        <field name="sequence">40</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_31"/>
         <field name="code">96</field>
     </record>
 
-    <!-- Row 45 -->
-    <record id="tax_report_de_tax_tag_45" model="account.tax.report.line">
-        <field name="name">45. Ubertrag (zeile 45)</field>
-        <field name="tag_name">45_TAX</field>
+    <record id="tax_report_de_tax_tag_46" model="account.tax.report.line">
+        <field name="name">Leistungsempfänger als Steuerschuldner</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_37"/>
-        <field name="code">45</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
     </record>
 
-    <!-- Row 48 - 49 - 50 - 51 - 52 - 53 -->
     <record id="tax_report_de_tag_47" model="account.tax.report.line">
-        <field name="name">47. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebietansässigen Unternehmers (zeile 48)</field>
+        <field name="name">47. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebietansässigen Unternehmers (zeile 29)</field>
         <field name="tag_name">47</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
         <field name="code">47</field>
     </record>
-    <record id="tax_report_de_tag_53" model="account.tax.report.line">
-        <field name="name">53. Andere Leistungen eines im Ausland ansässigen Unternehmers (zeile 49)</field>
-        <field name="tag_name">53</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
-        <field name="code">53</field>
-    </record>
     <record id="tax_report_de_tag_74" model="account.tax.report.line">
-        <field name="name">74. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 50)</field>
+        <field name="name">74. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 30)</field>
         <field name="tag_name">74</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
         <field name="code">74</field>
     </record>
-    <record id="tax_report_de_tag_79" model="account.tax.report.line">
-        <field name="name">79. Lieferungen von Mobilfunkgeräten, Tablet-Computern, Spielekonsolen und integrierten Schaltkreisen (zeile 51)</field>
-        <field name="tag_name">79</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
-        <field name="code">79</field>
-    </record>
     <record id="tax_report_de_tag_85" model="account.tax.report.line">
-        <field name="name">85. Andere Leistungen (zeile 52)</field>
+        <field name="name">85. Andere Leistungen eines im Ausland ansässigen Unternehmers (zeile 31)</field>
         <field name="tag_name">85</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
+        <field name="sequence">30</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
         <field name="code">85</field>
     </record>
-    <record id="tax_report_de_tag_65" model="account.tax.report.line">
-        <field name="name">65. Steuer infolge Wechsels der Besteuerungsform sowie Nachsteuer auf versteuerte Anzahlungen u. ä. wegen Steuersatzänderung (zeile 53)</field>
-        <field name="tag_name">65</field>
+
+    <record id="tax_report_de_tax_tag_55" model="account.tax.report.line">
+        <field name="name">Abziehbare Vorsteuerbetrage</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">6</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_46"/>
-        <field name="code">65</field>
+        <field name="sequence">30</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
     </record>
 
-    <!-- Row 56 - 57 - 58 - 59 - 60 - 61 - 62 -->
     <record id="tax_report_de_tag_66" model="account.tax.report.line">
-        <field name="name">66. Vorsteuerbeträge aus Rechnungen von anderen Unternehmern (zeile 56)</field>
+        <field name="name">66. Vorsteuerbeträge aus Rechnungen von anderen Unternehmern (zeile 37)</field>
         <field name="tag_name">66</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">66</field>
     </record>
     <record id="tax_report_de_tag_61" model="account.tax.report.line">
-        <field name="name">61. Vorsteuerbeträge aus dem innergemeinschaftlichen Erwerb von Gegenständen (zeile 57)</field>
+        <field name="name">61. Vorsteuerbeträge aus dem innergemeinschaftlichen Erwerb von Gegenständen (zeile 38)</field>
         <field name="tag_name">61</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">61</field>
     </record>
     <record id="tax_report_de_tag_62" model="account.tax.report.line">
-        <field name="name">62. Entstandene Einfuhrumsatzsteuer (zeile 58)</field>
+        <field name="name">62. Entstandene Einfuhrumsatzsteuer (zeile 39)</field>
         <field name="tag_name">62</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">3</field>
+        <field name="sequence">30</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">62</field>
     </record>
     <record id="tax_report_de_tag_67" model="account.tax.report.line">
-        <field name="name">67. Vorsteuerbeträge aus Leistungen im Sinne des § 13b UStG (zeile 59)</field>
+        <field name="name">67. Vorsteuerbeträge aus Leistungen im Sinne des § 13b UStG (zeile 40)</field>
         <field name="tag_name">67</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">4</field>
+        <field name="sequence">40</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">67</field>
     </record>
     <record id="tax_report_de_tag_63" model="account.tax.report.line">
-        <field name="name">63. Vorsteuerbeträge, die nach allgemeinen Durchschnittssätzen berechnet sind (zeile 60)</field>
+        <field name="name">63. Vorsteuerbeträge, die nach allgemeinen Durchschnittssätzen berechnet sind (zeile 41)</field>
         <field name="tag_name">63</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">5</field>
+        <field name="sequence">50</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">63</field>
     </record>
-    <record id="tax_report_de_tag_64" model="account.tax.report.line">
-        <field name="name">64. Berichtigung des Vorsteuerabzugs (zeile 61)</field>
-        <field name="tag_name">64</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence">6</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
-        <field name="code">64</field>
-    </record>
     <record id="tax_report_de_tag_59" model="account.tax.report.line">
-        <field name="name">59. Vorsteuerabzug für innergemeinschaftliche Lieferungen neuer Fahrzeuge außerhalb eines Unternehmens (zeile 62)</field>
+        <field name="name">59. Vorsteuerabzug für innergemeinschaftliche Lieferungen neuer Fahrzeuge außerhalb eines Unternehmens (zeile 42)</field>
         <field name="tag_name">59</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">7</field>
+        <field name="sequence">60</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
         <field name="code">59</field>
     </record>
+    <record id="tax_report_de_tag_64" model="account.tax.report.line">
+        <field name="name">64. Berichtigung des Vorsteuerabzugs (zeile 43)</field>
+        <field name="tag_name">64</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">70</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_55"/>
+        <field name="code">64</field>
+    </record>
 
-    <!-- Row 65 -->
+    <record id="tax_report_de_tax_tag_64" model="account.tax.report.line">
+        <field name="name">Andere Steuerbetrage</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">40</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
+    </record>
+
+    <record id="tax_report_de_tag_65" model="account.tax.report.line">
+        <field name="name">65. Steuer infolge Wechsels der Besteuerungsform sowie Nachsteuer auf versteuerte Anzahlungen u. ä. wegen Steuersatzänderung (zeile 45)</field>
+        <field name="tag_name">65</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_64"/>
+        <field name="code">65</field>
+    </record>
     <record id="tax_report_de_tag_69" model="account.tax.report.line">
-        <field name="name">69. In Rechnungen unrichtig oder unberechtigt ausgewiesene Steuerbeträge (zeile 65)</field>
+        <field name="name">69. In Rechnungen unrichtig oder unberechtigt ausgewiesene Steuerbeträge (zeile 46)</field>
         <field name="tag_name">69</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
+        <field name="sequence">20</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_64"/>
         <field name="code">69</field>
     </record>
-
-    <!-- Row 67 - 68 -->
     <record id="tax_report_de_tag_39" model="account.tax.report.line">
-        <field name="name">39. Abzug der festgesetzten Sondervorauszahlung für Dauerfristverlängerung (zeile 67)</field>
+        <field name="name">39. Abzug der festgesetzten Sondervorauszahlung für Dauerfristverlängerung (zeile 48)</field>
         <field name="tag_name">39</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">1</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_66"/>
+        <field name="sequence">60</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
         <field name="code">39</field>
     </record>
     <record id="tax_report_de_tag_83" model="account.tax.report.line">
         <field name="name">83. Verbleibende Umsatzsteuer-Vorauszahlung (zeile 68)</field>
         <field name="tag_name">83</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence">2</field>
-        <field name="parent_id" ref="tax_report_de_tax_tag_66"/>
+        <field name="sequence">70</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
         <field name="code">83</field>
     </record>
+
+    <record id="tax_report_de_tag_71" model="account.tax.report.line">
+        <field name="name">Minderung</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">30</field>
+        <field name="formula">None</field>
+    </record>
+    <record id="tax_report_de_tag_50" model="account.tax.report.line">
+        <field name="name">50. Minderung der Bemessungsgrundlage (zeile 50)</field>
+        <field name="tag_name">50</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="tax_report_de_tag_71"/>
+        <field name="code">50</field>
+    </record>
+    <record id="tax_report_de_tag_37_74" model="account.tax.report.line">
+        <field name="name">37. Minderung der abziehbaren Vorsteuerbeträge (zeile 51)</field>
+        <field name="tag_name">37</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="tax_report_de_tag_71"/>
+        <field name="code">37</field>
+    </record>
+
 
     <record id="tag_de_intracom_community_delivery" model="account.account.tag">
         <field name="name">Innergemeinschaftliche Lieferung</field>
@@ -790,60 +775,56 @@
         <field name="name">Bilanz-Passiva: A V-Jahresüberschuß/Jahresfehlbetrag</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_B" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: B Sonderposten mit Rücklageanteil</field>
+    <record id="tag_de_liabilities_bs_B_1" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: B 1-Rückstellungen für Pensionen und ähnliche Verpflichtungen</field>
+        <field name="applicability">accounts</field>
+    </record>
+    <record id="tag_de_liabilities_bs_B_2" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: B 2-Steuerrückstellungen</field>
+        <field name="applicability">accounts</field>
+    </record>
+    <record id="tag_de_liabilities_bs_B_3" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: B 3-Sonstige Rückstellungen</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_1" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 1-Rückstellungen für Pensionen und ähnliche Verpflichtungen</field>
+        <field name="name">Bilanz-Passiva: C 1-Anleihen, davon konvertibeln</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_2" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 2-Steuerrückstellungen</field>
+        <field name="name">Bilanz-Passiva: C 2-Verbindlichkeiten gegenüber Kreditinstituten</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_3" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 3-Sonstige Rückstellungen</field>
+        <field name="name">Bilanz-Passiva: C 3-Erhaltene Anzahlungen auf Bestellungen</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_1" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 1-Anleihen, davon konvertibeln</field>
+    <record id="tag_de_liabilities_bs_C_4" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: C 4-Verbindlichkeiten aus Lieferungen und Leistungen</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_2" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 2-Verbindlichkeiten gegenüber Kreditinstituten</field>
+    <record id="tag_de_liabilities_bs_C_5" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: C 5-Verbindlichkeiten aus der Annahme gezogener Wechsel und der Ausstellung eigener Wechsel</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_3" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 3-Erhaltene Anzahlungen auf Bestellungen</field>
+    <record id="tag_de_liabilities_bs_C_6" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: C 6-Verbindlichkeiten gegenüber verbundenen Unternehmen</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_4" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 4-Verbindlichkeiten aus Lieferungen und Leistungen</field>
+    <record id="tag_de_liabilities_bs_C_7" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: C 7-Verbindlichkeiten gegenüber Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_5" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 5-Verbindlichkeiten aus der Annahme gezogener Wechsel und der Ausstellung eigener Wechsel</field>
+    <record id="tag_de_liabilities_bs_C_8" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: C 8-Sonstige Verbindlichkeiten, davon aus Steuern, davon im Rahmen der sozialen Sicherheit</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="tag_de_liabilities_bs_D_6" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 6-Verbindlichkeiten gegenüber verbundenen Unternehmen</field>
-        <field name="applicability">accounts</field>
-    </record>
-    <record id="tag_de_liabilities_bs_D_7" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 7-Verbindlichkeiten gegenüber Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
-        <field name="applicability">accounts</field>
-    </record>
-    <record id="tag_de_liabilities_bs_D_8" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 8-Sonstige Verbindlichkeiten, davon aus Steuern, davon im Rahmen der sozialen Sicherheit</field>
+    <record id="tag_de_liabilities_bs_D" model="account.account.tag">
+        <field name="name">Bilanz-Passiva: D-Rechnungsabgrenzungsposten</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_E" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: E-Rechnungsabgrenzungsposten</field>
-        <field name="applicability">accounts</field>
-    </record>
-    <record id="tag_de_liabilities_bs_F" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: F-Passive latente Steuern</field>
+        <field name="name">Bilanz-Passiva: E-Passive latente Steuern</field>
         <field name="applicability">accounts</field>
     </record>
 

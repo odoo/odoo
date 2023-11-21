@@ -97,7 +97,7 @@ const LazyColumnListRenderer = ListRenderer.extend({
             {
                 model: state.model,
                 method: "search_read",
-                args: [state.domain, lazyColumns],
+                args: [state.domain.concat([['id', 'in', state.res_ids]]), lazyColumns],
             },
             { shadow: true }
         );

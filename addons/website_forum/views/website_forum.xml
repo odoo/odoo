@@ -1595,6 +1595,8 @@
                         <div class="tab-content" id="o_tab_content_spam">
                             <div class="tab-pane fade show active" data-key="create_uid" id="spam_user" role="tabpanel" aria-labelledby="user-tab">
                                 <form class="row" >
+                                    <!-- Prevent the foreach loop to overide the `user` variable from the controller -->
+                                    <t t-set="env_user" t-value="user"/>
                                     <div t-foreach="posts_ids.mapped('create_uid')" t-as="user" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
@@ -1608,6 +1610,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <t t-set="user" t-value="env_user"/>
                                 </form>
                             </div>
                             <div class="tab-pane fade" data-key="country_id" id="spam_country" role="tabpanel" aria-labelledby="country-tab">

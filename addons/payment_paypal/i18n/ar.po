@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2023-01-31 17:26+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -130,7 +130,7 @@ msgstr "المزود"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr "البيانات المستلمة مع حالة دفع غير صالحة: %s "
+msgstr "تم استلام البيانات مع حالة دفع غير صالحة: %s "
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -159,6 +159,26 @@ msgid ""
 msgstr ""
 "عنوان البريد الإلكتروني العام للعمل الذي يُستخدم فقط لتعريف الحساب مع PayPal"
 " "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+"لم نتمكن من مزامنة حالة المعاملة ذات المرجع %(ref)s لأن خيار \"نقل بيانات "
+"الدفع\" غير مفعّل في لوحة بيانات PayPal. "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type

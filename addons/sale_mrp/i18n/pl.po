@@ -7,6 +7,7 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -33,14 +34,25 @@ msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">Sprzedaż</span>"
 
 #. module: sale_mrp
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
+msgstr ""
+"Dopóki istnieją jakieś linie zamówień sprzedaży, które muszą być "
+"dostarczone/fakturowane i są powiązane z tymi listami materiałów, nie można "
+"ich usunąć. Błąd dotyczy tych produktów: %s"
+
+#. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count
 msgid "Count of MO generated"
-msgstr ""
+msgstr "Lista wygenerowanych MO"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_order_count
 msgid "Count of Source SO"
-msgstr ""
+msgstr "Liczba źródłowych SO"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line

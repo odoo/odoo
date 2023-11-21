@@ -30,7 +30,7 @@ Here is how it works:
     - Printing the invoice will trigger the download of three files: the invoice, its ISR and its QR-bill
     - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.
     """,
-    'version': '11.0',
+    'version': '11.1',
     'category': 'Accounting/Localizations/Account Charts',
 
     'depends': ['account', 'l10n_multilang', 'base_iban'],
@@ -42,7 +42,9 @@ Here is how it works:
         'data/account_tax_group_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_vat2011_data.xml',
+        'data/account_tax_template_data_2024.xml',
         'data/account_fiscal_position_data.xml',
+        'data/account_fiscal_position_data_2024.xml',
         'data/account_chart_template_data.xml',
         'report/isr_report.xml',
         'report/swissqr_report.xml',

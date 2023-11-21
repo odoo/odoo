@@ -19,7 +19,7 @@ class FleetVehicle(models.Model):
         moves = self.env['account.move.line'].read_group(
             domain=[
                 ('vehicle_id', 'in', self.ids),
-                ('move_id.state', '!=', 'cancel'),
+                ('parent_state', '!=', 'cancel'),
                 ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
             ],
             fields=['vehicle_id', 'move_id:array_agg'],

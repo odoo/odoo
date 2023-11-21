@@ -220,12 +220,6 @@ body.editor_enable {
 //s_dynamic_snippet
 body.editor_enable {
     .s_dynamic {
-        // TODO remove .stretched-link::after in master
-        // BS4 adds pointer-events: auto on it which breaks the editor.
-        // BS5 doesn't do that so this can safely be removed in master.
-        > *, .stretched-link::after {
-            pointer-events: none;
-        }
         [data-url] {
             cursor: inherit;
         }
@@ -257,12 +251,12 @@ body.editor_enable {
 // target all inputs and/or target specific snippets in their own app.
 .editor_enable {
     .s_website_form, .s_searchbar_input, .js_subscribe, .s_group, .s_donation_form {
-        input {
+        input:not(.o_translatable_attribute) {
             pointer-events: none;
         }
     }
     .s_website_form {
-        [data-toggle="datetimepicker"], textarea {
+        [data-toggle="datetimepicker"], textarea:not(.o_translatable_attribute):not(.o_translatable_text) {
             pointer-events: none;
         }
     }

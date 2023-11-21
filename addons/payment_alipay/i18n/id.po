@@ -7,6 +7,7 @@
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2022\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,17 +39,17 @@ msgstr "Akun"
 #: model:account.payment.method,name:payment_alipay.payment_method_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "Alipay Seller Email"
-msgstr ""
+msgstr "Email Penjual Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
 msgid "Cross-border"
-msgstr ""
+msgstr "Cross-border"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -59,23 +60,23 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Express Checkout (hanya untuk pedagang Tiongkok)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
 msgid "MD5 Signature Key"
-msgstr ""
+msgstr "MD5 Signature Key"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
-msgstr ""
+msgstr "ID Partner Pedagang"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
@@ -101,7 +102,7 @@ msgstr "Pemberi"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Menerima data dengan referensi yang hilang %(r)s atau txn_id %(t)s."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -141,12 +142,14 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Email publik partner Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"ID publik partner yang digunakan hanya untuk mengidentifikasi akun dengan "
+"Alipay"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -158,4 +161,4 @@ msgstr ""
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "menerima status transaksi tidak valid: %s"

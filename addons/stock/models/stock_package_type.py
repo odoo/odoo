@@ -7,6 +7,7 @@ from odoo import models, fields, _
 class PackageType(models.Model):
     _name = 'stock.package.type'
     _description = "Stock package type"
+    _order = "sequence"
 
     def _get_default_length_uom(self):
         return self.env['product.template']._get_length_uom_name_from_ir_config_parameter()
@@ -35,8 +36,15 @@ class PackageType(models.Model):
     ]
 
     def _compute_length_uom_name(self):
-        for package_type in self:
-            package_type.length_uom_name = self.env['product.template']._get_length_uom_name_from_ir_config_parameter()
+        # FIXME This variable does not impact any logic, it is only used for the packaging display on the form view.
+        #  However, it generates some confusion for the users since this UoM will be ignored when sending the requests
+        #  to the carrier server: the dimensions will be expressed with another UoM and there won't be any conversion.
+        #  For instance, with Fedex, the UoM used with the package dimensions will depend on the UoM of
+        #  `fedex_weight_unit`. With UPS, we will use the UoM defined on `ups_package_dimension_unit`
+        #  This is also confusing when length UoM of the database is `ft`. The dimensions are integers (not floats) and
+        #  the UoM is not small enough (for instance, the user will not be able to define a package with a length
+        #  of 10 in)
+        self.length_uom_name = ""
 
     def _compute_weight_uom_name(self):
         for package_type in self:

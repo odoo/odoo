@@ -7,11 +7,12 @@ import json
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID, _
+from odoo import http, SUPERUSER_ID, _, _lt
 from odoo.http import request
 from odoo.tools import plaintext2html
-from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.exceptions import AccessDenied, ValidationError, UserError
+from odoo.tools.misc import hmac, consteq
 
 
 class WebsiteForm(http.Controller):
@@ -68,6 +69,15 @@ class WebsiteForm(http.Controller):
                 # in case of an email, we want to send it immediately instead of waiting
                 # for the email queue to process
                 if model_name == 'mail.mail':
+                    form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
+                        'email_cc' in kwargs["website_form_signature"]
+                    # remove the email_cc information from the signature
+                    kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
+                    if kwargs.get("email_to"):
+                        value = kwargs['email_to'] + (':email_cc' if form_has_email_cc else '')
+                        hash_value = hmac(model_record.env, 'website_form_signature', value)
+                        if not consteq(kwargs["website_form_signature"], hash_value):
+                            raise AccessDenied('invalid website_form_signature')
                     request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
@@ -84,7 +94,7 @@ class WebsiteForm(http.Controller):
 
     # Constants string to make metadata readable on a text field
 
-    _meta_label = "%s\n________\n\n" % _("Metadata")  # Title for meta data
+    _meta_label = _lt("Metadata")  # Title for meta data
 
     # Dict of dynamically called filters following type of field to be fault tolerent
 
@@ -180,7 +190,7 @@ class WebsiteForm(http.Controller):
                     custom_fields.append((_('email'), field_value))
 
             # If it's a custom field
-            elif field_name != 'context':
+            elif field_name not in ('context', 'website_form_signature'):
                 custom_fields.append((field_name, field_value))
 
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
@@ -213,8 +223,12 @@ class WebsiteForm(http.Controller):
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
-            values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
+            email_from = _('"%s form submission" <%s>') % (request.env.company.name, request.env.company.email)
+            values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
+            mail_create_nosubscribe=True,
+            commit_assetsbundle=False,
+        ).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
@@ -224,7 +238,7 @@ class WebsiteForm(http.Controller):
             default_field_data = values.get(default_field.name, '')
             custom_content = (default_field_data + "\n\n" if default_field_data else '') \
                            + (_custom_label + custom + "\n\n" if custom else '') \
-                           + (self._meta_label + meta if meta else '')
+                           + (self._meta_label + "\n________\n\n" + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead

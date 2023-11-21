@@ -26,6 +26,14 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def get_order_amount_unpaid(self):
+        order_amount_unpaid = {}
+        for sale_order in self:
+            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
+            total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
+            order_amount_unpaid[sale_order.id] = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
+        return order_amount_unpaid
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -44,7 +52,7 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def read_converted(self):
-        field_names = ["product_id", "name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
+        field_names = ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
         results = []
         for sale_line in self:
             if sale_line.product_type:

@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
+from psycopg2.extras import execute_values
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -89,6 +93,8 @@ class ProductTemplate(models.Model):
 
     def _get_website_accessory_product(self):
         domain = self.env['website'].sale_product_domain()
+        if not self.env.user._is_internal():
+            domain = expression.AND([domain, [('is_published', '=', True)]])
         return self.accessory_product_ids.filtered_domain(domain)
 
     def _get_website_alternative_product(self):
@@ -236,6 +242,25 @@ class ProductTemplate(models.Model):
         website = self.website_id or kwargs.get('website')
         return website and website.company_id or res
 
+    def _init_column(self, column_name):
+        # to avoid generating a single default website_sequence when installing the module,
+        # we need to set the default row by row for this column
+        if column_name == "website_sequence":
+            _logger.debug("Table '%s': setting default value of new column %s to unique values for each row", self._table, column_name)
+            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            prod_tmpl_ids = self.env.cr.dictfetchall()
+            max_seq = self._default_website_sequence()
+            query = """
+                UPDATE {table}
+                SET website_sequence = p.web_seq
+                FROM (VALUES %s) AS p(p_id, web_seq)
+                WHERE id = p.p_id
+            """.format(table=self._table)
+            values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
+            execute_values(self.env.cr._obj, query, values_args)
+        else:
+            super(ProductTemplate, self)._init_column(column_name)
+
     def _default_website_sequence(self):
         ''' We want new product to be the last (highest seq).
         Every product should ideally have an unique sequence.
@@ -351,10 +376,11 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name', 'product_variant_ids.default_code']
+        search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
+            'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }

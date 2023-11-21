@@ -20,8 +20,8 @@ describe('insert HTML', () => {
                     await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
                 },
                 contentAfterEdit:
-                    '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
-                contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
+                    '<p><br><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                contentAfter: '<p><br><i class="fa fa-pastafarianism"></i>[]</p>',
             });
         });
         it('should insert html between two letters', async () => {
@@ -81,6 +81,15 @@ describe('insert HTML', () => {
                     await editor.execCommand('insertHTML', '<pre>def</pre>');
                 },
                 contentAfter: '<pre>abcdef[]<br>ghi</pre>',
+            });
+        });
+        it('should keep an "empty" block which contains fontawesome nodes when inserting multiple nodes', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insertHTML', '<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>');
+                },
+                contentAfter: '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
             });
         });
     });

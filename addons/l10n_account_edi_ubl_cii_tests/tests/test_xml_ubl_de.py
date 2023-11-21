@@ -24,6 +24,7 @@ class TestUBLDE(TestUBLCommon):
             'email': 'info@legoland.de',
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921'})],
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -34,6 +35,7 @@ class TestUBLDE(TestUBLCommon):
             'vat': 'DE186775212',
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743'})],
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -221,10 +223,10 @@ class TestUBLDE(TestUBLCommon):
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         # Export: BuyerReference is in the out_invoice xml
-        self.assertEqual(xml_etree.find('{*}BuyerReference').text, partner.name)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, partner.ref)
         self.assertEqual(
             xml_etree.find('{*}CustomizationID').text,
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2#conformant#urn:xoev-de:kosit:extension:xrechnung_2.2'
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3'
         )
 
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})

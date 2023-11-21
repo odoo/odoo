@@ -3,8 +3,9 @@
 # 	* pos_epson_printer
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2021
+# Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,18 +30,29 @@ msgstr "Kassenschublade"
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
+msgid ""
+"Check on the printer configuration for the 'Device ID' setting. It should be"
+" set to: "
+msgstr ""
+"Überprüfen Sie in der Druckerkonfiguration die Einstellung „Geräte-ID“. Sie "
+"sollte eingestellt sein auf:"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
 msgid "Connection to the printer failed"
 msgstr "Verbindung zum Drucker fehlgeschlagen"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
 msgid "Epson Printer IP"
-msgstr "Epson Drucker IP"
+msgstr "Epson-Drucker-IP"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 msgid "Epson Receipt Printer IP Address"
-msgstr "Epson Bondrucker IP Adresse"
+msgstr "IP-Adresse des Epson-Bondruckers"
 
 #. module: pos_epson_printer
 #. openerp-web
@@ -57,7 +69,14 @@ msgstr ""
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
 msgid "Local IP address of an Epson receipt printer."
-msgstr "Lokale IP Adresse des Epson Bondruckers."
+msgstr "Lokale IP-Adresse des Epson-Bondruckers."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "No paper was detected by the printer"
+msgstr "Es wurde kein Papier vom Drucker erkannt"
 
 #. module: pos_epson_printer
 #. openerp-web
@@ -76,7 +95,7 @@ msgstr "Bitte überprüfen Sie, ob der Drucker noch angeschlossen ist."
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Point Of Sale Konfiguration"
+msgstr "Kassensystem-Konfiguration"
 
 #. module: pos_epson_printer
 #. openerp-web
@@ -91,5 +110,28 @@ msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
-"Der Epson-Bondrucker wird anstelle des an die IoT-Box angeschlossenen Bon-"
-"Druckers verwendet."
+"Der Epson-Bondrucker wird anstelle des an die IoT-Box angeschlossenen "
+"Bondruckers verwendet."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The following error code was given by the printer:"
+msgstr "Der folgende Fehlercode wurde vom Drucker ausgegeben:"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The printer was successfully reached, but it wasn't able to print."
+msgstr "Der Drucker wurde erfolgreich erreicht, aber er konnte nicht drucken."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "To find more details on the error reason, please search online for:"
+msgstr ""
+"Um weitere Einzelheiten über die Fehlerursache zu erfahren, suchen Sie bitte"
+" online nach:"

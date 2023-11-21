@@ -11,15 +11,17 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # sixsix six, 2022
 # Tamás Dombos, 2022
+# Szabolcs Rádi, 2023
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2023-01-27 13:05+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Tamás Dombos, 2022\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Last-Translator: Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -370,7 +372,7 @@ msgstr "Folytatás"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
 msgid "Cover Properties"
-msgstr ""
+msgstr "Borító beállításai"
 
 #. module: website_event
 #. openerp-web
@@ -648,7 +650,7 @@ msgstr "Résztvevő"
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Közzétett"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -772,7 +774,7 @@ msgstr ""
 #: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
 msgid "On Site"
-msgstr ""
+msgstr "Üzletben"
 
 #. module: website_event
 #. openerp-web
@@ -1031,6 +1033,12 @@ msgid "This technical menu displays all event sub-menu items."
 msgstr ""
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr "Jegy #"
@@ -1106,7 +1114,7 @@ msgstr "Megtekintés"
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Látható ezen a weboldalon"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
@@ -1170,7 +1178,7 @@ msgstr "Honlap címe"
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Látogató"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description

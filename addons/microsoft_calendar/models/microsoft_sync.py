@@ -133,6 +133,12 @@ class MicrosoftSync(models.AbstractModel):
                 if with_uid
                 else [('microsoft_id', '=', False)]
             )
+        elif operator == '!=' and not value:
+            return (
+                [('microsoft_id', 'ilike', f'{IDS_SEPARATOR}_')]
+                if with_uid
+                else [('microsoft_id', '!=', False)]
+            )
         return (
             ['|'] * (len(value) - 1) + [_domain(v) for v in value]
             if operator.lower() == 'in'
@@ -461,14 +467,7 @@ class MicrosoftSync(models.AbstractModel):
         :param full_sync: If True, all events attended by the user are returned
         :return: events
         """
-        domain = self._get_microsoft_sync_domain()
-        if not full_sync:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
-            domain = expression.AND([domain, [
-                '|',
-                '&', ('ms_universal_event_id', '=', False), is_active_clause,
-                ('need_sync_m', '=', True),
-            ]])
+        domain = self.with_context(full_sync_m=full_sync)._get_microsoft_sync_domain()
         return self.with_context(active_test=False).search(domain)
 
     @api.model
@@ -513,3 +512,18 @@ class MicrosoftSync(models.AbstractModel):
         a given user.
         """
         raise NotImplementedError()
+
+    def _extend_microsoft_domain(self, domain):
+        """ Extends the sync domain based on the full_sync_m context parameter.
+        In case of full sync it shouldn't include already synced events.
+        """
+        if self._context.get('full_sync_m', True):
+            domain = expression.AND([domain, [('ms_universal_event_id', '=', False)]])
+        else:
+            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+            domain = expression.AND([domain, [
+                '|',
+                '&', ('ms_universal_event_id', '=', False), is_active_clause,
+                ('need_sync_m', '=', True),
+            ]])
+        return domain

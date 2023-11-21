@@ -219,6 +219,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             let syncedOrderBackendIds = [];
 
             try {
+                this.env.services.ui.block()
                 if (this.currentOrder.is_to_invoice()) {
                     syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
                         this.currentOrder
@@ -247,6 +248,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         throw error;
                     }
                 }
+            } finally {
+                this.env.services.ui.unblock()
             }
             if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
                 const result = await this._postPushOrderResolve(
@@ -290,6 +293,18 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     title: this.env._t('Empty Order'),
                     body: this.env._t(
                         'There must be at least one product in your order before it can be validated and invoiced.'
+                    ),
+                });
+                return false;
+            }
+
+            if (this.currentOrder.electronic_payment_in_progress()) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Pending Electronic Payments'),
+                    body: this.env._t(
+                        'There is at least one pending electronic payment.\n' +
+                        'Please finish the payment with the terminal or ' +
+                        'cancel it then remove the payment line.'
                     ),
                 });
                 return false;

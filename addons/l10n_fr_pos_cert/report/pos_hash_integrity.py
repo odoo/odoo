@@ -10,10 +10,8 @@ class ReportPosHashIntegrity(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        if data:
-            data.update(self.env.company._check_pos_hash_integrity())
-        else:
-            data = self.env.company._check_hash_pos_integrity()
+        data = data or {}
+        data.update(self.env.company._check_pos_hash_integrity() or {})
         return {
             'doc_ids' : docids,
             'doc_model' : self.env['res.company'],

@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"POT-Creation-Date: 2023-01-27 15:59+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,9 +40,7 @@ msgstr "Generieren Sie Ihren Webhook"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
-"Erhalten Sie Ihre Geheim- und veröffentlichbaren Schlüssel "
-"(Secret/Publishable Key)"
+msgstr "Erhalten Sie Ihre geheimen und veröffentlichbaren Schlüssel"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -49,6 +48,9 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Wenn in Ihrem Stripe-Konto ein Webhook aktiviert ist, muss dieses "
+"Signiergeheimnis festgelegt werden, um die von Stripe an Odoo gesendeten "
+"Nachrichten zu authentifizieren."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -74,7 +76,7 @@ msgstr "Zahlungsmethoden"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr "Zahlungs-Token"
+msgstr "Zahlungstoken"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -89,19 +91,19 @@ msgstr "Anbieter"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr "Publishable Key"
+msgstr "Veröffentlichbarer Schlüssel"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Erhaltene Daten mit ungültigem Absichtsstatus: %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Erhaltene Daten mit fehlendem Absichtsstatus."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -185,7 +187,7 @@ msgstr "Die Transaktion ist nicht mit einem Token verknüpft."
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr "Zahlungs-Token kann nicht in neue API konvertiert werden."
+msgstr "Zahlungstoken kann nicht in neue API konvertiert werden."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -211,10 +213,20 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid ""
+"You cannot set the acquirer state to Enabled until your onboarding to Stripe"
+" is completed."
+msgstr ""
+"Sie können den Anbieterstatus erst dann auf „Aktiviert“ setzen, wenn Ihr "
+"Einführung bei Stripe abgeschlossen ist."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
 "You cannot set the acquirer to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
-"Sie können den Acquirer nicht in den Testmodus versetzen, solange er mit "
+"Sie können den Anbieter nicht in den Testmodus versetzen, solange er mit "
 "Ihrem Stripe-Konto verbunden ist."
 
 #. module: payment_stripe

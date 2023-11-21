@@ -22,7 +22,7 @@ const ReCaptcha = Class.extend({
      */
     loadLibs: function () {
         if (this._publicKey) {
-            this._recaptchaReady = ajax.loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${this._publicKey}`)
+            this._recaptchaReady = ajax.loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${encodeURIComponent(this._publicKey)}`)
                 .then(() => new Promise(resolve => window.grecaptcha.ready(() => resolve())));
             return this._recaptchaReady.then(() => !!document.querySelector('.grecaptcha-badge'));
         }

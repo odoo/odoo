@@ -324,7 +324,7 @@ class AccountEdiFormat(models.Model):
     def _check_filename_is_fattura_pa(self, filename):
         return re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", filename)
 
-    def _is_fattura_pa(self, filename, tree):
+    def _is_fattura_pa(self, filename, tree=None):
         return self.code == 'fattura_pa' and self._check_filename_is_fattura_pa(filename)
 
     def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
@@ -364,17 +364,17 @@ class AccountEdiFormat(models.Model):
 
     def _create_invoice_from_binary(self, filename, content, extension):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, self.env['account.move'])
         return super()._create_invoice_from_binary(filename, content, extension)
 
     def _update_invoice_from_binary(self, filename, content, extension, invoice):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
@@ -762,9 +762,8 @@ class AccountEdiFormat(models.Model):
                         'res_id': new_invoice.id,
                     })
 
-                    # default_res_id is had to context to avoid facturx to import his content
                     # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
-                    new_invoice.with_context(no_new_invoice=True, default_res_id=new_invoice.id).message_post(
+                    new_invoice.with_context(no_new_invoice=True).message_post(
                         body=(_("Attachment from XML")),
                         attachment_ids=[attachment_64.id]
                     )

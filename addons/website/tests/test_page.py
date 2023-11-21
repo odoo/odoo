@@ -1,6 +1,7 @@
 # coding: utf-8
 from lxml import html
 
+from odoo.addons.website.controllers.main import Website
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import common, HttpCase, tagged
 from odoo.tests.common import HOST
@@ -284,3 +285,21 @@ class WithContext(HttpCase):
         root_html = html.fromstring(r.content)
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertEqual(canonical_url, website.domain + "/")
+
+    def test_page_url_case_insensitive_match(self):
+        r = self.url_open('/page_1')
+        self.assertEqual(r.status_code, 200, "Reaching page URL, common case")
+        r2 = self.url_open('/Page_1', allow_redirects=False)
+        self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
+        self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")
+
+@tagged('-at_install', 'post_install')
+class TestNewPage(common.TransactionCase):
+    def test_new_page_used_key(self):
+        website = self.env.ref('website.default_website')
+        controller = Website()
+        with MockRequest(self.env, website=website):
+            controller.pagenew(path="snippets")
+        pages = self.env['website.page'].search([('url', '=', '/snippets')])
+        self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
+        self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")

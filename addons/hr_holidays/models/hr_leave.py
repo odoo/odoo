@@ -72,6 +72,13 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
+        employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+        # In some cases, the context does not contain the employee's working time for the day requested
+        if defaults.get('request_date_from') and defaults.get('request_date_to'):
+            default_attendance_from, default_attendance_to = self._get_attendances(employee, defaults['request_date_from'], defaults['request_date_to'])
+            defaults['date_from'] = self._get_start_or_end_from_attendance(default_attendance_from.hour_from, defaults['request_date_from'], employee)
+            defaults['date_to'] = self._get_start_or_end_from_attendance(default_attendance_to.hour_to, defaults['request_date_to'], employee)
+
         if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1)
 
@@ -88,7 +95,6 @@ class HolidaysRequest(models.Model):
             defaults.update({'date_from': now})
         if 'date_to' not in defaults:
             defaults.update({'date_to': now})
-        employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
         default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
         default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
         if defaults['date_from'].time() == default_start_time and defaults['date_to'].time() == default_end_time:
@@ -102,7 +108,7 @@ class HolidaysRequest(models.Model):
 
     def _get_start_or_end_from_attendance(self, hour, date, employee):
         hour = float_to_time(float(hour))
-        holiday_tz = timezone(employee.tz or self.env.user.tz)
+        holiday_tz = timezone(employee.tz or self.env.user.tz or 'utc')
         return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
     def _get_attendances(self, employee, request_date_from, request_date_to):
@@ -198,7 +204,7 @@ class HolidaysRequest(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict",
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        tracking=True)
+        tracking=True, compute_sudo=False)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean(related='employee_id.active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
@@ -239,10 +245,10 @@ class HolidaysRequest(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     employee_ids = fields.Many2many(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False,
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False, groups="hr_holidays.group_hr_holidays_user",
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     multi_employee = fields.Boolean(
-        compute='_compute_from_employee_ids', store=True,
+        compute='_compute_from_employee_ids', store=True, compute_sudo=False,
         help='Holds whether this allocation concerns more than 1 employee')
     category_id = fields.Many2one(
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag',
@@ -684,7 +690,7 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
-        mapped_days = self.holiday_status_id.get_employees_days((self.employee_id | self.employee_ids).ids)
+        mapped_days = self.holiday_status_id.get_employees_days((self.employee_id | self.sudo().employee_ids).ids)
         for holiday in self:
             if holiday.holiday_type != 'employee'\
                     or not holiday.employee_id and not holiday.employee_ids\
@@ -722,7 +728,8 @@ class HolidaysRequest(models.Model):
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
             # We force the company in the domain as we are more than likely in a compute_sudo
-            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+            domain = [('time_type', '=', 'leave'),
+                      ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
             result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)[employee.id]
             if self.request_unit_half and result['hours'] > 0:
                 result['days'] = 0.5
@@ -808,7 +815,6 @@ class HolidaysRequest(models.Model):
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(date_from_utc) or ""
                     if leave.number_of_days > 1 and date_from_utc and date_to_utc:
                         display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
@@ -964,6 +970,8 @@ class HolidaysRequest(models.Model):
         if default and 'date_from' in default and 'date_to' in default:
             default['request_date_from'] = default.get('date_from')
             default['request_date_to'] = default.get('date_to')
+            return super().copy_data(default)
+        elif self.state in {"cancel", "refuse"}:  # No overlap constraint in these cases
             return super().copy_data(default)
         raise UserError(_('A time off cannot be duplicated.'))
 
@@ -1130,6 +1138,18 @@ class HolidaysRequest(models.Model):
     def _get_leaves_on_public_holiday(self):
         return self.filtered(lambda l: l.employee_id and not l.number_of_days)
 
+    def _get_employees_from_holiday_type(self):
+        self.ensure_one()
+        if self.holiday_type == 'employee':
+            employees = self.employee_ids
+        elif self.holiday_type == 'category':
+            employees = self.category_id.employee_ids
+        elif self.holiday_type == 'company':
+            employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
+        else:
+            employees = self.department_id.member_ids
+        return employees
+
     def action_validate(self):
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
@@ -1152,14 +1172,7 @@ class HolidaysRequest(models.Model):
 
             if leave.holiday_type != 'employee' or\
                 (leave.holiday_type == 'employee' and len(leave.employee_ids) > 1):
-                if leave.holiday_type == 'employee':
-                    employees = leave.employee_ids
-                elif leave.holiday_type == 'category':
-                    employees = leave.category_id.employee_ids
-                elif leave.holiday_type == 'company':
-                    employees = self.env['hr.employee'].search([('company_id', '=', leave.mode_company_id.id)])
-                else:
-                    employees = leave.department_id.member_ids
+                employees = leave._get_employees_from_holiday_type()
 
                 conflicting_leaves = self.env['hr.leave'].with_context(
                     tracking_disable=True,
@@ -1320,8 +1333,12 @@ class HolidaysRequest(models.Model):
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
-                    if (state == 'validate' and val_type == 'manager') and self.env.user != holiday.employee_id.leave_manager_id:
-                        raise UserError(_('You must be %s\'s Manager to approve this leave', holiday.employee_id.name))
+                    if (state == 'validate' and val_type == 'manager') and self.env.user != (holiday.employee_id | holiday.sudo().employee_ids).leave_manager_id:
+                        if holiday.employee_id:
+                            employees = holiday.employee_id
+                        else:
+                            employees = ', '.join(holiday.employee_ids.filtered(lambda e: e.leave_manager_id != self.env.user).mapped('name'))
+                        raise UserError(_('You must be %s\'s Manager to approve this leave', employees))
 
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))

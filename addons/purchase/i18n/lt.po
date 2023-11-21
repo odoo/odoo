@@ -6,7 +6,6 @@
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2022
 # Rolandas <info@paninfo.lt>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
 # Gailius Kazlauskas, 2022
 # Anatolij, 2022
 # Paulius Sladkevičius <paulius@versada.eu>, 2022
@@ -24,8 +23,9 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Naglis Jonaitis, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Arunas V. <arunas@devoro.com>, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,8 +33,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1118,7 +1118,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr ""
+msgstr "Trikampės Prekybos Pristatymo Adresas"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -1574,7 +1574,7 @@ msgstr "Naujausia"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Kitas veiklos kalendoriaus įvykis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
@@ -1788,7 +1788,7 @@ msgstr "Pakavimas"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Pakuočių kiekis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2068,6 +2068,7 @@ msgid "Purchase Order: Vendor Reminder"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2077,6 +2078,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Pirkimų užsakymai"
 
@@ -3088,6 +3090,12 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Kurdami pirkimo užsakymą, atkreipkite dėmesį į <i>Tiekėjo Patikimumą</i>. "
+"Jei jis per mažas, aktyvuokite <i>automatinius priminimus</i>. Likus kelioms"
+" dienoms iki pristatymo datos, Odoo išsiųs tiekėjui el. laišką, prašydamas "
+"patvirtinti siuntimo datas ir informuos Jus, jei tiekėjas vėluos. Norėdami "
+"gauti pardavėjo našumo statistiką, spustelėkite ant Tiekėjo Patikimumo "
+"rodiklio."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1

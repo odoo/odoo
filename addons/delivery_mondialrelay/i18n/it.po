@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2021
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,19 +13,19 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__mondialrelay_brand
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__mondialrelay_brand
 msgid "Brand Code"
-msgstr ""
+msgstr "Codice marchio"
 
 #. module: delivery_mondialrelay
 #: model:ir.model,name:delivery_mondialrelay.model_res_partner
@@ -47,12 +48,12 @@ msgstr "Procedura di selezione vettore di consegna"
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_partner__is_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_users__is_mondialrelay
 msgid "Is Mondialrelay"
-msgstr ""
+msgstr "È Mondial Relay"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__mondialrelay_last_selected
 msgid "Last Relay Selected"
-msgstr ""
+msgstr "Ultimo Relay selezionato"
 
 #. module: delivery_mondialrelay
 #: model:delivery.carrier,name:delivery_mondialrelay.delivery_carrier_mondialrelay_be_lu
@@ -69,22 +70,24 @@ msgstr "Mondial Relay"
 msgid ""
 "Mondial Relay mismatching between delivery method and shipping address."
 msgstr ""
+"Non vi è corrispondenza tra l'indirizzo di spedizione e quello di consegna "
+"su Mondial Relay."
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__mondialrelay_allowed_countries
 msgid "Mondialrelay Allowed Countries"
-msgstr ""
+msgstr "Paesi autorizzati Mondial Relay"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__mondialrelay_last_selected_id
 msgid "Mondialrelay Last Selected"
-msgstr ""
+msgstr "Ultimo selezionato Mondial Relay"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__mondialrelay_colLivMod
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__mondialrelay_packagetype
 msgid "Mondialrelay Packagetype"
-msgstr ""
+msgstr "Tipo di collo Mondial Relay"
 
 #. module: delivery_mondialrelay
 #: code:addons/delivery_mondialrelay/wizard/choose_delivery_carrier.py:0

@@ -3,6 +3,7 @@
 from odoo.api import model
 from typing import Iterator, Mapping
 from collections import abc
+from odoo.tools import ReadonlyDict
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 
 
@@ -17,14 +18,15 @@ class MicrosoftEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) -> Iterator['MicrosoftEvent']:
         return iter(MicrosoftEvent([vals]) for vals in self._events.values())

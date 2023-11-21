@@ -45,7 +45,7 @@ class CrmClient(MailPluginController):
         if not partner:
             return {'error': 'partner_not_found'}
 
-        record = request.env['crm.lead'].create({
+        record = request.env['crm.lead'].with_company(partner.company_id).create({
             'name': html2plaintext(email_subject),
             'partner_id': partner_id,
             'description': email_body,

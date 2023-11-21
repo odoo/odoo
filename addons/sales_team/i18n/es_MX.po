@@ -5,7 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2021
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,20 +14,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
-"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Administrar\" "
-"title=\"Administrar\"/>"
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Gestionar\" "
+"title=\"Gestionar\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -60,7 +61,7 @@ msgstr "<span>Ver</span>"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -78,8 +79,8 @@ msgstr "Tipos de actividad"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
-"Añada miembros para asignar automáticamente sus documentos a este equipo de "
-"ventas."
+"Agregue miembros para asignar automáticamente sus documentos a este equipo "
+"de ventas."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -88,7 +89,7 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
-"Añadir %(user_name)s a este equipo lo sacaría de su equipo actual "
+"Agregar a %(user_name)s a este equipo le sacaría de su equipo actual "
 "%(team_name)s."
 
 #. module: sales_team
@@ -98,7 +99,7 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
-"Añadir %(user_name)s a este equipo lo sacaría de sus equipos actuales "
+"Agregar a %(user_name)s a este equipo le sacaría de sus equipos actuales "
 "%(team_names)s."
 
 #. module: sales_team
@@ -108,7 +109,7 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
-"Añadir %(user_names)s a este equipo lo sacaría de sus equipos actuales "
+"Agregar a %(user_names)s a este equipo le sacaría de sus equipos actuales "
 "(%(team_names)s)."
 
 #. module: sales_team
@@ -267,8 +268,8 @@ msgstr "Miembros favoritos"
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
-"Equipos favoritos que se mostrarán en el tablero y a los que se podrá "
-"acceder fácilmente."
+"Equipos favoritos que se mostrarán en el tablero y a los que podrá acceder "
+"con facilidad."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -276,8 +277,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Seguir a este equipo de ventas para rastrear automáticamente los eventos "
-"asociados a los usuarios de este equipo."
+"Seguir a este equipo de ventas para rastrear de forma automática los eventos"
+" asociados a los usuarios de este equipo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -289,7 +290,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -321,8 +322,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
-"Si es Verdadero, los usuarios pueden pertenecer a varios equipos de ventas. "
-"De lo contrario, solo se puede pertenecer a un único equipo de ventas."
+"Si está seleccionado, los usuarios pueden pertenecer a varios equipos de "
+"ventas. De lo contrario, solo pueden pertenecer a un único equipo de ventas."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -331,15 +332,14 @@ msgstr ""
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado hay nuevos mensajes que requieren su atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -348,8 +348,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
-"Si se encuentra seleccionado, se utilizará este equipo para las ventas y "
-"tareas relacionadas con este partner."
+"Si se establece, este equipo de ventas se utilizará para las ventas y "
+"asignaciones relacionadas con este contacto."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -357,8 +357,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Si el campo activo se define como falso se podrá ocultar el equipo de ventas"
-" sin eliminarlo."
+"Si desactiva el campo activo, podrá ocultar el equipo de ventas sin "
+"eliminarlo."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -445,13 +445,13 @@ msgstr "Miembros"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr "Advertencia sobre el número de miembros"
+msgstr "Advertencia sobre la membresía "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_has_error
 msgid "Message Delivery error"
-msgstr "Error en el envío del mensaje"
+msgstr "Error al enviar el mensaje"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
@@ -468,7 +468,7 @@ msgstr "Celular"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr "Múltiples membresías permitidas"
+msgstr "Varias membresías permitidas"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -686,7 +686,7 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
-"Para añadir un vendedor a varios equipos, active la opción Multiequipo en "
+"Para agregar un vendedor a varios equipos, active la opción Multiequipo en "
 "los ajustes."
 
 #. module: sales_team
@@ -699,15 +699,15 @@ msgstr "Capacitación "
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
-"Experiencia de usuario: dar a los usuarios la posibilidad de no añadir en el"
-" equipo elegido para evitar duplicados."
+"Experiencia de usuario: proporcionar a los usuarios la posibilidad de no "
+"agregar al equipo elegido para evitar duplicados."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
 msgstr ""
-"Experiencia del usuario: Limitar a la empresa del equipo o a todas si no hay"
+"Experiencia del usuario: limitar a la empresa del equipo o a todas si no hay"
 " empresa"
 
 #. module: sales_team
@@ -744,8 +744,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
-"Utilice la función de equipos de ventas para organizar su departamento de ventas.\n"
-"Cada equipo trabajará con un flujo de trabajo independiente."
+"Utilice los equipos de ventas para organizar sus departamentos de ventas.\n"
+"                Cada equipo trabajará con un flujo independiente."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -803,18 +803,17 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
-"Está intentando crear unas membresías duplicadas. Encontramos que "
-"%(duplicates)s ya existen."
+"Está intentando crear membresías duplicadas, ya existen %(duplicates)s."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr "por ejemplo, América del Norte"
+msgstr "Por ejemplo, América del Norte"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr "por ejemplo, servicios"
+msgstr "Por ejemplo, servicios"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
@@ -827,12 +826,12 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
-"el usuario tendrá acceso a todos los registros en la aplicación de ventas."
+"el usuario tendrá acceso a todos los registros en la aplicación Ventas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "el usuario tendrá acceso a sus propios datos en la aplicación ventas."
+msgstr "el usuario tendrá acceso a sus propios datos en la aplicación Ventas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager

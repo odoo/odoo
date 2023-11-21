@@ -69,6 +69,29 @@ def resolve_mro(model, name, predicate):
     return result
 
 
+def determine(needle, records, *args):
+    """ Simple helper for calling a method given as a string or a function.
+
+    :param needle: callable or name of method to call on ``records``
+    :param BaseModel records: recordset to call ``needle`` on or with
+    :params args: additional arguments to pass to the determinant
+    :returns: the determined value if the determinant is a method name or callable
+    :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
+                      a callable or valid method name
+    """
+    if not isinstance(records, BaseModel):
+        raise TypeError("Determination requires a subject recordset")
+    if isinstance(needle, str):
+        needle = getattr(records, needle)
+        if needle.__name__.find('__'):
+            return needle(*args)
+    elif callable(needle):
+        if needle.__name__.find('__'):
+            return needle(records, *args)
+
+    raise TypeError("Determination requires a callable or method name")
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -266,10 +289,6 @@ class Field(MetaField('DummyField', (object,), {})):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
-
-    def new(self, **kwargs):
-        """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
 
     def __str__(self):
         if self.name is None:
@@ -558,7 +577,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for attr, prop in self.related_attrs:
             # check whether 'attr' is explicitly set on self (from its field
             # definition), and ignore its class-level value (only a default)
-            if attr not in self.__dict__:
+            if attr not in self.__dict__ and prop.startswith('_related_'):
                 setattr(self, attr, getattr(field, prop))
 
         for attr in field._extra_keys:
@@ -748,6 +767,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return a dictionary that describes the field ``self``. """
         desc = {'type': self.type}
         for attr, prop in self.description_attrs:
+            if not prop.startswith('_description_'):
+                continue
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
@@ -1096,7 +1117,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
             elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
-                value = self.convert_to_cache(record._origin[self.name], record)
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
                 env.cache.set(record, self, value)
 
             elif self.compute:
@@ -1110,14 +1131,18 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    try:
-                        value = env.cache.get(record, self)
-                    except CacheMiss:
+                        recs = record
+
+                    missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                    if missing_recs_ids:
+                        missing_recs = record.browse(missing_recs_ids)
                         if self.readonly and not self.store:
-                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
-                        # fallback to null value if compute gives nothing
-                        value = self.convert_to_cache(False, record, validate=False)
-                        env.cache.set(record, self, value)
+                            raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
+                        # fallback to null value if compute gives nothing, do it for every unset record
+                        false_value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.update(missing_recs, self, itertools.repeat(false_value))
+
+                    value = env.cache.get(record, self)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -1275,22 +1300,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, str):
-            getattr(records, self.inverse)()
-        else:
-            self.inverse(records)
+        determine(self.inverse, records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if isinstance(self.search, str):
-            return getattr(records, self.search)(operator, value)
-        else:
-            return self.search(records, operator, value)
-
-    ############################################################################
-    #
-    # Notification when fields are modified
-    #
+        return determine(self.search, records, operator, value)
 
 
 class Boolean(Field):
@@ -1428,8 +1442,6 @@ class Float(Field):
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
-        if not validate:
-            return value
         digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
@@ -2501,10 +2513,8 @@ class Selection(Field):
             translated according to context language
         """
         selection = self.selection
-        if isinstance(selection, str):
-            return getattr(env[self.model_name], selection)()
-        if callable(selection):
-            return selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            return determine(selection, env[self.model_name])
 
         # translate selection labels
         if env.lang:
@@ -2519,10 +2529,8 @@ class Selection(Field):
     def get_values(self, env):
         """Return a list of the possible values."""
         selection = self.selection
-        if isinstance(selection, str):
-            selection = getattr(env[self.model_name], selection)()
-        elif callable(selection):
-            selection = selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            selection = determine(selection, env[self.model_name])
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -2841,9 +2849,8 @@ class Many2one(_Relational):
         return ustr(value.display_name)
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records

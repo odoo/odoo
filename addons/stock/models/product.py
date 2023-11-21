@@ -241,6 +241,7 @@ class Product(models.Model):
             return self.description_pickingout or self.name
         if picking_code == 'internal':
             return self.description_picking or description
+        return description
 
     def _get_domain_locations(self):
         '''
@@ -248,6 +249,7 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, compute_child
         '''
+        Location = self.env['stock.location']
         Warehouse = self.env['stock.warehouse']
 
         def _search_ids(model, values):
@@ -276,7 +278,14 @@ class Product(models.Model):
             w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
-                location_ids = w_ids & l_ids
+                parents = Location.browse(w_ids).mapped("parent_path")
+                location_ids = {
+                    loc.id
+                    for loc in Location.browse(l_ids)
+                    if any(loc.parent_path.startswith(parent) for parent in parents)
+                }
+                if not location_ids:
+                    return [[expression.FALSE_LEAF]] * 3
             else:
                 location_ids = w_ids
         else:
@@ -351,7 +360,7 @@ class Product(models.Model):
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
             raise UserError(_('Invalid domain operator %s', operator))
         if not isinstance(value, (float, int)):
-            raise UserError(_('Invalid domain right operand %s', value))
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
@@ -364,6 +373,11 @@ class Product(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
+        if operator not in ('<', '>', '=', '!=', '<=', '>='):
+            raise UserError(_('Invalid domain operator %s', operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -659,7 +673,10 @@ class ProductTemplate(models.Model):
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
-        ('none', 'No Tracking')], string="Tracking", help="Ensure the traceability of a storable product in your warehouse.", default='none', required=True)
+        ('none', 'No Tracking')],
+        string="Tracking", required=True, default='none',
+        compute='_compute_tracking', store=True, readonly=False,
+        help="Ensure the traceability of a storable product in your warehouse.")
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -773,6 +790,12 @@ class ProductTemplate(models.Model):
             template.nbr_moves_in = int(res[template.id]['moves_in'])
             template.nbr_moves_out = int(res[template.id]['moves_out'])
 
+    @api.depends('type')
+    def _compute_tracking(self):
+        self.filtered(
+            lambda t: not t.tracking or t.type in ('consu', 'service') and t.tracking != 'none'
+        ).tracking = 'none'
+
     @api.model
     def _get_action_view_related_putaway_rules(self, domain):
         return {
@@ -837,8 +860,6 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         res = super(ProductTemplate, self)._onchange_type() or {}
-        if self.type == 'consu' and self.tracking != 'none':
-            self.tracking = 'none'
 
         # Return a warning when trying to change the product type
         if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
@@ -859,10 +880,17 @@ class ProductTemplate(models.Model):
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
             if products_changing_company:
+                move = self.env['stock.move'].sudo().search([
+                    ('product_id', 'in', products_changing_company.product_variant_ids.ids),
+                    ('company_id', 'not in', [vals['company_id'], False]),
+                ], order=None, limit=1)
+                if move:
+                    raise UserError(_("This product's company cannot be changed as long as there are stock moves of it belonging to another company."))
+
                 # Forbid changing a product's company when quant(s) exist in another company.
                 quant = self.env['stock.quant'].sudo().search([
                     ('product_id', 'in', products_changing_company.product_variant_ids.ids),
-                    ('company_id', '!=', vals['company_id']),
+                    ('company_id', 'not in', [vals['company_id'], False]),
                     ('quantity', '!=', 0),
                 ], order=None, limit=1)
                 if quant:
@@ -871,7 +899,7 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:

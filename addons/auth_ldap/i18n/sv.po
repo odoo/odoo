@@ -8,6 +8,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Johan Bergquist <johan.bergquist@netip.se>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse Larsson, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,6 +40,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filter som används för att söka upp användarkonton i LDAP-databasen. Det är ett godtyckligt LDAP-filter i strängrepresentation. Alla `%s` platshållare kommer att ersättas av inloggningen (identifieraren) som tillhandahålls av användaren, filtret bör innehålla minst en sådan platshållare.\n"
+"\n"
+"    Filtret måste resultera i exakt ett (1) resultat, annars kommer inloggningen att anses vara ogiltig.\n"
+"\n"
+"    Exempel (aktuella attribut beror på LDAP-server och inställningar):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    eller\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -62,7 +75,7 @@ msgstr "Företag"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Företagets LDAP-konfiguration"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -72,7 +85,7 @@ msgstr "Konfigurationsinställningar"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr ""
+msgstr "Skapa användare"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -90,6 +103,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN för användarsökningens omfattning: alla ättlingar till denna bas kommer "
+"att sökas efter användare."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -116,7 +131,7 @@ msgstr "LDAP-parametrar"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -173,6 +188,8 @@ msgstr "Inloggningsuppgifter"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Ingen lokal användare hittades för LDAP-inloggning och det är inte "
+"konfigurerat att skapa en"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

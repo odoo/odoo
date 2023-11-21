@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,6 +38,7 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
+"ปรับระยะขอบของเช็คที่สร้างขึ้นเพื่อให้พอดีกับการตั้งค่าเครื่องพิมพ์ของคุณ"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -52,56 +54,56 @@ msgstr "ยกเลิก"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "ตรวจสอบเค้าโครง"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "ตรวจสอบระยะขอบด้านซ้าย"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 msgid "Check Number"
-msgstr ""
+msgstr "ตรวจสอบหมายเลข"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr ""
+msgstr "ตรวจสอบการพิมพ์"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "ตรวจสอบระยะขอบด้านขวา"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
-msgstr ""
+msgstr "ตรวจสอบลำดับ"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "ตรวจสอบระยะขอบด้านบน"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "หมายเลขเช็คต้องประกอบด้วยตัวเลขเท่านั้น"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
+msgstr "เลือกตัวเลือกนี้ หากเช็คที่พิมพ์ไว้ล่วงหน้าของคุณไม่มีหมายเลขกำกับ"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr ""
+msgstr "ตรวจสอบเพื่อสั่งพิมพ์"
 
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
@@ -111,19 +113,19 @@ msgstr "เช็ค"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr ""
+msgstr "ตรวจสอบลำดับเลข"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
 msgid "Checks to Print"
-msgstr ""
+msgstr "ตรวจสอบเพื่อสั่งพิมพ์"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr ""
+msgstr "ตรวจสอบเพื่อสั่งพิมพ์"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
@@ -174,6 +176,8 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
+"หากต้องการพิมพ์เช็คหลายรายการในคราวเดียว "
+"เช็คเหล่านั้นจะต้องอยู่ในสมุดรายวันของธนาคารเดียวกัน"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -204,7 +208,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
-msgstr ""
+msgstr "การกำหนดหมายเลขด้วยตนเอง"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
@@ -227,20 +231,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Stub ตรวจสอบหลายหน้า"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr ""
+msgstr "หมายเลขเช็คถัดไป"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "หมายเลขเช็คถัดไปควรมีเฉพาะตัวเลขเท่านั้น"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -271,20 +275,22 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
+"การชำระเงินที่จะพิมพ์เป็นเช็คจะต้องเลือก \"เช็ค\" "
+"เป็นวิธีการชำระเงินและยังไม่ได้รับการกระทบยอด"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr ""
+msgstr "โปรดป้อนหมายเลขเช็คที่พิมพ์ไว้ล่วงหน้าฉบับแรกที่คุณกำลังจะพิมพ์"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "วิธีการชำระเงินที่ต้องการ"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -294,6 +300,9 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"ใช้วิธีการชำระเงินที่ต้องการเมื่อชำระเงินให้กับผู้ขายรายนี้ "
+"กรองใบเรียกเก็บเงินของผู้จำหน่ายโดยวิธีการชำระเงินที่ต้องการเพื่อลงทะเบียนการชำระเงินเป็นกลุ่ม"
+" กรณีการใช้งาน: สร้างไฟล์ธนาคารสำหรับการโอนเงินแบบกลุ่มและดำเนินการตรวจสอบ"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -322,7 +331,7 @@ msgstr "พิมพ์ป้ายวันที่"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr ""
+msgstr "พิมพ์เช็คที่กำหนดหมายเลขล่วงหน้า"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_register
@@ -332,7 +341,7 @@ msgstr "ลงทะเบียนการจ่ายเงิน"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "ขอบด้านขวา"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -341,6 +350,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"เลือกรูปแบบที่สอดคล้องกับกระดาษเช็คที่คุณจะพิมพ์เช็ค\n"
+"หากต้องการปิดใช้งานฟีเจอร์การพิมพ์ ให้เลือก 'ไม่มี'"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -350,7 +361,7 @@ msgstr "ส่งแล้ว"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "หมายเลขลำดับของเช็คที่พิมพ์ครั้งถัดไป"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -359,6 +370,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"มีข้อผิดพลาดเกิดขึ้นกับเค้าโครงของเช็ค "
+"โปรดเลือกเค้าโครงอื่นในการตั้งค่าการออกใบแจ้งหนี้/การบัญชีแล้วลองอีกครั้ง"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -367,6 +380,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"มีการใช้หมายเลขต่อไปนี้แล้ว:\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -375,6 +390,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"หมายเลขเช็คล่าสุดคือ %s เพื่อหลีกเลี่ยงไม่ให้ธนาคารปฏิเสธเช็ค "
+"คุณสามารถใช้ตัวเลขที่มากกว่าได้เท่านั้น"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -383,6 +400,10 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"สมุดรายวันที่เลือกได้รับการกำหนดค่าให้พิมพ์หมายเลขเช็ค "
+"หากกระดาษเช็คที่พิมพ์ไว้ล่วงหน้าของคุณมีตัวเลขอยู่แล้ว "
+"หรือหากหมายเลขปัจจุบันไม่ถูกต้อง "
+"คุณสามารถเปลี่ยนได้ในหน้าการกำหนดค่าสมุดรายวัน"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -391,6 +412,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"ตัวเลือกนี้ช่วยให้คุณสามารถพิมพ์รายละเอียดเช็ค (ต้นขั้ว) บนหลายหน้าได้ "
+"หากไม่พอดีกับหน้าเดียว"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -399,22 +422,24 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"ตัวเลือกนี้ช่วยให้คุณสามารถพิมพ์ป้ายกำกับวันที่บนเช็คตาม CPA\n"
+"ปิดการใช้งานนี้หากเช็คที่พิมพ์ไว้ล่วงหน้าของคุณมีป้ายกำกับวันที่อยู่แล้ว"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "ซึ่งจะช่วยให้สามารถประหยัดการชำระเงินตามจำนวนเช็คที่เกี่ยวข้อง"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr ""
+msgstr "ยกเลิกการทำเครื่องหมายว่าส่งแล้ว"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "ยกเลิกเช็ค"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -423,3 +448,6 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"คุณต้องเลือกเค้าโครงเช็ค สำหรับการดำเนินการนี้ "
+"ให้ไปที่การตั้งค่าการออกใบแจ้งหนี้/การบัญชี ค้นหา 'เค้าโครงเช็ค' "
+"และตั้งค่าหนึ่งรายการ"

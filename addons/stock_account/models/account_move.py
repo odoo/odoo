@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.tools import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -105,6 +106,7 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
@@ -129,6 +131,9 @@ class AccountMove(models.Model):
                 sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
+
+                if move.currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+                    continue
 
                 # Add interim account line.
                 lines_vals_list.append({
@@ -204,7 +209,7 @@ class AccountMove(models.Model):
                         lambda line: line.product_id == prod and line.account_id == product_interim_account and not line.reconciled)
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
-                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == prod)
+                    product_stock_moves = stock_moves._filter_by_product(prod)
                     product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
                         .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
 
@@ -225,7 +230,7 @@ class AccountMoveLine(models.Model):
         # with anglo-saxon accounting.
         self.ensure_one()
         self = self.with_company(self.move_id.journal_id.company_id)
-        if self.product_id.type == 'product' \
+        if self._can_use_stock_accounts() \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
@@ -237,6 +242,9 @@ class AccountMoveLine(models.Model):
     def _eligible_for_cogs(self):
         self.ensure_one()
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
+
+    def _can_use_stock_accounts(self):
+        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

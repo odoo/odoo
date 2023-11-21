@@ -188,7 +188,11 @@ class StockQuant(models.Model):
             lot_id = self.env['stock.production.lot'].browse(vals.get('lot_id'))
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
             owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-            quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+            quant = self.env["stock.quant"]
+            if not self.env.context.get('import_file'):
+                # Merge quants later, to make sure one line = one record during batch import
+                quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+
             if lot_id:
                 quant = quant.filtered(lambda q: q.lot_id)
 
@@ -262,6 +266,15 @@ class StockQuant(models.Model):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
         return super(StockQuant, self).write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_wrong_permission(self):
+        if not self.env.is_superuser():
+            if not self.user_has_groups('stock.group_stock_manager'):
+                raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
+            self = self.with_context(inventory_mode=True)
+            self.inventory_quantity = 0
+            self._apply_inventory()
 
     def action_view_stock_moves(self):
         self.ensure_one()
@@ -428,10 +441,26 @@ class StockQuant(models.Model):
 
     @api.constrains('quantity')
     def check_quantity(self):
-        for quant in self:
-            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
-                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
+        sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
+        if not sn_quants:
+            return
+        domain = expression.OR([
+            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
+            for q in sn_quants
+        ])
+        groups = self.read_group(
+            domain,
+            ['quantity'],
+            ['product_id', 'location_id', 'lot_id'],
+            orderby='id',
+            lazy=False,
+        )
+        for group in groups:
+            product = self.env['product.product'].browse(group['product_id'][0])
+            lot = self.env['stock.production.lot'].browse(group['lot_id'][0])
+            uom = product.uom_id
+            if float_compare(abs(group['quantity']), 1, precision_rounding=uom.rounding) > 0:
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (product.display_name, lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
@@ -536,7 +565,7 @@ class StockQuant(models.Model):
                 self.product_id, self.location_id, lot_id=self.lot_id,
                 package_id=self.package_id, owner_id=self.owner_id, strict=True)
             if quant:
-                self.quantity = quant.quantity
+                self.quantity = quant.filtered(lambda q: q.lot_id == self.lot_id).quantity
 
             # Special case: directly set the quantity to one for serial numbers,
             # it'll trigger `inventory_quantity` compute.

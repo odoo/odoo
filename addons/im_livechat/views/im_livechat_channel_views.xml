@@ -95,7 +95,7 @@
                         <notebook>
                             <page string="Operators" name="operators">
                                 <group>
-                                    <field name="user_ids" nolabel="1" colspan="2">
+                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['groups_id', 'not in', %(base.group_portal)d]]">
                                         <kanban>
                                             <field name="id"/>
                                             <field name="name"/>

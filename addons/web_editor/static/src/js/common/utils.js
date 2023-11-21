@@ -47,6 +47,13 @@ const DEFAULT_PALETTE = {
     '4': '#FFFFFF',
     '5': '#383E45',
 };
+/**
+ * Set of all the data attributes relative to the background images.
+ */
+const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
+    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
+    "filterOptions",
+]);
 
 /**
  * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
@@ -350,6 +357,50 @@ function _getColorClass(el, colorNames, prefix) {
     const prefixedColorNames = _computeColorClasses(colorNames, prefix);
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
+/**
+ * Add one or more new attributes related to background images in the
+ * BACKGROUND_IMAGE_ATTRIBUTES set.
+ *
+ * @param {...string} newAttributes The new attributes to add in the
+ * BACKGROUND_IMAGE_ATTRIBUTES set.
+ */
+function _addBackgroundImageAttributes(...newAttributes) {
+    BACKGROUND_IMAGE_ATTRIBUTES.add(...newAttributes);
+}
+/**
+ * Check if an attribute is in the BACKGROUND_IMAGE_ATTRIBUTES set.
+ *
+ * @param {string} attribute The attribute that has to be checked.
+ */
+function _isBackgroundImageAttribute(attribute) {
+    return BACKGROUND_IMAGE_ATTRIBUTES.has(attribute);
+}
+/**
+ * Checks if an element supposedly marked with the o_editable_media class should
+ * in fact be editable (checks if its environment looks like a non editable
+ * environment whose media should be editable).
+ *
+ * TODO: the name of this function is voluntarily bad to reflect the fact that
+ * this system should be improved. The combination of o_not_editable,
+ * o_editable, getContentEditableAreas, getReadOnlyAreas and other concepts
+ * related to what should be editable or not should be reviewed.
+ *
+ * @returns {boolean}
+ */
+function _shouldEditableMediaBeEditable(mediaEl) {
+    // Some sections of the DOM are contenteditable="false" (for
+    // example with the help of the o_not_editable class) but have
+    // inner media that should be editable (the fact the container
+    // is not is to prevent adding text in between those medias).
+    // This case is complex and the solution to support it is not
+    // perfect: we mark those media with a class and check that the
+    // first non editable ancestor is in fact in an editable parent.
+    const parentEl = mediaEl.parentElement;
+    const nonEditableAncestorRootEl = parentEl && parentEl.closest('[contenteditable="false"]');
+    return nonEditableAncestorRootEl
+        && nonEditableAncestorRootEl.parentElement
+        && nonEditableAncestorRootEl.parentElement.isContentEditable;
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -369,5 +420,8 @@ return {
     backgroundImageCssToParts: _backgroundImageCssToParts,
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
     getColorClass: _getColorClass,
+    addBackgroundImageAttributes: _addBackgroundImageAttributes,
+    isBackgroundImageAttribute: _isBackgroundImageAttribute,
+    shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
 };
 });

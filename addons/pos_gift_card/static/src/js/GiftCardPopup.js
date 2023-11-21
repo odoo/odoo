@@ -76,7 +76,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
           quantity: 1,
           merge: false,
           generated_gift_card_ids: giftCard ? giftCard.id : false,
-          extras: { price_manually_set: true },
+          extras: { price_automatically_set: true },
         });
       } else {
         await this.showPopup('ErrorPopup', {
@@ -159,7 +159,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         quantity: 1,
         merge: false,
         gift_card_id: giftCard.id,
-        extras: { price_manually_set: true },
+        extras: { price_automatically_set: true },
       });
 
       this.cancel();

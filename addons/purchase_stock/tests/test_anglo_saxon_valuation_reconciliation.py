@@ -330,7 +330,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         exchange_move = valuation_line.full_reconcile_id.exchange_move_id
         self.assertTrue(exchange_move, "An exchange move should exists.")
         exchange_difference = exchange_move.line_ids.filtered(lambda l: l.account_id.id == interim_account_id).balance
-        self.assertAlmostEqual(exchange_difference, 38.46, "Exchange amount is incorrect")
+        self.assertAlmostEqual(exchange_difference, 38.46, msg="Exchange amount is incorrect")
 
     def test_reconcile_cash_basis_bill(self):
         ''' Test the generation of the CABA move after bill payment

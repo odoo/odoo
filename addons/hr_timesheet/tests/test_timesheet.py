@@ -527,3 +527,40 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 8.0,
         })
         self.assertEqual(with_user_timesheet.user_id, self.user_employee, 'User Employee is set in timesheet.')
+
+    def test_create_timesheet_with_companyless_analytic_account(self):
+        """ This test ensures that a timesheet can be created on an analytic account whose company_id is set to False"""
+        self.project_customer.analytic_account_id.company_id = False
+        timesheet = self.env['account.analytic.line'].with_user(self.user_employee).create(
+            {'unit_amount': 1.0, 'project_id': self.project_customer.id})
+        self.assertEqual(timesheet.product_uom_id, self.project_customer.company_id.project_time_mode_id,
+                         "The product_uom_id of the timesheet should be equal to the project's company uom "
+                         "if the project's analytic account has no company_id")
+
+    def test_percentage_of_planned_hours(self):
+        """ Test the percentage of planned hours on a task. """
+        self.task1.planned_hours = round(11/60, 2)
+        self.assertEqual(self.task1.effective_hours, 0, 'No timesheet should be created yet.')
+        self.assertEqual(self.task1.progress, 0, 'No timesheet should be created yet.')
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 3/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            },
+        ])
+        self.assertEqual(self.task1.progress, 100, 'The percentage of planned hours should be 100%.')

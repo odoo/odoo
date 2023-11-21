@@ -10,7 +10,7 @@
                 </div>
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
                     <span style="display: inline-block; text-align: center; line-height: 8px;">
-                        <h1 style="line-height: 25px;">
+                        <h1 style="line-height: 35px;">
                             <strong><span t-esc="not pre_printed_report and document_letter or '&#160;'"/></strong>
                         </h1>
                         <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
@@ -187,7 +187,7 @@
 
                     <!-- (17) CUIT -->
                     <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id and o.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code != '99'">
-                        <br/><strong><t t-esc="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-esc="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_latam_identification_type_id.is_vat else o.partner_id.vat"/>
+                        <br/><strong><t t-esc="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-esc="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_ar_vat else o.partner_id.vat"/>
                     </t>
 
                 </div>

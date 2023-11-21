@@ -33,6 +33,7 @@
 # Martin Trigaux, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Richard Mouthier <rmo@odoo.com>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -40,8 +41,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Richard Mouthier <rmo@odoo.com>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -177,7 +178,7 @@ msgstr "'%s' ei voida muuntaa päivämääräksi tai ajaksi"
 #: code:addons/web/static/src/legacy/js/views/basic/basic_model.js:0
 #, python-format
 msgid "'%s' is unsynchronized with '%s'."
-msgstr ""
+msgstr "'%s' ei ole synkronoitu '%s':n kanssa."
 
 #. module: web
 #. openerp-web
@@ -284,7 +285,7 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">Tax 15%</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Vero 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -331,6 +332,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2020/07/0003</span>"
 msgstr ""
+"<span>Lasku</span>\n"
+"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -358,6 +361,8 @@ msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
 "                                       Four person modern office workstation</span>"
 msgstr ""
+"<span>[FURN_8220] Neljän hengen työpöytä<br/>\n"
+"                                       Neljän hengen moderni toimistotyöpöytä</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -365,6 +370,8 @@ msgid ""
 "<span>[FURN_8999] Three-Seat Sofa<br/>\n"
 "                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
 msgstr ""
+"<span>[FURN_8999] Kolmen istuimen sohva<br/>\n"
+"                                       Kolmen istuimen sohva lepotuolilla, väri teräksenharmaa</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -391,7 +398,7 @@ msgstr "<strong>Yhteensä</strong>"
 #: code:addons/web/static/src/search/favorite_menu/custom_favorite_item.js:0
 #, python-format
 msgid "A filter with same name already exists."
-msgstr ""
+msgstr "Samanniminen suodatin on jo olemassa."
 
 #. module: web
 #. openerp-web
@@ -399,7 +406,7 @@ msgstr ""
 #: code:addons/web/static/src/search/favorite_menu/custom_favorite_item.js:0
 #, python-format
 msgid "A name for your favorite filter is required."
-msgstr ""
+msgstr "Suosikkisuodattimelle on annettava nimi."
 
 #. module: web
 #. openerp-web
@@ -584,7 +591,7 @@ msgstr "Lisää solmu"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Add qweb directive context"
-msgstr ""
+msgstr "Lisää qweb-direktiivin konteksti"
 
 #. module: web
 #. openerp-web
@@ -683,7 +690,7 @@ msgstr "Alt"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Among the"
-msgstr ""
+msgstr "Niistä"
 
 #. module: web
 #. openerp-web
@@ -865,7 +872,7 @@ msgstr "Avatar"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
-msgstr ""
+msgstr "Taustakuva"
 
 #. module: web
 #. openerp-web
@@ -1081,7 +1088,7 @@ msgstr "Valitse tiedosto"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Choose a debug command..."
-msgstr ""
+msgstr "Valitse debug-komento..."
 
 #. module: web
 #. openerp-web
@@ -1161,7 +1168,7 @@ msgstr "Yritys"
 #: model:ir.model.fields,field_description:web.field_base_document_layout__company_details
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Company Details"
-msgstr ""
+msgstr "Yrityksen tiedot"
 
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
@@ -1261,7 +1268,7 @@ msgstr "Hallinta"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Control panel buttons"
-msgstr ""
+msgstr "Ohjauspaneelin painikkeet"
 
 #. module: web
 #. openerp-web
@@ -1312,14 +1319,14 @@ msgstr "Ei voitu yhdistää palvelimeen"
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
 #, python-format
 msgid "Could not display the selected image"
-msgstr ""
+msgstr "Valittua kuvaa ei voitu näyttää"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "Määritettyä kuvan url-osoitetta ei voitu näyttää."
 
 #. module: web
 #. openerp-web
@@ -1517,7 +1524,7 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Debug tools..."
-msgstr ""
+msgstr "Työkalut"
 
 #. module: web
 #. openerp-web
@@ -1623,7 +1630,7 @@ msgstr "Hylkää tietueen muutokset"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Discard record"
-msgstr ""
+msgstr "Hävitä tietue"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -1635,7 +1642,7 @@ msgstr "Näyttönimi"
 #: code:addons/web/static/src/legacy/js/views/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr ""
+msgstr "Haluatko todella peruuttaa %s-latauksen?"
 
 #. module: web
 #. openerp-web
@@ -1677,14 +1684,14 @@ msgstr "Toimialueen solmu"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not properly formed"
-msgstr ""
+msgstr "Verkkotunnus ei ole oikein muodostettu"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not supported"
-msgstr ""
+msgstr "Operaattoria ei tueta"
 
 #. module: web
 #. openerp-web
@@ -1698,7 +1705,7 @@ msgstr "Toimialue:"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Don't leave yet,"
-msgstr ""
+msgstr "Älä lähde vielä,"
 
 #. module: web
 #. openerp-web
@@ -1832,7 +1839,7 @@ msgstr "Sähköposti"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Enable profiling"
-msgstr ""
+msgstr "Ota profilointi käyttöön"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -1927,7 +1934,7 @@ msgstr "Ulkoinen linkki"
 #: code:addons/web/static/src/legacy/js/control_panel/control_panel_model_extension.js:0
 #, python-format
 msgid "Failed to evaluate search context"
-msgstr ""
+msgstr "Epäonnistui hakukontekstin arvioinnissa"
 
 #. module: web
 #. openerp-web
@@ -2043,6 +2050,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"Excel-yhteensopivuuden vuoksi tietoja ei voi viedä, jos sarakkeita on yli 16384.\n"
+"\n"
+"Vihje: yritä kääntää akselia, suodattaa tarkemmin tai vähentää raportoitavien tietojen määrää."
 
 #. module: web
 #. openerp-web
@@ -2056,7 +2066,7 @@ msgstr "Lomake"
 #: code:addons/web/static/src/legacy/js/views/qweb/qweb_view.js:0
 #, python-format
 msgid "Freedom View"
-msgstr ""
+msgstr "Vapaa näkymä"
 
 #. module: web
 #. openerp-web
@@ -2124,7 +2134,7 @@ msgstr "Kahva"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr ""
+msgstr "Kaikkien raporttien yläosassa näkyvä otsikkoteksti."
 
 #. module: web
 #. openerp-web
@@ -2203,6 +2213,8 @@ msgid ""
 "If you change %s or %s, the synchronization will be reapplied and the data "
 "will be modified."
 msgstr ""
+"Jos muutat %s tai %s, synkronointi otetaan uudelleen käyttöön ja tietoja "
+"muutetaan."
 
 #. module: web
 #. openerp-web
@@ -2265,7 +2277,7 @@ msgstr "Epäkelpo toimialue"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Invalid field chain"
-msgstr ""
+msgstr "Virheellinen kenttäketju"
 
 #. module: web
 #. openerp-web
@@ -2275,6 +2287,8 @@ msgid ""
 "Invalid field chain. You may have used a non-existing field name or followed"
 " a non-relational field."
 msgstr ""
+"Virheellinen kenttäketju. Olet ehkä käyttänyt kentän nimeä, jota ei ole "
+"olemassa, tai seurannut muuta kuin relaatiokenttää."
 
 #. module: web
 #. openerp-web
@@ -2302,6 +2316,11 @@ msgid ""
 "            compilation...). During rendering, the global time also takes part of the time to make\n"
 "            the profile as well as some part not logged in the function generated by the qweb."
 msgstr ""
+"On mahdollista, että \"t-call\":n aika ei vastaa kokonaisaikaa, joka on \n"
+"            mallissa. Koska kokonaisaika (pudotusvalikossa) ei ota huomioon\n"
+"            kestoa, joka ei kulu renderöinnissä (etsi malli, lue, periytyminen,\n"
+"            kääntäminen...). Renderöinnin aikana globaaliin aikaan sisältyy myös osa ajasta, joka kuluu siihen, että tehdään\n"
+"            profiilin tekemiseen sekä jonkin osan, jota ei kirjata qwebin tuottamaan funktioon."
 
 #. module: web
 #. openerp-web
@@ -2315,14 +2334,14 @@ msgstr "Kanban"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Kanban Examples"
-msgstr ""
+msgstr "Kanban esimerkkejä"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Kanban: no action for type: "
-msgstr ""
+msgstr "Kanban: ei toimintoa tyypille:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -2367,7 +2386,7 @@ msgstr "Ulkoasu"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background
 msgid "Layout Background"
-msgstr ""
+msgstr "Asettelun tausta"
 
 #. module: web
 #. openerp-web
@@ -2493,7 +2512,7 @@ msgstr "Mac"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "MailDeliveryException"
-msgstr ""
+msgstr "Poikkeava virhe sähköpostin lähetyksessä"
 
 #. module: web
 #. openerp-web
@@ -2600,7 +2619,7 @@ msgstr "Tapaamisen aihe"
 #: code:addons/web/static/src/legacy/xml/web_calendar.xml:0
 #, python-format
 msgid "Meeting Subject:"
-msgstr ""
+msgstr "Kokouksen aihe:"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_ui_menu
@@ -2633,7 +2652,7 @@ msgstr "Mobiililaitteiden tuki"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "Model Record Rules"
-msgstr ""
+msgstr "Mallirekisterisäännöt"
 
 #. module: web
 #. openerp-web
@@ -2782,7 +2801,7 @@ msgstr "Ei päivitystä:"
 #: code:addons/web/static/src/webclient/actions/client_actions.js:0
 #, python-format
 msgid "No action with id '%s' could be found"
-msgstr ""
+msgstr "Toimintoa tunnuksella '%s' ei löytynyt"
 
 #. module: web
 #. openerp-web
@@ -2862,14 +2881,14 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr ""
+msgstr "Ei kelvollista tietuetta tallennettavaksi"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 #, python-format
 msgid "No view of type '%s' could be found in the current action."
-msgstr ""
+msgstr "Toiminnosta ei löytynyt näkymää, jonka tyyppi on '%s'."
 
 #. module: web
 #. openerp-web
@@ -3031,13 +3050,14 @@ msgstr "One2many"
 msgid ""
 "Only employees can access this database. Please contact the administrator."
 msgstr ""
+"Vain työntekijät voivat käyttää tätä tietokantaa. Ota yhteyttä ylläpitäjään."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %d records have been deleted (out of %d selected)"
-msgstr ""
+msgstr "Vain ensimmäiset %d tietuetta on poistettu (valituista %d tietueesta)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -3046,6 +3066,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
 msgstr ""
+"Vain tyypit %(supported_types)s ovat tuettuja luokassa (löydetty tyyppi "
+"%(field_type)s)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -3054,6 +3076,8 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
 msgstr ""
+"Suodattimessa tuetaan vain tyyppejä %(supported_types)s (löydetty tyyppi "
+"%(field_type)s)"
 
 #. module: web
 #. openerp-web
@@ -3076,6 +3100,13 @@ msgstr ""
 #, python-format
 msgid "Open View"
 msgstr "Avaa näkymä"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "Avaa kehittäjätyökalut"
 
 #. module: web
 #. openerp-web
@@ -3127,7 +3158,7 @@ msgstr "Avaa: %s"
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Optional columns"
-msgstr ""
+msgstr "Valinnaiset sarakkeet"
 
 #. module: web
 #. openerp-web
@@ -3277,7 +3308,7 @@ msgstr "Pivot %(title)s (%(model_name)s)"
 #: code:addons/web/static/src/views/pivot/pivot_view.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr ""
+msgstr "Pivot-asetukset"
 
 #. module: web
 #. openerp-web
@@ -3350,6 +3381,8 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
 msgstr ""
+"Huomioi seuraava tieto maksua varten : <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -3386,7 +3419,7 @@ msgstr "Esikatsele sisäinen raportti"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr ""
+msgstr "Logon esikatselu"
 
 #. module: web
 #. openerp-web
@@ -3447,7 +3480,7 @@ msgstr "Tulosta"
 #: code:addons/web/static/src/legacy/xml/report.xml:0
 #, python-format
 msgid "Printing options"
-msgstr ""
+msgstr "Tulostusvaihtoehdot"
 
 #. module: web
 #. openerp-web
@@ -3573,21 +3606,21 @@ msgstr "Radio"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record qweb"
-msgstr ""
+msgstr "Tallenna qweb"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record sql"
-msgstr ""
+msgstr "Tallenna SQL"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record traces"
-msgstr ""
+msgstr "Tallenna seurannat (tracet)"
 
 #. module: web
 #. openerp-web
@@ -3604,7 +3637,7 @@ msgstr "Punainen"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Refresh"
-msgstr ""
+msgstr "Päivitä"
 
 #. module: web
 #. openerp-web
@@ -3710,7 +3743,7 @@ msgstr "Raportin Pohja"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_layout_preview
 msgid "Report Layout Preview"
-msgstr ""
+msgstr "Raportin ulkoasun esikatselu"
 
 #. module: web
 #. openerp-web
@@ -3723,7 +3756,7 @@ msgstr "Pyynnön aikakatkaisu"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr ""
+msgstr "Palauta logon värit"
 
 #. module: web
 #. openerp-web
@@ -3849,7 +3882,7 @@ msgstr "Etsi Lisää..."
 #: code:addons/web/static/src/core/commands/command_service.js:0
 #, python-format
 msgid "Search for a command..."
-msgstr ""
+msgstr "Etsi komento..."
 
 #. module: web
 #. openerp-web
@@ -3882,7 +3915,7 @@ msgstr "Etsi: %s"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Toissijainen väri"
 
 #. module: web
 #. openerp-web
@@ -4003,14 +4036,14 @@ msgstr "Aseta kansikuva"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a kanban state..."
-msgstr ""
+msgstr "Aseta Kanban-tila..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a priority..."
-msgstr ""
+msgstr "Aseta prioriteetti..."
 
 #. module: web
 #. openerp-web
@@ -4024,14 +4057,14 @@ msgstr "Aseta käyttäjän aikavyöhyke"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set kanban state..."
-msgstr ""
+msgstr "Aseta Kanban-tila..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set priority..."
-msgstr ""
+msgstr "Aseta prioriteetti..."
 
 #. module: web
 #. openerp-web
@@ -4093,6 +4126,8 @@ msgid ""
 "Something happened while trying to contact the server, check that the server"
 " is online and that you still have a working network connection."
 msgstr ""
+"Jotain tapahtui, kun yritit ottaa yhteyttä palvelimeen, tarkista, että "
+"palvelin on verkossa ja että verkkoyhteys toimii edelleen."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4106,7 +4141,7 @@ msgstr "Jotain kamalaa tapahtui"
 #: code:addons/web/static/src/views/graph/graph_view.xml:0
 #, python-format
 msgid "Sort graph"
-msgstr ""
+msgstr "Lajittelukuvaaja"
 
 #. module: web
 #. openerp-web
@@ -4129,7 +4164,7 @@ msgstr "Pinottu"
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "Start typing..."
-msgstr ""
+msgstr "Kirjoita..."
 
 #. module: web
 #. openerp-web
@@ -4188,7 +4223,7 @@ msgstr "Tunnisteet"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Take a minute to get a coffee,"
-msgstr ""
+msgstr "Ota hyvä hetki hakea kahvia,"
 
 #. module: web
 #. openerp-web
@@ -4248,13 +4283,15 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"Tämän solun sisältö on liian pitkä XLSX-tiedostoon (yli %s merkkiä). Käytä "
+"CSV-muotoa tähän vientiin."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "The field is empty, there's nothing to save."
-msgstr ""
+msgstr "Kenttä on tyhjä, ei ole mitään tallennettavaa."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4278,6 +4315,8 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
+"Operaatio keskeytettiin. Tämä tarkoittaa yleensä sitä, että nykyinen "
+"toiminto vie liikaa aikaa."
 
 #. module: web
 #. openerp-web
@@ -4304,13 +4343,15 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"Excel 2007-2013 (.xlsx) -muodossa vietäviä rivejä on liikaa (%s riviä, "
+"rajoitus: %s). Harkitse viennin jakamista useampaan vientiin."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Kansikuvaksi määritettävää kuvaa ei ole käytettävissä."
 
 #. module: web
 #. openerp-web
@@ -4325,6 +4366,7 @@ msgstr "Tiedoston lataamisessa oli ongelma"
 #, python-format
 msgid "This date is in the future. Make sure this is what you expect."
 msgstr ""
+"Tämä päivämäärä on tulevaisuudessa. Varmista, että tämä on se, mitä odotat."
 
 #. module: web
 #. openerp-web
@@ -4333,20 +4375,21 @@ msgstr ""
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
 msgstr ""
+"Tämä päivämäärä on tulevaisuudessa. Varmista, että se on se, mitä odotit."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "Tätä verkkotunnusta ei tueta."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "Tämä tiedosto on virheellinen. Valitse kuva."
 
 #. module: web
 #. openerp-web
@@ -4372,7 +4415,7 @@ msgstr "Tämä on esimerkki sisäisestä raportista."
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "This update will only consider the records of the current page."
-msgstr ""
+msgstr "Tämä päivitys ottaa huomioon vain nykyisen sivun tietueet."
 
 #. module: web
 #. openerp-web
@@ -4389,6 +4432,8 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Aikavyöhyke eroaa : Tämä aikavyöhyke eroaa selaimesi aikavyöhykkeestä.\n"
+"Aseta sama aikavyöhyke kuin selaimessasi, jotta vältät aikaerot järjestelmässäsi."
 
 #. module: web
 #. openerp-web
@@ -4416,7 +4461,7 @@ msgstr "Huomenna"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "Liian monta kohdetta näytettäväksi."
 
 #. module: web
 #. openerp-web
@@ -4453,6 +4498,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                    active filter in the search bar."
 msgstr ""
+"Yritä lisätä joitakin tietueita tai varmista, että hakupalkissa\\n\n"
+"                    ei ole asetettuna suodatinta."
 
 #. module: web
 #. openerp-web
@@ -4482,6 +4529,8 @@ msgstr "URL"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr ""
+"Wkhtmltopdf-ohjelmaa ei löydy palvelimelta. Raportti näytetään html-"
+"muodossa."
 
 #. module: web
 #. openerp-web
@@ -4575,7 +4624,7 @@ msgstr "Tuntematon ei-kirjallinen tyyppi "
 #: code:addons/web/static/src/legacy/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Irrota linkki riviltä"
 
 #. module: web
 #. openerp-web
@@ -4602,7 +4651,7 @@ msgstr "Nimetön"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Update to:"
-msgstr ""
+msgstr "Päivitä:"
 
 #. module: web
 #. openerp-web
@@ -4630,7 +4679,7 @@ msgstr "Päivitä tuleviin versioihin"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Lataa ja aseta"
 
 #. module: web
 #. openerp-web
@@ -4691,7 +4740,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Kanban"
-msgstr ""
+msgstr "Käytä tätä kanbaniini"
 
 #. module: web
 #. openerp-web
@@ -4712,7 +4761,7 @@ msgstr "Käyttäjä"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Käyttäjän virhe"
 
 #. module: web
 #. openerp-web
@@ -4726,7 +4775,7 @@ msgstr "Tarkistusvirhe"
 #: code:addons/web/static/src/legacy/js/views/basic/basic_renderer.js:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Tässä asetetut arvot ovat yrityskohtaisia."
 
 #. module: web
 #. openerp-web
@@ -4734,7 +4783,7 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "Muunnelma"
 
 #. module: web
 #. openerp-web
@@ -4748,7 +4797,7 @@ msgstr "Katso %s"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Access Rights"
-msgstr ""
+msgstr "Näytä käyttöoikeudet"
 
 #. module: web
 #. openerp-web
@@ -4770,7 +4819,7 @@ msgstr "Näytä metatiedot"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Record Rules"
-msgstr ""
+msgstr "Näytä tietueen säännöt"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
@@ -4782,7 +4831,7 @@ msgstr "Näkymän tyyppi"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "View switcher"
-msgstr ""
+msgstr "Näkymän vaihtaminen"
 
 #. module: web
 #. openerp-web
@@ -4799,17 +4848,17 @@ msgstr "Varoitus"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
 msgid "Web Benchmarks"
-msgstr ""
+msgstr "Verkon vertailuarvot"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Web Mobile Testit"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr ""
+msgstr "Verkkotestit"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
@@ -4845,7 +4894,7 @@ msgstr "Windows/Linux"
 #: code:addons/web/static/src/legacy/js/fields/special_fields.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "Kääri raaka html iframeen"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4905,7 +4954,7 @@ msgstr "Sinulla ei ole oikeuksia ladata liitettä tähän"
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector.js:0
 #, python-format
 msgid "You cannot follow relations for this field chain construction"
-msgstr ""
+msgstr "Et voi seurata tämän kenttäketjun rakentamisen suhteita"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4918,7 +4967,7 @@ msgstr "Et voi jättää salasanaa tyhjäksi."
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "You may not believe it,"
-msgstr ""
+msgstr "Ette ehkä usko tätä,"
 
 #. module: web
 #. openerp-web
@@ -4936,6 +4985,8 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"Sinun on tallennettava tämä uusi tietue ennen käännöksen muokkaamista. "
+"Haluatko jatkaa?"
 
 #. module: web
 #. openerp-web
@@ -4945,6 +4996,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"Sinun on käynnistettävä Odoo vähintään kahdella workerillä, jotta voit "
+"tulostaa raporttien pdf-version."
 
 #. module: web
 #. openerp-web
@@ -4955,6 +5008,9 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages."
 msgstr ""
+"Sinun tulisi päivittää Wkhtmltopdf-versiosi vähintään versioon 0.12.0, jotta"
+" saat otsikot ja alatunnisteet näkymään oikein ja jotta sivujen väliset "
+"taulukot tukevat taulukkojen katkaisua."
 
 #. module: web
 #. openerp-web
@@ -4962,7 +5018,7 @@ msgstr ""
 #: code:addons/web/static/src/public/error_notifications.js:0
 #, python-format
 msgid "Your Odoo session expired. The current page is about to be refreshed."
-msgstr ""
+msgstr "Odoo-istuntosi päättyi. Nykyinen sivu on päivittymässä."
 
 #. module: web
 #. openerp-web
@@ -4972,6 +5028,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
 msgstr ""
+"Wkhtmltopdf-ohjelman asennus näyttää olevan rikki. Raportti näytetään html-"
+"muodossa."
 
 #. module: web
 #. openerp-web
@@ -4986,7 +5044,7 @@ msgstr "Nimesi"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "[No widget %s]"
-msgstr ""
+msgstr "[Ei pienoisohjelmaa %s]"
 
 #. module: web
 #. openerp-web
@@ -5040,42 +5098,42 @@ msgstr "kaikki tietueet"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "ovat voimassa tässä päivityksessä."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "as a new"
-msgstr ""
+msgstr "uutena"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "at:"
-msgstr ""
+msgstr "at:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "because it's loading..."
-msgstr ""
+msgstr "koska se latautuu..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "but the application is actually loading..."
-msgstr ""
+msgstr "sovellus aikuisten oikeasti latautuu..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "lapsi"
 
 #. module: web
 #. openerp-web
@@ -5091,7 +5149,7 @@ msgstr "sisältää"
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #, python-format
 msgid "date"
-msgstr ""
+msgstr "päivämäärä"
 
 #. module: web
 #. openerp-web
@@ -5256,7 +5314,7 @@ msgstr "ei ole"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "ei ole ="
 
 #. module: web
 #. openerp-web
@@ -5377,42 +5435,42 @@ msgstr "ms"
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
-msgstr ""
+msgstr "ei kuvausta"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "not"
-msgstr ""
+msgstr "ei"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not in"
-msgstr ""
+msgstr "ei ole"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not set (false)"
-msgstr ""
+msgstr "ei asetettu (false)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr ""
+msgstr "seuraavista säännöistä:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "of:"
-msgstr ""
+msgstr "josta:"
 
 #. module: web
 #. openerp-web
@@ -5429,7 +5487,7 @@ msgstr "tai"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
-msgstr ""
+msgstr "vanhempi"
 
 #. module: web
 #. openerp-web
@@ -5445,7 +5503,7 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/profiling/profiling_qweb.xml:0
 #, python-format
 msgid "query"
-msgstr ""
+msgstr "kysely"
 
 #. module: web
 #. openerp-web
@@ -5459,7 +5517,7 @@ msgstr "tietue(et)"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "records ?"
-msgstr ""
+msgstr "tietueet ?"
 
 #. module: web
 #. openerp-web
@@ -5489,21 +5547,21 @@ msgstr "valittu"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "valitut tietueet,"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "set"
-msgstr ""
+msgstr "asetettuna"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "set (true)"
-msgstr ""
+msgstr "asetettuna (true)"
 
 #. module: web
 #. openerp-web

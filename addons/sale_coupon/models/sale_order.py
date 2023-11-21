@@ -44,12 +44,13 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
+        res = super().action_confirm()
         valid_coupon_ids = self.generated_coupon_ids.filtered(lambda coupon: coupon.state not in ['expired', 'cancel'])
         valid_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
         (self.generated_coupon_ids - valid_coupon_ids).write({'state': 'cancel', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
-        return super(SaleOrder, self).action_confirm()
+        return res
 
     def _action_cancel(self):
         res = super()._action_cancel()
@@ -88,15 +89,25 @@ class SaleOrder(models.Model):
         total_qty = sum(self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).mapped('product_uom_qty'))
         # Remove needed quantity from reward quantity if same reward and rule product
         if program._get_valid_products(program.reward_product_id):
-            # number of times the program should be applied
-            program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
-            # multipled by the reward qty
-            reward_product_qty = program.reward_product_quantity * program_in_order
+            # number of times the program could be applied by quantity
+            nbr_program_by_qtt = (
+                max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            )
             # do not give more free reward than products
-            reward_product_qty = min(reward_product_qty, total_qty)
+            nbr_program_less_than_products = total_qty // program.reward_product_quantity
+            program_in_order = min(nbr_program_by_qtt, nbr_program_less_than_products)
             if program.rule_minimum_amount:
-                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
-                reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
+                # Ensure the minimum amount for the reward is met
+                min_amount_with_reward = (
+                    program.rule_minimum_amount
+                    + program.reward_product_quantity * program.reward_product_id.lst_price
+                )
+                nbr_program_by_amount = (
+                    sum(order_lines.mapped('price_total')) // min_amount_with_reward
+                )
+                program_in_order = min(program_in_order, nbr_program_by_amount)
+            # multiplied by the reward qty
+            reward_product_qty = program_in_order * program.reward_product_quantity
         else:
             program_in_order = max_product_qty // program.rule_min_quantity
             reward_product_qty = min(program.reward_product_quantity * program_in_order, total_qty)
@@ -423,6 +434,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
         applied_programs = order._get_applied_programs_with_rewards_on_current_order()
+        programs_lost_that_should_be_kept = self.env['coupon.program']
         for program in applied_programs.sorted(lambda ap: (ap.discount_type == 'fixed_amount', ap.discount_apply_on == 'on_order')):
             values = order._get_reward_line_values(program)
             lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
@@ -453,13 +465,36 @@ class SaleOrder(models.Model):
                         lines_to_add += [(0, False, value)]
                 # Case 3.
                 line_update = []
-                if lines_to_remove:
+                if lines_to_remove:  # == if lines_to_keep
+                    programs_lost_that_should_be_kept += program
                     line_update += [(3, line_id, 0) for line_id in lines_to_remove.ids]
                     line_update += lines_to_keep
                 line_update += lines_to_add
                 order.write({'order_line': line_update})
             else:
                 update_line(order, lines, values[0]).unlink()
+        if programs_lost_that_should_be_kept:
+            # Some programs are lost when part of the targets of their rewards are removed
+            # Since they are still applied, we need to link them again to the order
+            # (even if it means recomputing somes reward lines with the same values)
+            #
+            # Example:
+            #   Order with products A (Tax T) & B (no tax), program of x% discount
+            #      will have two reward lines L1 & L2 (tax & no tax)
+            #   If we remove product A, reward line L1 will be removed, and the program at the same time
+            #      L2 is not removed, but since the program was removed from the order, it can be applied
+            #      once again, leading to infinite discounts.
+            no_code_programs = programs_lost_that_should_be_kept.filtered(
+                lambda p: p.promo_code_usage == 'no_code_needed')
+            code_program = programs_lost_that_should_be_kept - no_code_programs
+            update_vals = {}
+            if code_program:
+                update_vals['code_promo_program_id'] = code_program.id
+            if no_code_programs:
+                update_vals['no_code_promo_program_ids'] = [
+                    (4, no_code_program.id, 0) for no_code_program in no_code_programs]
+            if update_vals:
+                order.write(update_vals)
 
     def _remove_invalid_reward_lines(self):
         """ Find programs & coupons that are not applicable anymore.

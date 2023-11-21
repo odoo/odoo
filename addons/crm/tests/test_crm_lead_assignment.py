@@ -533,3 +533,32 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertFalse(dupe_lead.exists())
         self.assertEqual(master_opp.team_id, self.sales_team_1, 'Opportunity: should keep its sales team')
         self.assertEqual(master_opp.user_id, self.user_sales_manager, 'Opportunity: should keep its salesman')
+
+    def test_no_assign_if_exceed_max_assign(self):
+        """ Test no leads being assigned to any team member if weights list sums to 0"""
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            count=1
+        )
+
+        sales_team_4 = self.env['crm.team'].create({
+            'name': 'Sales Team 4',
+            'sequence': 15,
+            'use_leads': True,
+            })
+        sales_team_4_m1 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_salesman.id,
+            'crm_team_id': sales_team_4.id,
+            'assignment_max': 30,
+        })
+
+        sales_team_4_m1.lead_month_count = 50
+        leads.team_id = sales_team_4.id
+
+        members_data = sales_team_4_m1._assign_and_convert_leads(work_days=0.2)
+        self.assertEqual(
+            len(members_data[sales_team_4_m1]['assigned']),
+            0,
+            "If team member has lead count greater than max assign,then do not assign any more")

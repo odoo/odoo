@@ -82,7 +82,7 @@ class PartnerCategory(models.Model):
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     parent_path = fields.Char(index=True)
-    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
+    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -133,7 +133,7 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
-    _order = "display_name"
+    _order = "display_name ASC, id DESC"
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -266,8 +266,13 @@ class Partner(models.Model):
     def _compute_avatar(self, avatar_field, image_field):
         partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
         super(Partner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
-        for partner in self - partners_with_internal_user:
-            partner[avatar_field] = partner[image_field] or partner._avatar_get_placeholder()
+        partners_without_image = (self - partners_with_internal_user).filtered(lambda p: not p[image_field])
+        for _, group in tools.groupby(partners_without_image, key=lambda p: p._avatar_get_placeholder_path()):
+            group_partners = self.env['res.partner'].concat(*group)
+            group_partners[avatar_field] = group_partners[0]._avatar_get_placeholder()
+
+        for partner in self - partners_with_internal_user - partners_without_image:
+            partner[avatar_field] = partner[image_field]
 
     def _avatar_get_placeholder_path(self):
         if self.is_company:
@@ -278,7 +283,7 @@ class Partner(models.Model):
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
-    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
+    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name', 'commercial_company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
         names = dict(self.with_context(**diff).name_get())
@@ -314,8 +319,9 @@ class Partner(models.Model):
             Partner = self.with_context(active_test=False).sudo()
             domain = [
                 ('vat', '=', partner.vat),
-                ('company_id', 'in', [False, partner.company_id.id]),
             ]
+            if partner.company_id:
+                domain += [('company_id', 'in', [False, partner.company_id.id])]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
@@ -418,11 +424,36 @@ class Partner(models.Model):
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
+        """ Compute formatted email for partner, using formataddr. Be defensive
+        in computation, notably
+
+          * double format: if email already holds a formatted email like
+            'Name' <email@domain.com> we should not use it as it to compute
+            email formatted like "Name <'Name' <email@domain.com>>";
+          * multi emails: sometimes this field is used to hold several addresses
+            like email1@domain.com, email2@domain.com. We currently let this value
+            untouched, but remove any formatting from multi emails;
+          * invalid email: if something is wrong, keep it in email_formatted as
+            this eases management and understanding of failures at mail.mail,
+            mail.notification and mailing.trace level;
+          * void email: email_formatted is False, as we cannot do anything with
+            it;
+        """
+        self.email_formatted = False
         for partner in self:
-            if partner.email:
-                partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
-            else:
-                partner.email_formatted = ''
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                # note: multi-email input leads to invalid email like "Name" <email1, email2>
+                # but this is current behavior in Odoo 14+ and some servers allow it
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    ','.join(emails_normalized)
+                ))
+            elif partner.email:
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    partner.email
+                ))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -439,8 +470,9 @@ class Partner(models.Model):
 
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
-        if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
-            raise ValidationError('An other user already has this barcode')
+        for partner in self:
+            if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
+                raise ValidationError(_('Another partner already has this barcode'))
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -488,6 +520,7 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._commercial_sync_to_children()
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
@@ -736,8 +769,7 @@ class Partner(models.Model):
             name = partner._display_address(without_company=True)
         if self._context.get('show_address'):
             name = name + "\n" + partner._display_address(without_company=True)
-        name = name.replace('\n\n', '\n')
-        name = name.replace('\n\n', '\n')
+        name = re.sub(r'\s+\n', '\n', name)
         if self._context.get('partner_show_db_id'):
             name = "%s (%s)" % (name, partner.id)
         if self._context.get('address_inline'):
@@ -749,7 +781,7 @@ class Partner(models.Model):
             name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
             name = "%s ‒ %s" % (name, partner.vat)
-        return name
+        return name.strip()
 
     def name_get(self):
         res = []
@@ -764,7 +796,9 @@ class Partner(models.Model):
 
           * Raoul <raoul@grosbedon.fr>
           * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from
+            df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
+            in 'email_split_tuples';
 
         Otherwise: default, everything is set as the name. Starting from 13.3
         returned email will be normalized to have a coherent encoding.
@@ -773,12 +807,6 @@ class Partner(models.Model):
         split_results = tools.email_split_tuples(text)
         if split_results:
             name, email = split_results[0]
-
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
 
         if email:
             email = tools.email_normalize(email)

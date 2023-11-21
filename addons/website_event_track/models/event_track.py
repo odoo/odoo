@@ -5,7 +5,7 @@ from datetime import timedelta
 from pytz import utc
 from random import randint
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
@@ -75,6 +75,7 @@ class Track(models.Model):
         help='Speaker phone is used for public display and may vary from contact phone')
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
+        sanitize_attributes=False,
         readonly=False, store=True)
     partner_function = fields.Char(
         'Job Position', compute='_compute_partner_function',
@@ -481,15 +482,19 @@ class Track(models.Model):
             #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
             #  linked to the track. (created from contact_email if any, then partner_email if any)
             main_email = self.contact_email or self.partner_email
-            if main_email:
-                new_partner = message.partner_ids.filtered(lambda partner: partner.email == main_email)
-                if new_partner:
-                    main_email_string = 'contact_email' if self.contact_email else 'partner_email'
-                    self.search([
-                        ('partner_id', '=', False),
-                        (main_email_string, '=', new_partner.email),
-                        ('stage_id.is_cancel', '=', False),
-                    ]).write({'partner_id': new_partner.id})
+            main_email_normalized = tools.email_normalize(main_email)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == main_email or (main_email_normalized and partner.email_normalized == main_email_normalized)
+            )
+            if new_partner:
+                mail_email_fname = 'contact_email' if self.contact_email else 'partner_email'
+                if new_partner[0].email_normalized:
+                    email_domain = (mail_email_fname, 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = (mail_email_fname, '=', new_partner[0].email)
+                self.search([
+                    ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
+                ]).write({'partner_id': new_partner[0].id})
         return super(Track, self)._message_post_after_hook(message, msg_vals)
 
     def _track_template(self, changes):
