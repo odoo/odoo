@@ -48,7 +48,7 @@
                             <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
                         </div>
                         <div class="col-7">
-                            <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
+                            <field name="absence_of_today" widget="progressbar" options="{'max_value': 'total_employee'}" readonly="1"/>
                         </div>
                     </div>
                 </xpath>

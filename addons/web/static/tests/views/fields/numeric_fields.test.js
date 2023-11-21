@@ -63,7 +63,7 @@ test("Numeric fields: fields with keydown on numpad decimal key", async () => {
                 <field name="monetary"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="percentage" widget="percentage"/>
-                <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true}"/>
+                <field name="progressbar" widget="progressbar" readonly="0"/>
             </form>
         `,
         resId: 1,
@@ -113,7 +113,7 @@ test("Numeric fields: fields with keydown on numpad decimal key", async () => {
     await keyDown(".", { code: "NumpadDecimal" });
     await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
-    expect(".o_field_progressbar input").toHaveValue("0🇧🇪44🇧🇪🇧🇪");
+    expect(".o_field_progressbar input").toHaveValue("69🇧🇪🇧🇪");
 });
 
 test("Numeric fields: NumpadDecimal key is different from the decimalPoint", async () => {
@@ -128,7 +128,7 @@ test("Numeric fields: NumpadDecimal key is different from the decimalPoint", asy
                 <field name="monetary"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="percentage" widget="percentage"/>
-                <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true}"/>
+                <field name="progressbar" widget="progressbar" readonly="0"/>
             </form>
         `,
         resId: 1,
@@ -216,9 +216,9 @@ test("Numeric fields: NumpadDecimal key is different from the decimalPoint", asy
 
     await testInputElementOnNumpadDecimal({
         el: progressbarInput,
-        selectionRange: [1, 3],
-        expectedValue: "0,14",
-        msg: "Progressbar field 2 from 0,44 to 0,14",
+        selectionRange: [1, 2],
+        expectedValue: "6,1",
+        msg: "Progressbar field from 69 to 6,1",
     });
 });
 

@@ -12,7 +12,7 @@
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"  column_invisible="context.get('template_project')"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
-                    <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"
+                    <field name="progress" widget="project_task_progressbar" optional="hide" decoration-danger="progress > 1" groups="hr_timesheet.group_hr_timesheet_user"
                     column_invisible="context.get('template_project')"/>
                 </xpath>
                 <xpath expr="//group/field[@name='allocated_hours']" position="replace">
@@ -148,7 +148,7 @@
                     <field name="subtask_effective_hours" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
                     <field name="total_hours_spent" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
-                    <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
+                    <field name="progress" widget="project_task_progressbar" optional="hide" decoration-danger="progress > 1" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="context.get('template_project')"/>
                 </xpath>
             </field>
         </record>
@@ -166,7 +166,7 @@
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Time Spent on Sub-Tasks" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not context.get('allow_timesheets', True) or context.get('template_project')"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not context.get('allow_timesheets', True) or context.get('template_project')"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining on SO" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" invisible="allocated_hours == 0" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not context.get('allow_timesheets', True) or context.get('template_project')"/>
-                    <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" column_invisible="not context.get('allow_timesheets', True) or context.get('template_project')"/>
+                    <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" decoration-danger="progress > 1" column_invisible="not context.get('allow_timesheets', True) or context.get('template_project')"/>
                 </field>
             </field>
         </record>

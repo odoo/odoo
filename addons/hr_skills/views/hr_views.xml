@@ -349,7 +349,7 @@
         <field name="arch" type="xml">
             <list string="Skill Levels" class="o_skill_level_tree" editable="bottom" default_order="level_progress desc">
                 <field name="name"/>
-                <field name="level_progress" widget="progressbar" options="{'editable': true}" width="250"/>
+                <field name="level_progress" widget="progressbar" width="250" readonly="0"/>
                 <field name="default_level" widget="boolean_toggle_load"/>
                 <field name="technical_is_new_default" column_invisible="1"/> <!-- needs to be here to be accessible for the front-end -->
             </list>

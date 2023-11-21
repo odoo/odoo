@@ -320,11 +320,11 @@ test("filter on progressbar in new groups", async () => {
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(2) })).toHaveCount(1);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(3) })).toHaveCount(1);
 
-    expect(".o_kanban_group_show_200").toHaveCount(0);
+    expect(".o_kanban_group_show_300").toHaveCount(0);
 
     await contains(".o_column_progress .progress-bar", { root: getKanbanColumn(2) }).click();
-    expect(".o_kanban_group_show_200").toHaveCount(1);
-    expect(getKanbanColumn(2)).toHaveClass("o_kanban_group_show_200");
+    expect(".o_kanban_group_show_300").toHaveCount(1);
+    expect(getKanbanColumn(2)).toHaveClass("o_kanban_group_show_300");
 });
 
 test('column progressbars: "false" bar is clickable', async () => {
@@ -356,19 +356,19 @@ test('column progressbars: "false" bar is clickable', async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(getKanbanCounters()).toEqual(["1", "4"]);
     expect(".o_kanban_group:last-child .o_column_progress .progress-bar").toHaveCount(4);
-    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").toHaveCount(1, {
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300").toHaveCount(1, {
         message: "should have false kanban color",
     });
-    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
-        "bg-200"
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300:first").toHaveClass(
+        "bg-300"
     );
 
-    await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").click();
+    await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300").click();
 
-    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300:first").toHaveClass(
         "progress-bar-animated"
     );
-    expect(".o_kanban_group:last-child").toHaveClass("o_kanban_group_show_200");
+    expect(".o_kanban_group:last-child").toHaveClass("o_kanban_group_show_300");
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -412,9 +412,9 @@ test('column progressbars: "false" bar with sum_field', async () => {
     expect(".o_kanban_group").toHaveCount(2);
     expect(getKanbanCounters()).toEqual(["-4", "51"]);
 
-    await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").click();
+    await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300").click();
 
-    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-300:first").toHaveClass(
         "progress-bar-animated"
     );
     expect(getKanbanCounters()).toEqual(["-4", "15"]);
@@ -668,7 +668,7 @@ test("column progressbars on archiving records update counter", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanCounters()).toEqual(["-4", "0"]);
-    expect(queryAll(".progress-bar", { root: getKanbanColumn(1) })).toHaveCount(0, {
+    expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(0, {
         message: "the counter progressbars should have been correctly updated",
     });
     expect.verifySteps([
@@ -761,7 +761,7 @@ test("kanban with progressbars: slow read_progress_bar", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_column_progress").toHaveCount(1);
-    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar").toHaveCount(3);
+    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar.o_bar_has_records").toHaveCount(3);
     expect(".o_kanban_group:nth-child(2) .o_kanban_header").toHaveText("Yes\n36");
 });
 
@@ -1895,9 +1895,9 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         groupBy: ["bar"],
     });
 
-    expect(".o_kanban_group:nth-child(1) .progress-bar").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").toHaveCount(2);
     expect(
-        queryAll(".o_kanban_group:nth-child(1) .progress-bar").map((el) => el.dataset.tooltip)
+        queryAll(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").map((el) => el.dataset.tooltip)
     ).toEqual(["1 blip", "1 Other"]);
     expect(".o_kanban_group:nth-child(2) .progress-bar").toHaveCount(4);
     expect(
@@ -1962,7 +1962,7 @@ test("update field on which progress bars are computed", async () => {
     // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
     expect(getKanbanCounters()).toEqual(["1", "4"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(4);
-    expect(queryAll(".o_column_progress .progress-bar", { root: getKanbanColumn(1) })).toHaveCount(
+    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
         3
     );
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
@@ -1974,7 +1974,7 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "2"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar", { root: getKanbanColumn(1) })).toHaveCount(
+    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
         3
     );
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
@@ -1990,7 +1990,7 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar", { root: getKanbanColumn(1) })).toHaveCount(
+    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
         3
     );
     expect(getKanbanProgressBars(1)[0].style.width).toBe("25%"); // abc: 1

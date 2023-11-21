@@ -18,7 +18,7 @@
                 <field name="subtask_effective_hours" string="Sub-tasks Time Spent" widget="timesheet_uom" sum="Sub-tasks Time Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="total_hours_spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
-                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="progress" widget="project_task_progressbar" optional="hide" decoration-danger="progress > 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='portal_user_names']" position="after">
                 <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
@@ -26,7 +26,7 @@
                 <field name="subtask_effective_hours" string="Sub-tasks Time Spent" widget="timesheet_uom" sum="Sub-tasks Time Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="total_hours_spent" string="Total Time Spent" widget="timesheet_uom" sum="Total Time Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
-                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="progress" widget="project_task_progressbar" optional="hide" decoration-danger="progress > 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
             <xpath expr="//div[@name='repeat_intervals']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/>
