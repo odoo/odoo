@@ -25,28 +25,24 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
 msgstr " 产品成本从%(previous)s更新为%(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
-#, python-format
 msgid " [Accounted on %s]"
 msgstr " [负责人 %s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr "%(user)s将成本从%(previous)s改为%(new_price)s-%(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s"
 msgstr "%(user)s将库存计价从%(previous)s变更为%(new_value)s-%(product)s"
 
@@ -175,21 +171,18 @@ msgstr "取消"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
 msgstr "找不到产品%s的库存入库科目。 在处理此作业之前，您必须在产品类别或产品上进行一个定义。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
 msgstr "找不到产品%s的库存出库库科目。 在处理此作业之前，您必须在产品类别或产品上进行定义。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"
 msgstr "更改您的成本方法是一个重要的更改, 将影响您的库存计价。是否确实要进行此更改？"
 
@@ -212,7 +205,6 @@ msgstr "配置设置"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
 msgstr "配置错误。 请在产品或其类别上配置价格差异科目来处理此作业。"
 
@@ -227,7 +219,6 @@ msgstr "成本方法"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr "产品类别%s的成本定价核算方法更改：从%s 到%s。"
 
@@ -320,7 +311,6 @@ msgstr "在结算单上显示批次 / 序列号"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Due to a change of product category (from %s to %s), the costing method                                has changed for product template %s: from %s to %s."
 msgstr "由于产品类别的变更（从 %s 至%s ），成本定价方法已更改为产品模板 %s：从 %s 至%s 。"
 
@@ -364,7 +354,6 @@ msgstr "库存位置"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-#, python-format
 msgid "Inventory Valuation"
 msgstr "库存计价"
 
@@ -429,14 +418,12 @@ msgstr "手动"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "Manual Stock Valuation: %s."
 msgstr "手动库存计价。%s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "Manual Stock Valuation: No Reason Given."
 msgstr "手动库存计价:没有给出理由。"
 
@@ -506,7 +493,6 @@ msgstr "产品移动(库存移动明细)"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
-#, python-format
 msgid "Product Revaluation"
 msgstr "产品重新计价"
 
@@ -523,7 +509,6 @@ msgstr "产品变体"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Product value manually modified (from %s to %s)"
 msgstr "手动修改产品价值（从 %s 到%s）"
 
@@ -585,7 +570,6 @@ msgstr "退回明细行"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "Revaluation of %s"
 msgstr "重估%s的价值"
 
@@ -664,7 +648,6 @@ msgstr "库存要求盘点"
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
-#, python-format
 msgid "Stock Valuation"
 msgstr "库存计价"
 
@@ -712,42 +695,36 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account."
 msgstr "库存出库和/或入库账户不能与库存计价账户相同。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "The action leads to the creation of a journal entry, for which you don't have the access rights."
 msgstr "该操作将导致创建会计凭证，而您对此没有访问权限。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr "增值对库存计价没有任何影响"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "The move lines are not in a consistent state: some are entering and other are leaving the company."
 msgstr "凭证处于不一致状态：有些正在进入，有的正在离开公司。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."
 msgstr "凭证处于不一致的状态：他们在一个单一的步骤中作为一个公司的内部公司，而他们应该通过公司间中转地点。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "The move lines are not in a consistent states: they do not share the same origin or destination company."
 msgstr "凭证处于不一致的状态:它们不属于同一个来源或目标公司。"
 
@@ -846,7 +823,6 @@ msgstr "指定日期的计价"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr "产品类别的计价方法更改 %s: 从 %s 到 %s."
 
@@ -858,7 +834,6 @@ msgstr "价值"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-#, python-format
 msgid "Value On Hand:"
 msgstr "在手数量的价值："
 
@@ -870,7 +845,6 @@ msgstr "价值库存估价层"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "Warning"
 msgstr "警告"
 
@@ -903,42 +877,36 @@ msgstr "重新评估一个产品的库存的向导模型"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "You cannot revalue a product with a standard cost method."
 msgstr "您不能用标准成本法对一个产品进行重估。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-#, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr "您不能对一个空库存或负库存的产品进行重估。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."
 msgstr "您不能在自动估价中更新产品的成本，因为这将导致创建一个分录，而您没有这个权限。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "You don't have any input valuation account defined on your product category. You must define one before processing this operation."
 msgstr "您没有在产品类别中定义任何输入计价账户。您必须在处理此作业之前定义一个。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "You don't have any stock input account defined on your product category. You must define one before processing this operation."
 msgstr "您的产品类别上没有定义任何库存输入账户。您必须在处理这个作业之前定义一个。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts."
 msgstr "没有在产品类别中设置库存日记账，检查是否安装科目表."
 
@@ -946,14 +914,12 @@ msgstr "没有在产品类别中设置库存日记账，检查是否安装科目
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/stock_move.py:0
-#, python-format
 msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
 msgstr "您没有在您的产品类别中定义任何库存计价账户。 处理此作业之前，您必须定义一个。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#, python-format
 msgid "You must set a counterpart account on your product category."
 msgstr "您必须在您的产品类别上设置一个对应的账户。"
 

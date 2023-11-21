@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -28,20 +28,12 @@ msgid "# Sessions"
 msgstr "# เซสชั่น"
 
 #. module: website_livechat
-#: code:addons/website_livechat/models/mail_channel.py:0
-#, python-format
-msgid "%s has left the conversation."
-msgstr "%s ได้ออกจากการสนทนา"
-
-#. module: website_livechat
-#: code:addons/website_livechat/models/mail_channel.py:0
-#, python-format
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s has started a conversation with %s. \n"
+"%s started a conversation with %s.\n"
 "                        The chat request has been canceled."
 msgstr ""
-"%s ได้เริ่มสนทนากับ %s\n"
-"                        คำขอแชทถูกยกเลิก"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -59,9 +51,8 @@ msgid "Available"
 msgstr "พร้อม"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 msgid "Avatar"
 msgstr "อวตาร"
 
@@ -118,7 +109,7 @@ msgid "Description of the channel displayed on the website page"
 msgstr "รายละเอียดของช่องที่แสดงบนหน้าเว็บไซต์"
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_mail_channel
+#: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "ช่องการสนทนา"
 
@@ -138,9 +129,8 @@ msgid "Happy face"
 msgstr "ใบหน้ามีความสุข"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 msgid "History"
 msgstr "ประวัติ"
 
@@ -155,15 +145,14 @@ msgid "Is Published"
 msgstr "เผยแพร่"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 msgid "Lang"
 msgstr "ภาษา"
 
 #. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/models/website.py:0
-#, python-format
 msgid "Live Support"
 msgstr "การสนับสนุนไลฟ์"
 
@@ -188,8 +177,8 @@ msgid "New Channel"
 msgstr "ช่องทางใหม่"
 
 #. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
-#, python-format
 msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr "ไม่มีช่องไลฟ์แชทให้คุณส่งคำขอแชทสำหรับเว็บไซต์%s"
 
@@ -204,13 +193,6 @@ msgid "Okay"
 msgstr "โอเค"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
-#, python-format
-msgid "Online"
-msgstr "ออนไลน์"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 msgid "Operator Avatar"
 msgstr "ร่างอวตารผู้ดำเนินการ"
@@ -221,9 +203,11 @@ msgid "Operator Name"
 msgstr "ชื่อผู้ดำเนินการ"
 
 #. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
-#, python-format
-msgid "Recipients are not available. Please refresh the page to get latest visitors status."
+msgid ""
+"Recipients are not available. Please refresh the page to get latest visitors "
+"status."
 msgstr "ไม่มีผู้รับโปรดรีเฟรชหน้าเพื่อรับสถานะผู้เยี่ยมชมล่าสุด"
 
 #. module: website_livechat
@@ -277,8 +261,8 @@ msgid "The full URL to access the document through the website."
 msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านเว็บไซต์"
 
 #. module: website_livechat
-#: code:addons/website_livechat/models/mail_channel.py:0
-#, python-format
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "The visitor"
 msgstr "ผู้เยี่ยมชม"
 
@@ -298,16 +282,30 @@ msgid "Visible on current website"
 msgstr "ปรากฏบนเว็บไซต์ปัจจุบัน"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_visitor_id
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
 msgid "Visitor"
 msgstr "ผู้เยี่ยมชม"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
-#, python-format
-msgid "Visitor is online"
-msgstr "ผู้เยี่ยมชมออนไลน์"
+#. odoo-python
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/models/website_visitor.py:0
+msgid "Visitor #%d"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
+#. odoo-javascript
+#: code:addons/website_livechat/controllers/main.py:0
+#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
+msgid "Visitor #%s"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor %s left the conversation."
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -315,7 +313,7 @@ msgid "Visitor's Sessions"
 msgstr "เซสชั่นของผู้เยี่ยมชม"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__mail_channel_ids
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__discuss_channel_ids
 msgid "Visitor's livechat channels"
 msgstr "ช่องไลฟ์แชทของผู้เยี่ยมชม"
 
@@ -325,10 +323,9 @@ msgid "Visitors"
 msgstr "ผู้เยี่ยมชม"
 
 #. module: website_livechat
-#. openerp-web
-#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
-#, python-format
 msgid "Website"
 msgstr "เว็บไซต์"
 
@@ -348,9 +345,9 @@ msgid "Website URL"
 msgstr "เว็บไซต์ URL"
 
 #. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
-#, python-format
 msgid "Website Visitor"
 msgstr "ผู้เยี่ยมชมเว็บไซต์"
 
@@ -360,8 +357,8 @@ msgid "Website description"
 msgstr "คำอธิบายเว็บไซต์"
 
 #. module: website_livechat
-#: code:addons/website_livechat/models/mail_channel.py:0
-#, python-format
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "an operator"
 msgstr "ผู้ดำเนินการ"
 
