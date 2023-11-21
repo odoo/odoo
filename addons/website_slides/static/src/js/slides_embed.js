@@ -1,3 +1,4 @@
+// @odoo-module ignore
 /* global PDFSlidesViewer */
 
 /**

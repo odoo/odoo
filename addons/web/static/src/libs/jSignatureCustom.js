@@ -1,3 +1,5 @@
+// @odoo-module ignore
+
 function _renderImageOnCanvas( data, formattype, rerendercallable ) {
     'use strict'
     // #1. Do NOT rely on this. No worky on IE 
