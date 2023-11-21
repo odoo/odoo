@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -10,12 +9,11 @@ from odoo import tools
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, users
-from odoo.tests.common import HttpCase
+from odoo.tests import HttpCase, tagged, users
 from odoo.tools import mute_logger, email_normalize, parse_contact_from_email
 
 
-@tagged('mail_followers')
+@tagged("mail_followers", "post_install", "-at_install")
 class BaseFollowersTest(MailCommon):
 
     @classmethod
@@ -249,7 +247,7 @@ class BaseFollowersTest(MailCommon):
             self.assertEqual(document.message_follower_ids.subtype_ids, self.default_group_subtypes)
 
 
-@tagged('mail_followers')
+@tagged("mail_followers", "post_install", "-at_install")
 class AdvancedFollowersTest(MailCommon):
 
     @classmethod
@@ -461,7 +459,7 @@ class AdvancedFollowersTest(MailCommon):
         )
 
 
-@tagged('mail_followers')
+@tagged("mail_followers", "post_install", "-at_install")
 class AdvancedResponsibleNotifiedTest(MailCommon):
 
     def setUp(self):
@@ -508,7 +506,7 @@ class AdvancedResponsibleNotifiedTest(MailCommon):
         self.assertEqual(mail_notification.mail_mail_id.state, 'outgoing')
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged("mail_followers", "post_install", "-at_install")
 class RecipientsNotificationTest(MailCommon):
     """ Test advanced and complex recipients computation / notification, such
     as multiple users, batch computation, ... Post install because we need the
@@ -787,7 +785,7 @@ class RecipientsNotificationTest(MailCommon):
         self.assertRecipientsData(recipients_data, False, test_partners)
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged("mail_followers", "post_install", "-at_install")
 class UnfollowUnreadableRecordTest(MailCommon):
     """ Test message_unsubscribe on unreadable record. """
 
@@ -833,7 +831,7 @@ class UnfollowUnreadableRecordTest(MailCommon):
             self._message_unsubscribe_unreadable_record(self.user_portal, override_check='check_access_rights')
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged("mail_followers", "post_install", "-at_install")
 class UnfollowFromInboxTest(MailCommon):
     """ Test unfollow mechanism from inbox (server part). """
 
@@ -888,7 +886,7 @@ class UnfollowFromInboxTest(MailCommon):
         self.assertFalse(messages[0].get('user_follower_id'))
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged("mail_followers", "post_install", "-at_install")
 class UnfollowFromEmailTest(MailCommon, HttpCase):
     """ Test unfollow mechanism from email. """
 

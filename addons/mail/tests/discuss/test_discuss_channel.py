@@ -9,7 +9,7 @@ from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, grou
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, users
+from odoo.tests import tagged, users
 from odoo.tools import html_escape, mute_logger
 
 

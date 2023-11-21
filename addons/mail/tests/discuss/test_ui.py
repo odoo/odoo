@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 from odoo import Command
+from odoo.tests import HttpCase, tagged
 
-
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+@tagged("post_install", "-at_install")
+class TestUi(HttpCase):
 
     def test_01_mail_tour(self):
         self.start_tour("/web", 'discuss_channel_tour', login="admin")

@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests import HttpCase, tagged
 
-
-@tests.tagged('post_install', '-at_install')
-class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
+@tagged("post_install", "-at_install")
+class TestLivechatRequestHttpCase(HttpCase, TestLivechatCommon):
     def test_livechat_request_complete_flow(self):
         self._clean_livechat_sessions()
 

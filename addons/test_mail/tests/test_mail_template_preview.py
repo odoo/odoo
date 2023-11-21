@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.test_mail_template import TestMailTemplateCommon
 from odoo.tests import Form, tagged, users
 
-@tagged('mail_template', 'multi_lang')
+@tagged("mail_template", "multi_lang", "post_install", "-at_install")
 class TestMailTemplateTools(TestMailTemplateCommon):
     @classmethod
     def setUpClass(cls):

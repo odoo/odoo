@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -9,7 +9,7 @@ from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import convert_file
 
 
-@tagged('mail_template')
+@tagged("mail_template", "post_install", "-at_install")
 class TestMailTemplate(MailCommon):
 
     @classmethod
@@ -170,7 +170,7 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(server.active)
 
 
-@tagged('mail_template')
+@tagged("mail_template", "post_install", "-at_install")
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, filepath):
@@ -254,14 +254,14 @@ class TestMailTemplateReset(MailCommon):
         self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template", "post_install", "-at_install")
 class TestMailTemplateUI(HttpCase):
 
     def test_mail_template_dynamic_placeholder_tour(self):
         self.start_tour("/web", 'mail_template_dynamic_placeholder_tour', login="admin")
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template", "post_install", "-at_install")
 class TestTemplateConfigRestrictEditor(MailCommon):
 
     def test_switch_icp_value(self):

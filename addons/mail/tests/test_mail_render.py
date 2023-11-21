@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -8,6 +7,7 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 
 
+@tagged("post_install", "-at_install")
 class TestMailRenderCommon(common.MailCommon):
 
     @classmethod
@@ -141,7 +141,7 @@ class TestMailRenderCommon(common.MailCommon):
         cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
 
 
-@tagged('mail_render')
+@tagged("mail_render", "post_install", "-at_install")
 class TestMailRender(TestMailRenderCommon):
 
     @users('employee')
@@ -375,7 +375,7 @@ class TestMailRender(TestMailRenderCommon):
             self.assertEqual(rendered, expected)
 
 
-@tagged('mail_render')
+@tagged("mail_render", "post_install", "-at_install")
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
     group usage. """

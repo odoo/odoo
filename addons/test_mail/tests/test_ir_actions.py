@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
@@ -7,7 +6,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('ir_actions')
+@tagged("ir_actions", "post_install", "-at_install")
 class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
     def setUp(self):

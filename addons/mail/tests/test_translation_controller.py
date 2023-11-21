@@ -5,7 +5,7 @@ import requests
 from http import HTTPStatus
 from unittest.mock import patch
 
-from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
+from odoo.tests import HttpCase, JsonRpcException, new_test_user, tagged
 from odoo.tools import mute_logger
 
 SAMPLE = {

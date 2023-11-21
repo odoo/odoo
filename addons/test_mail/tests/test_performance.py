@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -6,11 +5,11 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import Form, users, warmup, tagged
+from odoo.tests import Form, tagged, users, warmup
 from odoo.tools import mute_logger, formataddr
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
     @classmethod
@@ -108,7 +107,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         return test_partners, test_records, test_template_full
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class TestBaseMailPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -249,7 +248,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
             })
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class TestBaseAPIPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -743,7 +742,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class TestMailAPIPerformance(BaseMailPerformance):
 
     @classmethod
@@ -1105,7 +1104,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(len(rec1.message_ids), 3)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class TestMailFormattersPerformance(BaseMailPerformance):
 
     @classmethod
@@ -1291,7 +1290,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
             self.assertEqual(len(res), 6)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged("mail_performance", "post_install", "-at_install")
 class TestPerformance(BaseMailPerformance):
 
     def setUp(self):

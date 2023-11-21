@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 
-from odoo import tests, _
+from odoo import _
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
-from odoo.tests.common import new_test_user
+from odoo.tests import HttpCase, new_test_user, tagged
 
 
-@tests.tagged('post_install', '-at_install')
-class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
+@tagged("post_install", "-at_install")
+class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
     def test_channel_created_on_user_interaction(self):
         self.start_tour('/', 'im_livechat_request_chat', login=None)
         channel = self.env['discuss.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])

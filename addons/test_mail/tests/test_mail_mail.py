@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
@@ -16,11 +15,11 @@ from odoo import api, Command, fields
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
-from odoo.tests import common, tagged, users
+from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import formataddr, mute_logger
 
 
-@tagged('mail_mail')
+@tagged("mail_mail", "post_install", "-at_install")
 class TestMailMail(MailCommon):
 
     @classmethod
@@ -632,7 +631,7 @@ class TestMailMail(MailCommon):
         msg = self.env['mail.mail'].create({})
         self.assertEqual(msg.message_type, 'email_outgoing', 'Mails should have outgoing email type by default')
 
-@tagged('mail_mail', 'mail_server')
+@tagged("mail_mail", "mail_server", "post_install", "-at_install")
 class TestMailMailServer(MailCommon):
 
     @classmethod
@@ -824,8 +823,8 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
 
 
-@tagged('mail_mail')
-class TestMailMailRace(common.TransactionCase):
+@tagged("mail_mail", "post_install", "-at_install")
+class TestMailMailRace(TransactionCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):

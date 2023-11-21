@@ -2,7 +2,7 @@
 
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests.common import tagged
+from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")

@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase
 
 
+@tagged("post_install", "-at_install")
 class TestRecipients(TransactionCase):
 
     @classmethod

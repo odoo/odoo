@@ -2,14 +2,13 @@
 
 import json
 
-import odoo
-from odoo.tools import mute_logger, date_utils
-from odoo.tests import HttpCase
-from odoo.http import STATIC_CACHE_LONG
 from odoo import Command
+from odoo.http import STATIC_CACHE_LONG
+from odoo.tests import HttpCase, tagged
+from odoo.tools import date_utils, mute_logger
 
 
-@odoo.tests.tagged("-at_install", "post_install")
+@tagged("post_install", "-at_install")
 class TestMessageController(HttpCase):
     @classmethod
     def setUpClass(cls):

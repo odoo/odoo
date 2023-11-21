@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 
 from odoo import fields, tests
+from odoo.tests import tagged
 
+
+@tagged("post_install", "-at_install")
 
 class TestLivechatCommon(tests.TransactionCase):
     def setUp(self):

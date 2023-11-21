@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
@@ -10,7 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
 
 
-@tagged('mail_activity', 'mail_activity_plan')
+@tagged("mail_activity", "mail_activity_plan", "post_install", "-at_install")
 class TestActivitySchedule(ActivityScheduleCase):
     """ Test plan and activity schedule
 

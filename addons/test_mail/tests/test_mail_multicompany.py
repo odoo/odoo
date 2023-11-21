@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -12,10 +11,11 @@ from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, users, HttpCase
+from odoo.tests import HttpCase, tagged, users
 from odoo.tools import mute_logger
 
 
+@tagged("post_install", "-at_install")
 class TestMailMCCommon(MailCommon, TestRecipients):
 
     @classmethod
@@ -64,7 +64,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
         self.patch(self.env.registry, 'ready', True)
 
 
-@tagged('multi_company')
+@tagged("multi_company", "post_install", "-at_install")
 class TestMultiCompanySetup(TestMailMCCommon):
 
     @users('employee_c2')
@@ -305,7 +305,7 @@ class TestMultiCompanySetup(TestMailMCCommon):
         )
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged("multi_company", "post_install", "-at_install")
 class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     def test_redirect_to_records(self):

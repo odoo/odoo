@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
@@ -6,7 +5,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_wizards')
+@tagged("mail_wizards", "post_install", "-at_install")
 class TestMailResend(MailCommon):
 
     @classmethod

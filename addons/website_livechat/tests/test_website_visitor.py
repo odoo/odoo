@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTests
 from odoo.tests import tagged
 
 
-@tagged('website_visitor')
+@tagged("website_visitor", "post_install", "-at_install")
 class WebsiteVisitorTestsLivechat(WebsiteVisitorTests):
 
     def test_link_to_visitor_livechat(self):

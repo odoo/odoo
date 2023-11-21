@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
@@ -13,7 +12,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('res_partner', 'mail_tools')
+@tagged("res_partner", "mail_tools", "post_install", "-at_install")
 class TestPartner(MailCommon):
 
     @classmethod

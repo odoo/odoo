@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -7,7 +6,7 @@ from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestMailComposer(MailCommon):
 
     @classmethod
@@ -40,7 +39,7 @@ class TestMailComposer(MailCommon):
             'name': 'Test template with mso conditionals',
         })
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestMailComposerForm(TestMailComposer):
     """ Test mail composer form view usage. """
 
@@ -214,7 +213,7 @@ class TestMailComposerForm(TestMailComposer):
         self.assertEqual(message.subject, 'MSO FTW')
 
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestMailComposerRendering(TestMailComposer):
     """ Test rendering and support of various html tweaks in composer """
 
@@ -261,7 +260,7 @@ class TestMailComposerRendering(TestMailComposer):
         )
 
 
-@tagged("mail_composer", "-at_install", "post_install")
+@tagged("mail_composer", "post_install", "-at_install")
 class TestMailComposerUI(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):

@@ -1,10 +1,11 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
-from odoo import Command
+from odoo import Command, fields
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestLoadMessages(odoo.tests.HttpCase):
+@tagged("post_install", "-at_install")
+class TestLoadMessages(HttpCase):
     def test_01_mail_message_load_order_tour(self):
         partner_admin = self.env.ref('base.partner_admin')
         channel_id = self.env["discuss.channel"].create({
@@ -14,7 +15,7 @@ class TestLoadMessages(odoo.tests.HttpCase):
         self.env["mail.message"].create([{
             "body": n,
             "model": "discuss.channel",
-            "pinned_at": odoo.fields.Datetime.now() if n == 1 else None,
+            "pinned_at": fields.Datetime.now() if n == 1 else None,
             "res_id": channel_id.id,
             "author_id": partner_admin.id,
             "message_type": "comment",

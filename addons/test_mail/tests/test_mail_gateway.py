@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -21,7 +20,7 @@ from odoo.tests import tagged
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
-@tagged('mail_gateway')
+@tagged("mail_gateway", "post_install", "-at_install")
 class TestEmailParsing(MailCommon):
 
     def test_message_parse_and_replace_binary_octetstream(self):
@@ -145,7 +144,7 @@ class TestEmailParsing(MailCommon):
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
 
 
-@tagged('mail_gateway')
+@tagged("mail_gateway", "post_install", "-at_install")
 class TestMailgateway(MailCommon):
 
     @classmethod
@@ -1894,7 +1893,7 @@ class TestMailgateway(MailCommon):
         self.assertFalse(record.message_ids.parent_id)
 
 
-@tagged('mail_gateway', 'mail_thread')
+@tagged("mail_gateway", "mail_thread", "post_install", "-at_install")
 class TestMailThreadCC(MailCommon):
 
     @classmethod

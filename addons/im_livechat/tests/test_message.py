@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
 
 from odoo import Command
-from odoo.tests.common import users, tagged, HttpCase
+from odoo.tests import users, tagged, HttpCase
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestImLivechatMessage(HttpCase):
     def setUp(self):
         super().setUp()

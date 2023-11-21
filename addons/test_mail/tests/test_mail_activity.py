@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
@@ -11,13 +10,14 @@ from unittest.mock import DEFAULT
 import pytz
 import random
 
-from odoo import fields, exceptions, tests
+from odoo import fields, exceptions
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
+from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
-from odoo.tests import Form, users
 
 
+@tagged("post_install", "-at_install")
 class TestActivityCommon(MailCommon):
 
     @classmethod
@@ -30,7 +30,7 @@ class TestActivityCommon(MailCommon):
         cls._reset_mail_context(cls.test_record)
 
 
-@tests.tagged('mail_activity')
+@tagged("mail_activity", "post_install", "-at_install")
 class TestActivityRights(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -162,7 +162,7 @@ class TestActivityRights(TestActivityCommon):
             self.assertEqual('Summary', read_group_result[0]['summary'])
 
 
-@tests.tagged('mail_activity')
+@tagged("mail_activity", "post_install", "-at_install")
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
@@ -287,7 +287,7 @@ class TestActivityFlow(TestActivityCommon):
             self.env.flush_all()
 
 
-@tests.tagged('mail_activity')
+@tagged("mail_activity", "post_install", "-at_install")
 class TestActivityMixin(TestActivityCommon):
 
     @classmethod
@@ -743,7 +743,7 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(test_record_1, record)
 
 
-@tests.tagged('mail_activity')
+@tagged("mail_activity", "post_install", "-at_install")
 class TestActivityViewHelpers(TestActivityCommon):
     @classmethod
     def setUpClass(cls):
@@ -897,7 +897,7 @@ class TestActivityViewHelpers(TestActivityCommon):
             })
 
 
-@tests.tagged('mail_activity')
+@tagged("mail_activity", "post_install", "-at_install")
 class TestORM(TestActivityCommon):
     """Test for read_progress_bar"""
 

@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests import tagged
 
-
-@tests.tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()

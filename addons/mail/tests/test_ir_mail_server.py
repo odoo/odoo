@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -8,7 +7,7 @@ from odoo.tests import tagged, users
 from odoo.tools import config, mute_logger
 
 
-@tagged('mail_server')
+@tagged("mail_server", "post_install", "-at_install")
 class TestIrMailServer(MailCommon):
 
     @classmethod

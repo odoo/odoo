@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -17,11 +16,11 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.api import call_kw
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import tagged, users
 from odoo.tools import mute_logger, formataddr
-from odoo.tests.common import users
 
 
+@tagged("post_install", "-at_install")
 class TestMessagePostCommon(MailCommon, TestRecipients):
 
     @classmethod
@@ -71,7 +70,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         self.patch(self.env.registry, 'ready', True)
 
 
-@tagged('mail_post')
+@tagged("mail_post", "post_install", "-at_install")
 class TestMailNotifyAPI(TestMessagePostCommon):
 
     @mute_logger('odoo.models.unlink')
@@ -341,7 +340,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post', 'mail_notify')
+# not post_install because _notify_get_action_link override in mail_mobile messes up the link in test_notify
+@tagged("mail_post", "mail_notify", "-post_install", "at_install")
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')
@@ -384,7 +384,7 @@ class TestMessageNotify(TestMessagePostCommon):
         self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
         admin_mail_body = admin_mails[0].get('body')
 
-        self.assertTrue('model=' in admin_mail_body, 'The email sent to admin should contain an access link')
+        self.assertIn('model=', admin_mail_body, 'The email sent to admin should contain an access link')
         admin_access_link = admin_mail_body[
             admin_mail_body.index('model='):admin_mail_body.index('/>', admin_mail_body.index('model=')) - 1]
         self.assertIn(f'model={self.test_record._name}', admin_access_link, 'The access link should contain a valid model argument')
@@ -566,7 +566,7 @@ class TestMessageNotify(TestMessagePostCommon):
         )
 
 
-@tagged('mail_post')
+@tagged("mail_post", "post_install", "-at_install")
 class TestMessageLog(TestMessagePostCommon):
 
     @classmethod
@@ -715,7 +715,7 @@ class TestMessageLog(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post')
+@tagged("mail_post", "post_install", "-at_install")
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
@@ -1420,7 +1420,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
 
 
-@tagged('mail_post')
+@tagged("mail_post", "post_install", "-at_install")
 class TestMessagePostHelpers(TestMessagePostCommon):
 
     @classmethod
@@ -1730,7 +1730,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         }])
 
 
-@tagged('mail_post', 'post_install', '-at_install')
+@tagged("mail_post", "post_install", "-at_install")
 class TestMessagePostGlobal(TestMessagePostCommon):
 
     @users('employee')
@@ -1746,7 +1746,7 @@ class TestMessagePostGlobal(TestMessagePostCommon):
         self.assertTrue(isinstance(message_id, int))
 
 
-@tagged('mail_post', 'multi_lang')
+@tagged("mail_post", "multi_lang", "post_install", "-at_install")
 class TestMessagePostLang(MailCommon, TestRecipients):
 
     @classmethod

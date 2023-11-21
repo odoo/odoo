@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -10,7 +9,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_track')
+@tagged("mail_track", "post_install", "-at_install")
 class TestTracking(MailCommon):
 
     @classmethod
@@ -441,7 +440,7 @@ class TestTracking(MailCommon):
         test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
 
 
-@tagged('mail_track')
+@tagged("mail_track", "post_install", "-at_install")
 class TestTrackingInternals(MailCommon):
 
     @classmethod

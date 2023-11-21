@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
@@ -7,11 +6,11 @@ from ast import literal_eval
 
 from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests import tagged, users
 from odoo.tools import formataddr, mute_logger
 
 
+@tagged("post_install", "-at_install")
 class TestMailAliasCommon(MailCommon):
 
     @classmethod
@@ -25,7 +24,7 @@ class TestMailAliasCommon(MailCommon):
         })
 
 
-@tagged('mail_gateway', 'mail_alias', 'multi_company')
+@tagged("mail_gateway", "mail_alias", "multi_company", "post_install", "-at_install")
 class TestMailAlias(TestMailAliasCommon):
     """ Test alias model features, constraints and behavior. """
 
@@ -382,7 +381,7 @@ class TestMailAlias(TestMailAliasCommon):
         alias.write({'alias_defaults': "{'custom_field': 'validdict'}"})
 
 
-@tagged('mail_alias', 'multi_company')
+@tagged("mail_alias", "multi_company", "post_install", "-at_install")
 class TestAliasCompany(TestMailAliasCommon):
     """ Test company / alias domain and configuration synchronization """
 
@@ -505,7 +504,7 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(company.alias_domain_id, self.mail_alias_domain_c2)
 
 
-@tagged('mail_gateway', 'mail_alias', 'multi_company')
+@tagged("mail_gateway", "mail_alias", "multi_company", "post_install", "-at_install")
 class TestMailAliasDomain(TestMailAliasCommon):
 
     @users('admin')

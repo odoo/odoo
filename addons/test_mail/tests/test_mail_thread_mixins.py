@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tests.mail_tracking_duration_mixin_case import MailTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tests.common import tagged, users
+from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_thread', 'mail_track')
+@tagged("mail_thread", "mail_track", "post_install", "-at_install")
 class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
 
     @classmethod
@@ -26,7 +25,7 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
         self._test_queries_batch_duration_tracking()
 
 
-@tagged('mail_thread', 'mail_blacklist')
+@tagged("mail_thread", "mail_blacklist", "post_install", "-at_install")
 class TestMailThread(MailCommon, TestRecipients):
 
     @mute_logger('odoo.models.unlink')
@@ -79,7 +78,7 @@ class TestMailThread(MailCommon, TestRecipients):
                 bl_record.unlink()
 
 
-@tagged('mail_thread', 'mail_thread_cc')
+@tagged("mail_thread", "mail_thread_cc", "post_install", "-at_install")
 class TestMailThreadCC(MailCommon):
 
     @users("employee")

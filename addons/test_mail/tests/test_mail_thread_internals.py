@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -13,7 +12,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_thread')
+@tagged("mail_thread", "post_install", "-at_install")
 class TestAPI(MailCommon, TestRecipients):
 
     @classmethod
@@ -98,7 +97,7 @@ class TestAPI(MailCommon, TestRecipients):
                 )
 
 
-@tagged('mail_thread')
+@tagged("mail_thread", "post_install", "-at_install")
 class TestChatterTweaks(MailCommon, TestRecipients):
 
     @classmethod
@@ -198,7 +197,7 @@ class TestChatterTweaks(MailCommon, TestRecipients):
         self.assertTrue(record.name)
 
 
-@tagged('mail_thread')
+@tagged("mail_thread", "post_install", "-at_install")
 class TestDiscuss(MailCommon, TestRecipients):
 
     @classmethod
@@ -379,7 +378,7 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
-@tagged('mail_thread')
+@tagged("mail_thread", "post_install", "-at_install")
 class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
 

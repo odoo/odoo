@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 
-
+@tagged("post_install", "-at_install")
 class TestSubtypeAccess(MailCommon):
 
     def test_subtype_access(self):

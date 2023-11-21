@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -21,7 +20,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import email_normalize, mute_logger, formataddr
 
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestMailComposer(MailCommon, TestRecipients):
     """ Test Composer internals """
 
@@ -135,7 +134,7 @@ class TestMailComposer(MailCommon, TestRecipients):
         return base_context
 
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestComposerForm(TestMailComposer):
 
     @classmethod
@@ -524,7 +523,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.subtype_is_log, 'MailComposer: subtype is log has no meaning in mail mode')
 
 
-@tagged('mail_composer')
+@tagged("mail_composer", "post_install", "-at_install")
 class TestComposerInternals(TestMailComposer):
 
     @users('employee')
@@ -1296,7 +1295,7 @@ class TestComposerInternals(TestMailComposer):
                     new_partners.unlink()
 
 
-@tagged('mail_composer', 'multi_lang', 'multi_company')
+@tagged("mail_composer", "multi_lang", "multi_company", "post_install", "-at_install")
 class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
@@ -2139,7 +2138,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         )
 
 
-@tagged('mail_composer', 'mail_blacklist')
+@tagged("mail_composer", "mail_blacklist", "post_install", "-at_install")
 class TestComposerResultsCommentStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific
     class to avoid bloating the base comment-based composer tests. """
@@ -2235,7 +2234,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails, skipping the exclusion list')
 
 
-@tagged('mail_composer', 'multi_lang')
+@tagged("mail_composer", "multi_lang", "post_install", "-at_install")
 class TestComposerResultsMass(TestMailComposer):
 
     @classmethod
@@ -3185,7 +3184,7 @@ class TestComposerResultsMass(TestMailComposer):
                                 },
                                )
 
-@tagged('mail_composer', 'mail_blacklist')
+@tagged("mail_composer", "mail_blacklist", "post_install", "-at_install")
 class TestComposerResultsMassStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific
     class to avoid bloating the base mailing-based composer tests. """

@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests import tagged, users
 
 
-@tagged('mail_composer_mixin')
+@tagged("mail_composer_mixin", "post_install", "-at_install")
 class TestMailComposerMixin(MailCommon, TestRecipients):
 
     @classmethod

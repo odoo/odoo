@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import tagged, users
+from odoo.tests import tagged, users
 from odoo.tools import is_html_empty, mute_logger, formataddr
 
 

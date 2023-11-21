@@ -10,6 +10,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged, HttpCase
 
 
+@tagged("post_install", "-at_install")
 class ActivityScheduleCase(MailCommon):
 
     @classmethod
@@ -144,7 +145,7 @@ class ActivityScheduleCase(MailCommon):
         }))
 
 
-@tagged("-at_install", "post_install")
+@tagged("post_install", "-at_install")
 class TestMailActivityChatter(HttpCase):
 
     def test_mail_activity_schedule_from_chatter(self):

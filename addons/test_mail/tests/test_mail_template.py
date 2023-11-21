@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -12,6 +11,7 @@ from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
+@tagged("post_install", "-at_install")
 class TestMailTemplateCommon(MailCommon, TestRecipients):
 
     @classmethod
@@ -65,7 +65,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
         cls.test_template.invalidate_recordset(['attachment_ids'])
 
 
-@tagged('mail_template')
+@tagged("mail_template", "post_install", "-at_install")
 class TestMailTemplate(TestMailTemplateCommon):
 
     def test_template_add_context_action(self):
@@ -106,7 +106,7 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertEqual(mail.state, 'outgoing')
 
 
-@tagged('mail_template', 'multi_lang')
+@tagged("mail_template", "multi_lang", "post_install", "-at_install")
 class TestMailTemplateLanguages(TestMailTemplateCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

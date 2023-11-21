@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests, _
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests import HttpCase, tagged
 
 
-@tests.tagged('post_install', '-at_install')
-class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
+@tagged("post_install", "-at_install")
+class TestLivechatUI(HttpCase, TestLivechatCommon):
     def setUp(self):
         super(TestLivechatUI, self).setUp()
         self.visitor_tour = self.env['website.visitor'].create({

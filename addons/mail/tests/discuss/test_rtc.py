@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import tagged, users
+from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 

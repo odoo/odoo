@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
@@ -11,6 +10,7 @@ from odoo.tests import HttpCase, tagged, users
 from odoo.tools import mute_logger
 
 
+@tagged("post_install", "-at_install")
 class TestNotifySecurityUpdate(MailCommon):
 
     @users('employee')
@@ -42,6 +42,7 @@ class TestNotifySecurityUpdate(MailCommon):
         })
 
 
+@tagged("post_install", "-at_install")
 class TestUser(MailCommon):
 
     @mute_logger('odoo.sql_db')
@@ -81,7 +82,7 @@ class TestUser(MailCommon):
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
 
 
-@tagged('-at_install', 'post_install')
+@tagged("post_install", "-at_install")
 class TestUserModifyOwnProfile(HttpCase):
 
     def test_user_modify_own_profile(self):

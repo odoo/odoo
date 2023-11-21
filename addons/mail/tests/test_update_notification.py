@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
-from odoo.tests.common import TransactionCase
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests import tagged, TransactionCase
 
 
+@tagged("post_install", "-at_install")
 class TestUpdateNotification(TransactionCase):
     def test_user_count(self):
         ping_msg = self.env['publisher_warranty.contract'].with_context(active_test=False)._get_message()

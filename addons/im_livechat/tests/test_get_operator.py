@@ -1,12 +1,12 @@
-import odoo
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import Command
-from odoo.tests import HttpCase
-from odoo.tests.common import new_test_user
+from odoo.tests import HttpCase, new_test_user, tagged
 
 from unittest.mock import patch
 
 
-@odoo.tests.tagged("-at_install", "post_install")
+@tagged("post_install", "-at_install")
 class TestGetOperator(HttpCase):
     def _create_operator(self, lang_code=None, country_code=None):
         operator = new_test_user(self.env, login=f"operator_{lang_code or country_code}_{self.operator_id}")

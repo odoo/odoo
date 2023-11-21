@@ -6,7 +6,7 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.tests.common import tagged
+from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")
