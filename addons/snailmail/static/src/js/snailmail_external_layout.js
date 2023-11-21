@@ -1,3 +1,5 @@
+// @odoo-module ignore
+
 // Change address font-size if needed
 document.addEventListener('DOMContentLoaded', function (evt) {
     var recipientAddress = document.querySelector(".address.row > div[name='address'] > address");
