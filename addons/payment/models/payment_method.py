@@ -84,6 +84,29 @@ class PaymentMethod(models.Model):
              "to customers.",
     )
 
+    # Message fields
+    pre_msg = fields.Html(
+        string="Help Message", help="The message displayed to explain and help the payment process",
+        translate=True)
+    pending_msg = fields.Html(
+        string="Pending Message",
+        help="The message displayed if the order pending after the payment process",
+        default=lambda self: _(
+            "Your payment has been successfully processed but is waiting for approval."
+        ), translate=True)
+    auth_msg = fields.Html(
+        string="Authorize Message", help="The message displayed if payment is authorized",
+        default=lambda self: _("Your payment has been authorized."), translate=True)
+    done_msg = fields.Html(
+        string="Done Message",
+        help="The message displayed if the order is successfully done after the payment process",
+        default=lambda self: _("Your payment has been successfully processed."),
+        translate=True)
+    cancel_msg = fields.Html(
+        string="Cancelled Message",
+        help="The message displayed if the order is cancelled during the payment process",
+        default=lambda self: _("Your payment has been cancelled."), translate=True)
+
     #=== COMPUTE METHODS ===#
 
     def _compute_is_primary(self):

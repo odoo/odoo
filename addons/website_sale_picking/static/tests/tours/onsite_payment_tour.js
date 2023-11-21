@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wTourUtils.clickOnElement('pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
         {
             content: "Check if the payment is successful",
-            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
+            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products.)',
         },
 
         // Test multi products (Either physical or not)
@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wTourUtils.clickOnElement('Pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
         {
             content: "Check if the payment is successful",
-            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
+            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products.)',
         },
 
         // Test without any physical product (option pay on site should not appear)

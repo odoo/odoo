@@ -44,6 +44,9 @@ class PaymentWizard(models.TransientModel):
             ('module_id', '=', module_id),
         ], limit=1)
 
+    def _get_wire_transfer_payment_method(self):
+        return self.env['payment.method'].search([('code', '=', 'wire_transfer')], limit=1)
+
     def _get_default_payment_provider_onboarding_value(self, key):
         if not self.env.is_admin():
             raise UserError(_("Only administrators can access this data."))
@@ -75,7 +78,6 @@ class PaymentWizard(models.TransientModel):
         journal = manual_payment.journal_id
 
         self._payment_provider_onboarding_cache['manual_name'] = manual_payment['name']
-        self._payment_provider_onboarding_cache['manual_post_msg'] = manual_payment['pending_msg']
         self._payment_provider_onboarding_cache['journal_name'] = journal.name if journal.name != "Bank" else ""
         self._payment_provider_onboarding_cache['acc_number'] = journal.bank_acc_number
 
@@ -112,13 +114,14 @@ class PaymentWizard(models.TransientModel):
                 })
             elif self.payment_method == 'manual':
                 manual_provider = self._get_manual_payment_provider(new_env)
+                wire_transfer_payment_method = self._get_wire_transfer_payment_method()
                 if not manual_provider:
                     raise UserError(_(
                         'No manual payment method could be found for this company. '
                         'Please create one from the Payment Provider menu.'
                     ))
                 manual_provider.name = self.manual_name
-                manual_provider.pending_msg = self.manual_post_msg
+                wire_transfer_payment_method.pending_msg = self.manual_post_msg
                 manual_provider.state = 'enabled'
 
                 journal = manual_provider.journal_id

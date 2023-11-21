@@ -18,11 +18,6 @@
                 <field name="show_credentials_page" invisible="1"/>
                 <field name="show_allow_express_checkout" invisible="1"/>
                 <field name="show_allow_tokenization" invisible="1"/>
-                <field name="show_pre_msg" invisible="1"/>
-                <field name="show_pending_msg" invisible="1"/>
-                <field name="show_auth_msg" invisible="1"/>
-                <field name="show_done_msg" invisible="1"/>
-                <field name="show_cancel_msg" invisible="1"/>
                 <field name="require_currency" invisible="1"/>
                 <field name="code" invisible="1"/>
                 <sheet>
@@ -115,17 +110,6 @@
                                            options="{'no_create': True}"/>
                                 </group>
                                 <group string="Payment Followup" name="payment_followup" invisible="1"/>
-                            </group>
-                        </page>
-                        <page string="Messages"
-                            name="messages"
-                            invisible="module_id and module_state != 'installed'">
-                            <group>
-                                <field name="pre_msg" invisible="not show_pre_msg"/>
-                                <field name="pending_msg" invisible="not show_pending_msg"/>
-                                <field name="auth_msg" invisible="not support_manual_capture or not show_auth_msg"/>
-                                <field name="done_msg" invisible="not show_done_msg"/>
-                                <field name="cancel_msg" invisible="not show_cancel_msg"/>
                             </group>
                         </page>
                     </notebook>

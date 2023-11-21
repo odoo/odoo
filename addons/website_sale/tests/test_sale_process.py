@@ -87,7 +87,6 @@ class TestUi(HttpCaseWithUserDemo):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
@@ -99,7 +98,6 @@ class TestUi(HttpCaseWithUserDemo):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
@@ -111,7 +109,6 @@ class TestUi(HttpCaseWithUserDemo):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
         self.env.company.country_id = self.env.ref('base.us')
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({

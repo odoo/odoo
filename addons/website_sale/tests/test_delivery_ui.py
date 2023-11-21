@@ -15,7 +15,6 @@ class TestUi(odoo.tests.HttpCase):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({

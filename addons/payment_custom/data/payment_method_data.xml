@@ -9,6 +9,12 @@
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund"></field>
+        <!-- Clear the default value before recomputing the pending_msg -->
+        <field name="pending_msg" eval="False"/>
     </record>
+
+    <function model="payment.method"
+              name="_transfer_ensure_pending_msg_is_set"
+              eval="[[ref('payment_method_wire_transfer')]]"/>
 
 </odoo>

@@ -124,29 +124,6 @@ class PaymentProvider(models.Model):
         currency_field='main_currency_id',
     )
 
-    # Message fields
-    pre_msg = fields.Html(
-        string="Help Message", help="The message displayed to explain and help the payment process",
-        translate=True)
-    pending_msg = fields.Html(
-        string="Pending Message",
-        help="The message displayed if the order pending after the payment process",
-        default=lambda self: _(
-            "Your payment has been successfully processed but is waiting for approval."
-        ), translate=True)
-    auth_msg = fields.Html(
-        string="Authorize Message", help="The message displayed if payment is authorized",
-        default=lambda self: _("Your payment has been authorized."), translate=True)
-    done_msg = fields.Html(
-        string="Done Message",
-        help="The message displayed if the order is successfully done after the payment process",
-        default=lambda self: _("Your payment has been successfully processed."),
-        translate=True)
-    cancel_msg = fields.Html(
-        string="Cancelled Message",
-        help="The message displayed if the order is cancelled during the payment process",
-        default=lambda self: _("Your payment has been cancelled."), translate=True)
-
     # Feature support fields
     support_tokenization = fields.Boolean(
         string="Tokenization Supported", compute='_compute_feature_support_fields'
@@ -181,11 +158,6 @@ class PaymentProvider(models.Model):
     show_credentials_page = fields.Boolean(compute='_compute_view_configuration_fields')
     show_allow_tokenization = fields.Boolean(compute='_compute_view_configuration_fields')
     show_allow_express_checkout = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_pre_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_pending_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_auth_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_done_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_cancel_msg = fields.Boolean(compute='_compute_view_configuration_fields')
     require_currency = fields.Boolean(compute='_compute_view_configuration_fields')
 
     #=== COMPUTE METHODS ===#
@@ -233,11 +205,6 @@ class PaymentProvider(models.Model):
         - `show_credentials_page`: Whether the "Credentials" notebook page should be shown.
         - `show_allow_tokenization`: Whether the `allow_tokenization` field should be shown.
         - `show_allow_express_checkout`: Whether the `allow_express_checkout` field should be shown.
-        - `show_pre_msg`: Whether the `pre_msg` field should be shown.
-        - `show_pending_msg`: Whether the `pending_msg` field should be shown.
-        - `show_auth_msg`: Whether the `auth_msg` field should be shown.
-        - `show_done_msg`: Whether the `done_msg` field should be shown.
-        - `show_cancel_msg`: Whether the `cancel_msg` field should be shown.
         - `require_currency`: Whether the `available_currency_ids` field shoud be required.
 
         For a provider to hide specific elements of the form view, it must override this method and
@@ -250,11 +217,6 @@ class PaymentProvider(models.Model):
             'show_credentials_page': True,
             'show_allow_tokenization': True,
             'show_allow_express_checkout': True,
-            'show_pre_msg': True,
-            'show_pending_msg': True,
-            'show_auth_msg': True,
-            'show_done_msg': True,
-            'show_cancel_msg': True,
             'require_currency': False,
         })
 

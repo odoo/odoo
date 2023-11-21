@@ -941,11 +941,11 @@ class PaymentTransaction(models.Model):
 
         display_message = None
         if self.state == 'pending':
-            display_message = self.provider_id.pending_msg
+            display_message = self.payment_method_id.pending_msg
         elif self.state == 'done':
-            display_message = self.provider_id.done_msg
+            display_message = self.payment_method_id.done_msg
         elif self.state == 'cancel':
-            display_message = self.provider_id.cancel_msg
+            display_message = self.payment_method_id.cancel_msg
         post_processing_values = {
             'provider_code': self.provider_code,
             'provider_name': self.provider_id.name,

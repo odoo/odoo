@@ -2471,20 +2471,20 @@
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="tx_sudo.state == 'pending'">
-                        <t t-out="tx_sudo.provider_id.sudo().pending_msg"/>
+                        <t t-out="tx_sudo.payment_method_id.sudo().pending_msg"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done'">
-                        <span t-if='tx_sudo.provider_id.sudo().done_msg' t-out="tx_sudo.provider_id.sudo().done_msg"/>
+                        <span t-if='tx_sudo.payment_method_id.sudo().done_msg' t-out="tx_sudo.payment_method_id.sudo().done_msg"/>
                     </t>
                     <t t-if="tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount">
                         <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
                         Please contact the responsible of the shop for more information.</span>
                     </t>
                     <t t-if="tx_sudo.state == 'cancel'">
-                        <t t-out="tx_sudo.provider_id.sudo().cancel_msg"/>
+                        <t t-out="tx_sudo.payment_method_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="tx_sudo.state == 'authorized'">
-                        <t t-if="tx_sudo.provider_id.sudo().auth_msg" t-out="tx_sudo.provider_id.sudo().auth_msg"/>
+                        <t t-if="tx_sudo.payment_method_id.sudo().auth_msg" t-out="tx_sudo.payment_method_id.sudo().auth_msg"/>
                         <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="tx_sudo.state == 'error'">
