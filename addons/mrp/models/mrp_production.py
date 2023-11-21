@@ -1814,30 +1814,31 @@ class MrpProduction(models.Model):
         assigned_moves = set()
         partially_assigned_moves = set()
         move_lines_to_unlink = set()
+        moves_to_consume = self.env['stock.move']
         for initial_move, backorder_moves in move_to_backorder_moves.items():
             # Create `stock.move.line` for consumed but non-reserved components and for by-products
-            if (initial_move.raw_material_production_id or (initial_move.production_id and initial_move.product_id != production.product_id))\
-                and not initial_move.move_line_ids and set_consumed_qty:
+            if set_consumed_qty and (initial_move.raw_material_production_id or (initial_move.production_id and initial_move.product_id != production.product_id)):
                 ml_vals = initial_move._prepare_move_line_vals()
                 backorder_move_to_ignore = backorder_moves[-1] if has_backorder_to_ignore[initial_move.raw_material_production_id] else self.env['stock.move']
-                for move in list(initial_move + backorder_moves - backorder_move_to_ignore):
-                    new_ml_vals = dict(
-                        ml_vals,
-                        quantity=move.product_uom_qty,
-                        move_id=move.id
-                    )
-                    move_lines_vals.append(new_ml_vals)
+                for move in (initial_move + backorder_moves - backorder_move_to_ignore):
+                    if not initial_move.move_line_ids:
+                        new_ml_vals = dict(
+                            ml_vals,
+                            quantity=move.product_uom_qty,
+                            move_id=move.id
+                        )
+                        move_lines_vals.append(new_ml_vals)
+                    moves_to_consume |= move
 
         for initial_move, backorder_moves in move_to_backorder_moves.items():
             ml_by_move = []
             product_uom = initial_move.product_id.uom_id
-            for move_line in initial_move.move_line_ids:
-                if initial_move.picked:
-                    continue
-                available_qty = move_line.product_uom_id._compute_quantity(move_line.quantity, product_uom)
-                if float_compare(available_qty, 0, precision_rounding=move_line.product_uom_id.rounding) <= 0:
-                    continue
-                ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
+            if not initial_move.picked:
+                for move_line in initial_move.move_line_ids:
+                    available_qty = move_line.product_uom_id._compute_quantity(move_line.quantity, product_uom)
+                    if float_compare(available_qty, 0, precision_rounding=move_line.product_uom_id.rounding) <= 0:
+                        continue
+                    ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
 
             moves = list(initial_move | backorder_moves)
 
@@ -1911,6 +1912,8 @@ class MrpProduction(models.Model):
         self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
         self.env['stock.move.line'].create(move_lines_vals)
+
+        moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:
