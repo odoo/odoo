@@ -29,6 +29,7 @@
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
                         t-attf-style="max-width: min(100%, {{ imagesWidth }}px); max-height: {{ props.imagesHeight }}px;"
+                        t-on-load="onImageLoaded"
                     />
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                         <i class="fa fa-spin fa-spinner"/>

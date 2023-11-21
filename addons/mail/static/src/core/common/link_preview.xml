@@ -27,7 +27,7 @@
                 </div>
                 <div class="o-mail-LinkPreviewCard-imageLinkWrap col-4 d-block">
                     <a t-att-href="props.linkPreview.source_url" target="_blank">
-                        <img t-if="props.linkPreview.og_image" class="w-100 h-100 o_object_fit_cover" t-att-src="props.linkPreview.og_image" t-att-alt="props.linkPreview.og_title"/>
+                        <img t-if="props.linkPreview.og_image" class="w-100 h-100 o_object_fit_cover" t-att-src="props.linkPreview.og_image" t-att-alt="props.linkPreview.og_title" t-on-load="onImageLoaded"/>
                         <span t-else="" class="d-flex align-items-center justify-content-center w-100 h-100 bg-100 text-300">
                             <i class="fa fa-camera fa-2x"/>
                         </span>
@@ -43,7 +43,7 @@
     <t t-name="mail.LinkPreviewImage">
         <div class="o-mail-LinkPreviewImage position-relative mb-2" t-att-class="{ 'me-2': env.inChatter }" t-attf-class="{{ className }}">
             <a t-if="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
-                <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl"/>
+                <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
             </a>
             <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
@@ -65,7 +65,7 @@
                 <div class="o-mail-LinkPreviewVideo-videoWrap col-4 d-block">
                     <a t-att-href="props.linkPreview.source_url" target="_blank">
                         <div t-if="props.linkPreview.og_image" class="o-mail-LinkPreviewVideo-overlay position-relative h-100 opacity-trigger-hover">
-                            <img class="img-fluid h-100 rounded-bottom o_object_fit_cover" t-att-src="props.linkPreview.og_image" t-att-alt="props.linkPreview.og_title"/>
+                            <img class="img-fluid h-100 rounded-bottom o_object_fit_cover" t-att-src="props.linkPreview.og_image" t-att-alt="props.linkPreview.og_title" t-on-load="onImageLoaded"/>
                             <div class="position-absolute top-50 start-50 translate-middle">
                                 <div class="o-mail-LinkPreviewVideo-play btn btn-lg rounded opacity-75 opacity-100-hover transition-base">
                                     <i class="fa fa-play"/>
