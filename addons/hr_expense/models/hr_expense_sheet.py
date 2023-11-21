@@ -195,6 +195,13 @@ class HrExpenseSheet(models.Model):
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
+    attachment_ids = fields.One2many(
+        comodel_name='ir.attachment',
+        inverse_name='res_id',
+        domain="[('res_model', '=', 'hr.expense.sheet')]",
+        string='Attachments of expenses',
+    )
+    message_main_attachment_id = fields.Many2one(compute='_compute_main_attachment', store=True)
     accounting_date = fields.Date(string="Accounting Date", compute='_compute_accounting_date', store=True)
     account_move_ids = fields.One2many(
         string="Journal Entries",
@@ -293,6 +300,17 @@ class HrExpenseSheet(models.Model):
                 sheet.state = sheet.approval_state
             else:
                 sheet.state = 'draft'
+
+    @api.depends('expense_line_ids.attachment_ids')
+    def _compute_main_attachment(self):
+        for sheet in self:
+            attachments = sheet.attachment_ids
+            if not sheet.message_main_attachment_id or sheet.message_main_attachment_id not in attachments:
+                expenses = sheet.expense_line_ids
+                expenses_mma_checksums = expenses.message_main_attachment_id.mapped('checksum')
+                sheet.message_main_attachment_id = attachments.filtered(
+                    lambda att: att.checksum in expenses_mma_checksums
+                )[:1] or attachments[:1]
 
     @api.depends('expense_line_ids.currency_id', 'company_currency_id')
     def _compute_currency_id(self):
@@ -455,19 +473,6 @@ class HrExpenseSheet(models.Model):
     # --------------------------------------------
     # Mail Thread
     # --------------------------------------------
-
-    def _get_mail_thread_data_attachments(self):
-        """
-            In order to see in the sheet attachment preview the corresponding
-            expenses' attachments, the latter attachments are added to the fetched data for the sheet record.
-        """
-        self.ensure_one()
-        res = super()._get_mail_thread_data_attachments()
-        expense_attachments = self.env['ir.attachment'].search(
-            [('res_id', 'in', self.expense_line_ids.ids), ('res_model', '=', 'hr.expense')],
-            order='id desc',
-        )
-        return res | expense_attachments
 
     def _track_subtype(self, init_values):
         self.ensure_one()
