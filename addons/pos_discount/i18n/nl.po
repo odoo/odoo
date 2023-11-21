@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -21,10 +21,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
+#. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
-#, python-format
-msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
-msgstr "Een kortingsproduct is vereist om de Globale Kortingsfunctie te gebruiken. Ga naar Kassa > Configuratie > Instellingen om het in te stellen."
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point "
+"of Sale > Configuration > Settings to set it."
+msgstr ""
+"Een kortingsproduct is vereist om de Globale Kortingsfunctie te gebruiken. "
+"Ga naar Kassa > Configuratie > Instellingen om het in te stellen."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
@@ -37,9 +41,8 @@ msgid "Config Settings"
 msgstr "Configuratie instellingen"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
 msgid "Discount"
 msgstr "Korting"
 
@@ -49,11 +52,10 @@ msgid "Discount %"
 msgstr "Korting %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
-#, python-format
 msgid "Discount Percentage"
 msgstr "Kortingspercentage"
 
@@ -64,16 +66,14 @@ msgid "Discount Product"
 msgstr "Kortingsproduct"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No discount product found"
 msgstr "Geen kortingsproduct gevonden"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No tax"
 msgstr "Geen btw"
 
@@ -98,9 +98,8 @@ msgid "Pos Discount Product"
 msgstr "Kassa Kortingsproduct"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "Tax: %s"
 msgstr "Btw: %s"
 
@@ -111,11 +110,14 @@ msgid "The default discount percentage when clicking on the Discount button"
 msgstr "Het standaard kortingspercentage als je op de kortingsknop klikt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
-msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
-msgstr "Het kortingsproduct lijkt foutief geconfigureerd te zijn. Zorg ervoor dat het aangeduid is als 'Kan verkocht' worden en 'Beschikbaar in Kassa'."
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
+"Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Het kortingsproduct lijkt foutief geconfigureerd te zijn. Zorg ervoor dat "
+"het aangeduid is als 'Kan verkocht' worden en 'Beschikbaar in Kassa'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id

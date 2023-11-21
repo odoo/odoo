@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -26,10 +26,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
+#. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
-#, python-format
-msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
-msgstr "Es necessita un producte de descompte per utilitzar la funció Descompte global. Aneu al punt de venda . Configuració > Configuració per a establir-lo."
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point "
+"of Sale > Configuration > Settings to set it."
+msgstr ""
+"Es necessita un producte de descompte per utilitzar la funció Descompte "
+"global. Aneu al punt de venda . Configuració > Configuració per a establir-"
+"lo."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
@@ -42,9 +47,8 @@ msgid "Config Settings"
 msgstr "Ajustos de configuració"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
 msgid "Discount"
 msgstr "Descompte"
 
@@ -54,11 +58,10 @@ msgid "Discount %"
 msgstr "Descompte %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
-#, python-format
 msgid "Discount Percentage"
 msgstr "Descompte en %"
 
@@ -69,16 +72,14 @@ msgid "Discount Product"
 msgstr "Producte en descompte"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No discount product found"
 msgstr "No s'ha trobat cap producte en descompte"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No tax"
 msgstr "Sense impostos"
 
@@ -103,9 +104,8 @@ msgid "Pos Discount Product"
 msgstr "Producte de descompte Pos"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "Tax: %s"
 msgstr "Impostos: %s"
 
@@ -113,14 +113,18 @@ msgstr "Impostos: %s"
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
-msgstr "El percentatge predeterminat de descompte en fer clic al botó Descompte"
+msgstr ""
+"El percentatge predeterminat de descompte en fer clic al botó Descompte"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
-msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
-msgstr "El producte amb descompte sembla estar mal configurat. Assegureu-vos que es marca com a \"Es pot vendre\" i \"Disponible al punt de venda\"."
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
+"Sold' and 'Available in Point of Sale'."
+msgstr ""
+"El producte amb descompte sembla estar mal configurat. Assegureu-vos que es "
+"marca com a \"Es pot vendre\" i \"Disponible al punt de venda\"."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id

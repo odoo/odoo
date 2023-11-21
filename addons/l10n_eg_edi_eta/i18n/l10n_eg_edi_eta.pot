@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-17 10:23+0000\n"
 "PO-Revision-Date: 2022-05-17 10:23+0000\n"
@@ -16,10 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">ETA API Integration</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.egyptian_invoice
+msgid "<strong class=\"text-center\">ETA QR Code</strong>"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -153,16 +151,14 @@ msgid "Air transport of passengers"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "An error occured in created the ETA invoice, please retry signing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "An unexpected error has occurred"
 msgstr ""
 
@@ -602,8 +598,8 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Document Canceled"
 msgstr ""
 
@@ -622,6 +618,11 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:ir.ui.menu,name:l10n_eg_edi_eta.account_eta_menu
 msgid "ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "ETA API Integration"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -674,6 +675,20 @@ msgid "ETA Item code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_long_id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_long_id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_payment__l10n_eg_long_id
+msgid "ETA Long ID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_qr_code
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_qr_code
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_payment__l10n_eg_qr_code
+msgid "ETA QR Code"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_client_secret
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_client_secret
 msgid "ETA Secret"
@@ -700,14 +715,14 @@ msgid "ETA code for the unit of measures"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "ETA invoice has been received"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "ETA_INVOICE_DOC_%s"
 msgstr ""
 
@@ -728,8 +743,8 @@ msgid "Egyptian Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Egyptian Tax authority JSON invoice generated for %s."
 msgstr ""
 
@@ -790,18 +805,14 @@ msgid "Errand stamp"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Error trying to connect to Odoo. Check your internet connection"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Error trying to connect to the middleware. Is the middleware running?"
 msgstr ""
 
@@ -1260,13 +1271,6 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4923
 msgid "Land transportation of goods by bus"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type____last_update
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive____last_update
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1748,9 +1752,8 @@ msgid "Minute ( min )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid ""
 "Missing Dependency - If you are using Windows, make sure eps2003csp11.dll is"
 " correctly installed. You can download it here: "
@@ -1759,9 +1762,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid ""
 "Missing library - Please make sure that PyKCS11 is correctly installed on "
 "the local proxy server"
@@ -1783,9 +1785,8 @@ msgid "Motion picture, video and television program distribution activities"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid ""
 "Multiple drive detected - Only one secure thumb drive can be inserted at the"
 " same time"
@@ -1813,9 +1814,8 @@ msgid "Nanometer ( nm )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "No drive found - Make sure the thumb drive is correctly inserted"
 msgstr ""
 
@@ -2064,8 +2064,8 @@ msgid "Ounce ( oz )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "PDF Document is not available"
 msgstr ""
 
@@ -2142,89 +2142,89 @@ msgid "Plastics industry in its primary forms and synthetic rubber"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please add all the required fields in the branch details"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please add all the required fields in the customer details"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please configure the API domain from the system parameters"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please configure the token domain from the system parameters"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/eta_thumb_drive.py:0
-#, python-format
 msgid "Please define the host of sign tool."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/res_currency_rate.py:0
-#, python-format
 msgid ""
 "Please make sure that the EGP per unit is within 5 decimal accuracy.\n"
 "Higher decimal accuracy might lead to inconsistency with the ETA invoicing portal!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the EGS/GS1 Barcode is set correctly on all products"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the invoice is signed"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the invoice lines UoM codes are all set up correctly"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid ""
 "Please make sure the invoice lines taxes all have the correct ETA tax code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please only sign invoices from one company at a time"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please set the all the ETA information on the invoice's journal"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please setup a personal drive for company %s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please setup the certificate on the thumb drive menu"
 msgstr ""
 
@@ -2279,18 +2279,18 @@ msgid "Processing and spinning of textile fibers"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model,name:l10n_eg_edi_eta.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:ir.model,name:l10n_eg_edi_eta.model_product_template
-msgid "Product Template"
+msgid "Product"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model,name:l10n_eg_edi_eta.model_uom_uom
 msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model,name:l10n_eg_edi_eta.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2865,9 +2865,8 @@ msgid "Support activities for joint facilities"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "System not supported"
 msgstr ""
 
@@ -2969,16 +2968,16 @@ msgid ""
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid ""
 "This invoice has been marked as invalid by the ETA. Please check the ETA "
 "website for more information"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid ""
 "This invoice has been sent to the ETA, but we are still awaiting validation"
 msgstr ""
@@ -3074,23 +3073,15 @@ msgid "Treatment and disposal of non-hazardous waste"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Unauthorized"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
-msgid "Unexpected error:"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "Unknown error"
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
+msgid "Unexpected error: “%s”"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -3114,8 +3105,8 @@ msgid "Volt ( V )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/res_currency_rate.py:0
-#, python-format
 msgid "Warning for %s"
 msgstr ""
 
@@ -3266,8 +3257,8 @@ msgid "You can only have one thumb drive per user per company!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid ""
 "You cannot issue an invoice to a partner with the same VAT number as the "
 "branch."
@@ -3279,15 +3270,15 @@ msgid "ZIP"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "an Unknown error has occured"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "an Unknown error has occurred"
 msgstr ""
 

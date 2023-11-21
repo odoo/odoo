@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -24,9 +24,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
+#. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
-#, python-format
-msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point "
+"of Sale > Configuration > Settings to set it."
 msgstr ""
 
 #. module: pos_discount
@@ -40,9 +42,8 @@ msgid "Config Settings"
 msgstr "Inställningar"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
 msgid "Discount"
 msgstr "Rabatt"
 
@@ -52,11 +53,10 @@ msgid "Discount %"
 msgstr "Rabatt %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
-#, python-format
 msgid "Discount Percentage"
 msgstr "Rabatt i procent"
 
@@ -67,16 +67,14 @@ msgid "Discount Product"
 msgstr "Rabattprodukt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No discount product found"
 msgstr "Ingen rabattprodukt hittad"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "No tax"
 msgstr ""
 
@@ -101,9 +99,8 @@ msgid "Pos Discount Product"
 msgstr ""
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 msgid "Tax: %s"
 msgstr ""
 
@@ -114,11 +111,14 @@ msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
-#, python-format
-msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
-msgstr "Rabattprodukten verkar vara felkonfigurerad. Se till att den är markerad som \"Kan säljas\" och \"Tillgänglig i kassan\"."
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
+"Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Rabattprodukten verkar vara felkonfigurerad. Se till att den är markerad som "
+"\"Kan säljas\" och \"Tillgänglig i kassan\"."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
