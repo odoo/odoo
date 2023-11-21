@@ -42,7 +42,6 @@
         <field name="sequence" eval="2"/>
     </record>
 
-
     <record id="tax_report_line_standard_rated_expense_base" model="account.tax.report.line">
         <field name="name">1. Standard rated expenses</field>
         <field name="tag_name">1. Standard rated expenses (Base)</field>
@@ -52,15 +51,11 @@
         <field name="sequence" eval="1"/>
     </record>
 
-
-
-
     <record id="tax_report_line_vat_all_expense" model="account.tax.report.line">
         <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="4"/>
     </record>
-
 
     <record id="tax_report_line_standard_rated_expense_vat" model="account.tax.report.line">
         <field name="name">1. Standard rated expenses</field>
@@ -71,13 +66,11 @@
         <field name="sequence" eval="1"/>
     </record>
 
-
     <record id="tax_report_line_net_vat_due" model="account.tax.report.line">
         <field name="name">Net VAT Due</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="5"/>
         <field name="formula">STD_RATE_SALES_TAX + STD_RATE_EXPENSES_TAX</field>
     </record>
-
 
 </odoo>

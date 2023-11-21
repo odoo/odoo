@@ -4,7 +4,7 @@
 
 {
     "name": "Iran - Accounting",
-    "version": "14.0.3.0.0",
+    "version": "1.0",
     "category": "Accounting/Localizations/Account Charts",
     "summary": """
 Iran Accounting Module
@@ -19,7 +19,11 @@ Also:
     "maintainer": ["saeed-raesi"],
     "license": "AGPL-3",
     "website": "https://github.com/OCA/l10n-iran",
-    "depends": ["account"],
+    "depends": [
+        "account",
+        "base_vat",
+        "l10n_multilang",
+    ],
     "data": [
         "data/l10n_ir_chart_data.xml",
         "data/account.group.template.csv",
