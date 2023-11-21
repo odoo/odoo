@@ -59,9 +59,13 @@ const ShareWidget = publicWidget.Widget.extend({
                 // parameter, merging everything together, e.g of output:
                 // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
                 // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
-                modifiedUrl.searchParams.set(titleParamFound, `${currentTitle}%20${currentUrl}`);
+                modifiedUrl.searchParams.set(titleParamFound, `${currentTitle} ${currentUrl}`);
             } else {
-                modifiedUrl.searchParams.set(titleParamFound, currentTitle);
+                // The built-in `URLSearchParams.set()` method encodes spaces
+                // as "+" characters, which are not properly parsed as spaces
+                // by email clients, so we can't use it here.
+                modifiedUrl.search = modifiedUrl.search
+                    .replace(encodeURIComponent("{title}"), encodeURIComponent(currentTitle));
             }
         }
 
