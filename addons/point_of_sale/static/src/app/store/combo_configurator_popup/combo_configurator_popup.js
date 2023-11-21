@@ -14,6 +14,8 @@ export class ComboConfiguratorPopup extends AbstractAwaitablePopup {
         this.pos = usePos();
         this.state = useState({
             combo: Object.fromEntries(this.props.product.combo_ids.map((elem) => [elem, 0])),
+            // configuration: id of combo_line -> ProductConfiguratorPopup payload
+            configuration: {},
         });
     }
 
@@ -37,6 +39,24 @@ export class ComboConfiguratorPopup extends AbstractAwaitablePopup {
     getPayload() {
         return Object.values(this.state.combo)
             .filter((x) => x) // we only keep the non-zero values
-            .map((x) => this.pos.db.combo_line_by_id[x]);
+            .map((x) => {
+                const combo_line = this.pos.db.combo_line_by_id[x];
+                return {
+                    ...combo_line,
+                    configuration: this.state.configuration[combo_line.id],
+                };
+            });
+    }
+
+    async onClickProduct({ product, combo_line }, ev) {
+        if (product.isConfigurable()) {
+            const { confirmed, payload } = await product.openConfigurator({ initQuantity: 1 });
+            if (confirmed) {
+                this.state.configuration[combo_line.id] = payload;
+            } else {
+                // Do not select the product if configuration popup is cancelled.
+                this.state.combo[combo_line.id] = 0;
+            }
+        }
     }
 }
