@@ -105,6 +105,16 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertFalse(mail.scheduled_date)
         self.assertEqual(mail.state, 'outgoing')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_mail_body(self):
+        """ Test that the body and body_html is set correctly in 'mail.mail'
+        when sending an email from mail.template """
+        mail_id = self.test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        body_result = '<p>EnglishBody for %s</p>' % self.test_record.name
+
+        self.assertEqual(mail.body_html, body_result)
+        self.assertEqual(mail.body, body_result)
 
 @tagged('mail_template', 'multi_lang')
 class TestMailTemplateLanguages(TestMailTemplateCommon):
