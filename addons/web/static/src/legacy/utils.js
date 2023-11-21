@@ -160,6 +160,16 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
                     legacyEnv.session.user_context,
                     params.kwargs.context,
                 );
+                if (settings.noContextKeys) {
+                    const keys = settings.noContextKeys;
+                    if (typeof(keys) === 'string') {
+                        delete params.kwargs.context[keys];
+                    } else {
+                        for (const key of keys) {
+                            delete params.kwargs.context[key];
+                        }
+                    }
+                }
             }
             const jsonrpc = wowlEnv.services.rpc(route, params, {
                 silent: settings.shadow,
