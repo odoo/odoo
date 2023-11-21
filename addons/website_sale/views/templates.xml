@@ -2334,12 +2334,15 @@
     </template>
 
     <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//div[hasclass('table-responsive')]" position="attributes">
+            <attribute name="class" remove="table-responsive" separator=" "/>
+        </xpath>
         <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
-            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
+            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url" class="d-block text-wrap" style="max-width: 35vw">
                 <span t-field="line.name" />
             </a>
             <t t-if="not line.product_id.website_published">
-                <span t-field="line.name" />
+                <span t-field="line.name" class="d-block text-wrap" style="max-width: 35vw"/>
             </t>
         </xpath>
     </template>
