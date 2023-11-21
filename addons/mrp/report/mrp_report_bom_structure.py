@@ -307,7 +307,7 @@ class ReportBomStructure(models.AbstractModel):
             bom_report_line['byproducts_total'] = sum(byproduct['quantity'] for byproduct in byproducts)
             bom_report_line['bom_cost'] *= bom_report_line['cost_share']
 
-        availabilities = self._get_availabilities(product, current_quantity, product_info, bom_key, quantities_info, level, ignore_stock, components)
+        availabilities = self._get_availabilities(product, current_quantity, product_info, bom_key, quantities_info, level, ignore_stock, components, report_line=bom_report_line)
         bom_report_line.update(availabilities)
 
         if level == 0:
@@ -590,7 +590,7 @@ class ReportBomStructure(models.AbstractModel):
         return {}
 
     @api.model
-    def _get_availabilities(self, product, quantity, product_info, bom_key, quantities_info, level, ignore_stock=False, components=False, bom_line=None):
+    def _get_availabilities(self, product, quantity, product_info, bom_key, quantities_info, level, ignore_stock=False, components=False, bom_line=None, report_line=False):
         # Get availabilities according to stock (today & forecasted).
         stock_state, stock_delay = ('unavailable', False)
         if not ignore_stock:
@@ -604,6 +604,10 @@ class ReportBomStructure(models.AbstractModel):
             resupply_state, resupply_delay = ('available', 0)
         elif route_info:
             resupply_state, resupply_delay = self._get_resupply_availability(route_info, components)
+
+        if resupply_state == "unavailable" and route_info == {} and components and report_line:
+            val = self._get_last_availability(report_line)
+            return val
 
         base = {
             'resupply_avail_delay': resupply_delay,
@@ -692,3 +696,19 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _has_attachments(self, data):
         return data['attachment_ids'] or any(self._has_attachments(component) for component in data.get('components', []))
+
+    def _get_last_availability(self, report_line):
+        delay = 0
+        component_max_delay = False
+        for component in report_line["components"]:
+            if component["availability_delay"] is False:
+                component_max_delay = component
+                break
+            elif component["availability_delay"] >= delay:
+                component_max_delay = component
+                delay = component["availability_delay"]
+        return {'resupply_avail_delay': component_max_delay['resupply_avail_delay'],
+                'stock_avail_state': component_max_delay['stock_avail_state'],
+                'availability_display': component_max_delay['availability_display'],
+                'availability_state': component_max_delay['availability_state'],
+                'availability_delay': component_max_delay['availability_delay']}
