@@ -22,10 +22,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">ETA API Integration</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.egyptian_invoice
+msgid "<strong class=\"text-center\">ETA QR Code</strong>"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -86,7 +84,9 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_9810
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_9820
-msgid "Activities of producing unearthed products and services for home appliances for personal use"
+msgid ""
+"Activities of producing unearthed products and services for home appliances "
+"for personal use"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -126,7 +126,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_id
-msgid "Address of the subdivision of the company.  You can just put the company partner if this is used for the main branch."
+msgid ""
+"Address of the subdivision of the company.  You can just put the company "
+"partner if this is used for the main branch."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -155,21 +157,21 @@ msgid "Air transport of passengers"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "An error occured in created the ETA invoice, please retry signing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "An unexpected error has occurred"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_7110
-msgid "Architectural and engineering activities and related technical consulting"
+msgid ""
+"Architectural and engineering activities and related technical consulting"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -340,7 +342,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid "Check to start sending invoices to your e-invoicing production environment"
+msgid ""
+"Check to start sending invoices to your e-invoicing production environment"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -411,7 +414,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_6202
-msgid "Computer consultancy experience and facilities management activities related to computer fields"
+msgid ""
+"Computer consultancy experience and facilities management activities related "
+"to computer fields"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -535,7 +540,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_0128
-msgid "Cultivation of spice crops, aromatics, medicine and pharmaceutical drugs"
+msgid ""
+"Cultivation of spice crops, aromatics, medicine and pharmaceutical drugs"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -596,8 +602,8 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Document Canceled"
 msgstr ""
 
@@ -616,6 +622,11 @@ msgstr "EDI Format"
 #. module: l10n_eg_edi_eta
 #: model:ir.ui.menu,name:l10n_eg_edi_eta.account_eta_menu
 msgid "ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
+msgid "ETA API Integration"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -657,12 +668,28 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
-msgid "ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"
+msgid ""
+"ETA Field for GS1/EGS product codes. Please use the barcode field to store "
+"GS1/EGS ETA code if possible"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
 msgid "ETA Item code"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_long_id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_long_id
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_payment__l10n_eg_long_id
+msgid "ETA Long ID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_qr_code
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_qr_code
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_payment__l10n_eg_qr_code
+msgid "ETA QR Code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -692,14 +719,14 @@ msgid "ETA code for the unit of measures"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "ETA invoice has been received"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "ETA_INVOICE_DOC_%s"
 msgstr ""
 
@@ -720,8 +747,8 @@ msgid "Egyptian Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Egyptian Tax authority JSON invoice generated for %s."
 msgstr ""
 
@@ -782,16 +809,14 @@ msgid "Errand stamp"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Error trying to connect to Odoo. Check your internet connection"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Error trying to connect to the middleware. Is the middleware running?"
 msgstr ""
 
@@ -802,7 +827,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_7220
-msgid "Experimental research and development in the field of social and human sciences"
+msgid ""
+"Experimental research and development in the field of social and human "
+"sciences"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -872,7 +899,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2591
-msgid "Forming metals by hammering, pressing, casting, rolling, and treatment of metal powders"
+msgid ""
+"Forming metals by hammering, pressing, casting, rolling, and treatment of "
+"metal powders"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1249,13 +1278,6 @@ msgid "Land transportation of goods by bus"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type____last_update
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive____last_update
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code____last_update
-msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
-
-#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__write_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__write_uid
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_uom_code__write_uid
@@ -1306,7 +1328,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_1512
-msgid "Luggage, handbags and similar industries, along with saddles and horse sets"
+msgid ""
+"Luggage, handbags and similar industries, along with saddles and horse sets"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1356,7 +1379,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_1622
-msgid "Manufacture of carpentry accessories intended for buildings and installations"
+msgid ""
+"Manufacture of carpentry accessories intended for buildings and installations"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1371,7 +1395,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_1702
-msgid "Manufacture of corrugated paper and paperboard and boxes made of paper and paperboard"
+msgid ""
+"Manufacture of corrugated paper and paperboard and boxes made of paper and "
+"paperboard"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1416,7 +1442,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2811
-msgid "Manufacture of generators and engines, with the exception of aircraft, vehicles and motorcycles"
+msgid ""
+"Manufacture of generators and engines, with the exception of aircraft, "
+"vehicles and motorcycles"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1451,7 +1479,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2920
-msgid "Manufacture of motor vehicle bodies and the manufacture of trailers and semi-trailers"
+msgid ""
+"Manufacture of motor vehicle bodies and the manufacture of trailers and semi-"
+"trailers"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1461,7 +1491,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2710
-msgid "Manufacture of motors, generators, electrical transformers, devices and control panels for electricity distribution"
+msgid ""
+"Manufacture of motors, generators, electrical transformers, devices and "
+"control panels for electricity distribution"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1471,7 +1503,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2817
-msgid "Manufacture of office equipment and equipment (excluding electronic computers and their accessories)"
+msgid ""
+"Manufacture of office equipment and equipment (excluding electronic "
+"computers and their accessories)"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1516,7 +1550,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2022
-msgid "Manufacture of paints, varnishes, and similar coatings, printing inks and molds"
+msgid ""
+"Manufacture of paints, varnishes, and similar coatings, printing inks and "
+"molds"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1556,12 +1592,16 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2211
-msgid "Manufacture of rubber tires and tubes, renewing and rebuilding the outer surfaces of rubber tires"
+msgid ""
+"Manufacture of rubber tires and tubes, renewing and rebuilding the outer "
+"surfaces of rubber tires"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_2023
-msgid "Manufacture of soap, disinfectants, cleaning and polishing preparations, perfumes and cosmetics"
+msgid ""
+"Manufacture of soap, disinfectants, cleaning and polishing preparations, "
+"perfumes and cosmetics"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1571,7 +1611,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_3520
-msgid "Manufacture of sulfur gas and distribution of gaseous fuels by means of main pipes"
+msgid ""
+"Manufacture of sulfur gas and distribution of gaseous fuels by means of main "
+"pipes"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1586,7 +1628,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_1629
-msgid "Manufacture of wood, wood products and cork, except furniture, and manufacture of articles produced from straw and sheets"
+msgid ""
+"Manufacture of wood, wood products and cork, except furniture, and "
+"manufacture of articles produced from straw and sheets"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1710,17 +1754,21 @@ msgid "Minute ( min )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
-msgid "Missing Dependency - If you are using Windows, make sure eps2003csp11.dll is correctly installed. You can download it here: https://www.egypttrust.com/en/downloads/other-drivers. If you are using Linux or macOS, please install OpenSC"
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
+msgid ""
+"Missing Dependency - If you are using Windows, make sure eps2003csp11.dll is "
+"correctly installed. You can download it here: https://www.egypttrust.com/en/"
+"downloads/other-drivers. If you are using Linux or macOS, please install "
+"OpenSC"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
-msgid "Missing library - Please make sure that PyKCS11 is correctly installed on the local proxy server"
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
+msgid ""
+"Missing library - Please make sure that PyKCS11 is correctly installed on "
+"the local proxy server"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1739,10 +1787,11 @@ msgid "Motion picture, video and television program distribution activities"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
-msgid "Multiple drive detected - Only one secure thumb drive can be inserted at the same time"
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
+msgid ""
+"Multiple drive detected - Only one secure thumb drive can be inserted at the "
+"same time"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1767,9 +1816,8 @@ msgid "Nanometer ( nm )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "No drive found - Make sure the thumb drive is correctly inserted"
 msgstr ""
 
@@ -1795,7 +1843,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_8720
-msgid "Nursing care facilities for special needs clinics, mental illnesses and physical abuse"
+msgid ""
+"Nursing care facilities for special needs clinics, mental illnesses and "
+"physical abuse"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1820,7 +1870,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_8412
-msgid "Organizing activities to provide health care, education, educational services and other social services, with the exception of social security"
+msgid ""
+"Organizing activities to provide health care, education, educational "
+"services and other social services, with the exception of social security"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1835,7 +1887,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_6399
-msgid "Other activities for information services that are not classified in other locations"
+msgid ""
+"Other activities for information services that are not classified in other "
+"locations"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1850,7 +1904,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_6209
-msgid "Other activities related to information technology and computer services"
+msgid ""
+"Other activities related to information technology and computer services"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1885,7 +1940,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_6499
-msgid "Other financial services activities, with the exception of insurance and credit provision activities for pensions not classified in other locations"
+msgid ""
+"Other financial services activities, with the exception of insurance and "
+"credit provision activities for pensions not classified in other locations"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1940,7 +1997,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_7490
-msgid "Other specialized, scientific and artistic activities not classified elsewhere"
+msgid ""
+"Other specialized, scientific and artistic activities not classified "
+"elsewhere"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1955,7 +2014,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_8299
-msgid "Other support services activities that are not classified in other locations"
+msgid ""
+"Other support services activities that are not classified in other locations"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1995,7 +2055,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4799
-msgid "Other types of retail sales that do not take place in stores, kiosks or markets"
+msgid ""
+"Other types of retail sales that do not take place in stores, kiosks or "
+"markets"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2004,8 +2066,8 @@ msgid "Ounce ( oz )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "PDF Document is not available"
 msgstr ""
 
@@ -2051,7 +2113,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_8219
-msgid "Photocopying, document processing and other specialized office support services activities"
+msgid ""
+"Photocopying, document processing and other specialized office support "
+"services activities"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2080,88 +2144,90 @@ msgid "Plastics industry in its primary forms and synthetic rubber"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please add all the required fields in the branch details"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please add all the required fields in the customer details"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please configure the API domain from the system parameters"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please configure the token domain from the system parameters"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/eta_thumb_drive.py:0
-#, python-format
 msgid "Please define the host of sign tool."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/res_currency_rate.py:0
-#, python-format
 msgid ""
 "Please make sure that the EGP per unit is within 5 decimal accuracy.\n"
-"Higher decimal accuracy might lead to inconsistency with the ETA invoicing portal!"
+"Higher decimal accuracy might lead to inconsistency with the ETA invoicing "
+"portal!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the EGS/GS1 Barcode is set correctly on all products"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the invoice is signed"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please make sure the invoice lines UoM codes are all set up correctly"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "Please make sure the invoice lines taxes all have the correct ETA tax code"
+msgid ""
+"Please make sure the invoice lines taxes all have the correct ETA tax code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please only sign invoices from one company at a time"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "Please set the all the ETA information on the invoice's journal"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please setup a personal drive for company %s"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-#, python-format
 msgid "Please setup the certificate on the thumb drive menu"
 msgstr ""
 
@@ -2216,19 +2282,19 @@ msgid "Processing and spinning of textile fibers"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model,name:l10n_eg_edi_eta.model_product_product
+#: model:ir.model,name:l10n_eg_edi_eta.model_product_template
 msgid "Product"
 msgstr "Produkte"
-
-#. module: l10n_eg_edi_eta
-#: model:ir.model,name:l10n_eg_edi_eta.model_product_template
-msgid "Product Template"
-msgstr "Produktvorlage"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model,name:l10n_eg_edi_eta.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "Produkteinheit"
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model,name:l10n_eg_edi_eta.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_5920
@@ -2317,7 +2383,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_7740
-msgid "Rent forms of intellectual property and similar products, except for copyright works"
+msgid ""
+"Rent forms of intellectual property and similar products, except for "
+"copyright works"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2382,7 +2450,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_7210
-msgid "Research and experimental development in the field of natural and engineering sciences"
+msgid ""
+"Research and experimental development in the field of natural and "
+"engineering sciences"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2422,7 +2492,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4753
-msgid "Retail sale in specialized stores of carpets, blankets, wall and floor coverings"
+msgid ""
+"Retail sale in specialized stores of carpets, blankets, wall and floor "
+"coverings"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2432,7 +2504,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4759
-msgid "Retail sale in specialized stores of household electrical appliances, furniture, lighting equipment and other household appliances"
+msgid ""
+"Retail sale in specialized stores of household electrical appliances, "
+"furniture, lighting equipment and other household appliances"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2447,12 +2521,15 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4772
-msgid "Retail sale in specialized stores of pharmaceutical, medical and pharmaceutical products, ornamental and cosmetic products"
+msgid ""
+"Retail sale in specialized stores of pharmaceutical, medical and "
+"pharmaceutical products, ornamental and cosmetic products"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4771
-msgid "Retail sale in specialized stores of shoes, clothing and leather products"
+msgid ""
+"Retail sale in specialized stores of shoes, clothing and leather products"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2472,7 +2549,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4741
-msgid "Retail sale in stores specialized in computer hardware, accessories, computer software, and communications equipment"
+msgid ""
+"Retail sale in stores specialized in computer hardware, accessories, "
+"computer software, and communications equipment"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2492,7 +2571,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4781
-msgid "Retail sale through kiosks and markets of food, soft drinks and tobacco products"
+msgid ""
+"Retail sale through kiosks and markets of food, soft drinks and tobacco "
+"products"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2557,7 +2638,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4540
-msgid "Sale, maintenance and repair of motorcycles, parts and accessories thereof"
+msgid ""
+"Sale, maintenance and repair of motorcycles, parts and accessories thereof"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2607,7 +2689,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
-msgid "Set the threshold amount for invoices that won't require the VAT ID of individuals when invoicing"
+msgid ""
+"Set the threshold amount for invoices that won't require the VAT ID of "
+"individuals when invoicing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2669,7 +2753,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_8810
-msgid "Social work activities for the infirm and disabled that take place without accommodation"
+msgid ""
+"Social work activities for the infirm and disabled that take place without "
+"accommodation"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2761,7 +2847,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_5912
-msgid "Subsequent activities for the production of movies, videos and television programs"
+msgid ""
+"Subsequent activities for the production of movies, videos and television "
+"programs"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2780,9 +2868,8 @@ msgid "Support activities for joint facilities"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "System not supported"
 msgstr ""
 
@@ -2813,7 +2900,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_9411
-msgid "The activities of commercial enterprises, employers and professional membership organizations"
+msgid ""
+"The activities of commercial enterprises, employers and professional "
+"membership organizations"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2838,7 +2927,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_1103
-msgid "The manufacture of alcoholic drinks derived from the molten and the manufacture of molten"
+msgid ""
+"The manufacture of alcoholic drinks derived from the molten and the "
+"manufacture of molten"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2863,29 +2954,41 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
-msgid "This can be an EGS or GS1 product code, which is needed for the e-invoice.  The best practice however is to use that code also as barcode and in that case, you should put it in the Barcode field instead and leave this field empty."
+msgid ""
+"This can be an EGS or GS1 product code, which is needed for the e-invoice.  "
+"The best practice however is to use that code also as barcode and in that "
+"case, you should put it in the Barcode field instead and leave this field "
+"empty."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_product_product__l10n_eg_eta_code
-msgid "This can be an EGS or GS1 product code, which is needed for the e-invoice.  The best practice however is to use that code also as barcode and in that case, you should put it in the Barcode field instead and leave this field empty. "
+msgid ""
+"This can be an EGS or GS1 product code, which is needed for the e-invoice.  "
+"The best practice however is to use that code also as barcode and in that "
+"case, you should put it in the Barcode field instead and leave this field "
+"empty. "
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "This invoice has been marked as invalid by the ETA. Please check the ETA website for more information"
+msgid ""
+"This invoice has been marked as invalid by the ETA. Please check the ETA "
+"website for more information"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "This invoice has been sent to the ETA, but we are still awaiting validation"
+msgid ""
+"This invoice has been sent to the ETA, but we are still awaiting validation"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_account_journal__l10n_eg_activity_type_id
-msgid "This is the activity type of the branch according to Egyptian Tax Authority"
+msgid ""
+"This is the activity type of the branch according to Egyptian Tax Authority"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2895,13 +2998,15 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_identifier
-msgid "This number can be found on the taxpayer profile on the eInvoicing portal. "
+msgid ""
+"This number can be found on the taxpayer profile on the eInvoicing portal. "
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_res_company__l10n_eg_invoicing_threshold
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_invoicing_threshold
-msgid "Threshold at which you are required to give the VAT number of the customer. "
+msgid ""
+"Threshold at which you are required to give the VAT number of the customer. "
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -2971,24 +3076,16 @@ msgid "Treatment and disposal of non-hazardous waste"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "Unauthorized"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. openerp-web
-#: code:addons/l10n_eg_edi_eta/static/src/js/sign_invoice.js:0
-#, python-format
-msgid "Unexpected error:"
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
+msgid "Unexpected error: “%s”"
 msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "Unknown error"
-msgstr "Unbekannter Fehler"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_0721
@@ -3011,8 +3108,8 @@ msgid "Volt ( V )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/res_currency_rate.py:0
-#, python-format
 msgid "Warning for %s"
 msgstr "Warnung für %s"
 
@@ -3058,7 +3155,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4669
-msgid "Wholesale trade for waste, waste and other products not classified elsewhere"
+msgid ""
+"Wholesale trade for waste, waste and other products not classified elsewhere"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -3088,7 +3186,8 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4652
-msgid "Wholesale trade of electronic devices, communications devices and accessories"
+msgid ""
+"Wholesale trade of electronic devices, communications devices and accessories"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -3108,7 +3207,9 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.activity.type,name:l10n_eg_edi_eta.l10n_eg_activity_type_4663
-msgid "Wholesale trade, supplies and equipment for building materials, hardware, plumbing and heating appliances"
+msgid ""
+"Wholesale trade, supplies and equipment for building materials, hardware, "
+"plumbing and heating appliances"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -3157,9 +3258,11 @@ msgid "You can only have one thumb drive per user per company!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
-msgid "You cannot issue an invoice to a partner with the same VAT number as the branch."
+msgid ""
+"You cannot issue an invoice to a partner with the same VAT number as the "
+"branch."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -3168,14 +3271,14 @@ msgid "ZIP"
 msgstr "PLZ"
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "an Unknown error has occured"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
-#, python-format
 msgid "an Unknown error has occurred"
 msgstr ""
 
