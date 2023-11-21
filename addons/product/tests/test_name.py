@@ -29,3 +29,28 @@ class TestName(TransactionCase):
         res = self.env['product.template'].name_search(name='PTN', operator='not ilike')
         res_ids = [r[0] for r in res]
         self.assertNotIn(self.product.id, res_ids)
+
+    def test_product_template_search_name_no_product_product(self):
+        color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
+        color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': color_attr.id})
+        color_attr_value_b = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': color_attr.id})
+        template_dyn = self.env['product.template'].create({
+            'name': 'Test Dynamical',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': color_attr.id,
+                'value_ids': [(4, color_attr_value_r.id), (4, color_attr_value_b.id)],
+            })]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Dynamo Lamp',
+            'default_code': 'Dynamo',
+        })
+        self.assertTrue(template_dyn.has_dynamic_attributes())
+        # Ensure that template_dyn hasn't any product_product
+        self.assertEqual(len(template_dyn.product_variant_ids), 0)
+        # Ensure that Dynam search return Dynamo and Test Dynamical as this
+        # last have no product_product
+        res = self.env['product.template'].name_search(name='Dynam', operator='ilike')
+        res_ids = [r[0] for r in res]
+        self.assertIn(template_dyn.id, res_ids)
+        self.assertIn(product.product_tmpl_id.id, res_ids)
