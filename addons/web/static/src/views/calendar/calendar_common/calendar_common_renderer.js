@@ -336,17 +336,17 @@ export class CalendarCommonRenderer extends Component {
     }
 
     getHeaderHtml(date) {
+        return renderToString(this.constructor.headerTemplate, this.headerTemplateProps(date));
+    }
+
+    headerTemplateProps(date) {
         const scale = this.props.model.scale;
-        const {
-            weekdayShort: weekdayShort,
-            weekdayLong: weekdayLong,
-            day,
-        } = DateTime.fromJSDate(date);
-        return renderToString(this.constructor.headerTemplate, {
+        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date);
+        return {
             weekdayShort,
             weekdayLong,
             day,
             scale,
-        });
+        };
     }
 }

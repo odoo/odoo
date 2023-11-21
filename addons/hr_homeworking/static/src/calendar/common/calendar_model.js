@@ -45,9 +45,9 @@ patch(AttendeeCalendarModel.prototype, {
                         // check if exception for that date
                         const { location_type } = res[employeeId].exceptions[dayISO];
                         if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
+                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
                         } else {
-                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
+                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
                         }
                     }
                     else {
@@ -56,16 +56,19 @@ patch(AttendeeCalendarModel.prototype, {
                             continue;
                         }
                         const {location_type} = res[employeeId][locationKeyName];
+                        if (!location_type) {
+                            continue;
+                        }
                         if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
+                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
                         } else {
-                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
+                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
                         }
                     }
                 } else {
                     const hasException = res[employeeId].exceptions && dayISO in res[employeeId].exceptions;
                     const workLocationData = hasException ? res[employeeId].exceptions[dayISO] : res[employeeId][`${dayName}_location_id`];
-                    const currentEvent = this.createHomeworkingEventAt(res[employeeId], startDay, workLocationData);
+                    const currentEvent = this.createHomeworkingRecordAt(res[employeeId], startDay, workLocationData);
                     const previousEvent = events[previousDay];
                     if (previousEvent && previousEvent.icon === currentEvent.icon && previousEvent.title === currentEvent.title) {
                         previousEvent.end = previousEvent.end.plus({days:1});
@@ -82,19 +85,15 @@ patch(AttendeeCalendarModel.prototype, {
         return events;
     },
 
-    createHomeworkingEventAt(record, day, workLocationData) {
+    createHomeworkingRecordAt(record, day, workLocationData) {
         const { location_type, location_name, work_location_id, hr_employee_location_id} = workLocationData;
-        const ghostEvent = !Boolean(hr_employee_location_id);
-        const id = ghostEvent ? `default-location-${record.employee_id}-${day.toMillis()}` : String(hr_employee_location_id);
+        const ghostRecord = !Boolean(hr_employee_location_id);
+        const id = ghostRecord ? `default-location-${record.employee_id}-${day.toMillis()}` : String(hr_employee_location_id);
         return {
             id,
             title: location_name,
-            isAllDay: true,
-            duration : 1,
             start: day,
-            end: day.plus({hours: 1}),
-            isHatched: false,
-            isStriked: false,
+            end: day.plus({days:1}),
             display: true,
             multiCalendar: this.multiCalendar,
             homeworking: true,
@@ -106,7 +105,7 @@ patch(AttendeeCalendarModel.prototype, {
             colorIndex: this.partnerColorMap[record.partner_id],
             resModel: "hr.employee.location",
             work_location_id,
-            ghostEvent,
+            ghostRecord,
             rawRecord: record,
         };
     },

@@ -9,13 +9,12 @@ import { serializeDate} from "@web/core/l10n/dates";
 
 patch(AttendeeCalendarController.prototype, {
     setup() {
-        super.setup()
+        super.setup();
         this.action = useService("action");
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         if (record.homeworking && 'start' in record) {
-            return this.action.doAction('hr_homeworking.set_location_wizard_action',{
-                name: _t("Edit Record"),
+            return this.action.doAction('hr_homeworking.set_location_wizard_action', {
                 additionalContext: {
                     'default_date': serializeDate(record.start),
                     'default_work_location_id' : record.work_location_id,
@@ -28,25 +27,9 @@ patch(AttendeeCalendarController.prototype, {
         }
         return super.editRecord(...arguments)
     },
-    createRecord(record) {
-        if (record.homework) {
-            return this.action.doAction('hr_homeworking.set_location_wizard_action',{
-                name: _t("Create Record"),
-                additionalContext: {
-                    'default_date': serializeDate(record.start),
-                    'dialog_size': 'medium',
-                },
-                onClose: async (closeInfo) => {
-                    this.model.load()
-                },
-            });
-        } else {
-            return super.createRecord(record);
-        }
-    },
     deleteRecord(record) {
         if (record.id && record.homeworking) {
-            if (record.ghostEvent) {
+            if (record.ghostRecord) {
                 this.displayDialog(ConfirmationDialog, {
                     title: _t("Confirmation"),
                     body: _t("Are you sure you want to delete this location?"),
@@ -78,6 +61,23 @@ patch(AttendeeCalendarController.prototype, {
             }
         } else {
             super.deleteRecord(...arguments)
+        }
+    },
+    openWorkLocationWizard(startDate) {
+        this.action.doAction('hr_homeworking.set_location_wizard_action',{
+            additionalContext: {
+                'default_date': serializeDate(startDate),
+                'dialog_size': 'medium',
+            },
+            onClose: async () => {
+                this.model.load()
+            },
+        })
+    },
+    get rendererProps() {
+        return {
+            ...super.rendererProps,
+            openWorkLocationWizard: (date) => this.openWorkLocationWizard(date),
         }
     },
 })
