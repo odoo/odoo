@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-
 import base64
 import io
 from markupsafe import Markup
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
+from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -255,16 +253,12 @@ class TestTranslationFlow(common.TransactionCase):
             po_file.name = 'fr_FR.po'
 
             def filter_func_for_python(row):
-                return row.get('value') and (
-                        PYTHON_TRANSLATION_COMMENT in row['comments']
-                        or JAVASCRIPT_TRANSLATION_COMMENT not in row['comments'])
+                return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
             new_code_translations.python_translations[('test_translation_import', 'fr_FR')] = \
                 CodeTranslations._read_code_translations_file(po_file, filter_func_for_python)
 
             def filter_func_for_javascript(row):
-                return row.get('value') and (
-                        JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
-                        or WEB_TRANSLATION_COMMENT in row['comments'])
+                return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
             new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
                 "messages": [
                     {"id": src, "string": value}
