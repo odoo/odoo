@@ -256,7 +256,11 @@ class AccountTax(models.Model):
         for tax in self:
             if not tax._check_m2m_recursion('children_tax_ids'):
                 raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
-            if any(child.type_tax_use not in ('none', tax.type_tax_use) or child.tax_scope != tax.tax_scope for child in tax.children_tax_ids):
+            if any(
+                child.type_tax_use not in ('none', tax.type_tax_use)
+                or child.tax_scope not in (tax.tax_scope, False)
+                for child in tax.children_tax_ids
+            ):
                 raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
 
     @api.constrains('company_id')
