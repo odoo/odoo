@@ -398,18 +398,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     max_price = max_price if max_price >= available_min_price else available_max_price
                     post['max_price'] = max_price
 
-        if filter_by_tags_enabled:
-            if (
-                search_product.product_tag_ids
-                or search_product.product_variant_ids.additional_product_tag_ids
-            ):
-                ProductTag = request.env['product.tag']
-                all_tags = ProductTag.search(
-                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)]
-                    + website_domain
-                )
-            else:
-                all_tags = []
+        if filter_by_tags_enabled and search_product:
+            ProductTag = request.env['product.tag']
+            all_tags = ProductTag.search(
+                expression.AND([
+                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)],
+                    website_domain
+                ])
+            )
+
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
             search_categories = Category.search(
