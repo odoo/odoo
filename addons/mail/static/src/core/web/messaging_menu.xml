@@ -27,7 +27,7 @@
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
-            <t t-if="installationRequest.isShown">
+            <t t-if="store.odoobot and installationRequest.isShown">
                 <NotificationItem
                     body="installationRequest.body"
                     displayName="installationRequest.displayName"
@@ -45,7 +45,7 @@
                     </t>
                 </NotificationItem>
             </t>
-            <t t-if="notificationRequest.isShown">
+            <t t-if="store.odoobot and notificationRequest.isShown">
                 <NotificationItem
                     body="notificationRequest.body"
                     displayName="notificationRequest.displayName"

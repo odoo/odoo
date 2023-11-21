@@ -84,7 +84,12 @@ export class MessagingMenu extends Component {
             (this.store.failures.length > 0 &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
-            (this.notification.permission === "prompt" &&
+            (this.store.odoobot &&
+                this.notification.permission === "prompt" &&
+                this.store.discuss.activeTab === "main" &&
+                !this.env.inDiscussApp) ||
+            (this.store.odoobot &&
+                this.canPromptToInstall &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp)
         );
