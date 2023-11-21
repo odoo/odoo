@@ -56,7 +56,6 @@ export class PopoverController extends Component {
         const target = ev.composedPath()[0];
         if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
             this.props.close();
-            ev.preventDefault();
         }
     }
 
