@@ -255,6 +255,7 @@ export class Thread extends Record {
             }
             return "chatter";
         },
+        eager: true,
         /** @this {import("models").Thread} */
         onUpdate() {
             this.onUpdateType();

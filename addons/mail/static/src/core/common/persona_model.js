@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { onChange } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -28,7 +27,7 @@ export class Persona extends Record {
     static new(data) {
         /** @type {import("models").Persona} */
         const persona = super.new(data);
-        onChange(persona, ["type", "im_status", "is_public"], () => {
+        Record.onChange(persona, ["type", "im_status", "is_public"], () => {
             if (persona.im_status !== "im_partner" && !persona.is_public) {
                 this.store.imStatusTrackedPersonas.add(persona);
             } else {

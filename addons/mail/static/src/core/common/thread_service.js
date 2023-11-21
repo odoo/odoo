@@ -73,11 +73,13 @@ export class ThreadService {
             channelMembers = results["channelMembers"][0][1];
         }
         thread.memberCount = results["memberCount"];
+        const toAdd = [];
         for (const channelMember of channelMembers) {
             if (channelMember.persona || channelMember.partner) {
-                thread.channelMembers.add({ ...channelMember, thread });
+                toAdd.push({ ...channelMember, thread });
             }
         }
+        thread.channelMembers.add(...toAdd);
     }
 
     /**

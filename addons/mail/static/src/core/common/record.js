@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { markRaw, toRaw } from "@odoo/owl";
+import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
@@ -10,7 +10,8 @@ const MANY_SYM = Symbol("many");
 const ONE_SYM = Symbol("one");
 const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
-const IS_RECORD_SYM = Symbol("isRecord");
+export const IS_RECORD_SYM = Symbol("isRecord");
+export const IS_FIELD_SYM = Symbol("isField");
 
 /** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */
 
@@ -106,39 +107,43 @@ export class RecordList extends Array {
             },
             /** @param {RecordList<R>} receiver */
             set(target, name, val, receiver) {
-                if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
-                    // support for "array[index] = r3" syntax
-                    const index = parseInt(name);
-                    receiver._insert(val, (r3) => {
-                        const r2 = receiver[index];
-                        if (r2 && r2.notEq(r3)) {
-                            r2.__uses__.delete(receiver);
-                        }
-                        const { inverse, onDelete } = receiver.owner.Model._fields[receiver.name];
-                        onDelete?.call(receiver.owner, r2);
-                        if (inverse) {
-                            r2._fields[inverse].value.delete(receiver);
-                        }
-                        receiver.data[index] = r3?.localId;
-                        if (r3) {
-                            r3.__uses__.add(receiver);
-                            const { inverse, onAdd } = receiver.owner.Model._fields[receiver.name];
-                            onAdd?.call(receiver.owner, r3);
-                            if (inverse) {
-                                r3._fields[inverse].value.add(receiver);
+                return Record.MAKE_UPDATE(() => {
+                    if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
+                        // support for "array[index] = r3" syntax
+                        const index = parseInt(name);
+                        receiver._insert(val, (r3) => {
+                            const r2 = receiver[index];
+                            if (r2 && r2.notEq(r3)) {
+                                r2.__uses__.delete(receiver);
                             }
+                            const { inverse, onDelete } =
+                                receiver.owner.Model._fields[receiver.name];
+                            onDelete?.call(receiver.owner, r2);
+                            if (inverse) {
+                                r2._fields[inverse].value.delete(receiver);
+                            }
+                            receiver.data[index] = r3?.localId;
+                            if (r3) {
+                                r3.__uses__.add(receiver);
+                                const { inverse, onAdd } =
+                                    receiver.owner.Model._fields[receiver.name];
+                                onAdd?.call(receiver.owner, r3);
+                                if (inverse) {
+                                    r3._fields[inverse].value.add(receiver);
+                                }
+                            }
+                        });
+                    } else if (name === "length") {
+                        const newLength = parseInt(val);
+                        if (newLength < receiver.length) {
+                            receiver.splice(newLength, receiver.length - newLength);
                         }
-                    });
-                } else if (name === "length") {
-                    const newLength = parseInt(val);
-                    if (newLength < receiver.length) {
-                        receiver.splice(newLength, receiver.length - newLength);
+                        receiver.data.length = newLength;
+                    } else {
+                        Reflect.set(target, name, val, receiver);
                     }
-                    receiver.data.length = newLength;
-                } else {
-                    Reflect.set(target, name, val, receiver);
-                }
-                return true;
+                    return true;
+                });
             },
         });
     }
@@ -179,74 +184,84 @@ export class RecordList extends Array {
     }
     /** @param {R[]|any[]} data */
     assign(data) {
-        /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
-        const collection = Record.isRecord(data) ? [data] : data;
-        // l1 and collection could be same record list,
-        // save before clear to not push mutated recordlist that is empty
-        const vals = [...collection];
-        /** @type {R[]} */
-        const oldRecords = this.slice();
-        for (const r2 of oldRecords) {
-            r2.__uses__.delete(this);
-        }
-        const records = vals.map((val) =>
-            this._insert(val, (r3) => {
-                r3.__uses__.add(this);
-            })
-        );
-        this.data = records.map((r) => r.localId);
+        return Record.MAKE_UPDATE(() => {
+            /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
+            const collection = Record.isRecord(data) ? [data] : data;
+            // l1 and collection could be same record list,
+            // save before clear to not push mutated recordlist that is empty
+            const vals = [...collection];
+            /** @type {R[]} */
+            const oldRecords = this.slice();
+            for (const r2 of oldRecords) {
+                r2.__uses__.delete(this);
+            }
+            const records = vals.map((val) =>
+                this._insert(val, (r3) => {
+                    r3.__uses__.add(this);
+                })
+            );
+            this.data = records.map((r) => r.localId);
+        });
     }
     /** @param {R[]} records */
     push(...records) {
-        for (const val of records) {
-            const r = this._insert(val, (r3) => {
-                this.data.push(r3.localId);
-                r3.__uses__.add(this);
-            });
-            const { inverse, onAdd } = this.owner.Model._fields[this.name];
-            onAdd?.call(this.owner, r);
-            if (inverse) {
-                r._fields[inverse].value.add(this.owner);
+        return Record.MAKE_UPDATE(() => {
+            for (const val of records) {
+                const r = this._insert(val, (r3) => {
+                    this.data.push(r3.localId);
+                    r3.__uses__.add(this);
+                });
+                const { inverse, onAdd } = this.owner.Model._fields[this.name];
+                onAdd?.call(this.owner, r);
+                if (inverse) {
+                    r._fields[inverse].value.add(this.owner);
+                }
             }
-        }
-        return this.data.length;
+            return this.data.length;
+        });
     }
     /** @returns {R} */
     pop() {
-        /** @type {R} */
-        const r2 = this.at(-1);
-        if (r2) {
-            this.splice(this.length - 1, 1);
-        }
-        return r2;
+        return Record.MAKE_UPDATE(() => {
+            /** @type {R} */
+            const r2 = this.at(-1);
+            if (r2) {
+                this.splice(this.length - 1, 1);
+            }
+            return r2;
+        });
     }
     /** @returns {R} */
     shift() {
-        const r2 = this.store.get(this.data.shift());
-        r2?.__uses__.delete(this);
-        const { inverse, onDelete } = this.owner.Model._fields[this.name];
-        if (r2) {
-            onDelete?.call(this.owner, r2);
-            if (inverse) {
-                r2._fields[inverse].value.delete(this.owner);
+        return Record.MAKE_UPDATE(() => {
+            const r2 = this.store.get(this.data.shift());
+            r2?.__uses__.delete(this);
+            const { inverse, onDelete } = this.owner.Model._fields[this.name];
+            if (r2) {
+                onDelete?.call(this.owner, r2);
+                if (inverse) {
+                    r2._fields[inverse].value.delete(this.owner);
+                }
             }
-        }
-        return r2;
+            return r2;
+        });
     }
     /** @param {R[]} records */
     unshift(...records) {
-        for (let i = records.length - 1; i >= 0; i--) {
-            const r = this._insert(records[i], (r3) => {
-                this.data.unshift(r3.localId);
-                r3.__uses__.add(this);
-            });
-            const { inverse, onAdd } = this.owner.Model._fields[this.name];
-            onAdd?.call(this.owner, r);
-            if (inverse) {
-                r._fields[inverse].value.add(this.owner);
+        return Record.MAKE_UPDATE(() => {
+            for (let i = records.length - 1; i >= 0; i--) {
+                const r = this._insert(records[i], (r3) => {
+                    this.data.unshift(r3.localId);
+                    r3.__uses__.add(this);
+                });
+                const { inverse, onAdd } = this.owner.Model._fields[this.name];
+                onAdd?.call(this.owner, r);
+                if (inverse) {
+                    r._fields[inverse].value.add(this.owner);
+                }
             }
-        }
-        return this.data.length;
+            return this.data.length;
+        });
     }
     /** @param {R} record */
     indexOf(record) {
@@ -258,32 +273,47 @@ export class RecordList extends Array {
      * @param {...R} [newRecords]
      */
     splice(start, deleteCount, ...newRecords) {
-        const oldRecords = this.slice(start, start + deleteCount);
-        const list = this.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
-        list.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
-        this.data = list;
-        for (const r of oldRecords) {
-            r.__uses__.delete(this);
-            const { inverse, onDelete } = this.owner.Model._fields[this.name];
-            onDelete?.call(this.owner, r);
-            if (inverse) {
-                r._fields[inverse].value.delete(this.owner);
+        return Record.MAKE_UPDATE(() => {
+            const oldRecords = this.slice(start, start + deleteCount);
+            const list = this.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
+            list.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
+            this.data = list;
+            for (const r of oldRecords) {
+                r.__uses__.delete(this);
+                const { inverse, onDelete } = this.owner.Model._fields[this.name];
+                onDelete?.call(this.owner, r);
+                if (inverse) {
+                    r._fields[inverse].value.delete(this.owner);
+                }
             }
-        }
-        for (const r of newRecords) {
-            r.__uses__.add(this);
-            const { inverse, onAdd } = this.owner.Model._fields[this.name];
-            onAdd?.call(this.owner, r);
-            if (inverse) {
-                r._fields[inverse].value.add(this.owner);
+            for (const r of newRecords) {
+                r.__uses__.add(this);
+                const { inverse, onAdd } = this.owner.Model._fields[this.name];
+                onAdd?.call(this.owner, r);
+                if (inverse) {
+                    r._fields[inverse].value.add(this.owner);
+                }
             }
-        }
+        });
     }
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
-        const list = this.data.slice(); // sort on copy of list so that reactive observers not triggered while sorting
-        list.sort((a, b) => func(this.store.get(a), this.store.get(b)));
-        this.data = list;
+        return Record.MAKE_UPDATE(() => {
+            const list = this.data.slice(); // sort on copy of list so that reactive observers not triggered while sorting
+            list.sort((a, b) => func(this.store.get(a), this.store.get(b)));
+            this.data = list;
+        });
+    }
+    /**
+     * Dummy sort just to re-tag everything for reactive callback. This has no effect on data in record list.
+     *
+     * @param {(a: R, b: R) => boolean} func
+     */
+    _sort(func) {
+        return Record.MAKE_UPDATE(() => {
+            const list = this.data.slice(); // sort on copy of list so that reactive observers not triggered while sorting
+            list.sort((a, b) => func(this.store.get(a), this.store.get(b)));
+        });
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
@@ -293,29 +323,31 @@ export class RecordList extends Array {
     }
     /** @param {...R}  */
     add(...records) {
-        if (RecordList.isOne(this)) {
-            const last = records.at(-1);
-            if (Record.isRecord(last) && last.in(this)) {
+        return Record.MAKE_UPDATE(() => {
+            if (RecordList.isOne(this)) {
+                const last = records.at(-1);
+                if (Record.isRecord(last) && last.in(this)) {
+                    return;
+                }
+                this._insert(last, (r) => {
+                    if (r.notEq(this[0])) {
+                        this.pop();
+                        this.push(r);
+                    }
+                });
                 return;
             }
-            this._insert(last, (r) => {
-                if (r.notEq(this[0])) {
-                    this.pop();
-                    this.push(r);
+            for (const val of records) {
+                if (Record.isRecord(val) && val.in(this)) {
+                    continue;
                 }
-            });
-            return;
-        }
-        for (const val of records) {
-            if (Record.isRecord(val) && val.in(this)) {
-                continue;
+                this._insert(val, (r) => {
+                    if (this.indexOf(r) === -1) {
+                        this.push(r);
+                    }
+                });
             }
-            this._insert(val, (r) => {
-                if (this.indexOf(r) === -1) {
-                    this.push(r);
-                }
-            });
-        }
+        });
     }
     /**
      * Version of add() that does not update the inverse.
@@ -363,18 +395,20 @@ export class RecordList extends Array {
     }
     /** @param {...R}  */
     delete(...records) {
-        for (const val of records) {
-            this._insert(
-                val,
-                (r) => {
-                    const index = this.indexOf(r);
-                    if (index !== -1) {
-                        this.splice(index, 1);
-                    }
-                },
-                { mode: "DELETE" }
-            );
-        }
+        return Record.MAKE_UPDATE(() => {
+            for (const val of records) {
+                this._insert(
+                    val,
+                    (r) => {
+                        const index = this.indexOf(r);
+                        if (index !== -1) {
+                            this.splice(index, 1);
+                        }
+                    },
+                    { mode: "DELETE" }
+                );
+            }
+        });
     }
     /**
      * Version of delete() that does not update the inverse.
@@ -399,9 +433,11 @@ export class RecordList extends Array {
         }
     }
     clear() {
-        while (this.data.length > 0) {
-            this.pop();
-        }
+        return Record.MAKE_UPDATE(() => {
+            while (this.data.length > 0) {
+                this.pop();
+            }
+        });
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
@@ -435,6 +471,8 @@ export class RecordList extends Array {
  * @property {(r: Record) => void} [onDelete] hook that is called when relation is updated
  *   with a record being deleted. Callback param is record being deleted from relation.
  * @property {() => void} [onUpdate] hook that is called when field is updated.
+ * @property {(r1: Record, r2: Record) => number} [sort] if defined, this many relational field is
+ *   automatically sorted by this function.
  */
 /**
  * @typedef {Object} RecordField
@@ -442,18 +480,33 @@ export class RecordList extends Array {
  * @property {boolean} [MANY_SYM] true when this is a many relation.
  * @property {boolean} [ONE_SYM] true when this is a one relation.
  * @property {any} [default] the default value of this attribute.
- * @property {() => any} [compute] if set the field is computed based on provided function.
- *   The `this` of function is the record, and the function is recalled whenever any field
- *   in models used by this compute function is changed. The return value is the new value of
- *   the field. On relational field, passing a (list of) record(s) or data work as expected.
- * @property {boolean} [computed] on a computed field, determines whether the field was computed at least
- *   once. Useful for a getter of a lazy computed field to force a compute if the field was never computed
- *   at least once.
- * @property {() => void} [probablyCompute] when this is a computed field, invoking this function
- *   will active compute or not the field depending on whether it's being used. This allow computed
- *   fields to be lazy-computed, so that only when used the field is actually (re-)computed.
- * @property {() => void} [onUpdate] hook that is called when field is updated.
- * @property {RecordList<Record>|any} [value] value of the field. Either its raw value if it's an attribute,
+ * @property {() => void} [compute] for computed field, invoking this function (re-)computes the field.
+ * @property {boolean} [computing] for computed field, determines whether the field is computing its value.
+ * @property {() => void} [requestCompute] on computed field, calling this function makes a request to compute
+ *   the field. This doesn't necessarily mean the field is immediately re-computed: during an update cycle, this
+ *   is put in the compute FC_QUEUE and will be invoked at end.
+ * @property {boolean} [computeOnNeed] on lazy-computed field, determines whether the field should be (re-)computed
+ *   when it's needed (i.e. accessed). Eager computed fields are immediately re-computed at end of update cycle,
+ *   whereas lazy computed fields wait extra for them being needed.
+ * @property {boolean} [computeInNeed] on lazy computed-fields, determines whether this field is needed (i.e. accessed).
+ *   This is only set when there's a get on this lazy computed-field during an update cycle (UPDATE !== 0), as computed
+ *   fields are invoked only at the end of an update cycle. When outside of an update cycle, only `computeOnNeed`
+ *   determines (re-)computation.
+ * @property {() => void} [sort] for sorted field, invoking this function (re-)sorts the field.
+ * @property {boolean} [sorting] for sorted field, determines whether the field is sorting its value.
+ * @property {() => void} [requestSort] on sorted field, calling this function makes a request to sort
+ *   the field. This doesn't necessarily mean the field is immediately re-sorted: during an update cycle, this
+ *   is put in the sort FS_QUEUE and will be invoked at end.
+ * @property {boolean} [sortOnNeed] on lazy-sorted field, determines whether the field should be (re-)sorted
+ *   when it's needed (i.e. accessed). Eager sorted fields are immediately re-sorted at end of update cycle,
+ *   whereas lazy sorted fields wait extra for them being needed.
+ * @property {boolean} [sortInNeed] on lazy sorted-fields, determines whether this field is needed (i.e. accessed).
+ *   This is only set when there's a get on this lazy sorted-field during an update cycle (UPDATE !== 0), as sorted
+ *   fields are invoked only at the end of an update cycle. When outside of an update cycle, only `sortOnNeed`
+ *   determines (re-)sort.
+ * @property {() => void} [onChange] function that contains functions to be called when the value of field
+ *   has changed, e.g. sort and onUpdate.
+ * @property {RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
  *   or a RecordList if it's a relational field.
  */
 
@@ -470,8 +523,131 @@ export class Record {
     static id;
     /** @type {Object<string, Record>} */
     static records = {};
-    /** @type {import("@mail/core/common/store_service").Store} */
+    /** @type {import("models").Store} */
     static store;
+    /** @type {RecordField[]} */
+    static FC_QUEUE = []; // field-computes
+    /** @type {RecordField[]} */
+    static FS_QUEUE = []; // field-sorts
+    /** @type {RecordField[]} */
+    static FO_QUEUE = []; // field-onchanges
+    /** @type {Function[]} */
+    static RO_QUEUE = []; // record-onchanges
+    static UPDATE = 0;
+    /** @param {() => any} fn */
+    static MAKE_UPDATE(fn) {
+        this.UPDATE++;
+        const res = fn();
+        this.UPDATE--;
+        if (this.UPDATE === 0) {
+            // pretend an increased update cycle so that nothing in queue creates many small update cycles
+            this.UPDATE++;
+            while (
+                this.FC_QUEUE.length > 0 ||
+                this.FS_QUEUE.length > 0 ||
+                this.FO_QUEUE.length > 0 ||
+                this.RO_QUEUE.length > 0
+            ) {
+                while (this.FC_QUEUE.length > 0) {
+                    const field = this.FC_QUEUE.pop();
+                    field.requestCompute({ force: true });
+                }
+                while (this.FS_QUEUE.length > 0) {
+                    const field = this.FS_QUEUE.pop();
+                    field.requestSort({ force: true });
+                }
+                while (this.FO_QUEUE.length > 0) {
+                    const field = this.FO_QUEUE.pop();
+                    field.onChange();
+                }
+                while (this.RO_QUEUE.length > 0) {
+                    const cb = this.RO_QUEUE.pop();
+                    cb();
+                }
+            }
+            this.UPDATE--;
+        }
+        return res;
+    }
+    /**
+     * @param {RecordField} field
+     * @param {"compute"|"onChange"} type
+     */
+    static ADD_QUEUE(field, type) {
+        const rawField = toRaw(field);
+        if (type === "compute") {
+            if (!this.FC_QUEUE.some((f) => toRaw(f) === rawField)) {
+                this.FC_QUEUE.push(field);
+            }
+        }
+        if (type === "sort") {
+            if (!this.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
+                this.FS_QUEUE.push(field);
+            }
+        }
+        if (type === "onChange") {
+            if (!this.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
+                this.FO_QUEUE.push(field);
+            }
+        }
+    }
+    static onChange(record, name, cb) {
+        this._onChange(record, name, (observe) => {
+            const fn = () => {
+                observe();
+                cb();
+            };
+            if (this.UPDATE !== 0) {
+                if (!this.RO_QUEUE.some((f) => toRaw(f) === fn)) {
+                    this.RO_QUEUE.push(fn);
+                }
+            } else {
+                fn();
+            }
+        });
+    }
+    /**
+     * Version of onChange where the callback receives observe function as param.
+     * This is useful when there's desire to postpone calling the callback function,
+     * in which the observe is also intended to have its invocation postponed.
+     *
+     * @param {Record} record
+     * @param {string|string[]} key
+     * @param {(observe: Function) => any} callback
+     */
+    static _onChange(record, key, callback) {
+        let proxy;
+        function _observe() {
+            // observe should not flag the field as in need
+            let oldComputeInNeed;
+            let oldSortInNeed;
+            if (record[IS_RECORD_SYM] && record._fields[key]) {
+                oldComputeInNeed = record._fields[key].computeInNeed;
+                oldSortInNeed = record._fields[key].sortInNeed;
+            }
+            void proxy[key];
+            if (proxy[key] instanceof Object) {
+                void Object.keys(proxy[key]);
+            }
+            if (proxy[key] instanceof Array) {
+                void proxy[key].length;
+                void proxy[key].forEach((i) => i);
+            }
+            if (record[IS_RECORD_SYM] && record._fields[key]) {
+                record._fields[key].computeInNeed = oldComputeInNeed;
+                record._fields[key].sortInNeed = oldSortInNeed;
+            }
+        }
+        if (Array.isArray(key)) {
+            for (const k of key) {
+                this._onChange(record, k, callback);
+            }
+            return;
+        }
+        proxy = reactive(record, () => callback(_observe));
+        _observe();
+        return proxy;
+    }
     /**
      * Contains field definitions of the model:
      * - key : field name
@@ -622,22 +798,24 @@ export class Record {
      * @returns {Record}
      */
     static new(data) {
-        const obj = new this.Class();
-        obj.Model = this;
-        const ids = this._retrieveIdFromData(data);
-        let record = Object.assign(obj, {
-            [IS_RECORD_SYM]: true,
-            localId: this.localId(data),
-            ...ids,
+        return Record.MAKE_UPDATE(() => {
+            const obj = new this.Class();
+            obj.Model = this;
+            const ids = this._retrieveIdFromData(data);
+            let record = Object.assign(obj, {
+                localId: this.localId(data),
+                ...ids,
+            });
+            Object.assign(record, { _store: this.store });
+            this.records[record.localId] = record;
+            // return reactive version
+            record = this.records[record.localId];
+            for (const field of Object.values(record._fields)) {
+                field.requestCompute?.();
+                field.requestSort?.();
+            }
+            return record;
         });
-        Object.assign(record, { _store: this.store });
-        this.records[record.localId] = record;
-        // return reactive version
-        record = this.records[record.localId];
-        for (const { probablyCompute } of Object.values(record._fields)) {
-            probablyCompute?.();
-        }
-        return record;
     }
     /**
      * @template {keyof import("models").Models} M
@@ -718,18 +896,20 @@ export class Record {
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
-        const isMulti = Array.isArray(data);
-        if (!isMulti) {
-            data = [data];
-        }
-        const oldTrusted = Record.trusted;
-        Record.trusted = options.html ?? Record.trusted;
-        const res = data.map((d) => this._insert(d, options));
-        Record.trusted = oldTrusted;
-        if (!isMulti) {
-            return res[0];
-        }
-        return res;
+        return Record.MAKE_UPDATE(() => {
+            const isMulti = Array.isArray(data);
+            if (!isMulti) {
+                data = [data];
+            }
+            const oldTrusted = Record.trusted;
+            Record.trusted = options.html ?? Record.trusted;
+            const res = data.map((d) => this._insert(d, options));
+            Record.trusted = oldTrusted;
+            if (!isMulti) {
+                return res[0];
+            }
+            return res;
+        });
     }
     /** @returns {Record} */
     static _insert(data) {
@@ -785,40 +965,44 @@ export class Record {
     setup() {}
 
     update(data) {
-        if (typeof data === "object" && data !== null) {
-            Object.assign(this, data);
-        } else {
-            // update on single-id data
-            if (this.Model.id in this.Model._fields) {
-                this[this.Model.id] = data;
+        return Record.MAKE_UPDATE(() => {
+            if (typeof data === "object" && data !== null) {
+                Object.assign(this, data);
+            } else {
+                // update on single-id data
+                if (this.Model.id in this.Model._fields) {
+                    this[this.Model.id] = data;
+                }
             }
-        }
+        });
     }
 
     delete() {
-        const r1 = this;
-        for (const name in r1._fields) {
-            r1[name] = undefined;
-        }
-        for (const [localId, names] of r1.__uses__.data.entries()) {
-            for (const [name2, count] of names.entries()) {
-                const r2 = this._store.get(localId);
-                if (!r2) {
-                    // record already deleted, clean inverses
-                    r1.__uses__.data.delete(localId);
-                    continue;
-                }
-                const l2 = r2._fields[name2].value;
-                if (RecordList.isMany(l2)) {
-                    for (let c = 0; c < count; c++) {
-                        r2[name2].delete(r1);
+        return Record.MAKE_UPDATE(() => {
+            const r1 = this;
+            for (const name in r1._fields) {
+                r1[name] = undefined;
+            }
+            for (const [localId, names] of r1.__uses__.data.entries()) {
+                for (const [name2, count] of names.entries()) {
+                    const r2 = this._store.get(localId);
+                    if (!r2) {
+                        // record already deleted, clean inverses
+                        r1.__uses__.data.delete(localId);
+                        continue;
                     }
-                } else {
-                    r2[name2] = undefined;
+                    const l2 = r2._fields[name2].value;
+                    if (RecordList.isMany(l2)) {
+                        for (let c = 0; c < count; c++) {
+                            r2[name2].delete(r1);
+                        }
+                    } else {
+                        r2[name2] = undefined;
+                    }
                 }
             }
-        }
-        delete this.Model.records[r1.localId];
+            delete this.Model.records[r1.localId];
+        });
     }
 
     /** @param {Record} record */

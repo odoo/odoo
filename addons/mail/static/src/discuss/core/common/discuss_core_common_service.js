@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -25,9 +26,11 @@ export class DiscussCoreCommon {
 
     setup() {
         this.messagingService.isReady.then((data) => {
-            for (const channelData of data.channels) {
-                this.createChannelThread(channelData);
-            }
+            Record.MAKE_UPDATE(() => {
+                for (const channelData of data.channels) {
+                    this.createChannelThread(channelData);
+                }
+            });
             this.threadService.sortChannels();
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
