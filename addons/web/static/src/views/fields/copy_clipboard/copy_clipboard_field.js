@@ -3,7 +3,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 
-import { CopyButton } from "./copy_button";
+import { CopyButton } from "@web/core/copy_button/copy_button";
 import { UrlField } from "../url/url_field";
 import { CharField } from "../char/char_field";
 import { TextField } from "../text/text_field";
