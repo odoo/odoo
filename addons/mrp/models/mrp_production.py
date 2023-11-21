@@ -2638,7 +2638,7 @@ class MrpProduction(models.Model):
                 continue
             rounding = move.product_uom.rounding
             if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and not move.picked or (any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
+                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
             error_msg = _("You need to supply Lot/Serial Number for products and 'picked' them:") + missing_lot_id_products
