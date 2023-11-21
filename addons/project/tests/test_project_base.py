@@ -200,6 +200,15 @@ class TestProjectBase(TestProjectCommon):
             # Cannot change the company of a project if the company of the partner is different
             self.project_pigs.company_id = company_1
 
+        # Can change the company of the partner back to False
+        partner.company_id = False
+
+        self.project_goats.company_id = company_1
+        self.project_goats.partner_id = partner
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner that part of multiple projects with different companies
+            self.project_goats.partner_id.company_id = company_2
+
     def test_search_project_root_id(self):
         project = self.env['project.project'].create({
             'name': 'Test project',
