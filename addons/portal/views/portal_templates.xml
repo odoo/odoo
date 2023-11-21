@@ -440,6 +440,12 @@
                 <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
             </div>
         </div>
+        <div t-if="not partner_can_edit_vat" class="col-12 d-none d-xl-block">
+            <small class="form-text text-muted">
+                Company name, VAT Number and country can not be changed once document(s) have been issued for your account.
+                <br/>Please contact us directly for that operation.
+            </small>
+        </div>
         <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="name">Name</label>
             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="name or partner.name" />
@@ -468,9 +474,6 @@
             <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-disabled="None if partner_can_edit_vat else '1'" />
             <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
         </div>
-        <div t-if="not partner_can_edit_vat" class="col-12 d-none d-xl-block">
-            <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>
-        </div>
         <div t-attf-class="mb-3 #{error.get('phone') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="phone">Phone</label>
             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="phone or partner.phone" />
@@ -491,7 +494,7 @@
         </div>
         <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="country_id">Country</label>
-            <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
+            <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-disabled="None if partner_can_edit_vat else '1'">
                 <option value="">Country...</option>
                 <t t-foreach="countries or []" t-as="country">
                     <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
@@ -499,6 +502,7 @@
                     </option>
                 </t>
             </select>
+            <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
         </div>
         <div t-attf-class="mb-3 #{error.get('state_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label label-optional" for="state_id">State / Province</label>
