@@ -170,7 +170,7 @@ class HrExpense(models.Model):
             taxes = expense.tax_ids.compute_all(amount, expense.currency_id, quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.untaxed_amount = taxes.get('total_excluded')
 
-    @api.depends("sheet_id.account_move_id.line_ids")
+    @api.depends("sheet_id.account_move_id.line_ids.amount_residual")
     def _compute_amount_residual(self):
         for expense in self:
             if not expense.sheet_id:
@@ -919,7 +919,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
 
-    @api.depends("account_move_id.line_ids")
+    @api.depends("account_move_id.line_ids.amount_residual")
     def _compute_amount_residual(self):
         for sheet in self:
             payment_term_lines = sheet.account_move_id.sudo().line_ids \
