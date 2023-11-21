@@ -26,6 +26,7 @@
                     t-att-id="props.id"
                     class="o_input o_field_property_input"
                     type="text"
+                    autocomplete="off"
                     t-att-value="displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
@@ -35,6 +36,7 @@
                     t-att-id="props.id"
                     class="o_input o_field_property_input"
                     type="text"
+                    autocomplete="off"
                     t-att-value="displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
@@ -138,6 +140,7 @@
                     class="o_input"
                     t-att-id="props.id"
                     type="text"
+                    autocomplete="off"
                     t-att-value="propertyValue || ''"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
