@@ -229,3 +229,12 @@ class SaleOrder(models.Model):
             'promo_code_success': promo_code_success,
             'promo_code_error': promo_code_error,
         }
+
+    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+        """ Override to filter on the pickup and return date for rental products. """
+        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
+        if not line_id:
+            lines = lines.filtered(
+                lambda l: not l.is_reward_line
+            )
+        return lines
