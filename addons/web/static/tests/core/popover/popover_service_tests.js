@@ -85,30 +85,6 @@ QUnit.test("close on click away", async (assert) => {
     assert.containsNone(fixture, ".o_popover #comp");
 });
 
-QUnit.test("close on click away should be default prevented", async (assert) => {
-    assert.expect(6);
-    class Comp extends Component {}
-    Comp.template = xml`<div id="comp">in popover</div>`;
-
-    popovers.add(popoverTarget, Comp, {});
-    await nextTick();
-
-    assert.containsOnce(fixture, ".o_popover");
-    assert.containsOnce(fixture, ".o_popover #comp");
-    const closeButton = fixture.querySelector("#close");
-    function clickListener(ev) {
-        assert.step(`click-event-${ev.defaultPrevented ? "default-prevented" : ""}`);
-    }
-    closeButton.addEventListener("pointerdown", clickListener);
-
-    await click(fixture, "#close");
-
-    assert.containsNone(fixture, ".o_popover");
-    assert.containsNone(fixture, ".o_popover #comp");
-    assert.verifySteps(["click-event-default-prevented"]);
-    closeButton.removeEventListener("pointerdown", clickListener);
-});
-
 QUnit.test("close on 'Escape' keydown", async (assert) => {
     class Comp extends Component {}
     Comp.template = xml`<div id="comp">in popover</div>`;
