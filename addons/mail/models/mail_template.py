@@ -652,6 +652,8 @@ class MailTemplate(models.Model):
                 )
 
             values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+        if 'body_html' in values:
+            values['body'] = values['body_html']
 
         mail = self.env['mail.mail'].sudo().create(values)
 
