@@ -10,11 +10,7 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        # Auto-subscribe to channels unless skip explicitly requested
-        if not self.env.context.get("discuss_channel_nosubscribe"):
-            self.env["discuss.channel"].search(
-                [("group_ids", "in", users.groups_id.ids)]
-            )._subscribe_users_automatically()
+        self.env["discuss.channel"].search([("group_ids", "in", users.groups_id.ids)])._subscribe_users_automatically()
         return users
 
     def write(self, vals):
