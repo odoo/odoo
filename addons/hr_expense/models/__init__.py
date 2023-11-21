@@ -8,6 +8,7 @@ from . import account_tax
 from . import hr_department
 from . import hr_expense
 from . import hr_expense_sheet
+from . import ir_attachment
 from . import product_product
 from . import product_template
 from . import res_config_settings
