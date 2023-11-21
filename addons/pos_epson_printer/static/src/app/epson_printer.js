@@ -6,16 +6,16 @@ import { templates } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 
 function ePOSPrint(children) {
-    let ePOSLayout = templates.querySelector("[t-name='pos_epson_printer.ePOSLayout'");
-    if (!ePOSLayout) {
+    const ePOSLayoutString = templates["pos_epson_printer.ePOSLayout"];
+    if (!ePOSLayoutString) {
         throw new Error("'ePOSLayout' not loaded");
     }
-    ePOSLayout = ePOSLayout.cloneNode(true);
+    const ePOSLayout = new DOMParser().parseFromString(ePOSLayoutString, "text/xml");
     const [eposPrintEl] = ePOSLayout.getElementsByTagName("epos-print");
     append(eposPrintEl, children);
     // IMPORTANT: Need to remove `xmlns=""` in the image and cut elements.
     // > Otherwise, the print request will succeed but it the printer device won't actually do the printing.
-    return ePOSLayout.innerHTML.replaceAll(`xmlns=""`, "");
+    return ePOSLayout.documentElement.outerHTML.replaceAll(`xmlns=""`, "");
 }
 
 /**

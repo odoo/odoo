@@ -15,7 +15,7 @@ import base64
 import odoo
 from odoo import api, http
 from odoo.addons import __path__ as ADDONS_PATH
-from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules.module import get_manifest
@@ -641,9 +641,8 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be any test_assetsbundle.invalid_xml template.
             # there should be an parsing_error template with the parsing error message.
-            self.assertEqual(self.bundle.xml(),
-                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>\'Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml\'</parsererror></t>',
-                            "the parsing error should be shown")
+            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
+                self.bundle.xml()
 
     def test_02_multiple_broken_xml(self):
         """ Checks that a bundle with multiple broken xml returns a comprehensive error message.
@@ -652,10 +651,9 @@ class TestXMLAssetsBundle(FileTouchable):
             self.bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
 
             # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
-            # there should be two parsing_error templates with the parsing error message for each file.
-            self.assertEqual(self.bundle.xml(),
-                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>\'Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml\'</parsererror></t><t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_second_invalid_xml.xml"><parsererror>\'Invalid XML template: XML declaration allowed only at the start of the document, line 2, column 6\' in file \'/test_assetsbundle/static/invalid_src/xml/second_invalid_xml.xml\'</parsererror></t>',
-                            "the parsing error should be shown")
+            # there should be one parsing_error templates with the parsing error message for the first file.
+            with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
+                self.bundle.xml()
 
     def test_03_multiple_xml_same_name(self):
         """ Checks that a bundle with multiple templates with the same name returns a comprehensive error message.
@@ -665,9 +663,8 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
-            self.assertEqual(str(self.bundle.xml()),
-                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_multiple_same_name.xml"><parsererror>&#34;Template &#39;multiple_name_xml&#39; already exists in module &#39;test_assetsbundle&#39;&#34; in file &#39;/test_assetsbundle/static/invalid_src/xml/multiple_same_name.xml&#39;</parsererror></t>',
-                            "the parsing error should be shown")
+            with self.assertRaisesRegex(XMLAssetError, "\"Template \'multiple_name_xml\' already exists in module \'test_assetsbundle\'\" in file \'/test_assetsbundle/static/invalid_src/xml/multiple_same_name.xml\'"):
+                self.bundle.xml()
 
     def test_04_template_wo_name(self):
         """ Checks that a bundle with template without name returns a comprehensive error message.
@@ -677,11 +674,10 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
-            self.assertEqual(str(self.bundle.xml()),
-                            '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_template_wo_name.xml"><parsererror>&#39;Template name is missing.&#39; in file &#39;/test_assetsbundle/static/invalid_src/xml/template_wo_name.xml&#39;</parsererror></t>',
-                            "the parsing error should be shown")
+            with self.assertRaisesRegex(XMLAssetError, "'Template name is missing.' in file \'/test_assetsbundle/static/invalid_src/xml/template_wo_name.xml\'"):
+                self.bundle.xml()
 
-    def test_04_file_not_found(self):
+    def test_05_file_not_found(self):
         """ Checks that a bundle with a file in error (file not found, encoding error, or other) returns a comprehensive error message.
         """
         with mute_logger('odoo.addons.base.models.assetsbundle'):
@@ -689,9 +685,8 @@ class TestXMLAssetsBundle(FileTouchable):
 
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
-            self.assertEqual(self.bundle.xml(),
-                            '<t t-name="parsing_errortest_assetsbundle_static_invalid_src_xml_file_not_found.xml"><parsererror>\'"Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."\' in file \'test_assetsbundle/static/invalid_src/xml/file_not_found.xml\'</parsererror></t>',
-                            "the parsing error should be shown")
+            with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."):
+                self.bundle.xml()
 
 @tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):
