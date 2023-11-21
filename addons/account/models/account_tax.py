@@ -59,7 +59,7 @@ class AccountTaxGroup(models.Model):
              "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
     )
 
-    @api.depends('company_id.account_fiscal_country_id')
+    @api.depends('company_id')
     def _compute_country_id(self):
         for group in self:
             group.country_id = group.company_id.account_fiscal_country_id or group.company_id.country_id
@@ -219,7 +219,7 @@ class AccountTax(models.Model):
             if tax.is_used:
                 raise ValidationError(_("This tax has been used in transactions. For that reason, it is forbidden to modify this field."))
 
-    @api.depends('company_id.account_fiscal_country_id')
+    @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
             tax.country_id = tax.company_id.account_fiscal_country_id or tax.company_id.country_id or tax.country_id
