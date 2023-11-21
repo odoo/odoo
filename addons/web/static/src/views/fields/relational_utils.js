@@ -313,7 +313,7 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!records.length && !this.activeActions.create) {
+        if (!records.length && !this.activeActions.createEdit && !this.props.quickCreate) {
             options.push({
                 label: this.env._t("No records"),
                 classList: "o_m2o_no_result",
