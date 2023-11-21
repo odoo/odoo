@@ -21,7 +21,7 @@
         </record>
         <record id="transportation_expense" model="hr.expense">
             <field name="name">Transportation</field>
-            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
             <field eval="60.0" name="price_unit"/>
@@ -32,7 +32,7 @@
         </record>
         <record id="restaurant_expense" model="hr.expense">
             <field name="name">Restaurant</field>
-            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_meal"/>
             <field eval="40.0" name="price_unit"/>
