@@ -51,7 +51,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(1);
         patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 return Promise.resolve({
                     type: "ir.actions.act_window_close",
                     effect: {
@@ -82,7 +82,7 @@ QUnit.module("ActionManager", (hooks) => {
             </form>`;
         patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 return Promise.resolve(false);
             }
         };

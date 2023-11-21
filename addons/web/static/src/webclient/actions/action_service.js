@@ -1224,7 +1224,7 @@ function makeActionManager(env) {
                 }
                 args = args.concat(additionalArgs);
             }
-            const callProm = env.services.rpc("/web/dataset/call_button", {
+            const callProm = env.services.rpc(`/web/dataset/call_button/${params.resModel}/${params.name}`, {
                 args,
                 kwargs: { context },
                 method: params.name,

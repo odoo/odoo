@@ -201,7 +201,7 @@ QUnit.module("ActionManager", (hooks) => {
         const def = makeDeferred();
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 await def;
                 return serverData.actions[1];
             }

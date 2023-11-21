@@ -23,8 +23,8 @@ class DataSet(http.Controller):
     def call_kw(self, model, method, args, kwargs, path=None):
         return self._call_kw(model, method, args, kwargs)
 
-    @http.route('/web/dataset/call_button', type='json', auth="user")
-    def call_button(self, model, method, args, kwargs):
+    @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='json', auth="user")
+    def call_button(self, model, method, args, kwargs, path=None):
         action = self._call_kw(model, method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action, env=request.env)

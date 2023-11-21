@@ -695,7 +695,7 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 assert.deepEqual(
                     args,
                     {
@@ -803,7 +803,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(3);
             const mockRPC = async (route, args) => {
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     return Promise.reject();
                 }
             };
@@ -833,7 +833,7 @@ QUnit.module("ActionManager", (hooks) => {
         </form>
       `;
             const mockRPC = async (route, args) => {
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     return Promise.reject();
                 }
             };
@@ -939,7 +939,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.expect(2);
             let def = undefined;
             const mockRPC = async (route, args) => {
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     return Promise.resolve(false);
                 } else if (args.method === "web_read") {
                     await def; // block the 'read' call
@@ -972,7 +972,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action with html help returned by a call_button", async function (assert) {
         const mockRPC = async (route, args) => {
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 return Promise.resolve({
                     res_model: "partner",
                     type: "ir.actions.act_window",
@@ -1995,7 +1995,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("do not restore after action button clicked", async function (assert) {
         assert.expect(4);
         const mockRPC = async (route, args) => {
-            if (route === "/web/dataset/call_button" && args.method === "do_something") {
+            if (route.startsWith("/web/dataset/call_button") && args.method === "do_something") {
                 return true;
             }
         };
