@@ -27,8 +27,7 @@ from odoo.tools.translate import code_translations
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
                                                      'mail_notrack': True,
-                                                     'no_reset_password': True,
-                                                     'discuss_channel_nosubscribe': True})
+                                                     'no_reset_password': True})
 
 
 class MockEmail(common.BaseCase, MockSmtplibCase):
@@ -736,7 +735,6 @@ class MailCase(MockEmail):
                             ("UNKNOWN", "Unknown error")
     """
     _test_context = {
-        'discuss_channel_nosubscribe': True,
         'mail_create_nolog': True,
         'mail_create_nosubscribe': True,
         'mail_notrack': True,
