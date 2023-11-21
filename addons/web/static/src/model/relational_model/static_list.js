@@ -5,7 +5,7 @@ import { intersection } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
-import { fromUnityToServerValues, getId, patchActiveFields } from "./utils";
+import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 
 import { markRaw } from "@odoo/owl";
 
@@ -85,14 +85,9 @@ export class StaticList extends DataPoint {
     }
 
     get evalContext() {
-        const context = this.config.context;
-        return {
-            context,
-            uid: context.uid,
-            allowed_company_ids: context.allowed_company_ids,
-            current_company_id: this.config.currentCompanyId,
-            parent: this._parent.evalContext,
-        };
+        const evalContext = getBasicEvalContext(this.config);
+        evalContext.parent = this._parent.evalContext;
+        return evalContext;
     }
 
     get limit() {
