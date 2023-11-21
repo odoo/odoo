@@ -56,7 +56,7 @@ class AccountTaxGroup(models.Model):
              "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
     )
 
-    @api.depends('company_id.account_fiscal_country_id')
+    @api.depends('company_id')
     def _compute_country_id(self):
         for group in self:
             group.country_id = group.company_id.account_fiscal_country_id or group.company_id.country_id
@@ -201,7 +201,7 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
-    @api.depends('company_id.account_fiscal_country_id')
+    @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
             tax.country_id = tax.company_id.account_fiscal_country_id or tax.company_id.country_id or tax.country_id
