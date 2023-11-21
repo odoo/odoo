@@ -1683,17 +1683,15 @@ header {
 // The design of some of the new mega menu templates required a column with
 // an overlay that would overflow until the end of the container. For
 // technical reasons, this overlay has to be hardcoded here.
-%s_mega_menu_gray_area {
+.s_mega_menu_gray_area {
     z-index: 1;
 
     &:before {
+        @include o-position-absolute($top: 0, $left: 0);
         content: '';
         display: block;
-        width: 100vw;
+        width: 100%;
         height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
         z-index: -1;
         pointer-events: none;
         background: rgba(0, 0, 0, .05);
