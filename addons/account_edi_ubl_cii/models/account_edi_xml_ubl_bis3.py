@@ -62,9 +62,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
                 vals['company_id'] = "AU" + partner.vat
 
-            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
-                vals['company_id'] = partner.l10n_lu_peppol_identifier
-
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))

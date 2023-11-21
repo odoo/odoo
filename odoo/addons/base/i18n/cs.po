@@ -12,11 +12,11 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Martin Trigaux, 2023
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
-# Jiří Podhorecký, 2023
 # Ivana Bartonkova, 2023
 # Tomáš Píšek, 2023
 # Jakub Smolka, 2023
+# Jiří Podhorecký, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +119,57 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Chat, poštovní brána a soukromý kanál.\n"
+"=======================================\n"
+"\n"
+"Komunikujte se svými kolegy/zákazníky/hosty v rámci Odoo.\n"
+"\n"
+"Diskuse/chat\n"
+"------------\n"
+"Uživatelsky přívětivé funkce \"Diskuse\", které umožňují komunikaci jeden 2 jeden nebo skupinovou komunikaci.\n"
+"(textový chat/hlasový hovor/videohovor), pozvat hosty a sdílet dokumenty s uživateli.\n"
+"s nimi, a to vše v reálném čase.\n"
+"\n"
+"Poštovní brána\n"
+"------------\n"
+"Zjednodušené zasílání informací a dokumentů. Můžete posílat e-maily\n"
+"přímo z Odoo, a to s velkými možnostmi. Například,\n"
+"navrhněte krásnou šablonu e-mailu pro faktury a použijte stejnou šablonu pro\n"
+"pro všechny své zákazníky, nemusíte pokaždé provádět stejný úkon.\n"
+"\n"
+"Chatter\n"
+"-------\n"
+"Proveďte veškerou kontextovou konverzaci na dokumentu. Například na\n"
+"Žadatel, přímo zveřejněte aktualizaci a odešlete e-mail žadateli,\n"
+"naplánovat další hovor k pohovoru, připojit smlouvu, přidat pracovníka personálního oddělení.\n"
+"do seznamu sledovaných osob, abyste je upozornili na důležité události(s pomocí\n"
+"podtypů),...\n"
+"\n"
+"\n"
+"Získávání příchozích e-mailů na serverech POP/IMAP.\n"
+"============================================\n"
+"Zadejte parametry účtu (účtů) POP/IMAP a všechny příchozí e-maily na.\n"
+"těchto účtech budou automaticky staženy do systému Odoo. Vše\n"
+"POP3/IMAP kompatibilní servery jsou podporovány, včetně těch, které vyžadují připojení k internetu.\n"
+"šifrované připojení SSL/TLS.\n"
+"To lze využít ke snadnému vytváření pracovních postupů založených na e-mailu pro mnoho dokumentů Odoo s podporou e-mailu, jako např:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"* Vedení/příležitosti CRM\n"
+"* CRM reklamace\n"
+"* Problémy projektu\n"
+"* Úkoly projektu\n"
+"* Nábor lidských zdrojů (uchazeči)\n"
+"Stačí nainstalovat příslušnou aplikaci a můžete přiřadit kterýkoli z těchto dokumentů\n"
+"(Leads, Project Issues) k příchozím e-mailovým účtům. Nové e-maily budou\n"
+"automaticky vytvářet nové dokumenty zvoleného typu, takže je hračka vytvořit\n"
+"integraci mezi poštovními schránkami a aplikací Odoo. A co víc: tyto dokumenty přímo fungují jako mini\n"
+"konverzace synchronizované prostřednictvím e-mailu. Můžete na ně odpovídat z prostředí Odoo a\n"
+"odpovědi se automaticky shromáždí, jakmile se vrátí, a připojí se ke zprávě, kterou jste odeslali.\n"
+"stejnému dokumentu *konverzace*.\n"
+"Pro specifičtější potřeby můžete také přiřadit vlastní definované akce\n"
+"(odborně: Akce serveru), které se mají spouštět pro každou příchozí poštu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -407,6 +458,9 @@ msgid ""
 "\n"
 "This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
 msgstr ""
+"\n"
+"\n"
+"Tento modul vám umožní zobrazit marži vašich objednávek v prodejním místě v sestavě Marže z prodeje.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -1415,6 +1469,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"Umožňuje vypočítat přesnou marži pro prodej služeb.\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -7658,6 +7715,7 @@ msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
 msgstr ""
+"Veškeré naše smluvní vztahy se budou řídit výhradně zákony Spojených států."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -10203,7 +10261,7 @@ msgstr "Stav státu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kupóny a věrnostní programy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
@@ -15057,6 +15115,15 @@ msgstr "Neplatný typ"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Neplatná hodnota pro %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python

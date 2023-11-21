@@ -231,3 +231,14 @@ PosLoyalty.do.enterCode('abcda');
 PosLoyalty.check.orderTotalIs('90');
 
 Tour.register('PosLoyaltyTour7', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.totalAmountIs('50.00');
+
+Tour.register('PosLoyaltyTour8', { test: true, url: '/pos/web' }, getSteps());

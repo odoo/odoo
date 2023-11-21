@@ -2715,7 +2715,7 @@ options.registry.anchor = options.Class.extend({
                     return;
                 }
 
-                const alreadyExists = !!document.getElementById(anchorName);
+                const alreadyExists = !!self.ownerDocument.getElementById(anchorName);
                 this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
                 $input.toggleClass('is-invalid', alreadyExists);
                 if (!alreadyExists) {
@@ -2774,7 +2774,7 @@ options.registry.anchor = options.Class.extend({
             const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
             const anchorName = this._text2Anchor(title);
             let n = '';
-            while (document.getElementById(anchorName + n)) {
+            while (this.ownerDocument.getElementById(anchorName + n)) {
                 n = (n || 1) + 1;
             }
             this._setAnchorName(anchorName + n);

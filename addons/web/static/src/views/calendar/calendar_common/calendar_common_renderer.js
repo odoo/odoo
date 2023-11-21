@@ -84,7 +84,7 @@ export class CalendarCommonRenderer extends Component {
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
-            firstDay: this.props.model.firstDayOfWeek % 7,
+            firstDay: this.props.model.firstDayOfWeek,
             header: false,
             height: "parent",
             locale: luxon.Settings.defaultLocale,

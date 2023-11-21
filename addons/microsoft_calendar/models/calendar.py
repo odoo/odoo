@@ -95,7 +95,9 @@ class Meeting(models.Model):
 
     def _check_organizer_validation(self, sender_user, partner_included):
         """ Check if the proposed event organizer can be set accordingly. """
-        if sender_user and sender_user != self.env.user:
+        # Edge case: events created or updated from Microsoft should not check organizer validation.
+        change_from_microsoft = self.env.context.get('dont_notify', False)
+        if sender_user and sender_user != self.env.user and not change_from_microsoft:
             current_sync_status = self._check_microsoft_sync_status()
             sender_sync_status = self.with_user(sender_user)._check_microsoft_sync_status()
             if not sender_sync_status and current_sync_status:
@@ -171,12 +173,16 @@ class Meeting(models.Model):
                 self._forbid_recurrence_update()
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
-        if values.get('user_id') and self.user_id.id != values['user_id']:
-            sender_user, partner_ids = self._get_organizer_user_change_info(values)
-            partner_included = sender_user.partner_id in self.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
-            self._check_organizer_validation(sender_user, partner_included)
-            self._recreate_event_different_organizer(values, sender_user)
-            values['active'] = False
+        # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
+        change_from_microsoft = self.env.context.get('dont_notify', False)
+        deactivated_events_ids = []
+        for event in self:
+            if values.get('user_id') and event.user_id.id != values['user_id'] and not change_from_microsoft:
+                sender_user, partner_ids = event._get_organizer_user_change_info(values)
+                partner_included = sender_user.partner_id in event.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
+                event._check_organizer_validation(sender_user, partner_included)
+                event._recreate_event_different_organizer(values, sender_user)
+                deactivated_events_ids.append(event.id)
 
         # check a Outlook limitation in overlapping the actual recurrence
         if recurrence_update_setting == 'self_only' and 'start' in values:
@@ -189,7 +195,12 @@ class Meeting(models.Model):
                 e._microsoft_delete(e._get_organizer(), e.ms_organizer_event_id, timeout=3)
                 e.microsoft_id = False
 
-        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        deactivated_events = self.browse(deactivated_events_ids)
+        res = super(Meeting, (self - deactivated_events).with_context(dont_notify=notify_context)).write(values)
+
+        # Deactivate events that were recreated after changing organizer.
+        if deactivated_events:
+            res |= super(Meeting, deactivated_events.with_context(dont_notify=notify_context)).write({**values, 'active': False})
 
         if recurrence_update_setting in ('all_events',) and len(self) == 1 \
            and values.keys() & self._get_microsoft_synced_fields():
@@ -212,7 +223,9 @@ class Meeting(models.Model):
         attendee_values = self._attendees_values(values['partner_ids']) if 'partner_ids' in values else []
         partner_ids = []
         if attendee_values:
-            partner_ids = [command[2]['partner_id'] for command in attendee_values]
+            for command in attendee_values:
+                if len(command) == 3 and isinstance(command[2], dict):
+                    partner_ids.append(command[2].get('partner_id'))
         return sender_user, partner_ids
 
     def action_mass_archive(self, recurrence_update_setting):

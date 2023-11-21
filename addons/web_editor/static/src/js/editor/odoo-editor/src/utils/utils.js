@@ -890,7 +890,7 @@ export function preserveCursor(document) {
         replace = replace || new Map();
         cursorPos[0] = replace.get(cursorPos[0]) || cursorPos[0];
         cursorPos[2] = replace.get(cursorPos[2]) || cursorPos[2];
-        setSelection(...cursorPos);
+        setSelection(...cursorPos, false);
     };
 }
 
@@ -1993,11 +1993,8 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    const closestLi = el.closest('li');
-    if (el.tagName === 'LI' && newTagName !== 'p') {
+    if (el.tagName === 'LI') {
         el.append(n);
-    } else if (closestLi && newTagName === 'p') {
-        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }

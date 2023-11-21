@@ -25,6 +25,7 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Jonatan Gk, 2022
+# Harcogourmet, 2022
 # ericrolo, 2022
 # Guspy12, 2022
 # jabiri7, 2022
@@ -32,11 +33,11 @@
 # Martin Trigaux, 2023
 # Josep Anton Belchi, 2023
 # martioodo hola, 2023
-# Harcogourmet, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Albert Parera, 2023
 # Xavi Ivars <xavi.ivars@gmail.com>, 2023
 # xean, 2023
+# Pere Martínez, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: xean, 2023\n"
+"Last-Translator: Pere Martínez, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,6 +241,15 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s ha assolit un estat invàlid segons la línia de l'extracte amb el que està relacionat.\n"
+"Per a ser consistent, l'assentament ha de tenir sempre una línia suspesa."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -329,8 +339,8 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Odoo ha de calcular els apunts del diari abans de publicar-los en la "
-"moneda de l'empresa."
+". Odoo ha de calcular els assentaments abans de publicar-los en la moneda de"
+" l'empresa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -893,7 +903,7 @@ msgstr "<span class=\"o_stat_text\">Facturat</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Apunt comptable</span>"
+msgstr "<span class=\"o_stat_text\">Assentament comptable</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -904,7 +914,7 @@ msgid ""
 msgstr ""
 "<span class=\"oe_inline o_form_label mx-3\" "
 "groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
-"'=', 'entry')]}\"> in </span>"
+"'=', 'entry')]}\"> en </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -1072,7 +1082,7 @@ msgstr "<span>Número de factura</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Entry</span>"
-msgstr "<span>Nova entrada</span>"
+msgstr "<span>Nou assentament</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1127,7 +1137,7 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Aquesta entrada s'ha generat per l'aplicació de facturació, abans "
+"<span>Aquest assentament s'ha generat per l'aplicació de facturació, abans "
 "d'instal·lar la comptabilitat. El seu saldo s'ha importat per "
 "separat.</span>"
 
@@ -3535,7 +3545,7 @@ msgstr "Cancel·lar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "Cancel·la l'apunt"
+msgstr "Cancel·la l'assentament"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -4481,12 +4491,12 @@ msgstr "Crear Entrades Automàtiques"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr "Creeu Entrades Automàtiques per als Elements de Diari seleccionats"
+msgstr "Creeu assentaments automàtics pels apunts seleccionats"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr "Crea entrada"
+msgstr "Crea assentament"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -4501,7 +4511,7 @@ msgstr "Crear Factures sobre Correus Electrònics"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "Crear Entrades de Diari"
+msgstr "Crear assentaments"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4533,7 +4543,7 @@ msgstr "Crear una factura de client"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Creeu una entrada de diari"
+msgstr "Creeu un assentament"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -8333,12 +8343,12 @@ msgstr "Moneda de la revista"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Seients de diari"
+msgstr "Assentaments"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "Entrades de Diari per Data"
+msgstr "Assentaments per data"
 
 #. module: account
 #. odoo-javascript
@@ -8571,7 +8581,7 @@ msgstr "Diaris disponibles"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "Data de bloqueig d'apunts comptables"
+msgstr "Data de bloqueig d'assentaments"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -9763,8 +9773,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
-"Cap usuari pot modificar entrades de diari relacionades amb un impost previ "
-"i incloent aquesta data."
+"Cap usuari pot modificar assentaments relacionats amb un impost previ i "
+"incloent aquesta data."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -11778,7 +11788,7 @@ msgstr "Quantitat de impostos relacionats"
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Refeu la seqüència d' entrades de diari."
+msgstr "Refeu la seqüència d'assentaments."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
@@ -12045,7 +12055,7 @@ msgstr "Assentament de reversió"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Inverteix l' entrada de diari"
+msgstr "Inverteix l'assentament de diari"
 
 #. module: account
 #. odoo-python
@@ -12774,8 +12784,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
-"Nom curt usat per a mostrar. Les entrades del diari d' aquest diari també "
-"seran anomenades usant aquest prefix per omissió."
+"Nom curt usat per a mostrar. Els assentaments d'aquest diari també seran "
+"anomenades usant aquest prefix per omissió."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -13321,7 +13331,7 @@ msgstr "Impost de base d'efectiu"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr "S' està tancant l' entrada"
+msgstr "S' està tancant l' assentament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -13806,7 +13816,7 @@ msgstr "Termes i condicions "
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr "Aquesta és la data de l'entrada d'obertura."
+msgstr "Aquesta és la data de l'assentament d'obertura."
 
 #. module: account
 #. odoo-python
@@ -13854,7 +13864,7 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
-"La seqüència d'entrada del diari no s'ajusta al format actual. Només el "
+"La seqüència d'assentament del diari no s'ajusta al format actual. Només el "
 "comptable pot canviar-ho."
 
 #. module: account
@@ -14163,7 +14173,7 @@ msgstr "Els document(s) que han generat la factura."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr "L'entrada %s (id %s) ja està publicada."
+msgstr "L'assentament %s (id %s) ja està publicat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -14218,7 +14228,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Les següents entrades de diari es generaran"
+msgstr "Es generaran els següents assentaments"
 
 #. module: account
 #. odoo-python
@@ -14321,8 +14331,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
-"L'entrada del diari %s ha assolit un estat no vàlid pel que fa a la seva línia de declaracions relacionada.\n"
-"Per a ser consistents, l'entrada de diari sempre ha de tenir exactament un ítem de diari que identifica el compte bancari/cash."
+"L'assentament %s ha assolit un estat no vàlid pel que fa a la seva línia de declaracions relacionada.\n"
+"Per a ser consistents, l'entrada de diari sempre ha de tenir exactament un apunt que identifica el compte bancari/cash."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14330,8 +14340,8 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"L' entrada de diari que conté el balanç inicial de tots els comptes d' "
-"aquesta empresa."
+"L' assentament que conté el balanç inicial de tots els comptes d' aquesta "
+"empresa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
@@ -14341,8 +14351,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"L'entrada del diari de la qual s' ha creat aquesta entrada en efectiu en "
-"base de diari."
+"L'assentament de la qual s' ha creat aquesta entrada en efectiu en base de "
+"diari."
 
 #. module: account
 #. odoo-python
@@ -15272,7 +15282,7 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
-"Aquest producte ja s'està utilitzant en entrades de revistes publicades. Si "
+"Aquest producte ja s'està utilitzant en assentaments comptabilitzats. Si "
 "voleu canviar la seva unitat de mesura, arxiveu aquest producte i creeu-ne "
 "un de nou."
 
@@ -15468,7 +15478,7 @@ msgstr "Total signat"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr "Total impactat per l' entrada automàtica."
+msgstr "Total impactat per l'entrada automàtica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -16762,7 +16772,7 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
-"No podeu eliminar aquesta entrada, ja que ja ha consumit un número de "
+"No podeu eliminar aquest assentament, ja que ja ha consumit un número de "
 "seqüència i no és l'última de la cadena. Probablement hauríeu de revertir-"
 "lo."
 
@@ -16786,8 +16796,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"No podeu fer aquesta modificació en una entrada de diari conciliat. Només podeu canviar alguns camps no legals o primer heu de desconclar.\n"
-"Entrada de diari (ind): %s (%s) @ info: whatsthis"
+"No podeu fer aquesta modificació en un assentament conciliat. Només podeu canviar alguns camps no legals o primer heu de desconciliar.\n"
+"Assentament (id): %s (%s)"
 
 #. module: account
 #. odoo-python
@@ -16877,8 +16887,8 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
-"No podeu modificar una entrada publicada d' aquest diari perquè està en mode"
-" estricte."
+"No podeu modificar un assentament publicat d'aquest diari perquè està en "
+"mode estricte."
 
 #. module: account
 #. odoo-python
@@ -16898,8 +16908,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"No podeu modificar els impostos relacionats amb un element de diari "
-"publicat, hauríeu de reiniciar l' entrada de diari per a fer- ho."
+"No podeu modificar els impostos relacionats amb un assentament publicat, "
+"hauríeu de reiniciar l' entrada de diari per a fer- ho."
 
 #. module: account
 #. odoo-python
@@ -16926,7 +16936,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr "No podeu publicar una entrada en un diari arxivat (%(journal)s)"
+msgstr "No podeu publicar un assentament en un diari arxivat (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -16977,14 +16987,16 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "No es pot tornar a engegar l'entrada d'impostos en base de diari."
+msgstr ""
+"No es pot tornar a establir l'assentament basat en criteri de caixa a "
+"esborrany."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr "No podeu reiniciar- lo a una entrada de diari d' intercanvi."
+msgstr "No podeu reiniciar- lo a un assentament d' intercanvi."
 
 #. module: account
 #. odoo-python
@@ -17122,9 +17134,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Hauríeu de configurar el 'Exchange' o Loss Journal' a les opcions de la "
-"vostra empresa, per a gestionar automàticament les entrades comptables "
-"relacionades amb les diferències entre les taxes d' intercanvi."
+"Hauríeu de configurar el 'Canvi' o 'Diari de pèrdues' a les opcions de la "
+"vostra empresa, per a gestionar automàticament els assentaments relacionats "
+"amb les diferències de canvi."
 
 #. module: account
 #. odoo-python

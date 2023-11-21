@@ -56,18 +56,6 @@ const L10nFrOrder = (Order) => class L10nFrOrder extends Order {
       result = Boolean(result || this.pos.is_french_country());
       return result;
     }
-    destroy (option) {
-        // SUGGESTION: It's probably more appropriate to apply this restriction
-        // in the TicketScreen.
-        if (option && option.reason == 'abandon' && this.pos.is_french_country() && this.get_orderlines().length) {
-            Gui.showPopup("ErrorPopup", {
-                'title': _t("Fiscal Data Module error"),
-                'body':  _t("Deleting of orders is not allowed."),
-            });
-        } else {
-            super.destroy(...arguments);
-        }
-    }
 }
 Registries.Model.extend(Order, L10nFrOrder);
 

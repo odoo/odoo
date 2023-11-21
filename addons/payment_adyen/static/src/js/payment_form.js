@@ -156,7 +156,8 @@ odoo.define('payment_adyen.payment_form', require => {
                 }).then(paymentMethodsResult => {
                     // Instantiate the drop-in
                     const configuration = {
-                        paymentMethodsResponse: paymentMethodsResult,
+                        paymentMethodsResponse: paymentMethodsResult['payment_methods_data'],
+                        amount: paymentMethodsResult['amount_formatted'],
                         clientKey: providerInfo.client_key,
                         locale: (this._getContext().lang || 'en-US').replace('_', '-'),
                         environment: providerInfo.state === 'enabled' ? 'live' : 'test',

@@ -1605,6 +1605,11 @@ def _get_translation_upgrade_queries(cr, field):
                       JOIN "{Model._table}" m ON t.res_id = m.id
                       JOIN website w ON m.website_id = w.id
                       JOIN res_lang l ON w.default_lang_id = l.id
+                    UNION
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, 'en_US'
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                     WHERE m.website_id IS NULL
                 """
         cr.execute(f"""
             WITH t0 AS (

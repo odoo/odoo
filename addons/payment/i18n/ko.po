@@ -3,8 +3,6 @@
 # 	* payment
 # 
 # Translators:
-# JH CHOI <hwangtog@gmail.com>, 2022
-# Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2022
 # Daye Jeong, 2023
 # Sarah Park, 2023
@@ -13,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -312,11 +310,6 @@ msgid "Bank"
 msgstr "은행"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "은행 계좌 정보"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "은행명"
@@ -438,11 +431,6 @@ msgstr "코드"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "색상"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "의사소통"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -755,14 +743,10 @@ msgid "Full Only"
 msgstr "전체 적용"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "결제 링크 생성"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "판매 결제 링크 생성"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1340,16 +1324,6 @@ msgstr "결제 옵션을 하나만 선택하세요."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "%s 보다 작은 금액을 설정하십시오."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "다음과 같은 이동 세부정보를 사용하십시오"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "의사소통 참조를 위해 주문 이름을 사용하여 주시기 바랍니다."
 
 #. module: payment
 #. odoo-javascript
@@ -2036,8 +2010,10 @@ msgstr "계좌 이체"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
-msgstr "%s 결제대행업체를 삭제할 수 없습니다: 대신 보관 처리하시기 바랍니다."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -2149,6 +2125,7 @@ msgstr "결제가 접수되었지만 수동으로 확인해야 합니다."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

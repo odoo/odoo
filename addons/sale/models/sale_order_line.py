@@ -305,13 +305,14 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
+            lang = line.order_partner_id.lang or self.env.user.lang
             if not line.product_id:
                 continue
             if not line.order_partner_id.is_public:
-                line = line.with_context(lang=line.order_partner_id.lang)
+                line = line.with_context(lang=lang)
             name = line._get_sale_order_line_multiline_description_sale()
             if line.is_downpayment and not line.display_type:
-                context = {'lang': line.order_partner_id.lang}
+                context = {'lang': lang}
                 dp_state = line._get_downpayment_state()
                 if dp_state == 'draft':
                     name = _("%(line_description)s (Draft)", line_description=name)
@@ -1043,6 +1044,9 @@ class SaleOrderLine(models.Model):
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
             for line in order_lines:
+                if 'product_id' in values and values['product_id'] != line.product_id.id:
+                    # tracking is meaningless if the product is changed as well.
+                    continue
                 msg += "<li> %s: <br/>" % line.product_id.display_name
                 msg += _(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",

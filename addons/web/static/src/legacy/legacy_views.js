@@ -175,6 +175,7 @@ function registerView(name, LegacyView) {
         icon: LegacyView.prototype.icon,
         isMobileFriendly: LegacyView.prototype.mobile_friendly,
         multiRecord: LegacyView.prototype.multi_record,
+        accessKey: LegacyView.prototype.accesskey,
         isLegacy: true,
         Controller,
     };

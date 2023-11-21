@@ -3,10 +3,10 @@
 # 	* mrp
 # 
 # Translators:
-# Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Djordje Marjanovic <djvmarjanovic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2023
 # Milan Bojovic, 2023
 # 
 msgid ""
@@ -408,7 +408,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Izvor:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
@@ -1389,7 +1389,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Costs"
-msgstr ""
+msgstr "Troškovi"
 
 #. module: mrp
 #. odoo-javascript
@@ -3259,7 +3259,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtevaju akciju"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -3498,7 +3498,7 @@ msgstr "U toku"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__performance
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Performance"
-msgstr ""
+msgstr "Performanse"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -4832,6 +4832,14 @@ msgstr ""
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5464,6 +5472,16 @@ msgstr "Važeće"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
 msgstr "Overi"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6119,13 +6137,6 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
 msgstr ""
 
 #. module: mrp

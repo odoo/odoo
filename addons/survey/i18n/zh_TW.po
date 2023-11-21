@@ -270,6 +270,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or '參加者'\">參加者</t> 你好！<br><br>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            你已獲邀請參加新的認證。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            我們正在進行一項調查，希望你能抽空回應。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    開始認證\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    開始回應問卷\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            請於 <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t> 之前回應問卷 / 接受認證。<br><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            祝你好運！\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            先感謝你的參與。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -4184,7 +4215,7 @@ msgstr "文本答案"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you for your participation, hope you had a blast!"
-msgstr ""
+msgstr "感謝你的參與，希望你玩得開心！"
 
 #. module: survey
 #. odoo-python
@@ -4204,7 +4235,7 @@ msgstr "謝謝！"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you. We will contact you soon."
-msgstr ""
+msgstr "謝謝你，我們會盡快聯絡你。"
 
 #. module: survey
 #. odoo-python

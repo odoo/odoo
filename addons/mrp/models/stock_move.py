@@ -131,7 +131,7 @@ class StockMove(models.Model):
     unit_factor = fields.Float('Unit Factor', compute='_compute_unit_factor', store=True)
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done', store=True)
-    order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True)
+    order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True, index='btree_not_null')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!

@@ -30,11 +30,13 @@ msgid ""
 ") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send them "
 "an email</span>."
 msgstr ""
+") <span attrs=\"{'invisible': [('send_email', '=', "
+"False)]}\">และส่งอีเมลถึงพวกเขา</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr ""
+msgstr "<br/> คุณจะได้รับแจ้งทันทีที่มีการโพสต์เนื้อหาใหม่"
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
@@ -49,6 +51,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                เรียน<br><br>\n"
+"                คุณได้ขอสมัครรับรายชื่ออีเมล <strong t-out=\"object.name or ''\"></strong>\n"
+"                <br><br>\n"
+"                เพื่อยืนยัน โปรดไปที่ลิงก์ต่อไปนี้: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                หากนี่เป็นข้อผิดพลาดหรือคุณไม่ได้ร้องขอการดำเนินการนี้ โปรดเพิกเฉยต่อข้อความนี้\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -63,6 +74,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                เรียน<br><br>\n"
+"                คุณได้ขอยกเลิกการสมัครรับรายชื่ออีเมล <strong t-out=\"object.name or ''\"></strong>\n"
+"                <br><br>\n"
+"                เพื่อยืนยัน โปรดไปที่ลิงก์ต่อไปนี้: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                หากนี่เป็นข้อผิดพลาดหรือคุณไม่ได้ร้องขอการดำเนินการนี้ โปรดเพิกเฉยต่อข้อความนี้\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -74,6 +94,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>เรียน <t t-out=\"object.partner_id.name or ''\"></t></p>\n"
+"                <p>โปรดดูหลักเกณฑ์ของรายชื่ออีเมล {{ object.mail_group_id.name }} ที่ด้านล่าง</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -126,6 +152,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"รูปภาพ\" aria-label=\"นามแฝง\" "
+"title=\"นามแฝง\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -138,11 +166,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"รูปภาพ\" aria-label=\"ผู้รับ\" "
+"title=\"ผู้รับ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
+msgstr "<span class=\"bg-warning\">รอดำเนินการ</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -150,16 +180,18 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">อยู่ในรายการที่อนุญาตพิเศษ</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">ถูกแบน</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "<span class=\"mx-2\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">-</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "<span>By thread</span>"
-msgstr ""
+msgstr "<span>โดย เธรด</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -167,6 +199,8 @@ msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
+"<span>ยังไม่มีกลุ่มเมล</span>\n"
+"                    <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
@@ -206,6 +240,7 @@ msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
+"เพิ่มที่อยู่อีเมลนี้ในรายชื่อบุคคลที่อนุญาตและยอมรับข้อความที่รอดำเนินการทั้งหมดจากผู้เขียนคนเดียวกัน"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
@@ -221,7 +256,7 @@ msgstr "นามแฝงสำหรับติดต่อเพื่อค
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_fullname
 msgid "Alias Full Name"
-msgstr ""
+msgstr "นามแฝงชื่อเต็ม"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
@@ -241,7 +276,7 @@ msgstr "โมเดลนามแฝง"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "All messages of this group"
-msgstr ""
+msgstr "ข้อความทั้งหมดของกลุ่มนี้"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -251,7 +286,7 @@ msgstr "Allowed Emails"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Alone we can do so little, together we can do so much"
-msgstr ""
+msgstr "คนเดียวเราทำได้น้อย ร่วมมือกันเราทำได้มาก"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
@@ -263,7 +298,7 @@ msgstr "Always Allow"
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "An email with instructions has been sent."
-msgstr ""
+msgstr "ส่งอีเมลพร้อมคำแนะนำแล้ว"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -288,7 +323,7 @@ msgstr "ผู้เขียน"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
 msgid "Author Moderation Status"
-msgstr ""
+msgstr "สถานะการกลั่นกรองผู้เขียน"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
@@ -320,7 +355,7 @@ msgstr "Ban"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Ban the author of the message ("
-msgstr ""
+msgstr "แบนผู้เขียนข้อความ ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -329,11 +364,13 @@ msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
 msgstr ""
+"แบนที่อยู่อีเมลนี้และปฏิเสธข้อความที่รอดำเนินการทั้งหมดจากผู้เขียนคนเดียวกัน"
+" และส่งอีเมลถึงผู้เขียน"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
 msgid "Banned"
-msgstr ""
+msgstr "ถูกแบน"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -343,17 +380,17 @@ msgstr "Banned Emails"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "By date"
-msgstr ""
+msgstr "ตามวันที่"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
 msgid "Can Manage"
-msgstr ""
+msgstr "จัดการได้"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
 msgid "Can manage the members"
-msgstr ""
+msgstr "สามารถบริหารจัดการสมาชิกได้"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
@@ -368,12 +405,12 @@ msgstr "กำหนดค่าโดเมนที่กำหนดเอง
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
 msgid "Confirm subscription to {{ object.name }}"
-msgstr ""
+msgstr "ยืนยันการสมัครสมาชิก {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr ""
+msgstr "ยืนยันการยกเลิกการสมัคร {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
@@ -384,12 +421,12 @@ msgstr "เนื้อหา"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr ""
+msgstr "สร้างกลุ่มจดหมาย"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Create a new group"
-msgstr ""
+msgstr "สร้างกลุ่มใหม่"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -411,7 +448,7 @@ msgstr "สร้างเมื่อ"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
 msgid "Current user is a moderator of the group"
-msgstr ""
+msgstr "ผู้ใช้ปัจจุบันเป็นผู้ดูแลกลุ่ม"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
@@ -453,7 +490,7 @@ msgstr "อีเมล"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Email %s is invalid"
-msgstr ""
+msgstr "อีเมล %s ไม่ถูกต้อง"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -463,7 +500,7 @@ msgstr "นามแฝงอีเมล"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
 msgid "Email From"
-msgstr ""
+msgstr "อีเมลจาก"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
@@ -482,7 +519,7 @@ msgstr "อีเมล"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails waiting an action for this group"
-msgstr ""
+msgstr "อีเมลที่รอการดำเนินการสำหรับกลุ่มนี้"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
@@ -492,7 +529,7 @@ msgstr "ทุกคน"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Follow-Ups"
-msgstr ""
+msgstr "ติดตาม"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
@@ -518,7 +555,7 @@ msgstr "กลุ่มโดย"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
-msgstr ""
+msgstr "ข้อความกลุ่ม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -530,7 +567,7 @@ msgstr "ชื่อกลุ่ม"
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr ""
+msgstr "ข้อความกลุ่มสามารถเชื่อมโยงกับกลุ่มอีเมลเท่านั้น โมเดลปัจจุบันคือ %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -541,7 +578,7 @@ msgstr "แนวทางการปฏิบัติ"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr ""
+msgstr "หลักเกณฑ์ของกลุ่ม {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -585,7 +622,7 @@ msgstr "รูปภาพ"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Invalid action for URL generation (%s)"
-msgstr ""
+msgstr "การดำเนินการที่ไม่ถูกต้องสำหรับการสร้าง URL (%s)"
 
 #. module: mail_group
 #. odoo-python
@@ -593,27 +630,27 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr ""
+msgstr "ที่อยู่อีเมลไม่ถูกต้อง %r"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "ลิงก์ยืนยันไม่ถูกต้องหรือหมดอายุ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Allowed"
-msgstr ""
+msgstr "ได้รับอนุญาต"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Banned"
-msgstr ""
+msgstr "ถูกแบน"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
 msgid "Is Group Moderated"
-msgstr ""
+msgstr "มีการตรวจสอบแบบกลุ่ม"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
@@ -662,7 +699,7 @@ msgstr "ลา"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
-msgstr ""
+msgstr "ให้ผู้อื่นสมัครรับรายการของคุณทางออนไลน์หรือเพิ่มด้วยตนเองที่นี่"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
@@ -673,55 +710,55 @@ msgstr "กลุ่มเมล"
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr ""
+msgstr "ผู้ดูแลระบบกลุ่มจดหมาย"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "กลุ่มเมล: การสมัครสมาชิกรายชื่อผู้รับจดหมาย"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "กลุ่มเมล: การยกเลิกการสมัครรับรายชื่อผู้รับจดหมาย"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr ""
+msgstr "กลุ่มเมล: ส่งคำแนะนำ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
 #: model:ir.ui.menu,name:mail_group.mail_group_menu
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Mail Groups"
-msgstr ""
+msgstr "กลุ่มเมล"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
 #: model:ir.cron,cron_name:mail_group.ir_cron_mail_notify_group_moderators
 msgid "Mail List: Notify group moderators"
-msgstr ""
+msgstr "รายชื่อเมล: แจ้งเตือนผู้ดูแลกลุ่ม"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "ข้อความเมล"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr ""
+msgstr "สมาชิกรายชื่อผู้รับจดหมาย"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr ""
+msgstr "ข้อความรายชื่อผู้รับจดหมาย"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr ""
+msgstr "รายชื่อผู้รับจดหมายรายการไม่อนุญาต / อนุญาต"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
@@ -733,12 +770,12 @@ msgstr "รายชื่อผู้รับอีเมล"
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
+msgstr "กลุ่มส่งเมลคือคอมมูนิตี้ที่ต้องการพูดคุยหัวข้อใดหัวข้อหนึ่งร่วมกัน"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr ""
+msgstr "รายชื่อผู้รับจดหมาย:"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
@@ -757,17 +794,17 @@ msgstr "สมาชิก"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
 msgid "Members Count"
-msgstr ""
+msgstr "จำนวนสมาชิก"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members of this group"
-msgstr ""
+msgstr "สมาชิกกลุ่มนี้"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
 msgid "Members only"
-msgstr ""
+msgstr "เฉพาะสมาชิก"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
@@ -777,7 +814,7 @@ msgstr "ข้อความ"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
 msgid "Message Rejection Explanation"
-msgstr ""
+msgstr "คำอธิบายเกี่ยวกับการปฏิเสธข้อความ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
@@ -787,67 +824,67 @@ msgstr "ข้อความ"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
 msgid "Messages Count"
-msgstr ""
+msgstr "จำนวนข้อความ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
 msgid "Messages Per Month"
-msgstr ""
+msgstr "ข้อความต่อเดือน"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Messages are pending moderation"
-msgstr ""
+msgstr "ข้อความกำลังรอการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Messages that need an action"
-msgstr ""
+msgstr "ข้อความที่ต้องดำเนินการ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Moderate Messages"
-msgstr ""
+msgstr "กลั่นกรองข้อความ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate this group"
-msgstr ""
+msgstr "กลั่นกรองกลุ่มนี้"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderated"
-msgstr ""
+msgstr "กลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "กลั่นกรองโดย"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
 msgid "Moderated Emails"
-msgstr ""
+msgstr "อีเมลที่ได้รับการตรวจสอบ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
 msgid "Moderated emails count"
-msgstr ""
+msgstr "จำนวนอีเมลที่ได้รับการตรวจสอบ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderated emails in this group"
-msgstr ""
+msgstr "อีเมลที่ได้รับการตรวจสอบในกลุ่มนี้"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderated group must have moderators."
-msgstr ""
+msgstr "กลุ่มที่ได้รับการตรวจสอบจะต้องมีผู้ดูแล"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
@@ -858,40 +895,40 @@ msgstr "การกลั่นกรอง"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "รายการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
 msgid "Moderation Rules"
-msgstr ""
+msgstr "กฎการกลั่นกรอง"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderations"
-msgstr ""
+msgstr "การกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
 msgid "Moderator"
-msgstr ""
+msgstr "ผู้ดูแล"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderators"
-msgstr ""
+msgstr "ผู้ดูแล"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "ผู้ดูแลจะต้องมีที่อยู่อีเมล"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
 msgid "My Company News"
-msgstr ""
+msgstr "ข่าวบริษัทของฉัน"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
@@ -909,17 +946,17 @@ msgstr ""
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
+msgstr "ผู้มาใหม่ในกลุ่มที่ได้รับการตรวจสอบนี้จะได้รับคำแนะนำโดยอัตโนมัติ"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "No Members in this list yet!"
-msgstr ""
+msgstr "ยังไม่มีสมาชิกในรายการนี้!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid "No Messages in this list yet!"
-msgstr ""
+msgstr "ยังไม่มีข้อความในรายการนี้!"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
@@ -929,22 +966,22 @@ msgstr "ทำให้อีเมลเป็นมาตรฐาน"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
 msgid "Normalized From"
-msgstr ""
+msgstr "ทำให้เป็นมาตรฐานจาก"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
 msgid "Notification message"
-msgstr ""
+msgstr "ข้อความแจ้งเตือน"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Notify Members"
-msgstr ""
+msgstr "แจ้งให้สมาชิกทราบ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
 msgid "Number of message in this group"
-msgstr ""
+msgstr "จำนวนข้อความในกลุ่มนี้"
 
 #. module: mail_group
 #. odoo-python
@@ -953,13 +990,14 @@ msgstr ""
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
+"มีเพียงผู้ดูแลระบบหรือผู้ดูแลเท่านั้นที่สามารถส่งคำแนะนำไปยังสมาชิกกลุ่มได้"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Only members can send email to the mailing list."
-msgstr ""
+msgstr "เฉพาะสมาชิกเท่านั้นที่สามารถส่งอีเมลไปยังรายชื่อผู้รับจดหมายได้"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1011,22 +1049,22 @@ msgstr "พาร์ทเนอร์"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr ""
+msgstr "สมาชิกพาร์ทเนอร์"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
 msgid "Pending Messages"
-msgstr ""
+msgstr "ข้อความที่รอดำเนินการ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Pending Messages Count"
-msgstr ""
+msgstr "จำนวนข้อความที่รอดำเนินการ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
 msgid "Pending Moderation"
-msgstr ""
+msgstr "รอการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
@@ -1034,11 +1072,12 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
+"ผู้คนจะได้รับการแจ้งเตือนอัตโนมัติเกี่ยวกับข้อความที่พวกเขากำลังรอการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
-msgstr ""
+msgstr "การห้ามอย่างถาวร"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
@@ -1056,7 +1095,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Post to:"
-msgstr ""
+msgstr "ส่งถึง:"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
@@ -1072,7 +1111,7 @@ msgstr "ความเป็นส่วนตัว"
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
 msgid "Public Mailing List"
-msgstr ""
+msgstr "รายชื่อผู้รับจดหมายสาธารณะ"
 
 #. module: mail_group
 #. odoo-python
@@ -1102,17 +1141,17 @@ msgstr "ปฏิเสธ"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
 msgid "Reject Group Message"
-msgstr ""
+msgstr "ปฏิเสธข้อความกลุ่ม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "ปฏิเสธอย่างเงียบๆ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject the message"
-msgstr ""
+msgstr "ปฏิเสธข้อความ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
@@ -1124,32 +1163,32 @@ msgstr "ปฏิเสธแล้ว"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Remove message with explanation"
-msgstr ""
+msgstr "ลบข้อความที่มีคำอธิบาย"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsible Users"
-msgstr ""
+msgstr "ผู้ใช้ที่มีความรับผิดชอบ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "Search Group Message"
-msgstr ""
+msgstr "ค้นหาข้อความกลุ่ม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr ""
+msgstr "ค้นหาสมาชิกกลุ่มเมล"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Search Mail group"
-msgstr ""
+msgstr "ค้นหากลุ่มจดหมาย"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr ""
+msgstr "ค้นหารายการการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1165,12 +1204,12 @@ msgstr "ส่ง"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Ban"
-msgstr ""
+msgstr "ส่งและแบน"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Reject"
-msgstr ""
+msgstr "ส่งและปฏิเสธ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
@@ -1180,27 +1219,27 @@ msgstr "ส่งอีเมล"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Send Guidelines"
-msgstr ""
+msgstr "ส่งแนวปฏิบัติ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
-msgstr ""
+msgstr "ส่งอีเมลถึงผู้เขียนข้อความ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr ""
+msgstr "ส่งแนวทางไปยังสมาชิกใหม่"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
-msgstr ""
+msgstr "ส่งถึงผู้ที่สมัครเป็นสมาชิกกลุ่มส่งเมลโดยมีหลักเกณฑ์ของกลุ่ม"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "ส่งถึงผู้ที่ยกเลิกการสมัครจากกลุ่มอีเมล"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1212,7 +1251,7 @@ msgstr "สถานะ"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "ติดต่อกับคอมมูนิตี้ของเรา"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
@@ -1232,7 +1271,7 @@ msgstr "ติดตาม"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "การยืนยันการสมัครสมาชิกไปยังกลุ่มอีเมล"
 
 #. module: mail_group
 #. odoo-python
@@ -1242,6 +1281,8 @@ msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has"
 " been sent. Please contact an administrator to fix this issue."
 msgstr ""
+"ไม่พบเทมเพลต \"mail_group.mail_template_guidelines\" ไม่มีการส่งอีเมล "
+"โปรดติดต่อผู้ดูแลระบบเพื่อแก้ไขปัญหานี้"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1253,40 +1294,40 @@ msgstr "ขอบคุณ"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The \"Authorized Group\" is missing."
-msgstr ""
+msgstr "\"กลุ่มที่ได้รับอนุญาต\" หายไป"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "The email"
-msgstr ""
+msgstr "อีเมล"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "อีเมล \"%s\" ไม่ถูกต้อง"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The group of the message do not match."
-msgstr ""
+msgstr "กลุ่มข้อความไม่ตรงกัน"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is empty."
-msgstr ""
+msgstr "คำอธิบายแนวทางปฏิบัติว่างเปล่า"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is missing."
-msgstr ""
+msgstr "ไม่มีคำอธิบายหลักเกณฑ์"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
@@ -1313,7 +1354,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The notification message is missing."
-msgstr ""
+msgstr "ข้อความแจ้งเตือนหายไป"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
@@ -1332,47 +1373,47 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The partner can not be found."
-msgstr ""
+msgstr "ไม่พบพาร์ทเนอร์"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The record of the message should be the group."
-msgstr ""
+msgstr "การบันทึกข้อความควรเป็นกลุ่ม"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is already subscribed."
-msgstr ""
+msgstr "อีเมลนี้ได้สมัครรับข่าวสารแล้ว"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is not subscribed."
-msgstr ""
+msgstr "อีเมลนี้ไม่ได้สมัครรับข้อมูล"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "This message can not be moderated"
-msgstr ""
+msgstr "ข้อความนี้ไม่สามารถกลั่นกรองได้"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr ""
+msgstr "พาร์ทเนอร์รายนี้สมัครสมาชิกกลุ่มแล้ว"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Those messages can not be moderated: %s."
-msgstr ""
+msgstr "ข้อความเหล่านั้นไม่สามารถกลั่นกรองได้:%s."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1391,56 +1432,56 @@ msgstr "ยกเลิกการเป็นสมาชิก"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr ""
+msgstr "ยกเลิกการสมัคร"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
+msgstr "เมื่อมีคนส่งอีเมลไปยังนามแฝงของรายการ พวกเขาจะแสดงขึ้นที่นี่"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Whitelist"
-msgstr ""
+msgstr "รายการที่อนุญาต"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr ""
+msgstr "รายการที่อนุญาตอ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "สถานะไม่ถูกต้อง (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
+msgstr "คุณสามารถสร้างกฎได้เพียงกฎเดียวสำหรับที่อยู่อีเมลที่ระบุในกลุ่ม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr ""
+msgstr "คุณมีข้อความที่ต้องกลั่นกรอง โปรดดำเนินการต่อไป"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "_______________________________________________"
-msgstr ""
+msgstr "_______________________________________________"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr ""
+msgstr "และส่งอีเมลถึงผู้เขียน ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid "attachments"
-msgstr ""
+msgstr "ไฟล์แนบ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -1450,17 +1491,17 @@ msgstr "โดย"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr ""
+msgstr "เช่น \"จดหมายข่าว\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr ""
+msgstr "กลุ่ม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "has been"
-msgstr ""
+msgstr "ได้รับการ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1468,36 +1509,38 @@ msgid ""
 "members<br/>\n"
 "                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
+"สมาชิก<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"รูปภาพ\" aria-label=\"การเข้าชม\" title=\"การเข้าชม\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
-msgstr ""
+msgstr "ข้อความ/เดือน"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "คำตอบเพิ่มเติม"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "replies"
-msgstr ""
+msgstr "ตอบกลับ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr ""
+msgstr "สมัครรับข้อมูล"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr ""
+msgstr "รายการ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr ""
+msgstr "ยกเลิกการสมัครจาก"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

@@ -1396,6 +1396,79 @@ class TestMrpOrder(TestMrpCommon):
         subassembly_mo2.lot_producing_id = subassembly_sn
         subassembly_mo2.button_mark_done()
 
+    def test_product_produce_duplicate_6(self):
+        """Produce a product for the second time with the same serial
+        after having unbuilt, scrapped and unscrapped the product"""
+        product = self.env["product.product"].create(
+            {
+                "name": "Product",
+                "type": "product",
+                "tracking": "serial",
+            }
+        )
+
+        sn = self.env["stock.lot"].create(
+            {
+                "name": "SN",
+                "product_id": product.id,
+                "company_id": self.env.company.id,
+            }
+        )
+
+        mo1_form = Form(self.env["mrp.production"])
+        mo1_form.product_id = product
+        mo1 = mo1_form.save()
+        mo1.action_confirm()
+        with Form(mo1) as mo:
+            mo.qty_producing = 1
+        mo1.lot_producing_id = sn
+        mo1.button_mark_done()
+
+        ub_form = Form(self.env["mrp.unbuild"])
+        ub_form.mo_id = mo1
+        ub = ub_form.save()
+        ub.action_unbuild()
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'lot_id': sn.id,
+        })
+        scrap.do_scrap()
+
+        unscrap_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'location_id': scrap.scrap_location_id.id,
+            'location_dest_id': scrap.location_id.id,
+        })
+        unscrap_move = self.env['stock.move'].create({
+            'name': 'unscrap',
+            'location_id': scrap.scrap_location_id.id,
+            'location_dest_id': scrap.location_id.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'picking_id': unscrap_picking.id,
+        })
+        self.env['stock.move.line'].create({
+            'move_id': unscrap_move.id,
+            'product_id': unscrap_move.product_id.id,
+            'lot_id': sn.id,
+            'qty_done': 1,
+            'product_uom_id': unscrap_move.product_uom.id,
+            'picking_id': unscrap_move.picking_id.id,
+        })
+        unscrap_picking.action_confirm()
+        unscrap_picking.button_validate()
+
+        mo2_form = Form(self.env["mrp.production"])
+        mo2_form.product_id = product
+        mo2 = mo2_form.save()
+        mo2.action_confirm()
+        with Form(mo2) as mo:
+            mo.qty_producing = 1
+        mo2.lot_producing_id = sn
+        mo2.button_mark_done()
+
     def test_product_produce_12(self):
         """ Checks that, the production is robust against deletion of finished move."""
 
@@ -3650,3 +3723,57 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(mo.move_raw_ids.product_id, component)
+
+    def test_product_variants_in_mo(self):
+        """
+        Test that the moves are corrltly removed when the poduct variant is changed
+        """
+        # Add another attribute line to test efficiency the function bom_line check
+        size_attribute_line = self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.product_7_template.id,
+                 'attribute_id': self.size_attribute.id,
+                 'value_ids': [(6, 0, self.size_attribute.value_ids.ids)]
+             }])
+        c1, c2, c3 = self.env['product.product'].create([{
+            'name': i,
+            'type': 'product',
+        } for i in range(3)])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': c1.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)]}), # Blue color
+                Command.create({
+                    'product_id': c2.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [
+                        (4, self.product_7_attr1_v1.id), # Red color
+                        (4, size_attribute_line.product_template_value_ids[2].id) # size L
+                    ]}),
+                Command.create({
+                    'product_id': c3.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)]}), # Red color
+            ]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        # select a product with a blue and s size attribute
+        mo_form.product_id = self.product_7_template.product_variant_ids[1]
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.product_id, c1)
+        # select a product with a red and L attribute (the compoent C1 should be removed and C2, C3 added)
+        mo_form.product_id = self.product_7_template.product_variant_ids[6]
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.product_id, (c2 | c3))
+        # select the product with red and s attribute (C2 and C3 should be removed and C1 added)
+        mo_form.product_id = self.product_7_template.product_variant_ids[0]
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.product_id, c3)

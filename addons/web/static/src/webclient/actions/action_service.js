@@ -421,6 +421,7 @@ function makeActionManager(env) {
                     name: v.display_name.toString(),
                     type: v.type,
                     multiRecord: v.multiRecord,
+                    accessKey: v.accessKey,
                 };
                 if (view.type === v.type) {
                     viewSwitcherEntry.active = true;

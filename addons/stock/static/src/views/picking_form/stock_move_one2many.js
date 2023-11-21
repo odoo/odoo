@@ -7,10 +7,10 @@ import { ViewButton } from "@web/views/view_button/view_button";
 
 class MoveViewButton extends ViewButton {
     async onClick(ev) {
-        if (this.props.clickParams.name != "action_show_details") {
-            super.onClick(ev);
-        } else {
+        if (this.env.model.root.resModel == "stock.picking" && this.props.clickParams.name == "action_show_details") {
             await this.props.record.saveAndOpenDetails();
+        } else {
+            super.onClick(ev);
         }
     }
 

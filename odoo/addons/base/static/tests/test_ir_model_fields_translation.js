@@ -25,12 +25,22 @@ function checkLoginColumn(translation) {
     ]
 }
 
-tour.register('ir_model_fields_translation_tour', {
+tour.register('ir_model_fields_translation_en_tour', {
+    test: true,
+    url: '/web',
+}, checkLoginColumn('Login'));
+
+tour.register('ir_model_fields_translation_en_tour2', {
+    test: true,
+    url: '/web',
+}, checkLoginColumn('Login2'));
+
+tour.register('ir_model_fields_translation_fr_tour', {
     test: true,
     url: '/web',
 }, checkLoginColumn('Identifiant'));
 
-tour.register('ir_model_fields_translation_tour2', {
+tour.register('ir_model_fields_translation_fr_tour2', {
     test: true,
     url: '/web',
 }, checkLoginColumn('Identifiant2'));

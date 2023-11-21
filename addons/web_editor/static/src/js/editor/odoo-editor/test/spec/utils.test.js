@@ -753,14 +753,12 @@ describe('Utils', () => {
                 stepFunction: async editor => {
                     const sel = document.getSelection();
                     const element = sel.anchorNode;
-                    triggerEvent(editor.editable, 'keydown', { key: '/' });
+                    await triggerEvent(editor.editable, 'keydown', { key: '/' });
                     await insertText(editor, '/');
-                    triggerEvent(editor.editable, 'keyup', { key: '/' });
+                    await triggerEvent(editor.editable, 'keyup', { key: '/' });
                     await insertText(editor, 'h2');
-                    triggerEvent(element, 'keyup', { key: '2' });
-                    await nextTickFrame();
-                    triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
-                    await nextTickFrame();
+                    await triggerEvent(element, 'keyup', { key: '2' });
+                    await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     const activeElement = document.activeElement;
                     setCursorStart(activeElement.lastElementChild);
                     await nextTickFrame();
@@ -1225,7 +1223,7 @@ describe('Utils', () => {
         it('should find all traversed nodes in nested range', async () => {
             await testEditor(BasicEditor, {
                 contentBefore:
-                    '<p><span>ab[</span>cd</p><div><p><span><b>e</b><i>f]g</i>h</span></p></div>',
+                    '<p><span class="a">ab[</span>cd</p><div><p><span class="b"><b>e</b><i>f]g</i>h</span></p></div>',
                 stepFunction: editor => {
                     const editable = editor.editable;
                     const ab = editable.firstChild.firstChild.firstChild;
@@ -1277,7 +1275,7 @@ describe('Utils', () => {
         });
         it('should find that a text node is fully selected', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p><span>ab</span>[cd]</p>',
+                contentBefore: '<p><span class="a">ab</span>[cd]</p>',
                 stepFunction: editor => {
                     const editable = editor.editable;
                     const result = getSelectedNodes(editable);
@@ -1302,7 +1300,7 @@ describe('Utils', () => {
         it('should find all selected nodes in nested range', async () => {
             await testEditor(BasicEditor, {
                 contentBefore:
-                    '<p><span>ab[</span>cd</p><div><p><span><b>e</b><i>f]g</i>h</span></p></div>',
+                    '<p><span class="a">ab[</span>cd</p><div><p><span class="b"><b>e</b><i>f]g</i>h</span></p></div>',
                 stepFunction: editor => {
                     const editable = editor.editable;
                     const cd = editable.firstChild.lastChild;

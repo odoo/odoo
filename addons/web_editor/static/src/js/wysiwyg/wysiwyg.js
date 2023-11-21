@@ -440,7 +440,10 @@ const Wysiwyg = Widget.extend({
                         $target.data('popover-widget-initialized', this.linkPopover);
                     })();
                 }
-                $target.focus();
+                // Setting the focus on the closest contenteditable element
+                // resets the selection inside that element if no selection
+                // exists.
+                $target.closest('[contenteditable=true]').focus();
                 if ($target.closest('#wrapwrap').length && this.snippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
@@ -1175,7 +1178,6 @@ const Wysiwyg = Widget.extend({
                 this.odooEditor.historyUnpauseSteps();
                 this.odooEditor.historyStep();
                 link = linkWidget.$link[0];
-                this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
                 setSelection(link, 0, link, link.childNodes.length, false);
                 // Focus the link after the dialog element is removed because
                 // if the dialog element is still in the DOM at the time of

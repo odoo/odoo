@@ -600,7 +600,7 @@ class IrModelFields(models.Model):
         """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
         names = self.related.split(".")
         last = len(names) - 1
-        model_name = self.model
+        model_name = self.model or self.model_id.model
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
@@ -942,10 +942,10 @@ class IrModelFields(models.Model):
 
         # names of the models to patch
         patched_models = set()
-        if vals and self:
-            translate_only = all(self._fields[field_name].translate for field_name in vals)
+        translate_only = all(self._fields[field_name].translate for field_name in vals)
+        if vals and self and not translate_only:
             for item in self:
-                if item.state != 'manual' and not translate_only:
+                if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                       'Please modify them through Python code, '
                                       'preferably through a custom addon!'))
@@ -1002,7 +1002,7 @@ class IrModelFields(models.Model):
                             sql.Identifier(f'{table}_{newname}_index'),
                         ))
 
-        if column_rename or patched_models:
+        if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             self.pool.setup_models(self._cr)

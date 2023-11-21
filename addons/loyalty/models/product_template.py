@@ -18,5 +18,5 @@ class ProductTemplate(models.Model):
             raise UserError(_(
                 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
                 " Please archive it instead.",
-                name=product.name
+                name=product.with_context(display_default_code=False).display_name
             ))

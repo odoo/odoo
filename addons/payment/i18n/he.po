@@ -7,6 +7,7 @@
 # yacov mosbacher <ymosba@gmail.com>, 2022
 # Jonathan Spier, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
 # ilan kl <ilan@qaroads.co.il>, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
@@ -14,19 +15,19 @@
 # Amit Spilman <amit@laylinetech.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Yihya Hugirat <hugirat@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
 # NoaFarkash, 2022
+# yael terner, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: yael terner, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -320,11 +321,6 @@ msgid "Bank"
 msgstr "בנק"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "חשבון בנק"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "שם בנק"
@@ -443,11 +439,6 @@ msgstr "קוד"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "צבע"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "אסמכתה"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -760,14 +751,10 @@ msgid "Full Only"
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "צור קישור לתשלום"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "צור קישור לתשלום מכירות"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -911,7 +898,7 @@ msgstr "הרגע בוצע"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "מסלול נחיתה"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -931,7 +918,7 @@ msgstr "שינוי אחרון ב"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "תאריך שינוי המדינה האחרון"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
@@ -1345,16 +1332,6 @@ msgid "Please set an amount smaller than %s."
 msgstr "אנא הגדר סכום הנמוך מ %s."
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "אנא השתמש בפרטי ההעברה הבאים"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "אנא השתמש בשם ההזמנה כפניה להתקשרות."
-
-#. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
@@ -1379,12 +1356,12 @@ msgstr "ספק"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
-msgstr ""
+msgstr "הפניה לספק"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__provider_ids
 msgid "Providers"
-msgstr ""
+msgstr "ספקים"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
@@ -1448,7 +1425,7 @@ msgstr "החזרים כספיים"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "מס' החזרים"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -2032,6 +2009,15 @@ msgstr "העברה בנקאית"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
 msgid "You cannot publish a disabled provider."
 msgstr ""
 
@@ -2138,6 +2124,7 @@ msgstr "התשלום שלך התקבל אך יש לאשר אותו באופן י
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

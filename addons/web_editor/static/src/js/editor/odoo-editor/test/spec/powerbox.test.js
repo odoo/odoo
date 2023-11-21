@@ -26,8 +26,28 @@ describe('Powerbox', () => {
                 stepFunction: async editor => {
                     await insertText(editor, '/');
                     await insertText(editor, 'head');
-                    triggerEvent(editor.editable, 'keyup');
+                    await triggerEvent(editor.editable, 'keyup');
                     window.chai.expect(getCurrentCommandNames(editor.powerbox)).to.eql(['Heading 1', 'Heading 2', 'Heading 3']);
+                },
+            });
+        });
+        it('should not filter the powerbox contents when collaborator type on two different blocks', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '/');
+                    await insertText(editor, 'heading');
+                    setSelection(editor.editable.firstChild, 1);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    // Mimick a collaboration scenario where another user types
+                    // random text, using `insert` as it won't trigger keyup.
+                    editor.execCommand('insert', 'random text');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    setSelection(editor.editable.lastChild, 9);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    await insertText(editor, '1');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    window.chai.expect(getCurrentCommandNames(editor.powerbox)).to.eql(['Heading 1']);
                 },
             });
         });
@@ -38,10 +58,22 @@ describe('Powerbox', () => {
                     editor.powerbox.el.classList.add('yo');
                     await insertText(editor, '/');
                     await insertText(editor, 'head');
-                    triggerEvent(editor.editable, 'keyup');
-                    triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    await triggerEvent(editor.editable, 'keyup');
+                    await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                 },
                 contentAfter: '<h1>ab[]</h1>',
+            });
+        });
+        it('should close the powerbox if keyup event is called on other block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async (editor) => {
+                    await insertText(editor, '/');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    setSelection(editor.editable.firstChild, 1);
+                    await triggerEvent(editor.editable, 'keyup');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                },
             });
         });
     });
@@ -52,8 +84,8 @@ describe('Powerbox', () => {
                 stepFunction: async editor => {
                     await insertText(editor,'/');
                     await insertText(editor, 'table');
-                    triggerEvent(editor.editable,'keyup');
-                    triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                    await triggerEvent(editor.editable,'keyup');
+                    await triggerEvent(editor.editable,'keydown', {key: 'Enter'});
                 },
                 contentAfter: `<table class="table table-bordered o_table"><tbody><tr><td>[]<p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`,
             });
@@ -107,19 +139,20 @@ describe('Powerbox', () => {
             });
             powerbox.open();
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('1');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('2');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('3');
-            triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('2');
-            triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('1');
             powerbox.destroy();
             editable.remove();
         });
         it('should execute command on press Enter', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             const powerbox = new Powerbox({
                 categories: [],
@@ -130,12 +163,14 @@ describe('Powerbox', () => {
                 ],
                 editable,
             });
+            setSelection(editable, 0);
             powerbox.open();
             window.chai.expect(editable.innerText).to.eql('');
-            triggerEvent(editable, 'keydown', { key: 'Enter'});
+            await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('1');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
-            triggerEvent(editable, 'keydown', { key: 'Enter'});
+            powerbox.open();
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('2');
             powerbox.destroy();
             editable.remove();
@@ -196,6 +231,7 @@ describe('Powerbox', () => {
         });
         it('should filter commands with filter text', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             editable.append(document.createTextNode('original text'));
             setSelection(editable.firstChild, 13);
@@ -216,24 +252,25 @@ describe('Powerbox', () => {
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // filter: '1'
             editable.append(document.createTextNode('1'));
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'b1y']);
             // filter: ''
             editable.lastChild.remove();
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // filter: 'a'
             editable.append(document.createTextNode('a'));
-            triggerEvent(editable, 'keyup'); // filter: 'a'.
+            await triggerEvent(editable, 'keyup'); // filter: 'a'.
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3']);
             editable.append(document.createTextNode('1'));
-            triggerEvent(editable, 'keyup'); // filter: 'a1'.
+            await triggerEvent(editable, 'keyup'); // filter: 'a1'.
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1']);
             powerbox.destroy();
             editable.remove();
         });
         it('should close the Powerbox on remove last filter text with Backspace', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             editable.append(document.createTextNode('1'));
             setSelection(editable.firstChild, 13);
@@ -255,19 +292,19 @@ describe('Powerbox', () => {
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // Text: '1y' -> filter: 'y'
             editable.append(document.createTextNode('x'));
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['b2x', 'b3x']);
             // Text: '1'
             editable.lastChild.remove();
-            triggerEvent(editable, 'keydown', { key: 'Backspace' });
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keydown', { key: 'Backspace' });
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             window.chai.expect(powerbox.isOpen).to.eql(true);
             window.chai.expect(powerbox.el.style.display).not.to.eql('none');
             // Text: ''
             editable.lastChild.remove();
-            triggerEvent(editable, 'keydown', { key: 'Backspace' });
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keydown', { key: 'Backspace' });
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(powerbox.isOpen).to.eql(false);
             window.chai.expect(powerbox.el.style.display).to.eql('none');
             powerbox.destroy();
@@ -288,7 +325,7 @@ describe('Powerbox', () => {
             powerbox.open();
             window.chai.expect(powerbox.isOpen).to.eql(true);
             window.chai.expect(powerbox.el.style.display).not.to.eql('none');
-            triggerEvent(editable, 'keydown', { key: 'Escape' });
+            await triggerEvent(editable, 'keydown', { key: 'Escape' });
             window.chai.expect(powerbox.isOpen).to.eql(false);
             window.chai.expect(powerbox.el.style.display).to.eql('none');
             powerbox.destroy();

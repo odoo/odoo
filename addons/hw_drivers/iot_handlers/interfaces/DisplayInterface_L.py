@@ -3,8 +3,6 @@
 
 from re import sub, finditer
 import subprocess
-from vcgencmd import Vcgencmd
-import RPi.GPIO as GPIO
 
 from odoo.addons.hw_drivers.interface import Interface
 
@@ -15,22 +13,20 @@ class DisplayInterface(Interface):
 
     def get_devices(self):
         display_devices = {}
+        displays = subprocess.check_output(['tvservice', '-l']).decode()
         x_screen = 0
-        hdmi_port = {'hdmi_0' : 2}
-        rpi_type = GPIO.RPI_INFO.get('TYPE')
-        # RPI 3B+ response on for booth hdmi port
-        if 'Pi 4' in rpi_type:
-            hdmi_port.update({'hdmi_1': 7})
-
-        for hdmi in hdmi_port:
-            power_state_hdmi = Vcgencmd().display_power_state(hdmi_port.get(hdmi))
-            if power_state_hdmi == 'on':
+        for match in finditer(r'Display Number (\d), type HDMI (\d)', displays):
+            display_id, hdmi_id = match.groups()
+            tvservice_output = subprocess.check_output(['tvservice', '-nv', display_id]).decode().strip()
+            if tvservice_output:
+                display_name = tvservice_output.split('=')[1]
+                display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
                 iot_device = {
-                    'identifier': hdmi,
-                    'name': 'Display hdmi ' + str(x_screen),
+                    'identifier': display_identifier,
+                    'name': display_name,
                     'x_screen': str(x_screen),
                 }
-                display_devices[hdmi] = iot_device
+                display_devices[display_identifier] = iot_device
                 x_screen += 1
 
         if not len(display_devices):

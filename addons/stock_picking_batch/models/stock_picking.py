@@ -250,6 +250,9 @@ class StockPicking(models.Model):
             log_message = _('Assigned to %s Responsible', (pick.batch_id._get_html_link()))
             pick.message_post(body=log_message)
 
+    def _package_move_lines(self):
+        return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines()
+
     def action_view_batch(self):
         self.ensure_one()
         return {

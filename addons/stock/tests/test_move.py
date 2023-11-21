@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import TransactionCase
 
 
@@ -2010,6 +2010,21 @@ class StockMove(TransactionCase):
         move_partial.product_uom_qty = 3.0
         move_partial._action_assign()
         self.assertEqual(move_partial.state, 'assigned')
+
+    def test_product_tree_views(self):
+        """Test to make sure that there are no ACLs errors in users with basic permissions."""
+        self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 3.0)
+        user = new_test_user(self.env, login="test-basic-user")
+        product_view = Form(
+            self.env["product.product"].with_user(user).browse(self.product.id),
+            view="product.product_product_tree_view",
+        )
+        self.assertEqual(product_view.name, self.product.name)
+        template_view = Form(
+            self.env["product.template"].with_user(user).browse(self.product.product_tmpl_id.id),
+            view="product.product_template_tree_view",
+        )
+        self.assertEqual(template_view.name, self.product.product_tmpl_id.name)
 
     def test_availability_9(self):
         """ Test the assignment mechanism when the product quantity is increase

@@ -252,7 +252,7 @@ class Contract(models.Model):
             self._assign_open_contract()
         today = fields.Date.today()
         for contract in self:
-            if contract == contract.employee_id.contract_id \
+            if contract == contract.employee_id.sudo().contract_id \
                 and old_state[contract.id] == 'open' \
                 and new_state[contract.id] != 'open':
                 running_contract = self.env['hr.contract'].search([
@@ -261,7 +261,7 @@ class Contract(models.Model):
                     ('state', '=', 'open'),
                 ]).filtered(lambda c: c.date_start <= today and (not c.date_end or c.date_end >= today))
                 if running_contract:
-                    contract.employee_id.contract_id = running_contract[0]
+                    contract.employee_id.sudo().contract_id = running_contract[0]
         if vals.get('state') == 'close':
             for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)

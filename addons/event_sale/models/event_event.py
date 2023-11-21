@@ -35,7 +35,8 @@ class Event(models.Model):
         if self.ids:
             event_subtotals = self.env['sale.order.line']._read_group(
                 [('event_id', 'in', self.ids),
-                 ('price_subtotal', '!=', 0)],
+                 ('price_subtotal', '!=', 0),
+                 ('state', '!=', 'cancel')],
                 ['event_id', 'currency_id', 'price_subtotal:sum'],
                 ['event_id', 'currency_id'],
                 lazy=False

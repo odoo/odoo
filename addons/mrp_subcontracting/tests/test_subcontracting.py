@@ -724,6 +724,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.quantity_done = qty
             subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
             self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+            self.assertEqual(move.product_uom_qty, quantities[0])
 
         picking_receipt.button_validate()
         self.assertEqual(move.product_uom_qty, quantities[-1])
@@ -749,6 +750,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.quantity_done = qty
             subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
             self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+            self.assertEqual(move.product_uom_qty, qty)
 
         picking_receipt.button_validate()
         self.assertEqual(move.product_uom_qty, quantities[-1])
@@ -850,6 +852,75 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_qty': 5, 'state': 'done'},
             {'product_qty': 2, 'state': 'done'},
             {'product_qty': 3, 'state': 'cancel'},
+        ])
+
+    def test_decrease_quantity_done(self):
+        self.bom.consumption = 'flexible'
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 10.0,
+                'product_uom': self.finished.uom_id.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+
+        receipt.action_confirm()
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 0.0, 'product_qty': 10.0, 'state': 'confirmed'},
+        ])
+
+        receipt.move_ids.quantity_done = 6
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertEqual(receipt.move_ids.product_uom_qty, 10.0, 'Demand should not be impacted')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 6.0, 'product_qty': 6.0, 'state': 'to_close'},
+            {'qty_producing': 4.0, 'product_qty': 4.0, 'state': 'to_close'},
+        ])
+
+        receipt.move_ids.quantity_done = 9
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertEqual(receipt.move_ids.product_uom_qty, 10.0, 'Demand should not be impacted')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 6.0, 'product_qty': 6.0, 'state': 'to_close'},
+            {'qty_producing': 3.0, 'product_qty': 3.0, 'state': 'to_close'},
+            {'qty_producing': 1.0, 'product_qty': 1.0, 'state': 'to_close'},
+        ])
+
+        receipt.move_ids.quantity_done = 7
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertEqual(receipt.move_ids.product_uom_qty, 10.0, 'Demand should not be impacted')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 6.0, 'product_qty': 6.0, 'state': 'to_close'},
+            {'qty_producing': 1.0, 'product_qty': 1.0, 'state': 'to_close'},
+            {'qty_producing': 3.0, 'product_qty': 3.0, 'state': 'to_close'},
+        ])
+
+        receipt.move_ids.quantity_done = 4
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertEqual(receipt.move_ids.product_uom_qty, 10.0, 'Demand should not be impacted')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 4.0, 'product_qty': 4.0, 'state': 'to_close'},
+            {'qty_producing': 1.0, 'product_qty': 1.0, 'state': 'cancel'},
+            {'qty_producing': 6.0, 'product_qty': 6.0, 'state': 'to_close'},
+        ])
+
+        receipt.move_ids.quantity_done = 0
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertEqual(receipt.move_ids.product_uom_qty, 10.0, 'Demand should not be impacted')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 4.0, 'product_qty': 4.0, 'state': 'cancel'},
+            {'qty_producing': 1.0, 'product_qty': 1.0, 'state': 'cancel'},
+            {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
 
 
