@@ -143,6 +143,21 @@ export class Product extends PosModel {
             return formattedUnitPrice;
         }
     }
+
+    async openConfigurator({ initQuantity = 1 }) {
+        const attributes = this.attribute_line_ids
+            .map((id) => this.pos.attributes_by_ptal_id[id])
+            .filter((attr) => attr !== undefined);
+        return await makeAwaitable(this.env.services.dialog, ProductConfiguratorPopup, {
+            product: this,
+            attributes: attributes,
+        });
+    }
+
+    isConfigurable() {
+        return this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id);
+    }
+
     async getAddProductOptions(code) {
         let price_extra = 0.0;
         let draftPackLotLines, packLotLinesToEdit, attribute_value_ids;
@@ -154,28 +169,21 @@ export class Product extends PosModel {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
         }
 
-        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
-            const attributes = this.attribute_line_ids
-                .map((id) => this.pos.attributes_by_ptal_id[id])
-                .filter((attr) => attr !== undefined);
-            const payload = await makeAwaitable(
-                this.env.services.dialog,
-                ProductConfiguratorPopup,
-                {
-                    product: this,
-                    attributes: attributes,
-                }
-            );
-            if (!payload) {
+        if (this.isConfigurable()) {
+            const payload = await this.openConfigurator({ initQuantity: quantity });
+            if (payload) {
+                attribute_value_ids = payload.attribute_value_ids;
+                attribute_custom_values = payload.attribute_custom_values;
+                price_extra += payload.price_extra;
+                quantity = payload.quantity;
+            } else {
                 return;
             }
-            attribute_value_ids = payload.attribute_value_ids;
-            attribute_custom_values = payload.attribute_custom_values;
-            price_extra += payload.price_extra;
         }
         if (this.combo_ids.length) {
             comboLines = await makeAwaitable(this.env.services.dialog, ComboConfiguratorPopup, {
                 product: this,
+                keepBehind: true,
             });
             if (!comboLines) {
                 return;
@@ -399,7 +407,7 @@ export class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_type = json.price_type;
+        this.price_type = json.price_type || "original";
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.attribute_value_ids = json.attribute_value_ids || [];
@@ -431,6 +439,7 @@ export class Orderline extends PosModel {
         this.skipChange = json.skip_change;
         this.combo_line_ids = json.combo_line_ids;
         this.combo_parent_id = json.combo_parent_id;
+        this.comboLine = this.pos.db.combo_line_by_id[json.combo_line_id];
     }
     clone() {
         var orderline = new Orderline(
@@ -786,6 +795,7 @@ export class Orderline extends PosModel {
             price_type: this.price_type,
             combo_line_ids: this.comboLines?.map((line) => line.id || line.cid),
             combo_parent_id: this.comboParent?.id || this.comboParent?.cid,
+            combo_line_id: this.comboLine?.id,
         };
     }
 
@@ -1918,12 +1928,45 @@ export class Order extends PosModel {
         var self = this;
         this.pricelist = pricelist;
 
-        var lines_to_recompute = this.get_orderlines().filter(
-            (line) => line.price_type === "original"
+        const orderlines = this.get_orderlines();
+
+        const lines_to_recompute = orderlines.filter(
+            (line) =>
+                line.price_type === "original" && !(line.comboLines?.length || line.comboParent)
         );
         lines_to_recompute.forEach((line) => {
             line.set_unit_price(
                 line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
+            );
+            self.fix_tax_included_price(line);
+        });
+        const combo_parent_lines = orderlines.filter(
+            (line) => line.price_type === "original" && line.comboLines?.length
+        );
+        const attributes_prices = {};
+        combo_parent_lines.forEach((parentLine) => {
+            attributes_prices[parentLine.id] = this.compute_child_lines(
+                parentLine.product,
+                parentLine.comboLines.map((childLine) => {
+                    const comboLineCopy = { ...childLine.comboLine };
+                    if (childLine.attribute_value_ids) {
+                        comboLineCopy.configuration = {
+                            attribute_value_ids: childLine.attribute_value_ids,
+                        };
+                    }
+                    return comboLineCopy;
+                }),
+                pricelist
+            );
+        });
+        const combo_children_lines = orderlines.filter(
+            (line) => line.price_type === "original" && line.comboParent
+        );
+        combo_children_lines.forEach((line) => {
+            line.set_unit_price(
+                attributes_prices[line.comboParent.id].find(
+                    (item) => item.comboLine.id === line.comboLine.id
+                ).price
             );
             self.fix_tax_included_price(line);
         });
@@ -2025,46 +2068,56 @@ export class Order extends PosModel {
             this.select_orderline(line);
         }
     }
-    async addComboLines(comboParent, options) {
-        const parentLstPrice = comboParent.product.lst_price;
-        const originalTotal = options.comboLines.reduce((acc, comboLine) => {
+
+    compute_child_lines(comboParentProduct, comboLines, pricelist) {
+        const combolines = [];
+        const parentLstPrice = comboParentProduct.get_price(pricelist, 1);
+        const originalTotal = comboLines.reduce((acc, comboLine) => {
             const originalPrice = this.pos.db.combo_by_id[comboLine.combo_id[0]].base_price;
             return acc + originalPrice;
         }, 0);
 
         let remainingTotal = parentLstPrice;
 
-        for (let i = 0; i < options.comboLines.length; i++) {
-            const comboLine = options.comboLines[i];
-            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
+        for (const comboLine of comboLines) {
             const combo = this.pos.db.combo_by_id[comboLine.combo_id[0]];
             let priceUnit = round_di(
                 (combo.base_price * parentLstPrice) / originalTotal,
                 this.pos.dp["Product Price"]
             );
             remainingTotal -= priceUnit;
-            if (i == options.comboLines.length - 1) {
+            if (comboLine == comboLines[comboLines.length - 1]) {
                 priceUnit += remainingTotal;
             }
-            await this.pos.addProductToCurrentOrder(product, {
-                price: priceUnit,
-                comboParent,
-            });
+            const attribute_value_ids = comboLine.configuration?.attribute_value_ids;
+            const attributesPriceExtra = (attribute_value_ids ?? [])
+                .map((id) => this.pos.db.attribute_value_by_id[id]?.price_extra || 0)
+                .reduce((acc, price) => acc + price, 0);
+            const totalPriceExtra = priceUnit + attributesPriceExtra + comboLine.combo_price;
+            combolines.push({ comboLine: comboLine, price: totalPriceExtra, attribute_value_ids });
         }
+        return combolines;
+    }
 
-        // Take into account the extra prices.
-        const childLines = this.get_orderlines().filter(
-            (l) => l.comboParent?.uuid === comboParent.uuid
+    async addComboLines(comboParent, options) {
+        const comboLinesPrices = this.compute_child_lines(
+            comboParent.product,
+            options.comboLines,
+            this.pricelist
         );
-        for (const comboLine of options.comboLines) {
-            const presentLine = childLines.find((l) => l.product.id === comboLine.product_id[0]);
-            if (presentLine) {
-                const attributesPriceExtra = (presentLine.attribute_value_ids ?? [])
-                    .map((id) => this.pos.db.attribute_value_by_id[id]?.price_extra || 0)
-                    .reduce((acc, price) => acc + price, 0);
-                const totalPriceExtra = attributesPriceExtra + comboLine.combo_price;
-                presentLine.set_unit_price(presentLine.get_unit_price() + totalPriceExtra);
-            }
+        for (const line of comboLinesPrices) {
+            // Important to call addProductFromUi instead of addProductToCurrentOrder
+            // to avoid showing the ProductConfiguratorPopup.
+            // Product configuration is already done during the setup of the combo.
+            await this.pos.addProductFromUi(
+                this.pos.db.product_by_id[line.comboLine.product_id[0]],
+                {
+                    price: line.price,
+                    comboParent,
+                    comboLine: line.comboLine,
+                    attribute_value_ids: line.attribute_value_ids,
+                }
+            );
         }
     }
     set_orderline_options(orderline, options) {
@@ -2074,6 +2127,7 @@ export class Order extends PosModel {
         }
         if (options.comboParent) {
             orderline.comboParent = options.comboParent;
+            orderline.comboLine = options.comboLine;
             orderline.comboParent.comboLines.push(orderline);
         }
         if (options.quantity !== undefined) {
