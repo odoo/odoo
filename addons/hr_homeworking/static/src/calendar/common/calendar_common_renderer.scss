@@ -1,10 +1,9 @@
 .o_worklocation_btn {
+    min-height: o-to-rem(20px);
+    margin-top: 1em;
+    color: var(--body-color);
     .o_worklocation_text, .o_worklocation_line {
         box-shadow: 0 1px 0 rgba(0,0,0, 0.3)
-    }
-
-    .o_worklocation_text {
-        font-size: o-to-rem(10px);
     }
 }
 
@@ -12,13 +11,16 @@
     height: 3px;
 }
 
-.fc-event.o_homework_event {
+/* .fc-event.o_homework_event {
     background-color: transparent;
     border-color: transparent;
     box-shadow: none;
     cursor: pointer;
 
-    .o_homework_multi .o_homeworking_content .fa {
+} */
+.o_homework_multi {
+    text-transform: none;
+    &.o_homeworking_content .fa {
         height: var(--o-homework-icon-size, 20px);
         aspect-ratio: 1;
         font-size: var(--o-homework-icon-size, 1.2rem);
@@ -31,8 +33,8 @@
 
 // ----- View specific
 .fc-timeGridDay-view {
-    .o_worklocation_btn .o_worklocation_line{
-        display: none;
+    .o_worklocation_btn {
+        margin-top: 0px;
     }
 }
 
