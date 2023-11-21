@@ -2,10 +2,10 @@
 
 import {
     click,
+    clickOpenedDropdownItem,
     getFixture,
     nextTick,
     editInput,
-    selectDropdownItem,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -261,6 +261,11 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.test("SelectCreateDialog cascade x2many in create mode", async function (assert) {
         assert.expect(5);
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
         serverData.views = {
             "partner,false,form": `
                 <form>
@@ -319,7 +324,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, ".o_field_x2many_list_row_add a");
 
         await editInput(target, ".o_field_widget[name=instrument] input", "ABC");
-        await selectDropdownItem(target, "instrument", "Create and edit...");
+        await clickOpenedDropdownItem(target, "instrument", "Create and edit...");
 
         assert.containsOnce(target, ".modal .modal-lg");
 
