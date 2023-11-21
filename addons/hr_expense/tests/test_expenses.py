@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+
 from freezegun import freeze_time
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
@@ -1179,3 +1181,91 @@ class TestExpenses(TestExpenseCommon):
         self.env['hr.expense'].create_expense_from_attachments(attachment.id)
         expense = self.env['hr.expense'].search([], order='id desc', limit=1)
         self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
+
+    def test_expense_sheet_attachments_sync(self):
+        """
+        Test that the hr.expense.sheet attachments stay in sync with the attachments associated with the expense lines
+        Syncing should happen when:
+        - When adding/removing expense_line_ids on a hr.expense.sheet <-> changing sheet_id on an expense
+        - When deleting an expense that is associated with an hr.expense.sheet
+        - When adding/removing an attachment of an expense that is associated with an hr.expense.sheet
+        """
+        def assert_attachments_are_synced(sheet, attachments_on_sheet, sheet_has_attachment):
+            if sheet_has_attachment:
+                self.assertTrue(bool(attachments_on_sheet), "Attachment that belongs to the hr.expense.sheet only was removed unexpectedly")
+            self.assertSetEqual(
+                set(sheet.expense_line_ids.attachment_ids.mapped('checksum')),
+                set((sheet.attachment_ids - attachments_on_sheet).mapped('checksum')),
+                "Attachments between expenses and their sheet is not in sync.",
+            )
+
+        for sheet_has_attachment in (False, True):
+            expense_1, expense_2, expense_3 = self.env['hr.expense'].create([{
+                'name': 'expense_1',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 1000,
+            }, {
+                'name': 'expense_2',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 999,
+            }, {
+                'name': 'expense_3',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 998,
+            }])
+            self.env['ir.attachment'].create([{
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_2.txt",
+                'datas': base64.b64encode(b'other content'),
+                'res_id': expense_2.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_3.txt",
+                'datas': base64.b64encode(b'different content'),
+                'res_id': expense_3.id,
+                'res_model': 'hr.expense',
+            }])
+
+            sheet = self.env['hr.expense.sheet'].create({
+                'company_id': self.env.company.id,
+                'employee_id': self.expense_employee.id,
+                'name': 'test sheet',
+                'expense_line_ids': [Command.set([expense_1.id, expense_2.id, expense_3.id])],
+            })
+
+            sheet_attachment = self.env['ir.attachment'].create({
+                'name': "test_file_4.txt",
+                'datas': base64.b64encode(b'yet another different content'),
+                'res_id': sheet.id,
+                'res_model': 'hr.expense.sheet',
+            }) if sheet_has_attachment else self.env['ir.attachment']
+
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_1.attachment_ids.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            self.env['ir.attachment'].create({
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            })
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = False
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = sheet
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.expense_line_ids = [Command.set([expense_1.id, expense_3.id])]
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_3.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.attachment_ids.filtered(
+                lambda att: att.checksum in sheet.expense_line_ids.attachment_ids.mapped('checksum')
+            ).unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
