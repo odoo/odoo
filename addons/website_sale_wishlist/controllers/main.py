@@ -8,6 +8,12 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleWishlist(WebsiteSale):
 
+    def _get_additional_shop_values(self, values):
+        """ Hook to update values used for rendering website_sale.products template """
+        vals = super()._get_additional_shop_values(values)
+        vals['products_in_wishlist'] = request.env['product.wishlist'].current().product_id.product_tmpl_id
+        return vals
+
     @route(['/shop/wishlist/add'], type='json', auth="public", website=True)
     def add_to_wishlist(self, product_id, **kw):
         website = request.website
