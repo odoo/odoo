@@ -188,7 +188,7 @@ class HrExpense(models.Model):
         self.ensure_one()
         return self.tax_ids.compute_all(price_unit=price, currency=self.currency_id, quantity=quantity, product=self.product_id, partner=self.employee_id.user_id.partner_id)
 
-    @api.depends("sheet_id.account_move_id.line_ids")
+    @api.depends('sheet_id.account_move_id.line_ids.amount_residual')
     def _compute_amount_residual(self):
         for expense in self:
             if not expense.sheet_id:
@@ -984,12 +984,11 @@ class HrExpenseSheet(models.Model):
             sheet.total_amount_taxes = sum(sheet.expense_line_ids.mapped('amount_tax_company'))
             sheet.untaxed_amount = sheet.total_amount - sheet.total_amount_taxes
 
-    @api.depends("account_move_id.line_ids")
+    @api.depends('account_move_id.amount_residual_signed')
     def _compute_amount_residual(self):
         for sheet in self:
-            payment_term_lines = sheet.account_move_id.sudo().line_ids \
-                .filtered(lambda line: line.expense_id in sheet.expense_line_ids and line.account_internal_type in ('receivable', 'payable'))
-            sheet.amount_residual = -sum(payment_term_lines.mapped('amount_residual'))
+            # Expense moves are outbound, so amount_residual_signed are negative
+            sheet.amount_residual = -sheet.account_move_id.amount_residual_signed
 
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):
