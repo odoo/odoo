@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 class MassMailController(http.Controller):
 
     def _valid_unsubscribe_token(self, mailing_id, res_id, email, token):
-        if not (mailing_id and res_id and email and token):
+        if not (mailing_id and res_id is not None and email and token):
             return False
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         return consteq(mailing._unsubscribe_token(res_id, email), token)
