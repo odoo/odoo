@@ -271,8 +271,12 @@ function removeUnwantedAttrsFromTemplates(attrs) {
     const attrPrefixes = ["", "t-att-", "t-attf-"];
     for (const attrName of attrs) {
         for (const prefix of attrPrefixes) {
-            for (const element of templates.querySelectorAll(`*[${prefix}${attrName}]`)) {
-                replaceAttr(attrName, prefix, element);
+            for (const [name, template] of Object.entries(templates)) {
+                const parsedTemplate = new DOMParser().parseFromString(template, "text/xml");
+                for (const element of parsedTemplate.querySelectorAll(`*[${prefix}${attrName}]`)) {
+                    replaceAttr(attrName, prefix, element);
+                }
+                templates[name] = parsedTemplate.documentElement.outerHTML;
             }
         }
     }
@@ -368,7 +372,7 @@ export async function setupTests() {
     await whenReady();
 
     // alt attribute causes issues with scroll tests. Indeed, alt is
-    // displayed between the time we scroll programatically and the time
+    // displayed between the time we scroll programmatically and the time
     // we assert for the scroll position. The src attribute is removed
     // as well to make sure images won't trigger a GET request on the
     // server.

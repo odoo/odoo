@@ -11,7 +11,7 @@ import logging
 import odoo
 from odoo.tests.common import BaseCase, HttpCase, tagged
 from odoo.tools import mute_logger
-from odoo.addons.base.models.assetsbundle import AssetsBundle, WebAsset
+from odoo.addons.base.models.assetsbundle import AssetsBundle, WebAsset, XMLAssetError
 
 
 _logger = logging.getLogger(__name__)
@@ -70,76 +70,101 @@ class TestStaticInheritanceCommon(odoo.tests.TransactionCase):
                 'media': None,
             })
         asset = AssetsBundle('web.test_bundle', files, env=self.env, css=False, js=True, debug_assets=debug)
-        content = asset.xml(show_inherit_info=debug)
-        return f'<templates xml:space="preserve">\n{content}\n</templates>'
+        return asset.xml(show_inherit_info=debug)
 
     # Custom Assert
     def assertXMLEqual(self, output, expected):
-        self.assertTrue(output)
-        self.assertTrue(expected)
-        self.assertEqual(etree.fromstring(output), etree.fromstring(expected))
+        self.assertEqual(len(output), len(expected))
+        for key in output:
+            self.assertEqual(len(output[key]), len(expected[key]))
+            for template_name in output[key]:
+                self.assertEqual(len(output[key][template_name]), len(expected[key][template_name]))
+                self.assertEqual(output[key][template_name][0], etree.fromstring(expected[key][template_name][0]))
+                for i in range(1, len(output[key][template_name])):
+                    self.assertEqual(output[key][template_name][i], expected[key][template_name][i])
 
 @tagged('assets_bundle', 'static_templates')
 class TestStaticInheritance(TestStaticInheritanceCommon):
     # Actual test cases
     def test_static_with_debug_mode(self):
-        expected = """
-            <templates xml:space="preserve">
-
-                <!-- Filepath: /module_1/static/xml/file_1.xml -->
-                <form t-name="template_1_1" random-attr="gloria">
-                    <span>Ho !</span>
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-
-                <!-- Filepath: /module_1/static/xml/file_1.xml => /module_2/static/xml/file_1.xml -->
-                <t t-name="template_1_2">
-                    <div>And I grew strong</div>
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <span>Ho !</span>
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<t t-name="template_1_2">
+                        <div>And I grew strong</div>
                         <!-- Filepath: /module_2/static/xml/file_1.xml ; position="after" ; {'expr': '//div[1]'} --><div>And I learned how to get along</div>
-                </t>
+                    </t>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml']
+                ],
+            },
+            "module_2": {
+                "template_2_1": [
+                    """<form t-name="template_2_1" random-attr="gloria"><!-- Filepath: /module_2/static/xml/file_1.xml ; position="attributes" ; {'expr': '//span'} -->
+                        <span type="Scary screams">Ho !</span>
+                        <div>At first I was afraid</div>
+                            <!-- Filepath: /module_2/static/xml/file_1.xml ; position="after" ; {'expr': '//div[1]'} --><div>I was petrified</div>
+                            <!-- Filepath: /module_2/static/xml/file_1.xml ; position="after" ; {'expr': '//div[2]'} --><div>But then I spent so many nights thinking how you did me wrong</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml'],
+                ],
+                "template_2_2": [
+                    """<div t-name="template_2_2">
+                        <div>And I learned how to get along</div>
+                    </div>""",
+                    ['/module_2/static/xml/file_1.xml'],
+                ],
+            },
+        }
 
-                <!-- Filepath: /module_1/static/xml/file_1.xml => /module_2/static/xml/file_1.xml -->
-                <form t-name="template_2_1" random-attr="gloria"><!-- Filepath: /module_2/static/xml/file_1.xml ; position="attributes" ; {'expr': '//span'} -->
-                    <span type="Scary screams">Ho !</span>
-                    <div>At first I was afraid</div>
-                        <!-- Filepath: /module_2/static/xml/file_1.xml ; position="after" ; {'expr': '//div[1]'} --><div>I was petrified</div>
-                        <!-- Filepath: /module_2/static/xml/file_1.xml ; position="after" ; {'expr': '//div[2]'} --><div>But then I spent so many nights thinking how you did me wrong</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-
-                <!-- Filepath: /module_2/static/xml/file_1.xml -->
-                <div t-name="template_2_2">
-                    <div>And I learned how to get along</div>
-                </div>
-            </templates>
-        """
         self.assertXMLEqual(self.renderBundle(debug=True), expected)
 
     def test_static_inheritance_01(self):
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1" random-attr="gloria">
-                    <span>Ho !</span>
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <t t-name="template_1_2">
-                    <div>And I grew strong</div>
-                    <div>And I learned how to get along</div>
-                </t>
-                <form t-name="template_2_1" random-attr="gloria">
-                    <span type="Scary screams">Ho !</span>
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>But then I spent so many nights thinking how you did me wrong</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <div t-name="template_2_2">
-                    <div>And I learned how to get along</div>
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <span>Ho !</span>
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<t t-name="template_1_2">
+                        <div>And I grew strong</div>
+                        <div>And I learned how to get along</div>
+                    </t>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml']
+                ],
+            },
+            "module_2": {
+                "template_2_1": [
+                    """<form t-name="template_2_1" random-attr="gloria">
+                        <span type="Scary screams">Ho !</span>
+                        <div>At first I was afraid</div>
+                            <div>I was petrified</div>
+                            <div>But then I spent so many nights thinking how you did me wrong</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml'],
+                ],
+                "template_2_2": [
+                    """<div t-name="template_2_2">
+                        <div>And I learned how to get along</div>
+                    </div>""",
+                    ['/module_2/static/xml/file_1.xml'],
+                ],
+            },
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_inheritance_02(self):
@@ -158,19 +183,25 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_2" random-attr="gloria" added="true">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<form t-name="template_1_2" random-attr="gloria" added="true">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_inheritance_03(self):
@@ -192,23 +223,32 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             '''
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1">
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_2" added="true">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_3" added="false" other="here">
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<form t-name="template_1_2" added="true">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_3": [
+                    """<form t-name="template_1_3" added="false" other="here">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_inheritance_in_same_module(self):
@@ -232,19 +272,26 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             '''
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1">
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_2">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<form t-name="template_1_2">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_2.xml'],
+                ],
+            },
+        }
+
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_inheritance_in_same_file(self):
@@ -263,19 +310,25 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             ''',
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1">
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_2">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1">
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<form t-name="template_1_2">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_inherit_extended_template(self):
@@ -299,21 +352,27 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             ''',
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <form t-name="template_1_3">
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                    <div>But then I spent so many nights thinking how you did me wrong</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_3": [
+                    """<form t-name="template_1_3">
+                        <div>At first I was afraid</div>
+                        <div>I was petrified</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                        <div>But then I spent so many nights thinking how you did me wrong</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_sibling_extension(self):
@@ -347,16 +406,21 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             '''
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1">
-                    <div>I am a man of constant sorrow</div>
-                    <div>In constant sorrow all through his days</div>
-                    <div>Oh Brother !</div>
-                    <div>I've seen trouble all my days</div>
-                </form>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1">
+                        <div>I am a man of constant sorrow</div>
+                        <div>In constant sorrow all through his days</div>
+                        <div>Oh Brother !</div>
+                        <div>I've seen trouble all my days</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml', '/module_3/static/xml/file_1.xml'],
+                ],
+            },
+            "module_2": {},
+            "module_3": {},
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_static_misordered_modules(self):
@@ -365,12 +429,9 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             '/module_2/static/xml/file_1.xml': files['/module_2/static/xml/file_1.xml'],
             '/module_1/static/xml/file_1.xml': files['/module_1/static/xml/file_1.xml'],
         }
-
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.assertEqual(
-                self.renderBundle(debug=False),
-                '<templates xml:space="preserve">\n<t t-name="parsing_error_module_2_static_xml_file_1.xml"><parsererror>&#34;Module &#39;module_1&#39; not loaded or inexistent (try to inherit &#39;template_1_1&#39;), or templates of addon being loaded &#39;module_2&#39; are misordered (template &#39;template_2_1&#39;)&#34; in file &#39;/module_2/static/xml/file_1.xml&#39;</parsererror></t>\n</templates>'
-            )
+            with self.assertRaisesRegex(XMLAssetError, r"\"Module \'module_1\' not loaded or inexistent \(try to inherit \'template_1_1\'\), or templates of addon being loaded \'module_2\' are misordered \(template \'template_2_1\'\)\" in file \'/module_2/static/xml/file_1.xml\'"):
+                self.renderBundle(debug=False)
 
     def test_static_misordered_templates(self):
         self.template_files['/module_2/static/xml/file_1.xml'] = """
@@ -387,10 +448,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         """
 
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.assertEqual(
-                self.renderBundle(debug=False),
-                '<templates xml:space="preserve">\n<t t-name="parsing_error_module_2_static_xml_file_1.xml"><parsererror>&#34;Cannot create &#39;module_2.template_2_1&#39; because the template to inherit &#39;module_2.template_2_2&#39; is not found.&#34; in file &#39;/module_2/static/xml/file_1.xml&#39;</parsererror></t>\n</templates>'
-            )
+            with self.assertRaisesRegex(XMLAssetError, r"\"Cannot create \'module_2.template_2_1\' because the template to inherit \'module_2.template_2_2\' is not found.\" in file \'/module_2/static/xml/file_1.xml\'"):
+                self.renderBundle(debug=False)
 
     def test_replace_in_debug_mode(self):
         """
@@ -410,13 +469,16 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <div overriden-attr="overriden" t-name="template_1_1">
-                    And I grew strong
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<div overriden-attr="overriden" t-name="template_1_1">
+                        And I grew strong
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_replace_in_debug_mode2(self):
@@ -438,15 +500,18 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <div t-name="template_1_1">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                    And so you're back
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<div t-name="template_1_1">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                        And so you're back
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_replace_in_debug_mode3(self):
@@ -472,16 +537,10 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <div t-name="template_1_1">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                </div>
-                And so you're back
-            </templates>
-        """
-        self.assertXMLEqual(self.renderBundle(debug=False), expected)
+        result = self.renderBundle(debug=False)
+        template = etree.tostring(result["module_1"]["template_1_1"][0])
+        with self.assertRaisesRegex(Exception, "Extra content at the end of the document"):
+            etree.fromstring(template)
 
     def test_replace_root_node_tag(self):
         """
@@ -504,13 +563,16 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <div t-name="template_1_1">
-                    Form replacer
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<div t-name="template_1_1">
+                        Form replacer
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_replace_root_node_tag_in_primary(self):
@@ -532,17 +594,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                    <form>Inner Form</form>
-                </form>
-                <div t-name="template_1_2">
-                    Form replacer
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                        <form>Inner Form</form>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div t-name="template_1_2">
+                        Form replacer
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_primary_replace_debug(self):
@@ -567,17 +635,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_1_2">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div overriden-attr="overriden" t-name="template_1_2">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_replace_in_nodebug_mode1(self):
@@ -601,15 +675,18 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <div t-name="template_1_1">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                    And so you're back
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<div t-name="template_1_1">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                        And so you're back
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_from_dotted_tname_1(self):
@@ -630,17 +707,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="module_1.template_1_1.dot" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_1_2">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1.dot": [
+                    """<form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div overriden-attr="overriden" t-name="template_1_2">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_from_dotted_tname_2(self):
@@ -661,17 +744,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1.dot" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_1_2">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1.dot": [
+                    """<form t-name="template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div overriden-attr="overriden" t-name="template_1_2">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_from_dotted_tname_2bis(self):
@@ -692,17 +781,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1.dot" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_1_2">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1.dot": [
+                    """<form t-name="template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div overriden-attr="overriden" t-name="template_1_2">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_from_dotted_tname_2ter(self):
@@ -723,17 +818,23 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
                 """,
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="module_1" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_1_2">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "module_1": [
+                    """<form t-name="module_1" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+                "template_1_2": [
+                    """<div overriden-attr="overriden" t-name="template_1_2">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_from_dotted_tname_3(self):
@@ -759,17 +860,25 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             """
         }
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="module_1.template_1_1.dot" random-attr="gloria">
-                    <div>At first I was afraid</div>
-                 </form>
-                 <div overriden-attr="overriden" t-name="template_2_1">
-                    And I grew strong
-                    <p>And I learned how to get along</p>
-                 </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1.dot": [
+                    """<form t-name="module_1.template_1_1.dot" random-attr="gloria">
+                        <div>At first I was afraid</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml'],
+                ],
+            },
+            "module_2" : {
+                "template_2_1": [
+                    """<div overriden-attr="overriden" t-name="template_2_1">
+                        And I grew strong
+                        <p>And I learned how to get along</p>
+                    </div>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml'],
+                ],
+            }
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
     def test_inherit_and_qweb_extend(self):
@@ -794,40 +903,63 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             """
 
-        expected = """
-            <templates xml:space="preserve">
-                <form t-name="template_1_1" random-attr="gloria">
-                    <article>!!!</article>
-                    <div>At first I was afraid</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <t t-name="template_1_2">
-                    <div>And I grew strong</div>
-                    <div>And I learned how to get along</div>
-                </t>
-                <t t-name="template_qw_1">
-                    <div>111</div>
-                </t>
-                <t t-name="template_qw_2">
-                    <div>222</div>
-                </t>
-                <t t-extend="template_qw_1">
-                    <t t-jquery="div" t-operation="after">
-                        <div>333</div>
-                    </t>
-                </t>
-                <form t-name="template_2_1" random-attr="gloria">
-                    <span type="Scary screams">Ho !</span>
-                    <div>At first I was afraid</div>
-                    <div>I was petrified</div>
-                    <div>But then I spent so many nights thinking how you did me wrong</div>
-                    <div>Kept thinking I could never live without you by my side</div>
-                </form>
-                <div t-name="template_2_2">
-                    <div>And I learned how to get along</div>
-                </div>
-            </templates>
-        """
+        expected = {
+            "module_1": {
+                "template_1_1": [
+                    """<form t-name="template_1_1" random-attr="gloria">
+                        <article>!!!</article>
+                        <div>At first I was afraid</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_1/static/xml/file_2.xml'],
+                ],
+                "template_1_2": [
+                    """<t t-name="template_1_2">
+                        <div>And I grew strong</div>
+                        <div>And I learned how to get along</div>
+                    </t>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml']
+                ],
+                "template_qw_1": [
+                    """<t t-name="template_qw_1">
+                        <div>111</div>
+                    </t>""",
+                    ['/module_1/static/xml/file_2.xml'],
+                ],
+                "template_qw_2": [
+                    """<t t-name="template_qw_2">
+                        <div>222</div>
+                    </t>""",
+                    ['/module_1/static/xml/file_2.xml'],
+                ],
+                "template_qw_1__extend_4": [
+                    """<t t-extend="template_qw_1">
+                        <t t-jquery="div" t-operation="after">
+                            <div>333</div>
+                        </t>
+                    </t>""",
+                    ['/module_1/static/xml/file_2.xml'],
+                ],
+            },
+            "module_2": {
+                "template_2_1": [
+                    """<form t-name="template_2_1" random-attr="gloria">
+                        <span type="Scary screams">Ho !</span>
+                        <div>At first I was afraid</div>
+                            <div>I was petrified</div>
+                            <div>But then I spent so many nights thinking how you did me wrong</div>
+                        <div>Kept thinking I could never live without you by my side</div>
+                    </form>""",
+                    ['/module_1/static/xml/file_1.xml', '/module_2/static/xml/file_1.xml'],
+                ],
+                "template_2_2": [
+                    """<div t-name="template_2_2">
+                        <div>And I learned how to get along</div>
+                    </div>""",
+                    ['/module_2/static/xml/file_1.xml'],
+                ],
+            },
+        }
         self.assertXMLEqual(self.renderBundle(debug=False), expected)
 
 
