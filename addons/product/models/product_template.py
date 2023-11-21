@@ -511,15 +511,22 @@ class ProductTemplate(models.Model):
         searched_ids = set(templates.ids)
         # some product.templates do not have product.products yet (dynamic variants configuration),
         # we need to add the base _name_search to the results
-        # FIXME awa: this is really not performant at all but after discussing with the team
-        # we don't see another way to do it
         tmpl_without_variant_ids = []
-        if not limit or len(searched_ids) < limit:
-            tmpl_without_variant_ids = self.env['product.template'].search(
-                [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)]))]
-            )
+        # Useless if variants is not set up as no tmpl_without_variant_ids could exist.
+        if self.env.user.has_group('product.group_product_variant') and (not limit or len(searched_ids) < limit):
+            # The ORM has to be bypassed because it would require a NOT IN which is inefficient.
+            self.env['product.product'].flush_model(['product_tmpl_id', 'active'])
+            tmpl_without_variant_ids = self.env['product.template']._search([], order='id')
+            tmpl_without_variant_ids.add_where("""
+                NOT EXISTS (
+                    SELECT product_tmpl_id
+                    FROM product_product
+                    WHERE product_product.active = true
+                        AND product_template.id = product_product.product_tmpl_id
+                )
+            """)
         if tmpl_without_variant_ids:
-            domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids.ids)]])
+            domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids)]])
             searched_ids |= set(super(ProductTemplate, self)._name_search(
                     name,
                     args=domain,
