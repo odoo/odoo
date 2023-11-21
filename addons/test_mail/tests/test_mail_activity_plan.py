@@ -319,3 +319,9 @@ class TestActivitySchedule(ActivityScheduleCase):
                 ValidationError, msg='When selecting responsible "other", you must specify a responsible.'):
             template.responsible_type = 'other'
         template.write({'responsible_type': 'other', 'responsible_id': self.user_admin})
+
+    def test_plan_copy(self):
+        """Test plan copy"""
+        copied_plan = self.plan_onboarding.copy()
+        self.assertEqual(copied_plan.name, f'{self.plan_onboarding.name} (copy)')
+        self.assertEqual(len(copied_plan.template_ids), len(self.plan_onboarding.template_ids))
