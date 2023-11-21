@@ -8,7 +8,7 @@ import { Field } from "@web/views/fields/field";
 import { Record } from "@web/model/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
-import { Component } from "@odoo/owl";
+import { Component, useExternalListener } from "@odoo/owl";
 
 export class CalendarCommonPopover extends Component {
     setup() {
@@ -16,6 +16,8 @@ export class CalendarCommonPopover extends Component {
         this.timeDuration = null;
         this.date = null;
         this.dateDuration = null;
+
+        useExternalListener(window, "pointerdown", (e) => e.preventDefault(), { capture: true });
 
         this.computeDateTimeAndDuration();
     }
