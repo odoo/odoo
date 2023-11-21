@@ -352,8 +352,12 @@
                             <div class="ribbon ribbon-top-right" invisible="not date_closed">
                                 <span class="text-bg-success">Hired</span>
                             </div>
-                            <span class="badge rounded-pill text-bg-danger float-end me-4" invisible="application_status != 'refused'">Refused</span>
-                            <span class="badge rounded-pill text-bg-secondary float-end me-4" invisible="application_status != 'archived'">Archived</span>
+                            <div class="ribbon ribbon-top-right" invisible="application_status != 'refused'">
+                                <span class="text-bg-danger">Refused</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" invisible="application_status != 'archived'">
+                                <span class="text-bg-secondary">Archived</span>
+                            </div>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
