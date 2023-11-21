@@ -1023,7 +1023,13 @@ export async function clickDropdown(target, fieldName) {
 }
 
 export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
-    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .dropdown ul li`);
+    const dropdowns = target.querySelectorAll(`[name='${fieldName}'] .dropdown .dropdown-menu`);
+    if (dropdowns.length === 0) {
+        throw new Error(`No dropdown found for field ${fieldName}`);
+    } else if (dropdowns.length > 1) {
+        throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
+    }
+    const dropdownItems = dropdowns[0].querySelectorAll("li");
     const indexToClick = Array.from(dropdownItems)
         .map((html) => html.textContent)
         .indexOf(itemContent);
