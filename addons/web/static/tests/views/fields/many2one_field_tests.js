@@ -1117,14 +1117,45 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu"),
             "li.o_m2o_start_typing",
-            "autocomplete should contains start typing option"
+            "autocomplete should contain start typing option"
         );
 
         await click(target, ".o_field_many2one[name='product_id'] input");
         assert.containsNone(
             target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
             "li.o_m2o_start_typing",
-            "autocomplete should contains start typing option"
+            "autocomplete should not contain start typing option"
+        );
+    });
+
+    QUnit.test("many2one with no_create_edit and no_quick_create options should show no records when no result match", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="product_id" options="{'no_create_edit': 1, 'no_quick_create': 1}" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await click(target, ".o_field_many2one[name='product_id'] input");
+        assert.containsNone(
+            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+            "li.o_m2o_no_result",
+            "autocomplete should not contain the no records option"
+        );
+        await editInput(target, ".o_field_many2one[name='product_id'] input", "aze");
+        assert.containsOnce(
+            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+            "li.o_m2o_no_result",
+            "autocomplete should contain the no records option"
         );
     });
 
