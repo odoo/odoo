@@ -627,12 +627,15 @@ export class Record {
     /**
      * @template T
      * @param {T} def;
+     * @param {Function} [compute] if set, the value of this field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
      * @param {boolean} [html] if set, the field value contains html value.
      *   Useful to automatically markup when the insert is trusted.
      * @returns {T}
      */
-    static attr(def, { html } = {}) {
-        return [ATTR_SYM, { default: def, html }];
+    static attr(def, { compute, html } = {}) {
+        return [ATTR_SYM, { compute, default: def, html }];
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {

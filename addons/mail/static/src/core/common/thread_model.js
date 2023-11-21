@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { ScrollPosition } from "@mail/core/common/scroll_position";
 import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -228,8 +227,13 @@ export class Thread extends Record {
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
-    /** @type {ScrollPosition} */
-    scrollPosition = new ScrollPosition();
+    /** @type {number|'bottom'} */
+    scrollTop = Record.attr("bottom", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.type === "chatter" ? 0 : "bottom";
+        },
+    });
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */

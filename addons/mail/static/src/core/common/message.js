@@ -18,7 +18,6 @@ import {
     Component,
     markup,
     onMounted,
-    onPatched,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -128,11 +127,14 @@ export class Message extends Component {
             },
             () => [this.props.messageEdition?.editingMessage]
         );
-        onPatched(() => {
-            if (this.props.highlighted && this.root.el) {
-                this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-        });
+        useEffect(
+            (highlighted) => {
+                if (highlighted) {
+                    this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            },
+            () => [this.props.highlighted]
+        );
         onMounted(() => {
             if (this.messageBody.el) {
                 this.prepareMessageBody(this.messageBody.el);

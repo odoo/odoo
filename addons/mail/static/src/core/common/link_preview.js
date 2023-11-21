@@ -27,4 +27,8 @@ export class LinkPreview extends Component {
             LinkPreview,
         });
     }
+
+    onImageLoaded() {
+        this.env.onImageLoaded?.();
+    }
 }
