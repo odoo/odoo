@@ -18,6 +18,7 @@
                                 t-attf-id="combo-{{combo_id}}-combo_line-{{combo_line_id}}"
                                 t-attf-value="{{combo_line_id}}" 
                                 t-model="state.combo[combo_id]"
+                                t-att-class="{ 'selected': state.combo[combo_id] == combo_line_id }"
                                 />
                             <label t-attf-for="combo-{{combo_id}}-combo_line-{{combo_line_id}}" class="combo-line h-100 w-100 rounded cursor-pointer transition-base">
                                 <ProductCard
@@ -26,7 +27,7 @@
                                     productId="product.id"
                                     price="formattedComboPrice(combo_line)"
                                     imageUrl="product.getImageUrl()"
-                                    onClick="() => {}"
+                                    onClick="(ev) => this.onClickProduct({ product, combo_line }, ev)"
                                 />
                             </label>
                         </div>
