@@ -179,6 +179,16 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
     @classmethod
+    def change_company_country(cls, company, country):
+        company.country_id = country
+        company.account_fiscal_country_id = country
+        for model in ('account.tax', 'account.tax.group'):
+            cls.env.add_to_compute(
+                cls.env[model]._fields['country_id'],
+                cls.env[model].search([('company_id', '=', company.id)]),
+            )
+
+    @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         ''' Create a new company having the name passed as parameter.
         A chart of accounts will be installed to this company: the same as the current company one.
