@@ -26,6 +26,7 @@ const composerPatch = {
     get hasGifPicker() {
         return (
             (this.store.hasGifPickerFeature || this.store.self.isAdmin) &&
+            !this.env.inKnowledge &&
             !this.env.inChatter &&
             !this.props.composer.message
         );
