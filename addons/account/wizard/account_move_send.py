@@ -594,10 +594,11 @@ class AccountMoveSend(models.Model):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice) and invoice_data.get('error'):
+            form = invoice_data['_form']
+            if form._need_invoice_document(invoice) and invoice_data.get('error'):
                 invoice_data.pop('error')
-                self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
-                self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
+                form._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
+                form._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
                 invoice_data['proforma_pdf_attachment'] = self.env['ir.attachment']\
                     .create(invoice_data.pop('proforma_pdf_attachment_values'))
 
