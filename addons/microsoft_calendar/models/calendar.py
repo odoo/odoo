@@ -63,7 +63,7 @@ class Meeting(models.Model):
         Returns True if synchronization with Outlook Calendar is active and False otherwise.
         The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
         """
-        outlook_connected = self.env.user._get_microsoft_calendar_token() and self.env.user._is_microsoft_calendar_valid()
+        outlook_connected = self.env.user._get_microsoft_calendar_token()
         return outlook_connected and self.env.user.microsoft_synchronization_stopped is False
 
     @api.model_create_multi
@@ -104,7 +104,7 @@ class Meeting(models.Model):
                 raise ValidationError(
                     _("For having a different organizer in your event, it is necessary that "
                       "the organizer have its Odoo Calendar synced with Outlook Calendar."))
-            elif not partner_included:
+            elif sender_sync_status and not partner_included:
                 raise ValidationError(
                     _("It is necessary adding the proposed organizer as attendee before saving the event."))
 
