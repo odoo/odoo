@@ -1186,7 +1186,7 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
                 mockRPC: async (route, args) => {
                     assert.step(args.method);
-                    if (route === "/web/dataset/call_button") {
+                    if (route.startsWith("/web/dataset/call_button")) {
                         return true;
                     }
                 },
@@ -8510,7 +8510,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, { method }) {
                 if (method === "web_save") {
                     assert.step("web_save");
-                } else if (route === "/web/dataset/call_button") {
+                } else if (route.startsWith("/web/dataset/call_button")) {
                     assert.step("call_button");
                     return true;
                 }
@@ -19497,7 +19497,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
 
             mockRPC: async (route, args) => {
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     assert.step(args.method);
                     return true;
                 }

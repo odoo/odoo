@@ -129,7 +129,7 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const mockRPC = async (route, args) => {
             assert.step(route);
-            if (route === "/web/dataset/call_button" && args.method === "some_method") {
+            if (route.startsWith("/web/dataset/call_button") && args.method === "some_method") {
                 return {
                     tag: "display_notification",
                     type: "ir.actions.client",
@@ -155,7 +155,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click(`button[name="some_method"]`);
         assert.verifySteps([
             "/web/dataset/call_kw/partner/web_save",
-            "/web/dataset/call_button",
+            "/web/dataset/call_button/partner/some_method",
             "/web/dataset/call_kw/partner/web_read",
         ]);
         assert.containsNone(document.body, ".modal");

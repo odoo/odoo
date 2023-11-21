@@ -9457,7 +9457,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     return { context: {}, domain: [] };
                 }
                 if (args.method === "get_installed") {
