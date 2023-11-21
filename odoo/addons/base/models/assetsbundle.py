@@ -51,6 +51,8 @@ class AssetError(Exception):
 class AssetNotFound(AssetError):
     pass
 
+class XMLAssetError(Exception):
+    pass
 
 class AssetsBundle(object):
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
@@ -331,11 +333,7 @@ class AssetsBundle(object):
         if not js_attachment:
             template_bundle = ''
             if self.templates:
-                content = ['<?xml version="1.0" encoding="UTF-8"?>']
-                content.append('<templates xml:space="preserve">')
-                content.append(self.xml(show_inherit_info=not is_minified))
-                content.append('</templates>')
-                templates = '\n'.join(content).replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
+                templates = self.generate_xml_bundle(is_minified)
                 template_bundle = textwrap.dedent(f"""
 
                     /*******************************************
@@ -345,7 +343,8 @@ class AssetsBundle(object):
                     odoo.define("{self.name}.bundle.xml", ["@web/core/templates"], function(require) {{
                         "use strict";
                         const {{ registerTemplate }} = require("@web/core/templates");
-                        registerTemplate(`{self.name}`, `{templates}`);
+                        /* {self.name} */
+                        {templates}
                     }});
                 """)
 
@@ -399,6 +398,26 @@ class AssetsBundle(object):
         })
 
         return js_attachment
+
+    def generate_xml_bundle(self, is_minified):
+        content = []
+        templates_dict = {}
+        try:
+            templates_dict = self.xml(show_inherit_info=not is_minified)
+        except XMLAssetError as e:
+            content.append(f'throw new Error({json.dumps(to_text(e))});')
+
+        for templates in templates_dict.values():
+            for name, (element, url) in templates.items():
+                if 't-name' in element.attrib:
+                    element.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+                    name = element.attrib['t-name']
+                    string = etree.tostring(element, encoding='unicode')
+                    if not is_minified:
+                        content.append("/* Filepath: %s */" % ' => '.join(url))
+                    template = string.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
+                    content.append(f'registerTemplate("{name}", `{template}`);')
+        return '\n'.join(content)
 
     def xml(self, show_inherit_info=False):
         """
@@ -514,22 +533,8 @@ class AssetsBundle(object):
                 else:
                     return asset.generate_error(_("Template name is missing."))
 
-        # Concat and render inherited templates
-        root = etree.Element('root')
-        for addon in template_dict.values():
-            for template, urls in addon.values():
-                if show_inherit_info:
-                    tail = "\n"
-                    if len(root) > 0:
-                        tail = root[-1].tail
-                        root[-1].tail = "\n\n"
-                    comment = etree.Comment(f""" Filepath: {' => '.join(urls)} """)
-                    comment.tail = tail
-                    root.append(comment)
-                root.append(template)
+        return template_dict
 
-        # Returns the string by removing the <root> tag.
-        return etree.tostring(root, encoding='unicode')[6:-7]
 
     def css(self):
         is_minified = not self.is_debug_assets
@@ -923,7 +928,7 @@ class XMLAsset(WebAsset):
 
     def generate_error(self, msg):
         msg = super().generate_error(msg)
-        return Markup('<t t-name="parsing_error{}"><parsererror>{}</parsererror></t>').format(self.url.replace("/", "_"), msg)
+        raise XMLAssetError(msg)
 
     @property
     def bundle_version(self):
