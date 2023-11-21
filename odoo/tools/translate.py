@@ -38,9 +38,6 @@ PYTHON_TRANSLATION_COMMENT = 'odoo-python'
 
 # translation used for javascript code in web client
 JAVASCRIPT_TRANSLATION_COMMENT = 'odoo-javascript'
-# used to notify web client that these translations should be loaded in the UI
-# deprecated comment since Odoo 16.0
-WEB_TRANSLATION_COMMENT = "openerp-web"
 
 SKIPPED_ELEMENTS = ('script', 'style', 'title')
 
@@ -807,10 +804,6 @@ class PoFileWriter:
                 entry.occurrences.append((u"%s:%s" % (typy, name), str(res_id)))
             else:
                 entry.occurrences.append((u"%s:%s:%s" % (typy, name, res_id), ''))
-        if code:
-            # TODO 17.0: remove the flag python-format in all PO/POT files
-            # The flag is used in a wrong way. It marks all code translations even for javascript translations.
-            entry.flags.append("python-format")
         self.po.append(entry)
 
 
@@ -1615,21 +1608,13 @@ class CodeTranslations:
 
     def _load_python_translations(self, module_name, lang):
         def filter_func(row):
-            # In the pot files with new translations, a code translation should have either
-            # PYTHON_TRANSLATION_COMMENT or JAVASCRIPT_TRANSLATION_COMMENT for comments.
-            # If a comment has neither the above comments, the pot file uses the deprecated
-            # comments. And all code translations are stored as python translations.
-            return row.get('value') and (
-                    PYTHON_TRANSLATION_COMMENT in row['comments']
-                    or JAVASCRIPT_TRANSLATION_COMMENT not in row['comments'])
+            return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
         self.python_translations[(module_name, lang)] = translations
 
     def _load_web_translations(self, module_name, lang):
         def filter_func(row):
-            return row.get('value') and (
-                    JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
-                    or WEB_TRANSLATION_COMMENT in row['comments'])
+            return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
         self.web_translations[(module_name, lang)] = {
             "messages": [{"id": src, "string": value} for src, value in translations.items()]
