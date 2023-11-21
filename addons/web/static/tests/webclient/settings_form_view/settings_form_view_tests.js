@@ -488,7 +488,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                         },
                     ]);
                 }
-                if (route === "/web/dataset/call_button" && method === "execute") {
+                if (route.startsWith("/web/dataset/call_button") && method === "execute") {
                     assert.deepEqual(args[0].length, 1);
                     return true;
                 }
@@ -715,7 +715,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (route === "/web/dataset/call_button") {
+            if (route.startsWith("/web/dataset/call_button")) {
                 if (args.method === "execute") {
                     return true;
                 }
@@ -879,7 +879,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             };
 
             const mockRPC = (route, args) => {
-                if (route === "/web/dataset/call_button") {
+                if (route.startsWith("/web/dataset/call_button")) {
                     if (args.method === "execute") {
                         assert.ok("execute method called");
                         return true;
@@ -1435,7 +1435,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             };
 
             const mockRPC = (route, args) => {
-                if (route === "/web/dataset/call_button" && args.method === "execute") {
+                if (route.startsWith("/web/dataset/call_button") && args.method === "execute") {
                     assert.step("execute");
                     return true;
                 } else if (args.method === "web_save") {
