@@ -65,7 +65,7 @@ test("project.task (tree): progress bar color", async () => {
             <list>
                 <field name="name"/>
                 <field name="project_id"/>
-                <field name="progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}"/>
+                <field name="progress" widget="project_task_progressbar" decoration-danger="progress > 1"/>
             </list>
         `,
     });
@@ -76,7 +76,7 @@ test("project.task (tree): progress bar color", async () => {
     expect("div.o_progressbar .bg-warning").toHaveCount(1, {
         message: "Task 2 having progress = 80 >= 80 => orange color",
     });
-    expect("div.o_progressbar .bg-success").toHaveCount(1, {
-        message: "Task 3 having progress = 101 > 100 => red color",
+    expect("div.o_progressbar .bg-danger").toHaveCount(1, {
+        message: "Task 3 having progress = 104 > 100 => red color",
     });
 });

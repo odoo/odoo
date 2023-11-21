@@ -16773,7 +16773,7 @@ test(`classNames given to a field are set on the right field directly`, async ()
         type: "list",
         arch: `
             <list editable="bottom">
-                <field class="d-flex align-items-center" name="int_field" widget="progressbar" options="{'editable': true}"/>
+                <field class="d-flex align-items-center" name="int_field" widget="progressbar"/>
                 <field class="d-none" name="bar"/>
             </list>
         `,

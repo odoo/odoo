@@ -12,7 +12,7 @@
                     <p t-esc="state.message"/>
                     <t t-if="!state.error">
                         <div t-attf-class="o_progressbar align-items-center w-100 d-flex">
-                            <div class="o_progress w-100 flex-fill"
+                            <div class="progress w-100 flex-fill"
                                  aria-valuemin="0"
                                  t-att-aria-valuemax="props.invoices.length"
                                  t-att-aria-valuenow="state.successfullySent">
