@@ -149,6 +149,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/src/webclient/navbar/navbar.scss',
+<<<<<<< HEAD
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/base_frontend.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
@@ -159,6 +160,34 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
+||||||| parent of 3b551df393b1 (temp)
+            'web/static/src/legacy/scss/ui.scss',
+            'web/static/src/legacy/scss/mimetypes.scss',
+            'web/static/src/legacy/scss/modal.scss',
+            'web/static/src/legacy/scss/animation.scss',
+            'web/static/src/legacy/scss/banner.scss',
+            'web/static/src/legacy/scss/colorpicker.scss',
+            'web/static/src/legacy/scss/popover.scss',
+            'web/static/src/legacy/scss/translation_dialog.scss',
+            'web/static/src/legacy/scss/keyboard.scss',
+            'web/static/src/legacy/scss/name_and_signature.scss',
+            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+=======
+            'web/static/src/legacy/scss/ui.scss',
+            'web/static/src/legacy/scss/mimetypes.scss',
+            'web/static/src/legacy/scss/modal.scss',
+            'web/static/src/legacy/scss/animation.scss',
+            'web/static/src/legacy/scss/daterangepicker.scss',
+            'web/static/src/legacy/scss/banner.scss',
+            'web/static/src/legacy/scss/colorpicker.scss',
+            'web/static/src/legacy/scss/popover.scss',
+            'web/static/src/legacy/scss/translation_dialog.scss',
+            'web/static/src/legacy/scss/keyboard.scss',
+            'web/static/src/legacy/scss/name_and_signature.scss',
+            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+>>>>>>> 3b551df393b1 (temp)
 
             'web/static/src/legacy/scss/lazyloader.scss',
 

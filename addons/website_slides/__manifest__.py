@@ -144,7 +144,30 @@ Featuring
             'web/static/src/views/fields/signature/signature_field.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
+<<<<<<< HEAD
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
+||||||| parent of 3b551df393b1 (temp)
+            'web/static/src/legacy/scss/animation.scss',
+            'web/static/src/legacy/scss/daterangepicker.scss',
+            'web/static/src/legacy/scss/banner.scss',
+            'web/static/src/legacy/scss/colorpicker.scss',
+            'web/static/src/legacy/scss/popover.scss',
+            'web/static/src/legacy/scss/translation_dialog.scss',
+            'web/static/src/legacy/scss/keyboard.scss',
+            'web/static/src/legacy/scss/name_and_signature.scss',
+            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+=======
+            'web/static/src/legacy/scss/animation.scss',
+            'web/static/src/legacy/scss/banner.scss',
+            'web/static/src/legacy/scss/colorpicker.scss',
+            'web/static/src/legacy/scss/popover.scss',
+            'web/static/src/legacy/scss/translation_dialog.scss',
+            'web/static/src/legacy/scss/keyboard.scss',
+            'web/static/src/legacy/scss/name_and_signature.scss',
+            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+>>>>>>> 3b551df393b1 (temp)
 
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
