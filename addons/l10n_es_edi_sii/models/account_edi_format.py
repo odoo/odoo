@@ -363,14 +363,9 @@ class AccountEdiFormat(models.Model):
                             "\n".join(invoice.line_ids.tax_ids.mapped('name'))
                         ))
 
-                    invoice_node['ImporteTotal'] = round(sign * (
-                        tax_details_info_service_vals['tax_details']['base_amount']
-                        + tax_details_info_service_vals['tax_details']['tax_amount']
-                        - tax_details_info_service_vals['tax_amount_retention']
-                        + tax_details_info_consu_vals['tax_details']['base_amount']
-                        + tax_details_info_consu_vals['tax_details']['tax_amount']
-                        - tax_details_info_consu_vals['tax_amount_retention']
-                    ), 2)
+                    invoice_node['ImporteTotal'] = round(invoice.amount_total_signed
+                                                         + sign * tax_details_info_service_vals['tax_amount_retention']
+                                                         + sign * tax_details_info_consu_vals['tax_amount_retention'], 2)
 
             else:
                 # Vendor bills
@@ -390,14 +385,17 @@ class AccountEdiFormat(models.Model):
                 if tax_details_info_other_vals['tax_details_info']:
                     invoice_node['DesgloseFactura']['DesgloseIVA'] = tax_details_info_other_vals['tax_details_info']
 
-                invoice_node['ImporteTotal'] = round(sign * (
-                    tax_details_info_isp_vals['tax_details']['base_amount']
-                    + tax_details_info_isp_vals['tax_details']['tax_amount']
-                    - tax_details_info_isp_vals['tax_amount_retention']
-                    + tax_details_info_other_vals['tax_details']['base_amount']
-                    + tax_details_info_other_vals['tax_details']['tax_amount']
-                    - tax_details_info_other_vals['tax_amount_retention']
-                ), 2)
+                if invoice._l10n_es_is_dua():
+                    invoice_node['ImporteTotal'] = round(sign * (
+                            tax_details_info_isp_vals['tax_details']['base_amount']
+                            + tax_details_info_isp_vals['tax_details']['tax_amount']
+                            + tax_details_info_other_vals['tax_details']['base_amount']
+                            + tax_details_info_other_vals['tax_details']['tax_amount']
+                    ), 2)
+                else:
+                    invoice_node['ImporteTotal'] = round(-invoice.amount_total_signed
+                                                         - sign * tax_details_info_isp_vals['tax_amount_retention']
+                                                         - sign * tax_details_info_other_vals['tax_amount_retention'], 2)
 
                 invoice_node['CuotaDeducible'] = round(sign * (
                     tax_details_info_isp_vals['tax_amount_deductible']
