@@ -240,7 +240,7 @@
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            invisible="not project_id or project_id == id"/>
+                                            invisible="project_id != context.get('active_id')"/>
                                 </tree>
                             </field>
                         </page>
@@ -273,7 +273,7 @@
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            invisible="not project_id or project_id == id"/>
+                                            invisible="project_id != context.get('active_id')"/>
                                 </tree>
                             </field>
                         </page>
