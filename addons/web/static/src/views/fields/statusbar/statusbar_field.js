@@ -340,6 +340,9 @@ export const statusBarField = {
             name: "fold_field",
             type: "field",
             availableTypes: ["boolean"],
+            help: _t(
+                "Boolean field from the model used in the relation, which indicates whether the state is folded or not."
+            ),
         },
     ],
     supportedTypes: ["many2one", "selection"],
