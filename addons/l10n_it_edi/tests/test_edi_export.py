@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
-
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
@@ -46,6 +44,26 @@ class TestItEdiExport(TestItEdi):
             'country_id': cls.env.ref('base.us').id,
             'is_company': True,
         })
+
+    def test_vat_not_equals_codice(self):
+        self.company.partner_id.vat = '01698911003'
+        self.company.l10n_it_codice_fiscale = '07149930583'
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_vat_not_equals_codice.xml')
 
     def test_export_invoice_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the
