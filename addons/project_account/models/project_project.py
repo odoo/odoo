@@ -125,7 +125,13 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
+<<<<<<< HEAD
         return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
+||||||| parent of 78c4e8a5cb9e (temp)
+        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False)]
+=======
+        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', "manufacturing_order")]
+>>>>>>> 78c4e8a5cb9e (temp)
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
