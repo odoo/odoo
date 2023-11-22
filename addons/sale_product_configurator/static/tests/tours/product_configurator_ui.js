@@ -79,6 +79,17 @@ tour.register('sale_product_configurator_tour', {
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){}
+},
+// check that additional line is kept if selected but not edited with a click followed by a check
+{
+    trigger: 'td.o_data_cell:contains("Chair floor protection")',
+    extra_trigger: 'div[name="order_line"]',
+    in_modal: false,
+    run: 'click'
+}, {
+    trigger: 'div[name="tax_totals_json"]',
+    in_modal: false,
+    run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
     extra_trigger: 'div[name="order_line"]',
