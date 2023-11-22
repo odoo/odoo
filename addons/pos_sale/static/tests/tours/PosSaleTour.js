@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             Dialog.confirm("Open session"),
             ProductScreen.controlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.totalAmountIs(40.25),
+            ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
