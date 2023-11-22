@@ -11,6 +11,15 @@
                 </field>
             </field>
         </record>
+        <record id="stock.view_stock_product_tree" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),(4, ref('account.group_account_readonly'))]" />
+        </record>
+        <record id="stock.view_stock_product_template_tree" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),(4, ref('account.group_account_readonly'))]" />
+        </record>
+        <record id="stock.product_template_kanban_stock_view" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),(4, ref('account.group_account_readonly'))]" />
+        </record>
 
         <record id="view_category_property_form_stock" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit.stock</field>
