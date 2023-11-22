@@ -23,7 +23,7 @@
                     <DatiTrasmissione>
                         <IdTrasmittente>
                             <IdPaese t-out="sender_info['country_code']"/>
-                            <IdCodice t-out="sender_info['vat']"/>
+                            <IdCodice t-out="sender_info['codice_fiscale'] or sender_info['vat']"/>
                         </IdTrasmittente>
                         <ProgressivoInvio t-out="format_alphanumeric(record.name.replace('/',''), -10)"/>
                         <FormatoTrasmissione t-out="formato_trasmissione"/>
