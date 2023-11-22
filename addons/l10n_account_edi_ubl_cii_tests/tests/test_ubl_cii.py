@@ -7,8 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
-class TestAccountEdiUblCii(AccountTestInvoicingCommon):
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestEdiUBLCII(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
