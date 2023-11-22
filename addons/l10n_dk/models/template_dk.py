@@ -9,8 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('dk')
     def _get_dk_template_data(self):
         return {
-            'property_account_receivable_id': 'dk_coa_5960',
-            'property_account_payable_id': 'dk_coa_7180',
+            'property_account_receivable_id': 'dk_coa_6190',
+            'property_account_payable_id': 'dk_coa_7440',
             'property_account_expense_categ_id': 'dk_coa_1610',
             'property_account_income_categ_id': 'dk_coa_1010',
             'property_tax_payable_account_id': 'dk_coa_7840',
@@ -24,15 +24,15 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.dk',
-                'bank_account_code_prefix': '682',
-                'cash_account_code_prefix': '681',
+                'bank_account_code_prefix': '648',
+                'cash_account_code_prefix': '647',
                 'transfer_account_code_prefix': '683',
-                'account_default_pos_receivable_account_id': 'dk_coa_5961',
+                'account_default_pos_receivable_account_id': 'dk_coa_6190',
                 'income_currency_exchange_account_id': 'dk_coa_3610',
                 'expense_currency_exchange_account_id': 'dk_coa_3610',
-                'account_journal_early_pay_discount_loss_account_id': 'dk_coa_3790',
-                'account_journal_early_pay_discount_gain_account_id': 'dk_coa_3570',
-                'account_sale_tax_id': 'tax110',
-                'account_purchase_tax_id': 'tax400',
+                'account_journal_early_pay_discount_loss_account_id': 'dk_coa_2720',
+                'account_journal_early_pay_discount_gain_account_id': 'dk_coa_2720',
+                'account_sale_tax_id': 'tax_s1',
+                'account_purchase_tax_id': 'tax_k1',
             },
         }
