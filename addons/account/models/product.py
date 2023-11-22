@@ -245,17 +245,21 @@ class ProductProduct(models.Model):
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        for value, domain in (
-            (name, ('name', 'ilike', name)),
-            (default_code, ('default_code', '=', default_code)),
-            (barcode, ('barcode', '=', barcode)),
-        ):
-            if value is not None:
-                domains.append([domain])
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if barcode:
+            domains.append([('barcode', '=', barcode)])
 
-        domain = expression.AND([
-            expression.OR(domains),
-            self.env['product.product']._check_company_domain(company),
-            extra_domain,
-        ])
-        return self.env['product.product'].search(domain, limit=1)
+        # Search for the product with the exact name, then ilike the name
+        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        for name_domain in name_domains:
+            product = self.env['product.product'].search(
+                expression.AND([
+                    expression.OR(domains + [name_domain]),
+                    self.env['product.product']._check_company_domain(company),
+                ]),
+                limit=1,
+            )
+            if product:
+                return product
+        return self.env['product.product']
