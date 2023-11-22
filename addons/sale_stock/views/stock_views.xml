@@ -46,5 +46,14 @@
                 </button>
             </field>
         </record>
+        <record id="stock.view_stock_product_tree" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        </record>
+        <record id="stock.view_stock_product_template_tree" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        </record>
+        <record id="stock.product_template_kanban_stock_view" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        </record>
     </data>
 </odoo>
