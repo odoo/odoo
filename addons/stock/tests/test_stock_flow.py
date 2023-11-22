@@ -2507,6 +2507,16 @@ class TestStockFlow(TestStockCommon):
         self.PickingObj.flush_model()
         self.assertEqual(self.PickingObj.search_count([('name', '=', picking_2.name)]), 1)
 
+    def test_empty_picking_draft(self):
+        """ test an empty still can be reset to draft """
+        picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.stock_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.assertFalse(picking.move_ids)
+        self.assertEqual(picking.state, 'draft')
+
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
