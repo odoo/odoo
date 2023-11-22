@@ -22,6 +22,7 @@ import {
     PHONE_REGEX,
     URL_REGEX,
     unwrapContents,
+    FONT_SIZE_CLASSES,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -241,6 +242,8 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         const isList = ['UL', 'OL'].includes(block.nodeName);
         let node = isList ? block.parentElement : block;
 
+        _mergeFontSizeClasses(node);
+
         // Sanitize the tree.
         while (node?.isConnected && root.contains(node)) {
             if (!isProtected(node)) {
@@ -287,4 +290,38 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         }
     }
     return nodeToSanitize;
+}
+
+/**
+ * Traverses the DOM tree of a element using a DFS strategy, merges font size
+ * classes from child to their parent when possible.
+ *
+ * @private
+ * @param {HTMLElement} el - The element to traverse.
+ */
+function _mergeFontSizeClasses(el) {
+    if (el.children.length === 0) {
+        return;
+    }
+    for (const childEl of el.children) {
+        _mergeFontSizeClasses(childEl);
+    }
+    // All child nodes have to be elements or void and the parent have to be an
+    // element in which we want to merge font size classes.
+    if ([...el.childNodes].some(childNode =>
+            childNode.nodeType !== Node.ELEMENT_NODE && childNode.textContent.trim() !== "")
+        || !["P", "SPAN", "FONT", "H1", "H2", "H3", "H4", "H5", "H6", "B", "I", "U", "S", "PRE",
+            "BLOCKQUOTE", "CODE", "SMALL"].includes(el.nodeName)) {
+        return;
+    }
+    // Find the common font size class of all children.
+    const fsClass = [...el.children[0].classList].find(c => FONT_SIZE_CLASSES.includes(c));
+    if (!fsClass || [...el.children].some(child => !child.classList.contains(fsClass))) {
+        // No common font size class.
+        return;
+    }
+    el.classList.add(fsClass);
+    for (const childEl of el.children) {
+        childEl.classList.remove(fsClass);
+    }
 }
