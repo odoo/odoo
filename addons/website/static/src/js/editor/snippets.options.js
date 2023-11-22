@@ -13,6 +13,7 @@ import {isImageSupportedForStyle} from "web_editor.image_processing";
 import "website.s_popup_options";
 import { range } from "@web/core/utils/numbers";
 import {Domain} from "@web/core/domain";
+import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -2578,8 +2579,13 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @override
      */
     async onTargetShow() {
-        if (this.$target[0].classList.contains('o_snippet_mobile_invisible')
-                || this.$target[0].classList.contains('o_snippet_desktop_invisible')) {
+        // TODO In future version use tool method to determine isMobilePreview.
+        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+        const isMobilePreview = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+        const isMobileHidden = this.$target[0].classList.contains("o_snippet_mobile_invisible");
+        if ((this.$target[0].classList.contains('o_snippet_mobile_invisible')
+                || this.$target[0].classList.contains('o_snippet_desktop_invisible')
+            ) && isMobilePreview === isMobileHidden) {
             this.$target[0].classList.add('o_snippet_override_invisible');
         }
     },
