@@ -184,13 +184,13 @@ export const fieldMany2OneMailingFilter = {
             label: _t("Domain field"),
             name: "domain_field",
             type: "field",
-            supportedTypes: ["char"]
+            availableTypes: ["char"]
         },
         {
             label: _t("Model field"),
             name: "model_field",
             type: "field",
-            supportedTypes: ["char"]
+            availableTypes: ["char"]
         }
     ],
     extractProps({ options }) {

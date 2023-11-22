@@ -79,7 +79,7 @@ export const charField = {
             label: _t("Model reference field"),
             name: "dynamic_placeholder_model_reference_field",
             type: "field",
-            supportedTypes: ["char"],
+            availableTypes: ["char"],
         },
     ],
     extractProps: ({ attrs, options }) => ({
