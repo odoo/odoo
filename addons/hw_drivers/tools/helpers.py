@@ -275,7 +275,7 @@ def get_version():
     if platform.system() == 'Linux':
         return read_file_first_line('/var/odoo/iotbox_version')
     elif platform.system() == 'Windows':
-        return 'W22_11'
+        return 'W23_11'
 
 def get_wifi_essid():
     wifi_options = []
