@@ -163,23 +163,6 @@ class PosConfig(models.Model):
             if (vals.get('self_ordering_service_mode') == 'counter' or record.self_ordering_service_mode == 'counter') and vals.get('self_ordering_mode') == 'mobile':
                 vals['self_ordering_pay_after'] = 'each'
 
-            if 'self_ordering_image_home_ids' in vals and self.env.context.get('from_settings_view'):
-                linked_ids = set(record.self_ordering_image_home_ids.ids)
-
-                # Changes in the splash screen field always results to an array of link commands or a single set command.
-                # We inspect the commands to determine which attachments should be unlinked.
-                # We only care about the link command. We can consider set command as absolute as it will replace all.
-                for command in vals['self_ordering_image_home_ids']:
-                    if command[0] == 4:
-                        _id = command[1]
-                        if _id in linked_ids:
-                            linked_ids.remove(_id)
-
-                # Remaining items in linked_ids should be unlinked.
-                unlink_commands = [Command.unlink(_id) for _id in linked_ids]
-
-                vals['self_ordering_image_home_ids'] = unlink_commands + vals['self_ordering_image_home_ids']
-
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
         return super().write(vals)
