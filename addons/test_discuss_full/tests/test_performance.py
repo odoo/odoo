@@ -13,6 +13,11 @@ from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_
 class TestDiscussFullPerformance(TransactionCase):
     def setUp(self):
         super().setUp()
+        self.env['mail.shortcode'].search([]).unlink()
+        self.shortcodes = self.env['mail.shortcode'].create([
+            {'source': 'hello', 'substitution': 'Hello. How may I help you?'},
+            {'source': 'bye', 'substitution': 'Thanks for your feedback. Good bye!'},
+        ])
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
@@ -59,6 +64,7 @@ class TestDiscussFullPerformance(TransactionCase):
     def test_init_messaging(self):
         """Test performance of `_init_messaging`."""
         channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
+        channel_general.message_ids.unlink() # Remove messages to avoid depending on demo data.
         self.env['mail.channel'].sudo().search([('id', '!=', channel_general.id)]).unlink()
         user_root = self.env.ref('base.user_root')
         # create public channels
@@ -121,10 +127,10 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_minimized': False,
                     'is_pinned': True,
                     'last_interest_dt': channel_general.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in channel_general._channel_last_message_ids()),
+                    'last_message_id': False,
                     'memberCount': len(self.env.ref('base.group_user').users | user_root),
                     'message_needaction_counter': 0,
-                    'message_unread_counter': 5,
+                    'message_unread_counter': 0,
                     'name': 'general',
                     'public': 'groups',
                     'rtcSessions': [('insert', [])],
@@ -736,13 +742,13 @@ class TestDiscussFullPerformance(TransactionCase):
             'shortcodes': [
                 {
                     'description': False,
-                    'id': 1,
+                    'id': self.shortcodes[0].id,
                     'source': 'hello',
                     'substitution': 'Hello. How may I help you?',
                 },
                 {
                     'description': False,
-                    'id': 2,
+                    'id': self.shortcodes[1].id,
                     'source': 'bye',
                     'substitution': 'Thanks for your feedback. Good bye!',
                 },

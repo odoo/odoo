@@ -4,11 +4,12 @@
 import datetime
 
 from odoo import tests, _
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 
 
 @tests.tagged('post_install', '-at_install')
-class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
+class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_visitor_banner_history(self):
         # create visitor history
         self.env['website.track'].create([{
