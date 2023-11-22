@@ -902,10 +902,6 @@ var SnippetEditor = Widget.extend({
                 if (isMobilePreview === isMobileHidden) {
                     // Preview mode and hidden type are the same.
                     show = false;
-                } else {
-                    // Preview mode is not related to hidden type.
-                    delete this.$target[0].dataset.invisible;
-                    return false;
                 }
             }
         }
@@ -4470,9 +4466,17 @@ var SnippetsMenu = Widget.extend({
                 gridUtils._reloadLazyImages(gridItemEl);
             }
 
+            // TODO In future version use tool method to determine isMobilePreview.
+            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+            const isMobilePreview = this.$body[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
             for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
+                const isMobileHidden = invisibleOverrideEl.classList.contains("o_snippet_mobile_invisible");
                 invisibleOverrideEl.classList.remove('o_snippet_override_invisible');
-                invisibleOverrideEl.dataset.invisible = '1';
+                if (isMobilePreview === isMobileHidden) {
+                    invisibleOverrideEl.dataset.invisible = '1';
+                } else {
+                    delete invisibleOverrideEl.dataset.invisible;
+                }
             }
 
             // This is async but using the main editor mutex, currently locked.
