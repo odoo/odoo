@@ -81,20 +81,26 @@ export class Thread extends Component {
          * scrollable (in other cases).
          */
         this.scrollableRef = this.props.scrollRef ?? useRef("messages");
-        this.loadOlderState = useVisible("load-older", () => {
-            if (this.loadOlderState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread);
-            }
-        });
-        this.loadNewerState = useVisible("load-newer", () => {
-            if (this.loadNewerState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread, "newer");
-            }
-        });
-        this.presentThresholdState = useVisible(
-            "present-treshold",
-            () => this.updateShowJumpPresent(),
+        this.loadOlderState = useVisible(
+            "load-older",
+            () => {
+                if (this.loadOlderState.isVisible && !this.isJumpingRecent) {
+                    this.threadService.fetchMoreMessages(this.props.thread);
+                }
+            },
             { init: true }
+        );
+        this.loadNewerState = useVisible(
+            "load-newer",
+            () => {
+                if (this.loadNewerState.isVisible && !this.isJumpingRecent) {
+                    this.threadService.fetchMoreMessages(this.props.thread, "newer");
+                }
+            },
+            { init: true }
+        );
+        this.presentThresholdState = useVisible("present-treshold", () =>
+            this.updateShowJumpPresent()
         );
         this.setupScroll();
         useEffect(

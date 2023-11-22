@@ -1011,7 +1011,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
         await click(".o-mail-NotificationItem");
-        await contains(".o-mail-Message", { count: 31 });
+        await contains(".o-mail-Message", { count: 30 });
         await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
         await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
         // fold chat window
@@ -1020,7 +1020,7 @@ QUnit.test(
         await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
         // unfold chat window
         await click(".o-mail-ChatWindow-command[title='Open']");
-        await contains(".o-mail-Message", { count: 31 });
+        await contains(".o-mail-Message", { count: 30 });
         await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
     }
 );

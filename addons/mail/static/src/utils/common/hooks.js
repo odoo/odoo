@@ -6,6 +6,7 @@ import {
     onWillPatch,
     onWillUnmount,
     useComponent,
+    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -165,37 +166,31 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
 export function useVisible(refName, cb, { init = false } = {}) {
     const ref = useRef(refName);
     const state = { isVisible: init };
+
+    function setValue(value) {
+        if (state.isVisible !== value) {
+            state.isVisible = value;
+            cb();
+        }
+    }
     const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
-            const newVal = entry.isIntersecting;
-            if (state.isVisible !== newVal) {
-                state.isVisible = newVal;
-                cb();
-            }
+            setValue(entry.isIntersecting);
         }
     });
-    let el;
-    onMounted(observe);
-    onWillUnmount(() => {
-        if (!el) {
-            return;
-        }
-        observer.unobserve(el);
-    });
-    onPatched(observe);
 
-    function observe() {
-        if (ref.el !== el) {
+    useEffect(
+        (el) => {
             if (el) {
-                observer.unobserve(el);
-                state.isVisible = false;
+                observer.observe(el);
+                return () => {
+                    setValue(false);
+                    observer.unobserve(el);
+                };
             }
-            if (ref.el) {
-                observer.observe(ref.el);
-            }
-        }
-        el = ref.el;
-    }
+        },
+        () => [ref.el]
+    );
     return state;
 }
 
