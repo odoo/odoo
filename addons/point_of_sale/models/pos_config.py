@@ -640,10 +640,12 @@ class PosConfig(models.Model):
             cash_journal = self.env['account.journal'].search([
                 *self.env['account.journal']._check_company_domain(company),
                 ('type', '=', 'cash'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
             ], limit=1)
             bank_journal = self.env['account.journal'].search([
                 *self.env['account.journal']._check_company_domain(company),
                 ('type', '=', 'bank'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
             ], limit=1)
             payment_methods = self.env['pos.payment.method']
             if cash_journal and len(cash_journal.pos_payment_method_ids.ids) == 0:
