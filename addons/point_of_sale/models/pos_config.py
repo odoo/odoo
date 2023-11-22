@@ -579,8 +579,16 @@ class PosConfig(models.Model):
         for pos_config in self:
             if pos_config.payment_method_ids or pos_config.has_active_session:
                 continue
-            cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-            bank_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'cash'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
+            ], limit=1)
+            bank_journal = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'bank'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
+            ], limit=1)
             payment_methods = self.env['pos.payment.method']
             if cash_journal:
                 payment_methods |= payment_methods.create({
