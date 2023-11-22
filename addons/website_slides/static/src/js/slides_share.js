@@ -115,7 +115,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
         var $clipboardBtn = $(ev.currentTarget);
         $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
         var share_link_el = this.$('#wslides_share_link_id_' + $clipboardBtn[0].id.split('id_')[1]);
-        await browser.navigator.clipboard.writeText(share_link_el[0].innerText);    
+        await browser.navigator.clipboard.writeText(share_link_el.val() || '');
         $clipboardBtn.tooltip('show');
         setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
     },
@@ -132,7 +132,7 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
         const $clipboardBtn = $(ev.currentTarget);
         $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
         var share_embed_el = this.$('#wslides_share_embed_id_' + $clipboardBtn[0].id.split('id_')[1]);
-        await browser.navigator.clipboard.writeText(share_embed_el[0].innerText);    
+        await browser.navigator.clipboard.writeText(share_embed_el.val() || '');
         $clipboardBtn.tooltip('show');
         setTimeout(function () {
             $clipboardBtn.tooltip("hide");
