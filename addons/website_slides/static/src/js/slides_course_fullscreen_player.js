@@ -444,7 +444,7 @@
             ev.preventDefault();
             var $clipboardBtn = this.$('.o_clipboard_button');
             $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-            await browser.navigator.clipboard.writeText(this.$('.o_wslides_js_share_link')[0].innerText);    
+            await browser.navigator.clipboard.writeText(this.$('.o_wslides_js_share_link').val() || '');
             $clipboardBtn.tooltip('show');
             setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
         },
