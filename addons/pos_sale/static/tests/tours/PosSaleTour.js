@@ -117,7 +117,7 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickQuotationButton();
 ProductScreen.do.selectFirstOrder();
-ProductScreen.check.totalAmountIs(40.25);
+ProductScreen.check.totalAmountIs(32.2); // 3.5 * 8 * 1.15
 ProductScreen.do.clickOrderline("Product A", 0.5);
 ProductScreen.check.checkOrderlinesNumber(4);
 
