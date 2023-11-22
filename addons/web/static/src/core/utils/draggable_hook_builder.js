@@ -977,13 +977,18 @@ export function makeDraggableHook(hookParams) {
                 },
                 () => computeParams(params)
             );
+            // Firefox currently (119.0.1) does not handle our pointer events
+            // nicely when they happen from within the iframe. To work around
+            // this, we use mouse events instead of pointer events.
+            const useMouseEvents = isBrowserFirefox() && !hasTouch() && params.iframeWindow;
             // Effect depending on the `ref.el` to add triggering pointer events listener.
             setupHooks.setup(
                 (el) => {
                     if (el) {
                         const { add, cleanup } = makeCleanupManager();
                         const { addListener } = makeDOMHelpers({ add });
-                        addListener(el, "pointerdown", onPointerDown, { noAddedStyle: true });
+                        const event = useMouseEvents ? "mousedown" : "pointerdown";
+                        addListener(el, event, onPointerDown, { noAddedStyle: true });
                         if (hasTouch()) {
                             addListener(el, "contextmenu", safePrevent);
                             // Adds a non-passive listener on touchstart: this allows
@@ -1010,10 +1015,10 @@ export function makeDraggableHook(hookParams) {
             };
             // Other global event listeners.
             const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
-            addWindowListener("pointermove", throttledOnPointerMove, {
+            addWindowListener(useMouseEvents ? "mousemove" : "pointermove", throttledOnPointerMove, {
                 passive: false,
             });
-            addWindowListener("pointerup", onPointerUp);
+            addWindowListener(useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
             addWindowListener("pointercancel", onPointerCancel);
             addWindowListener("keydown", onKeyDown, { capture: true });
             setupHooks.teardown(() => dragEnd(null));
