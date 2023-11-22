@@ -2,10 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.MonetaryField" owl="1">
-        <span t-if="props.readonly" t-esc="formattedValue" />
-        <div class="text-nowrap d-inline-flex w-100 align-items-baseline" t-else="">
-            <span t-if="!props.hideSymbol and currency" t-out="currencySymbol" />
-            <input t-ref="numpadDecimal" t-att-id="props.id" t-att-type="props.inputType" t-att-placeholder="props.placeholder" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
+        <span t-if="props.readonly" t-esc="getFormattedValue()" />
+        <div class="text-nowrap d-inline-flex w-100 align-items-baseline position-relative me-4" t-else="">
+            <span class="o_input position-absolute pe-none d-flex w-100">
+                <span class="opacity-0 mw-100" t-out="state.value"/>
+                <span t-if="!props.hideSymbol and currency and currency.position === 'after'" t-out="nbsp + currencySymbol"/>
+            </span>
+            <span t-if="!props.hideSymbol and currency and currency.position === 'before'" t-out="currencySymbol + nbsp"/>
+            <input t-ref="numpadDecimal" t-on-input="onInput" t-att-id="props.id" t-att-type="props.inputType" t-att-placeholder="props.placeholder" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
         </div>
     </t>
 

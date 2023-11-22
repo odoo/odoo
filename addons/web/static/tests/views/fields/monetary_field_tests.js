@@ -11,6 +11,7 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
+import { nbsp } from "@web/core/utils/strings";
 
 let serverData;
 let target;
@@ -118,8 +119,8 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
-            "$",
+            target.querySelector(".o_field_widget input").parentNode.childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
 
@@ -166,8 +167,8 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
-            "$",
+            target.querySelector(".o_field_widget input").parentNode.childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
 
@@ -291,9 +292,10 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[0].textContent,
-            "Bs.F",
-            "The input should be preceded by a span containing the currency symbol."
+            target.querySelector(".o_field_widget input").parentNode.childNodes[0].childNodes[1]
+                .textContent,
+            nbsp + "Bs.F",
+            "The input should be superposed with a span containing the currency symbol."
         );
 
         await editInput(target, ".o_field_widget input", "99.111111111");
@@ -352,9 +354,10 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[0].textContent,
-            "Bs.F",
-            "The input should be preceded by a span containing the currency symbol."
+            target.querySelector(".o_field_widget input").parentNode.childNodes[0].childNodes[1]
+                .textContent,
+            nbsp + "Bs.F",
+            "The input should be superposed with a span containing the currency symbol."
         );
 
         await editInput(target, ".o_field_widget input", "99.111111111");
@@ -447,8 +450,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
-            "$",
+            target.querySelector(".o_field_widget input").parentNode.childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
 
@@ -542,8 +545,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.childNodes[0].textContent,
-            "$",
+            target.querySelector(".o_field_widget input").parentNode.childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
 
@@ -592,9 +595,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").textContent +
-                target.querySelector(".o_field_monetary div :last-child").value,
-            "€4.20",
+            target.querySelector(".o_field_monetary input").value +
+                target.querySelector(".o_field_monetary div > span").childNodes[1].textContent,
+            "4.20" + nbsp + "€",
             "The value should be formatted with new currency on blur."
         );
 
@@ -636,9 +639,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").textContent +
-                target.querySelector(".o_field_monetary div :last-child").value,
-            "€4.20",
+            target.querySelector(".o_field_monetary input").value +
+                target.querySelector(".o_field_monetary div > span").childNodes[1].textContent,
+            "4.20" + nbsp + "€",
             "The value should be formatted with new currency on blur."
         );
 
@@ -783,9 +786,10 @@ QUnit.module("Fields", (hooks) => {
             ".o_selected_row .o_field_widget[name=float_field] input",
             "monetary field should have been rendered correctly (without currency)"
         );
-        assert.containsNone(
+        assert.containsN(
             target,
             ".o_selected_row .o_field_widget[name=float_field] span",
+            2,
             "monetary field should have been rendered correctly (without currency)"
         );
 
@@ -799,7 +803,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_selected_row .o_field_widget[name=float_field] span")
                 .innerText,
-            "€",
+            nbsp + "€",
             "monetary field should have been re-rendered correctly (with currency)"
         );
         await click(target.querySelector(".o_field_widget[name=float_field] input"));
@@ -817,9 +821,10 @@ QUnit.module("Fields", (hooks) => {
             ".o_selected_row .o_field_widget[name=float_field] input",
             "monetary field should have been re-rendered correctly (without currency)"
         );
-        assert.containsNone(
+        assert.containsN(
             target,
             ".o_selected_row .o_field_widget[name=float_field] span",
+            2,
             "monetary field should have been re-rendered correctly (without currency)"
         );
         await click(target.querySelector(".o_field_widget[name=float_field] input"));
@@ -897,9 +902,9 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=float_field] input").parentElement.firstChild
-                .textContent,
-            "$",
+            target.querySelector(".o_field_widget[name=float_field] input").parentElement
+                .childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
 
@@ -993,8 +998,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_form_editable");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=monetary_field] input").parentElement
-                .firstChild.textContent,
-            "$",
+                .childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
     });
@@ -1024,8 +1029,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_form_editable");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=monetary_field] input").parentElement
-                .firstChild.textContent,
-            "$",
+                .childNodes[1].textContent,
+            "$" + nbsp,
             "The input should be preceded by a span containing the currency symbol."
         );
     });

@@ -8,16 +8,22 @@ import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { session } from "@web/session";
+import { nbsp } from "@web/core/utils/strings";
 
-import { Component } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class MonetaryField extends Component {
     setup() {
         useInputField({
-            getValue: () => this.formattedValue,
+            getValue: () => this.getFormattedValue(),
             refName: "numpadDecimal",
             parse: parseMonetary,
         });
+        onWillUpdateProps((nextProps) => {
+            this.state.value = this.getFormattedValue(nextProps);
+        });
+        this.state = useState({ value: this.getFormattedValue() });
+        this.nbsp = nbsp;
         useNumpadDecimal();
     }
 
@@ -50,15 +56,19 @@ export class MonetaryField extends Component {
         return session.currencies[this.currencyId].digits;
     }
 
-    get formattedValue() {
-        if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
-            return this.props.value;
+    getFormattedValue(props = this.props) {
+        if (props.inputType === "number" && !props.readonly && props.value) {
+            return props.value;
         }
-        return formatMonetary(this.props.value, {
+        return formatMonetary(props.value, {
             digits: this.currencyDigits,
             currencyId: this.currencyId,
-            noSymbol: !this.props.readonly || this.props.hideSymbol,
+            noSymbol: !props.readonly || props.hideSymbol,
         });
+    }
+
+    onInput(ev) {
+        this.state.value = ev.target.value;
     }
 }
 
