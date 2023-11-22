@@ -209,7 +209,7 @@
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            attrs="{'invisible': &quot;['|', ('project_id', '=', False), ('project_id', '!=', active_id)]&quot;}"/>
+                                            attrs="{'invisible': &quot;[('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>
