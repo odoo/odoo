@@ -692,9 +692,11 @@ class Task(models.Model):
         has_default_name = bool(default.get('name', ''))
         if not has_default_name:
             default['name'] = _("%s (copy)", self.name)
+            default['child_ids'] = [child.copy({'name': _("%s (copy)", child.name)}).id for child in self.child_ids]
+        else:
+            default['child_ids'] = [child.copy({'name': child.name}).id for child in self.child_ids]
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
-        default['child_ids'] = [child.copy({'name': child.name}).id for child in self.child_ids]
         self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
         task_copy = super(Task, self_with_mail_context).copy(default)
         if self.allow_task_dependencies:
