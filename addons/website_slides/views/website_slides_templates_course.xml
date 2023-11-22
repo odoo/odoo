@@ -13,9 +13,9 @@
                             <a href="/slides">Courses</a>
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('fw-bold' if not slide else '')" />
-                        <li t-att-class="'breadcrumb-item %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}"><span t-esc="channel.name"/></a>
-                            <a t-else="" t-attf-href="/slides/#{slug(channel)}"><span t-esc="channel.name"/></a>
+                        <li t-att-class="'breadcrumb-item w-25 %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}" class="text-truncate d-block"><span t-esc="channel.name"/></a>
+                            <a t-else="" t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-esc="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
                             <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}"><span t-esc="search_category.name"/></a>
