@@ -73,6 +73,70 @@ export class Store extends BaseStore {
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
+    menuThreads = Record.many("Thread", {
+        /** @this {import("models").Store} */
+        compute() {
+            /** @type {import("@mail/core/common/thread_model").Thread[]} */
+            let threads = Object.values(this.Thread.records).filter(
+                (thread) =>
+                    thread.displayToSelf ||
+                    (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
+            );
+            const tab = this.discuss.activeTab;
+            if (tab !== "main") {
+                threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
+            } else if (tab === "main" && this.env.inDiscussApp) {
+                threads = threads.filter(({ type }) =>
+                    this.tabToThreadType("mailbox").includes(type)
+                );
+            }
+            return threads;
+        },
+        /**
+         * @this {import("models").Store}
+         * @param {import("models").Thread} a
+         * @param {import("models").Thread} b
+         */
+        sort(a, b) {
+            /**
+             * Ordering:
+             * - threads with needaction
+             * - unread channels
+             * - read channels
+             * - odoobot chat
+             *
+             * In each group, thread with most recent message comes first
+             */
+            if (a.correspondent?.eq(this.odoobot) && !b.correspondent?.eq(this.odoobot)) {
+                return 1;
+            }
+            if (b.correspondent?.eq(this.odoobot) && !a.correspondent?.eq(this.odoobot)) {
+                return -1;
+            }
+            if (a.needactionMessages.length > 0 && b.needactionMessages.length === 0) {
+                return -1;
+            }
+            if (b.needactionMessages.length > 0 && a.needactionMessages.length === 0) {
+                return 1;
+            }
+            if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
+                return -1;
+            }
+            if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
+                return 1;
+            }
+            if (!a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+                return 1;
+            }
+            if (!b.newestPersistentMessage?.datetime && a.newestPersistentMessage?.datetime) {
+                return -1;
+            }
+            if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+                return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
+            }
+            return b.localId > a.localId ? 1 : -1;
+        },
+    });
     discuss = Record.one("DiscussApp");
     failures = Record.many("Failure", {
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
@@ -87,6 +151,14 @@ export class Store extends BaseStore {
     setup() {
         super.setup();
         this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
+    }
+
+    /**
+     * @param {'chat' | 'group'} tab
+     * @returns Thread types matching the given tab.
+     */
+    tabToThreadType(tab) {
+        return tab === "chat" ? ["chat", "group"] : [tab];
     }
 
     updateBusSubscription() {
