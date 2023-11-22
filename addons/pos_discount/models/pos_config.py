@@ -34,5 +34,4 @@ class PosConfig(models.Model):
 
     def _get_special_products(self):
         res = super()._get_special_products()
-        default_discount_product = self.env.ref('point_of_sale.product_product_consumable', raise_if_not_found=False) or self.env['product.product']
-        return res | self.env['pos.config'].search([]).mapped('discount_product_id') | default_discount_product
+        return res | self.env['pos.config'].search([]).mapped('discount_product_id')
