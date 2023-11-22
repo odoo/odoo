@@ -20,6 +20,7 @@
 .o_view_nocontent {
     @include o-position-absolute(0, 0, 0, 0);
     pointer-events: none;
+    overflow: auto;
     z-index: var(--o-view-nocontent-zindex, 1);
     display: flex;
     align-items: center;
