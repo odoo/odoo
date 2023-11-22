@@ -18,6 +18,11 @@ const enterEditModeOfTestProduct = () => [
         content: "Click on the product anchor",
         trigger: "iframe a:contains('Test Remove Image')",
     },
+    {
+        content: "Wait for the product page to be loaded",
+        trigger: "iframe #product_detail",
+        run: () => null, // it's a check
+    },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
 ];
 
