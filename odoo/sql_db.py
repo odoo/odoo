@@ -13,6 +13,7 @@ import os
 import re
 import threading
 import time
+import traceback
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -181,6 +182,7 @@ class BaseCursor:
             self.close()
 
 
+_concurrent = _logger.getChild('concurrent')
 class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,
        acting as a lightweight wrapper around psycopg2's
@@ -277,6 +279,8 @@ class Cursor(BaseCursor):
         self.cache = {}
         self._now = None
 
+        self._first_select = None
+
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
 
@@ -351,6 +355,19 @@ class Cursor(BaseCursor):
         # optional hooks for performance and tracing analysis
         for hook in getattr(current_thread, 'query_hooks', ()):
             hook(self, query, params, start, delay)
+
+        if _concurrent.isEnabledFor(logging.DEBUG):
+            decoded_query = self._obj.query.decode()
+            if self._first_select:
+                _concurrent.debug(
+                    "executed a second query before reading result of first select:\n\n%s\n\n%s",
+                    ''.join(traceback.format_stack()),
+                    self._first_select,
+                )
+                self._first_select = None
+
+            if not re_into.search(decoded_query) and re_from.search(decoded_query):
+                self._first_select = ''.join(traceback.format_stack())
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
@@ -491,6 +508,8 @@ class Cursor(BaseCursor):
     def __getattr__(self, name):
         if self._closed and name == '_obj':
             raise psycopg2.InterfaceError("Cursor already closed")
+        if name in ('fetchall', 'fetchone', 'fetchmany', 'rowcount'):
+            self._first_select = None
         return getattr(self._obj, name)
 
     @property
