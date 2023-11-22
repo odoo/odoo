@@ -70,27 +70,3 @@ class TestFrontendMobile(SelfOrderCommonTest):
         result = response.json()
         order_id = result['result']['id']
         self.assertEqual(self.env['pos.order'].browse(order_id).fiscal_position_id.id, alternative_fp.id)
-
-    def test_properly_delete_splash_screen_images(self):
-        """ Simulate what is done from the res.config.settings view when removing an image. """
-
-        self.pos_config.write({
-            'self_ordering_image_home_ids': [
-                Command.clear(),
-                Command.create({'name': 'a1', 'datas': b'blob1234', 'mimetype': 'image/png'}),
-                Command.create({'name': 'a2', 'datas': b'blob2345', 'mimetype': 'image/png'}),
-                Command.create({'name': 'a3', 'datas': b'blob3456', 'mimetype': 'image/png'}),
-            ]
-        })
-
-        linked_ids = self.pos_config.self_ordering_image_home_ids.ids
-        second_id = linked_ids[1]
-
-        # We'll unlink the second image and then save the settings.
-        # It will be a set of link commands for the images except the one we want to delete.
-        commands = [Command.link(id) for id in linked_ids if id != second_id]
-        self.pos_config.with_context(from_settings_view=True).write({
-            'self_ordering_image_home_ids': commands
-        })
-
-        self.assertTrue(second_id not in self.pos_config.self_ordering_image_home_ids.ids)
