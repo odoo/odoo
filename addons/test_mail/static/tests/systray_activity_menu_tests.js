@@ -6,10 +6,15 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { session } from "@web/session";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
-QUnit.module("activity menu");
+QUnit.module("activity menu", {
+    beforeEach() {
+        // Avoid problem around midnight (Ex.: tomorrow activities become today activities when reaching midnight)
+        patchDate(2023, 11, 13, 8, 0, 0);
+    },
+});
 
 QUnit.test("menu with no records", async () => {
     await start({
@@ -45,12 +50,6 @@ QUnit.test("do not show empty text when at least some future activities", async 
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
-    function containsN(domElement, selector, containings) {
-        return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
-            containings.every((containing) => sel.textContent.includes(containing))
-        ).length;
-    }
-
     const tomorrow = today().plus({ days: 1 });
     const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
@@ -94,24 +93,22 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");
     await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", { count: 2 });
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Late"])
-    );
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "1 Today"])
-    );
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Future"])
-    );
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Late"])
-    );
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Today"])
-    );
-    assert.ok(
-        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "2 Future"])
-    );
+    await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", {
+        contains: [
+            ["div[name='activityTitle']", { text: "res.partner" }],
+            ["span", { text: "0 Late" }],
+            ["span", { text: "1 Today" }],
+            ["span", { text: "0 Future" }],
+        ],
+    });
+    await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", {
+        contains: [
+            ["div[name='activityTitle']", { text: "mail.test.activity" }],
+            ["span", { text: "1 Late" }],
+            ["span", { text: "1 Today" }],
+            ["span", { text: "2 Future" }],
+        ],
+    });
     actionChecks.res_model = "res.partner";
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "res.partner" });
     await contains(".o-mail-ActivityMenu", { count: 0 });

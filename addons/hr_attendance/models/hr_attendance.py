@@ -70,46 +70,47 @@ class HrAttendance(models.Model):
 
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
-        self.env['hr.attendance'].flush_model(['worked_hours'])
-        self.env['hr.attendance.overtime'].flush_model(['duration'])
-        self.env.cr.execute('''
-            SELECT att.id as att_id,
-                   att.worked_hours as att_wh,
-                   ot.id as ot_id,
-                   ot.duration as ot_d,
-                   ot.date as od,
-                   att.check_in as ad
-              FROM hr_attendance att
-         INNER JOIN hr_attendance_overtime ot
-                ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
-                AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
-                AND att.employee_id IN %s
-                AND att.employee_id = ot.employee_id
-                ORDER BY att.check_in DESC
-        ''', (tuple(self.employee_id.ids),))
-        a = self.env.cr.dictfetchall()
-        grouped_dict = dict()
-        for row in a:
-            if row['ot_id'] and row['att_wh']:
-                if row['ot_id'] not in grouped_dict:
-                    grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
-                else:
-                    grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
-
         att_progress_values = dict()
-        for ot in grouped_dict:
-            ot_bucket = grouped_dict[ot]['overtime_duration']
-            for att in grouped_dict[ot]['attendances']:
-                if ot_bucket > 0:
-                    sub_time = att[1] - ot_bucket
-                    if sub_time < 0:
-                        att_progress_values[att[0]] = 0
-                        ot_bucket -= att[1]
+        if self.employee_id:
+            self.env['hr.attendance'].flush_model(['worked_hours'])
+            self.env['hr.attendance.overtime'].flush_model(['duration'])
+            self.env.cr.execute('''
+                SELECT att.id as att_id,
+                       att.worked_hours as att_wh,
+                       ot.id as ot_id,
+                       ot.duration as ot_d,
+                       ot.date as od,
+                       att.check_in as ad
+                  FROM hr_attendance att
+             INNER JOIN hr_attendance_overtime ot
+                    ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
+                    AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
+                    AND att.employee_id IN %s
+                    AND att.employee_id = ot.employee_id
+                    ORDER BY att.check_in DESC
+            ''', (tuple(self.employee_id.ids),))
+            a = self.env.cr.dictfetchall()
+            grouped_dict = dict()
+            for row in a:
+                if row['ot_id'] and row['att_wh']:
+                    if row['ot_id'] not in grouped_dict:
+                        grouped_dict[row['ot_id']] = {'attendances': [(row['att_id'], row['att_wh'])], 'overtime_duration': row['ot_d']}
                     else:
-                        att_progress_values[att[0]] = float(((att[1] - ot_bucket) / att[1])*100)
-                        ot_bucket = 0
-                else:
-                    att_progress_values[att[0]] = 100
+                        grouped_dict[row['ot_id']]['attendances'].append((row['att_id'], row['att_wh']))
+
+            for ot in grouped_dict:
+                ot_bucket = grouped_dict[ot]['overtime_duration']
+                for att in grouped_dict[ot]['attendances']:
+                    if ot_bucket > 0:
+                        sub_time = att[1] - ot_bucket
+                        if sub_time < 0:
+                            att_progress_values[att[0]] = 0
+                            ot_bucket -= att[1]
+                        else:
+                            att_progress_values[att[0]] = float(((att[1] - ot_bucket) / att[1])*100)
+                            ot_bucket = 0
+                    else:
+                        att_progress_values[att[0]] = 100
         for attendance in self:
             attendance.overtime_hours = attendance.worked_hours * ((100 - att_progress_values.get(attendance.id, 100))/100)
 

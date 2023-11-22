@@ -281,7 +281,7 @@ class ReportMoOverview(models.AbstractModel):
                 'quantity_decorator': self._get_comparison_decorator(workorder.duration_expected, wo_duration, 0.01),
                 'uom_name': operation_uom,
                 'production_id': production.id,
-                'unit_cost': expected_cost / workorder.duration_expected,
+                'unit_cost': expected_cost / (workorder.duration_expected or 1),
                 'mo_cost': mo_cost,
                 'real_cost': real_cost,
                 'currency_id': currency.id,

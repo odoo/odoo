@@ -3288,6 +3288,7 @@ msgstr "Forcer la stratégie d'enlèvement"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Forecast"
 msgstr "Prévision"
 
@@ -7533,7 +7534,6 @@ msgstr "Réserver avant la date prévue"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__assigned
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserved"
 msgstr "Réservé"
 
@@ -10018,12 +10018,12 @@ msgstr "Fournisseur"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
 msgid "Vendor Location"
-msgstr "Adresse du vendeur"
+msgstr "Emplacement fournisseur"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Adresses du vendeur"
+msgstr "Emplacements fournisseur"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -10905,6 +10905,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Vous avez traité moins de produits que la demande initiale. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Vous avez des produits en stock pour lesquels le suivi par lot/numéro de série est activé. \n"
+"Désactivez le suivi sur tous les produits avant de désactiver ce paramètre."
 
 #. module: stock
 #. odoo-python

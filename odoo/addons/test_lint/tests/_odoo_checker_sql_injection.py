@@ -153,6 +153,13 @@ class OdooBaseChecker(BaseChecker):
             return self._is_constexpr(node.value, args_allowed=args_allowed, position=position)
         elif isinstance(node, astroid.BinOp): # recusively infer both side of the operation. Failing if either side is not inferable
             left_operand = self._is_constexpr(node.left, args_allowed=args_allowed)
+            # This case allows to always consider a string formatted with %d to be safe
+            if node.op == '%' and \
+                isinstance(node.left, astroid.Const) and \
+                node.left.pytype() == 'builtins.str' and \
+                '%d' in node.left.value and \
+                not '%s' in node.left.value:
+                return True
             right_operand = self._is_constexpr(node.right, args_allowed=args_allowed)
             return left_operand and right_operand
         elif isinstance(node, astroid.Name) or isinstance(node, astroid.AssignName): # Variable: find the assignement instruction in the AST and infer its value.

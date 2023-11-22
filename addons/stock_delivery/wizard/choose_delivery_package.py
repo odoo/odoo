@@ -44,16 +44,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def action_put_in_pack(self):
-        picking_move_lines = self.picking_id.move_line_ids
-
-        move_line_ids = picking_move_lines.filtered(lambda ml:
-            float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-            and not ml.result_package_id
-        )
-        if not move_line_ids:
-            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.quantity, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+        move_line_ids = self.picking_id._package_move_lines()
 
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
         # write shipping weight and package type on 'stock_quant_package' if needed

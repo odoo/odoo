@@ -32,7 +32,11 @@ export async function attachComponent(parent, element, componentClass, props = {
         });
     }
 
-    const component = await app.mount(element);
+    const originalValidateTarget = App.validateTarget;
+    App.validateTarget = () => {};
+    const mountPromise = app.mount(element);
+    App.validateTarget = originalValidateTarget;
+    const component = await mountPromise;
     const subComp = Object.values(component.__owl__.children)[0].component;
     return {
         component: subComp,

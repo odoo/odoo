@@ -2,7 +2,7 @@
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { Model, DispatchResult, helpers } from "@odoo/o-spreadsheet";
+import { Model, DispatchResult, helpers, tokenize } from "@odoo/o-spreadsheet";
 import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
@@ -47,6 +47,7 @@ import {
 import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { toRangeData } from "../utils/zones";
+import { PivotUIPlugin } from "@spreadsheet/pivot/index";
 const { DateTime } = luxon;
 const { toZone } = helpers;
 
@@ -67,6 +68,11 @@ const LAST_YEAR_LEGACY_FILTER = {
 const DEFAULT_FIELD_MATCHINGS = {
     1: { chain: "date", type: "date" },
 };
+
+function getFiltersMatchingPivot(model, formula) {
+    const pivotUIPlugin = model["handlers"].find((handler) => handler instanceof PivotUIPlugin);
+    return pivotUIPlugin._getFiltersMatchingPivot(tokenize(formula));
+}
 
 QUnit.module("spreadsheet > Global filters model", {}, () => {
     QUnit.test("Can add a global filter", async function (assert) {
@@ -1772,21 +1778,25 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     pivot: { 1: { chain: "date", type: "date" } },
                 }
             );
-            const relationalFilters1 = model.getters.getFiltersMatchingPivot(
+            const relationalFilters1 = getFiltersMatchingPivot(
+                model,
                 '=ODOO.PIVOT.HEADER(1,"product_id",37)'
             );
             assert.deepEqual(relationalFilters1, [{ filterId: "42", value: [37] }]);
-            const relationalFilters2 = model.getters.getFiltersMatchingPivot(
+            const relationalFilters2 = getFiltersMatchingPivot(
+                model,
                 '=ODOO.PIVOT.HEADER(1,"product_id","41")'
             );
             assert.deepEqual(relationalFilters2, [{ filterId: "42", value: [41] }]);
-            const dateFilters1 = model.getters.getFiltersMatchingPivot(
+            const dateFilters1 = getFiltersMatchingPivot(
+                model,
                 '=ODOO.PIVOT.HEADER(1,"date:month","08/2016")'
             );
             assert.deepEqual(dateFilters1, [
                 { filterId: "43", value: { yearOffset: -6, period: "august" } },
             ]);
-            const dateFilters2 = model.getters.getFiltersMatchingPivot(
+            const dateFilters2 = getFiltersMatchingPivot(
+                model,
                 '=ODOO.PIVOT.HEADER(1,"date:year","2016")'
             );
             assert.deepEqual(dateFilters2, [{ filterId: "43", value: { yearOffset: -6 } }]);
@@ -1797,7 +1807,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         "getFiltersMatchingPivot return an empty array if there is no pivot formula",
         async function (assert) {
             const model = await createModelWithDataSource();
-            const result = model.getters.getFiltersMatchingPivot("=1");
+            const result = getFiltersMatchingPivot(model, "=1");
             assert.deepEqual(result, []);
         }
     );
@@ -1837,7 +1847,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     pivot: { 1: { chain: "product_id", type: "many2one" } },
                 }
             );
-            const filters = model.getters.getFiltersMatchingPivot(
+            const filters = getFiltersMatchingPivot(
+                model,
                 '=ODOO.PIVOT.HEADER(1,"date:month","08/2016","product_id","41")'
             );
             assert.deepEqual(filters, [{ filterId: "42", value: [41] }]);
@@ -1864,7 +1875,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
             assert.deepEqual(filters, [
                 {
                     filterId: "42",
@@ -1894,7 +1905,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
             assert.deepEqual(filters, [
                 {
                     filterId: "42",
@@ -1919,7 +1930,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 type: "relation",
                 defaultValue: [],
             });
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
             assert.deepEqual(filters, []);
         }
     );
@@ -1944,7 +1955,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
             assert.deepEqual(filters, []);
         }
     );
@@ -1966,7 +1977,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 defaultValue: [1],
                 pivotFields: { 1: { field: "product_id", type: "many2one" } },
             });
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
             assert.deepEqual(filters, []);
         }
     );
@@ -2062,7 +2073,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 type: "relation",
                 defaultValue: [],
             });
-            const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B2"));
+            const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B2"));
             assert.deepEqual(filters, []);
         }
     );

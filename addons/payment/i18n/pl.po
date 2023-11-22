@@ -5,14 +5,15 @@
 # Translators:
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2023
 # Wil Odoo, 2023
+# Anita Kosobucka, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2023-11-14 13:53+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Anita Kosobucka, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +70,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"></i>Skonfiguruj dostawcę płatności"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -77,6 +78,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"Aktywuj metody płatności"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -131,7 +134,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "<span>Your payment methods</span>"
-msgstr ""
+msgstr "<span>Twoje metody płatności</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -515,7 +518,7 @@ msgstr "Wybierz metodę płatności"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr ""
+msgstr "Wybierz inną metodę<i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -1036,7 +1039,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr ""
+msgstr "Brak metod płatności dla twojego dostawcy płatności."
 
 #. module: payment
 #. odoo-python
@@ -1210,7 +1213,7 @@ msgstr "Metoda płatności"
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_code
 msgid "Payment Method Code"
-msgstr ""
+msgstr "Kod metody płatności"
 
 #. module: payment
 #. odoo-python
@@ -1282,14 +1285,14 @@ msgstr "Szczegóły płatności zapisane na %(date)s"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
-msgstr ""
+msgstr "Metody płatności"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Przetwarzanie płatności nie powiodło się"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1475,7 +1478,7 @@ msgstr "Zapisz"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select countries. Leave empty to allow any."
-msgstr ""
+msgstr "Wybierz kraje. Pozostaw puste by zezwolić na każdy."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1490,7 +1493,7 @@ msgstr "Wybierz waluty. Pozostaw puste, aby nie ograniczać."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select currencies. Leave empty to allow any."
-msgstr ""
+msgstr "Wybierz waluty. Pozostaw puste by zezwolić na każdą."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1605,12 +1608,12 @@ msgstr "Obsługa przechwytywania częściowego"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
 msgid "Supported Countries"
-msgstr ""
+msgstr "Obsługiwane kraje"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
 msgid "Supported Currencies"
-msgstr ""
+msgstr "Obsługiwane waluty"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1720,6 +1723,9 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"Lista krajów w których następująca metoda płatności jest dostępna (jeżeli "
+"dostawca na to pozwala). W pozostałych krajach ta metoda płatności nie jest "
+"widoczna dla klientów."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -1732,7 +1738,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "Lista dostawców obsługujących tę metodę płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -2103,7 +2109,7 @@ msgstr "Nie możemy znaleźć płatności, ale nie martw się."
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment. Please wait."
-msgstr ""
+msgstr "Twoja płatność jest przetwarzana. Poczekaj."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2142,10 +2148,10 @@ msgstr "Przelew bankowy"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
 msgstr ""
-"Nie można usunąć dostawcy płatności %s; zamiast tego należy go "
-"zarchiwizować."
 
 #. module: payment
 #. odoo-python
@@ -2257,7 +2263,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr ""
+msgstr "Twoja płatność została poprawnie przetworzona."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status

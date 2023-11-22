@@ -1,29 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Martin Trigaux, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jesse Järvi <me@jessejarvi.net>, 2023
-#
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jesse Järvi <me@jessejarvi.net>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
@@ -34,7 +34,7 @@ msgstr "- tai -"
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Alkuopastus"
 
 #. module: auth_oauth
 #. odoo-python
@@ -168,7 +168,7 @@ msgstr "OAuth Providers"
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID täytyy olla Provider-kohtaisesti yksilöllinen "
+msgstr "OAuth UID täytyy olla Provider-kohtaisesti yksilöllinen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
@@ -241,8 +241,13 @@ msgstr "UserInfon URL (UserInfo URL)"
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Sinulla ei ole pääsyä tähän tietokantaan tai käyttäjäkutsusi on vanhentunut. Pyydä uutta kutsua ja varmista että seuraat kutsuviestissä olevaa linkkiä."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Sinulla ei ole pääsyä tähän tietokantaan tai käyttäjäkutsusi on vanhentunut."
+" Pyydä uutta kutsua ja varmista että seuraat kutsuviestissä olevaa linkkiä."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

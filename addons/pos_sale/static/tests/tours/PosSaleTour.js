@@ -134,3 +134,17 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add('PosSettleOrderNotGroupable', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.totalAmountIs(34.5),
+            ProductScreen.checkOrderlinesNumber(3),
+        ].flat(),
+    });

@@ -1,36 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
-# Timo Kekäläinen <timo.kekalainen@hotmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Marko Happonen <marko.happonen@sprintit.fi>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Martin Trigaux, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -89,8 +85,13 @@ msgstr "<strong>Toimituksen kuvaus:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "Kuvaus toimitustavasta, jonka haluat ilmoittaa asiakkaillesi myyntitilauksessa ja myyntivahvistussähköpostissa. Esim. ohjeet asiakkaille."
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Kuvaus toimitustavasta, jonka haluat ilmoittaa asiakkaillesi "
+"myyntitilauksessa ja myyntivahvistussähköpostissa. Esim. ohjeet asiakkaille."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -132,8 +133,12 @@ msgstr "Arvo"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Summa jonka ylittyessä toimitus on ilmainen, ilmaistuna yrityksen valuutassa."
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Summa jonka ylittyessä toimitus on ilmainen, ilmaistuna yrityksen "
+"valuutassa."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -355,6 +360,7 @@ msgstr "Ympäristö"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr "Virhe: tämä toimitustapa ei ole käytettävissä tässä osoitteessa."
@@ -378,8 +384,12 @@ msgstr "Täytä tämä kenttä, jos aiot laskuttaa lähetyksen perustuen noutoon
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "Lomakkeen täyttäminen mahdollistaa kuljetusliikkeen suodattamisen asiakkaan osoitteen perusteella."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Lomakkeen täyttäminen mahdollistaa kuljetusliikkeen suodattamisen asiakkaan "
+"osoitteen perusteella."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -434,8 +444,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Jos tilauksen kokonaismäärä (ilman lähetystä) on tämän arvon yläpuolella tai yhtä suuri, asiakas saa ilmaisen toimituksen"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Jos tilauksen kokonaismäärä (ilman lähetystä) on tämän arvon yläpuolella tai"
+" yhtä suuri, asiakas saa ilmaisen toimituksen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -565,8 +579,16 @@ msgstr "Etuliite on jo olemassa!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "Postinumeroiden etuliitteet, joita tämä operaattori koskee. Huomaa, että säännöllisiä lausekkeita voidaan käyttää tukemaan maita, joissa postinumeron pituus vaihtelee, eli '$' voidaan lisätä etuliitteen loppuun täsmällisen postinumeron löytämiseksi (esim. '100$' vastaa vain '100' eikä '1000')"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Postinumeroiden etuliitteet, joita tämä operaattori koskee. Huomaa, että "
+"säännöllisiä lausekkeita voidaan käyttää tukemaan maita, joissa postinumeron"
+" pituus vaihtelee, eli '$' voidaan lisätä etuliitteen loppuun täsmällisen "
+"postinumeron löytämiseksi (esim. '100$' vastaa vain '100' eikä '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -670,13 +692,21 @@ msgstr "Toimituksen paino"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "Lähetysvakuutus on palvelu, joka voi korvata lähettäjille, joiden paketti on kadonnut, varastettu ja/tai vahingoittunut kuljetuksen aikana."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Lähetysvakuutus on palvelu, joka voi korvata lähettäjille, joiden paketti on"
+" kadonnut, varastettu ja/tai vahingoittunut kuljetuksen aikana."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "Toimitustavan tiedot on sisällytettävä myyntitilausten ja niiden vahvistussähköpostien alaosaan. Esim. ohjeet asiakkaille noudatettavaksi."
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Toimitustavan tiedot on sisällytettävä myyntitilausten ja niiden "
+"vahvistussähköpostien alaosaan. Esim. ohjeet asiakkaille noudatettavaksi."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -702,7 +732,8 @@ msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
 msgstr "Asiakas voi ladata palautusetiketin asiakasportaalista."
 
 #. module: delivery

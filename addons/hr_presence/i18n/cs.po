@@ -1,25 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-#
+# Jakub Smolka, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_presence
@@ -179,7 +177,9 @@ msgstr "SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
-msgid "Sent manually in presence module when an employee wasn't working despite not being off"
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
 msgstr ""
 
 #. module: hr_presence
@@ -197,7 +197,8 @@ msgstr "Nastavit jako přítomný"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr "Pro tohoto zaměstnance neexistuje žádná profesionální e-mailová adresa."
+msgstr ""
+"Pro tohoto zaměstnance neexistuje žádná profesionální e-mailová adresa."
 
 #. module: hr_presence
 #. odoo-python
@@ -209,7 +210,7 @@ msgstr "Pro tohoto zaměstnance neexistuje profesionální mobilní telefon."
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr "Volné dny"
+msgstr "Volno"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
@@ -226,10 +227,12 @@ msgstr "Neočekávaná absence"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr "Uživatelský protokol"
+msgstr "Historie uživatele"
 
 #. module: hr_presence
 #. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
@@ -238,4 +241,4 @@ msgstr "Nemáte na to právo. Obraťte se na správce."
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "zpráva zpracování websocketu"

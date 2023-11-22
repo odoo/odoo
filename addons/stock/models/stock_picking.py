@@ -546,7 +546,8 @@ class Picking(models.Model):
 
     @api.depends('state')
     def _compute_hide_picking_type(self):
-        self.hide_picking_type = self.state != "draft" and self.ids and 'default_picking_type_id' in self.env.context
+        for picking in self:
+            picking.hide_picking_type = picking.state != "draft" and picking.ids and 'default_picking_type_id' in picking.env.context
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -989,7 +990,7 @@ class Picking(models.Model):
             )
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package))
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product'))
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
@@ -999,43 +1000,43 @@ class Picking(models.Model):
 
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
-        for picking in self:
-            origin_packages = picking.move_line_ids.mapped("package_id")
-            for pack in origin_packages:
-                if picking._check_move_lines_map_quant_package(pack):
-                    package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
-                    move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack and not ml.result_package_id and ml.state not in ('done', 'cancel'))
-                    if not package_level_ids:
-                        package_location = self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id
+        for package in self.move_line_ids.package_id:
+            pickings = self.move_line_ids.filtered(lambda ml: ml.package_id == package).picking_id
+            if pickings._check_move_lines_map_quant_package(package):
+                package_level_ids = pickings.package_level_ids.filtered(lambda pl: pl.package_id == package)
+                move_lines_to_pack = pickings.move_line_ids.filtered(lambda ml: ml.package_id == package and not ml.result_package_id and ml.state not in ('done', 'cancel'))
+                if not package_level_ids:
+                    if len(pickings) == 1:
+                        package_location = pickings._get_entire_pack_location_dest(move_lines_to_pack) or pickings.location_dest_id.id
                         self.env['stock.package_level'].create({
-                            'picking_id': picking.id,
-                            'package_id': pack.id,
-                            'location_id': pack.location_id.id,
+                            'picking_id': pickings.id,
+                            'package_id': package.id,
+                            'location_id': package.location_id.id,
                             'location_dest_id': package_location,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
-                            'company_id': picking.company_id.id,
+                            'company_id': pickings.company_id.id,
                         })
-                        # Propagate the result package in the next move for disposable packages only.
-                        if pack.package_use == 'disposable':
-                            move_lines_to_pack.write({'result_package_id': pack.id})
-                    else:
-                        move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
-                        move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
-                        for ml in move_lines_in_package_level:
-                            ml.write({
-                                'result_package_id': pack.id,
-                                'package_level_id': ml.move_id.package_level_id.id,
-                            })
-                        move_lines_without_package_level.write({
-                            'result_package_id': pack.id,
-                            'package_level_id': package_level_ids[0].id,
+                    # Propagate the result package in the next move for disposable packages only.
+                    if package.package_use == 'disposable':
+                        move_lines_to_pack.write({'result_package_id': package.id})
+                else:
+                    move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
+                    move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
+                    for ml in move_lines_in_package_level:
+                        ml.write({
+                            'result_package_id': package.id,
+                            'package_level_id': ml.move_id.package_level_id.id,
                         })
-                        for pl in package_level_ids:
-                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
-                        for move in move_lines_to_pack.move_id:
-                            if all(line.package_level_id for line in move.move_line_ids) \
-                                    and len(move.move_line_ids.package_level_id) == 1:
-                                move.package_level_id = move.move_line_ids.package_level_id
+                    move_lines_without_package_level.write({
+                        'result_package_id': package.id,
+                        'package_level_id': package_level_ids[0].id,
+                    })
+                    for pl in package_level_ids:
+                        pl.location_dest_id = pickings._get_entire_pack_location_dest(pl.move_line_ids) or pickings.location_dest_id.id
+                    for move in move_lines_to_pack.move_id:
+                        if all(line.package_level_id for line in move.move_line_ids) \
+                                and len(move.move_line_ids.package_level_id) == 1:
+                            move.package_level_id = move.move_line_ids.package_level_id
 
     def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
         """ Get all move_lines with tracked products that need to be checked over in the sanity check.
@@ -1452,14 +1453,11 @@ class Picking(models.Model):
         else:
             return {}
 
-    def _put_in_pack(self, move_line_ids, create_package_level=True):
-        self.ensure_one()
+    def _put_in_pack(self, move_line_ids):
         package = self.env['stock.quant.package'].create({})
-
-        if not package.package_type_id:
-            package_type = move_line_ids.move_id.product_packaging_id.package_type_id
-            if len(package_type) == 1:
-                package.package_type_id = package_type
+        package_type = move_line_ids.move_id.product_packaging_id.package_type_id
+        if len(package_type) == 1:
+            package.package_type_id = package_type
         if len(move_line_ids) == 1:
             default_dest_location = move_line_ids._get_default_dest_location()
             move_line_ids.location_dest_id = default_dest_location._get_putaway_strategy(
@@ -1469,12 +1467,12 @@ class Picking(models.Model):
         move_line_ids.write({
             'result_package_id': package.id,
         })
-        if create_package_level:
+        if len(self) == 1:
             self.env['stock.package_level'].create({
                 'package_id': package.id,
                 'picking_id': self.id,
                 'location_id': False,
-                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                'location_dest_id': move_line_ids.location_dest_id.id,
                 'move_line_ids': [(6, 0, move_line_ids.ids)],
                 'company_id': self.company_id.id,
             })
@@ -1492,18 +1490,21 @@ class Picking(models.Model):
                 return action
         return package_id
 
+    def _package_move_lines(self):
+        quantity_move_line_ids = self.move_line_ids.filtered(
+            lambda ml:
+                float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
+                not ml.result_package_id
+        )
+        move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
+        if not move_line_ids:
+            move_line_ids = quantity_move_line_ids
+        return move_line_ids
+
     def action_put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-
-            quantity_move_line_ids = self.move_line_ids.filtered(
-                lambda ml:
-                    float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
-                    not ml.result_package_id
-            )
-            move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
-            if not move_line_ids:
-                move_line_ids = quantity_move_line_ids
+            move_line_ids = self._package_move_lines()
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:

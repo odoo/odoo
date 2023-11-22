@@ -1,29 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_calendar
-#
+# 
 # Translators:
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Martin Trigaux, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
@@ -72,20 +72,32 @@ msgstr "Aktiivinen"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "An administrator needs to configure Google Synchronization before you can use it!"
-msgstr "Ylläpitäjän pitää tehdä Google-synkronoinnin asetukset, jotta voit ottaa sen käyttöön!"
+msgid ""
+"An administrator needs to configure Google Synchronization before you can "
+"use it!"
+msgstr ""
+"Ylläpitäjän pitää tehdä Google-synkronoinnin asetukset, jotta voit ottaa sen"
+" käyttöön!"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
-msgid "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronisation."
-msgstr "Pääsytunnuksen luomisessa tapahtui virhe. Valtuutuskoodisi voi olla virheellinen tai se on jo vanhentunut [%s]. Tarkista asiakastunnuksesi ja salaisuutesi Google APIs -alustalta tai yritä keskeyttää ja käynnistää kalenterin synkronointi uudelleen."
+msgid ""
+"An error occurred while generating the token. Your authorization code may be"
+" invalid or has already expired [%s]. You should check your Client ID and "
+"secret on the Google APIs plateform or try to stop and restart your calendar"
+" synchronisation."
+msgstr ""
+"Pääsytunnuksen luomisessa tapahtui virhe. Valtuutuskoodisi voi olla "
+"virheellinen tai se on jo vanhentunut [%s]. Tarkista asiakastunnuksesi ja "
+"salaisuutesi Google APIs -alustalta tai yritä keskeyttää ja käynnistää "
+"kalenterin synkronointi uudelleen."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Kalenteri osallistujan tiedot"
+msgstr "Osallistujan tiedot kalenterissa"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -131,9 +143,18 @@ msgstr "Asetukset"
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
 msgstr "Asetukset"
+
+#. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "Configure"
+msgstr "Konfiguroi"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -168,6 +189,13 @@ msgid "Delete from the current Google Calendar account"
 msgstr "Poista nykyisestä Google-kalenteritilistä"
 
 #. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__display_name
 msgid "Display Name"
@@ -187,6 +215,8 @@ msgstr "Tapahtuman toistuvuussääntö"
 
 #. module: google_calendar
 #. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
 msgid "Google"
@@ -230,6 +260,16 @@ msgid "Google Calendar: synchronization"
 msgstr "Google-kalenteri: synkronointi"
 
 #. module: google_calendar
+#: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
+msgid "Google Meet"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
+msgid "Google Synchronization Paused"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
@@ -243,6 +283,11 @@ msgid "Google gave the following explanation: %s"
 msgstr "Google antoi seuraavan selityksen: %s"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
+msgid "Guests Event Modification Permission"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__id
 msgid "ID"
@@ -250,8 +295,17 @@ msgstr "ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_calendar_event__active
-msgid "If the active field is set to false, it will allow you to hide the event alarm information without removing it."
-msgstr "Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa tapahtumahälytystiedot poistamatta niitä."
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa "
+"tapahtumahälytystiedot poistamatta niitä."
+
+#. module: google_calendar
+#: model:ir.model.fields,help:google_calendar.field_res_config_settings__cal_sync_paused
+msgid "Indicates if synchronization with Google Calendar is paused or not."
+msgstr ""
 
 #. module: google_calendar
 #. odoo-python
@@ -263,8 +317,13 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
-msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
-msgstr "Viimeinen Calendar ID, joka on synkronoitu.  Jos tätä muutetaan, kaikki linkitykset poistetaan GoogleID:n ja Odoon sisäisen Google Internal ID:n väliltä"
+msgid ""
+"Last Calendar ID who has been synchronized. If it is changed, we remove all "
+"links between GoogleID and Odoo Google Internal ID"
+msgstr ""
+"Viimeinen Calendar ID, joka on synkronoitu.  Jos tätä muutetaan, kaikki "
+"linkitykset poistetaan GoogleID:n ja Odoon sisäisen Google Internal ID:n "
+"väliltä"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -309,10 +368,15 @@ msgid "Notification"
 msgstr "Ilmoitus"
 
 #. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+msgid "Pause Synchronization"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_rtoken
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "Uudista Token"
+msgstr "Uudista pääsytunniste"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
@@ -323,6 +387,13 @@ msgstr "Nollaa tili"
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
 msgstr "Nollaa Google-kalenteritili"
+
+#. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "Stop Synchronization"
+msgstr ""
 
 #. module: google_calendar
 #. odoo-javascript
@@ -350,8 +421,12 @@ msgstr "Synkronoi vain uudet tapahtumat"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
-msgstr "Google-synkronoinnin asetukset tulee määritellä ennen käyttöönottoa. Haluatko tehdä sen nyt?"
+msgid ""
+"The Google Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"Google-synkronoinnin asetukset tulee määritellä ennen käyttöönottoa. "
+"Haluatko tehdä sen nyt?"
 
 #. module: google_calendar
 #. odoo-python
@@ -359,6 +434,15 @@ msgstr "Google-synkronoinnin asetukset tulee määritellä ennen käyttöönotto
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
 msgstr "Google-kalenteripalvelun tiliä ei ole määritetty."
+
+#. module: google_calendar
+#. odoo-python
+#: code:addons/google_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"The following event can only be updated by the organizer according to the "
+"event permissions set on Google Calendar."
+msgstr ""
 
 #. module: google_calendar
 #. odoo-python
@@ -388,7 +472,7 @@ msgstr "Tämä vaikuttaa vain tapahtumiin, joiden omistaja on käyttäjä"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "Token kelpoisuus"
+msgstr "Pääsytunnisteen kelpoisuus"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -409,14 +493,31 @@ msgid "User's Existing Events"
 msgstr "Käyttäjän olemassa olevat tapahtumat"
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
+msgid "Videocall Source"
+msgstr "Videopuhelun lähde"
+
+#. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
-msgid "You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"
-msgstr "Olet lopettamassa kalenterisi synkronoinnin Googlen kanssa. Haluatko varmasti jatkaa?"
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
+msgstr ""
+"Olet lopettamassa kalenterisi synkronoinnin Googlen kanssa. Haluatko "
+"varmasti jatkaa?"
+
+#. module: google_calendar
+#. odoo-javascript
+#: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, python-format
+msgid "Your administrator paused the synchronization with Google Calendar."
+msgstr ""
 
 #. module: google_calendar
 #. odoo-python
+#: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
@@ -426,5 +527,7 @@ msgstr "määrittelemätön aika"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
-msgid "you don't seem to have permission to modify this event on Google Calendar"
-msgstr "sinulla ei näytä olevan lupaa muokata tätä tapahtumaa Google-kalenterissa"
+msgid ""
+"you don't seem to have permission to modify this event on Google Calendar"
+msgstr ""
+"sinulla ei näytä olevan lupaa muokata tätä tapahtumaa Google-kalenterissa"

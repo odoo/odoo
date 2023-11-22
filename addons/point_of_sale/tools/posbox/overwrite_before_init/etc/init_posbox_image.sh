@@ -21,6 +21,10 @@ source ~/.bashrc
 
 # upgrade firmware-brcm80211 broke access point on rpi4
 apt-mark hold firmware-brcm80211
+# Installations from the current Debian Bookworm (12.0) on amd64 systems are experiencing the problem that prevents
+# the kernel from being upgraded (e.g. when trying to upgrade to kernel linux-image-6.1.0-10-amd64)
+rm /etc/{initramfs/post-update.d/,kernel/{postinst.d/,postrm.d/}}z50-raspi-firmware
+apt purge raspi-firmware
 apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working

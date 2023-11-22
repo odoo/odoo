@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +41,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
-"Se requiere que tanto el proyecto interno como la tarea generen una hoja de "
-"horas para el tiempo personal %s. Si no desea generarla, debe dejar el "
-"proyecto interno y la tarea vacíos."
+"Para crear una hoja de horas para el tiempo personal %s debe establecer el "
+"proyecto interno y la tarea. Si no desea generarla, debe dejar los campos "
+"anteriores vacíos."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -67,7 +68,9 @@ msgstr "Generar hojas de horas"
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
-msgstr "Genere hojas de horas cuando valide este tipo de tiempo personal."
+msgstr ""
+"Genere hojas de horas al validar solicitudes con este tipo de tiempo "
+"personal."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -80,8 +83,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
-"Si se encuentra seleccionado, validar un tiempo libre generará una hoja de "
-"horas en el proyecto de vacaciones de la empresa."
+"Si se encuentra seleccionado, generará una hoja de horas en el proyecto de "
+"vacaciones de la empresa al validar un permiso."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -136,7 +139,7 @@ msgid ""
 msgstr ""
 "El proyecto predeterminado que se usa cuando se generan hojas de horas en "
 "automático desde las solicitudes de tiempo personal. Puede especificar otro "
-"proyecto en cada tipo de tiempo libre de forma individual."
+"proyecto en cada tipo de permiso de forma individual."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -146,7 +149,7 @@ msgid ""
 msgstr ""
 "La tarea predeterminada que se usa cuando se genera una hoja de horas "
 "automáticamente a través de las solicitudes de tiempo libre. Puede "
-"especificar otra tarea en cada tipo de tiempo libre de forma individual."
+"especificar otra tarea en cada tipo de permiso de forma individual."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -185,7 +188,7 @@ msgstr "Tipo de tiempo personal"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr "Contabilización de los tipos de tiempo personal"
+msgstr "Número de tipos de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -207,8 +210,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
-"No puede crear hojas de horas para una tarea que está vinculada a un tipo de"
-" tiempo libre. Mejor use la aplicación Tiempo personal para solicitar uno "
+"No puede crear hojas de horas para una tarea vinculada a un tipo de permiso."
+" Le recomendamos que use la aplicación Tiempo personal para solicitar uno "
 "nuevo."
 
 #. module: project_timesheet_holidays
@@ -230,9 +233,9 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
-"No puede eliminar hojas de horas que estén vinculadas a solicitudes de "
-"tiempo personal. Mejor cancele la solicitud de tiempo libre de la aplicación"
-" Tiempo personal."
+"No puede eliminar hojas de horas vinculadas a solicitudes de tiempo "
+"personal. Le recomendamos que cancele la solicitud desde la aplicación "
+"Tiempo personal."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -242,6 +245,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"No puede modificar las hojas de horas que estén vinculadas a solicitudes de "
-"tiempo personal. Mejor use la aplicación Tiempo personal para modificar sus "
-"solicitudes."
+"No puede modificar las hojas de horas vinculadas a solicitudes de tiempo "
+"personal. Le recomendamos que use la aplicación Tiempo personal para "
+"modificar sus solicitudes."

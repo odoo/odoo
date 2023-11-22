@@ -9,7 +9,7 @@ from odoo.tools.misc import frozendict
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False)
+    expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False, index='btree_not_null')
 
     def action_open_expense_report(self):
         self.ensure_one()

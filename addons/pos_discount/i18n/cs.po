@@ -1,29 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_discount
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
-#
+# Jakub Smolka, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: pos_discount
+#. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
 #, python-format
-msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
 msgstr ""
 
 #. module: pos_discount
@@ -34,11 +37,11 @@ msgstr "Umožnit pokladníkovi poskytnout slevy na celou objednávku."
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Konfigurační nastavení"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
 #, python-format
 msgid "Discount"
 msgstr "Sleva"
@@ -46,11 +49,11 @@ msgstr "Sleva"
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount %"
-msgstr "Sleva %"
+msgstr "Sleva v %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #, python-format
@@ -64,15 +67,15 @@ msgid "Discount Product"
 msgstr "Zlevněný produkt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "No discount product found"
 msgstr "Nenalezen žádný slevový produkt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "No tax"
 msgstr ""
@@ -90,7 +93,7 @@ msgstr "Nastavení prodejního místa"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sezení Prodejního místa"
+msgstr "Relace prodejního místa"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
@@ -98,8 +101,8 @@ msgid "Pos Discount Product"
 msgstr ""
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "Tax: %s"
 msgstr ""
@@ -111,11 +114,15 @@ msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
-msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
-msgstr "Zdá se, že slevový produkt není správně nakonfigurován. Ujistěte se, že je označeno jako 'Může být prodáno' a 'Dostupné v místě prodeje'."
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Zdá se, že slevový produkt není správně nakonfigurován. Ujistěte se, že je "
+"označeno jako 'Může být prodáno' a 'Dostupné v místě prodeje'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id

@@ -902,7 +902,7 @@ class XMLAsset(WebAsset):
         try:
             root = etree.fromstring(content.encode('utf-8'), parser=parser)
         except etree.XMLSyntaxError as e:
-            return f'<t t-name="parsing_error"><parsererror>Invalid XML template: {self.url} \n {e.msg} </parsererror></t>'
+            return f'<t t-name="parsing_error{self.url.replace("/","_")}"><parsererror>Invalid XML template: {self.url} \n {e.msg} </parsererror></t>'
         if root.tag in ('templates', 'template'):
             return ''.join(etree.tostring(el, encoding='unicode') for el in root)
         return etree.tostring(root, encoding='unicode')

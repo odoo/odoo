@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: delivery
@@ -25,12 +25,12 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s Помилка"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Отримати ставку"
 
 #. module: delivery
 #. odoo-python
@@ -51,11 +51,13 @@ msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Тестове</span>\n"
+"                                <span class=\"o_stat_text\">Середовище</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Немає дебагу</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -68,6 +70,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Робоче</span>\n"
+"                                <span class=\"o_stat_text\">Середовище</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -76,8 +80,14 @@ msgstr "<strong>Опис доставки:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "Опис методу доставки, який ви хочете повідомити своїм клієнтам у замовленні на продаж та електронному листі з підтвердженням продажу. Наприклад, інструкції для клієнтів."
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Опис методу доставки, який ви хочете повідомити своїм клієнтам у замовленні "
+"на продаж та електронному листі з підтвердженням продажу. Наприклад, "
+"інструкції для клієнтів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -110,7 +120,7 @@ msgstr "Додати доставку"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Додаткова маржа"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -119,8 +129,12 @@ msgstr "Сума"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Сума замовлення на отримання безкоштовної доставки, виражена у валюті компанії"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Сума замовлення на отримання безкоштовної доставки, виражена у валюті "
+"компанії"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -219,7 +233,8 @@ msgstr "Відстеження журналів"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Метод доставки за замовчуванням використовується у замовленні на продаж."
+msgstr ""
+"Метод доставки за замовчуванням використовується у замовленні на продаж."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -297,6 +312,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Префікси поштових індексів доставки призначаються перевізникам, щоб обмежити, для\n"
+" яких поштових індексів він доступний."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -333,6 +350,9 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Кожен перевізник (напр. UPS) може мати кілька методів доставки (напр.\n"
+"            UPS Express, UPS Standard) з набором правил ціноутворення, \n"
+"доданим до кожного методу."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -341,6 +361,7 @@ msgstr "Середовище"
 
 #. module: delivery
 #. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -352,6 +373,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Орієнтовна вартість: клієнту буде виставлено рахунок на орієнтовну вартість доставки.\n"
+"Реальна вартість: клієнту буде виставлено рахунок на реальну вартість доставки, вартість доставки буде оновлено в SO після доставки."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -361,17 +384,23 @@ msgstr "Орієнтована вартість"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "Заповніть це поле, якщо плануєте нарахувати вартість доставки відповідно до комплектування."
+msgstr ""
+"Заповніть це поле, якщо плануєте нарахувати вартість доставки відповідно до "
+"комплектування."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "Заповнення цієї форми дозволяє вам фільтрувати постачальників доставки відповідно до адреси доставки вашого клієнта."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Заповнення цієї форми дозволяє вам фільтрувати постачальників доставки "
+"відповідно до адреси доставки вашого клієнта."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Фіксована маржа"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -421,8 +450,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Якщо загальна сума замовлення (без доставки) перевищує або дорівнює такому значенню, клієнт отримує вигоду від безкоштовної доставки"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Якщо загальна сума замовлення (без доставки) перевищує або дорівнює такому "
+"значенню, клієнт отримує вигоду від безкоштовної доставки"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -509,7 +542,7 @@ msgstr "Максимальне значення"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
 msgid "Name"
-msgstr "Назва"
+msgstr "Ім'я"
 
 #. module: delivery
 #. odoo-python
@@ -523,7 +556,7 @@ msgstr "Нові провайдери"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Not available for current order"
-msgstr ""
+msgstr "Недоступно для поточного замовлення"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -539,6 +572,8 @@ msgstr "Замовлення"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
 msgstr ""
+"Будь ласка, виберіть країну, перш ніж вибрати штат або префікс поштового "
+"індексу."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -552,8 +587,16 @@ msgstr "Префікс вже існує!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "Префікси поштових індексів, до яких відноситься цей перевізник. Зауважте, що регулярні вирази можна використовувати для підтримки країн із різною довжиною індексу, тобто «$» можна додати до кінця префікса, щоб відповідати точному індексу (наприклад, «100$» відповідатиме лише «100», а не «1000»)"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Префікси поштових індексів, до яких відноситься цей перевізник. Зауважте, що"
+" регулярні вирази можна використовувати для підтримки країн із різною "
+"довжиною індексу, тобто «$» можна додати до кінця префікса, щоб відповідати "
+"точному індексу (наприклад, «100$» відповідатиме лише «100», а не «1000»)"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -634,7 +677,8 @@ msgstr "Товар послуги"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Встановіть Правильно, якщо ваші уповноваження сертифіковані для виробництва."
+msgstr ""
+"Встановіть Правильно, якщо ваші уповноваження сертифіковані для виробництва."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -648,7 +692,7 @@ msgstr "Метод доставки"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Методи доставки"
+msgstr "Способи доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
@@ -657,19 +701,27 @@ msgstr "Вага вантажу"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "Страхування доставки – це послуга, яка може відшкодувати відправникам, чиї посилки втрачено, викрадено та/або пошкоджено під час транспортування."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Страхування доставки – це послуга, яка може відшкодувати відправникам, чиї "
+"посилки втрачено, викрадено та/або пошкоджено під час транспортування."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "Деталі способу доставки вказуються в нижніх замовленнях на продаж і в електронних листах із підтвердженням. наприклад Інструкції для клієнтів."
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Деталі способу доставки вказуються в нижніх замовленнях на продаж і в "
+"електронних листах із підтвердженням. наприклад Інструкції для клієнтів."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Стандартна доставка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -689,7 +741,8 @@ msgstr "Проведення"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
 msgstr "Етикетка повернення може бути звантажена клієнтом з порталу клієнта."
 
 #. module: delivery
@@ -707,7 +760,8 @@ msgstr "Страхування доставки має бути відсотко
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "Доставка здійснюється безкоштовно, оскільки сума замовлення перевищує %.2f."
+msgstr ""
+"Доставка здійснюється безкоштовно, оскільки сума замовлення перевищує %.2f."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -716,11 +770,14 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Ці методи дозволяють автоматично розрахувати вартість доставки відповідно до ваших налаштувань; у\n"
+" замовленні на продаж (на основі комерційної\n"
+" пропозиції) або рахунку-фактурі (на основі замовлень на доставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Ця фіксована сума буде додана до ціни доставки."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -730,7 +787,7 @@ msgstr "Цей відсоток буде додано до вартості до
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Загальна вага замовлення"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -776,7 +833,7 @@ msgstr "Вага * Об'єм"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Назва од. вим. ваги"
 
 #. module: delivery
 #. odoo-python

@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_event
@@ -36,7 +37,7 @@ msgid "(Ref:"
 msgstr "(Реф:"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(only"
 msgstr "(лише"
 
@@ -44,10 +45,8 @@ msgstr "(лише"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
 ")\n"
-"                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
+"                                    <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 msgstr ""
-")\n"
-"                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 
 #. module: website_event
 #. odoo-javascript
@@ -68,16 +67,15 @@ msgstr "<b>Почати</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
-msgid "<em>Write here a quote from one of your attendees. It gives confidence in your events.</em>"
-msgstr "<em>Напишіть тут цитату одного з ваших учасників. Це надає впевненості вашій події.</em>"
+msgid ""
+"<em>Write here a quote from one of your attendees. It gives confidence in "
+"your events.</em>"
+msgstr ""
+"<em>Напишіть тут цитату одного з ваших учасників. Це надає впевненості вашій"
+" події.</em>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.template_intro
-msgid "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Introduction</font>"
-msgstr "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Вступ</font>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
 msgstr "<i class=\"fa fa-ban me-2\"/>Продано"
 
@@ -87,15 +85,31 @@ msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
 msgstr "<i class=\"fa fa-ban me-2\"/>Неопубліковано"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-calendar me-2\"/>Add to Calendar"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr "<i class=\"fa fa-check me-2\"/>Зареєстровано"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"fa fa-chevron-left me-2\"/>\n"
+"            <span>Back to events</span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" title=\"Facebook\"/>"
-msgstr "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" title=\"Facebook\"/>"
+msgid ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
+msgstr ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -109,8 +123,12 @@ msgstr "<i class=\"fa fa-fw fa-calendar\"/> Додати до iCal/Outlook"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-msgid "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" title=\"Configure event tickets\"/><em>Configure Tickets</em>"
-msgstr "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" title=\"Configure event tickets\"/><em>Налаштувати квитки</em>"
+msgid ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+msgstr ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Налаштувати квитки</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -124,22 +142,26 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" title=\"Instagram\"/>"
-msgstr "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" title=\"Instagram\"/>"
+msgid ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
+msgstr ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" title=\"LinkedIn\"/>"
-msgstr "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" title=\"LinkedIn\"/>"
+msgid ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
+msgstr ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid ""
-"<i class=\"fa fa-long-arrow-left me-2\"/>\n"
-"                            <span>All Events</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-map-marker fa-fw\" role=\"img\"/>Get the direction"
 msgstr ""
-"<i class=\"fa fa-long-arrow-left me-2\"/>\n"
-"                            <span>Усі події</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -149,77 +171,81 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
-msgstr "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
+msgstr ""
+"<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" "
+"title=\"Twitter\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" title=\"Youtube\"/>"
-msgstr "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" title=\"Youtube\"/>"
+msgid ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
+msgstr ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Speaker</span>"
-msgstr "<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Спікер</span>"
+msgid ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Speaker</span>"
+msgstr ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Спікер</span>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0 me-auto pe-sm-4\">Events</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span class=\"o_countdown_metric pe-1\">days</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span class=\"o_countdown_metric pe-1\">днів</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">days</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">днів</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_hours\">00</span><span class=\"o_countdown_metric\">:</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_hours\">00</span><span class=\"o_countdown_metric\">:</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span class=\"o_countdown_metric\">:</span>"
-msgstr "<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span class=\"o_countdown_metric\">:</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span class=\"o_countdown_metric\"/>"
-msgstr "<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span class=\"o_countdown_metric\"/>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
+msgstr ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"py-2 o_wevent_registration_title text-start\">Tickets</span>"
-msgstr "<span class=\"py-2 o_wevent_registration_title text-start\">Квитки</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"text-dark fw-bold align-middle px-2\">Qty</span>"
-msgstr "<span class=\"text-dark fw-bold align-middle px-2\">К-сть</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban me-2\"/>Sold Out\n"
-"                                </span>"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
+"                                    </span>"
 msgstr ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban me-2\"/>Продано\n"
-"                                </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
 msgstr "<span>Онлайн-події</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span>Tickets</span>\n"
-"                        <span class=\"btn p-0 close d-none\">×</span>"
-msgstr ""
-"<span>Квитки</span>\n"
-"                        <span class=\"btn p-0 close d-none\">×</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -229,7 +255,7 @@ msgstr "<strong> Ви замовили більше квитків, ніж є в
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_2
 msgid "A friend"
-msgstr ""
+msgstr "Друг"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
@@ -245,11 +271,6 @@ msgstr "Про нас"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "About us"
 msgstr "Про нас"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Add to Calendar"
-msgstr "Додати до календаря"
 
 #. module: website_event
 #. odoo-python
@@ -273,17 +294,18 @@ msgstr "Усі країни"
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_1
 msgid "Allergies"
-msgstr ""
+msgstr "Алергії"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid "Allows to display and manage event-specific menus on website."
-msgstr "Дозволяє відображати та керувати меню для конкретних подій на веб-сайті."
+msgstr ""
+"Дозволяє відображати та керувати меню для конкретних подій на веб-сайті."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Відповідь"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.action_event_registration_report
@@ -292,28 +314,41 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Розбивка відповідей"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__answer_ids
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "Відповіді"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Запитувати один раз на замовлення"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide."
-msgstr "Лише в 13 років John DOE вже розпочав розробляти його перший бізнес-додаток для клієнтів. Після освоєння інженерії, він знайшов TinyERP. Це був перший етап OpenERP, яка згодом стала Odoo, найбільш популярне програмне забезпечення з відкритим кодом у світі."
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
+msgstr ""
+"Лише в 13 років John DOE вже розпочав розробляти його перший бізнес-додаток "
+"для клієнтів. Після освоєння інженерії, він знайшов TinyERP. Це був перший "
+"етап OpenERP, яка згодом стала Odoo, найбільш популярне програмне "
+"забезпечення з відкритим кодом у світі."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
+msgstr "Відповіді учасника"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
+msgid "Attendee Selection Answers"
 msgstr ""
 
 #. module: website_event
@@ -331,12 +366,12 @@ msgstr "Автор"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_1
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_1
 msgid "Blog Post"
-msgstr ""
+msgstr "Допис блогу"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "Зарезервовано"
 
 #. module: website_event
 #. odoo-python
@@ -347,6 +382,7 @@ msgstr "Бізнес воркшопи"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
+#: model:ir.model.fields,field_description:website_event.field_event_tag__can_publish
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Можна опублікувати"
@@ -363,6 +399,8 @@ msgstr "Картки"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Close"
 msgstr "Закрити"
@@ -375,7 +413,7 @@ msgstr ""
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_1
 msgid "Commercials"
-msgstr ""
+msgstr "Комерція"
 
 #. module: website_event
 #. odoo-python
@@ -407,14 +445,19 @@ msgid "Conference For Architects"
 msgstr "Конференція для архітекторів"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
+msgid "Configure event tickets"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Підтвердити реєстрацію"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_0
 msgid "Consumers"
-msgstr ""
+msgstr "Споживачі"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -443,6 +486,7 @@ msgid "Created on"
 msgstr "Створено"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Date"
 msgstr "Дата"
@@ -492,6 +536,16 @@ msgstr "Відображати панель спільноти на веб-са�
 #, python-format
 msgid "Don't forget to click <b>save</b> when you're done."
 msgstr "Не забудьте натиснути <b>зберегти</b>, коли закінчите."
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download All Tickets"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgstr ""
 
 #. module: website_event
 #. odoo-python
@@ -552,12 +606,12 @@ msgstr "Сторінки події"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Запитання події"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Відповідь запитання події"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
@@ -567,7 +621,7 @@ msgstr "Реєстрація події"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Відповідь реєстрації події"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
@@ -576,9 +630,14 @@ msgstr "Реєстрації на подію"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
 msgstr "Підзаголовок події"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_tag
+msgid "Event Tag"
+msgstr "Тег події"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_tag_category
@@ -596,14 +655,14 @@ msgid "Event Template"
 msgstr "Шаблон події"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Title"
 msgstr "Заголовок події"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "Тип події"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -628,6 +687,7 @@ msgstr "Подію не опубліковано"
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
@@ -639,7 +699,7 @@ msgid "Events Page"
 msgstr "Сторінка подій"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Expired"
 msgstr "Протерміновано"
 
@@ -651,9 +711,18 @@ msgid "Extra Register Button"
 msgstr "Додаткова кнопка реєстрації"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "Filters"
+msgstr "Фільтри"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Find out what people see and say about this event, and join the conversation."
-msgstr "Дізнайтеся, що люди думають і говорять про цю подію, і приєднуйтесь до розмови."
+msgid ""
+"Find out what people see and say about this event, and join the "
+"conversation."
+msgstr ""
+"Дізнайтеся, що люди думають і говорять про цю подію, і приєднуйтесь до "
+"розмови."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -674,12 +743,7 @@ msgstr "Наступний контект буде з'являтися на вс
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Get the direction"
-msgstr "Отримати напрямок"
+msgstr "Загальні запитання"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -716,7 +780,7 @@ msgstr ""
 #: model:event.question,title:website_event.event_5_question_0
 #: model:event.question,title:website_event.event_type_data_sports_question_0
 msgid "How did you learn about this event?"
-msgstr ""
+msgstr "Як ви дізналися про цю подію?"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__id
@@ -728,13 +792,20 @@ msgstr "ID"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_question__once_per_order
-msgid "If True, this question will be asked only once and its value will be propagated to every attendees.If not it will be asked for every attendee of a reservation."
+msgid ""
+"If True, this question will be asked only once and its value will be "
+"propagated to every attendees.If not it will be asked for every attendee of "
+"a reservation."
 msgstr ""
+"Якщо True, це питання буде задано лише один раз, і його значення буде "
+"передане кожному учаснику. Якщо ні, то запитуватиметься для кожного учасника"
+" бронювання."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
 msgstr "Вступ"
@@ -766,6 +837,7 @@ msgstr "Участь"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__is_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__is_published
 msgid "Is Published"
 msgstr "Опубліковано"
@@ -831,24 +903,28 @@ msgstr "Меню розташування"
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!"
-msgstr "Виглядає чудово! Тепер <b>опублікуйте</b> цю сторінку, щоби вона стала <b>видимою</b> на вашому веб-сайті!"
+msgid ""
+"Looking great! Let's now <b>publish</b> this page so that it becomes "
+"<b>visible</b> on your website!"
+msgstr ""
+"Виглядає чудово! Тепер <b>опублікуйте</b> цю сторінку, щоби вона стала "
+"<b>видимою</b> на вашому веб-сайті!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Обов'язково"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Обов'язкова відповідь"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_0
 msgid "Meal Type"
-msgstr ""
+msgstr "Тип їжі"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -868,7 +944,7 @@ msgstr "Меню"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_0
 msgid "Mixed"
-msgstr ""
+msgstr "Змішаний"
 
 #. module: website_event
 #. odoo-python
@@ -903,8 +979,13 @@ msgstr "Ще немає пунктів меню веб-сайту!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "No events found."
-msgstr "Подій не знайдено."
+msgid "No event matching your search criteria could be found."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No events scheduled yet"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
@@ -947,7 +1028,7 @@ msgstr "Наші тренінги"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_0
 msgid "Our website"
-msgstr ""
+msgstr "Наш веб-сайт"
 
 #. module: website_event
 #. odoo-python
@@ -959,7 +1040,7 @@ msgstr "Минулі події"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_2
 msgid "Pastafarian"
-msgstr ""
+msgstr "Pastafarian"
 
 #. module: website_event
 #. odoo-python
@@ -976,13 +1057,6 @@ msgid "Photos"
 msgstr "Фотографії"
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/js/website_event.js:0
-#, python-format
-msgid "Please select at least one ticket."
-msgstr "Будь ласка, виберіть принаймні один квиток."
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
@@ -994,20 +1068,20 @@ msgstr "Опубліковано"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Question"
-msgstr ""
+msgstr "Запитання"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Тип запитання"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
+msgstr "Питання не може належати як до категорії подій, так і до себе."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1041,7 +1115,8 @@ msgstr "Реф:"
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
@@ -1071,7 +1146,7 @@ msgstr "Зареєстровані події"
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__registration_id
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #, python-format
 msgid "Registration"
 msgstr "Реєстрація"
@@ -1080,6 +1155,11 @@ msgstr "Реєстрація"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
 msgstr "Реєстрація підтверджена!"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid "Registration failed! These tickets are not available anymore."
+msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.event_registration_action_from_visitor
@@ -1117,10 +1197,12 @@ msgstr "Час, що залишився до початку, (у хвилина�
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_2
 msgid "Research"
-msgstr ""
+msgstr "Пошук"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_id
 msgid "Restrict publishing to this website."
 msgstr "Обмеження публікації на цьому веб-сайті."
 
@@ -1142,15 +1224,15 @@ msgstr "Поділитися"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
-msgstr ""
+msgstr "Продажі"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales end on"
 msgstr "Кінець продажів на"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales start on"
 msgstr "Продажі починаються"
 
@@ -1169,17 +1251,17 @@ msgstr "Пошук події..."
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "Обрані відповіді"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Вибрана відповідь"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Вибір"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1190,7 +1272,7 @@ msgstr "Назва Seo"
 #: model:ir.model.fields,field_description:website_event.field_event_question__sequence
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1208,10 +1290,11 @@ msgstr "Бічна панель"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_0
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_0
 msgid "Social Media"
-msgstr ""
+msgstr "Соціальні мережі"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Sold Out"
 msgstr "Розпродано"
@@ -1224,7 +1307,7 @@ msgstr "Вибачте, подія за цим запитом більше не 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Спеціальні запитання"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1249,7 +1332,7 @@ msgstr "Початок <span/>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Stats"
-msgstr ""
+msgstr "Статистика"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1259,7 +1342,7 @@ msgstr "Підменю (Спеціальне)"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "Запропонована відповідь"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1269,23 +1352,31 @@ msgstr "Шаблони"
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Введення тексту"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_text_box
 msgid "Text answer"
-msgstr ""
+msgstr "Текстова відповідь"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
+#: model:ir.model.fields,help:website_event.field_event_tag__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
 msgstr "URL-адреса повністю, для доступу до документації через сайт."
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr "Веб-сайт має бути від тієї ж компанії, що й подія."
+
+#. module: website_event
 #: model:ir.model.constraint,message:website_event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Має бути запропоноване значення або текст."
 
 #. module: website_event
 #. odoo-python
@@ -1311,7 +1402,7 @@ msgstr "У цьому технічному меню відображаються
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This ticket is not available for sale for this event"
-msgstr ""
+msgstr "Цей квиток недоступний для продажу для цієї події"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1324,6 +1415,12 @@ msgid "Ticket Sales starting on"
 msgstr "Продаж квитків починається"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Tickets"
+msgstr "Квитки"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr "Квитки на цю подію <b>Продані</b>"
@@ -1331,7 +1428,7 @@ msgstr "Квитки на цю подію <b>Продані</b>"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #. module: website_event
 #. odoo-python
@@ -1341,7 +1438,7 @@ msgid "Today"
 msgstr "Сьогодні"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Toggle navigation"
 msgstr "Перемкнути навігацію"
 
@@ -1354,7 +1451,7 @@ msgstr "Філтр верхньої панелі"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #. module: website_event
 #. odoo-python
@@ -1366,21 +1463,20 @@ msgid "Upcoming Events"
 msgstr "Найближчі події"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Use the top button '<b>+ New</b>' to create an event."
-msgstr "Використовуйте верхню кнопку '<b>+ Нова</b>' щоб створити подію."
-
-#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use this <b>shortcut</b> to easily access your event web page."
-msgstr "Використовуйте цей <b>короткий шлях</b>, щоби легко дістатися до вашої сторінки події."
+msgstr ""
+"Використовуйте цей <b>короткий шлях</b>, щоби легко дістатися до вашої "
+"сторінки події."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragraph to write a short text about your events or company."
-msgstr "Використовуйте цей абзац, щоб написати короткий текст про ваші події чи компанію."
+msgstr ""
+"Використовуйте цей абзац, щоб написати короткий текст про ваші події чи "
+"компанію."
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
@@ -1390,7 +1486,7 @@ msgstr "Використовується, коли не є меню на осн�
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_1
 msgid "Vegetarian"
-msgstr ""
+msgstr "Вегетаріанський"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
@@ -1399,6 +1495,7 @@ msgstr "Перегляд"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
 msgstr "Видимий на поточному веб-сайті"
@@ -1409,8 +1506,21 @@ msgid "Visitor"
 msgstr "Відвідувач"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event matching your search for:"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event scheduled at this moment."
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_website
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_id
+#: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
 msgid "Website"
 msgstr "Веб-сайт"
 
@@ -1455,6 +1565,7 @@ msgstr "Підменю події"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_url
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_url
 msgid "Website URL"
 msgstr "URL сайту"
@@ -1502,38 +1613,50 @@ msgstr "Чи розпочнеться подія сьогодні, якщо во
 #. module: website_event
 #: model:event.question,title:website_event.event_7_question_0
 msgid "Which field are you working in"
-msgstr ""
+msgstr "У якій сфері ви працюєте"
 
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "With the Edit button, you can <b>customize</b> the web page visitors will see when registering."
-msgstr "Через кнопку Редагувати ви можете <b>кастомізувати</b> сторінку веб-сайту, яку відвідувачі бачитимуть під час реєстрації."
+msgid ""
+"With the Edit button, you can <b>customize</b> the web page visitors will "
+"see when registering."
+msgstr ""
+"Через кнопку Редагувати ви можете <b>кастомізувати</b> сторінку веб-сайту, "
+"яку відвідувачі бачитимуть під час реєстрації."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgid ""
+"You cannot change the question type of a question that already has answers!"
+msgstr "Ви не можете змінити тип запитання, яке вже має відповідь!"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
+msgstr "Ви не можете видалити запитання, на яке учасники вже відповіли."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question_answer.py:0
 #, python-format
-msgid "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
+msgstr "Ви не можете видалити відповідь, яку вже вибрали учасники."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "alert-link my-3"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "available)"
 msgstr "доступно)"
 
@@ -1546,9 +1669,14 @@ msgstr "напр. \"Конференція для архітекторів\""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "напр. \"У вас є якісь дієтичні обмеження?\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "iCal/Outlook"
 msgstr "iCal/Outlook"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "ms-2"
+msgstr ""

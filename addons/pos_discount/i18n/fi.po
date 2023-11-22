@@ -1,33 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_discount
-#
+# 
 # Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
+#. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
 #, python-format
-msgid "A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it."
-msgstr "Yleisten alennuksen käyttäminen edellyttää alennustuotetta. Määritä se kohdassa Kassa > Määritykset > Asetukset."
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+"Yleisten alennuksen käyttäminen edellyttää alennustuotetta. Määritä se "
+"kohdassa Kassa > Määritykset > Asetukset."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
@@ -40,8 +45,8 @@ msgid "Config Settings"
 msgstr "Asetukset"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
 #, python-format
 msgid "Discount"
 msgstr "Alennus"
@@ -52,8 +57,8 @@ msgid "Discount %"
 msgstr "Alennus %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #, python-format
@@ -67,15 +72,15 @@ msgid "Discount Product"
 msgstr "Alennustuote"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "No discount product found"
 msgstr "Alennustuotetta ei löytynyt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "No tax"
 msgstr "ei veroa"
@@ -101,8 +106,8 @@ msgid "Pos Discount Product"
 msgstr "Kassan alennustuote"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "Tax: %s"
 msgstr "Vero: %s"
@@ -114,11 +119,15 @@ msgid "The default discount percentage when clicking on the Discount button"
 msgstr "Oletusarvoinen alennusprosentti, kun napsautat Alennus-painiketta"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
-msgid "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
-msgstr "Alennustuote näyttää olevan väärin konfiguroitu. Varmista, että se on merkitty 'Voidaan myydä' ja 'Saatavilla kassassa'."
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Alennustuote näyttää olevan väärin konfiguroitu. Varmista, että se on "
+"merkitty 'Voidaan myydä' ja 'Saatavilla kassassa'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id

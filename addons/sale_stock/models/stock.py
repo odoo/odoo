@@ -17,6 +17,15 @@ class StockMove(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
     @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        model = self.env.context.get('active_model')
+        so_id = self.env.context.get('active_id')
+        if model == 'sale.order' and so_id:
+            defaults['group_id'] = self.env[model].browse(so_id).procurement_group_id.id
+        return defaults
+
+    @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
         distinct_fields.append('sale_line_id')

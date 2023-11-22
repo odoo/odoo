@@ -837,7 +837,7 @@
                 <div class="accordion-header d-flex mb-1">
                     <t t-call="website_sale.categorie_link"/>
                     <button t-attf-id="o_wsale_cat_accordion_title_{{c.id}}"
-                            t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1"
+                            t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1 bg-transparent shadow-none"
                             t-attf-data-bs-target="#o_wsale_cat_accordion_{{c.id}}"
                             t-att-aria-expanded="isOpen and 'true' or 'false'"
                             t-attf-aria-controls="o_wsale_cat_accordion_{{c.id}}"

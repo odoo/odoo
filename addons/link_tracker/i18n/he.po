@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* link_tracker
-#
+# 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2022
-# ExcaliberX <excaliberx@gmail.com>, 2022
-# Netta Waizer, 2022
-# NoaFarkash, 2022
-# Martin Trigaux, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-#
+# yael terner, 2023
+# NoaFarkash, 2023
+# Netta Waizer, 2023
+# ExcaliberX <excaliberx@gmail.com>, 2023
+# Yihya Hugirat <hugirat@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Sagi Ahiel, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
-"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: he\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: link_tracker
@@ -43,7 +45,7 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
 msgid "Button label"
-msgstr ""
+msgstr "תווית כפתור"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
@@ -103,6 +105,7 @@ msgstr "נוצר ב-"
 
 #. module: link_tracker
 #. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Creating a Link Tracker without URL is not possible"
@@ -190,8 +193,12 @@ msgstr "קוד מעקב קישורים"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
-msgid "Link Tracker values (URL, campaign, medium and source) must be unique (%s, %s, %s, %s)."
-msgstr "ערכי מעקב אחר קישורים (כתובת אתר, מסע פרסום, אמצעי הגעה לאתר ומקור) חייבים להיות ייחודיים (%s, %s, %s, %s)."
+msgid ""
+"Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
+"%s, %s, %s)."
+msgstr ""
+"ערכי מעקב אחר קישורים (כתובת אתר, מסע פרסום, אמצעי הגעה לאתר ומקור) חייבים "
+"להיות ייחודיים (%s, %s, %s, %s)."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -219,7 +226,7 @@ msgstr "אמצעי תקשורת"
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
 msgid "No data yet!"
-msgstr "אין דירוג עדיין"
+msgstr "אין מידע עדיין"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
@@ -270,8 +277,12 @@ msgstr "כתובת יעד"
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
 #: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "זהו שם שעוזר לך לעקוב אחר מאמצי הקמפיין השונים שלך, למשל Fall_Drive, Christmas_Special"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"זהו שם שעוזר לך לעקוב אחר מאמצי הקמפיין השונים שלך, למשל Fall_Drive, "
+"Christmas_Special"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
@@ -280,7 +291,9 @@ msgstr "זוהי שיטת המשלוח, למשל גלויה, דוא\"ל או מ�
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr "זהו מקור הקישור, למשל מנוע חיפוש, דומיין אחר או שם של רשימת דוא\"ל"
 
 #. module: link_tracker
@@ -296,8 +309,12 @@ msgstr "כתובת אתר למעקב"
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
-msgid "Trackers are used to collect count stat about click on links and generate short URLs."
-msgstr "עוקבים משמשים לאיסוף נתוני ספירה לגבי קליקים על קישורים ויצירת כתובות URL קצרות."
+msgid ""
+"Trackers are used to collect count stat about click on links and generate "
+"short URLs."
+msgstr ""
+"עוקבים משמשים לאיסוף נתוני ספירה לגבי קליקים על קישורים ויצירת כתובות URL "
+"קצרות."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form

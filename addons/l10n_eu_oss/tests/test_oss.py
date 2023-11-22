@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.l10n_eu_oss.models.eu_tag_map import EU_TAG_MAP
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_eu_oss.models.eu_tag_map import EU_TAG_MAP
 from odoo.tests import tagged
 
 
@@ -9,7 +10,7 @@ from odoo.tests import tagged
 class OssTemplateTestCase(AccountTestInvoicingCommon):
 
     @classmethod
-    def load_specific_chart_template(cls, chart_template_ref):
+    def setUpClass(cls, chart_template_ref=None):
         try:
             super().setUpClass(chart_template_ref=chart_template_ref)
         except ValueError as e:
@@ -23,9 +24,26 @@ class TestOSSBelgium(OssTemplateTestCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='be_comp'):
-        cls.load_specific_chart_template(chart_template_ref)
-        cls.company_data['company'].country_id = cls.env.ref('base.be')
-        cls.company_data['company']._map_eu_taxes()
+        super().setUpClass(chart_template_ref)
+        cls.root_company = cls.company_data['company']
+        cls.root_company.country_id = cls.env.ref('base.be')
+        cls.root_company.child_ids = [Command.create({'name': 'Branch A'})]
+        cls.cr.precommit.run()  # load the CoA
+        cls.child_company = cls.root_company.child_ids
+        cls.child_company.child_ids = [Command.create({'name': 'sub Branch B'})]
+        cls.sub_child_company = cls.root_company.child_ids.child_ids
+        cls.cr.precommit.run()  # load the CoA
+
+        cls.sub_child_company._map_eu_taxes()
+
+    def test_oss_tax_should_be_instantiated_on_root_company(self):
+        # simulate sub child selection in the switcher
+        self.env.user.company_id, self.env.user.company_ids = self.sub_child_company, self.sub_child_company
+
+        another_eu_country_code = (self.env.ref('base.europe').country_ids - self.sub_child_company.country_id)[0].code
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        self.assertTrue(tax_oss)
+        self.assertEqual(tax_oss.company_id, self.root_company)
 
     def test_country_tag_from_belgium(self):
         """
@@ -57,7 +75,7 @@ class TestOSSSpain(OssTemplateTestCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='es_full'):
-        cls.load_specific_chart_template(chart_template_ref)
+        super().setUpClass(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.es')
         cls.company_data['company']._map_eu_taxes()
 
@@ -90,7 +108,7 @@ class TestOSSUSA(OssTemplateTestCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        cls.load_specific_chart_template(chart_template_ref)
+        super().setUpClass(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.us')
         cls.company_data['company']._map_eu_taxes()
 

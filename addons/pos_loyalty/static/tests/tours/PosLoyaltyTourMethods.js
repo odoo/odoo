@@ -156,9 +156,5 @@ export function finalizeOrder(paymentMethod, amount) {
     ];
 }
 export function removeRewardLine(name) {
-    return [
-        ...this.selectRewardLine(name),
-        ...ProductScreen.pressNumpad("⌫"),
-        ...Chrome.confirmPopup(),
-    ];
+    return [...selectRewardLine(name), ...ProductScreen.pressNumpad("⌫"), ...Chrome.confirmPopup()];
 }

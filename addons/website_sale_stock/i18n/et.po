@@ -1,36 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Maidu Targama <m.targama@gmail.com>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
-# Piia Paurson <piia@avalah.ee>, 2022
-# Andre Roomet <andreroomet@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
-# Anna, 2023
+# Maidu Targama <m.targama@gmail.com>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# Patrick-Jordan Kiudorv, 2023
+# Martin Trigaux, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
 # JanaAvalah, 2023
-#
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Anna, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">Units</span>"
-msgstr "<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">Ühikud</span>"
+msgid "<span invisible=\"not show_availability\">Units</span>"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -62,8 +62,12 @@ msgstr "Hea klient"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default availability mode set on newly created storable products. This can be changed at the product level."
-msgstr "Uutele ladustatavatele toodetele on seatud vaikimisi saadavuse režiim. Seda saab muuta toote tasemel."
+msgid ""
+"Default availability mode set on newly created storable products. This can "
+"be changed at the product level."
+msgstr ""
+"Uutele ladustatavatele toodetele on seatud vaikimisi saadavuse režiim. Seda "
+"saab muuta toote tasemel."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -71,7 +75,7 @@ msgid "Default visibility for custom messages."
 msgstr "Vaikimisi nähtavad kohandatud sõnumid"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
@@ -83,13 +87,14 @@ msgid "How to display products having low quantities (on hand - reserved)"
 msgstr "Kuidas kuvada väikeses koguses tooteid (Laos - Reserveeritud)"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
 msgstr "Kehtetu e-posti aadress"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
@@ -101,7 +106,7 @@ msgid "Inventory Defaults"
 msgstr "Lao vaikimisi seadistused"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Only"
@@ -113,7 +118,7 @@ msgid "Order Now"
 msgstr "Telli kohe"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
@@ -132,6 +137,7 @@ msgid "Out-of-Stock Message"
 msgstr "Laost otsas sõnum"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #: model:ir.model,name:website_sale_stock.model_product_template
 #, python-format
@@ -145,8 +151,6 @@ msgstr "Toote variatsioon"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
-#: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
 msgstr "Toode: Saada e-kiri toodete saadavuse kohta"
 
@@ -186,10 +190,15 @@ msgid "Show availability Qty"
 msgstr "Näita saadaolevat kogust"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience."
-msgstr "Mõni toode ei ole enam saadaval ja teie ostukorvi on värskendatud. Vabandame ebamugavuste pärast."
+msgid ""
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
+msgstr ""
+"Mõni toode ei ole enam saadaval ja teie ostukorvi on värskendatud. Vabandame"
+" ebamugavuste pärast."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -197,13 +206,21 @@ msgid "The following product is now available."
 msgstr "Järgmine toode on nüüd saadaval. "
 
 #. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+#, python-format
+msgid "The item has not been added to your cart since it is not available."
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "Toode '%(product_name)s' on nüüd saadaval."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
@@ -212,7 +229,7 @@ msgstr "Antud toode on laost otsas."
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Ülekanne"
+msgstr "Siirded"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -227,7 +244,7 @@ msgid "Warehouse"
 msgstr "Ladu"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
@@ -245,27 +262,28 @@ msgid "Website where this order has been placed, for eCommerce orders."
 msgstr "Veebisait, kust e-kaubanduse jaoks see tellimus esitati."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Sa juba lisasid"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
 msgstr "Teil on juba kõik saadaolevad tooted ostukorvi lisatud. "
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
 msgstr "Teil on juba %s tk ostukorvis."
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
 #, python-format
@@ -273,21 +291,22 @@ msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "Küsisite %(desired_qty)s toodet kuid ainult %(new_qty)s on saadaval."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
 msgstr "Küsisite %s tk kuid ainult %s on saadaval."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "sinu ostkorvis"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
@@ -300,8 +319,8 @@ msgid "only if below"
 msgstr "ainult siis, kui alla "
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr "sinumeil@gmail.com"
+msgstr "youremail@gmail.com"

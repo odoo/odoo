@@ -122,7 +122,7 @@ class StockMove(models.Model):
     unit_factor = fields.Float('Unit Factor', compute='_compute_unit_factor', store=True)
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done', store=True)
-    order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True)
+    order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True, index='btree_not_null')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
@@ -374,14 +374,14 @@ class StockMove(models.Model):
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
 
-        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
-        move_to_unlink.quantity = 0
-        move_to_unlink._action_cancel()
-        move_to_unlink.unlink()
         if phantom_moves_vals_list:
             phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
             phantom_moves._adjust_procure_method()
             moves_ids_to_return |= phantom_moves.action_explode().ids
+        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
+        move_to_unlink.quantity = 0
+        move_to_unlink._action_cancel()
+        move_to_unlink.unlink()
         return self.env['stock.move'].browse(moves_ids_to_return)
 
     def action_show_details(self):

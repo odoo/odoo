@@ -418,6 +418,39 @@ class TestPacking(TestPackingCommon):
         with self.assertRaises(UserError):
             picking._action_done()
 
+    def test_pack_delivery_three_step_propagate_package_consumable(self):
+        """ Checks all works right in the following case:
+          * For a three-step delivery
+          * Put products in a package then validate the receipt.
+          * The automatically generated internal transfer should have package set by default.
+        """
+        prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
+        ship_move = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': prod.id,
+            'product_uom_qty': 5.0,
+            'product_uom': prod.uom_id.id,
+            'location_id': self.warehouse.wh_output_stock_loc_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'warehouse_id':  self.warehouse.id,
+            'picking_type_id':  self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
+        })
+
+        # create chained pick/pack moves to test with
+        ship_move._assign_picking()
+        ship_move._action_confirm()
+        pack_move = ship_move.move_orig_ids[0]
+        pick_move = pack_move.move_orig_ids[0]
+
+        picking = pick_move.picking_id
+        picking.action_confirm()
+        picking.action_put_in_pack()
+        self.assertTrue(picking.move_line_ids.result_package_id)
+        picking.button_validate()
+        self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
+
     def test_pack_in_receipt_two_step_single_putway(self):
         """ Checks all works right in the following specific corner case:
 
@@ -1606,3 +1639,31 @@ class TestPacking(TestPackingCommon):
         })
         picking_03.action_confirm()
         self.assertEqual(move_03.move_line_ids.result_package_id, pack_2)
+
+    def test_compute_hide_picking_type_multiple_records(self):
+        """
+        Create two pickings and compute their respective hide picking types together.
+        """
+        picking1 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking1.action_confirm()
+        picking2 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        (picking1 | picking2).with_context(default_picking_type_id=self.ref('stock.picking_type_out'))._compute_hide_picking_type()
+        self.assertTrue(picking1.hide_picking_type)
+        self.assertFalse(picking2.hide_picking_type)

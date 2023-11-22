@@ -8,7 +8,7 @@ import { ImageSelector } from '@web_editor/components/media_dialog/image_selecto
 import { useService } from '@web/core/utils/hooks';
 import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_progress_toast/upload_service';
 
-import { useState, Component, useRef } from "@odoo/owl";
+import { useState, Component } from "@odoo/owl";
 
 class UnsplashCredentials extends Component {
     setup() {
@@ -43,8 +43,6 @@ patch(ImageSelector.prototype, {
         super.setup();
         this.unsplash = useService('unsplash');
         this.keepLastUnsplash = new KeepLast();
-
-        this.unsplashErrorRef = useRef("unsplash-error");
 
         this.state.unsplashRecords = [];
         this.state.isFetchingUnsplash = false;
@@ -211,35 +209,6 @@ patch(ImageSelector.prototype, {
         this.state.unsplashError = null;
         await this.rpc('/web_unsplash/save_unsplash', { key, appId });
         await this.searchUnsplash();
-    },
-
-    /**
-     * Updates the scroll button but takes the unsplash error into account.
-     */
-    updateScroll() {
-        if (!this.state.unsplashError) {
-            super.updateScroll();
-            return;
-        }
-        const unsplashErrorEl = this.unsplashErrorRef.el.querySelector(".alert");
-        const canScroll = this.isElementHidden(unsplashErrorEl);
-        this.state.canScrollAttachments = canScroll;
-        this.loadMoreButtonRef.el.classList.toggle("o_can_scroll", canScroll);
-    },
-
-    /**
-     * Computes the amount to scroll: first for the attachments, then for the
-     * unsplash error when all the attachments are already above the bottom bar.
-     */
-    computeScroll() {
-        let scrollAmount = super.computeScroll();
-        if (this.state.unsplashError && scrollAmount === 15) {
-            const unsplashErrorEl = this.unsplashErrorRef.el.querySelector(".alert");
-            const unsplashErrorBottom = unsplashErrorEl.getBoundingClientRect().bottom;
-            const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
-            scrollAmount += Math.ceil(unsplashErrorBottom - loadMoreTop);
-        }
-        return scrollAmount;
     },
 });
 ImageSelector.components = {

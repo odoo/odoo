@@ -21,8 +21,8 @@
                     <ImponibileCassa t-esc="format_monetary(pension_fund.base_amount, currency)"/>
                     <AliquotaIVA t-esc="format_numbers(pension_fund.vat_tax.amount or 0.0)"/>
                     <Ritenuta t-if="pension_fund.withholding_tax and pension_fund.withholding_tax.sequence > pension_fund.tax.sequence">SI</Ritenuta>
-                    <Natura t-if="pension_fund.tax.l10n_it_exempt_reason" t-esc="format_alphanumeric(pension_fund.tax.l10n_it_exempt_reason)"/>
-                    <RiferimentoAmministrazione t-if="pension_fund.tax.description" t-esc="format_alphanumeric(pension_fund.tax.description, 20)"/>
+                    <Natura t-if="pension_fund.vat_tax.l10n_it_exempt_reason" t-esc="format_alphanumeric(pension_fund.vat_tax.l10n_it_exempt_reason)"/>
+                    <RiferimentoAmministrazione t-if="pension_fund.vat_tax.description" t-esc="format_alphanumeric(pension_fund.vat_tax.description, 20)"/>
                 </DatiCassaPrevidenziale>
             </t>
         </xpath>

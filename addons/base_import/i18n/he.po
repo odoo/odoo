@@ -1,32 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# yotam linder <linder@laylinetech.com>, 2022
-# Sagi Ahiel, 2022
-# Ofir Blum <ofir.blum@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# דודי מלכה <Dudimalka6@gmail.com>, 2022
-# MichaelHadar, 2022
-# Yihya Hugirat <hugirat@gmail.com>, 2022
-# Martin Trigaux, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-# NoaFarkash, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
-#
+# yotam linder <linder@laylinetech.com>, 2023
+# NoaFarkash, 2023
+# Yihya Hugirat <hugirat@gmail.com>, 2023
+# MichaelHadar, 2023
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Sagi Ahiel, 2023
+# Martin Trigaux, 2023
+# Ha Ketem <haketem@gmail.com>, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# דודי מלכה <Dudimalka6@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
-"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: he\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: base_import
@@ -47,7 +46,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr ""
 
 #. module: base_import
@@ -75,8 +76,15 @@ msgstr "לאפשר התאמה עם תתי-שדות"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "אירעה בעיה לא ידועה במהלך הייבוא (ייתכן שהחיבור התנתק, חריגה ממגבלת הנתונים או חריגה ממגבלות הזיכרון). נסה שוב אם הבעיה היא זמנית. אם הבעיה עדיין מתרחשת, נסה לפצל את הקובץ במקום לייבא אותו בפעם אחת."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"אירעה בעיה לא ידועה במהלך הייבוא (ייתכן שהחיבור התנתק, חריגה ממגבלת הנתונים "
+"או חריגה ממגבלות הזיכרון). נסה שוב אם הבעיה היא זמנית. אם הבעיה עדיין "
+"מתרחשת, נסה לפצל את הקובץ במקום לייבא אותו בפעם אחת."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -150,6 +158,8 @@ msgstr "שם עמודה "
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "פסיק"
@@ -165,8 +175,12 @@ msgstr "תגובות"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
-msgstr "לא ניתן היה לאחזר את כתובת האתר: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"לא ניתן היה לאחזר את כתובת האתר: %(url)s [%(field_name)s: L%(line_number)d]:"
+" %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -189,6 +203,7 @@ msgstr "נוצר ב-"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -224,6 +239,7 @@ msgstr "שם לתצוגה"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "נקודה"
@@ -258,6 +274,24 @@ msgid "Error at row %s: \"%s\""
 msgstr ""
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
@@ -280,6 +314,7 @@ msgstr "מומלץ קבצי אקסל כי הפורמט אוטומטי."
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -315,6 +350,7 @@ msgstr "סוג קובץ"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "גודל הקובץ חורג מהמקסימום המוגדר (%s בייטים)"
@@ -349,8 +385,12 @@ msgstr "פורמט"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr "נמצאו נתוני תמונה שאינם תקינים, יש לייבא תמונות ככתובות אתרי אינטרנט או כנתונים מקודדים בבסיס 64."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"נמצאו נתוני תמונה שאינם תקינים, יש לייבא תמונות ככתובות אתרי אינטרנט או "
+"כנתונים מקודדים בבסיס 64."
 
 #. module: base_import
 #. odoo-javascript
@@ -398,8 +438,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr "קובץ הדימוי גדולמדי, ייבוא דימויים צריך להיות קטן מ-24 מיליון פיקסלים"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr "קובץ הדימוי גדולמדי, ייבוא דימויים צריך להיות קטן מ-42 מיליון פיקסלים"
 
 #. module: base_import
 #. odoo-javascript
@@ -442,13 +483,6 @@ msgstr ""
 #, python-format
 msgid "Import records"
 msgstr "ייבוא רשומות"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#, python-format
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-msgstr "זמן הייבוא הסתיים. נסה שוב. אם אתה עדיין נתקל בבעיה זו, הקובץ עשוי להיות גדול מדי לתצורת המערכת, נסה לפצל אותו (ייבא פחות רשומות בקובץ)."
 
 #. module: base_import
 #. odoo-javascript
@@ -502,12 +536,12 @@ msgstr "טוען קובץ..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 #, python-format
 msgid "Loading..."
-msgstr ""
+msgstr "טוען..."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr "דגם"
+msgstr "מודל"
 
 #. module: base_import
 #. odoo-javascript
@@ -657,6 +691,7 @@ msgstr "גליון"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "דלג על הרשומות"
@@ -684,6 +719,7 @@ msgstr "התחל בשורה"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -784,7 +820,8 @@ msgstr "לא ניתן לטעון את הקובץ \"{extension}\": דרוש מו�
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr "פורמט קובץ לא נתמך \"{}\", ייבוא תומך רק ב- CSV, ODS, XLS ו- XLSX"
 
 #. module: base_import
@@ -812,14 +849,21 @@ msgstr "העלה קובץ אקסל או CSV לייבוא"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
@@ -845,8 +889,12 @@ msgstr "כשלערך אין התאמה"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "אינך יכול לייבא תמונות דרך כתובת אתר האינטרנט, פנה למנהל המערכת שלך או לתמיכה כדי להבין את הסיבה."
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"אינך יכול לייבא תמונות דרך כתובת אתר האינטרנט, פנה למנהל המערכת שלך או "
+"לתמיכה כדי להבין את הסיבה."
 
 #. module: base_import
 #. odoo-javascript
@@ -895,7 +943,7 @@ msgstr "דקות"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "עוד"
 
 #. module: base_import
 #. odoo-javascript

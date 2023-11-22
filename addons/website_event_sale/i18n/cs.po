@@ -1,25 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_sale
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2022
-#
+# Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_event_sale
@@ -32,10 +31,8 @@ msgstr ""
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
+"<i class=\"fa fa-check me-2\"/>\n"
+"                                            Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -49,25 +46,34 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
 msgstr ""
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
+msgstr "Potvrdit registraci"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
 msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "Výkaz prodejů událostí"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -75,12 +81,12 @@ msgid "Event Tickets"
 msgstr "Vstupenky na akce"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
 msgstr "Volný"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Od"
 
@@ -102,7 +108,7 @@ msgstr "Pravidlo ceníku"
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product Variant"
-msgstr "Varianta výrobku"
+msgstr "Produktová varianta"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
@@ -118,7 +124,7 @@ msgstr "Prodejní objednávka"
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Řádek zakázky"
+msgstr "Položka prodejní objednávky"
 
 #. module: website_event_sale
 #. odoo-python
@@ -131,7 +137,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
 msgstr ""
 
 #. module: website_event_sale
@@ -163,7 +171,7 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Webstránka"
+msgstr "Webová stránka"
 
 #. module: website_event_sale
 #. odoo-python
@@ -183,6 +191,6 @@ msgid "events"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
 msgstr "k"

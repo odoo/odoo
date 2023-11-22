@@ -129,10 +129,10 @@
                                     <field name="scoring_type" widget="radio" force_save="1"/>
                                     <field name="scoring_success_min" invisible="scoring_type == 'no_scoring'" />
                                     <label for="certification"
-                                           invisible="survey_type == 'live_session'"/>
+                                           invisible="survey_type == 'live_session' or scoring_type == 'no_scoring'"/>
                                     <div class="o_checkbox_optional_field"
                                          invisible="survey_type == 'live_session'">
-                                        <field name="certification" nolabel="1"/>
+                                        <field name="certification" invisible="scoring_type == 'no_scoring'"/>
                                         <div invisible="not certification" class="w-100">
                                             <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
                                             <button name="action_survey_preview_certification_template"

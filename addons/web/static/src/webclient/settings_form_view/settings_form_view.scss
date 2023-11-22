@@ -1,3 +1,11 @@
+body:not(.o_touch_device) .o_settings_container .o_field_selection {
+    &:not(:hover):not(:focus-within) {
+        & select:not(:hover) {
+            background: transparent $o-caret-down no-repeat right center;
+        }
+    }
+}
+
 .o_base_settings_view .o_form_renderer {
    height: 100%;
    overflow: auto;
@@ -156,6 +164,10 @@
            .highlighter {
                background: yellow;
            }
+
+            .o_datepicker .o_datepicker_button {
+                visibility: visible;
+            }
        }
 
        .d-block {

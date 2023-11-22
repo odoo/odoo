@@ -354,7 +354,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'allday': False,
             'recurrency': False,
             'partner_ids': partner_ids,
-            'start': "2023-10-09 08:00:00",
+            'start': "2023-10-04 08:00:00",
             'stop': "2023-10-10 08:00:00",
         })
 

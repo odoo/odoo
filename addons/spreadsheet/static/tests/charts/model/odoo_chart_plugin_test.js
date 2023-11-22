@@ -5,7 +5,10 @@ import { OdooChart } from "@spreadsheet/chart/odoo_chart/odoo_chart";
 import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../utils/chart";
+import { insertListInSpreadsheet } from "../../utils/list";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
+import { addGlobalFilter } from "../../utils/commands";
+import { THIS_YEAR_GLOBAL_FILTER } from "../../utils/global_filter";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { session } from "@web/session";
@@ -518,5 +521,15 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 3]
         );
+    });
+
+    QUnit.test("Can insert odoo chart from a different model", async (assert) => {
+        const model = await createModelWithDataSource();
+        insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
+        await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+        const sheetId = model.getters.getActiveSheetId();
+        assert.strictEqual(model.getters.getChartIds(sheetId).length, 0);
+        insertChartInSpreadsheet(model);
+        assert.strictEqual(model.getters.getChartIds(sheetId).length, 1);
     });
 });

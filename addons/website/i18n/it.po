@@ -40,7 +40,7 @@ msgstr "\" con un"
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "\"%s form submission\" <%s>"
-msgstr ""
+msgstr "\"%s invio modulo\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -950,6 +950,12 @@ msgid ""
 "                                                            <option value=\"3\">Three</option>\n"
 "                                                        </select>"
 msgstr ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Apri menu di selezione</option>\n"
+"                                                            <option value=\"1\">Uno</option>\n"
+"                                                            <option value=\"2\">Due</option>\n"
+"                                                            <option value=\"3\">Tre</option>\n"
+"                                                        </select>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -967,6 +973,18 @@ msgid ""
 "                        Standard Shipping\n"
 "                    </small>"
 msgstr ""
+"<small class=\"d-flex align-items-center\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        Garanzia prezzo basso\n"
+"                    </small>\n"
+"                    <small class=\"d-flex align-items-center\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-stack me-1\"/>\n"
+"                        Reso online 30 giorni\n"
+"                    </small>\n"
+"                    <small class=\"d-flex align-items-center\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/>\n"
+"                        Spedizione standard\n"
+"                    </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -982,42 +1000,42 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-0)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-0)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-1)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-1)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-2)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-2)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-3)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-3)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(ombra)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-lg)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(shadow-lg)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-sm)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(shadow-sm)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">Last updated 3 mins ago</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Ultimo aggiornamento 3 minuti fa</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1067,7 +1085,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid "<small>Free Returns and Standard Shipping</small>"
-msgstr ""
+msgstr "<small>Resi gratuiti e spedizione standard</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1106,6 +1124,9 @@ msgid ""
 "                            <b>Discover our new products</b>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-block p-2 small\">\n"
+"                            <b>Scopri i nostri nuovi prodotti</b>\n"
+"                        </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -1199,6 +1220,8 @@ msgid ""
 "<span class=\"s_blockquote_author text-muted\"><b>Iris DOE</b> • CEO of "
 "MyCompany</span>"
 msgstr ""
+"<span class=\"s_blockquote_author text-muted\"><b>Iris DOE</b> • AD di "
+"MyCompany</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -1206,6 +1229,8 @@ msgid ""
 "<span class=\"s_blockquote_author text-muted\"><b>Jane DOE</b> • CEO of "
 "MyCompany</span>"
 msgstr ""
+"<span class=\"s_blockquote_author text-muted\"><b>Jane DOE</b> • AD di "
+"MyCompany</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote
@@ -1333,6 +1358,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Oggetto</span>\n"
+"                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
@@ -1363,6 +1390,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Question</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">La tua domanda</span>\n"
+"                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
@@ -1509,7 +1538,7 @@ msgstr "Un titolo incisivo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "A second item"
-msgstr ""
+msgstr "Un secondo elemento"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -1526,7 +1555,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "A third item"
-msgstr ""
+msgstr "Un terzo elemento"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -1562,7 +1591,7 @@ msgstr "Informazioni"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_image_text
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_timeline_s_text_block_h2
 msgid "About Me"
-msgstr ""
+msgstr "Chi sono"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
@@ -1624,6 +1653,8 @@ msgid ""
 "Achieve holistic health with personalized nutritional advice that "
 "complements your workouts, promoting overall well-being."
 msgstr ""
+"Raggiungi una salute olistica con consigli nutrizionali personalizzati che "
+"integrano gli allenamenti, promuovendo il benessere generale."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
@@ -1749,7 +1780,7 @@ msgstr "Aggiungi scheda"
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "Add Text Highlight Effects"
-msgstr ""
+msgstr "Aggiungi effetti per evidenziare il testo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
@@ -1849,6 +1880,8 @@ msgid ""
 "Adding a language requires to leave the editor. This will save all your "
 "changes, are you sure you want to proceed?"
 msgstr ""
+"L'aggiunta di una lingua richiede di abbandonare l'editor. Le modifiche "
+"verranno salvate, sei sicuro di voler continuare?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -1862,6 +1895,9 @@ msgid ""
 "Adjust volume, skip tracks, answer calls, and activate voice assistants with"
 " a simple tap, keeping your hands free and your focus on what matters most."
 msgstr ""
+"Regola il volume, salta le tracce, rispondi alle chiamate e attiva "
+"l'assistente vocale con un semplice tocco, per avere le mani libere e "
+"concentrarti su ciò che conta di più."
 
 #. module: website
 #. odoo-javascript
@@ -1968,7 +2004,7 @@ msgstr "Tutti i siti web"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "All You Can Eat"
-msgstr ""
+msgstr "All You Can Eat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -1995,7 +2031,7 @@ msgstr "Queste icone sono totalmente gratuite per uso commerciale. "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "All-Day Comfort"
-msgstr ""
+msgstr "Comfort per tutto il giorno"
 
 #. module: website
 #. odoo-javascript
@@ -2085,12 +2121,12 @@ msgstr "Sempre visibile"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_numbers
 msgid "Amazing Pages"
-msgstr ""
+msgstr "Pagine fantastiche"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Amazing Sound Quality"
-msgstr ""
+msgstr "Qualità del suono fantastica"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -2117,12 +2153,12 @@ msgstr "Si è verificato un errore durante il rendering del template"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "An example alert with an icon"
-msgstr ""
+msgstr "Un avviso di esempio con l'icona"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "An item"
-msgstr ""
+msgstr "Un elemento"
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
@@ -2198,7 +2234,7 @@ msgstr "Altra funzionalità"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Another link"
-msgstr ""
+msgstr "Un altro link"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__append
@@ -2448,7 +2484,7 @@ msgstr "Base"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Basic example"
-msgstr ""
+msgstr "Esempio base"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2468,7 +2504,7 @@ msgstr "Carpaccio di manzo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Beef Carpaccio, Filet Mignon 8oz and Cheesecake"
-msgstr ""
+msgstr "Carpaccio di manzo, 227 grammi di filet mignon e cheesecake"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__before
@@ -2516,7 +2552,7 @@ msgstr "In lista nera nei moduli web"
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 #, python-format
 msgid "Blank Page"
-msgstr ""
+msgstr "Pagina vuota"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2564,7 +2600,7 @@ msgstr "Sfocatura"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_menu
 msgid "Book your table today"
-msgstr ""
+msgstr "Prenota il tuo tavolo oggi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -2611,22 +2647,22 @@ msgstr "Larghezza bordo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius large"
-msgstr ""
+msgstr "Raggio bordo grande"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius medium"
-msgstr ""
+msgstr "Raggio bordo medio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius none"
-msgstr ""
+msgstr "Nessun raggio bordo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius small"
-msgstr ""
+msgstr "Raggio bordo piccolo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2738,6 +2774,7 @@ msgid ""
 "By Crafting unique and compelling brand identities that leave a lasting "
 "impact."
 msgstr ""
+"Creando identità uniche e convincenti che lasciano un impatto duraturo."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -2811,6 +2848,8 @@ msgid ""
 "Cannot apply this option on current text selection. Try clearing the format "
 "and try again."
 msgstr ""
+"Impossibile applicare l'opzione sulla selezione testo corrente. Prova a "
+"pulire il formato e prova di nuovo."
 
 #. module: website
 #. odoo-python
@@ -2843,12 +2882,12 @@ msgstr "Stile scheda"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Card link"
-msgstr ""
+msgstr "Link carta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Card title"
-msgstr ""
+msgstr "Titolo carta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2865,7 +2904,7 @@ msgstr "Carriera"
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 #, python-format
 msgid "Careful"
-msgstr ""
+msgstr "Attenzione"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -3125,7 +3164,7 @@ msgstr "Fai clic per selezionare"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_numbers
 msgid "Clients"
-msgstr ""
+msgstr "Clienti"
 
 #. module: website
 #. odoo-javascript
@@ -3153,7 +3192,7 @@ msgstr "Colore pulsante di chiusura"
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #, python-format
 msgid "Close editor"
-msgstr ""
+msgstr "Chiudi editor"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -3231,7 +3270,7 @@ msgstr "Colonne"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_0_s_cover
 msgid "Coming Soon"
-msgstr ""
+msgstr "In arrivo"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__website_config_preselection
@@ -3410,6 +3449,8 @@ msgid ""
 "Contact us today to embark on your path to a healthier, more vibrant you. "
 "Your fitness journey begins here."
 msgstr ""
+"Contattaci oggi per iniziare il percorso che ti renderà una persona in "
+"salute e più attiva. La tua avventura fitness inizia qui."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -3470,7 +3511,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_controller_page__controller_page_ids
 #: model:ir.model.fields,field_description:website.field_website_page__controller_page_ids
 msgid "Controller Page"
-msgstr ""
+msgstr "Pagina controller"
 
 #. module: website
 #. odoo-javascript
@@ -3581,12 +3622,12 @@ msgstr "Mixin sito web per proprietà copertina"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_cover
 msgid "Crafting Your Digital Success Story"
-msgstr ""
+msgstr "La tua storia di successo digitale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Cras justo odio"
-msgstr ""
+msgstr "Cras justo odio"
 
 #. module: website
 #. odoo-javascript
@@ -3687,7 +3728,7 @@ msgstr "Data creazione"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_color_blocks_2
 msgid "Crystal Clear Sound"
-msgstr ""
+msgstr "Audio cristallino"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
@@ -3869,7 +3910,7 @@ msgstr "Lingua predefinita"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__default_layout
 msgid "Default Layout"
-msgstr ""
+msgstr "Layout predefinito"
 
 #. module: website
 #: model:website.menu,name:website.main_menu
@@ -3896,7 +3937,7 @@ msgstr "Valore predefinito"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default checkbox"
-msgstr ""
+msgstr "Casella di controllo predefinita"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
@@ -3911,17 +3952,17 @@ msgstr "Codice lingua predefinito"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_controller_page_listing_layout
 msgid "Default layout"
-msgstr ""
+msgstr "Layout predefinito"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default radio"
-msgstr ""
+msgstr "Radio predefinito"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default switch checkbox input"
-msgstr ""
+msgstr "Casella di controllo interruttore predefinito"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -4049,7 +4090,7 @@ msgstr "Progettato per aumentare il tasso di conversione"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_cover
 msgid "Designed to provide an immersive audio experience on the go."
-msgstr ""
+msgstr "Progettato per fornire un'esperienza audio immersiva."
 
 #. module: website
 #. odoo-javascript
@@ -4083,7 +4124,7 @@ msgstr "Determina"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text_2nd
 msgid "Digital Consulting Expertise"
-msgstr ""
+msgstr "Esperienza di consulenza digitale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -4129,7 +4170,7 @@ msgstr "Abbandona"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_banner
 msgid "Discover Our Univers"
-msgstr ""
+msgstr "Scopri il nostro universo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -4144,7 +4185,7 @@ msgstr "Scopri di più"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Discover more <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-msgstr ""
+msgstr "Scopri di più <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text
@@ -4152,6 +4193,8 @@ msgid ""
 "Discover our comprehensive marketing service designed to amplify your "
 "brand's reach and impact."
 msgstr ""
+"Scopri il nostro servizio di marketing completo, progettato per amplificare "
+"la portata e l'impatto del tuo marchio."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -4223,12 +4266,12 @@ msgstr "Display 4"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 5"
-msgstr ""
+msgstr "Display 5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 6"
-msgstr ""
+msgstr "Display 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -4327,7 +4370,7 @@ msgstr "Non contiene"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dolly Zoom"
-msgstr ""
+msgstr "Effetto vertigo "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_domain
@@ -4339,6 +4382,7 @@ msgstr "Dominio"
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
 msgid "Domain to restrict records that can be viewed publicly"
 msgstr ""
+"Dominio per limitare i record che possono essere visualizzati pubblicamente"
 
 #. module: website
 #. odoo-javascript
@@ -4510,7 +4554,7 @@ msgstr "Monitora facilmente i tuoi visitatori grazie a Plausible"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_cover
 msgid "EchoTunes Wireless Earbuds"
-msgstr ""
+msgstr "Auricolari senza fili EchoTunes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
@@ -4518,6 +4562,8 @@ msgid ""
 "EchoTunes comes with customizable ear tip sizes that provide a secure and "
 "comfortable fit."
 msgstr ""
+"EchoTunes è dotato di auricolari personalizzabili che garantiscono una "
+"vestibilità sicura e confortevole."
 
 #. module: website
 #. odoo-javascript
@@ -4542,7 +4588,7 @@ msgstr "Modifica %s"
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #, python-format
 msgid "Edit HTML anyway"
-msgstr ""
+msgstr "Modifica comunque HTML"
 
 #. module: website
 #. odoo-javascript
@@ -4629,17 +4675,17 @@ msgstr "Elettronica"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Elements"
-msgstr ""
+msgstr "Elementi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_call_to_action
 msgid "Elevate Your Audio Journey Today"
-msgstr ""
+msgstr "Migliora il tuo viaggio audio oggi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_1_s_banner
 msgid "Elevate Your Brand With Us"
-msgstr ""
+msgstr "Valorizza il tuo marchio con noi"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
@@ -4676,6 +4722,9 @@ msgid ""
 "beginnings. What started as a simple idea in a garage has evolved into an "
 "innovative force in the industry."
 msgstr ""
+"Intraprendi un viaggio nel tempo condividendo la storia dei nostri umili "
+"inizi. Ciò che è iniziato come una semplice idea in un garage si è evoluto "
+"in una forza innovativa nel settore."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -4687,6 +4736,8 @@ msgstr "Incorpora codice"
 msgid ""
 "Empowering your business through strategic digital insights and expertise."
 msgstr ""
+"Dai forza al tuo business grazie a conoscenze e competenze digitali "
+"strategiche."
 
 #. module: website
 #. odoo-python
@@ -4807,7 +4858,7 @@ msgstr "Eventi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_s_carousel
 msgid "Every Friday From 6PM to 7PM !"
-msgstr ""
+msgstr "Ogni venerdì dalle 18:00 alle 19:00!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4837,6 +4888,8 @@ msgid ""
 "Experience a digital transformation like never before with our range of "
 "innovative solutions, designed to illuminate your brand's potential."
 msgstr ""
+"Sperimenta la trasformazione digitale grazie alla nostra gamma di soluzioni "
+"innovative, progettate per illuminare il potenziale del tuo marchio."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_pricing_s_text_block_2nd
@@ -4844,12 +4897,15 @@ msgid ""
 "Experience the power of our software without breaking the bank – choose a "
 "plan that suits you best and start unlocking its full potential today."
 msgstr ""
+"Prova la potenza del nostro software senza spendere una fortuna: scegli il "
+"piano più adatto a te e inizia a sbloccare il suo pieno potenziale oggi "
+"stesso."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_banner
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_text_cover
 msgid "Experienced fullstack developer."
-msgstr ""
+msgstr "Sviluppatore fullstack con esperienza."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_features
@@ -4858,6 +4914,9 @@ msgid ""
 "functional teams and delivering successful outcomes with a strategic "
 "approach."
 msgstr ""
+"Esperienza nella gestione efficace dei progetti, capacità di guidare team "
+"interfunzionali e di ottenere risultati di successo con un approccio "
+"strategico."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -4891,6 +4950,10 @@ msgid ""
 "capture the essence of our craftsmanship, innovation, and dedication to "
 "excellence."
 msgstr ""
+"Esplora la nostra accattivante galleria, un viaggio visivo che mette in "
+"mostra i nostri lavori migliori e progetti creativi. Immergiti in una "
+"collezione di immagini che catturano l'essenza della nostra abilità "
+"artigianale, dell'innovazione e della dedizione all'eccellenza."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
@@ -5175,7 +5238,7 @@ msgstr "Bandiera"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flag and Code"
-msgstr ""
+msgstr "Bandiera e codice"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5300,6 +5363,9 @@ msgid ""
 "He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr ""
+"Fondatore e capo visionario, Tony è la forza motrice dell'azienda. Ama "
+"tenersi occupato partecipando allo sviluppo del software, del marketing e "
+"delle strategie relative all'esperienza del cliente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_media_list
@@ -5308,6 +5374,9 @@ msgid ""
 "hands full by participating in the development of the software, marketing, "
 "and UX strategies."
 msgstr ""
+"In quanto fondatore, Tony è la forza trainante dell'azienda. Ama tenersi "
+"occupato partecipando allo sviluppo del software, del marketing e delle "
+"strategie UX."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_image_text
@@ -5316,6 +5385,9 @@ msgid ""
 "hands full by participating in the development of the software, marketing, "
 "and customer experience."
 msgstr ""
+"In quanto fondatore, Tony è la forza motrice dell'azienda. Ama tenersi "
+"occupato partecipando allo sviluppo del software, del marketing e delle "
+"strategie relative all'esperienza del cliente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5358,6 +5430,8 @@ msgid ""
 "From SEO to social media, we create campaigns that not only get you noticed "
 "but also drive engagement and conversions."
 msgstr ""
+"Dalla SEO ai social media, creiamo campagne che non solo ti fanno notare, ma"
+" che favoriscono anche il coinvolgimento e le conversioni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5381,6 +5455,10 @@ msgid ""
 "digital landscape, we'll guide you through a strategic process that ensures "
 "your brand remains relevant and resonates with your audience."
 msgstr ""
+"Dalla rivitalizzazione dell'identità visiva al riallineamento della "
+"messaggistica per il panorama digitale, ti guideremo attraverso un processo "
+"strategico che assicura che il tuo marchio rimanga rilevante e risuoni con "
+"il pubblico."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -5394,7 +5472,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_features
 msgid "Frontend"
-msgstr ""
+msgstr "Frontend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5876,7 +5954,7 @@ msgstr "Alta"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Highlight"
-msgstr ""
+msgstr "Evidenzia"
 
 #. module: website
 #. odoo-javascript
@@ -6020,6 +6098,9 @@ msgid ""
 "skills, coupled with effective communication, enable me to lead cross-"
 "functional teams to success."
 msgstr ""
+"Sono uno sviluppatore fullstack con un passato da manager. Le mie capacità "
+"analitiche, unite a una comunicazione efficace, mi consentono di condurre al"
+" successo team interfunzionali."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__id
@@ -6142,6 +6223,8 @@ msgid ""
 "If you need to add analytics or marketing tags, inject code in your header "
 "or body instead."
 msgstr ""
+"Se devi aggiungere tag di analisi o di marketing, inserisci il codice "
+"nell'intestazione o nel corpo del documento."
 
 #. module: website
 #. odoo-javascript
@@ -6312,7 +6395,7 @@ msgstr "Vista ereditata"
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #, python-format
 msgid "Inject code in header or body"
-msgstr ""
+msgstr "Inserisci il codice nell'intestazione o nel corpo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -6521,7 +6604,7 @@ msgstr "Cronologia interazioni <br/>(opzionale)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
 msgid "Intuitive Touch Controls"
-msgstr ""
+msgstr "Controlli touch intuitivi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -6696,6 +6779,8 @@ msgid ""
 "It's time to elevate your fitness journey with coaching that's as unique as "
 "you are. Choose your path, embrace the guidance, and transform your life."
 msgstr ""
+"È il momento di elevare il tuo percorso di fitness con un coaching unico "
+"come te. Scegli un percorso, accogli la guida e trasforma la tua vita."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6743,6 +6828,8 @@ msgid ""
 "Join us for a remarkable dining experience that blends exquisite flavors "
 "with a warm ambiance."
 msgstr ""
+"Unisciti a noi per un'esperienza culinaria straordinaria che unisce sapori "
+"squisiti a un ambiente accogliente."
 
 #. module: website
 #. odoo-javascript
@@ -6803,7 +6890,7 @@ msgstr "Larghezza etichette"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 msgid "Landing Pages"
-msgstr ""
+msgstr "Pagine di destinazione"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__lang_id
@@ -6971,7 +7058,7 @@ msgstr "Colore sfondo struttura"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Lead text"
-msgstr ""
+msgstr "Testo contatto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -7029,6 +7116,9 @@ msgid ""
 "digital landscape. Reach out today and let's build something extraordinary "
 "together."
 msgstr ""
+"Collaboriamo per creare soluzioni innovative che si distinguono nel panorama"
+" digitale. Contattati oggi stesso e costruiamo insieme qualcosa di "
+"straordinario."
 
 #. module: website
 #. odoo-javascript
@@ -7050,6 +7140,8 @@ msgid ""
 "Let's turn your vision into reality. Contact us today to set your brand on "
 "the path to digital excellence with us."
 msgstr ""
+"Trasformiamo la tua visione in realtà. Contattaci oggi stesso per avviare il"
+" tuo marchio sulla strada dell'eccellenza digitale."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7065,7 +7157,7 @@ msgstr "Leggero"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Light &amp; Dark"
-msgstr ""
+msgstr "Luce e buio"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -7158,12 +7250,12 @@ msgstr "Elenco"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "List-group"
-msgstr ""
+msgstr "Gruppo elenco"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_controller_page__page_type__listing
 msgid "Listing"
-msgstr ""
+msgstr "Elenco"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7237,7 +7329,7 @@ msgstr "Bassa"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Main"
-msgstr ""
+msgstr "Principale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -7362,6 +7454,8 @@ msgid ""
 "Mastering frontend craftsmanship with expertise in HTML, CSS, and JavaScript"
 " to craft captivating and responsive user experiences."
 msgstr ""
+"Gestione del frontend con competenze in HTML, CSS e JavaScript per creare "
+"esperienze utente accattivanti e reattive."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7401,7 +7495,7 @@ msgstr "Titolo multimedia"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Mediterranean buffet of starters, main dishes and desserts"
-msgstr ""
+msgstr "Buffet mediterraneo di antipasti, piatti principali e dolci"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -7415,7 +7509,7 @@ msgstr "Media"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_1_s_text_block_h2
 msgid "Meet The Team"
-msgstr ""
+msgstr "Incontra il team"
 
 #. module: website
 #. odoo-javascript
@@ -7451,22 +7545,22 @@ msgstr "Menù"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Menu - Sales 1"
-msgstr ""
+msgstr "Menu - Vendite 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Menu - Sales 2"
-msgstr ""
+msgstr "Menu - Vendite 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Menu - Sales 3"
-msgstr ""
+msgstr "Menu - Vendite 3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Menu - Sales 4"
-msgstr ""
+msgstr "Menu - Vendite 4"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__menu_company
@@ -7487,7 +7581,7 @@ msgstr "Voce di menù %s"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Menu One"
-msgstr ""
+msgstr "Menu uno"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__menu_sequence
@@ -7497,7 +7591,7 @@ msgstr "Sequenza menu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Menu Two"
-msgstr ""
+msgstr "Menu due"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__copy_ids
@@ -7507,7 +7601,7 @@ msgstr "Menù a partire da una copia"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Menu with Search bar"
-msgstr ""
+msgstr "Menu con barra di ricerca"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_menu_list
@@ -7547,6 +7641,9 @@ msgid ""
 "Commercial Director in the software industry, Mich has helped the company to"
 " get where it is today."
 msgstr ""
+"Mich ama affrontare le sfide. Grazie alla sua esperienza pluriennale come "
+"Direttore Commerciale nel settore del software, Mich ha aiutato l'azienda ad"
+" arrivare dove è oggi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_0_s_three_columns
@@ -7597,7 +7694,7 @@ msgstr "Minuti"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Mirror Blur"
-msgstr ""
+msgstr "Specchio sfocato"
 
 #. module: website
 #. odoo-javascript
@@ -7628,12 +7725,12 @@ msgstr "Anteprima dispositivo mobile"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Modal"
-msgstr ""
+msgstr "Modale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Modal title"
-msgstr ""
+msgstr "Titolo modale"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
@@ -7662,7 +7759,7 @@ msgstr "Pagina modello"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_controller_pages_list
 msgid "Model Pages"
-msgstr ""
+msgstr "Pagine modello"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__model_name
@@ -7835,7 +7932,7 @@ msgstr "La mia azienda"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_features
 msgid "My Skills"
-msgstr ""
+msgstr "Le mie competenze"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.option_header_brand_name
@@ -7889,7 +7986,7 @@ msgstr "Stretto"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Nav and tabs"
-msgstr ""
+msgstr "Navigazione e schede"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -8123,6 +8220,8 @@ msgid ""
 "Note: To embed code in this specific page, use the \"Embed Code\" building "
 "block"
 msgstr ""
+"Nota; per inserire il codice in questa pagina utilizza il blocco di "
+"costruzione \"Incorpora codice\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -8157,7 +8256,7 @@ msgstr "Numeri"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
 msgid "Nutritional Guidance"
-msgstr ""
+msgstr "Guida nutrizionale"
 
 #. module: website
 #. odoo-javascript
@@ -8273,7 +8372,7 @@ msgstr "Su invito"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
 msgid "On-the-Go Charging"
-msgstr ""
+msgstr "Caricamento in movimento"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -8427,7 +8526,7 @@ msgstr "Altre informazioni:"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_image
 msgid "Our Approach"
-msgstr ""
+msgstr "Il nostro approccio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -8435,6 +8534,8 @@ msgid ""
 "Our Coaching combines personalized fitness plans with mindfulness practices,"
 " ensuring you achieve harmony in your body and peace in your mind."
 msgstr ""
+"Il nostro Coaching combina piani di fitness personalizzati con pratiche di "
+"mindfulness, per garantire l'armonia del corpo e la pace della mente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -8444,12 +8545,12 @@ msgstr "La nostra azienda"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_text_image
 msgid "Our Goals"
-msgstr ""
+msgstr "I nostri obiettivi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_pricing_5_s_text_block_h1
 msgid "Our Menus"
-msgstr ""
+msgstr "I nostri menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
@@ -8464,7 +8565,7 @@ msgstr "La nostra offerta"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_map_s_text_block_h2
 msgid "Our Offices"
-msgstr ""
+msgstr "I nostri uffici"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
@@ -8475,25 +8576,25 @@ msgstr "Le nostre referenze"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_text_block_h2
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_h1
 msgid "Our Services"
-msgstr ""
+msgstr "I nostri servizi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_image_text
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_mini_s_text_block_h2
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Story"
-msgstr ""
+msgstr "La nostra storia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_picture
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_text_block_h1
 msgid "Our Team"
-msgstr ""
+msgstr "Il nostro team"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Values"
-msgstr ""
+msgstr "I nostri valori"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -8501,6 +8602,8 @@ msgid ""
 "Our experienced fitness coaches design workouts that align with your goals, "
 "fitness level, and preferences."
 msgstr ""
+"I nostri esperti allenatori di fitness progettano allenamenti in linea con i"
+" tuoi obiettivi, il tuo livello di forma e le tue preferenze."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
@@ -8509,6 +8612,9 @@ msgid ""
 "driven by a relentless pursuit of innovation and a commitment to exceeding "
 "expectations."
 msgstr ""
+"La nostra missione è creare esperienze trasformative e favorire la crescita,"
+" guidati da una ricerca incessante dell'innovazione e dall'impegno a "
+"superare le aspettative."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text_2nd
@@ -8517,6 +8623,10 @@ msgid ""
 "industry knowledge to analyze your current strategies, identify "
 "opportunities, and formulate data-driven recommendations."
 msgstr ""
+"I nostri consulenti esperti forniscono una guida su misura, sfruttando la "
+"loro profonda conoscenza del settore per analizzare le tue strategie "
+"attuali, identificare le opportunità e formulare raccomandazioni basate sui "
+"dati."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -8532,6 +8642,11 @@ msgid ""
 "to businesses of all sizes, we offer pricing options that provide "
 "exceptional value without compromising on features or performance."
 msgstr ""
+"I nostri piani software sono progettati per soddisfare una varietà di "
+"esigenze, assicurandoti di trovare la soluzione perfetta per le tue "
+"necessità. Dai singoli utenti alle aziende di ogni dimensione, offriamo "
+"opzioni di prezzo che garantiscono un valore eccezionale senza compromettere"
+" le funzionalità o le prestazioni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -8552,6 +8667,10 @@ msgid ""
 "providing exceptional service. They reflect our dedication to integrity, "
 "collaboration, and client satisfaction."
 msgstr ""
+"I nostri valori plasmano la nostra cultura, influenzano le nostre decisioni "
+"e ci guidano nel fornire un servizio eccezionale. Essi riflettono la nostra "
+"dedizione all'integrità, alla collaborazione e alla soddisfazione del "
+"cliente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8625,7 +8744,7 @@ msgstr "Ancoraggio pagina"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Page Details"
-msgstr ""
+msgstr "Dettagli pagina"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__website_indexed
@@ -8661,7 +8780,7 @@ msgstr "Titolo pagina"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__page_type
 msgid "Page Type"
-msgstr ""
+msgstr "Tipo di pagina"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__url
@@ -8820,12 +8939,12 @@ msgstr "Paga"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_cover
 msgid "Personalized Fitness"
-msgstr ""
+msgstr "Fitness personalizzato"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
 msgid "Personalized Workouts"
-msgstr ""
+msgstr "Allenamenti personalizzati"
 
 #. module: website
 #. odoo-javascript
@@ -9044,7 +9163,7 @@ msgstr "Tariffazione"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_pricing_s_text_block_h1
 msgid "Pricing Plans"
-msgstr ""
+msgstr "Piani tariffari"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -9113,6 +9232,8 @@ msgid ""
 "Proficient in backend development, specializing in Python, Django, and "
 "database management to create efficient and scalable solutions."
 msgstr ""
+"Competente nello sviluppo backend, specializzato in Python, Django e nella "
+"gestione di database per creare soluzioni efficienti e scalabili."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -9145,7 +9266,7 @@ msgstr "Peso barra di avanzamento"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
 msgid "Progress Tracking"
-msgstr ""
+msgstr "Monitoraggio avanzamento"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9176,7 +9297,7 @@ msgstr "Utente pubblico"
 #. module: website
 #: model:res.groups,name:website.website_page_controller_expose
 msgid "Public access to arbitrary exposed model"
-msgstr ""
+msgstr "Accesso pubblico a un modello esposto in maniera arbitraria"
 
 #. module: website
 #. odoo-javascript
@@ -9246,7 +9367,7 @@ msgstr "Qualità"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_pricing_s_text_block_h2
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_h2
 msgid "Questions?"
-msgstr ""
+msgstr "Domande?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9289,12 +9410,12 @@ msgstr "Riordinare"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_call_to_action
 msgid "Ready to Embrace Your Fitness Journey?"
-msgstr ""
+msgstr "Pronto a intrapendere il tuo percorso fitness?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_about
 msgid "Ready to bring your digital vision to life?"
-msgstr ""
+msgstr "Pronto a dare vita alla tua visione digitale?"
 
 #. module: website
 #. odoo-javascript
@@ -9306,7 +9427,7 @@ msgstr "Pronto a costruire il"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_digital
 msgid "Ready to embark on a journey of digital transformation?"
-msgstr ""
+msgstr "Pronto a intraprendere un viaggio di trasformazione digitale?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_call_to_action
@@ -9314,11 +9435,13 @@ msgid ""
 "Ready to embark on your auditory adventure? Order your EchoTunes Wireless "
 "Earbuds today and let the symphony begin."
 msgstr ""
+"Pronto a partire per la tua avventura? Ordina oggi stesso gli auricolari "
+"wireless EchoTunes e lasciati cullare dalla sinfonia."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
 msgid "Rebranding"
-msgstr ""
+msgstr "Rebranding"
 
 #. module: website
 #. odoo-javascript
@@ -9386,7 +9509,7 @@ msgstr "Menù correlati"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__controller_page_id
 msgid "Related Model Page"
-msgstr ""
+msgstr "Pagina modello correlata"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__page_id
@@ -9632,7 +9755,7 @@ msgstr "Miniature rotonde"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Rounded box menu"
-msgstr ""
+msgstr "Menu box arrotondato"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__route_id
@@ -9724,7 +9847,7 @@ msgstr "Salva e ricarica"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Save changes"
-msgstr ""
+msgstr "Salva modifiche"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9857,7 +9980,7 @@ msgstr "Secondo menù"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Second default radio"
-msgstr ""
+msgstr "Secondo radio predefinito "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -9896,7 +10019,7 @@ msgstr "Sottotitolo di sezione"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
 msgid "Secure and Comfortable Fit"
-msgstr ""
+msgstr "Vestibilità sicura e confortevole"
 
 #. module: website
 #. odoo-javascript
@@ -9930,12 +10053,12 @@ msgstr "Selezione"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_cover
 msgid "Sell Online. <br/>Easily."
-msgstr ""
+msgstr "Vendi online. <br/>Facilmente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid "Sell Online. <strong>Easily.</strong>"
-msgstr ""
+msgstr "Vendi online. <strong>Facilmente.</strong>"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_shop
@@ -10062,17 +10185,17 @@ msgstr "Ombra"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Shadow large"
-msgstr ""
+msgstr "Ombra grande"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Shadow medium"
-msgstr ""
+msgstr "Ombra media"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Shadow small"
-msgstr ""
+msgstr "Ombra piccola"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10205,37 +10328,37 @@ msgstr "Mostra/nascondi su dispositivi mobili"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide button"
-msgstr ""
+msgstr "Mostra/nascondi pulsante"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide language selector"
-msgstr ""
+msgstr "Mostra/nascondi selettore lingua"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide logo"
-msgstr ""
+msgstr "Mostra/nascondi logo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide search bar"
-msgstr ""
+msgstr "Mostra/nascondi barra di ricerca"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide sign in button"
-msgstr ""
+msgstr "Mostra/nascondi pulsante registrati"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide social links"
-msgstr ""
+msgstr "Mostra/nascondi link social"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/hide text element"
-msgstr ""
+msgstr "Mostra/nascondi elemento testo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10260,7 +10383,7 @@ msgstr "Con accesso"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_controller_page__page_type__single
 msgid "Single record"
-msgstr ""
+msgstr "Record singolo"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_site
@@ -10303,7 +10426,7 @@ msgstr "Salta e comincia da zero"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
 msgid "Sleek and Modern Design"
-msgstr ""
+msgstr "Design elegante e moderno"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -10334,7 +10457,7 @@ msgstr "Scorri a destra"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid "Slide Title"
-msgstr ""
+msgstr "Titolo diapositiva"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -10414,6 +10537,8 @@ msgid ""
 "Some quick example text to build on the card title and make up the bulk of "
 "the card's content."
 msgstr ""
+"Un rapido esempio di testo che si basa sul titolo della scheda e che "
+"costituisce la maggior parte del suo contenuto."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -10440,7 +10565,7 @@ msgstr "Spaziatura"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 msgid "Spacing (Y, X)"
-msgstr ""
+msgstr "Spaziatura (Y, X)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -10528,7 +10653,7 @@ msgstr "Inizia ora"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid "Start Now <span class=\"fa fa-angle-right ms-2\"/>"
-msgstr ""
+msgstr "Inizia ora <span class=\"fa fa-angle-right ms-2\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -10588,6 +10713,9 @@ msgid ""
 "innovative force. Our journey, born in a garage, reflects the power of "
 "passion and hard work."
 msgstr ""
+"Esplora il nostro passato e assisti alla trasformazione di una semplice idea"
+" in una forza innovativa. Il nostro viaggio, nato in un garage, riflette il "
+"potere della passione e del duro lavoro."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10623,17 +10751,17 @@ msgstr "Freccia dritta"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text
 msgid "Strategic Marketing Solutions"
-msgstr ""
+msgstr "Soluzioni di marketing strategiche"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Strength Training:"
-msgstr ""
+msgstr "Allenamento di forza:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stretch menu"
-msgstr ""
+msgstr "Espandi menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10648,7 +10776,7 @@ msgstr "Strisce"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stroke Width"
-msgstr ""
+msgstr "Larghezza tratto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10669,7 +10797,7 @@ msgstr "Sottomenù"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Subheading"
-msgstr ""
+msgstr "Sottotitolo"
 
 #. module: website
 #. odoo-javascript
@@ -10918,7 +11046,7 @@ msgstr "Grazie!"
 #: code:addons/website/static/src/snippets/s_instagram_page/options.js:0
 #, python-format
 msgid "The Instagram page name is not valid"
-msgstr ""
+msgstr "Il nome della pagina instagram non è valido"
 
 #. module: website
 #. odoo-javascript
@@ -10934,6 +11062,9 @@ msgid ""
 "battery life that lasts up to 17h, you can enjoy your favorite tunes without"
 " interruption."
 msgstr ""
+"La custodia di ricarica compatta offre una comoda ricarica in movimento e "
+"una durata della batteria fino a 17 ore, per ascoltare i tuoi brani "
+"preferiti senza interruzioni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -10969,6 +11100,9 @@ msgid ""
 "pocket-friendly size ensures you can carry your audio experience wherever "
 "you roam."
 msgstr ""
+"Gli auricolari si adattano perfettamente al tuo stile di vita, mentre le "
+"dimensioni tascabili della custodia di ricarica ti permettono di portare con"
+" te l'esperienza audio ovunque tu vada."
 
 #. module: website
 #. odoo-javascript
@@ -11062,11 +11196,13 @@ msgstr "Il messaggio sarà visibile una volta terminato il conto alla rovescia"
 msgid ""
 "The name is used to generate the URL and is shown in the browser title bar"
 msgstr ""
+"Lo stesso viene utilizzato per generare l'URL e viene mostrato nella barra "
+"titolo del browser"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
-msgstr ""
+msgstr "Il nome della pagina utilizzabile nell'URL"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11094,6 +11230,8 @@ msgid ""
 "The type of the page. If set, it indicates whether the page displays a list "
 "of records or a single record"
 msgstr ""
+"Tipo di pagina. Se selezionato, indica se la pagina visualizza un elenco di "
+"record o un singolo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11203,7 +11341,7 @@ msgstr "Spesso"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thickness"
-msgstr ""
+msgstr "Spessore"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -11234,6 +11372,9 @@ msgid ""
 "nutrition guidance, and expert coaching. Elevate your fitness level and "
 "achieve feats you never thought possible."
 msgstr ""
+"Questo programma di coaching offre allenamenti specializzati per la forza, "
+"una guida nutrizionale e un coaching esperto. Migliora la tua forma fisica e"
+" raggiungi risultati che non avresti mai pensato di poter raggiungere."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -11323,6 +11464,10 @@ msgid ""
 "aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
 " Phasellus laoreet lorem vel dolor tempus vehicula."
 msgstr ""
+"Questo è un paragrafo. Ambitioni dedisse scripsisse iudicaretur. Nihilne te "
+"nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -11339,6 +11484,9 @@ msgid ""
 "This is a wider card with supporting text below as a natural lead-in to "
 "additional content. This content is a little bit longer."
 msgstr ""
+"Si tratta di una scheda più ampia, con un testo di supporto sottostante che "
+"fa da apripista naturale a un contenuto aggiuntivo. Questo contenuto è un "
+"po' più lungo."
 
 #. module: website
 #. odoo-python
@@ -11621,7 +11769,7 @@ msgstr "Monitorata"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_image
 msgid "Transform Your Brand"
-msgstr ""
+msgstr "Trasforma il tuo brand"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11941,6 +12089,8 @@ msgstr "Usa un'immagine predefinita per la condivisione"
 #, python-format
 msgid "Use an array to list the images to use in the radio selection."
 msgstr ""
+"Usa una matrice per elencare le immagini da utilizzare nella selezione "
+"radio."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -12093,7 +12243,7 @@ msgstr "Valore"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
-msgstr ""
+msgstr "Insalata di verdure, hamburger di manzo e gelato al mango"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12333,12 +12483,12 @@ msgstr "Orologi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_4_s_cover
 msgid "We Are Coming Soon"
-msgstr ""
+msgstr "Arriviamo presto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_5_s_banner
 msgid "We Are Down for Maintenance"
-msgstr ""
+msgstr "Fermi per manutenzione"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -12390,6 +12540,9 @@ msgid ""
 "understanding your fitness aspirations, your current lifestyle, and any "
 "challenges you face."
 msgstr ""
+"Crediamo che ogni percorso di fitness sia unico. Il nostro approccio inizia "
+"con la comprensione delle aspirazioni, dell'attuale stile di vita e delle "
+"sfide da affrontare."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12422,6 +12575,8 @@ msgid ""
 "We monitor your progress meticulously, adjusting your plan as needed to "
 "ensure continuous improvement and results."
 msgstr ""
+"Monitoriamo meticolosamente i tuoi progressi, adattando il piano in base "
+"alle necessità per garantire miglioramenti e risultati continui."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -12466,6 +12621,9 @@ msgid ""
 "We're driven by the aspiration to redefine industry standards, to exceed the"
 " expectations of our clients, and to foster a culture of continuous growth."
 msgstr ""
+"Siamo guidati dalla voglia di ridefinire gli standard del settore, di "
+"superare le aspettative dei nostri clienti e di promuovere una cultura di "
+"crescita continua."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -12587,12 +12745,12 @@ msgstr "Impostazioni menù del sito web"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Website Model Page Settings"
-msgstr ""
+msgstr "Impostazioni pagina modello sito web"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_controller_pages_list
 msgid "Website Model Pages"
-msgstr ""
+msgstr "Pagine modello sito web"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -12784,7 +12942,7 @@ msgstr "Siti web da tradurre"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Weight Loss Transformation"
-msgstr ""
+msgstr "Perdita di peso"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -12794,6 +12952,10 @@ msgid ""
 "support, we're committed to helping you achieve lasting results that align "
 "with your aspirations."
 msgstr ""
+"Benvenuti nella nostra ampia gamma di servizi di fitness coaching su misura:"
+" allenamenti personalizzati, piani nutrizionali su misura e supporto "
+"costante. Ci impegniamo ad aiutarti a raggiungere risultati duraturi e in "
+"linea con le tue aspirazioni."
 
 #. module: website
 #. odoo-javascript
@@ -12805,12 +12967,12 @@ msgstr "Benvenuto nella"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Wellness Coaching"
-msgstr ""
+msgstr "Coach benessere"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_text_block_h2
 msgid "What Makes Me Proud"
-msgstr ""
+msgstr "Cosa mi rende orgoglioso"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -12831,7 +12993,7 @@ msgstr "Vinci $20"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Wireless Freedom"
-msgstr ""
+msgstr "Libertà senza fili"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
@@ -12845,6 +13007,9 @@ msgid ""
 " support, you'll shed unwanted pounds while building healthy habits that "
 "last."
 msgstr ""
+"Grazie a piani di fitness personalizzati, a una guida nutrizionale su misura"
+" e a un supporto costante, potrai eliminare i chili indesiderati e costruire"
+" abitudini sane che durino nel tempo."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -13102,7 +13267,7 @@ msgstr "La tua domanda"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "Your Site Title"
-msgstr ""
+msgstr "Il titolo del tuo sito"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
@@ -13110,6 +13275,8 @@ msgid ""
 "Your brand is your story. We help you tell it through cohesive visual "
 "identity and messaging that resonates with your audience."
 msgstr ""
+"Il tuo brand è la tua storia. Ti aiutiamo a raccontarla attraverso "
+"un'identità visiva coesa e un messaggio che risuona con il vostro pubblico."
 
 #. module: website
 #. odoo-javascript
@@ -13117,6 +13284,7 @@ msgstr ""
 #, python-format
 msgid "Your changes might be lost during future Odoo upgrade."
 msgstr ""
+"Le modifiche potrebbero andare perse durante futuri aggiornamenti di Odoo."
 
 #. module: website
 #. odoo-javascript
@@ -13146,6 +13314,8 @@ msgstr ""
 msgid ""
 "Your instagram page must be public to be integrated into an Odoo website."
 msgstr ""
+"La tua pagina Instagram deve essere pubblica per essere integrata in un sito"
+" web Odoo."
 
 #. module: website
 #. odoo-javascript

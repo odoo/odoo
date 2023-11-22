@@ -18,5 +18,7 @@
         <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
             <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
         </xpath>
+        <!-- hide subsection subtotals, because they don't include tax -->
+        <td name="td_section_subtotal" position="replace"/>
     </template>
 </odoo>

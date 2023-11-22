@@ -1,30 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import_module
-#
+# 
 # Translators:
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "Aktivoi"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+#, python-format
+msgid "Apps"
+msgstr "Sovelluskauppa"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -37,6 +51,21 @@ msgid "Close"
 msgstr "Sulje"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed, the module %s cannot be downloaded."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
@@ -58,6 +87,8 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
@@ -70,18 +101,16 @@ msgstr "Pakota alustus"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "Pakota alustus vaikka moduuli olisi asennettuna. (päivittää myös noupdate=\"1\"-tietueet)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgstr ""
+"Pakota alustus vaikka moduuli olisi asennettuna. (päivittää myös "
+"noupdate=\"1\"-tietueet)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import App"
-msgstr "Tuo App"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
@@ -92,14 +121,18 @@ msgstr "Tuo viesti"
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Tuo moduuli"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import module"
-msgstr "Tuo moduuli"
+msgid "Import demo data"
+msgstr ""
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
+msgid "Import demo data of module"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -107,9 +140,19 @@ msgid "Imported Module"
 msgstr "Tuotu moduuli"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
+msgid "Industries"
+msgstr "Toimialat"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install"
+msgstr "Asenna"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install the application"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -132,6 +175,22 @@ msgid "Module .ZIP file"
 msgstr "Moduuli .zip-tiedosto"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
+msgid "Module Type"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Module file (.zip)"
+msgstr "Moduulitiedosto (.zip)"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
+msgid "Modules Dependencies"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "No file sent."
@@ -140,29 +199,28 @@ msgstr "Tiedostoa ei lähetetty."
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
-msgstr "Huomaa: voit ladata vain datamoduuleita (.xml-tiedostoja ja staattisia resursseja)"
+msgstr ""
+"Huomaa: voit ladata vain datamoduuleita (.xml-tiedostoja ja staattisia "
+"resursseja)"
 
 #. module: base_import_module
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
+msgid "Official Apps"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
 msgstr "Vain pääkäyttäjä pystyy lataamaan modulin"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
 msgstr "Vain .zip-tiedostot ovat tuettuja."
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Open Modules"
-msgstr "Avaa moduuleja"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Select module package to import (.zip file):"
-msgstr "Valitse tuotaa moduulipaketti (.zip tiedosto):"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -170,28 +228,45 @@ msgid "Status"
 msgstr "Tila"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require Studio"
 msgstr "Studio-mukautukset edellyttävät Studiota"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Studio-mukautukset edellyttävät Odoon Studio-sovellusta."
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "The following modules will be also installed:\n"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+"The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
-"Moduulien riippuvuuksissa ei ole täytetty: \n"
-"\n"
-" - %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "The module %s cannot be downloaded"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "Päivitä"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

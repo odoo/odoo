@@ -1,38 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail_account
-#
+# 
 # Translators:
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_move_send_inherit_snailmail
+msgid ""
+"<i class=\"fa fa-question-circle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The address is unknown on the partner\" invisible=\"not "
+"send_by_post_readonly\"/>"
+msgstr ""
+
+#. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Tähän asetetut arvot ovat yrityskohtaisia.\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Tähän asetetut arvot ovat "
+"yrityskohtaisia.\"/>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Lähetä tilin siirto"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__checkbox_send_by_post
@@ -57,6 +68,11 @@ msgstr ""
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move
 msgid "Journal Entry"
+msgstr "Päiväkirjan kirjaus"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_readonly
+msgid "Send By Post Readonly"
 msgstr ""
 
 #. module: snailmail_account
@@ -71,8 +87,15 @@ msgid "Send by Post"
 msgstr "Lähetä postitse"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_cost
+msgid "Stamps"
+msgstr "Postimerkit"
+
+#. module: snailmail_account
 #. odoo-python
 #: code:addons/snailmail_account/wizard/account_move_send.py:0
 #, python-format
-msgid "The following customers don't have a valid address: "
+msgid ""
+"The partners on the following invoices have no valid address, so those "
+"invoices will not be sent: %s"
 msgstr ""

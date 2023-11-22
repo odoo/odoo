@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -631,7 +632,7 @@ msgstr "Je wachtwoord kon niet opnieuw ingesteld worden"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr "Op rekening"
+msgstr "Klant account"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -703,6 +704,12 @@ msgstr "Laat klanten inloggen voor toegang tot hun documenten"
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
 msgstr "Marc Demo"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this login"
+msgstr "Meerdere accounts gevonden voor deze login"
 
 #. module: auth_signup
 #. odoo-python

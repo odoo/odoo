@@ -2084,11 +2084,8 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    const closestLi = el.closest('li');
-    if (el.tagName === 'LI' && newTagName !== 'p') {
+    if (el.tagName === 'LI') {
         el.append(n);
-    } else if (closestLi && newTagName === 'p') {
-        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }

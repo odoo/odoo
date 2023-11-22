@@ -1,32 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-#
+# 
 # Translators:
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
-# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Martin Trigaux, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2023
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
-"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: uom
@@ -99,8 +99,12 @@ msgstr "Yhdistetty suhdeluku"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. Konversio tehdään käyttäen kertoimena suhdetta."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. "
+"Konversio tehdään käyttäen kertoimena suhdetta."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -142,25 +146,27 @@ msgstr "Tunnit"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
-msgid "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "Kuinka monta kertaa tämä mittayksikkö on suurempi kuin tässä luokassa oleva mittayksikkö: 1 * (tämä yksikkö) = suhde * (vertailuyksikkö)"
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Kuinka monta kertaa tämä mittayksikkö on suurempi kuin tässä luokassa oleva "
+"mittayksikkö: 1 * (tämä yksikkö) = suhde * (vertailuyksikkö)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
-msgid "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr "Kuinka paljon suurempi tai pienempi tämä yksikkö verrattuna tämän luokan mittayksikköön: 1 * (vertailuyksikkö) = suhde * (tämä yksikkö)"
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Kuinka paljon suurempi tai pienempi tämä yksikkö verrattuna tämän luokan "
+"mittayksikköön: 1 * (vertailuyksikkö) = suhde * (tämä yksikkö)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
-#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
@@ -231,6 +237,7 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Pienempi kuin referenssiyksikkö"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -257,8 +264,12 @@ msgstr "Pinta"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
-msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
-msgstr "Laskettu määrä on moninkerta tästä arvosta. Käytä arvoa 1.0 sellaiselle mittayksikölle jota ei voi jakaa, kuten kappale."
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"Laskettu määrä on moninkerta tästä arvosta. Käytä arvoa 1.0 sellaiselle "
+"mittayksikölle jota ei voi jakaa, kuten kappale."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -266,6 +277,7 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Muuntokerroin mittayksikölle ei voi olla 0 !"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -286,10 +298,25 @@ msgid "The rounding precision must be strictly positive."
 msgstr "Pyöristystarkkuuden on oltava ehdottomasti positiivinen."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
-msgid "The unit of measure %s defined on the order line doesn't belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category."
-msgstr "Tilausrivillä määritelty mittayksikkö %s ei kuulu samaan luokkaan kuin tuotteessa määritelty mittayksikkö %s. Korjaa tilausrivillä tai tuotteessa määritelty mittayksikkö, niiden pitäisi kuulua samaan luokkaan."
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category as the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
+"Tilausrivillä määritelty mittayksikkö %s ei kuulu samaan luokkaan kuin "
+"tuotteessa määritelty mittayksikkö %s. Korjaa tilausrivillä tai tuotteessa "
+"määritelty mittayksikkö, niiden pitäisi kuulua samaan luokkaan."
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
+msgstr "Suhdeluvun arvo ei voi olla nolla"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -298,8 +325,11 @@ msgstr "Tyyppi"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
-msgid "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr "Poista aktiivinen kenttä ottaaksesi pois käytöstä mittayksikön poistamatta sitä."
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Poista aktiivinen kenttä ottaaksesi pois käytöstä mittayksikön poistamatta "
+"sitä."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -319,7 +349,7 @@ msgstr "Mittayksiköiden ryhmä"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "kpl"
+msgstr "Kpl"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -354,18 +384,22 @@ msgstr ""
 "             Tunnit, päivät."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr "Mittayksikkö-kategoriassa %s on oltava vähintään yksi viitemittayksikkö."
+msgstr ""
+"Mittayksikkö-kategoriassa %s on oltava vähintään yksi viitemittayksikkö."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr "Mittayksikkö-kategorialla %s tulisi olla viitemittayksikkö."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
@@ -382,6 +416,7 @@ msgid "Volume"
 msgstr "Tilavuus"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"

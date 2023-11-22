@@ -870,6 +870,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
+        values['notification_info']['warning'] = values.pop('warning', '')
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
         if not order.cart_quantity:
