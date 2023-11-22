@@ -107,7 +107,8 @@ class AccrualPlanLevel(models.Model):
     yearly_day = fields.Integer(default=1)
     yearly_day_display = fields.Selection(
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_yearly_day_display')
-    cap_accrued_time = fields.Boolean("Cap accrued time", default=True)
+    cap_accrued_time = fields.Boolean("Cap accrued time", default=True,
+        help="When the field is checked the accrued time will be capped at the specified amount of time.")
     maximum_leave = fields.Float(
         'Limit to', digits=(16, 2), compute="_compute_maximum_leave", readonly=False, store=True,
         help="Choose a cap for this accrual.")
@@ -116,7 +117,10 @@ class AccrualPlanLevel(models.Model):
          ('all', 'All accrued time carried over'),
          ('maximum', 'Carry over with a maximum')],
         string="Carry over",
-        default='all', required=True)
+        default='all', required=True,
+        help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
+        "to happen with the unused time off: None (time will be reset to zero), All accrued time carried over to "
+        "the next period; or Carryover with a maximum).")
     postpone_max_days = fields.Integer("Maximum amount of accruals to transfer",
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
     can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type")
