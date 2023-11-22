@@ -6,7 +6,7 @@ from odoo.tools import populate
 
 class Channel(models.Model):
     _inherit = "discuss.channel"
-    _populate_sizes = {"small": 50, "medium": 500, "large": 5000}
+    _populate_sizes = {"small": 150, "medium": 1000, "large": 10000}
 
     def _populate_factories(self):
         groups = self.env.ref("base.group_portal") + self.env.ref("base.group_user") + self.env.ref("base.group_system")
@@ -18,7 +18,11 @@ class Channel(models.Model):
 
         return [
             ("name", populate.constant("channel_{counter}")),
-            ("channel_type", populate.randomize(["channel", "group"])),
+            ("channel_type", populate.randomize(["channel", "group", "chat"], weights=[1, 2, 10])),
             ("description", populate.constant("channel_{counter}_description")),
             ("group_public_id", populate.compute(compute_group)),
         ]
+
+    def _populate(self, size):
+        # install_mode to prevent from automatically adding system as member
+        return super(Channel, self.with_context(install_mode=True))._populate(size)
