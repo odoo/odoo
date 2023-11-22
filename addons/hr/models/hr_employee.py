@@ -81,7 +81,7 @@ class HrEmployeePrivate(models.Model):
         help='Employee bank account to pay salaries')
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
-    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
+    visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
     work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user", tracking=True)
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")

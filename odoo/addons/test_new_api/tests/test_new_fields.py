@@ -505,6 +505,25 @@ class TestFields(TransactionCaseWithUserDemo):
         baz = foo.create({'name': 'baz', 'parent_id': bar.id})
         self.assertEqual(foo.display_name, 'foo(bar(baz()))')
 
+    def test_12_recursive_unlink(self):
+        order = self.env['test_new_api.recursive.order'].create({'value': 42})
+        line = self.env['test_new_api.recursive.line'].create({'order_id': order.id})
+        task = self.env['test_new_api.recursive.task'].create({'value': 42})
+        self.assertEqual(task.line_id, line)
+        self.assertEqual(line.task_ids, task)
+        self.assertTrue(line.task_number)
+
+        # Before deleting order, the following are marked to recompute:
+        #  - task.line_id (recursive, depends on task.line_id.order_id.value)
+        #  - line.task_number (implicitely depends on line.task_ids.line_id)
+        #
+        # If task.line_id is ever recomputed in order to mark line.task_number,
+        # its recomputed value will be lost in the cache invalidation, and
+        # there will be nothing left to write in the database afterwards!  This
+        # makes the call to unlink() crash in that case.
+        #
+        order.unlink()
+
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
@@ -2148,6 +2167,16 @@ class TestFields(TransactionCaseWithUserDemo):
             [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_51_search_many2one_ordered(self):
+        """ test search on many2one ordered by id """
+        with self.assertQueries(['''
+            SELECT "test_new_api_message".id FROM "test_new_api_message"
+            WHERE ("test_new_api_message"."active" = %s)
+            ORDER BY  "test_new_api_message"."discussion"
+        ''']):
+            self.env['test_new_api.message'].search([], order='discussion')
+
+
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -3171,6 +3200,52 @@ class TestHtmlField(common.TransactionCase):
         record.with_user(internal_user).write(write_vals)
         self.assertEqual(record.comment5, '',
                          "should be sanitized (not in groups)")
+
+    @patch('odoo.fields.html_sanitize', return_value='<p>comment</p>')
+    def test_onchange_sanitize(self, patch):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment2.sanitize)
+
+        record = self.env['test_new_api.mixed'].create({
+            'comment2': '<p>comment</p>',
+        })
+
+        # in a perfect world this should be 1, but at the moment the value is
+        # sanitized more than once during creation of the record
+        self.assertEqual(patch.call_count, 2)
+
+        # new value needs to be validated, so it is sanitized once more
+        record.comment2 = '<p>comment</p>'
+        self.assertEqual(patch.call_count, 3)
+
+        # the value is already sanitized for flushing
+        record.flush_recordset()
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db does not need to be sanitized
+        record.invalidate_recordset()
+        record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db during an onchange does not need to be sanitized
+        new_record = record.new(origin=record)
+        new_record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+    def test_read_sanitize_overridable(self):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment5.sanitize_overridable)
+
+        internal_user = self.env['res.users'].create({
+            'name': 'test internal user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        record = self.env['test_new_api.mixed'].with_user(internal_user).create({
+            'comment5': '<p>comment</p>',
+        })
+        self.assertEqual(record.comment5, '<p>comment</p>')
+        new_record = record.new(origin=record)
+        # this field access was causing an infinite loop in HTML sanitization
+        self.assertEqual(new_record.comment5, '<p>comment</p>')
 
 
 class TestMagicFields(common.TransactionCase):
