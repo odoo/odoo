@@ -392,7 +392,7 @@ export class SelfOrder extends Reactive {
             message = _t("Your order has been paid");
         } else if (state === "cancel") {
             this.editedOrder = null;
-            message = _t("Your order has been canceled");
+            message = _t("Your order has been cancelled");
         }
 
         this.notification.add(message, {

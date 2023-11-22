@@ -21,7 +21,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _("Your time off has been canceled."),
+                'message': _("Your time off has been cancelled."),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }

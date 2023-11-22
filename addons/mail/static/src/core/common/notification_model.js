@@ -102,7 +102,7 @@ export class Notification extends Record {
             case "ready":
                 return _t("Ready");
             case "canceled":
-                return _t("Canceled");
+                return _t("Cancelled");
         }
         return "";
     }

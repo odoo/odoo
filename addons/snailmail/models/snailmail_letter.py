@@ -53,7 +53,7 @@ class SnailmailLetter(models.Model):
         ('pending', 'In Queue'),
         ('sent', 'Sent'),
         ('error', 'Error'),
-        ('canceled', 'Canceled')
+        ('canceled', 'Cancelled')
         ], 'Status', readonly=True, copy=False, default='pending', required=True,
         help="When a letter is created, the status is 'Pending'.\n"
              "If the letter is correctly sent, the status goes in 'Sent',\n"

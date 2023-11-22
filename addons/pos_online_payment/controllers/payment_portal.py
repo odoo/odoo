@@ -20,7 +20,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 _("The provided order or access token is invalid."))
 
         if order_sudo.state == "cancel":
-            raise ValidationError(_("The order has been canceled."))
+            raise ValidationError(_("The order has been cancelled."))
         return order_sudo
 
     @staticmethod

@@ -33,7 +33,7 @@
                     Payments made with this payment method will be <b>successful</b>.
                 </span>
                 <span t-elif="token_sudo.demo_simulated_state=='cancel'">
-                    Payments made with this payment method will be automatically <b>canceled</b>.
+                    Payments made with this payment method will be automatically <b>cancelled</b>.
                 </span>
                 <span t-else="">
                     Payments made with this payment method will simulate a processing <b>error</b>.
@@ -224,8 +224,8 @@
                     <option value="pending" title="Payment processing">
                         Pending
                     </option>
-                    <option value="cancel" title="Payment canceled by customer">
-                        Canceled
+                    <option value="cancel" title="Payment cancelled by customer">
+                        Cancelled
                     </option>
                     <option value="error" title="Processing error">
                         Error

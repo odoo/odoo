@@ -262,7 +262,7 @@ export class PaymentStripe extends PaymentInterface {
         if (!this.terminal) {
             return true;
         } else if (this.terminal.getConnectionStatus() != "connected") {
-            this._showError(_t("Payment canceled because not reader connected"));
+            this._showError(_t("Payment cancelled because not reader connected"));
             return true;
         } else {
             const cancelCollectPaymentMethod = await this.terminal.cancelCollectPaymentMethod();

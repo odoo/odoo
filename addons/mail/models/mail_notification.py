@@ -32,7 +32,7 @@ class MailNotification(models.Model):
         ('sent', 'Delivered'),
         ('bounce', 'Bounced'),
         ('exception', 'Exception'),
-        ('canceled', 'Canceled')
+        ('canceled', 'Cancelled')
         ], string='Status', default='ready', index=True)
     is_read = fields.Boolean('Is Read', index=True)
     read_date = fields.Datetime('Read Date', copy=False)

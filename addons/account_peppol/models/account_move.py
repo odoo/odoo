@@ -15,7 +15,7 @@ class AccountMove(models.Model):
             ('to_send', 'Queued'),
             ('skipped', 'Skipped'),
             ('processing', 'Pending Reception'),
-            ('canceled', 'Canceled'),
+            ('canceled', 'Cancelled'),
             ('done', 'Done'),
             ('error', 'Error'),
         ],

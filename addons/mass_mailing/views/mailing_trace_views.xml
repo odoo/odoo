@@ -11,7 +11,7 @@
                 <field name="email"/>
                 <field name="mass_mailing_id"/>
                 <filter string="Scheduled" name="filter_scheduled" domain="[('trace_status', '=', 'outgoing')]"/>
-                <filter string="Canceled" name="filter_canceled" domain="[('trace_status', '=', 'cancel')]"/>
+                <filter string="Cancelled" name="filter_canceled" domain="[('trace_status', '=', 'cancel')]"/>
                 <filter string="Processing" name="filter_process" domain="[('trace_status', '=', 'process')]"/>
                 <filter string="Sent" name="filter_sent" domain="[('sent_datetime', '!=', False)]"/>
                 <filter string="Clicked" name="filter_clicked" domain="[('links_click_datetime', '!=', False)]"/>

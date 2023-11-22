@@ -325,7 +325,7 @@ class SaleOrderLine(models.Model):
                 if dp_state == 'draft':
                     name = _("%(line_description)s (Draft)", line_description=name)
                 elif dp_state == 'cancel':
-                    name = _("%(line_description)s (Canceled)", line_description=name)
+                    name = _("%(line_description)s (Cancelled)", line_description=name)
                 else:
                     invoice = line._get_invoice_lines().move_id
                     if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:

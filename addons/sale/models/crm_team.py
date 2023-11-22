@@ -160,7 +160,7 @@ class CrmTeam(models.Model):
         for team in self:
             if team.sale_order_count >= SO_COUNT_TRIGGER:
                 raise UserError(
-                    _('Team %(team_name)s has %(sale_order_count)s active sale orders. Consider canceling them or archiving the team instead.',
+                    _('Team %(team_name)s has %(sale_order_count)s active sale orders. Consider cancelling them or archiving the team instead.',
                       team_name=team.name,
                       sale_order_count=team.sale_order_count
                       ))
