@@ -249,7 +249,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         let remaining_quantity  = new_line.quantity;
                         while (!float_is_zero(remaining_quantity, 6)) {
                             let splitted_line = new Orderline({}, line_values);
-                            splitted_line.set_quantity(Math.min(remaining_quantity, 1.0));
+                            splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
                             remaining_quantity -= splitted_line.quantity;
                             this.env.pos.get_order().add_orderline(splitted_line);
                         }
