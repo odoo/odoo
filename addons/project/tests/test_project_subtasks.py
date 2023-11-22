@@ -235,6 +235,7 @@ class TestProjectSubtasks(TestProjectCommon):
             3) test the creation of sub-sub-tasks
             4) check the correct nb of sub-tasks is displayed in the 'sub-tasks' stat button and on the parent task kanban card
             5) sub-tasks should be copied when the parent task is duplicated
+            6) verify if there is a copy in the subtask name.
         """
 
         task_form = Form(self.task_1.with_context({'tracking_disable': True}))
@@ -254,6 +255,7 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(task.subtask_count, 1, "Parent task should have 1 children")
         task_2 = task.copy()
         self.assertEqual(task_2.subtask_count, 1, "If the parent task is duplicated then the sub task should be copied")
+        self.assertEqual(task_2.child_ids[0].name, "Test Subtask 1 (copy)", "The name of the subtask should contain the word 'copy'.")
 
     def test_subtask_copy_display_in_project(self):
         """
