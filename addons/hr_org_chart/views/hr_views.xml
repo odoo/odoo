@@ -25,7 +25,11 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(hr_org_chart.action_hr_employee_org_chart)d" icon="fa-users" string="Org Chart" type="action" context="{'hierarchy_res_id': id}" invisible="not parent_id and not child_ids"/>
+                <button name="%(hr_org_chart.action_hr_employee_org_chart)d" icon="fa-users" type="action" context="{'hierarchy_res_id': id}" invisible="not parent_id and not child_ids">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Org Chart</span>
+                    </div>
+                </button>
             </xpath>
             <div id="o_work_employee_main" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
