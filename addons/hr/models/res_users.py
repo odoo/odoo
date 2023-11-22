@@ -334,3 +334,12 @@ class User(models.Model):
             'res_id': employees.id,
             'view_mode': 'form',
         }
+
+    def onchange(self, values, field_names, fields_spec):
+        # Some of the fields are only allowed for groups Employees / Officer
+        # we can avoid building the snapshots for those fields
+        fields_to_read = self._get_employee_fields_to_sync()
+        if any(field in field_names for field in fields_to_read):
+            values = {key: val for key, val in values.items() if key in fields_to_read}
+            fields_spec = {key: val for key, val in fields_spec.items() if key in fields_to_read}
+        return super().onchange(values, field_names, fields_spec)
