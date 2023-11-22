@@ -26,7 +26,7 @@ iot_devices = {}
 
 
 class Manager(Thread):
-    def send_alldevices(self, iot_client):
+    def send_alldevices(self, iot_client=None):
         """
         This method send IoT Box and devices informations to Odoo database
         """
@@ -67,7 +67,8 @@ class Manager(Thread):
                         'Accept': 'text/plain',
                     },
                 )
-                iot_client.iot_channel = json.loads(resp.data).get('result', '')
+                if iot_client:
+                    iot_client.iot_channel = json.loads(resp.data).get('result', '')
             except Exception as e:
                 _logger.error('Could not reach configured server')
                 _logger.error('A error encountered : %s ' % e)
@@ -104,7 +105,8 @@ class Manager(Thread):
                 _logger.error("Error in %s: %s", str(interface), e)
 
         #Setup the websocket connection
-        iot_client.start()
+        if helpers.get_odoo_server_url():
+            iot_client.start()
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
         self.previous_iot_devices = []
