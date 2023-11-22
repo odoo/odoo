@@ -14,11 +14,11 @@ class Http(models.AbstractModel):
         result = super(Http, self).session_info()
         if self.env.user._is_internal():
             company_ids = self.env.user.company_ids
-
+            uom_hour = self.env.ref('uom.product_uom_hour')
             for company in company_ids:
                 result["user_companies"]["allowed_companies"][company.id].update({
                     "timesheet_uom_id": company.timesheet_encode_uom_id.id,
-                    "timesheet_uom_factor": company.project_time_mode_id._compute_quantity(
+                    "timesheet_uom_factor": uom_hour._compute_quantity(
                         1.0,
                         company.timesheet_encode_uom_id,
                         round=False
@@ -31,7 +31,7 @@ class Http(models.AbstractModel):
     def get_timesheet_uoms(self):
         company_ids = self.env.user.company_ids
         uom_ids = company_ids.mapped('timesheet_encode_uom_id') | \
-                  company_ids.mapped('project_time_mode_id')
+                  self.env.ref('uom.product_uom_hour')
         return {
             uom.id:
                 {

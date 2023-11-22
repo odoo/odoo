@@ -127,6 +127,15 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.department_id = line.employee_id.department_id
 
+    @api.constrains('project_id', 'product_uom_id')
+    def _check_timesheet_uom(self):
+        timesheets = self.filtered(lambda line: line.project_id)
+        if timesheets:
+            uom_hour_id = self.env['ir.model.data']._xmlid_to_res_id('uom.product_uom_hour')
+        for timesheet in timesheets:
+            if timesheet.project_id and timesheet.product_uom_id.id != uom_hour_id:
+                raise ValidationError(_("All timesheets need to be encoded in hours in database."))
+
     def _check_can_write(self, values):
         # If it's a basic user then check if the timesheet is his own.
         if not (self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') or self.env.su) and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
@@ -187,8 +196,6 @@ class AccountAnalyticLine(models.Model):
                 if not vals.get('company_id'):
                     company = self.env['hr.employee'].browse(employee_in_id).company_id
                     vals['company_id'] = company.id
-                if not vals.get('product_uom_id'):
-                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
                 if employee_in_id in valid_employee_per_id:
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
@@ -212,8 +219,6 @@ class AccountAnalyticLine(models.Model):
                 if not vals.get('company_id'):
                     company = self.env['hr.employee'].browse(employee_out_id).company_id
                     vals['company_id'] = company.id
-                if not vals.get('product_uom_id'):
-                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
             else:  # ...and raise an error if they fail
                 raise ValidationError(error_msg)
 
@@ -324,10 +329,16 @@ class AccountAnalyticLine(models.Model):
         """
         timesheet_indices = set()
         task_ids, project_ids, account_ids = set(), set(), set()
+        uom_hour_id = None
         for index, vals in enumerate(vals_list):
             if not vals.get('project_id') and not vals.get('task_id'):
                 continue
             timesheet_indices.add(index)
+            # default uom for newly created timesheets
+            if not self and not vals.get('product_uom_id'):
+                if uom_hour_id is None:
+                    uom_hour_id = self.env['ir.model.data']._xmlid_to_res_id('uom.product_uom_hour')
+                vals['product_uom_id'] = uom_hour_id
             if vals.get('task_id'):
                 task_ids.add(vals['task_id'])
             elif vals.get('project_id'):
@@ -353,11 +364,6 @@ class AccountAnalyticLine(models.Model):
         accounts = self.env['account.analytic.account'].sudo().browse(account_ids)
         account_per_id = {account.id: account for account in accounts}
 
-        uom_id_per_company = {
-            company: company.project_time_mode_id.id
-            for company in accounts.company_id
-        }
-
         for index in timesheet_indices:
             vals = vals_list[index]
             data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
@@ -371,9 +377,6 @@ class AccountAnalyticLine(models.Model):
                 vals['company_id'] = account.company_id.id or data.company_id.id
             if not vals.get('partner_id'):
                 vals['partner_id'] = data.partner_id.id
-            if not vals.get('product_uom_id'):
-                company = account_per_id[vals['account_id']].company_id or data.company_id
-                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id)
         return vals_list
 
     def _timesheet_postprocess(self, values):

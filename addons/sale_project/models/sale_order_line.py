@@ -133,7 +133,7 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
-                    allocated_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)
+                    allocated_hours = line._convert_time_qty_timesheet_database_uom()
                     line.task_id.write({'allocated_hours': allocated_hours})
         return result
 
@@ -141,7 +141,8 @@ class SaleOrderLine(models.Model):
     # Service : Project and task generation
     ###########################################
 
-    def _convert_qty_company_hours(self, dest_company):
+    def _convert_time_qty_timesheet_database_uom(self):
+        """ Overridden in sale_timesheet """
         return self.product_uom_qty
 
     def _timesheet_create_project_prepare_values(self):
@@ -216,7 +217,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         allocated_hours = 0.0
         if self.product_id.service_type not in ['milestones', 'manual']:
-            allocated_hours = self._convert_qty_company_hours(self.company_id)
+            allocated_hours = self._convert_time_qty_timesheet_database_uom()
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])

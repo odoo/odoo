@@ -123,7 +123,7 @@ class TestTimesheet(TestCommonTimesheet):
     def test_log_timesheet(self):
         """ Test when log timesheet: check analytic account, user and employee are correctly set. """
         Timesheet = self.env['account.analytic.line']
-        timesheet_uom = self.project_customer.analytic_account_id.company_id.project_time_mode_id
+        timesheet_uom = self.env.ref('uom.product_uom_hour')
         # employee 1 log some timesheet on task 1
         timesheet1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
@@ -585,15 +585,13 @@ class TestTimesheet(TestCommonTimesheet):
         self.project_customer.analytic_account_id.company_id = False
         timesheet_with_project = self.env['account.analytic.line'].with_user(self.user_employee).create(
             {'unit_amount': 1.0, 'project_id': self.project_customer.id})
-        self.assertEqual(timesheet_with_project.product_uom_id, self.project_customer.company_id.project_time_mode_id,
-                         "The product_uom_id of the timesheet should be equal to the project's company uom "
-                         "if the project's analytic account has no company_id and no task_id is defined in the vals")
+        self.assertEqual(timesheet_with_project.product_uom_id, self.env.ref('uom.product_uom_hour'),
+                         "The product_uom_id of the timesheet should always be equal to hours")
         timesheet_with_task = self.env['account.analytic.line'].with_user(self.user_employee).create({
             'unit_amount': 1.0, 'task_id': self.task1.id
         })
-        self.assertEqual(timesheet_with_task.product_uom_id, self.task1.company_id.project_time_mode_id,
-                         "The product_uom_id of the timesheet should be equal to the task's company uom "
-                         "if the project's analytic account has no company_id")
+        self.assertEqual(timesheet_with_task.product_uom_id, self.env.ref('uom.product_uom_hour'),
+                         "The product_uom_id of the timesheet should always be equal to hours")
 
     def test_create_timesheet_with_default_employee_in_context(self):
         timesheet = self.env['account.analytic.line'].with_context(default_employee_id=self.empl_employee.id).create({
@@ -662,3 +660,42 @@ class TestTimesheet(TestCommonTimesheet):
             },
         ])
         self.assertEqual(self.task1.progress, 1, 'The progress of allocated hours should be 1.')
+
+    def test_constraint_product_uom(self):
+        """
+        Timesheets are always stored in hours in the database. Following cases are tested:
+        - A uom different than hour can not be set on timesheets (error raised).
+        - If not product_uom_id is chosen at creation, the default one (hours) should be set.
+        """
+
+        Timesheet = self.env['account.analytic.line'].with_context(default_employee_id=self.empl_employee.id)
+        timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'name': 'Timesheet 1',
+            'unit_amount': 8,
+        })
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        self.assertEqual(
+            timesheet.product_uom_id,
+            uom_hour,
+            "Timesheets uom should be set by default to hour at creation."
+        )
+        self.assertEqual(timesheet.unit_amount, 8)
+
+        uom_day = self.env.ref('uom.product_uom_day')
+        with self.assertRaises(ValidationError):
+            # Not possible to create a timesheet with an uom != hour
+            Timesheet.create({
+                'project_id': self.project_customer.id,
+                'name': 'Timesheet 2',
+                'unit_amount': 2,
+                'product_uom_id': uom_day.id,
+            })
+        with self.assertRaises(ValidationError):
+            # Not possible to set an uom != hour to an existing timesheet
+            timesheet.write({
+                'project_id': self.project_customer.id,
+                'name': 'Timesheet 3',
+                'unit_amount': 4,
+                'product_uom_id': uom_day.id,
+            })

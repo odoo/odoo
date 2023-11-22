@@ -36,15 +36,16 @@ class SaleOrder(models.Model):
         for order in self:
             order.timesheet_count = timesheets_per_so.get(order.id, 0)
 
-    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
+    @api.depends('company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
     def _compute_timesheet_total_duration(self):
         group_data = self.env['account.analytic.line']._read_group([
             ('order_id', 'in', self.ids), ('project_id', '!=', False)
         ], ['order_id'], ['unit_amount:sum'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({order.id: unit_amount for order, unit_amount in group_data})
+        uom_hour = self.env.ref('uom.product_uom_hour')
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
+            total_time = uom_hour._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
@@ -165,6 +166,7 @@ class SaleOrderLine(models.Model):
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
             company = self.env.company
             encoding_uom = company.timesheet_encode_uom_id
+            uom_hour = None
             is_hour = is_day = False
             unit_label = ''
             if encoding_uom == self.env.ref('uom.product_uom_hour'):
@@ -191,7 +193,9 @@ class SaleOrderLine(models.Model):
                             minutes=minutes,
                             remaining=unit_label)
                     elif is_day:
-                        remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
+                        if uom_hour is None:
+                            uom_hour = self.env.ref('uom.product_uom_hour')
+                        remaining_days = uom_hour._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = ' ({qty:.02f} {unit})'.format(
                             qty=remaining_days,
                             unit=unit_label
@@ -248,22 +252,25 @@ class SaleOrderLine(models.Model):
     # Service : Project and task generation
     ###########################################
 
-    def _convert_qty_company_hours(self, dest_company):
-        company_time_uom_id = dest_company.project_time_mode_id
+    def _convert_time_qty_timesheet_database_uom(self):
+        """
+        Convert the quantity of a product to the uom used to log timesheet in db (hours) if
+        the uom of the product belongs to the time category (or is unit uom).
+        """
+        database_timesheet_uom = self.env.ref('uom.product_uom_hour')
         allocated_hours = 0.0
         product_uom = self.product_uom
         if product_uom == self.env.ref('uom.product_uom_unit'):
             product_uom = self.env.ref('uom.product_uom_hour')
-        if product_uom.category_id == company_time_uom_id.category_id:
-            if product_uom != company_time_uom_id:
-                allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+        if product_uom.category_id == database_timesheet_uom.category_id:
+            if product_uom != database_timesheet_uom:
+                allocated_hours = product_uom._compute_quantity(self.product_uom_qty, database_timesheet_uom)
             else:
                 allocated_hours = self.product_uom_qty
         return allocated_hours
 
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()
-        project_uom = self.company_id.project_time_mode_id
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_hour = self.env.ref('uom.product_uom_hour')
 
@@ -271,7 +278,7 @@ class SaleOrderLine(models.Model):
         factor_inv_per_id = {
             uom.id: uom.factor_inv
             for uom in self.order_id.order_line.product_uom
-            if uom.category_id == project_uom.category_id
+            if uom.category_id == uom_hour.category_id
         }
         # if sold as units, assume hours for time allocation
         factor_inv_per_id[uom_unit.id] = uom_hour.factor_inv
@@ -284,7 +291,7 @@ class SaleOrderLine(models.Model):
                     and line.product_id.service_tracking in ['task_in_project', 'project_only'] \
                     and line.product_id.project_template_id == self.product_id.project_template_id \
                     and line.product_uom.id in factor_inv_per_id:
-                uom_factor = project_uom.factor * factor_inv_per_id[line.product_uom.id]
+                uom_factor = uom_hour.factor * factor_inv_per_id[line.product_uom.id]
                 allocated_hours += line.product_uom_qty * uom_factor
 
         project.write({

@@ -11,11 +11,6 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_timesheet_modules", store=True, readonly=False)
     reminder_user_allow = fields.Boolean(string="Employee Reminder")
     reminder_allow = fields.Boolean(string="Approver Reminder")
-    project_time_mode_id = fields.Many2one(
-        'uom.uom', related='company_id.project_time_mode_id', string='Project Time Unit', readonly=False,
-        help="This will set the unit of measure used in projects and tasks.\n"
-             "If you use the timesheet linked to projects, don't "
-             "forget to setup the right unit of measure in your employees.")
     is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days')
     timesheet_encode_method = fields.Selection([
         ('hours', 'Hours / Minutes'),

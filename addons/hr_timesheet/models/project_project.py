@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict
 
 from odoo import models, fields, api, _, _lt
 from odoo.exceptions import ValidationError, RedirectWarning
@@ -130,24 +129,18 @@ class Project(models.Model):
     def _compute_total_timesheet_time(self):
         timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
-            ['project_id', 'product_uom_id'],
+            ['project_id'],
             ['unit_amount:sum'],
         )
-        timesheet_time_dict = defaultdict(list)
-        for project, product_uom, unit_amount_sum in timesheets_read_group:
-            timesheet_time_dict[project.id].append((product_uom, unit_amount_sum))
+        timesheet_time_dict = {}
+        for project, unit_amount_sum in timesheets_read_group:
+            timesheet_time_dict[project.id] = unit_amount_sum
 
+        uom_hour = self.env.ref('uom.product_uom_hour')
         for project in self:
-            # Timesheets may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = sum([
-                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
-                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
-            ], 0.0)
-
-            # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
+            unit_amount = timesheet_time_dict[project.id] if project.id in timesheet_time_dict else 0
+            # Converting timesheets from hours to the uom set in the settings
+            total_time = unit_amount * uom_hour.factor_inv * project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
     @api.model_create_multi
