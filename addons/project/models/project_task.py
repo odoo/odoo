@@ -5,6 +5,7 @@ import re
 from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
+import traceback
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.addons.rating.models import rating_data
@@ -1223,6 +1224,10 @@ class Task(models.Model):
         for task in self:
             if task.partner_id and not (task.project_id or task.parent_id):
                 task.partner_id = False
+                print('raouf _compute_partner_id in project')
+                for line in traceback.format_stack():
+                    print(line.strip())
+
                 continue
             if not task.partner_id:
                 task.partner_id = self._get_default_partner_id(task.project_id, task.parent_id)

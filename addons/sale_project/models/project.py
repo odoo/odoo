@@ -4,6 +4,7 @@
 import json
 from collections import defaultdict
 from datetime import date
+import traceback
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
@@ -805,6 +806,11 @@ class ProjectTask(models.Model):
     def _compute_partner_id(self):
         billable_task = self.filtered(lambda t: t.allow_billable or (not self._origin and t.parent_id.allow_billable))
         (self - billable_task).partner_id = False
+        if self - billable_task:
+            print('raouf _compute_partner_id in sale_project')
+            for line in traceback.format_stack():
+                print(line.strip())
+
         super(ProjectTask, billable_task)._compute_partner_id()
 
     def _inverse_partner_id(self):
