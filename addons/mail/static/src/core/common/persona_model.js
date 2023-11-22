@@ -24,18 +24,6 @@ export class Persona extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new(data) {
-        /** @type {import("models").Persona} */
-        const persona = super.new(data);
-        Record.onChange(persona, ["type", "im_status", "is_public"], () => {
-            if (persona.im_status !== "im_partner" && !persona.is_public) {
-                this.store.imStatusTrackedPersonas.add(persona);
-            } else {
-                this.store.imStatusTrackedPersonas.delete(persona);
-            }
-        });
-        return persona;
-    }
 
     channelMembers = Record.many("ChannelMember");
     /** @type {number} */

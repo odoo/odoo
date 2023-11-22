@@ -69,7 +69,14 @@ export class Store extends BaseStore {
     odoobotOnboarding;
     users = {};
     internalUserGroupId = null;
-    imStatusTrackedPersonas = Record.many("Persona");
+    imStatusTrackedPersonas = Record.many("Persona", {
+        /** @this {import("models").Store} */
+        compute() {
+            return Object.values(this.Persona.records).filter(
+                (persona) => persona.im_status !== "im_partner" && !persona.is_public
+            );
+        },
+    });
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
