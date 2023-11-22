@@ -13,6 +13,45 @@ const ParentClosingMode = {
 };
 
 export class DropdownItem extends Component {
+    static template = "web.DropdownItem";
+    static props = {
+        onSelected: {
+            type: Function,
+            optional: true,
+        },
+        class: {
+            type: [String, Object],
+            optional: true,
+        },
+        parentClosingMode: {
+            type: ParentClosingMode,
+            optional: true,
+        },
+        hotkey: {
+            type: String,
+            optional: true,
+        },
+        href: {
+            type: String,
+            optional: true,
+        },
+        slots: {
+            type: Object,
+            optional: true,
+        },
+        title: {
+            type: String,
+            optional: true,
+        },
+        dataset: {
+            type: Object,
+            optional: true,
+        },
+    };
+    static defaultProps = {
+        parentClosingMode: ParentClosingMode.AllParents,
+    };
+
     /**
      * Tells the parent dropdown that an item was selected and closes the
      * parent(s) dropdown according the parentClosingMode prop.
@@ -52,41 +91,3 @@ export class DropdownItem extends Component {
         return {};
     }
 }
-DropdownItem.template = "web.DropdownItem";
-DropdownItem.props = {
-    onSelected: {
-        type: Function,
-        optional: true,
-    },
-    class: {
-        type: [String, Object],
-        optional: true,
-    },
-    parentClosingMode: {
-        type: ParentClosingMode,
-        optional: true,
-    },
-    hotkey: {
-        type: String,
-        optional: true,
-    },
-    href: {
-        type: String,
-        optional: true,
-    },
-    slots: {
-        type: Object,
-        optional: true,
-    },
-    title: {
-        type: String,
-        optional: true,
-    },
-    dataset: {
-        type: Object,
-        optional: true,
-    },
-};
-DropdownItem.defaultProps = {
-    parentClosingMode: ParentClosingMode.AllParents,
-};

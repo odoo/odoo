@@ -13,6 +13,7 @@ import { onWillStart } from "@odoo/owl";
 
 
 export class SkillsListRenderer extends CommonSkillsListRenderer {
+    static template = "hr_skills.SkillsListRenderer";
     setup() {
         super.setup();
         this.orm = useService('orm');
@@ -60,9 +61,12 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         return super.calculateColumnWidth(column);
     }
 }
-SkillsListRenderer.template = 'hr_skills.SkillsListRenderer';
 
 export class SkillsX2ManyField extends X2ManyField {
+    static components = {
+        ...X2ManyField.components,
+        ListRenderer: SkillsListRenderer,
+    };
     setup() {
         super.setup()
         const { saveRecord, updateRecord } = useX2ManyCrud(
@@ -100,11 +104,6 @@ export class SkillsX2ManyField extends X2ManyField {
         });
     }
 }
-
-SkillsX2ManyField.components = {
-    ...X2ManyField.components,
-    ListRenderer: SkillsListRenderer,
-};
 
 export const skillsX2ManyField = {
     ...x2ManyField,

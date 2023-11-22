@@ -8,8 +8,11 @@ import { SkillsX2ManyField, skillsX2ManyField } from "../skills_one2many/skills_
 import { CommonSkillsListRenderer } from "../../views/skills_list_renderer";
 
 export class ResumeListRenderer extends CommonSkillsListRenderer {
+    static template = "hr_skills.ResumeListRenderer";
+    static rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
+    static recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
     get groupBy() {
-        return 'line_type_id';
+        return "line_type_id";
     }
 
     get colspan() {
@@ -25,16 +28,13 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
 
     setDefaultColumnWidths() {}
 }
-ResumeListRenderer.template = 'hr_skills.ResumeListRenderer';
-ResumeListRenderer.rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
-ResumeListRenderer.recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
 
-
-export class ResumeX2ManyField extends SkillsX2ManyField {}
-ResumeX2ManyField.components = {
-    ...SkillsX2ManyField.components,
-    ListRenderer: ResumeListRenderer,
-};
+export class ResumeX2ManyField extends SkillsX2ManyField {
+    static components = {
+        ...SkillsX2ManyField.components,
+        ListRenderer: ResumeListRenderer,
+    };
+}
 
 export const resumeX2ManyField = {
     ...skillsX2ManyField,

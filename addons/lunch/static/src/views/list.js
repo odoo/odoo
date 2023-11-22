@@ -12,16 +12,16 @@ import { LunchSearchModel } from './search_model';
 
 
 export class LunchListRenderer extends LunchRendererMixin(ListRenderer) {
+    static template = "lunch.ListRenderer";
+    static components = {
+        ...LunchListRenderer.components,
+        LunchDashboard,
+    };
     onCellClicked(record, column) {
         this.openOrderLine(record.resId);
     }
 }
 
-LunchListRenderer.template = 'lunch.ListRenderer';
-LunchListRenderer.components = {
-    ...LunchListRenderer.components,
-    LunchDashboard,
-}
 
 registry.category('views').add('lunch_list', {
     ...listView,

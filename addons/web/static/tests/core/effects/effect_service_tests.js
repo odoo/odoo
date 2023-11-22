@@ -118,11 +118,11 @@ QUnit.module("Effect Service", (hooks) => {
         assert.expect(2);
         const props = { foo: "bar" };
         class Custom extends Component {
+            static template = xml`<div class="custom">foo is <t t-esc="props.foo"/></div>`;
             setup() {
                 assert.deepEqual(this.props, props, "should have received these props");
             }
         }
-        Custom.template = xml`<div class="custom">foo is <t t-esc="props.foo"/></div>`;
 
         const parent = await makeParent();
         parent.env.services.effect.add({ Component: Custom, props });

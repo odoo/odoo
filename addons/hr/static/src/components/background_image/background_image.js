@@ -4,8 +4,9 @@ import { registry } from '@web/core/registry';
 
 import { ImageField, imageField } from '@web/views/fields/image/image_field';
 
-export class BackgroundImageField extends ImageField {}
-BackgroundImageField.template = 'hr.BackgroundImage';
+export class BackgroundImageField extends ImageField {
+    static template = "hr.BackgroundImage";
+}
 
 export const backgroundImageField = {
     ...imageField,

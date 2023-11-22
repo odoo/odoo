@@ -163,6 +163,21 @@ const STANDARD_PROPS = [
 
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
 export class View extends Component {
+    static _download = async function () {};
+    static template = "web.View";
+    static components = { WithSearch };
+    static searchMenuTypes = ["filter", "groupBy", "favorite"];
+    static defaultProps = {
+        display: {},
+        context: {},
+        loadActionMenus: false,
+        loadIrFilters: false,
+        className: "",
+    };
+    static props = {
+        "*": true,
+    };
+
     setup() {
         const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
         if (!resModel) {
@@ -415,19 +430,3 @@ export class View extends Component {
         Object.assign(this.withSearchProps, { comparison, context, domain, groupBy, orderBy });
     }
 }
-
-View._download = async function () {};
-
-View.template = "web.View";
-View.components = { WithSearch };
-View.defaultProps = {
-    display: {},
-    context: {},
-    loadActionMenus: false,
-    loadIrFilters: false,
-    className: "",
-};
-View.props = {
-    "*": true,
-};
-View.searchMenuTypes = ["filter", "groupBy", "favorite"];

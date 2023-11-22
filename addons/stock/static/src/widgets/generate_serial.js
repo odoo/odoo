@@ -10,6 +10,13 @@ import { getId } from "@web/model/relational_model/utils";
 import { Component, useRef, xml, onMounted } from "@odoo/owl";
 
 export class GenerateDialog extends Component {
+    static template = "stock.generate_serial_dialog";
+    static components = { Dialog };
+    static props = {
+        type: { type: String },
+        move: { type: Object },
+        close: { type: Function },
+    };
     setup() {
         this.size = 'md';
         if (this.props.type === 'serial') {
@@ -68,14 +75,6 @@ export class GenerateDialog extends Component {
         this.props.close();
     }
 }
-
-GenerateDialog.template = 'stock.generate_serial_dialog';
-GenerateDialog.props = {
-    type: { type: String },
-    move: { type: Object },
-    close: { type: Function },
-};
-GenerateDialog.components = { Dialog };
 
 class GenerateSerials extends Component {
     static template = xml`<button class="btn btn-link" t-on-click="openDialog">Generate Serials</button>`;

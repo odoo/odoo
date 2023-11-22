@@ -6,6 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart } from "@odoo/owl";
 
 class InsufficientCreditDialog extends Component {
+    static components = { Dialog };
+    static template = "iap.InsufficientCreditDialog";
     setup() {
         this.orm = useService("orm");
         onWillStart(this.onWillStart);
@@ -33,8 +35,6 @@ class InsufficientCreditDialog extends Component {
         this.props.close();
     }
 }
-InsufficientCreditDialog.components = { Dialog };
-InsufficientCreditDialog.template = "iap.InsufficientCreditDialog";
 
 function insufficientCreditHandler(env, error, originalError) {
     if (!originalError) {

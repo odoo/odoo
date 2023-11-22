@@ -7,6 +7,18 @@ import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 
 export class CalendarQuickCreate extends Component {
+    static template = "web.CalendarQuickCreate";
+    static components = {
+        Dialog,
+    };
+    static props = {
+        title: { type: String, optional: true },
+        close: Function,
+        record: Object,
+        model: Object,
+        editRecord: Function,
+    };
+
     setup() {
         this.titleRef = useAutofocus({ refName: "title" });
         this.notification = useService("notification");
@@ -73,15 +85,3 @@ export class CalendarQuickCreate extends Component {
         this.props.close();
     }
 }
-
-CalendarQuickCreate.template = "web.CalendarQuickCreate";
-CalendarQuickCreate.components = {
-    Dialog,
-};
-CalendarQuickCreate.props = {
-    title: { type: String, optional: true },
-    close: Function,
-    record: Object,
-    model: Object,
-    editRecord: Function,
-};

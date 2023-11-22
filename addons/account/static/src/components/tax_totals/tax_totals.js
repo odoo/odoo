@@ -20,6 +20,15 @@ import {
  A line of some TaxTotalsComponent, giving the values of a tax group.
  **/
 class TaxGroupComponent extends Component {
+    static props = {
+        currency: { optional: true },
+        taxGroup: { optional: true },
+        onChangeTaxGroup: { optional: true },
+        isReadonly: Boolean,
+        invalidate: Function,
+    };
+    static template = "account.TaxGroupComponent";
+
     setup() {
         this.inputTax = useRef("taxValueInput");
         this.state = useState({ value: "readonly" });
@@ -96,15 +105,6 @@ class TaxGroupComponent extends Component {
     }
 }
 
-TaxGroupComponent.props = {
-    currency: { optional: true },
-    taxGroup: { optional: true },
-    onChangeTaxGroup: { optional: true },
-    isReadonly: Boolean,
-    invalidate: Function,
-};
-TaxGroupComponent.template = "account.TaxGroupComponent";
-
 /**
  Widget used to display tax totals by tax groups for invoices, PO and SO,
  and possibly allowing editing them.
@@ -113,6 +113,12 @@ TaxGroupComponent.template = "account.TaxGroupComponent";
  currency_id field.
  **/
 export class TaxTotalsComponent extends Component {
+    static template = "account.TaxTotalsField";
+    static components = { TaxGroupComponent };
+    static props = {
+        ...standardFieldProps,
+    };
+
     setup() {
         this.totals = {};
         this.formatData(this.props);
@@ -182,11 +188,6 @@ export class TaxTotalsComponent extends Component {
         this.totals = totals;
     }
 }
-TaxTotalsComponent.template = "account.TaxTotalsField";
-TaxTotalsComponent.components = { TaxGroupComponent };
-TaxTotalsComponent.props = {
-    ...standardFieldProps,
-};
 
 export const taxTotalsComponent = {
     component: TaxTotalsComponent,

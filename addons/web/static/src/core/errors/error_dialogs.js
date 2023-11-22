@@ -38,6 +38,11 @@ export const odooExceptionTitleMap = new Map(
 // Generic Error Dialog
 // -----------------------------------------------------------------------------
 export class ErrorDialog extends Component {
+    static template = "web.ErrorDialog";
+    static components = { Dialog };
+    static title = _t("Odoo Error");
+    static props = { ...standardErrorDialogProps };
+
     setup() {
         this.state = useState({
             showTraceback: false,
@@ -49,10 +54,6 @@ export class ErrorDialog extends Component {
         );
     }
 }
-ErrorDialog.template = "web.ErrorDialog";
-ErrorDialog.components = { Dialog };
-ErrorDialog.title = _t("Odoo Error");
-ErrorDialog.props = { ...standardErrorDialogProps };
 
 // -----------------------------------------------------------------------------
 // Client Error Dialog
@@ -112,6 +113,13 @@ export class RPCErrorDialog extends ErrorDialog {
 // Warning Dialog
 // -----------------------------------------------------------------------------
 export class WarningDialog extends Component {
+    static template = "web.WarningDialog";
+    static components = { Dialog };
+    static props = {
+        ...standardErrorDialogProps,
+        title: { type: String, optional: true },
+    };
+
     setup() {
         this.title = this.inferTitle();
         const { data, message } = this.props;
@@ -128,17 +136,15 @@ export class WarningDialog extends Component {
         return this.props.title || _t("Odoo Warning");
     }
 }
-WarningDialog.template = "web.WarningDialog";
-WarningDialog.components = { Dialog };
-WarningDialog.props = {
-    ...standardErrorDialogProps,
-    title: { type: String, optional: true },
-};
 
 // -----------------------------------------------------------------------------
 // Redirect Warning Dialog
 // -----------------------------------------------------------------------------
 export class RedirectWarningDialog extends Component {
+    static template = "web.RedirectWarningDialog";
+    static components = { Dialog };
+    static props = { ...standardErrorDialogProps };
+
     setup() {
         this.actionService = useService("action");
         const { data, subType } = this.props;
@@ -161,31 +167,30 @@ export class RedirectWarningDialog extends Component {
         this.props.close();
     }
 }
-RedirectWarningDialog.template = "web.RedirectWarningDialog";
-RedirectWarningDialog.components = { Dialog };
-RedirectWarningDialog.props = { ...standardErrorDialogProps };
 
 // -----------------------------------------------------------------------------
 // Error 504 Dialog
 // -----------------------------------------------------------------------------
-export class Error504Dialog extends Component {}
-Error504Dialog.template = "web.Error504Dialog";
-Error504Dialog.components = { Dialog };
-Error504Dialog.title = _t("Request timeout");
-Error504Dialog.props = { ...standardErrorDialogProps };
+export class Error504Dialog extends Component {
+    static template = "web.Error504Dialog";
+    static components = { Dialog };
+    static title = _t("Request timeout");
+    static props = { ...standardErrorDialogProps };
+}
 
 // -----------------------------------------------------------------------------
 // Expired Session Error Dialog
 // -----------------------------------------------------------------------------
 export class SessionExpiredDialog extends Component {
+    static template = "web.SessionExpiredDialog";
+    static components = { Dialog };
+    static title = _t("Odoo Session Expired");
+    static props = { ...standardErrorDialogProps };
+
     onClick() {
         browser.location.reload();
     }
 }
-SessionExpiredDialog.template = "web.SessionExpiredDialog";
-SessionExpiredDialog.components = { Dialog };
-SessionExpiredDialog.title = _t("Odoo Session Expired");
-SessionExpiredDialog.props = { ...standardErrorDialogProps };
 
 registry
     .category("error_dialogs")

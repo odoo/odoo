@@ -21,6 +21,8 @@ const serviceRegistry = registry.category("services");
 let target;
 
 class PagerController extends Component {
+    static template = xml`<Pager t-props="state" />`;
+    static components = { Pager };
     setup() {
         this.state = useState({ ...this.props });
     }
@@ -29,8 +31,6 @@ class PagerController extends Component {
         await nextTick();
     }
 }
-PagerController.template = xml`<Pager t-props="state" />`;
-PagerController.components = { Pager };
 
 async function makePager(props) {
     serviceRegistry.add("ui", uiService);

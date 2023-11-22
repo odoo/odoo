@@ -25,16 +25,17 @@ debugRegistry.category("view").add("viewSeparator", viewSeparator);
 //------------------------------------------------------------------------------
 
 class GetViewDialog extends Component {
+    static template = "web.DebugMenu.GetViewDialog";
+    static components = { Dialog };
+    static props = {
+        arch: { type: Element },
+        close: { type: Function },
+    };
+
     setup() {
         this.title = _t("Get View");
     }
 }
-GetViewDialog.template = "web.DebugMenu.GetViewDialog";
-GetViewDialog.components = { Dialog };
-GetViewDialog.props = {
-    arch: { type: Element },
-    close: { type: Function },
-};
 
 export function getView({ component, env }) {
     return {
@@ -118,6 +119,8 @@ debugRegistry.category("view").add("editSearchView", editSearchView);
 // -----------------------------------------------------------------------------
 
 class GetMetadataDialog extends Component {
+    static template = "web.DebugMenu.GetMetadataDialog";
+    static components = { Dialog };
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
@@ -161,8 +164,6 @@ class GetMetadataDialog extends Component {
         this.state.writeDate = formatDateTime(deserializeDateTime(metadata.write_date));
     }
 }
-GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";
-GetMetadataDialog.components = { Dialog };
 
 export function viewMetadata({ component, env }) {
     const resId = component.model.root.resId;
@@ -189,21 +190,21 @@ debugRegistry.category("form").add("viewMetadata", viewMetadata);
 // -----------------------------------------------------------------------------
 
 class RawRecordDialog extends Component {
+    static template = xml`
+    <Dialog title="props.title">
+        <pre t-esc="content"/>
+    </Dialog>`;
+    static components = { Dialog };
+    static props = {
+        record: { type: Object },
+        title: { type: String },
+        close: { type: Function },
+    };
     get content() {
         const record = this.props.record;
         return JSON.stringify(record, Object.keys(record).sort(), 2);
     }
 }
-RawRecordDialog.template = xml`
-<Dialog title="props.title">
-    <pre t-esc="content"/>
-</Dialog>`;
-RawRecordDialog.components = { Dialog };
-RawRecordDialog.props = {
-    record: { type: Object },
-    title: { type: String },
-    close: { type: Function },
-};
 
 export function viewRawRecord({ component, env }) {
     const { resId, resModel } = component.model.config;
@@ -232,6 +233,14 @@ debugRegistry.category("form").add("viewRawRecord", viewRawRecord);
 // -----------------------------------------------------------------------------
 
 class SetDefaultDialog extends Component {
+    static template = "web.DebugMenu.SetDefaultDialog";
+    static components = { Dialog };
+    static props = {
+        record: { type: Object },
+        fieldNodes: { type: Object },
+        close: { type: Function },
+    };
+
     setup() {
         this.orm = useService("orm");
         this.title = _t("Set Defaults");
@@ -335,13 +344,6 @@ class SetDefaultDialog extends Component {
         this.props.close();
     }
 }
-SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
-SetDefaultDialog.components = { Dialog };
-SetDefaultDialog.props = {
-    record: { type: Object },
-    fieldNodes: { type: Object },
-    close: { type: Function },
-};
 
 export function setDefaults({ component, env }) {
     return {

@@ -11,6 +11,16 @@ import { Field, getFieldFromRegistry } from "@web/views/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class SubtaskKanbanList extends Component {
+    static components = {
+        Record,
+        Field,
+        KanbanMany2ManyTagsAvatarUserField,
+    };
+    static props = {
+        ...standardWidgetProps,
+    };
+    static template = "project.SubtaskKanbanList";
+
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
@@ -95,15 +105,6 @@ export class SubtaskKanbanList extends Component {
     }
 }
 
-SubtaskKanbanList.components = {
-    Record,
-    Field,
-    KanbanMany2ManyTagsAvatarUserField,
-};
-SubtaskKanbanList.props = {
-    ...standardWidgetProps,
-};
-SubtaskKanbanList.template = "project.SubtaskKanbanList";
 const subtaskKanbanList = {
     component: SubtaskKanbanList,
     fieldDependencies: [{ name: "child_ids", type: "one2many" }],

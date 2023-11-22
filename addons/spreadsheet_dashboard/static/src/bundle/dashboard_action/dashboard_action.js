@@ -16,6 +16,17 @@ import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
 export class SpreadsheetDashboardAction extends Component {
+    static template = "spreadsheet_dashboard.DashboardAction";
+    static components = {
+        ControlPanel,
+        Spreadsheet,
+        FilterValue,
+        DashboardMobileSearchPanel,
+        MobileFigureContainer,
+        SpreadsheetShareButton,
+    };
+    static props = { ...standardActionServiceProps };
+
     setup() {
         this.Status = Status;
         this.controlPanelDisplay = {};
@@ -128,16 +139,6 @@ export class SpreadsheetDashboardAction extends Component {
         return url;
     }
 }
-SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";
-SpreadsheetDashboardAction.components = {
-    ControlPanel,
-    Spreadsheet,
-    FilterValue,
-    DashboardMobileSearchPanel,
-    MobileFigureContainer,
-    SpreadsheetShareButton,
-};
-SpreadsheetDashboardAction.props = { ...standardActionServiceProps };
 
 registry
     .category("actions")

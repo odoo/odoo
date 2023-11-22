@@ -11,6 +11,7 @@ import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_pr
 import { useState, Component } from "@odoo/owl";
 
 class UnsplashCredentials extends Component {
+    static template = "web_unsplash.UnsplashCredentials";
     setup() {
         this.state = useState({
             key: '',
@@ -30,13 +31,13 @@ class UnsplashCredentials extends Component {
         }
     }
 }
-UnsplashCredentials.template = 'web_unsplash.UnsplashCredentials';
 
-export class UnsplashError extends Component {}
-UnsplashError.template = 'web_unsplash.UnsplashError';
-UnsplashError.components = {
-    UnsplashCredentials,
-};
+export class UnsplashError extends Component {
+    static template = "web_unsplash.UnsplashError";
+    static components = {
+        UnsplashCredentials,
+    };
+}
 
 patch(ImageSelector.prototype, {
     setup() {

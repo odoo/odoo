@@ -6,6 +6,9 @@ import { makeContext } from "@web/core/context";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class BoardAction extends Component {
+    static template = "board.BoardAction";
+    static components = { View };
+    static cache = {};
     setup() {
         const rpc = useService("rpc");
         const userService = useService("user");
@@ -67,6 +70,3 @@ export class BoardAction extends Component {
         });
     }
 }
-BoardAction.template = "board.BoardAction";
-BoardAction.components = { View };
-BoardAction.cache = {};

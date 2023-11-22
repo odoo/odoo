@@ -6,6 +6,12 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class IconSelectionField extends Component {
+    static template = "event.IconSelectionField";
+    static props = {
+        ...standardFieldProps,
+        icons: Object,
+    };
+
     get icon() {
         return this.props.icons[this.props.record.data[this.props.name]];
     }
@@ -16,11 +22,6 @@ export class IconSelectionField extends Component {
         );
     }
 }
-IconSelectionField.template = "event.IconSelectionField";
-IconSelectionField.props = {
-    ...standardFieldProps,
-    icons: Object,
-};
 
 export const iconSelectionField = {
     component: IconSelectionField,

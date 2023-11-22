@@ -23,17 +23,16 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const mountListAndAssert = async (setupList, shouldThrow) => {
             class List extends Component {
+                static template = xml`
+                    <div t-ref="root" class="root">
+                        <ul class="list">
+                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        </ul>
+                    </div>`;
                 setup() {
                     setupList();
                 }
             }
-
-            List.template = xml`
-                <div t-ref="root" class="root">
-                    <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                    </ul>
-                </div>`;
 
             let err;
             await mount(List, target).catch((e) => (err = e));
@@ -86,6 +85,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(22);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -117,13 +122,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
         await mount(List, target);
 
         assert.containsN(target, ".item", 3);
@@ -147,6 +145,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(20);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="l + ' ' + i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -179,13 +183,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="l + ' ' + i" class="item" />
-                </ul>
-            </div>`;
-
         await mount(List, target);
 
         assert.containsN(target, ".list", 3);
@@ -203,6 +200,22 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("Sorting in groups with distinct per-axis scrolling", async (assert) => {
         const { advanceFrame } = mockAnimationFrame();
         class List extends Component {
+            static template = xml`
+                <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
+                    <div class="spacer_before" style="min-height: 50px;"></div>
+                    <div class="spacer_horizontal" style="min-height: 50px;"></div>
+                    <div t-ref="root" class="root d-flex align-items-end" style="overflow-x: scroll;">
+                        <div class="d-flex">
+                            <div style="padding-left: 20px;"
+                                t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
+                                <div style="min-width: 50px; min-height: 50px; padding-top: 20px;"
+                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spacer_after" style="min-height: 150px;"></div>
+                </div>
+            `;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -214,22 +227,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
-                <div class="spacer_before" style="min-height: 50px;"></div>
-                <div class="spacer_horizontal" style="min-height: 50px;"></div>
-                <div t-ref="root" class="root d-flex align-items-end" style="overflow-x: scroll;">
-                    <div class="d-flex">
-                        <div style="padding-left: 20px;"
-                            t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
-                            <div style="min-width: 50px; min-height: 50px; padding-top: 20px;"
-                                t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="spacer_after" style="min-height: 150px;"></div>
-            </div>
-        `;
         await mount(List, target);
 
         assert.containsN(target, ".list", 3);
@@ -296,6 +293,18 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("draggable area contains overflowing visible elements", async (assert) => {
         const { advanceFrame } = mockAnimationFrame();
         class List extends Component {
+            static template = xml`
+                <div class="controller" style="max-width: 900px; min-width: 900px;">
+                    <div class="content" style="max-width: 600px;">
+                        <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
+                            <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
+                                <div style="min-width: 300px; min-height: 50px;"
+                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
             setup() {
                 useSortable({
                     ref: useRef("renderer"),
@@ -305,18 +314,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-        List.template = xml`
-            <div class="controller" style="max-width: 900px; min-width: 900px;">
-                <div class="content" style="max-width: 600px;">
-                    <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
-                        <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
-                            <div style="min-width: 300px; min-height: 50px;"
-                                t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
         await mount(List, target);
 
         const controller = target.querySelector(".controller");
@@ -367,6 +364,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const state = reactive({ enableSortable: true });
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 this.state = useState(state);
                 useSortable({
@@ -379,13 +382,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
 
         await mount(List, target);
 
@@ -413,6 +409,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             assert.expect(3);
 
             class List extends Component {
+                static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
                 setup() {
                     useSortable({
                         ref: useRef("root"),
@@ -423,13 +425,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     });
                 }
             }
-
-            List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
 
             await mount(List, target);
 
@@ -457,6 +452,15 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(6);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
+                            <span class="ignored" t-esc="i" />
+                            <span class="not-ignored" t-esc="i" />
+                        </li>
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -468,16 +472,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                        <span class="ignored" t-esc="i" />
-                        <span class="not-ignored" t-esc="i" />
-                    </li>
-                </ul>
-            </div>`;
 
         await mount(List, target);
 
@@ -505,6 +499,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         let dragElement;
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -525,13 +525,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
         await mount(List, target);
         // First item after 2nd item
         const { drop, moveTo } = await drag(".item:first-child");
@@ -546,6 +539,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(2);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -564,13 +563,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
         await mount(List, target);
         // First item after 2nd item
         const { drop, moveTo } = await drag(".item:first-child");
@@ -582,6 +574,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(2);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useSortable({
                     ref: useRef("root"),
@@ -594,13 +592,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
 
         await mount(List, target);
         // First item after 2nd item

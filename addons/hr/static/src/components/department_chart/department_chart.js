@@ -7,6 +7,11 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { onWillStart, useState, onWillUpdateProps, Component } from "@odoo/owl";
 
 export class DepartmentChart extends Component {
+    static template = "hr.DepartmentChart";
+    static props = {
+        ...standardWidgetProps,
+    };
+
     setup() {
         super.setup();
 
@@ -36,10 +41,6 @@ export class DepartmentChart extends Component {
         });
     }
 }
-DepartmentChart.template = "hr.DepartmentChart";
-DepartmentChart.props = {
-    ...standardWidgetProps,
-};
 
 export const departmentChart = {
     component: DepartmentChart,

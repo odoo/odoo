@@ -6,17 +6,32 @@ import { debounce } from '@web/core/utils/timing';
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
-class VideoOption extends Component {}
-VideoOption.template = 'web_editor.VideoOption';
+class VideoOption extends Component {
+    static template = "web_editor.VideoOption";
+}
 
 class VideoIframe extends Component {
-    static template = 'web_editor.VideoIframe';
+    static template = "web_editor.VideoIframe";
     static props = {
         src: { type: String },
     };
 }
 
 export class VideoSelector extends Component {
+    static mediaSpecificClasses = ["media_iframe_video"];
+    static mediaSpecificStyles = [];
+    static mediaExtraClasses = [];
+    static tagNames = ["IFRAME", "DIV"];
+    static template = "web_editor.VideoSelector";
+    static components = {
+        VideoIframe,
+        VideoOption,
+    };
+    static defaultProps = {
+        vimeoPreviewIds: [],
+        isForBgVideo: false,
+    };
+
     setup() {
         this.rpc = useService('rpc');
         this.http = useService('http');
@@ -234,16 +249,3 @@ export class VideoSelector extends Component {
         });
     }
 }
-VideoSelector.mediaSpecificClasses = ['media_iframe_video'];
-VideoSelector.mediaSpecificStyles = [];
-VideoSelector.mediaExtraClasses = [];
-VideoSelector.tagNames = ['IFRAME', 'DIV'];
-VideoSelector.template = 'web_editor.VideoSelector';
-VideoSelector.components = {
-    VideoIframe,
-    VideoOption,
-};
-VideoSelector.defaultProps = {
-    vimeoPreviewIds: [],
-    isForBgVideo: false,
-};

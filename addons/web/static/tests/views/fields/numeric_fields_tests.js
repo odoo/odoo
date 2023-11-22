@@ -331,17 +331,17 @@ QUnit.module("Fields", (hooks) => {
             }
 
             class MyComponent extends Component {
+                static template = xml`
+                    <main t-ref="numpadDecimal">
+                        <input type="text" placeholder="input 1" />
+                        <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
+                    </main>
+                `;
                 setup() {
                     useNumpadDecimal();
                     this.state = useState({ showOtherInput: false });
                 }
             }
-            MyComponent.template = xml`
-                <main t-ref="numpadDecimal">
-                    <input type="text" placeholder="input 1" />
-                    <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
-                </main>
-            `;
             const comp = await mount(MyComponent, target, { env: await makeTestEnv() });
 
             // Initially, only one input should be rendered.

@@ -3,12 +3,12 @@
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { PurchaseDashBoard } from '@purchase/views/purchase_dashboard';
+import { PurchaseDashBoard } from "@purchase/views/purchase_dashboard";
 
-export class PurchaseDashBoardRenderer extends ListRenderer {};
-
-PurchaseDashBoardRenderer.template = 'purchase.PurchaseListView';
-PurchaseDashBoardRenderer.components= Object.assign({}, ListRenderer.components, {PurchaseDashBoard})
+export class PurchaseDashBoardRenderer extends ListRenderer {
+    static template = "purchase.PurchaseListView";
+    static components = Object.assign({}, ListRenderer.components, { PurchaseDashBoard });
+}
 
 export const PurchaseDashBoardListView = {
     ...listView,

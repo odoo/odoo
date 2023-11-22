@@ -9,6 +9,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useRef, useState, useEffect } from "@odoo/owl";
 
 export class AutoResizeImage extends Attachment {
+    static template = "web_editor.AutoResizeImage";
     setup() {
         super.setup();
 
@@ -45,9 +46,27 @@ export class AutoResizeImage extends Attachment {
         this.state.loaded = true;
     }
 }
-AutoResizeImage.template = 'web_editor.AutoResizeImage';
-
+const newLocal = "img-fluid";
 export class ImageSelector extends FileSelector {
+    static mediaSpecificClasses = ["img", newLocal, "o_we_custom_image"];
+    static mediaSpecificStyles = [];
+    static mediaExtraClasses = [
+        "rounded-circle",
+        "rounded",
+        "img-thumbnail",
+        "shadow",
+        "w-25",
+        "w-50",
+        "w-75",
+        "w-100",
+    ];
+    static tagNames = ["IMG"];
+    static attachmentsListTemplate = "web_editor.ImagesListTemplate";
+    static components = {
+        ...FileSelector.components,
+        AutoResizeImage,
+    };
+
     setup() {
         super.setup();
 
@@ -359,16 +378,3 @@ export class ImageSelector extends FileSelector {
         }
     }
 }
-
-ImageSelector.mediaSpecificClasses = ['img', 'img-fluid', 'o_we_custom_image'];
-ImageSelector.mediaSpecificStyles = [];
-ImageSelector.mediaExtraClasses = [
-    'rounded-circle', 'rounded', 'img-thumbnail', 'shadow',
-    'w-25', 'w-50', 'w-75', 'w-100',
-];
-ImageSelector.tagNames = ['IMG'];
-ImageSelector.attachmentsListTemplate = 'web_editor.ImagesListTemplate';
-ImageSelector.components = {
-    ...FileSelector.components,
-    AutoResizeImage,
-};

@@ -14,7 +14,11 @@ import { onWillStart } from "@odoo/owl";
 
 export class TodoFormController extends FormController {
     static template = "project_todo.TodoFormView";
-
+    static components = {
+        ...FormController.components,
+        TodoEditableBreadcrumbName,
+        TodoDoneCheckmark,
+    };
     setup() {
         super.setup();
         onWillStart(async () => {
@@ -48,8 +52,3 @@ export class TodoFormController extends FormController {
         return menuItems;
     }
 }
-
-Object.assign(TodoFormController.components, {
-    TodoEditableBreadcrumbName,
-    TodoDoneCheckmark,
-});

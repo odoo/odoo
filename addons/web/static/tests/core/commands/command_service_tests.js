@@ -42,15 +42,15 @@ export async function backspaceSearchBar() {
 }
 
 class TestComponent extends Component {
+    static template = xml`
+      <div>
+        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+      </div>
+    `;
     get OverlayContainer() {
         return registry.category("main_components").get("OverlayContainer");
     }
 }
-TestComponent.template = xml`
-  <div>
-    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
-  </div>
-`;
 
 QUnit.module("Command Service", {
     async beforeEach() {
@@ -142,12 +142,12 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
     }
 
     class OtherComponent extends Component {
+        static template = xml`<div t-ref="active"></div>`;
         setup() {
             useActiveElement("active");
             useCommand("I'm taking the throne", () => {});
         }
     }
-    OtherComponent.template = xml`<div t-ref="active"></div>`;
 
     await mount(MyComponent, target, { env });
     triggerHotkey("control+k");
@@ -232,11 +232,11 @@ QUnit.test("global command with hotkey", async (assert) => {
     assert.verifySteps([globalHotkey, hotkey]);
 
     class MyComponent extends Component {
+        static template = xml`<div t-ref="active"><button/></div>`;
         setup() {
             useActiveElement("active");
         }
     }
-    MyComponent.template = xml`<div t-ref="active"><button/></div>`;
     await mount(MyComponent, target, { env });
 
     triggerHotkey("a");
@@ -408,19 +408,19 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.expect(8);
 
     class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+            <div>
+                <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
+                <input title="Bran Stark" type="text" data-hotkey="b" />
+                <button title="Sansa Stark" data-hotkey="c" style="display: none;" />
+                <TestComponent />
+            </div>
+        `;
         onClick() {
             assert.step("Hodor");
         }
     }
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-        <div>
-            <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
-            <input title="Bran Stark" type="text" data-hotkey="b" />
-            <button title="Sansa Stark" data-hotkey="c" style="display: none;" />
-            <TestComponent />
-        </div>
-    `;
     await mount(MyComponent, target, { env });
 
     // Open palette
@@ -468,6 +468,14 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     });
 
     class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+            <div>
+                <button title="B" data-hotkey="b" t-on-click="onClickB" />
+                <button title="C" data-hotkey="c" t-on-click="onClickC" />
+                <TestComponent />
+            </div>
+        `;
         onClickB() {
             assert.step("B");
         }
@@ -475,14 +483,6 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
             assert.step("C");
         }
     }
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-    <div>
-      <button title="B" data-hotkey="b" t-on-click="onClickB" />
-      <button title="C" data-hotkey="c" t-on-click="onClickC" />
-      <TestComponent />
-    </div>
-  `;
     await mount(MyComponent, target, { env });
 
     // Open palette
@@ -1041,21 +1041,22 @@ QUnit.test("command categories", async (assert) => {
 QUnit.test("data-command-category", async (assert) => {
     assert.expect(3);
 
-    class MyComponent extends Component {}
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-    <div>
-      <div>
-        <button title="Aria Stark" data-hotkey="a" />
-        <button title="Bran Stark" data-hotkey="b" />
-      </div>
-      <div data-command-category="custom">
-        <button title="Robert Baratheon" data-hotkey="r" />
-        <button title="Joffrey Baratheon" data-hotkey="j" />
-      </div>
-      <TestComponent />
-    </div>
-  `;
+    class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+        <div>
+        <div>
+            <button title="Aria Stark" data-hotkey="a" />
+            <button title="Bran Stark" data-hotkey="b" />
+        </div>
+        <div data-command-category="custom">
+            <button title="Robert Baratheon" data-hotkey="r" />
+            <button title="Joffrey Baratheon" data-hotkey="j" />
+        </div>
+        <TestComponent />
+        </div>
+    `;
+    }
     await mount(MyComponent, target, { env });
 
     // Open palette
@@ -1082,14 +1083,15 @@ QUnit.test("data-command-category", async (assert) => {
 });
 
 QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
-    class MyComponent extends Component {}
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-    <div>
-      <button title="Click" data-hotkey="f" />
-      <TestComponent />
-    </div>
-  `;
+    class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+            <div>
+                <button title="Click" data-hotkey="f" />
+                <TestComponent />
+            </div>
+    `;
+    }
 
     await mount(MyComponent, target, { env });
 
@@ -1123,14 +1125,15 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
         },
     });
 
-    class MyComponent extends Component {}
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-        <div>
-        <button title="Click" data-hotkey="f" />
-        <TestComponent />
-        </div>
-    `;
+    class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+            <div>
+            <button title="Click" data-hotkey="f" />
+            <TestComponent />
+            </div>
+        `;
+    }
 
     await mount(MyComponent, target, { env });
 
@@ -1165,14 +1168,15 @@ QUnit.test(
             overlayModifier: "alt+control",
         });
 
-        class MyComponent extends Component {}
-        MyComponent.components = { TestComponent };
-        MyComponent.template = xml`
-    <div>
-      <button title="Click" data-hotkey="a" />
-      <TestComponent />
-    </div>
-  `;
+        class MyComponent extends Component {
+            static components = { TestComponent };
+            static template = xml`
+                <div>
+                <button title="Click" data-hotkey="a" />
+                <TestComponent />
+                </div>
+            `;
+        }
 
         await mount(MyComponent, target, { env });
         // Open palette
@@ -1198,14 +1202,15 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
         overlayModifier: "alt+control",
     });
 
-    class MyComponent extends Component {}
-    MyComponent.components = { TestComponent };
-    MyComponent.template = xml`
-    <div>
-      <button title="Click" data-hotkey="a" />
-      <TestComponent />
-    </div>
-  `;
+    class MyComponent extends Component {
+        static components = { TestComponent };
+        static template = xml`
+            <div>
+            <button title="Click" data-hotkey="a" />
+            <TestComponent />
+            </div>
+        `;
+    }
 
     await mount(MyComponent, target, { env });
     // Open palette

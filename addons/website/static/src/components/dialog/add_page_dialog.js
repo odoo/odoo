@@ -12,6 +12,28 @@ import wUtils from '@website/js/utils';
 const NO_OP = () => {};
 
 export class AddPageConfirmDialog extends Component {
+    static template = "website.AddPageConfirmDialog";
+    static props = {
+        close: Function,
+        onAddPage: {
+            type: Function,
+            optional: true,
+        },
+        websiteId: Number,
+        sectionsArch: {
+            type: String,
+            optional: true,
+        },
+        name: String,
+    };
+    static defaultProps = {
+        onAddPage: NO_OP,
+    };
+    static components = {
+        Switch,
+        WebsiteDialog,
+    };
+
     setup() {
         super.setup();
         useAutofocus();
@@ -57,29 +79,16 @@ export class AddPageConfirmDialog extends Component {
         this.props.onAddPage(this.state);
     }
 }
-AddPageConfirmDialog.props = {
-    close: Function,
-    onAddPage: {
-        type: Function,
-        optional: true,
-    },
-    websiteId: Number,
-    sectionsArch: {
-        type: String,
-        optional: true,
-    },
-    name: String,
-};
-AddPageConfirmDialog.defaultProps = {
-    onAddPage: NO_OP,
-};
-AddPageConfirmDialog.components = {
-    Switch,
-    WebsiteDialog,
-};
-AddPageConfirmDialog.template = "website.AddPageConfirmDialog";
 
 export class AddPageTemplateBlank extends Component {
+    static template = "website.AddPageTemplateBlank";
+    static props = {
+        firstRow: {
+            type: Boolean,
+            optional: true,
+        },
+    };
+
     setup() {
         super.setup();
         this.holderRef = useRef("holder");
@@ -93,15 +102,18 @@ export class AddPageTemplateBlank extends Component {
         this.env.addPage();
     }
 }
-AddPageTemplateBlank.props = {
-    firstRow: {
-        type: Boolean,
-        optional: true,
-    },
-};
-AddPageTemplateBlank.template = "website.AddPageTemplateBlank";
 
 export class AddPageTemplatePreview extends Component {
+    static template = "website.AddPageTemplatePreview";
+    static props = {
+        template: Object,
+        animationDelay: Number,
+        firstRow: {
+            type: Boolean,
+            optional: true,
+        },
+    };
+
     setup() {
         super.setup();
         this.iframeRef = useRef("iframe");
@@ -228,17 +240,20 @@ export class AddPageTemplatePreview extends Component {
         this.env.addPage(wrapEl.innerHTML);
     }
 }
-AddPageTemplatePreview.props = {
-    template: Object,
-    animationDelay: Number,
-    firstRow: {
-        type: Boolean,
-        optional: true,
-    },
-};
-AddPageTemplatePreview.template = "website.AddPageTemplatePreview";
 
 export class AddPageTemplatePreviews extends Component {
+    static template = "website.AddPageTemplatePreviews";
+    static props = {
+        templates: {
+            type: Array,
+            element: Object,
+        },
+    };
+    static components = {
+        AddPageTemplateBlank,
+        AddPageTemplatePreview,
+    };
+
     setup() {
         super.setup();
     }
@@ -253,19 +268,16 @@ export class AddPageTemplatePreviews extends Component {
         return result;
     }
 }
-AddPageTemplatePreviews.props = {
-    templates: {
-        type: Array,
-        element: Object,
-    },
-};
-AddPageTemplatePreviews.components = {
-    AddPageTemplateBlank,
-    AddPageTemplatePreview,
-};
-AddPageTemplatePreviews.template = "website.AddPageTemplatePreviews";
 
 export class AddPageTemplates extends Component {
+    static template = "website.AddPageTemplates";
+    static props = {
+        onTemplatePageChanged: Function,
+    };
+    static components = {
+        AddPageTemplatePreviews,
+    };
+
     setup() {
         super.setup();
         this.tabsRef = useRef("tabs");
@@ -338,15 +350,28 @@ export class AddPageTemplates extends Component {
         this.props.onTemplatePageChanged(tabEl.dataset.id === "basic" ? "" : tabEl.textContent);
     }
 }
-AddPageTemplates.props = {
-    onTemplatePageChanged: Function,
-};
-AddPageTemplates.components = {
-    AddPageTemplatePreviews,
-};
-AddPageTemplates.template = "website.AddPageTemplates";
 
 export class AddPageDialog extends Component {
+    static template = "website.AddPageDialog";
+    static props = {
+        close: Function,
+        onAddPage: {
+            type: Function,
+            optional: true,
+        },
+        websiteId: {
+            type: Number,
+        },
+    };
+    static defaultProps = {
+        onAddPage: NO_OP,
+    };
+    static components = {
+        WebsiteDialog,
+        AddPageTemplates,
+        AddPageTemplatePreviews,
+    };
+
     setup() {
         super.setup();
         useAutofocus();
@@ -410,22 +435,3 @@ export class AddPageDialog extends Component {
         return this.cssLinkEls;
     }
 }
-AddPageDialog.props = {
-    close: Function,
-    onAddPage: {
-        type: Function,
-        optional: true,
-    },
-    websiteId: {
-        type: Number,
-    },
-};
-AddPageDialog.defaultProps = {
-    onAddPage: NO_OP,
-};
-AddPageDialog.components = {
-    WebsiteDialog,
-    AddPageTemplates,
-    AddPageTemplatePreviews,
-};
-AddPageDialog.template = "website.AddPageDialog";

@@ -29,15 +29,16 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
     // TouchEvent by default. It might be an option to activate on some browser.
 
     QUnit.test("render only its target if no props is given", async (assert) => {
-        class Parent extends Component {}
-        Parent.components = { ActionSwiper };
-        Parent.template = xml`
-            <div class="d-flex">
-                <ActionSwiper>
-                    <div class="target-component"/>
-                </ActionSwiper>
-            </div>
-        `;
+        class Parent extends Component {
+            static components = { ActionSwiper };
+            static template = xml`
+                <div class="d-flex">
+                    <ActionSwiper>
+                        <div class="target-component"/>
+                    </ActionSwiper>
+                </div>
+            `;
+        }
         await mount(Parent, target, { env });
         assert.containsNone(target, "div.o_actionswiper");
         assert.containsOnce(target, "div.target-component");
@@ -75,23 +76,23 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
     QUnit.test("render with the height of its content", async (assert) => {
         assert.expect(2);
         class Parent extends Component {
+            static components = { ActionSwiper };
+            static template = xml`
+                <div class="o-container d-flex" style="width: 200px; height: 200px; overflow: auto">
+                    <ActionSwiper onRightSwipe = "{
+                        action: onRightSwipe,
+                        icon: 'fa-circle',
+                        bgColor: 'bg-warning'
+                    }">
+                        <div class="target-component" style="height: 800px">This element is very high and
+                        the o-container element must have a scrollbar</div>
+                    </ActionSwiper>
+                </div>
+            `;
             onRightSwipe() {
                 assert.step("onRightSwipe");
             }
         }
-        Parent.components = { ActionSwiper };
-        Parent.template = xml`
-            <div class="o-container d-flex" style="width: 200px; height: 200px; overflow: auto">
-                <ActionSwiper onRightSwipe = "{
-                    action: onRightSwipe,
-                    icon: 'fa-circle',
-                    bgColor: 'bg-warning'
-                }">
-                    <div class="target-component" style="height: 800px">This element is very high and
-                    the o-container element must have a scrollbar</div>
-                </ActionSwiper>
-            </div>
-        `;
         await mount(Parent, target, { env });
         assert.ok(
             target.querySelector(".o_actionswiper").scrollHeight ===
@@ -111,22 +112,22 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(5);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static components = { ActionSwiper };
+                static template = xml`
+                    <div class="d-flex">
+                        <ActionSwiper onRightSwipe = "{
+                            action: onRightSwipe,
+                            icon: 'fa-circle',
+                            bgColor: 'bg-warning'
+                        }">
+                            <div class="target-component" style="width: 200px; height: 80px">Test</div>
+                        </ActionSwiper>
+                    </div>
+                `;
                 onRightSwipe() {
                     assert.step("onRightSwipe");
                 }
             }
-            Parent.components = { ActionSwiper };
-            Parent.template = xml`
-                <div class="d-flex">
-                    <ActionSwiper onRightSwipe = "{
-                        action: onRightSwipe,
-                        icon: 'fa-circle',
-                        bgColor: 'bg-warning'
-                    }">
-                        <div class="target-component" style="width: 200px; height: 80px">Test</div>
-                    </ActionSwiper>
-                </div>
-            `;
             await mount(Parent, target, { env });
             const swiper = target.querySelector(".o_actionswiper");
             const targetContainer = target.querySelector(".o_actionswiper_target_container");
@@ -211,6 +212,24 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(7);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static components = { ActionSwiper };
+                static template = xml`
+                    <div class="d-flex">
+                        <ActionSwiper 
+                            onRightSwipe = "{
+                                action: onRightSwipe,
+                                icon: 'fa-circle',
+                                bgColor: 'bg-warning'
+                            }"
+                            onLeftSwipe = "{
+                                action: onLeftSwipe,
+                                icon: 'fa-check',
+                                bgColor: 'bg-success'
+                            }">
+                                <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
+                        </ActionSwiper>
+                    </div>
+                `;
                 onRightSwipe() {
                     assert.step("onRightSwipe");
                 }
@@ -218,24 +237,6 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                     assert.step("onLeftSwipe");
                 }
             }
-            Parent.components = { ActionSwiper };
-            Parent.template = xml`
-                <div class="d-flex">
-                    <ActionSwiper 
-                        onRightSwipe = "{
-                            action: onRightSwipe,
-                            icon: 'fa-circle',
-                            bgColor: 'bg-warning'
-                        }"
-                        onLeftSwipe = "{
-                            action: onLeftSwipe,
-                            icon: 'fa-check',
-                            bgColor: 'bg-success'
-                        }">
-                            <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
-                    </ActionSwiper>
-                </div>
-            `;
             await mount(Parent, target, { env });
             const swiper = target.querySelector(".o_actionswiper");
             const targetContainer = target.querySelector(".o_actionswiper_target_container");
@@ -347,6 +348,24 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(7);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static components = { ActionSwiper };
+                static template = xml`
+                    <div class="d-flex">
+                        <ActionSwiper 
+                            onRightSwipe = "{
+                                action: onRightSwipe,
+                                icon: 'fa-circle',
+                                bgColor: 'bg-warning'
+                            }"
+                            onLeftSwipe = "{
+                                action: onLeftSwipe,
+                                icon: 'fa-check',
+                                bgColor: 'bg-success'
+                            }">
+                                <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
+                        </ActionSwiper>
+                    </div>
+                `;
                 onRightSwipe() {
                     assert.step("onRightSwipe");
                 }
@@ -354,24 +373,6 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                     assert.step("onLeftSwipe");
                 }
             }
-            Parent.components = { ActionSwiper };
-            Parent.template = xml`
-                <div class="d-flex">
-                    <ActionSwiper 
-                        onRightSwipe = "{
-                            action: onRightSwipe,
-                            icon: 'fa-circle',
-                            bgColor: 'bg-warning'
-                        }"
-                        onLeftSwipe = "{
-                            action: onLeftSwipe,
-                            icon: 'fa-check',
-                            bgColor: 'bg-success'
-                        }">
-                            <div class="target-component" style="width: 250px; height: 80px">Swipe in both directions</div>
-                    </ActionSwiper>
-                </div>
-            `;
             serviceRegistry.add("localization", makeFakeLocalizationService({ direction: "rtl" }));
             await mount(Parent, target, { env });
             const swiper = target.querySelector(".o_actionswiper");
@@ -485,6 +486,30 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(9);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static components = { ActionSwiper };
+                static template = xml`
+                    <div class="d-flex">
+                        <ActionSwiper 
+                            onRightSwipe = "{
+                                action: onRightSwipe,
+                                icon: 'fa-circle',
+                                bgColor: 'bg-warning'
+                            }"
+                            onLeftSwipe = "{
+                                action: onLeftSwipe,
+                                icon: 'fa-check',
+                                bgColor: 'bg-success'
+                            }">
+                                <div class="target-component" style="width: 200px; height: 300px">
+                                <h1>Test about swiping and scrolling</h1>
+                                    <div class="large-content" style="overflow: auto">
+                                        <h2>This div contains a larger element that will make it scrollable</h2>
+                                        <p class="large-text" style="width: 400px">This element is so large it needs to be scrollable</p>
+                                    </div>
+                                </div>
+                        </ActionSwiper>
+                    </div>
+                `;
                 onRightSwipe() {
                     assert.step("onRightSwipe");
                 }
@@ -492,30 +517,6 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                     assert.step("onLeftSwipe");
                 }
             }
-            Parent.components = { ActionSwiper };
-            Parent.template = xml`
-                <div class="d-flex">
-                    <ActionSwiper 
-                        onRightSwipe = "{
-                            action: onRightSwipe,
-                            icon: 'fa-circle',
-                            bgColor: 'bg-warning'
-                        }"
-                        onLeftSwipe = "{
-                            action: onLeftSwipe,
-                            icon: 'fa-check',
-                            bgColor: 'bg-success'
-                        }">
-                            <div class="target-component" style="width: 200px; height: 300px">
-                            <h1>Test about swiping and scrolling</h1>
-                                <div class="large-content" style="overflow: auto">
-                                    <h2>This div contains a larger element that will make it scrollable</h2>
-                                    <p class="large-text" style="width: 400px">This element is so large it needs to be scrollable</p>
-                                </div>
-                            </div>
-                    </ActionSwiper>
-                </div>
-            `;
             await mount(Parent, target, { env });
             const swiper = target.querySelector(".o_actionswiper");
             const targetContainer = target.querySelector(".o_actionswiper_target_container");
@@ -694,6 +695,30 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(8);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static components = { ActionSwiper };
+                static template = xml`
+                    <div class="d-flex">
+                        <ActionSwiper
+                            onRightSwipe = "{
+                                action: onRightSwipe,
+                                icon: 'fa-circle',
+                                bgColor: 'bg-warning'
+                            }"
+                            onLeftSwipe = "{
+                                action: onLeftSwipe,
+                                icon: 'fa-check',
+                                bgColor: 'bg-success'
+                            }">
+                                <div class="target-component" style="width: 200px; height: 300px">
+                                <h1>Test about swiping and scrolling for rtl</h1>
+                                    <div class="large-content" style="overflow: auto">
+                                        <h2>elballorcs ti ekam lliw taht tnemele regral a sniatnoc vid sihT</h2>
+                                        <p class="large-text" style="width: 400px">elballorcs eb ot sdeen ti egral os si tnemele sihT</p>
+                                    </div>
+                                </div>
+                        </ActionSwiper>
+                    </div>
+                `;
                 onRightSwipe() {
                     assert.step("onRightSwipe");
                 }
@@ -701,30 +726,6 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                     assert.step("onLeftSwipe");
                 }
             }
-            Parent.components = { ActionSwiper };
-            Parent.template = xml`
-                <div class="d-flex">
-                    <ActionSwiper
-                        onRightSwipe = "{
-                            action: onRightSwipe,
-                            icon: 'fa-circle',
-                            bgColor: 'bg-warning'
-                        }"
-                        onLeftSwipe = "{
-                            action: onLeftSwipe,
-                            icon: 'fa-check',
-                            bgColor: 'bg-success'
-                        }">
-                            <div class="target-component" style="width: 200px; height: 300px">
-                            <h1>Test about swiping and scrolling for rtl</h1>
-                                <div class="large-content" style="overflow: auto">
-                                    <h2>elballorcs ti ekam lliw taht tnemele regral a sniatnoc vid sihT</h2>
-                                    <p class="large-text" style="width: 400px">elballorcs eb ot sdeen ti egral os si tnemele sihT</p>
-                                </div>
-                            </div>
-                    </ActionSwiper>
-                </div>
-            `;
             serviceRegistry.add("localization", makeFakeLocalizationService({ direction: "rtl" }));
             await mount(Parent, target, { env });
             const targetContainer = target.querySelector(".o_actionswiper_target_container");

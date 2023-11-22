@@ -6,6 +6,12 @@ import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
+    static components = {
+        ...KanbanRenderer.components,
+        KanbanRecord: ProjectTaskKanbanRecord,
+        KanbanHeader: ProjectTaskKanbanHeader,
+    };
+
     setup() {
         super.setup();
         this.action = useService('action');
@@ -21,9 +27,3 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         return this.props.list.context.active_model === "project.project" && !!this.props.list.context.default_project_id;
     }
 }
-
-ProjectTaskKanbanRenderer.components = {
-    ...KanbanRenderer.components,
-    KanbanRecord: ProjectTaskKanbanRecord,
-    KanbanHeader: ProjectTaskKanbanHeader,
-};

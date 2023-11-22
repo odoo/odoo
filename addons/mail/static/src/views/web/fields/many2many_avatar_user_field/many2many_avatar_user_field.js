@@ -16,8 +16,9 @@ import {
     KanbanMany2ManyTagsAvatarFieldTagsList,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 
-export class Many2ManyAvatarUserTagsList extends TagsList {}
-Many2ManyAvatarUserTagsList.template = "mail.Many2ManyAvatarUserTagsList";
+export class Many2ManyAvatarUserTagsList extends TagsList {
+    static template = "mail.Many2ManyAvatarUserTagsList";
+}
 
 const WithUserChatter = (T) =>
     class UserChatterMixin extends T {

@@ -19,6 +19,42 @@ import { Component, useRef } from "@odoo/owl";
  */
 
 export class CheckBox extends Component {
+    static template = "web.CheckBox";
+    static nextId = 1;
+    static defaultProps = {
+        onChange: () => {},
+    };
+    static props = {
+        id: {
+            type: true,
+            optional: true,
+        },
+        disabled: {
+            type: Boolean,
+            optional: true,
+        },
+        value: {
+            type: Boolean,
+            optional: true,
+        },
+        slots: {
+            type: Object,
+            optional: true,
+        },
+        onChange: {
+            type: Function,
+            optional: true,
+        },
+        className: {
+            type: String,
+            optional: true,
+        },
+        name: {
+            type: String,
+            optional: true,
+        },
+    };
+
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;
         this.rootRef = useRef("root");
@@ -58,39 +94,3 @@ export class CheckBox extends Component {
         }
     }
 }
-
-CheckBox.template = "web.CheckBox";
-CheckBox.nextId = 1;
-CheckBox.defaultProps = {
-    onChange: () => {},
-};
-CheckBox.props = {
-    id: {
-        type: true,
-        optional: true,
-    },
-    disabled: {
-        type: Boolean,
-        optional: true,
-    },
-    value: {
-        type: Boolean,
-        optional: true,
-    },
-    slots: {
-        type: Object,
-        optional: true,
-    },
-    onChange: {
-        type: Function,
-        optional: true,
-    },
-    className: {
-        type: String,
-        optional: true,
-    },
-    name: {
-        type: String,
-        optional: true,
-    },
-};

@@ -5,6 +5,8 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 export class SendSMSButton extends Component {
+    static template = "sms.SendSMSButton";
+    static props = ["*"];
     setup() {
         this.action = useService("action");
         this.user = useService("user");
@@ -38,5 +40,3 @@ export class SendSMSButton extends Component {
         );
     }
 }
-SendSMSButton.template = "sms.SendSMSButton";
-SendSMSButton.props = ["*"];

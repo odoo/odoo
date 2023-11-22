@@ -179,6 +179,41 @@ export function isHtmlEmpty(innerHTML = "") {
 }
 
 export class KanbanRecord extends Component {
+    static components = {
+        Dropdown,
+        DropdownItem,
+        KanbanDropdownMenuWrapper,
+        Field,
+        KanbanCoverImageDialog,
+        ViewButton,
+        Widget,
+    };
+    static defaultProps = {
+        colors: COLORS,
+        deleteRecord: () => {},
+        openRecord: () => {},
+    };
+    static props = [
+        "archInfo",
+        "canResequence?",
+        "colors?",
+        "Compiler?",
+        "forceGlobalClick?",
+        "group?",
+        "list",
+        "deleteRecord?",
+        "openRecord?",
+        "readonly?",
+        "record",
+        "templates",
+        "progressBarState?",
+    ];
+    static Compiler = KanbanCompiler;
+    static KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+    static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
+    static menuTemplate = "web.KanbanRecordMenu";
+    static template = "web.KanbanRecord";
+
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
@@ -370,37 +405,3 @@ export class KanbanRecord extends Component {
         };
     }
 }
-KanbanRecord.components = {
-    Dropdown,
-    DropdownItem,
-    KanbanDropdownMenuWrapper,
-    Field,
-    KanbanCoverImageDialog,
-    ViewButton,
-    Widget,
-};
-KanbanRecord.defaultProps = {
-    colors: COLORS,
-    deleteRecord: () => {},
-    openRecord: () => {},
-};
-KanbanRecord.props = [
-    "archInfo",
-    "canResequence?",
-    "colors?",
-    "Compiler?",
-    "forceGlobalClick?",
-    "group?",
-    "list",
-    "deleteRecord?",
-    "openRecord?",
-    "readonly?",
-    "record",
-    "templates",
-    "progressBarState?",
-];
-KanbanRecord.Compiler = KanbanCompiler;
-KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
-KanbanRecord.KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
-KanbanRecord.menuTemplate = "web.KanbanRecordMenu";
-KanbanRecord.template = "web.KanbanRecord";

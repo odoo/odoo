@@ -86,19 +86,30 @@ export function splitCommandName(name, searchValue) {
     return [];
 }
 
-export class DefaultCommandItem extends Component {}
-DefaultCommandItem.template = "web.DefaultCommandItem";
-DefaultCommandItem.props = {
-    slots: { type: Object, optional: true },
-    // Props send by the command palette:
-    hotkey: { type: String, optional: true },
-    hotkeyOptions: { type: String, optional: true },
-    name: { type: String, optional: true },
-    searchValue: { type: String, optional: true },
-    executeCommand: { type: Function, optional: true },
-};
+export class DefaultCommandItem extends Component {
+    static template = "web.DefaultCommandItem";
+    static props = {
+        slots: { type: Object, optional: true },
+        // Props send by the command palette:
+        hotkey: { type: String, optional: true },
+        hotkeyOptions: { type: String, optional: true },
+        name: { type: String, optional: true },
+        searchValue: { type: String, optional: true },
+        executeCommand: { type: Function, optional: true },
+    };
+}
 
 export class CommandPalette extends Component {
+    static template = "web.CommandPalette";
+    static components = { Dialog };
+    static lastSessionId = 0;
+    static props = {
+        bus: { type: EventBus, optional: true },
+        close: Function,
+        config: Object,
+        closeMe: { type: Function, optional: true },
+    };
+
     setup() {
         if (this.props.bus) {
             const setConfig = ({ detail }) => this.setCommandPaletteConfig(detail);
@@ -379,12 +390,3 @@ export class CommandPalette extends Component {
         return isMobileOS();
     }
 }
-CommandPalette.lastSessionId = 0;
-CommandPalette.props = {
-    bus: { type: EventBus, optional: true },
-    close: Function,
-    config: Object,
-    closeMe: { type: Function, optional: true },
-};
-CommandPalette.template = "web.CommandPalette";
-CommandPalette.components = { Dialog };

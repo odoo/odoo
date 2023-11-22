@@ -5,8 +5,9 @@ import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 
 import { Component, xml } from "@odoo/owl";
 
-class TestComponent extends Component {}
-TestComponent.template = xml`<div class="o_test_component"/>`;
+class TestComponent extends Component {
+    static template = xml`<div class="o_test_component"/>`;
+}
 
 async function makeSearchModel(params) {
     const component = await makeWithSearch({

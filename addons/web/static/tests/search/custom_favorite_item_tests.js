@@ -164,6 +164,8 @@ QUnit.module("Search", (hooks) => {
         assert.expect(4);
 
         class TestComponent extends Component {
+            static components = { SearchBarMenu };
+            static template = xml`<div><SearchBarMenu/></div>`;
             setup() {
                 useSetupAction({
                     getContext: () => {
@@ -172,8 +174,6 @@ QUnit.module("Search", (hooks) => {
                 });
             }
         }
-        TestComponent.components = { SearchBarMenu };
-        TestComponent.template = xml`<div><SearchBarMenu/></div>`;
 
         const comp = await makeWithSearch({
             serverData,

@@ -17,21 +17,21 @@ let popoverTarget;
 const mainComponents = registry.category("main_components");
 
 class PseudoWebClient extends Component {
+    static template = xml`
+        <div>
+            <div id="anchor">Anchor</div>
+            <div id="close">Close</div>
+            <div>
+                <t t-foreach="Components" t-as="Component" t-key="Component[0]">
+                    <t t-component="Component[1].Component" t-props="Component[1].props"/>
+                </t>
+            </div>
+        </div>
+    `;
     setup() {
         this.Components = mainComponents.getEntries();
     }
 }
-PseudoWebClient.template = xml`
-    <div>
-        <div id="anchor">Anchor</div>
-        <div id="close">Close</div>
-        <div>
-            <t t-foreach="Components" t-as="Component" t-key="Component[0]">
-                <t t-component="Component[1].Component" t-props="Component[1].props"/>
-            </t>
-        </div>
-    </div>
-`;
 
 QUnit.module("Popover hook", {
     async beforeEach() {
@@ -49,15 +49,16 @@ QUnit.module("Popover hook", {
 });
 
 QUnit.test("close popover when component is unmounted", async (assert) => {
-    class Comp extends Component {}
-    Comp.template = xml`<div t-att-id="props.id">in popover</div>`;
+    class Comp extends Component {
+        static template = xml`<div t-att-id="props.id">in popover</div>`;
+    }
 
     class CompWithPopover extends Component {
+        static template = xml`<div />`;
         setup() {
             this.popover = usePopover(Comp);
         }
     }
-    CompWithPopover.template = xml`<div />`;
 
     const comp1 = await mount(CompWithPopover, target, { env });
     comp1.popover.open(popoverTarget, { id: "comp1" });

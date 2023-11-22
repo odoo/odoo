@@ -14,6 +14,7 @@ export const IMAGE_MIMETYPES = ['image/jpg', 'image/jpeg', 'image/jpe', 'image/p
 export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif', '.webp'];
 
 class RemoveButton extends Component {
+    static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-index-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
     setup() {
         this.removeTitle = _t("This file is attached to the current record.");
         if (this.props.model === 'ir.ui.view') {
@@ -26,35 +27,37 @@ class RemoveButton extends Component {
         this.props.remove();
     }
 }
-RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-index-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
 
 export class AttachmentError extends Component {
+    static components = { Dialog };
+    static template = xml`
+        <Dialog title="title">
+            <div class="form-text">
+                <p>The image could not be deleted because it is used in the
+                    following pages or views:</p>
+                <ul t-foreach="props.views"  t-as="view" t-key="view.id">
+                    <li>
+                        <a t-att-href="'/web#model=ir.ui.view&amp;id=' + window.encodeURIComponent(view.id)">
+                            <t t-esc="view.name"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => this.props.close()">
+                    Ok
+                </button>
+            </t>
+        </Dialog>`;
     setup() {
         this.title = _t("Alert");
     }
 }
-AttachmentError.components = { Dialog };
-AttachmentError.template = xml `
-<Dialog title="title">
-    <div class="form-text">
-        <p>The image could not be deleted because it is used in the
-            following pages or views:</p>
-        <ul t-foreach="props.views"  t-as="view" t-key="view.id">
-            <li>
-                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + window.encodeURIComponent(view.id)">
-                    <t t-esc="view.name"/>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <t t-set-slot="footer">
-        <button class="btn btn-primary" t-on-click="() => this.props.close()">
-            Ok
-        </button>
-    </t>
-</Dialog>`;
 
 export class Attachment extends Component {
+    static components = {
+        RemoveButton,
+    };
     setup() {
         this.dialogs = useService('dialog');
         this.rpc = useService('rpc');
@@ -78,11 +81,12 @@ export class Attachment extends Component {
         });
     }
 }
-Attachment.components = {
-    RemoveButton,
-};
 
 export class FileSelectorControlPanel extends Component {
+    static template = "web_editor.FileSelectorControlPanel";
+    static components = {
+        SearchMedia,
+    };
     setup() {
         this.state = useState({
             showUrlInput: false,
@@ -130,12 +134,13 @@ export class FileSelectorControlPanel extends Component {
         this.fileInput.el.value = '';
     }
 }
-FileSelectorControlPanel.template = 'web_editor.FileSelectorControlPanel';
-FileSelectorControlPanel.components = {
-    SearchMedia,
-};
 
 export class FileSelector extends Component {
+    static template = "web_editor.FileSelector";
+    static components = {
+        FileSelectorControlPanel,
+    };
+
     setup() {
         this.notificationService = useService("notification");
         this.orm = useService('orm');
@@ -383,7 +388,3 @@ export class FileSelector extends Component {
         scrollToEl.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
     }
 }
-FileSelector.template = 'web_editor.FileSelector';
-FileSelector.components = {
-    FileSelectorControlPanel,
-};

@@ -74,6 +74,8 @@ async function makeExpressionEditor(params = {}) {
     delete props.mockRPC;
 
     class Parent extends Component {
+        static components = { ExpressionEditor };
+        static template = xml`<ExpressionEditor t-props="expressionEditorProps"/>`;
         setup() {
             this.expressionEditorProps = {
                 resModel: "partner",
@@ -101,8 +103,6 @@ async function makeExpressionEditor(params = {}) {
             await nextTick();
         }
     }
-    Parent.components = { ExpressionEditor };
-    Parent.template = xml`<ExpressionEditor t-props="expressionEditorProps"/>`;
 
     const env = await makeTestEnv({ serverData, mockRPC });
     await mount(MainComponentsContainer, target, { env });

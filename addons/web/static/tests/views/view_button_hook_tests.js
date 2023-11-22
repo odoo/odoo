@@ -35,6 +35,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
         let executeInHook;
         let executeInHandler;
         class MyComponent extends Component {
+            static template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
             setup() {
                 const rootRef = useRef("root");
                 useViewButtons({}, rootRef, {
@@ -58,7 +59,6 @@ QUnit.module("UseViewButton tests", (hooks) => {
                 this.env.onClickViewButton({ beforeExecute, getResParams, clickParams });
             }
         }
-        MyComponent.template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
 
         const env = await makeTestEnv();
         await mount(MyComponent, target, { env, props: {} });
@@ -95,22 +95,22 @@ QUnit.module("UseViewButton tests", (hooks) => {
         );
 
         class MyComponent extends Component {
+            static components = { Dropdown, DropdownItem, ViewButton };
+            static template = xml`
+                <div t-ref="root" class="myComponent">
+                    <Dropdown>
+                        <t t-set-slot="toggler">dropdown</t>
+                        <DropdownItem>
+                            <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
+                        </DropdownItem>
+                    </Dropdown>
+                </div>
+            `;
             setup() {
                 const rootRef = useRef("root");
                 useViewButtons({}, rootRef);
             }
         }
-        MyComponent.components = { Dropdown, DropdownItem, ViewButton };
-        MyComponent.template = xml`
-            <div t-ref="root" class="myComponent">
-                <Dropdown>
-                    <t t-set-slot="toggler">dropdown</t>
-                    <DropdownItem>
-                        <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
-                    </DropdownItem>
-                </Dropdown>
-            </div>
-        `;
 
         const env = await makeTestEnv();
         await mount(MyComponent, target, { env });

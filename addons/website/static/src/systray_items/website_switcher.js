@@ -10,6 +10,11 @@ import wUtils from '@website/js/utils';
 import { Component } from "@odoo/owl";
 
 export class WebsiteSwitcherSystray extends Component {
+    static template = "website.WebsiteSwitcherSystray";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
     setup() {
         this.websiteService = useService('website');
         this.notificationService = useService("notification");
@@ -61,11 +66,6 @@ export class WebsiteSwitcherSystray extends Component {
         }));
     }
 }
-WebsiteSwitcherSystray.template = "website.WebsiteSwitcherSystray";
-WebsiteSwitcherSystray.components = {
-    Dropdown,
-    DropdownItem,
-};
 
 export const systrayItem = {
     Component: WebsiteSwitcherSystray,

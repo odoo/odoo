@@ -7,6 +7,12 @@ import { ReceptionReportTable } from "../reception_report_table/stock_reception_
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ReceptionReportMain extends Component {
+    static components = {
+        ControlPanel,
+        ReceptionReportTable,
+    };
+    static template = "stock.ReceptionReportMain";
+
     setup() {
         this.controlPanelDisplay = {};
         this.ormService = useService("orm");
@@ -138,11 +144,5 @@ export class ReceptionReportMain extends Component {
         return Object.values(this.state.sourcesToLines).every(lines => lines.every(line => !line.is_assigned));
     }
 }
-
-ReceptionReportMain.components = {
-    ControlPanel,
-    ReceptionReportTable,
-};
-ReceptionReportMain.template = "stock.ReceptionReportMain";
 
 registry.category("actions").add("reception_report", ReceptionReportMain);

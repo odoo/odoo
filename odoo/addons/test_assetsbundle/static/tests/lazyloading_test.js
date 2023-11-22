@@ -11,16 +11,16 @@ QUnit.module("utils", () => {
 
     QUnit.test("LazyComponent loads the required bundle", async function (assert) {
         class Test extends Component {
+            static template = xml`
+                <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="childProps"/>
+            `;
+            static components = { LazyComponent };
             get childProps() {
                 return {
                     onCreated: () => assert.step("Lazy test component created"),
                 };
             }
         }
-        Test.template = xml`
-            <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="childProps"/>
-        `;
-        Test.components = { LazyComponent };
 
         const target = getFixture();
         const app = new App(Test, {

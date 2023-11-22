@@ -391,12 +391,12 @@ QUnit.test("orm is specialized for component", async (assert) => {
     const env = await makeTestEnv();
 
     class MyComponent extends Component {
+        static template = xml`<div/>`;
         setup() {
             this.rpc = useService("rpc");
             this.orm = useService("orm");
         }
     }
-    MyComponent.template = xml`<div/>`;
 
     const target = getFixture();
     const component = await mount(MyComponent, target, { env });

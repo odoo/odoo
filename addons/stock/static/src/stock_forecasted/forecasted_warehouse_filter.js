@@ -5,6 +5,9 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class ForecastedWarehouseFilter extends Component {
+    static template = "stock.ForecastedWarehouseFilter";
+    static components = { Dropdown, DropdownItem };
+    static props = { action: Object, setWarehouseInContext: Function, warehouses: Array };
 
     setup() {
         this.orm = useService("orm");
@@ -27,7 +30,3 @@ export class ForecastedWarehouseFilter extends Component {
             this.warehouses[0];
     }
 }
-
-ForecastedWarehouseFilter.template = 'stock.ForecastedWarehouseFilter';
-ForecastedWarehouseFilter.components = {Dropdown, DropdownItem};
-ForecastedWarehouseFilter.props = {action: Object, setWarehouseInContext : Function, warehouses: Array};

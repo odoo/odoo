@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 
 export class FloatScannableField extends FloatField {
+    static template = "barcodes.FloatScannableField";
     onBarcodeScanned() {
         this.inputRef.el.dispatchEvent(new InputEvent("input"));
     }
 }
-FloatScannableField.template = "barcodes.FloatScannableField";
 
 export const floatScannableField = {
     ...floatField,

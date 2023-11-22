@@ -28,6 +28,7 @@ export function displayNotificationAction(env, action) {
 registry.category("actions").add("display_notification", displayNotificationAction);
 
 class InvalidAction extends Component {
+    static template = xml`<div class="o_invalid_action"></div>`;
     setup() {
         this.notification = useService("notification");
         onMounted(this.onMounted);
@@ -38,7 +39,6 @@ class InvalidAction extends Component {
         this.notification.add(message, { type: "danger" });
     }
 }
-InvalidAction.template = xml`<div class="o_invalid_action"></div>`;
 
 registry.category("actions").add("invalid_action", InvalidAction);
 

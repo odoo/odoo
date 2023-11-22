@@ -13,6 +13,18 @@ import { getCurrency } from '@web/core/currency';
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ProjectRightSidePanel extends Component {
+    static components = {
+        ProjectRightSidePanelSection,
+        ProjectMilestone,
+        ViewButton,
+        ProjectProfitability,
+    };
+    static template = "project.ProjectRightSidePanel";
+    static props = {
+        context: Object,
+        domain: Array,
+    };
+
     setup() {
         this.orm = useService('orm');
         this.actionService = useService('action');
@@ -153,10 +165,3 @@ export class ProjectRightSidePanel extends Component {
         };
     }
 }
-
-ProjectRightSidePanel.components = { ProjectRightSidePanelSection, ProjectMilestone, ViewButton, ProjectProfitability };
-ProjectRightSidePanel.template = 'project.ProjectRightSidePanel';
-ProjectRightSidePanel.props = {
-    context: Object,
-    domain: Array,
-};

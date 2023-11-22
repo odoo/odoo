@@ -9,6 +9,7 @@ import { useState } from "@odoo/owl";
 export const DELAY = 400;
 
 export class IbanWidget extends CharField {
+    static template = "base_iban.iban";
     setup() {
         super.setup();
         this.state = useState({ isValidIBAN: null });
@@ -25,7 +26,6 @@ export class IbanWidget extends CharField {
         }, DELAY);
     }
 }
-IbanWidget.template = "base_iban.iban";
 
 export const ibanWidget = {
     ...charField,

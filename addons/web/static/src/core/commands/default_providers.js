@@ -17,6 +17,7 @@ commandSetupRegistry.add("default", {
 });
 
 export class HotkeyCommandItem extends Component {
+    static template = "web.HotkeyCommandItem";
     setup() {
         useHotkey(this.props.hotkey, this.props.executeCommand);
     }
@@ -32,7 +33,6 @@ export class HotkeyCommandItem extends Component {
         return result.map((key) => key.toUpperCase());
     }
 }
-HotkeyCommandItem.template = "web.HotkeyCommandItem";
 
 const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");

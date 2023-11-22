@@ -7,6 +7,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 const websiteSystrayRegistry = registry.category('website_systray');
 
 export class EditInBackendSystray extends Component {
+    static template = "website.EditInBackendSystray";
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');
@@ -31,7 +32,6 @@ export class EditInBackendSystray extends Component {
         this.state.mainObjectName = await this.websiteService.getUserModelName();
     }
 }
-EditInBackendSystray.template = "website.EditInBackendSystray";
 
 export const systrayItem = {
     Component: EditInBackendSystray,

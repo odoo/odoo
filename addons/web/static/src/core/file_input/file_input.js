@@ -24,6 +24,28 @@ import { checkFileSize } from "@web/core/utils/files";
  *      to upload multiple files at once.
  */
 export class FileInput extends Component {
+    static template = "web.FileInput";
+    static defaultProps = {
+        acceptedFileExtensions: "*",
+        hidden: false,
+        multiUpload: false,
+        onUpload: () => {},
+        route: "/web/binary/upload_attachment",
+        beforeOpen: async () => true,
+    };
+    static props = {
+        acceptedFileExtensions: { type: String, optional: true },
+        autoOpen: { type: Boolean, optional: true },
+        hidden: { type: Boolean, optional: true },
+        multiUpload: { type: Boolean, optional: true },
+        onUpload: { type: Function, optional: true },
+        beforeOpen: { type: Function, optional: true },
+        resId: { type: Number, optional: true },
+        resModel: { type: String, optional: true },
+        route: { type: String, optional: true },
+        "*": true,
+    };
+
     setup() {
         this.http = useService("http");
         this.notification = useService("notification");
@@ -106,25 +128,3 @@ export class FileInput extends Component {
         }
     }
 }
-
-FileInput.defaultProps = {
-    acceptedFileExtensions: "*",
-    hidden: false,
-    multiUpload: false,
-    onUpload: () => {},
-    route: "/web/binary/upload_attachment",
-    beforeOpen: async () => true,
-};
-FileInput.props = {
-    acceptedFileExtensions: { type: String, optional: true },
-    autoOpen: { type: Boolean, optional: true },
-    hidden: { type: Boolean, optional: true },
-    multiUpload: { type: Boolean, optional: true },
-    onUpload: { type: Function, optional: true },
-    beforeOpen: { type: Function, optional: true },
-    resId: { type: Number, optional: true },
-    resModel: { type: String, optional: true },
-    route: { type: String, optional: true },
-    "*": true,
-};
-FileInput.template = "web.FileInput";

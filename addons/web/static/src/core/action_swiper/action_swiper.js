@@ -25,6 +25,40 @@ const isScrollSwipable = (scrollables) => {
  * @extends Component
  */
 export class ActionSwiper extends Component {
+    static template = "web.ActionSwiper";
+    static props = {
+        onLeftSwipe: {
+            type: Object,
+            args: {
+                action: Function,
+                icon: String,
+                bgColor: String,
+            },
+            optional: true,
+        },
+        onRightSwipe: {
+            type: Object,
+            args: {
+                action: Function,
+                icon: String,
+                bgColor: String,
+            },
+            optional: true,
+        },
+        slots: Object,
+        animationOnMove: { type: Boolean, optional: true },
+        animationType: { type: String, optional: true },
+        swipeDistanceRatio: { type: Number, optional: true },
+    };
+
+    static defaultProps = {
+        onLeftSwipe: undefined,
+        onRightSwipe: undefined,
+        animationOnMove: true,
+        animationType: "bounce",
+        swipeDistanceRatio: 2,
+    };
+
     setup() {
         this.actionTimeoutId = null;
         this.resetTimeoutId = null;
@@ -185,38 +219,3 @@ export class ActionSwiper extends Component {
         }
     }
 }
-
-ActionSwiper.props = {
-    onLeftSwipe: {
-        type: Object,
-        args: {
-            action: Function,
-            icon: String,
-            bgColor: String,
-        },
-        optional: true,
-    },
-    onRightSwipe: {
-        type: Object,
-        args: {
-            action: Function,
-            icon: String,
-            bgColor: String,
-        },
-        optional: true,
-    },
-    slots: Object,
-    animationOnMove: { type: Boolean, optional: true },
-    animationType: { type: String, optional: true },
-    swipeDistanceRatio: { type: Number, optional: true },
-};
-
-ActionSwiper.defaultProps = {
-    onLeftSwipe: undefined,
-    onRightSwipe: undefined,
-    animationOnMove: true,
-    animationType: "bounce",
-    swipeDistanceRatio: 2,
-};
-
-ActionSwiper.template = "web.ActionSwiper";

@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 
 export class ProjectControlPanel extends ControlPanel {
+    static template = "project.ProjectControlPanel";
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -39,5 +40,3 @@ export class ProjectControlPanel extends ControlPanel {
         });
     }
 }
-
-ProjectControlPanel.template = "project.ProjectControlPanel";

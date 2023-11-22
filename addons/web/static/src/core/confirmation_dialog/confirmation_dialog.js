@@ -13,6 +13,33 @@ Think twice before you click that 'Delete' button!"
 );
 
 export class ConfirmationDialog extends Component {
+    static template = "web.ConfirmationDialog";
+    static components = { Dialog };
+    static props = {
+        close: Function,
+        title: {
+            validate: (m) => {
+                return (
+                    typeof m === "string" ||
+                    (typeof m === "object" && typeof m.toString === "function")
+                );
+            },
+            optional: true,
+        },
+        body: String,
+        confirm: { type: Function, optional: true },
+        confirmLabel: { type: String, optional: true },
+        confirmClass: { type: String, optional: true },
+        cancel: { type: Function, optional: true },
+        cancelLabel: { type: String, optional: true },
+    };
+    static defaultProps = {
+        confirmLabel: _t("Ok"),
+        cancelLabel: _t("Cancel"),
+        confirmClass: "btn-primary",
+        title: _t("Confirmation"),
+    };
+
     setup() {
         this.env.dialogData.dismiss = () => this._cancel();
         this.modalRef = useChildRef();
@@ -58,39 +85,15 @@ export class ConfirmationDialog extends Component {
         this.props.close();
     }
 }
-ConfirmationDialog.template = "web.ConfirmationDialog";
-ConfirmationDialog.components = { Dialog };
-ConfirmationDialog.props = {
-    close: Function,
-    title: {
-        validate: (m) => {
-            return (
-                typeof m === "string" || (typeof m === "object" && typeof m.toString === "function")
-            );
-        },
-        optional: true,
-    },
-    body: String,
-    confirm: { type: Function, optional: true },
-    confirmLabel: { type: String, optional: true },
-    confirmClass: { type: String, optional: true },
-    cancel: { type: Function, optional: true },
-    cancelLabel: { type: String, optional: true },
-};
-ConfirmationDialog.defaultProps = {
-    confirmLabel: _t("Ok"),
-    cancelLabel: _t("Cancel"),
-    confirmClass: "btn-primary",
-    title: _t("Confirmation"),
-};
 
-export class AlertDialog extends ConfirmationDialog {}
-AlertDialog.template = "web.AlertDialog";
-AlertDialog.props = {
-    ...ConfirmationDialog.props,
-    contentClass: { type: String, optional: true },
-};
-AlertDialog.defaultProps = {
-    ...ConfirmationDialog.defaultProps,
-    title: _t("Alert"),
-};
+export class AlertDialog extends ConfirmationDialog {
+    static template = "web.AlertDialog";
+    static props = {
+        ...ConfirmationDialog.props,
+        contentClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        ...ConfirmationDialog.defaultProps,
+        title: _t("Alert"),
+    };
+}

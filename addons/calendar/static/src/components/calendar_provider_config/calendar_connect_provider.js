@@ -18,6 +18,11 @@ const providerData = {
 };
 
 export class CalendarConnectProvider extends Component {
+    static props = {
+        ...standardWidgetProps,
+    };
+    static template = "calendar.CalendarConnectProvider";
+
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -65,10 +70,6 @@ export class CalendarConnectProvider extends Component {
         return Promise.resolve();
     }
 }
-CalendarConnectProvider.props = {
-    ...standardWidgetProps,
-};
-CalendarConnectProvider.template = "calendar.CalendarConnectProvider";
 
 const calendarConnectProvider = {
     component: CalendarConnectProvider,

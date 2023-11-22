@@ -61,6 +61,24 @@ import {
  */
 
 export class Notebook extends Component {
+    static template = "web.Notebook";
+    static defaultProps = {
+        className: "",
+        orientation: "horizontal",
+        onPageUpdate: () => {},
+    };
+    static props = {
+        slots: { type: Object, optional: true },
+        pages: { type: Object, optional: true },
+        class: { optional: true },
+        className: { type: String, optional: true },
+        anchors: { type: Object, optional: true },
+        defaultPage: { type: String, optional: true },
+        orientation: { type: String, optional: true },
+        icons: { type: Object, optional: true },
+        onPageUpdate: { type: Function, optional: true },
+    };
+
     setup() {
         this.activePane = useRef("activePane");
         this.anchorTarget = null;
@@ -174,21 +192,3 @@ export class Notebook extends Component {
         return current;
     }
 }
-
-Notebook.template = "web.Notebook";
-Notebook.defaultProps = {
-    className: "",
-    orientation: "horizontal",
-    onPageUpdate: () => {},
-};
-Notebook.props = {
-    slots: { type: Object, optional: true },
-    pages: { type: Object, optional: true },
-    class: { optional: true },
-    className: { type: String, optional: true },
-    anchors: { type: Object, optional: true },
-    defaultPage: { type: String, optional: true },
-    orientation: { type: String, optional: true },
-    icons: { type: Object, optional: true },
-    onPageUpdate: { type: Function, optional: true },
-};

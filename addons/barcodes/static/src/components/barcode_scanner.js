@@ -6,6 +6,11 @@ import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BarcodeScanner extends Component {
+    static template = "barcodes.BarcodeScanner";
+    static props = {
+        onBarcodeScanned: { type: Function },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported();
@@ -36,8 +41,3 @@ export class BarcodeScanner extends Component {
         }
     }
 }
-
-BarcodeScanner.template = "barcodes.BarcodeScanner";
-BarcodeScanner.props = {
-    onBarcodeScanned: { type: Function },
-};

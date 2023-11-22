@@ -25,20 +25,21 @@ let env;
 let target;
 const serviceRegistry = registry.category("services");
 
-class FooterComponent extends Component {}
-FooterComponent.template = xml`<span>My footer</span>`;
+class FooterComponent extends Component {
+    static template = xml`<span>My footer</span>`;
+}
 
 class TestComponent extends Component {
+    static template = xml`
+      <div>
+        <div class="o_dialog_container"/>
+        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+      </div>
+    `;
     get OverlayContainer() {
         return registry.category("main_components").get("OverlayContainer");
     }
 }
-TestComponent.template = xml`
-  <div>
-    <div class="o_dialog_container"/>
-    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
-  </div>
-`;
 
 QUnit.module("Command Palette", {
     async beforeEach() {
@@ -315,12 +316,13 @@ QUnit.test("add a footer", async (assert) => {
 });
 
 QUnit.test("command with a Custom Component", async (assert) => {
-    class CustomComponent extends Component {}
-    CustomComponent.template = xml`
-        <div class="o_command_custom">
-            <span t-esc="props.name"/>
-        </div>
-    `;
+    class CustomComponent extends Component {
+        static template = xml`
+            <div class="o_command_custom">
+                <span t-esc="props.name"/>
+            </div>
+        `;
+    }
 
     await mount(TestComponent, target, { env });
     const action = () => {};

@@ -3,6 +3,7 @@
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 export class StockReportSearchPanel extends SearchPanel {
+    static template = "stock.StockReportSearchPanel";
     setup() {
         super.setup(...arguments);
         this.selectedWarehouse = false;
@@ -26,5 +27,3 @@ export class StockReportSearchPanel extends SearchPanel {
         this.selectedWarehouse = warehouse_id;
     }
 }
-
-StockReportSearchPanel.template = "stock.StockReportSearchPanel";

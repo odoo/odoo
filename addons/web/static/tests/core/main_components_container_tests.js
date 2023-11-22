@@ -21,11 +21,13 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("simple rendering", async function (assert) {
         const env = await makeTestEnv();
 
-        class MainComponentA extends Component {}
-        MainComponentA.template = xml`<span>MainComponentA</span>`;
+        class MainComponentA extends Component {
+            static template = xml`<span>MainComponentA</span>`;
+        }
 
-        class MainComponentB extends Component {}
-        MainComponentB.template = xml`<span>MainComponentB</span>`;
+        class MainComponentB extends Component {
+            static template = xml`<span>MainComponentB</span>`;
+        }
 
         mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
         mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
@@ -43,6 +45,7 @@ QUnit.module("Components", (hooks) => {
 
         let compA;
         class MainComponentA extends Component {
+            static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentA</span>`;
             setup() {
                 compA = this;
                 this.state = useState({ shouldThrow: false });
@@ -51,10 +54,10 @@ QUnit.module("Components", (hooks) => {
                 throw new Error("BOOM");
             }
         }
-        MainComponentA.template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentA</span>`;
 
-        class MainComponentB extends Component {}
-        MainComponentB.template = xml`<span>MainComponentB</span>`;
+        class MainComponentB extends Component {
+            static template = xml`<span>MainComponentB</span>`;
+        }
 
         mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
         mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
@@ -92,11 +95,13 @@ QUnit.module("Components", (hooks) => {
 
         const env = await makeTestEnv();
 
-        class MainComponentA extends Component {}
-        MainComponentA.template = xml`<span>MainComponentA</span>`;
+        class MainComponentA extends Component {
+            static template = xml`<span>MainComponentA</span>`;
+        }
 
         let compB;
         class MainComponentB extends Component {
+            static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentB</span>`;
             setup() {
                 compB = this;
                 this.state = useState({ shouldThrow: false });
@@ -105,7 +110,6 @@ QUnit.module("Components", (hooks) => {
                 throw new Error("BOOM");
             }
         }
-        MainComponentB.template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentB</span>`;
 
         mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
         mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
@@ -142,8 +146,9 @@ QUnit.module("Components", (hooks) => {
         await mount(MainComponentsContainer, target, { env, props: {} });
 
         assert.containsNone(target, ".myMainComponent");
-        class MyMainComponent extends Component {}
-        MyMainComponent.template = xml`<div class="myMainComponent" />`;
+        class MyMainComponent extends Component {
+            static template = xml`<div class="myMainComponent" />`;
+        }
         mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
         await nextTick();
         assert.containsOnce(target, ".myMainComponent");

@@ -74,6 +74,29 @@ function getElementToFocus(cell, index) {
 }
 
 export class ListRenderer extends Component {
+    static template = "web.ListRenderer";
+    static rowsTemplate = "web.ListRenderer.Rows";
+    static recordRowTemplate = "web.ListRenderer.RecordRow";
+    static groupRowTemplate = "web.ListRenderer.GroupRow";
+    static LONG_TOUCH_THRESHOLD = 400;
+    static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
+    static defaultProps = { hasSelectors: false, cycleOnTab: true };
+    static props = [
+        "activeActions?",
+        "list",
+        "archInfo",
+        "openRecord",
+        "evalViewModifier",
+        "onAdd?",
+        "cycleOnTab?",
+        "allowSelectors?",
+        "editable?",
+        "onOpenFormView?",
+        "noContentHelp?",
+        "nestedKeyOptionalFieldsData?",
+        "onOptionalFieldsChanged?",
+    ];
+
     setup() {
         this.uiService = useService("ui");
         this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
@@ -2125,29 +2148,3 @@ export class ListRenderer extends Component {
         }
     }
 }
-
-ListRenderer.template = "web.ListRenderer";
-
-ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
-ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
-ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
-
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
-ListRenderer.props = [
-    "activeActions?",
-    "list",
-    "archInfo",
-    "openRecord",
-    "evalViewModifier",
-    "onAdd?",
-    "cycleOnTab?",
-    "allowSelectors?",
-    "editable?",
-    "onOpenFormView?",
-    "noContentHelp?",
-    "nestedKeyOptionalFieldsData?",
-    "onOptionalFieldsChanged?",
-];
-ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
-
-ListRenderer.LONG_TOUCH_THRESHOLD = 400;

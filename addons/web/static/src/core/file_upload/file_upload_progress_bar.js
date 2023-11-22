@@ -7,6 +7,11 @@ import { ConfirmationDialog } from "../confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 
 export class FileUploadProgressBar extends Component {
+    static template = "web.FileUploadProgressBar";
+    static props = {
+        fileUpload: { type: Object },
+    };
+
     setup() {
         this.dialogService = useService("dialog");
     }
@@ -23,7 +28,3 @@ export class FileUploadProgressBar extends Component {
         });
     }
 }
-FileUploadProgressBar.props = {
-    fileUpload: { type: Object },
-};
-FileUploadProgressBar.template = "web.FileUploadProgressBar";

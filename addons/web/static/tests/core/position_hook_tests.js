@@ -50,11 +50,11 @@ function getTestComponent(popperOptions = {}, target = document.createElement("d
     }
 
     class TestComp extends Component {
+        static template = xml`<div id="popper" t-ref="popper" />`;
         setup() {
             usePosition("popper", () => target, popperOptions);
         }
     }
-    TestComp.template = xml`<div id="popper" t-ref="popper" />`;
     return TestComp;
 }
 

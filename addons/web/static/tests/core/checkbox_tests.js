@@ -40,9 +40,10 @@ QUnit.module("Components", (hooks) => {
         serviceRegistry.add("localization", makeFakeLocalizationService());
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
-        Parent.components = { CheckBox };
+        class Parent extends Component {
+            static template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
+            static components = { CheckBox };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.form-check");
@@ -54,12 +55,12 @@ QUnit.module("Components", (hooks) => {
 
         let value = false;
         class Parent extends Component {
+            static template = xml`<CheckBox onChange="onChange"/>`;
+            static components = { CheckBox };
             onChange(checked) {
                 value = checked;
             }
         }
-        Parent.template = xml`<CheckBox onChange="onChange"/>`;
-        Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-checkbox input");
@@ -72,9 +73,10 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("checkbox with props disabled", async (assert) => {
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<CheckBox onChange="onChange" disabled="true"/>`;
-        Parent.components = { CheckBox };
+        class Parent extends Component {
+            static template = xml`<CheckBox onChange="onChange" disabled="true"/>`;
+            static components = { CheckBox };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-checkbox input");
@@ -84,6 +86,8 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("can toggle value by pressing ENTER", async (assert) => {
         const env = await makeTestEnv();
         class Parent extends Component {
+            static template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
+            static components = { CheckBox };
             setup() {
                 this.state = useState({ value: false });
             }
@@ -91,8 +95,6 @@ QUnit.module("Components", (hooks) => {
                 this.state.value = checked;
             }
         }
-        Parent.template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
-        Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-checkbox input");
@@ -106,6 +108,8 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("toggling through multiple ways", async (assert) => {
         const env = await makeTestEnv();
         class Parent extends Component {
+            static template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
+            static components = { CheckBox };
             setup() {
                 this.state = useState({ value: false });
             }
@@ -114,8 +118,6 @@ QUnit.module("Components", (hooks) => {
                 assert.step(`${checked}`);
             }
         }
-        Parent.template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
-        Parent.components = { CheckBox };
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-checkbox input");
         assert.notOk(target.querySelector(".o-checkbox input").checked);

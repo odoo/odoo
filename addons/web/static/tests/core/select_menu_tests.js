@@ -37,6 +37,14 @@ QUnit.module("Web Components", (hooks) => {
 
     function getDefaultComponent() {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="choices"
+                    value="state.value"
+                    onSelect.bind="onSelect"
+                />
+            `;
             setup() {
                 this.state = useState({ value: "world" });
                 this.choices = [
@@ -48,14 +56,6 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.value = value;
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-        <SelectMenu
-            choices="choices"
-            value="state.value"
-            onSelect.bind="onSelect"
-        />
-    `;
         return Parent;
     }
 
@@ -100,6 +100,15 @@ QUnit.module("Web Components", (hooks) => {
         "Selecting a choice calls onSelect and the displayed value is updated",
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        groups="groups"
+                        choices="choices"
+                        value="state.value"
+                        onSelect.bind="onSelect"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: "world" });
                     this.choices = [{ label: "Hello", value: "hello" }];
@@ -116,15 +125,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = value;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-            <SelectMenu
-                groups="groups"
-                choices="choices"
-                value="state.value"
-                onSelect.bind="onSelect"
-            />
-        `;
 
             await mount(Parent, target, { env });
             assert.strictEqual(getValue(), "World");
@@ -241,6 +241,14 @@ QUnit.module("Web Components", (hooks) => {
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        choices="choices"
+                        value="state.value"
+                        onSelect.bind="this.onSelect"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: "hello" });
                     this.choices = [
@@ -254,14 +262,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = value;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-            <SelectMenu
-                choices="choices"
-                value="state.value"
-                onSelect.bind="this.onSelect"
-            />
-        `;
 
             await mount(Parent, target, { env });
             assert.containsOnce(target, ".o_select_menu_toggler_clear");
@@ -277,6 +277,14 @@ QUnit.module("Web Components", (hooks) => {
         'When the "required" props is set to true, the clear button is not shown',
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        required="true"
+                        choices="choices"
+                        value="state.value"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: null });
                     this.choices = [
@@ -288,14 +296,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = newValue;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-            <SelectMenu
-                required="true"
-                choices="choices"
-                value="state.value"
-            />
-        `;
 
             const parent = await mount(Parent, target, { env });
             assert.containsNone(
@@ -317,6 +317,12 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Items are sorted based on their label by default", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="choices"
+                />
+            `;
             setup() {
                 this.choices = [
                     { label: "Hello", value: "hello" },
@@ -326,12 +332,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    choices="choices"
-                />
-            `;
 
         await mount(Parent, target, { env });
         await open();
@@ -345,6 +345,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("autoSort props set to false", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`<SelectMenu choices="choices" autoSort="false"/>`;
             setup() {
                 this.choices = [
                     { label: "Hello", value: "hello" },
@@ -354,8 +356,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`<SelectMenu choices="choices" autoSort="false"/>`;
 
         await mount(Parent, target, { env });
         await open();
@@ -369,6 +369,12 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom toggler using default slot", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu choices="choices">
+                    <span class="select_menu_test">Select something</span>
+                </SelectMenu>
+            `;
             setup() {
                 this.choices = [
                     { label: "Hello", value: "hello" },
@@ -376,14 +382,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    choices="choices"
-                >
-                    <span class="select_menu_test">Select something</span>
-                </SelectMenu>
-            `;
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".select_menu_test");
@@ -398,6 +396,15 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom choice template using a slot", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu choices="choices">
+                    <span class="select_menu_test">Select something</span>
+                    <t t-set-slot="choice" t-slot-scope="choice">
+                        <span class="coolClass" t-esc="choice.data.label" />
+                    </t>
+                </SelectMenu>
+            `;
             setup() {
                 this.choices = [
                     { label: "Hello", value: "hello" },
@@ -405,17 +412,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    choices="choices"
-                >
-                    <span class="select_menu_test">Select something</span>
-                    <t t-set-slot="choice" t-slot-scope="choice">
-                        <span class="coolClass" t-esc="choice.data.label" />
-                    </t>
-                </SelectMenu>
-            `;
 
         await mount(Parent, target, { env });
         await open();
@@ -427,6 +423,22 @@ QUnit.module("Web Components", (hooks) => {
         "Custom template for the bottom area of the dropdown using a slot",
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        choices="choices"
+                        multiSelect="true"
+                        onSelect.bind="onSelect"
+                        value="state.value"
+                    >
+                        <span class="select_menu_test">Select something</span>
+                        <t t-set-slot="bottomArea" t-slot-scope="select">
+                        <span class="o_select_menu_bottom_area">
+                            <t t-esc="state.value.length"/> items selected
+                        </span>
+                        </t>
+                    </SelectMenu>
+                `;
                 setup() {
                     this.choices = [
                         { label: "Hello", value: "hello" },
@@ -441,22 +453,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = newValue;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-                <SelectMenu
-                    choices="choices"
-                    multiSelect="true"
-                    onSelect.bind="onSelect"
-                    value="state.value"
-                >
-                    <span class="select_menu_test">Select something</span>
-                    <t t-set-slot="bottomArea" t-slot-scope="select">
-                    <span class="o_select_menu_bottom_area">
-                        <t t-esc="state.value.length"/> items selected
-                    </span>
-                    </t>
-                </SelectMenu>
-            `;
 
             await mount(Parent, target, { env });
             await open();
@@ -476,21 +472,9 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom slot for the bottom area sends the current search value", async (assert) => {
         class Parent extends Component {
-            setup() {
-                this.choices = [
-                    { label: "Hello", value: "hello" },
-                    { label: "World", value: "world" },
-                ];
-            }
-            onClick(value) {
-                assert.step(value + " clicked");
-            }
-        }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    choices="choices"
-                >
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu choices="choices">
                     <span class="select_menu_test">Select something</span>
                     <t t-set-slot="bottomArea" t-slot-scope="select">
                         <div t-if="select.data.searchValue" class="px-2">
@@ -501,6 +485,16 @@ QUnit.module("Web Components", (hooks) => {
                     </t>
                 </SelectMenu>
             `;
+            setup() {
+                this.choices = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                ];
+            }
+            onClick(value) {
+                assert.step(value + " clicked");
+            }
+        }
 
         await mount(Parent, target, { env });
         await open();
@@ -515,6 +509,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Groups properly added in the select", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`<SelectMenu groups="groups"/>`;
             setup() {
                 this.groups = [
                     {
@@ -527,12 +523,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    groups="groups"
-                />
-            `;
 
         await mount(Parent, target, { env });
         await open();
@@ -548,6 +538,13 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Items are properly sorted but still in their respective group", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    groups="this.groups"
+                />
+            `;
             setup() {
                 this.choices = [{ label: "Z", value: "z" }];
                 this.groups = [
@@ -568,13 +565,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    choices="this.choices"
-                    groups="this.groups"
-                />
-            `;
 
         await mount(Parent, target, { env });
         await open();
@@ -597,6 +587,13 @@ QUnit.module("Web Components", (hooks) => {
             };
 
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        value="0"
+                        choices="this.choices"
+                    />
+                `;
                 setup() {
                     this.scrollSettings = scrollSettings;
 
@@ -606,13 +603,6 @@ QUnit.module("Web Components", (hooks) => {
                     }
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-                <SelectMenu
-                    value="0"
-                    choices="this.choices"
-                />
-            `;
 
             await mount(Parent, target, { env });
             await open();
@@ -642,6 +632,16 @@ QUnit.module("Web Components", (hooks) => {
         "When multiSelect is enable, value is an array of values, mutliple choices should display as selected and tags should be displayed",
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        multiSelect="true"
+                        value="this.state.value"
+                        choices="this.choices"
+                        onSelect.bind="this.onSelect"
+                        searchable="false"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: [] });
                     this.choices = [
@@ -656,16 +656,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = newValue;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-                <SelectMenu
-                    multiSelect="true"
-                    value="this.state.value"
-                    choices="this.choices"
-                    onSelect.bind="this.onSelect"
-                    searchable="false"
-                />
-            `;
 
             await mount(Parent, target, { env });
             assert.containsNone(
@@ -734,6 +724,16 @@ QUnit.module("Web Components", (hooks) => {
         "When multiSelect is enable, allow deselecting elements by clicking the selected choices inside the dropdown or by clicking the tags",
         async (assert) => {
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        multiSelect="true"
+                        value="this.state.value"
+                        choices="this.choices"
+                        onSelect.bind="this.onSelect"
+                        searchable="false"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: ["a", "b"] });
                     this.choices = [
@@ -748,16 +748,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = newValue;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-                <SelectMenu
-                    multiSelect="true"
-                    value="this.state.value"
-                    choices="this.choices"
-                    onSelect.bind="this.onSelect"
-                    searchable="false"
-                />
-            `;
 
             await mount(Parent, target, { env });
             assert.containsN(
@@ -801,6 +791,14 @@ QUnit.module("Web Components", (hooks) => {
         assert.expect(6);
 
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    value="this.state.value"
+                    choices="this.choices"
+                    onSelect.bind="this.onSelect"
+                />
+            `;
             setup() {
                 this.state = useState({ value: "b" });
                 this.choices = [
@@ -815,14 +813,6 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.value = newValue;
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-                <SelectMenu
-                    value="this.state.value"
-                    choices="this.choices"
-                    onSelect.bind="this.onSelect"
-                />
-            `;
 
         await mount(Parent, target, { env });
         await open();
@@ -861,6 +851,14 @@ QUnit.module("Web Components", (hooks) => {
             assert.expect(2);
 
             class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
+                    <SelectMenu
+                        value="this.state.value"
+                        choices="this.choices"
+                        onSelect.bind="this.onSelect"
+                    />
+                `;
                 setup() {
                     this.state = useState({ value: "b" });
                     this.choices = [
@@ -875,14 +873,6 @@ QUnit.module("Web Components", (hooks) => {
                     this.state.value = newValue;
                 }
             }
-            Parent.components = { SelectMenu };
-            Parent.template = xml`
-                <SelectMenu
-                    value="this.state.value"
-                    choices="this.choices"
-                    onSelect.bind="this.onSelect"
-                />
-            `;
 
             await mount(Parent, target, { env });
             await open();
@@ -894,6 +884,15 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Props onInput is executed when the search changes", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="state.choices"
+                    value="state.value"
+                    onInput.bind="onInput"
+                    onSelect.bind="onSelect"
+                />
+            `;
             setup() {
                 this.state = useState({
                     choices: [{ label: "Hello", value: "hello" }],
@@ -915,15 +914,6 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.value = value;
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-            <SelectMenu
-                choices="state.choices"
-                value="state.value"
-                onInput.bind="onInput"
-                onSelect.bind="onSelect"
-            />
-        `;
 
         await mount(Parent, target, { env });
         assert.strictEqual(getValue(), "Hello");
@@ -957,6 +947,15 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Choices are updated and filtered when props change", async (assert) => {
         class Parent extends Component {
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="state.choices"
+                    value="state.value"
+                    onInput.bind="onInput"
+                    onSelect.bind="onSelect"
+                />
+            `;
             setup() {
                 this.state = useState({
                     choices: [
@@ -979,15 +978,6 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.value = value;
             }
         }
-        Parent.components = { SelectMenu };
-        Parent.template = xml`
-            <SelectMenu
-                choices="state.choices"
-                value="state.value"
-                onInput.bind="onInput"
-                onSelect.bind="onSelect"
-            />
-        `;
 
         await mount(Parent, target, { env });
         assert.strictEqual(getValue(), "Hello");

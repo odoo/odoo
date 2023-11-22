@@ -37,11 +37,11 @@ function supportItem(env) {
 }
 
 class ShortcutsFooterComponent extends Component {
+    static template = "web.UserMenu.ShortcutsFooterComponent";
     setup() {
         this.runShortcutKey = isMacOS() ? "CONTROL" : "ALT";
     }
 }
-ShortcutsFooterComponent.template = "web.UserMenu.ShortcutsFooterComponent";
 
 function shortCutsItem(env) {
     // ℹ️ `_t` can only be inlined directly inside JS template literals after

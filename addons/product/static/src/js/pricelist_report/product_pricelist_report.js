@@ -20,6 +20,13 @@ function sendCustomNotification(type, message) {
 }
 
 export class ProductPricelistReport extends Component {
+    static props = {
+        action: { type: Object },
+        "*": true,
+    };
+    static components = { Layout };
+    static template = "product.ProductPricelistReport";
+
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
@@ -203,10 +210,4 @@ export class ProductPricelistReport extends Component {
     }
 }
 
-ProductPricelistReport.props = {
-    action: { type: Object },
-    "*": true,
-}
-ProductPricelistReport.components = { Layout };
-ProductPricelistReport.template = "product.ProductPricelistReport";
 registry.category("actions").add("generate_pricelist_report", ProductPricelistReport);

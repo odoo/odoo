@@ -118,10 +118,11 @@ QUnit.test(
     "handle custom RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
-        class CustomDialog extends Component {}
-        CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
-        CustomDialog.components = { RPCErrorDialog };
-        CustomDialog.props = { ...standardErrorDialogProps };
+        class CustomDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
+            static components = { RPCErrorDialog };
+            static props = { ...standardErrorDialogProps };
+        }
         const error = new RPCError();
         error.code = 701;
         error.message = "Some strange error occured";
@@ -159,12 +160,14 @@ QUnit.test(
     "handle normal RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
-        class CustomDialog extends Component {}
-        CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
-        CustomDialog.components = { RPCErrorDialog };
-        class NormalDialog extends Component {}
-        NormalDialog.template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
-        NormalDialog.components = { RPCErrorDialog };
+        class CustomDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
+            static components = { RPCErrorDialog };
+        }
+        class NormalDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
+            static components = { RPCErrorDialog };
+        }
         const error = new RPCError();
         error.code = 701;
         error.message = "A normal error occured";
@@ -281,6 +284,7 @@ QUnit.test("originalError is the root cause of the error chain", async (assert) 
     error.name = "boom";
 
     class ErrHandler extends Component {
+        static template = xml`<t t-component="props.comp"/>`;
         setup() {
             onError(async (err) => {
                 await unhandledRejectionCb(
@@ -294,26 +298,25 @@ QUnit.test("originalError is the root cause of the error chain", async (assert) 
             });
         }
     }
-    ErrHandler.template = xml`<t t-component="props.comp"/>`;
     class ThrowInSetup extends Component {
+        static template = xml``;
         setup() {
             throw error;
         }
     }
-    ThrowInSetup.template = xml``;
     let prom = makeDeferred();
     mount(ErrHandler, getFixture(), { props: { comp: ThrowInSetup } });
     await prom;
     assert.verifySteps(["in handler"]);
 
     class ThrowInWillStart extends Component {
+        static template = xml``;
         setup() {
             onWillStart(() => {
                 throw error;
             });
         }
     }
-    ThrowInWillStart.template = xml``;
     prom = makeDeferred();
     mount(ErrHandler, getFixture(), { props: { comp: ThrowInWillStart } });
     await prom;

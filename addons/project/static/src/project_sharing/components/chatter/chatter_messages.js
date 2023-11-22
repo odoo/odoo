@@ -6,6 +6,17 @@ import { ChatterAttachmentsViewer } from "./chatter_attachments_viewer";
 import { Component } from "@odoo/owl";
 
 export class ChatterMessages extends Component {
+    static template = "project.ChatterMessages";
+    static props = {
+        messages: Array,
+        isUserEmployee: { type: Boolean, optional: true },
+        update: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        update: (message_id, changes) => {},
+    };
+    static components = { ChatterAttachmentsViewer };
+
     setup() {
         this.rpc = useService('rpc');
     }
@@ -23,14 +34,3 @@ export class ChatterMessages extends Component {
         this.props.update(message.id, { is_internal: result });
     }
 }
-
-ChatterMessages.template = 'project.ChatterMessages';
-ChatterMessages.props = {
-    messages: Array,
-    isUserEmployee: { type: Boolean, optional: true },
-    update: { type: Function, optional: true },
-};
-ChatterMessages.defaultProps = {
-    update: (message_id, changes) => {},
-};
-ChatterMessages.components = { ChatterAttachmentsViewer };

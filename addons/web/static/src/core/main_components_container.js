@@ -6,6 +6,18 @@ import { useBus } from "@web/core/utils/hooks";
 import { Component, xml } from "@odoo/owl";
 
 export class MainComponentsContainer extends Component {
+    static components = { ErrorHandler };
+    static props = {};
+    static template = xml`
+    <div class="o-main-components-container">
+        <t t-foreach="Components" t-as="C" t-key="C[0]">
+            <ErrorHandler onError="error => this.handleComponentError(error, C)">
+                <t t-component="C[1].Component" t-props="C[1].props"/>
+            </ErrorHandler>
+        </t>
+    </div>
+    `;
+
     setup() {
         const mainComponents = registry.category("main_components");
         this.Components = mainComponents.getEntries();
@@ -29,15 +41,3 @@ export class MainComponentsContainer extends Component {
         });
     }
 }
-
-MainComponentsContainer.template = xml`
-<div class="o-main-components-container">
-    <t t-foreach="Components" t-as="C" t-key="C[0]">
-        <ErrorHandler onError="error => this.handleComponentError(error, C)">
-            <t t-component="C[1].Component" t-props="C[1].props"/>
-        </ErrorHandler>
-    </t>
-</div>
-`;
-MainComponentsContainer.components = { ErrorHandler };
-MainComponentsContainer.props = {};
