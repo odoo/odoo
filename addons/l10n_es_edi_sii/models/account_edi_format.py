@@ -305,8 +305,8 @@ class AccountEdiFormat(models.Model):
 
                 mod_303_10 = self.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
                 mod_303_11 = self.env.ref('l10n_es.mod_303_casilla_11_balance')._get_matching_tags()
-                tax_tags = invoice.line_ids.tax_tag_ids
-                intracom = any(tax in tax_tags for tax in mod_303_10) and any(tax in tax_tags for tax in mod_303_11)
+                tax_tags = invoice.invoice_line_ids.tax_ids.repartition_line_ids.tag_ids
+                intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
                 invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
 
             if invoice.move_type == 'out_invoice':
@@ -389,14 +389,18 @@ class AccountEdiFormat(models.Model):
                 if tax_details_info_other_vals['tax_details_info']:
                     invoice_node['DesgloseFactura']['DesgloseIVA'] = tax_details_info_other_vals['tax_details_info']
 
-                invoice_node['ImporteTotal'] = round(sign * (
-                    tax_details_info_isp_vals['tax_details']['base_amount']
-                    + tax_details_info_isp_vals['tax_details']['tax_amount']
-                    - tax_details_info_isp_vals['tax_amount_retention']
-                    + tax_details_info_other_vals['tax_details']['base_amount']
-                    + tax_details_info_other_vals['tax_details']['tax_amount']
-                    - tax_details_info_other_vals['tax_amount_retention']
-                ), 2)
+                if invoice._l10n_es_is_dua() or any(t.l10n_es_type == 'ignore' for t in invoice.invoice_line_ids.tax_ids):
+                    invoice_node['ImporteTotal'] = round(sign * (
+                            tax_details_info_isp_vals['tax_details']['base_amount']
+                            + tax_details_info_isp_vals['tax_details']['tax_amount']
+                            + tax_details_info_other_vals['tax_details']['base_amount']
+                            + tax_details_info_other_vals['tax_details']['tax_amount']
+                    ), 2)
+                else: # Intra-community -100 repartition line needs to be taken into account
+                    invoice_node['ImporteTotal'] = round(-invoice.amount_total_signed
+                                                         - sign * tax_details_info_isp_vals['tax_amount_retention']
+                                                         - sign * tax_details_info_other_vals['tax_amount_retention'], 2)
+
                 invoice_node['CuotaDeducible'] = round(sign * (
                     tax_details_info_isp_vals['tax_amount_deductible']
                     + tax_details_info_other_vals['tax_amount_deductible']
