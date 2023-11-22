@@ -237,10 +237,13 @@ export function makeStore(env) {
                                     exactProxy[name] = compute.call(proxy2);
                                     field.computing = false;
                                 },
+                                _compute: () => {
+                                    // dummy call to keep reactive cb
+                                    compute.call(proxy2);
+                                },
                                 requestCompute: ({ force = false } = {}) => {
                                     if (field.computing || field.sorting) {
-                                        // dummy call to keep reactive cb
-                                        compute.call(proxy2);
+                                        Record.ADD_QUEUE(field, "_compute");
                                         return;
                                     }
                                     if (Record.UPDATE !== 0 && !force) {
@@ -275,10 +278,13 @@ export function makeStore(env) {
                                     proxy2[name].sort(Model._fields[name].sort.bind(exactProxy));
                                     field.sorting = false;
                                 },
+                                _sort: () => {
+                                    // dummy call to keep reactive cb
+                                    proxy2[name]._sort(Model._fields[name].sort.bind(proxy2));
+                                },
                                 requestSort: ({ force } = {}) => {
                                     if (field.computing || field.sorting) {
-                                        // dummy call to keep reactive cb
-                                        proxy2[name]._sort(Model._fields[name].sort.bind(proxy2));
+                                        Record.ADD_QUEUE(field, "_sort");
                                         return;
                                     }
                                     if (Record.UPDATE !== 0 && !force) {
@@ -853,6 +859,9 @@ class RecordList extends Array {
  *   This is only set when there's a get on this lazy computed-field during an update cycle (UPDATE !== 0), as computed
  *   fields are invoked only at the end of an update cycle. When outside of an update cycle, only `computeOnNeed`
  *   determines (re-)computation.
+ * @property {() => void} [_compute] on computed field, function to trigger observing of sort without side-effect to actually
+ *   compute the field. Since OWL reactive are consumable and their callback can be triggered during a sorting in update cycle,
+ *   there's likely a need to re-observe the reactive. This function is handy for this specific case for the compute.
  * @property {() => void} [sort] for sorted field, invoking this function (re-)sorts the field.
  * @property {boolean} [sorting] for sorted field, determines whether the field is sorting its value.
  * @property {() => void} [requestSort] on sorted field, calling this function makes a request to sort
@@ -865,6 +874,9 @@ class RecordList extends Array {
  *   This is only set when there's a get on this lazy sorted-field during an update cycle (UPDATE !== 0), as sorted
  *   fields are invoked only at the end of an update cycle. When outside of an update cycle, only `sortOnNeed`
  *   determines (re-)sort.
+ * @property {() => void} [_sort] on sorted field, function to trigger observing of sort without side-effect to actually
+ *   sort the field. Since OWL reactive are consumable and their callback can be triggered during a sorting in update cycle,
+ *   there's likely a need to re-observe the reactive. This function is handy for this specific case for the sort.
  * @property {() => void} [onChange] function that contains functions to be called when the value of field
  *   has changed, e.g. sort and onUpdate.
  * @property {RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
@@ -889,7 +901,11 @@ export class Record {
     /** @type {RecordField[]} */
     static FC_QUEUE = []; // field-computes
     /** @type {RecordField[]} */
+    static FC2_QUEUE = []; // field-computes (dummy _compute, i.e. observing of compute, see Record._compute)
+    /** @type {RecordField[]} */
     static FS_QUEUE = []; // field-sorts
+    /** @type {RecordField[]} */
+    static FS2_QUEUE = []; // field-sorts (dummy _sort, i.e. observing of sort, see RecordField._sort)
     /** @type {RecordField[]} */
     static FO_QUEUE = []; // field-onchanges
     /** @type {Function[]} */
@@ -905,24 +921,46 @@ export class Record {
             this.UPDATE++;
             while (
                 this.FC_QUEUE.length > 0 ||
+                this.FC2_QUEUE.length > 0 ||
                 this.FS_QUEUE.length > 0 ||
+                this.FS2_QUEUE.length > 0 ||
                 this.FO_QUEUE.length > 0 ||
                 this.RO_QUEUE.length > 0
             ) {
-                while (this.FC_QUEUE.length > 0) {
-                    const field = this.FC_QUEUE.pop();
+                const FC_QUEUE = [...this.FC_QUEUE];
+                const FC2_QUEUE = [...this.FC2_QUEUE];
+                const FS_QUEUE = [...this.FS_QUEUE];
+                const FS2_QUEUE = [...this.FS2_QUEUE];
+                const FO_QUEUE = [...this.FO_QUEUE];
+                const RO_QUEUE = [...this.RO_QUEUE];
+                this.FC_QUEUE = [];
+                this.FC2_QUEUE = [];
+                this.FS_QUEUE = [];
+                this.FS2_QUEUE = [];
+                this.FO_QUEUE = [];
+                this.RO_QUEUE = [];
+                while (FC_QUEUE.length > 0) {
+                    const field = FC_QUEUE.pop();
                     field.requestCompute({ force: true });
                 }
-                while (this.FS_QUEUE.length > 0) {
-                    const field = this.FS_QUEUE.pop();
+                while (FS_QUEUE.length > 0) {
+                    const field = FS_QUEUE.pop();
                     field.requestSort({ force: true });
                 }
-                while (this.FO_QUEUE.length > 0) {
-                    const field = this.FO_QUEUE.pop();
+                while (FC2_QUEUE.length > 0) {
+                    const field = FC2_QUEUE.pop();
+                    field._compute();
+                }
+                while (FS2_QUEUE.length > 0) {
+                    const field = FS2_QUEUE.pop();
+                    field._sort();
+                }
+                while (FO_QUEUE.length > 0) {
+                    const field = FO_QUEUE.pop();
                     field.onChange();
                 }
-                while (this.RO_QUEUE.length > 0) {
-                    const cb = this.RO_QUEUE.pop();
+                while (RO_QUEUE.length > 0) {
+                    const cb = RO_QUEUE.pop();
                     cb();
                 }
             }
@@ -932,7 +970,7 @@ export class Record {
     }
     /**
      * @param {RecordField} field
-     * @param {"compute"|"onChange"} type
+     * @param {"compute"|"sort"|"onChange"|"_compute"|"_sort"} type
      */
     static ADD_QUEUE(field, type) {
         const rawField = toRaw(field);
@@ -949,6 +987,16 @@ export class Record {
         if (type === "onChange") {
             if (!this.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
                 this.FO_QUEUE.push(field);
+            }
+        }
+        if (type === "_compute") {
+            if (!this.FC2_QUEUE.some((f) => toRaw(f) === rawField)) {
+                this.FC2_QUEUE.push(field);
+            }
+        }
+        if (type === "_sort") {
+            if (!this.FS2_QUEUE.some((f) => toRaw(f) === rawField)) {
+                this.FS2_QUEUE.push(field);
             }
         }
     }

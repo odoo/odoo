@@ -72,8 +72,15 @@ export class Store extends BaseStore {
     imStatusTrackedPersonas = Record.many("Persona", {
         /** @this {import("models").Store} */
         compute() {
-            return Object.values(this.Persona.records).filter(
+            return Object.values(this.Persona?.records ?? []).filter(
                 (persona) => persona.im_status !== "im_partner" && !persona.is_public
+            );
+        },
+        eager: true,
+        onUpdate() {
+            this.env.services["im_status"].registerToImStatus(
+                "res.partner",
+                this.imStatusTrackedPersonas.map((p) => p.id)
             );
         },
     });
@@ -197,12 +204,6 @@ export const storeService = {
         store.discuss = {};
         store.discuss.activeTab = "main";
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
-        Record.onChange(store, "imStatusTrackedPersonas", () => {
-            services["im_status"].registerToImStatus(
-                "res.partner",
-                store.imStatusTrackedPersonas.map((p) => p.id)
-            );
-        });
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
             if (
