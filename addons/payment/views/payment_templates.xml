@@ -124,7 +124,6 @@
                             <input name="o_payment_radio"
                                    type="radio"
                                    t-att-checked="provider.id == default_payment_option_id"
-                                   t-att-class="'' if provider_count + token_count > 1 else 'd-none'"
                                    t-att-data-payment-option-id="provider.id"
                                    t-att-data-provider="provider.code"
                                    data-payment-option-type="provider"/>
