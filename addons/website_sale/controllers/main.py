@@ -1988,10 +1988,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'currency_id': order_sudo.currency_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
+        total = order_sudo.amount_total + order_sudo.amount_delivery
         if not kwargs.get('amount'):
-            kwargs['amount'] = order_sudo.amount_total
+            kwargs['amount'] = total
 
-        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
+        if tools.float_compare(kwargs['amount'], total, precision_rounding=order_sudo.currency_id.rounding):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
 
         tx_sudo = self._create_transaction(
