@@ -23,7 +23,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         ('1_done', 'Done'),
         ('04_waiting_normal', 'Waiting'),
         ('03_approved', 'Approved'),
-        ('1_canceled', 'Canceled'),
+        ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
     ], string='State', readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)

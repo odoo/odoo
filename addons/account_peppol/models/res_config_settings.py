@@ -234,7 +234,7 @@ class ResConfigSettings(models.TransientModel):
         - If the user is active on the SMP, we can't just cancel it.
           They have to request a migration key using the `button_migrate_peppol_registration` action
           or deregister.
-        - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
+        - 'not_registered', 'rejected', 'canceled' proxy states mean that cancelling the registration
           makes no sense, so we don't do it
         - Calls the IAP server first before setting the state as canceled on the client side,
           in case they've been activated on the IAP side in the meantime

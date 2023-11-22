@@ -63,7 +63,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
 
 CLOSED_STATES = {
     '1_done': 'Done',
-    '1_canceled': 'Canceled',
+    '1_canceled': 'Cancelled',
 }
 
 
@@ -362,7 +362,7 @@ class Task(models.Model):
             {'sequence': 4, 'name': _('This Month'), 'user_id': user_id, 'fold': False},
             {'sequence': 5, 'name': _('Later'), 'user_id': user_id, 'fold': False},
             {'sequence': 6, 'name': _('Done'), 'user_id': user_id, 'fold': True},
-            {'sequence': 7, 'name': _('Canceled'), 'user_id': user_id, 'fold': True},
+            {'sequence': 7, 'name': _('Cancelled'), 'user_id': user_id, 'fold': True},
         ]
 
     def _populate_missing_personal_stages(self):

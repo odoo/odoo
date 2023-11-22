@@ -54,7 +54,7 @@ class ResCompany(models.Model):
             ('pending', 'Pending'),
             ('active', 'Active'),
             ('rejected', 'Rejected'),
-            ('canceled', 'Canceled'),
+            ('canceled', 'Cancelled'),
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )

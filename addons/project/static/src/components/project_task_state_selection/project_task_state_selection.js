@@ -81,7 +81,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
 
     get options() {
         const options = [
-            ["1_canceled", _t("Canceled")],
+            ["1_canceled", _t("Cancelled")],
             ["1_done", _t("Done")],
         ];
         const currentState = this.props.record.data[this.props.name];

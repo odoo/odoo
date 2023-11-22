@@ -1369,7 +1369,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def _action_user_cancel(self, reason):
         self.ensure_one()
         if not self.can_cancel:
-            raise ValidationError(_('This time off cannot be canceled.'))
+            raise ValidationError(_('This time off cannot be cancelled.'))
 
         self._force_cancel(reason, 'mail.mt_note')
 
@@ -1377,7 +1377,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         recs = self.browse() if self.env.context.get(MODULE_UNINSTALL_FLAG) else self
         for leave in recs:
             leave.message_post(
-                body=_('The time off has been canceled: %s', reason),
+                body=_('The time off has been cancelled: %s', reason),
                 subtype_xmlid=msg_subtype
             )
 
@@ -1397,7 +1397,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 self.env['mail.thread'].sudo().message_notify(
                     partner_ids=responsibles.ids,
                     model_description='Time Off',
-                    subject=_('Canceled Time Off'),
+                    subject=_('Cancelled Time Off'),
                     body=_(
                         "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s.",
                         leave_name=leave.display_name,

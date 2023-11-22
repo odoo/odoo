@@ -159,7 +159,7 @@ class AccountEdiFormat(models.Model):
                 odoobot = self.env.ref("base.partner_root")
                 invoices.message_post(author_id=odoobot.id, body=
                     Markup("%s<br/>%s:<br/>%s") %(
-                        _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"),
+                        _("Somehow this E-waybill has been cancelled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"),
                         _("Error"),
                         error_message
                     )

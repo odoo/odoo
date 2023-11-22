@@ -24,7 +24,7 @@ const lookUpCodeTransaction = {
         "003007": "Connection Lost",
         "003008": "TCP/IP Failed to Initialize",
         "003010": "Time Out waiting for server response",
-        "003011": "Connect Canceled",
+        "003011": "Connect Cancelled",
         "003053": "Initialize Failed",
         "009999": "Unknown Error",
     },

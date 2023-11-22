@@ -157,7 +157,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'info'
             },
             'Valid': {'success': True},
-            'Cancelled': {'error': _('Document Canceled'), 'blocking_level': 'error'},
+            'Cancelled': {'error': _('Document Cancelled'), 'blocking_level': 'error'},
         }
         if document_summary and return_dict.get(document_summary[0].get('status')):
             return return_dict.get(document_summary[0]['status'])

@@ -92,7 +92,7 @@ class MailingTrace(models.Model):
         ('reply', 'Replied'),
         ('bounce', 'Bounced'),
         ('error', 'Exception'),
-        ('cancel', 'Canceled')], string='Status', default='outgoing')
+        ('cancel', 'Cancelled')], string='Status', default='outgoing')
     failure_type = fields.Selection(selection=[
         # generic
         ("unknown", "Unknown error"),
