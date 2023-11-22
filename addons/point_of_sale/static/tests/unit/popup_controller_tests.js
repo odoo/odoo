@@ -10,38 +10,40 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, xml } from "@odoo/owl";
 
 // Note that we are creating new popups here to decouple this test from the pos app.
-class CustomPopup1 extends AbstractAwaitablePopup {}
-CustomPopup1.template = xml/* html */ `
-    <div class="popup custom-popup-1">
-        <footer>
-            <div class="confirm" t-on-click="confirm">
-                Yes
-            </div>
-            <div class="cancel" t-on-click="cancel">
-                No
-            </div>
-        </footer>
-    </div>
-`;
+class CustomPopup1 extends AbstractAwaitablePopup {
+    static template = xml`
+        <div class="popup custom-popup-1">
+            <footer>
+                <div class="confirm" t-on-click="confirm">
+                    Yes
+                </div>
+                <div class="cancel" t-on-click="cancel">
+                    No
+                </div>
+            </footer>
+        </div>
+    `;
+}
 
-class CustomPopup2 extends AbstractAwaitablePopup {}
-CustomPopup2.template = xml/* html */ `
-    <div class="popup custom-popup-2">
-        <footer>
-            <div class="confirm" t-on-click="confirm">
-                Okay
-            </div>
-        </footer>
-    </div>
-`;
+class CustomPopup2 extends AbstractAwaitablePopup {
+    static template = xml`
+        <div class="popup custom-popup-2">
+            <footer>
+                <div class="confirm" t-on-click="confirm">
+                    Okay
+                </div>
+            </footer>
+        </div>
+    `;
+}
 
 class Root extends Component {
+    static template = xml`<MainComponentsContainer/>`;
     static components = { MainComponentsContainer };
     setup() {
         this.popup = useService("popup");
     }
 }
-Root.template = xml`<MainComponentsContainer/>`;
 
 let env;
 QUnit.module("unit tests for PopupContainer", {

@@ -1,6 +1,13 @@
 /** @odoo-module **/
 
-import { drag, dragAndDrop, getFixture, mount, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    drag,
+    dragAndDrop,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { useDraggable } from "@web/core/utils/draggable";
 import { browser } from "@web/core/browser/browser";
 
@@ -17,17 +24,16 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const mountListAndAssert = async (setupList, shouldThrow) => {
             class List extends Component {
+                static template = xml`
+                    <div t-ref="root" class="root">
+                        <ul class="list">
+                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        </ul>
+                    </div>`;
                 setup() {
                     setupList();
                 }
             }
-
-            List.template = xml`
-                <div t-ref="root" class="root">
-                    <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                    </ul>
-                </div>`;
 
             let err;
             await mount(List, target).catch((e) => (err = e));
@@ -73,6 +79,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(16);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -98,13 +110,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             }
         }
 
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
         await mount(List, target);
 
         assert.containsN(target, ".item", 3);
@@ -129,6 +134,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const state = reactive({ enableDrag: true });
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 this.state = useState(state);
                 useDraggable({
@@ -141,13 +152,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
 
         await mount(List, target);
 
@@ -173,6 +177,15 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(6);
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
+                            <span class="ignored" t-esc="i" />
+                            <span class="not-ignored" t-esc="i" />
+                        </li>
+                    </ul>
+                </div>`;
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -184,16 +197,6 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                        <span class="ignored" t-esc="i" />
-                        <span class="not-ignored" t-esc="i" />
-                    </li>
-                </ul>
-            </div>`;
 
         await mount(List, target);
 
@@ -239,7 +242,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 useDraggable({
                     ref: useRef("root"),
                     elements: ".item",
-                    preventDrag: (el) => el.classList.contains('ignored'),
+                    preventDrag: (el) => el.classList.contains("ignored"),
                     onDragStart() {
                         assert.step("drag");
                     },
@@ -266,17 +269,11 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["drag"]);
 
         // Drag ignored under ignored -> block
-        await dragAndDrop(
-            ".ignored.parent .ignored.child",
-            ".ignored.parent .not-ignored.child"
-        );
+        await dragAndDrop(".ignored.parent .ignored.child", ".ignored.parent .not-ignored.child");
         assert.verifySteps([]);
 
         // Drag not-ignored under ignored -> succeed
-        await dragAndDrop(
-            ".ignored.parent .not-ignored.child",
-            ".ignored.parent .ignored.child"
-        );
+        await dragAndDrop(".ignored.parent .not-ignored.child", ".ignored.parent .ignored.child");
         assert.verifySteps(["drag"]);
     });
 
@@ -294,17 +291,27 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             setTimeout: (fn, delay) => {
                 assert.strictEqual(delay, 300, "touch drag has a default 300ms initiation delay");
                 fn();
-            }
+            },
         });
 
         class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
             setup() {
                 useDraggable({
                     ref: useRef("root"),
                     elements: ".item",
                     onDragStart({ element }) {
                         assert.step("start");
-                        assert.hasClass(element, "o_touch_bounce", "element has the animation class applied");
+                        assert.hasClass(
+                            element,
+                            "o_touch_bounce",
+                            "element has the animation class applied"
+                        );
                     },
                     onDrag() {
                         assert.step("drag");
@@ -315,18 +322,15 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     async onDrop({ element }) {
                         assert.step("drop");
                         await nextTick();
-                        assert.doesNotHaveClass(element, "o_touch_bounce", "element no longer has the animation class applied");
+                        assert.doesNotHaveClass(
+                            element,
+                            "o_touch_bounce",
+                            "element no longer has the animation class applied"
+                        );
                     },
                 });
             }
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
 
         await mount(List, target);
         assert.verifySteps([]);
@@ -339,41 +343,43 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["start", "drag", "drop", "end"]);
     });
 
-    QUnit.test("Dragging element with touch event: initiation delay can be overrided", async (assert) => {
-        patchWithCleanup(browser, {
-            matchMedia: (media) => {
-                if (media === "(pointer:coarse)") {
-                    return { matches: true };
-                } else {
-                    this._super();
+    QUnit.test(
+        "Dragging element with touch event: initiation delay can be overrided",
+        async (assert) => {
+            patchWithCleanup(browser, {
+                matchMedia: (media) => {
+                    if (media === "(pointer:coarse)") {
+                        return { matches: true };
+                    } else {
+                        this._super();
+                    }
+                },
+                setTimeout: (fn, delay) => {
+                    assert.strictEqual(delay, 1000, "touch drag has the custom initiation delay");
+                    fn();
+                },
+            });
+
+            class List extends Component {
+                static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
+                setup() {
+                    useDraggable({
+                        ref: useRef("root"),
+                        delay: 1000,
+                        elements: ".item",
+                    });
                 }
-            },
-            setTimeout: (fn, delay) => {
-                assert.strictEqual(delay, 1000, "touch drag has the custom initiation delay");
-                fn();
             }
-        });
 
-        class List extends Component {
-            setup() {
-                useDraggable({
-                    ref: useRef("root"),
-                    delay: 1000,
-                    elements: ".item",
-                });
-            }
+            await mount(List, target);
+            const { drop, moveTo } = await drag(".item:first-child", "touch");
+            await moveTo(".item:nth-child(2)");
+            await drop();
         }
-
-        List.template = xml`
-            <div t-ref="root" class="root">
-                <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                </ul>
-            </div>`;
-
-        await mount(List, target);
-        const { drop, moveTo } = await drag(".item:first-child", "touch");
-        await moveTo(".item:nth-child(2)");
-        await drop();
-    });
+    );
 });

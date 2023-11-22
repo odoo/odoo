@@ -47,8 +47,9 @@ QUnit.test("can be rendered", async (assert) => {
 
 QUnit.test("can render a main component", async (assert) => {
     assert.expect(1);
-    class MyComponent extends Component {}
-    MyComponent.template = xml`<span class="chocolate">MyComponent</span>`;
+    class MyComponent extends Component {
+        static template = xml`<span class="chocolate">MyComponent</span>`;
+    }
     clearRegistryWithCleanup(mainComponentRegistry);
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
     const env = await makeTestEnv(baseConfig);
@@ -75,6 +76,7 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
     });
 
     class MyComponent extends Component {
+        static template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
         /** @param {MouseEvent} ev */
         onclick(ev) {
             assert.step(ev.ctrlKey ? "ctrl-click" : "click");
@@ -82,7 +84,6 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
             ev.preventDefault();
         }
     }
-    MyComponent.template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
     let env = await makeTestEnv(baseConfig);
 
     // Mount the component as standalone and control-click the <a href/>

@@ -11,6 +11,12 @@ import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
 
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
+    static template = `website.PageListView`;
+    static components = {
+        ...listView.Controller.components,
+        CheckboxItem,
+    };
+
     /**
      * @override
      */
@@ -75,18 +81,11 @@ export class PageListController extends PageControllerMixin(listView.Controller)
         this.actionService.switchView('list');
     }
 }
-PageListController.template = `website.PageListView`;
-PageListController.components = {
-    ...listView.Controller.components,
-    CheckboxItem,
-};
 
-export class PageListRenderer extends PageRendererMixin(listView.Renderer) {}
-PageListRenderer.props = [
-    ...listView.Renderer.props,
-    "activeWebsite",
-];
-PageListRenderer.recordRowTemplate = "website.PageListRenderer.RecordRow";
+export class PageListRenderer extends PageRendererMixin(listView.Renderer) {
+    static props = [...listView.Renderer.props, "activeWebsite"];
+    static recordRowTemplate = "website.PageListRenderer.RecordRow";
+}
 
 export const PageListView = {
     ...listView,

@@ -18,6 +18,10 @@ import { Component, useState } from "@odoo/owl";
  * After a delay of 3s, if a rpc is still not completed, we also block the UI.
  */
 export class LoadingIndicator extends Component {
+    static template = "web.LoadingIndicator";
+    static components = { Transition };
+    static props = {};
+
     setup() {
         this.uiService = useService("ui");
         this.state = useState({
@@ -65,10 +69,6 @@ export class LoadingIndicator extends Component {
         }
     }
 }
-
-LoadingIndicator.template = "web.LoadingIndicator";
-LoadingIndicator.components = { Transition };
-LoadingIndicator.props = {};
 
 registry.category("main_components").add("LoadingIndicator", {
     Component: LoadingIndicator,

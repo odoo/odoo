@@ -21,8 +21,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("error in a client action (at rendering)", async function (assert) {
         assert.expect(11);
-        class Boom extends Component {}
-        Boom.template = xml`<div><t t-esc="a.b.c"/></div>`;
+        class Boom extends Component {
+            static template = xml`<div><t t-esc="a.b.c"/></div>`;
+        }
         actionRegistry.add("Boom", Boom);
         const mockRPC = (route, args) => {
             if (args.method === "web_search_read") {
@@ -59,6 +60,11 @@ QUnit.module("ActionManager", (hooks) => {
         registry.category("services").add("error", errorService);
 
         class Boom extends Component {
+            static template = xml`
+                <div>
+                    <t t-if="boom" t-esc="a.b.c"/>
+                    <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
+                </div>`;
             setup() {
                 this.boom = false;
             }
@@ -71,11 +77,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this.render();
             }
         }
-        Boom.template = xml`
-            <div>
-                <t t-if="boom" t-esc="a.b.c"/>
-                <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
-            </div>`;
         actionRegistry.add("Boom", Boom);
 
         const webClient = await createWebClient({ serverData });

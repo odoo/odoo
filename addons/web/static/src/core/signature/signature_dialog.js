@@ -7,6 +7,12 @@ import { NameAndSignature } from "./name_and_signature";
 import { Component, useState } from "@odoo/owl";
 
 export class SignatureDialog extends Component {
+    static template = "web.SignatureDialog";
+    static components = { Dialog, NameAndSignature };
+    static defaultProps = {
+        defaultName: "",
+    };
+
     setup() {
         this.title = _t("Adopt Your Signature");
         this.signature = useState({
@@ -35,9 +41,3 @@ export class SignatureDialog extends Component {
         };
     }
 }
-
-SignatureDialog.template = "web.SignatureDialog";
-SignatureDialog.components = { Dialog, NameAndSignature };
-SignatureDialog.defaultProps = {
-    defaultName: "",
-};

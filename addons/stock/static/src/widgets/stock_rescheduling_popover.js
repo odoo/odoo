@@ -24,6 +24,9 @@ class  StockRescheculingPopoverComponent extends PopoverComponent {
 }
 
 class StockRescheculingPopover extends PopoverWidgetField {
+    static components = {
+        Popover: StockRescheculingPopoverComponent
+    };
     setup(){
         super.setup();
         this.color = this.jsonValue.color || 'text-danger';
@@ -36,9 +39,6 @@ class StockRescheculingPopover extends PopoverWidgetField {
         }
         super.showPopup(ev);
     }
-}
-StockRescheculingPopover.components = {
-    Popover: StockRescheculingPopoverComponent
 }
 
 registry.category("fields").add("stock_rescheduling_popover", {

@@ -6,6 +6,26 @@ import { FormLabel } from "../form_label";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 export class Setting extends Component {
+    static template = "web.Setting";
+    static components = {
+        FormLabel,
+        DocumentationLink,
+    };
+    static props = {
+        title: { type: String, optional: 1 },
+        fieldId: { type: String, optional: 1 },
+        help: { type: String, optional: 1 },
+        fieldName: { type: String, optional: 1 },
+        fieldInfo: { type: Object, optional: 1 },
+        class: { type: String, optional: 1 },
+        record: { type: Object, optional: 1 },
+        documentation: { type: String, optional: 1 },
+        string: { type: String, optional: 1 },
+        addLabel: { type: Boolean },
+        companyDependent: { type: Boolean, optional: 1 },
+        slots: { type: Object, optional: 1 },
+    };
+
     setup() {
         if (this.props.fieldName) {
             this.fieldType = this.props.record.fields[this.props.fieldName].type;
@@ -44,22 +64,3 @@ export class Setting extends Component {
         return label || "";
     }
 }
-Setting.components = {
-    FormLabel,
-    DocumentationLink,
-};
-Setting.template = "web.Setting";
-Setting.props = {
-    title: { type: String, optional: 1 },
-    fieldId: { type: String, optional: 1 },
-    help: { type: String, optional: 1 },
-    fieldName: { type: String, optional: 1 },
-    fieldInfo: { type: Object, optional: 1 },
-    class: { type: String, optional: 1 },
-    record: { type: Object, optional: 1 },
-    documentation: { type: String, optional: 1 },
-    string: { type: String, optional: 1 },
-    addLabel: { type: Boolean },
-    companyDependent: { type: Boolean, optional: 1 },
-    slots: { type: Object, optional: 1 },
-};

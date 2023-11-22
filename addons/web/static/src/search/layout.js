@@ -20,6 +20,15 @@ export function extractLayoutComponents(params) {
 }
 
 export class Layout extends Component {
+    static template = "web.Layout";
+    static props = {
+        className: { type: String, optional: true },
+        display: { type: Object, optional: true },
+        slots: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        display: {},
+    };
     setup() {
         this.components = extractLayoutComponents(this.env.config);
         this.contentRef = useRef("content");
@@ -40,13 +49,3 @@ export class Layout extends Component {
         };
     }
 }
-
-Layout.template = "web.Layout";
-Layout.props = {
-    className: { type: String, optional: true },
-    display: { type: Object, optional: true },
-    slots: { type: Object, optional: true },
-};
-Layout.defaultProps = {
-    display: {},
-};

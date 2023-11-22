@@ -8,6 +8,32 @@ import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_disp
 
 export class MoOverviewOperationsBlock extends Component {
     static template = "mrp.MoOverviewOperationsBlock";
+    static components = {
+        MoOverviewLine,
+    };
+    static props = {
+        unfoldAll: { type: Boolean, optional: true },
+        operations: Array,
+        summary: {
+            type: Object,
+            shape: {
+                index: String,
+                quantity: { type: Number, optional: true },
+                quantity_decorator: { type: [String, Boolean], optional: true },
+                mo_cost: { type: Number, optional: true },
+                mo_cost_decorator: { type: [String, Boolean], optional: true },
+                real_cost: { type: Number, optional: true },
+                uom_name: { type: String, optional: true },
+                currency_id: { type: Number, optional: true },
+                currency: { type: String, optional: true },
+                done: { type: Boolean, optional: true },
+            },
+        },
+        showOptions: SHOW_OPTIONS,
+    };
+    static defaultProps = {
+        unfoldAll: false,
+    };
 
     setup() {
         this.formatFloatTime = formatFloatTime;
@@ -43,7 +69,7 @@ export class MoOverviewOperationsBlock extends Component {
     getColorClass(decorator) {
         return decorator ? `text-${decorator}` : "";
     }
-    
+
     //---- Getters ----
 
     get hasOperations() {
@@ -53,7 +79,7 @@ export class MoOverviewOperationsBlock extends Component {
     get level() {
         return this.hasOperations ? this.props.operations[0].level - 1 : 0;
     }
-    
+
     get index() {
         return this.props.summary.index;
     }
@@ -65,30 +91,3 @@ export class MoOverviewOperationsBlock extends Component {
             formatFloatTime(this.props.summary.quantity)
     }
 }
-
-MoOverviewOperationsBlock.components = {
-    MoOverviewLine,
-};
-MoOverviewOperationsBlock.props = {
-    unfoldAll: { type: Boolean, optional: true },
-    operations: Array,
-    summary: {
-        type: Object,
-        shape: {
-            index: String,
-            quantity: { type: Number, optional: true },
-            quantity_decorator: { type: [String, Boolean], optional: true },
-            mo_cost: { type: Number, optional: true },
-            mo_cost_decorator: { type: [String, Boolean], optional: true },
-            real_cost: { type: Number, optional: true },
-            uom_name: { type: String, optional: true },
-            currency_id: { type: Number, optional: true },
-            currency: { type: String, optional: true },
-            done: { type: Boolean, optional: true },
-        },
-    },
-    showOptions: SHOW_OPTIONS,
-};
-MoOverviewOperationsBlock.defaultProps = {
-    unfoldAll: false,
-};

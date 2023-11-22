@@ -9,6 +9,12 @@ import { SelectionField, selectionField } from "@web/views/fields/selection/sele
  * that uses different possible sets of values on the same selection field.
  */
 export class FilterableSelectionField extends SelectionField {
+    static props = {
+        ...SelectionField.props,
+        whitelisted_values: { type: Array, optional: true },
+        blacklisted_values: { type: Array, optional: true },
+    };
+
     /**
      * @override
      */
@@ -16,22 +22,22 @@ export class FilterableSelectionField extends SelectionField {
         let options = super.options;
         if (this.props.whitelisted_values) {
             options = options.filter((option) => {
-                return option[0] === this.props.record.data[this.props.name] || this.props.whitelisted_values.includes(option[0])
+                return (
+                    option[0] === this.props.record.data[this.props.name] ||
+                    this.props.whitelisted_values.includes(option[0])
+                );
             });
         } else if (this.props.blacklisted_values) {
             options = options.filter((option) => {
-                return option[0] === this.props.record.data[this.props.name] || !this.props.blacklisted_values.includes(option[0]);
+                return (
+                    option[0] === this.props.record.data[this.props.name] ||
+                    !this.props.blacklisted_values.includes(option[0])
+                );
             });
         }
         return options;
     }
-};
-
-FilterableSelectionField.props = {
-    ...SelectionField.props,
-    whitelisted_values: { type: Array, optional: true },
-    blacklisted_values: { type: Array, optional: true },
-};
+}
 
 export const filterableSelectionField = {
     ...selectionField,
@@ -46,7 +52,7 @@ export const filterableSelectionField = {
             label: "Blacklisted Values",
             name: "blacklisted_values",
             type: "string",
-        }
+        },
     ],
     extractProps({ options }) {
         const props = selectionField.extractProps(...arguments);

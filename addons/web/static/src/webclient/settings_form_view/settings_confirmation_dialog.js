@@ -4,6 +4,15 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 
 export class SettingsConfirmationDialog extends ConfirmationDialog {
+    static template = "web.SettingsConfirmationDialog";
+    static defaultProps = {
+        title: _t("Unsaved changes"),
+    };
+    static props = {
+        ...ConfirmationDialog.props,
+        stayHere: { type: Function, optional: true },
+    };
+
     _stayHere() {
         if (this.props.stayHere) {
             this.props.stayHere();
@@ -11,11 +20,3 @@ export class SettingsConfirmationDialog extends ConfirmationDialog {
         this.props.close();
     }
 }
-SettingsConfirmationDialog.defaultProps = {
-    title: _t("Unsaved changes"),
-};
-SettingsConfirmationDialog.template = "web.SettingsConfirmationDialog";
-SettingsConfirmationDialog.props = {
-    ...ConfirmationDialog.props,
-    stayHere: { type: Function, optional: true },
-};

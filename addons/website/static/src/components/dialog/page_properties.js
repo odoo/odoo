@@ -10,6 +10,20 @@ import { renderToElement } from "@web/core/utils/render";
 import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
 
 export class PageDependencies extends Component {
+    static template = "website.PageDependencies";
+    static popoverTemplate = xml`
+        <div class="popover o_page_dependencies" role="tooltip">
+            <div class="arrow"/>
+            <h3 class="popover-header"/>
+            <div class="popover-body"/>
+        </div>
+    `;
+    static props = {
+        resIds: Array,
+        resModel: String,
+        mode: String,
+    };
+
     setup() {
         super.setup();
         this.orm = useService('orm');
@@ -54,21 +68,21 @@ export class PageDependencies extends Component {
         }).popover('toggle');
     }
 }
-PageDependencies.popoverTemplate = xml`
-    <div class="popover o_page_dependencies" role="tooltip">
-        <div class="arrow"/>
-        <h3 class="popover-header"/>
-        <div class="popover-body"/>
-    </div>
-`;
-PageDependencies.template = 'website.PageDependencies';
-PageDependencies.props = {
-    resIds: Array,
-    resModel: String,
-    mode: String,
-};
 
 export class DeletePageDialog extends Component {
+    static template = "website.DeletePageDialog";
+    static components = {
+        PageDependencies,
+        CheckBox,
+        WebsiteDialog,
+    };
+    static props = {
+        resIds: Array,
+        resModel: String,
+        onDelete: { type: Function, optional: true },
+        close: Function,
+    };
+
     setup() {
         this.website = useService('website');
         this.title = _t("Delete Page");
@@ -89,20 +103,27 @@ export class DeletePageDialog extends Component {
         this.props.onDelete();
     }
 }
-DeletePageDialog.components = {
-    PageDependencies,
-    CheckBox,
-    WebsiteDialog
-};
-DeletePageDialog.template = 'website.DeletePageDialog';
-DeletePageDialog.props = {
-    resIds: Array,
-    resModel: String,
-    onDelete: {type: Function, optional: true},
-    close: Function,
-};
 
 export class DuplicatePageDialog extends Component {
+    static components = { WebsiteDialog };
+    static template = xml`
+    <WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Page Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+            </div>
+        </div>
+    </WebsiteDialog>
+    `;
+    static props = {
+        onDuplicate: { type: Function, optional: true },
+        close: Function,
+        pageId: Number,
+    };
+
     setup() {
         this.orm = useService('orm');
         this.website = useService('website');
@@ -125,26 +146,26 @@ export class DuplicatePageDialog extends Component {
         this.props.onDuplicate();
     }
 }
-DuplicatePageDialog.components = {WebsiteDialog};
-DuplicatePageDialog.template = xml`
-<WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-    <div class="mb-3 row">
-        <label class="col-form-label col-md-3">
-            Page Name
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
-        </div>
-    </div>
-</WebsiteDialog>
-`;
-DuplicatePageDialog.props = {
-    onDuplicate: {type: Function, optional: true},
-    close: Function,
-    pageId: Number,
-};
 
 export class PagePropertiesDialog extends FormViewDialog {
+    static template = "website.PagePropertiesDialog";
+    static props = {
+        ...FormViewDialog.props,
+        onClose: { type: Function, optional: true },
+        resModel: { type: String, optional: true },
+    };
+
+    static defaultProps = {
+        ...FormViewDialog.defaultProps,
+        resModel: "website.page",
+        title: _t("Page Properties"),
+        size: "md",
+        context: {
+            form_view_ref: "website.website_page_properties_view_form",
+        },
+        onClose: () => {},
+    };
+
     setup() {
         super.setup();
         this.dialog = useService('dialog');
@@ -182,20 +203,3 @@ export class PagePropertiesDialog extends FormViewDialog {
         });
     }
 }
-PagePropertiesDialog.template = 'website.PagePropertiesDialog';
-PagePropertiesDialog.props = {
-    ...FormViewDialog.props,
-    onClose: {type: Function, optional: true},
-    resModel: {type: String, optional: true},
-};
-
-PagePropertiesDialog.defaultProps = {
-    ...FormViewDialog.defaultProps,
-    resModel: 'website.page',
-    title: _t("Page Properties"),
-    size: 'md',
-    context: {
-        form_view_ref: 'website.website_page_properties_view_form',
-    },
-    onClose: () => {},
-};

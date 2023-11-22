@@ -141,11 +141,12 @@ export async function loadState(env, state) {
 
 export function getActionManagerServerData() {
     // additional basic client action
-    class TestClientAction extends Component {}
-    TestClientAction.template = xml`
-      <div class="test_client_action">
-        ClientAction_<t t-esc="props.action.params?.description"/>
-      </div>`;
+    class TestClientAction extends Component {
+        static template = xml`
+            <div class="test_client_action">
+                ClientAction_<t t-esc="props.action.params?.description"/>
+            </div>`;
+    }
     actionRegistry.add("__test__client__action__", TestClientAction);
 
     const menus = {

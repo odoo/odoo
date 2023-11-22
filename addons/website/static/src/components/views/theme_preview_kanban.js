@@ -18,6 +18,7 @@ class ThemePreviewKanbanController extends KanbanController {
 }
 
 class ThemePreviewControlPanel extends ControlPanel {
+    static template = "website.ThemePreviewKanban.ControlPanel";
     setup() {
         super.setup();
         this.website = useService('website');
@@ -33,7 +34,6 @@ class ThemePreviewControlPanel extends ControlPanel {
         };
     }
 }
-ThemePreviewControlPanel.template = 'website.ThemePreviewKanban.ControlPanel';
 
 const ThemePreviewKanbanView = {
     ...kanbanView,

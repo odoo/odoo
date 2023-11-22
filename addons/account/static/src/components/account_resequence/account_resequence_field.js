@@ -3,18 +3,19 @@
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 
-class ChangeLine extends Component {}
-ChangeLine.template = "account.ResequenceChangeLine";
-ChangeLine.props = ["changeLine", "ordering"];
+class ChangeLine extends Component {
+    static template = "account.ResequenceChangeLine";
+    static props = ["changeLine", "ordering"];
+}
 
 class ShowResequenceRenderer extends Component {
+    static template = "account.ResequenceRenderer";
+    static components = { ChangeLine };
     getValue() {
         const value = this.props.record.data[this.props.name];
         return value ? JSON.parse(value) : { changeLines: [], ordering: "date" };
     }
 }
-ShowResequenceRenderer.template = "account.ResequenceRenderer";
-ShowResequenceRenderer.components = { ChangeLine };
 
 registry.category("fields").add("account_resequence_widget", {
     component: ShowResequenceRenderer,

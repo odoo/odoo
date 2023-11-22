@@ -6,6 +6,13 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class EventRegistrationSummaryDialog extends Component {
+    static template = "event.EventRegistrationSummaryDialog";
+    static components = { Dialog };
+    static props = {
+        close: Function,
+        registration: Object,
+    };
+
     setup() {
         this.actionService = useService("action");
         this.notification = useService("notification");
@@ -45,9 +52,3 @@ export class EventRegistrationSummaryDialog extends Component {
         this.props.close();
     }
 }
-EventRegistrationSummaryDialog.template = "event.EventRegistrationSummaryDialog";
-EventRegistrationSummaryDialog.components = { Dialog };
-EventRegistrationSummaryDialog.props = {
-    close: Function,
-    registration: Object,
-};

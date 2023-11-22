@@ -51,6 +51,8 @@ export function useLoaderOnClick() {
 }
 
 class ThemePreviewFormController extends FormController {
+    static components = { ...FormController.components, ViewButton };
+    static template = "website.ThemePreviewFormController";
     /**
      * @override
      */
@@ -71,10 +73,9 @@ class ThemePreviewFormController extends FormController {
         this.env.config.historyBack();
     }
 }
-ThemePreviewFormController.components = { ...FormController.components, ViewButton };
-ThemePreviewFormController.template = 'website.ThemePreviewFormController';
 
 class ThemePreviewFormControlPanel extends ControlPanel {
+    static template = "website.ThemePreviewForm.ControlPanel";
     /**
      * Triggers an event on the main bus.
      * @see {FieldIframePreview} for the event handler.
@@ -89,7 +90,6 @@ class ThemePreviewFormControlPanel extends ControlPanel {
         this.env.bus.trigger('THEME_PREVIEW:SWITCH_MODE', {mode: 'desktop'});
     }
 }
-ThemePreviewFormControlPanel.template = 'website.ThemePreviewForm.ControlPanel';
 
 const ThemePreviewFormView = {
     ...formView,

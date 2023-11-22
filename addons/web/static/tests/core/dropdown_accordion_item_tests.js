@@ -37,9 +37,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.module("Dropdown Accordion Item");
 
     QUnit.test("accordion can be rendered", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`<AccordionItem description="'Test'" class="'text-primary'" selected="false"><h5>In accordion</h5></AccordionItem>`;
-        Parent.components = { AccordionItem };
+        class Parent extends Component {
+            static template = xml`<AccordionItem description="'Test'" class="'text-primary'" selected="false"><h5>In accordion</h5></AccordionItem>`;
+            static components = { AccordionItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.strictEqual(
@@ -58,18 +59,19 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("dropdown with accordion keyboard navigation", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-            <Dropdown>
-                <DropdownItem>item 1</DropdownItem>
-                <AccordionItem description="'item 2'" selected="false">
-                    <DropdownItem>item 2-1</DropdownItem>
-                    <DropdownItem>item 2-2</DropdownItem>
-                </AccordionItem>
-                <DropdownItem>item 3</DropdownItem>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown, DropdownItem, AccordionItem };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <DropdownItem>item 1</DropdownItem>
+                    <AccordionItem description="'item 2'" selected="false">
+                        <DropdownItem>item 2-1</DropdownItem>
+                        <DropdownItem>item 2-2</DropdownItem>
+                    </AccordionItem>
+                    <DropdownItem>item 3</DropdownItem>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem, AccordionItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, ".o-dropdown .dropdown-toggle");

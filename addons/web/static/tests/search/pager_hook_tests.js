@@ -29,6 +29,8 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.test("pager is correctly displayed", async (assert) => {
         class TestComponent extends Component {
+            static components = { ControlPanel };
+            static template = xml`<ControlPanel />`;
             setup() {
                 usePager(() => ({
                     offset: 0,
@@ -38,8 +40,6 @@ QUnit.module("Search", (hooks) => {
                 }));
             }
         }
-        TestComponent.components = { ControlPanel };
-        TestComponent.template = xml`<ControlPanel />`;
 
         await makeWithSearch({
             serverData,
@@ -61,6 +61,8 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.test("pager is correctly updated", async (assert) => {
         class TestComponent extends Component {
+            static components = { ControlPanel };
+            static template = xml`<ControlPanel />`;
             setup() {
                 this.state = useState({ offset: 0, limit: 10 });
                 usePager(() => ({
@@ -73,8 +75,6 @@ QUnit.module("Search", (hooks) => {
                 }));
             }
         }
-        TestComponent.components = { ControlPanel };
-        TestComponent.template = xml`<ControlPanel />`;
 
         const comp = await makeWithSearch({
             serverData,

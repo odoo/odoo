@@ -4,6 +4,14 @@ import { useBus } from "@web/core/utils/hooks";
 import { EventBus, Component, xml, useState } from "@odoo/owl";
 
 export class FullscreenIndication extends Component {
+    static props = {
+        bus: EventBus,
+    };
+    static template = xml`
+    <div class="o_fullscreen_indication" t-att-class="{ o_visible: state.isVisible }">
+        <p>Press <span>esc</span> to exit full screen</p>
+    </div>`;
+
     setup() {
         this.state = useState({ isVisible: false });
         useBus(this.props.bus, "FULLSCREEN-INDICATION-SHOW", this.show.bind(this));
@@ -22,10 +30,3 @@ export class FullscreenIndication extends Component {
         }
     }
 }
-FullscreenIndication.props = {
-    bus: EventBus,
-};
-FullscreenIndication.template = xml`
-<div class="o_fullscreen_indication" t-att-class="{ o_visible: state.isVisible }">
-    <p>Press <span>esc</span> to exit full screen</p>
-</div>`;

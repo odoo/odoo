@@ -7,6 +7,16 @@ import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
+    static template = "web.PropertyDefinitionSelection";
+    static props = {
+        default: { type: String, optional: true },
+        options: {},
+        readonly: { type: Boolean, optional: true },
+        canChangeDefinition: { type: Boolean, optional: true },
+        onOptionsChange: { type: Function, optional: true }, // we add / remove / rename an option
+        onDefaultOptionChange: { type: Function, optional: true }, // we select a default value
+    };
+
     setup() {
         this.notification = useService("notification");
 
@@ -278,14 +288,3 @@ export class PropertyDefinitionSelection extends Component {
         this.props.onOptionsChange(options);
     }
 }
-
-PropertyDefinitionSelection.template = "web.PropertyDefinitionSelection";
-
-PropertyDefinitionSelection.props = {
-    default: { type: String, optional: true },
-    options: {},
-    readonly: { type: Boolean, optional: true },
-    canChangeDefinition: { type: Boolean, optional: true },
-    onOptionsChange: { type: Function, optional: true }, // we add / remove / rename an option
-    onDefaultOptionChange: { type: Function, optional: true }, // we select a default value
-};

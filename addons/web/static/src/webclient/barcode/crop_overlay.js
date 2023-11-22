@@ -5,6 +5,18 @@ import { browser } from "@web/core/browser/browser";
 import { clamp } from "@web/core/utils/numbers";
 
 export class CropOverlay extends Component {
+    static template = "web.CropOverlay";
+    static props = {
+        onResize: Function,
+        isReady: Boolean,
+        slots: {
+            type: Object,
+            shape: {
+                default: {},
+            },
+        },
+    };
+
     setup() {
         this.localStorageKey = "o-barcode-scanner-overlay";
         this.cropContainerRef = useRef("crop-container");
@@ -141,15 +153,3 @@ export class CropOverlay extends Component {
         this.executeOnResizeCallback();
     }
 }
-
-CropOverlay.template = "web.CropOverlay";
-CropOverlay.props = {
-    onResize: Function,
-    isReady: Boolean,
-    slots: {
-        type: Object,
-        shape: {
-            default: {},
-        },
-    },
-};

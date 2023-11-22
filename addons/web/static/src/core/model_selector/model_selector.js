@@ -8,6 +8,17 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class ModelSelector extends Component {
+    static template = "web.ModelSelector";
+    static components = { AutoComplete };
+    static props = {
+        onModelSelected: Function,
+        id: { type: String, optional: true },
+        value: { type: String, optional: true },
+        // list of models technical name, if not set
+        // we will fetch all models we have access to
+        models: { type: Array, optional: true },
+    };
+
     setup() {
         this.orm = useService("orm");
 
@@ -88,14 +99,3 @@ export class ModelSelector extends Component {
         return result || [];
     }
 }
-
-ModelSelector.template = "web.ModelSelector";
-ModelSelector.components = { AutoComplete };
-ModelSelector.props = {
-    onModelSelected: Function,
-    id: { type: String, optional: true },
-    value: { type: String, optional: true },
-    // list of models technical name, if not set
-    // we will fetch all models we have access to
-    models: { type: Array, optional: true },
-};

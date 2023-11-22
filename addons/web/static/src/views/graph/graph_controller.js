@@ -11,6 +11,16 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
+    static template = "web.GraphView";
+    static components = { Layout, SearchBar, CogMenu };
+    static props = {
+        ...standardViewProps,
+        Model: Function,
+        modelParams: Object,
+        Renderer: Function,
+        buttonTemplate: String,
+    };
+
     setup() {
         this.model = useModelWithSampleData(this.props.Model, this.props.modelParams);
 
@@ -45,14 +55,3 @@ export class GraphController extends Component {
         return context;
     }
 }
-
-GraphController.template = "web.GraphView";
-GraphController.components = { Layout, SearchBar, CogMenu };
-
-GraphController.props = {
-    ...standardViewProps,
-    Model: Function,
-    modelParams: Object,
-    Renderer: Function,
-    buttonTemplate: String,
-};

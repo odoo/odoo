@@ -12,6 +12,30 @@ import { Component, markup, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class SelectCreateDialog extends Component {
+    static components = { Dialog, View };
+    static template = "web.SelectCreateDialog";
+    static props = {
+        context: { type: Object, optional: true },
+        domain: { type: Array, optional: true },
+        dynamicFilters: { type: Array, optional: true },
+        resModel: String,
+        searchViewId: { type: [Number, { value: false }], optional: true },
+        multiSelect: { type: Boolean, optional: true },
+        onSelected: { type: Function, optional: true },
+        close: { type: Function, optional: true },
+        onCreateEdit: { type: Function, optional: true },
+        title: { type: String, optional: true },
+        noCreate: { type: Boolean, optional: true },
+        onUnselect: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        dynamicFilters: [],
+        multiSelect: true,
+        searchViewId: false,
+        domain: [],
+        context: {},
+    };
+
     setup() {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
@@ -86,28 +110,5 @@ export class SelectCreateDialog extends Component {
         }
     }
 }
-SelectCreateDialog.components = { Dialog, View };
-SelectCreateDialog.template = "web.SelectCreateDialog";
-SelectCreateDialog.props = {
-    context: { type: Object, optional: true },
-    domain: { type: Array, optional: true },
-    dynamicFilters: { type: Array, optional: true },
-    resModel: String,
-    searchViewId: { type: [Number, { value: false }], optional: true },
-    multiSelect: { type: Boolean, optional: true },
-    onSelected: { type: Function, optional: true },
-    close: { type: Function, optional: true },
-    onCreateEdit: { type: Function, optional: true },
-    title: { type: String, optional: true },
-    noCreate: { type: Boolean, optional: true },
-    onUnselect: { type: Function, optional: true },
-};
-SelectCreateDialog.defaultProps = {
-    dynamicFilters: [],
-    multiSelect: true,
-    searchViewId: false,
-    domain: [],
-    context: {},
-};
 
 registry.category("dialogs").add("select_create", SelectCreateDialog);

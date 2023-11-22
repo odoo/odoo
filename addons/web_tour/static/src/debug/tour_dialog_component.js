@@ -7,6 +7,8 @@ import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 
 export default class ToursDialog extends Component {
+    static template = "web_tour.ToursDialog";
+    static components = { Dialog };
     setup() {
         this.title = _t("Tours");
         this.tourService = useService("tour_service");
@@ -39,5 +41,3 @@ export default class ToursDialog extends Component {
         this.props.close();
     }
 }
-ToursDialog.template = "web_tour.ToursDialog";
-ToursDialog.components = { Dialog };

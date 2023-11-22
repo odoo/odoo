@@ -5,6 +5,11 @@ import { useService } from "@web/core/utils/hooks";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 
 export class UrlAutoComplete extends Component {
+    static props = {
+        options: { type: Object },
+        loadAnchors: { type: Function },
+        targetDropdown: { type: HTMLElement },
+    };
     static template = "website.UrlAutoComplete";
     static components = { AutoCompleteWithPages };
 
@@ -87,9 +92,3 @@ export class UrlAutoComplete extends Component {
         this.props.options.urlChosen?.();
     }
 }
-
-UrlAutoComplete.props = {
-    options: { type: Object },
-    loadAnchors: { type: Function },
-    targetDropdown: { type: HTMLElement },
-};

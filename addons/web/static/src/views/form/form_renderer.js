@@ -29,6 +29,35 @@ import {
 } from "@odoo/owl";
 
 export class FormRenderer extends Component {
+    static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
+    static components = {
+        Field,
+        FormLabel,
+        ButtonBox,
+        ViewButton,
+        Widget,
+        Notebook,
+        Setting,
+        OuterGroup,
+        InnerGroup,
+        StatusBarButtons,
+    };
+    static props = {
+        archInfo: Object,
+        Compiler: { type: Function, optional: true },
+        record: Object,
+        // Template props : added by the FormCompiler
+        class: { type: String, optional: 1 },
+        translateAlert: { type: [Object, { value: null }], optional: true },
+        onNotebookPageChange: { type: Function, optional: true },
+        activeNotebookPages: { type: Object, optional: true },
+        setFieldAsDirty: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        activeNotebookPages: {},
+        onNotebookPageChange: () => {},
+    };
+
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
@@ -80,32 +109,3 @@ export class FormRenderer extends Component {
         return !this.props.archInfo.disableAutofocus;
     }
 }
-
-FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
-FormRenderer.components = {
-    Field,
-    FormLabel,
-    ButtonBox,
-    ViewButton,
-    Widget,
-    Notebook,
-    Setting,
-    OuterGroup,
-    InnerGroup,
-    StatusBarButtons,
-};
-FormRenderer.props = {
-    archInfo: Object,
-    Compiler: { type: Function, optional: true },
-    record: Object,
-    // Template props : added by the FormCompiler
-    class: { type: String, optional: 1 },
-    translateAlert: { type: [Object, { value: null }], optional: true },
-    onNotebookPageChange: { type: Function, optional: true },
-    activeNotebookPages: { type: Object, optional: true },
-    setFieldAsDirty: { type: Function, optional: true },
-};
-FormRenderer.defaultProps = {
-    activeNotebookPages: {},
-    onNotebookPageChange: () => {},
-};

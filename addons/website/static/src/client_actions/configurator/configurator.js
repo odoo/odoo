@@ -75,8 +75,9 @@ const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 // Components
 //------------------------------------------------------------------------------
 
-class SkipButton extends Component {}
-SkipButton.template = 'website.Configurator.SkipButton';
+class SkipButton extends Component {
+    static template = "website.Configurator.SkipButton";
+}
 
 class WelcomeScreen extends Component {
     setup() {
@@ -89,8 +90,8 @@ class WelcomeScreen extends Component {
 }
 
 Object.assign(WelcomeScreen, {
-    components: {SkipButton},
-    template: 'website.Configurator.WelcomeScreen',
+    components: { SkipButton },
+    template: "website.Configurator.WelcomeScreen",
 });
 
 class IndustrySelectionAutoComplete extends AutoComplete {
@@ -393,6 +394,7 @@ Object.assign(FeaturesSelectionScreen, {
 });
 
 class ThemeSelectionScreen extends ApplyConfiguratorScreen {
+    static template = "website.Configurator.ThemeSelectionScreen";
     setup() {
         super.setup();
 
@@ -433,8 +435,6 @@ class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         await this.applyConfigurator(themeName);
     }
 }
-
-ThemeSelectionScreen.template = 'website.Configurator.ThemeSelectionScreen';
 
 //------------------------------------------------------------------------------
 // Store

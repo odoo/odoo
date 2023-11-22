@@ -8,6 +8,11 @@ import { ProjectSharingChatterCompiler } from './project_sharing_form_compiler';
 import { ChatterContainer } from '../../components/chatter/chatter_container';
 
 export class ProjectSharingFormController extends FormController {
+    static components = {
+        ...FormController.components,
+        ChatterContainer,
+    };
+
     setup() {
         super.setup();
         this.uiService = useService('ui');
@@ -28,9 +33,4 @@ export class ProjectSharingFormController extends FormController {
     get translateAlert() {
         return null;
     }
-}
-
-ProjectSharingFormController.components = {
-    ...FormController.components,
-    ChatterContainer,
 }

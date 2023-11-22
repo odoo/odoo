@@ -1593,6 +1593,12 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("standalone many2one field", async function (assert) {
         class Comp extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
+                    <Field name="'partner_id'" record="scope.record" canOpen="false" />
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     partner_id: {
@@ -1606,12 +1612,6 @@ QUnit.module("Fields", (hooks) => {
                 };
             }
         }
-        Comp.components = { Record, Field };
-        Comp.template = xml`
-            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
-                <Field name="'partner_id'" record="scope.record" canOpen="false" />
-            </Record>
-        `;
 
         await mount(Comp, target, {
             env: await makeTestEnv({

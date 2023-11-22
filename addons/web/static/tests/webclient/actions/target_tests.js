@@ -269,18 +269,23 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expectErrors();
 
         class ErrorClientAction extends Component {
+            static template = xml`<div/>`;
             setup() {
                 throw new Error("my error");
             }
         }
-        ErrorClientAction.template = xml`<div/>`;
         registry.category("actions").add("failing", ErrorClientAction);
 
-        class ClientActionTargetNew extends Component {}
-        ClientActionTargetNew.template = xml`<div class="my_action_new" />`;
+        class ClientActionTargetNew extends Component {
+            static template = xml`<div class="my_action_new" />`;
+        }
         registry.category("actions").add("clientActionNew", ClientActionTargetNew);
 
         class ClientAction extends Component {
+            static template = xml`
+                <div class="my_action" t-on-click="onClick">
+                    My Action
+                </div>`;
             setup() {
                 this.action = useService("action");
             }
@@ -296,10 +301,6 @@ QUnit.module("ActionManager", (hooks) => {
                 }
             }
         }
-        ClientAction.template = xml`
-            <div class="my_action" t-on-click="onClick">
-                My Action
-            </div>`;
         registry.category("actions").add("clientAction", ClientAction);
 
         const errorDialogOpened = makeDeferred();

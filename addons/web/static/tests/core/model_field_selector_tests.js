@@ -139,6 +139,16 @@ QUnit.module("Components", (hooks) => {
                 .join(" -> ");
         }
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    isDebugMode="false"
+                    update="(path) => this.onUpdate(path)"
+                />
+            `;
             setup() {
                 this.path = "";
             }
@@ -148,16 +158,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`
-            <ModelFieldSelector
-                readonly="false"
-                resModel="'partner'"
-                path="path"
-                isDebugMode="false"
-                update="(path) => this.onUpdate(path)"
-            />
-        `;
 
         const fieldSelector = await mountComponent(Parent);
 
@@ -379,6 +379,15 @@ QUnit.module("Components", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    update="(path) => this.onUpdate(path)"
+                />
+            `;
             setup() {
                 this.path = "partner_id.foo";
             }
@@ -387,15 +396,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`
-            <ModelFieldSelector
-                readonly="false"
-                resModel="'partner'"
-                path="path"
-                update="(path) => this.onUpdate(path)"
-            />
-        `;
 
         await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["Partner", "Foo"]);
@@ -505,6 +505,16 @@ QUnit.module("Components", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    isDebugMode="true"
+                    update="(pathInfo) => this.onUpdate(pathInfo)"
+                />
+            `;
             setup() {
                 this.path = "foo";
             }
@@ -513,16 +523,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`
-                    <ModelFieldSelector
-                        readonly="false"
-                        resModel="'partner'"
-                        path="path"
-                        isDebugMode="true"
-                        update="(pathInfo) => this.onUpdate(pathInfo)"
-                    />
-                `;
 
         await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["Foo"]);
@@ -630,12 +630,12 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("support of invalid paths (allowEmpty=false)", async (assert) => {
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
             setup() {
                 this.state = useState({ path: `` });
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
 
         const parent = await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
@@ -674,12 +674,12 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("support of invalid paths (allowEmpty=true)", async (assert) => {
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
             setup() {
                 this.state = useState({ path: `` });
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
 
         const parent = await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), []);
@@ -720,6 +720,8 @@ QUnit.module("Components", (hooks) => {
         assert.expect(10);
         let num = 1;
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
             setup() {
                 this.state = useState({ path: `` });
             }
@@ -745,8 +747,6 @@ QUnit.module("Components", (hooks) => {
                 }
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
 
         await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
@@ -772,13 +772,13 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("focus on search input", async (assert) => {
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
             setup() {
                 this.state = useState({ path: `foo` });
             }
-            update() { }
+            update() {}
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
 
         await mountComponent(Parent);
         await openModelFieldSelectorPopover(target);
@@ -966,6 +966,16 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("Modify path in popover debug input and click away", async (assert) => {
         class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    isDebugMode="true"
+                    update="(pathInfo) => this.onUpdate(pathInfo)"
+                />
+            `;
             setup() {
                 this.path = "foo";
             }
@@ -975,16 +985,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { ModelFieldSelector };
-        Parent.template = xml`
-                    <ModelFieldSelector
-                        readonly="false"
-                        resModel="'partner'"
-                        path="path"
-                        isDebugMode="true"
-                        update="(pathInfo) => this.onUpdate(pathInfo)"
-                    />
-                `;
 
         await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["Foo"]);

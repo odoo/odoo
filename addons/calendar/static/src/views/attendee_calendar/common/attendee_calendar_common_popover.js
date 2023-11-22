@@ -8,6 +8,16 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
+    static components = {
+        ...CalendarCommonPopover.components,
+        Dropdown,
+        DropdownItem,
+    };
+    static subTemplates = {
+        ...CalendarCommonPopover.subTemplates,
+        body: "calendar.AttendeeCalendarCommonPopover.body",
+        footer: "calendar.AttendeeCalendarCommonPopover.footer",
+    };
     setup() {
         super.setup();
         this.user = useService("user");
@@ -128,13 +138,3 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         await this.props.model.archiveRecord(this.props.record);
     }
 }
-AttendeeCalendarCommonPopover.components = {
-    ...CalendarCommonPopover.components,
-    Dropdown,
-    DropdownItem,
-};
-AttendeeCalendarCommonPopover.subTemplates = {
-    ...CalendarCommonPopover.subTemplates,
-    body: "calendar.AttendeeCalendarCommonPopover.body",
-    footer: "calendar.AttendeeCalendarCommonPopover.footer",
-};

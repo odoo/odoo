@@ -13,6 +13,15 @@ import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class StockForecasted extends Component {
+    static template = "stock.Forecasted";
+    static components = {
+        ControlPanel,
+        ForecastedButtons,
+        ForecastedWarehouseFilter,
+        ForecastedHeader,
+        View,
+        ForecastedDetails,
+    };
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -114,13 +123,4 @@ export class StockForecasted extends Component {
     }
 }
 
-StockForecasted.template = "stock.Forecasted";
-StockForecasted.components = {
-    ControlPanel,
-    ForecastedButtons,
-    ForecastedWarehouseFilter,
-    ForecastedHeader,
-    View,
-    ForecastedDetails,
-};
 registry.category("actions").add("stock_forecasted", StockForecasted);

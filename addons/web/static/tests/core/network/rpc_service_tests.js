@@ -1,7 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { ConnectionAbortedError, ConnectionLostError, rpcService } from "@web/core/network/rpc_service";
+import {
+    ConnectionAbortedError,
+    ConnectionLostError,
+    rpcService,
+} from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -105,11 +109,11 @@ QUnit.test("rpc with simple routes", async (assert) => {
 
 QUnit.test("rpc coming from destroyed components are left pending", async (assert) => {
     class MyComponent extends Component {
+        static template = xml`<div/>`;
         setup() {
             this.rpc = useService("rpc");
         }
     }
-    MyComponent.template = xml`<div/>`;
     const def = makeDeferred();
     const MockXHR = makeMockXHR({ result: "1" }, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
@@ -141,11 +145,11 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
 QUnit.test("rpc initiated from destroyed components throw exception", async (assert) => {
     assert.expect(1);
     class MyComponent extends Component {
+        static template = xml`<div/>`;
         setup() {
             this.rpc = useService("rpc");
         }
     }
-    MyComponent.template = xml`<div/>`;
     const env = await makeTestEnv({
         serviceRegistry,
     });

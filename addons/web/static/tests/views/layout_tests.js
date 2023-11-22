@@ -48,12 +48,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("Layout");
 
     QUnit.test("Simple rendering", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout className="'o_view_sample_data'" display="props.display">
-                <div class="toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout className="'o_view_sample_data'" display="props.display">
+                    <div class="toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
         const env = await makeTestEnv();
         const toyEnv = Object.assign(Object.create(env), { config: {} });
@@ -67,15 +68,16 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Simple rendering: with search", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout display="props.display">
-                <t t-set-slot="layout-actions">
-                    <div class="toy_search_bar" />
-                </t>
-                <div class="toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="props.display">
+                    <t t-set-slot="layout-actions">
+                        <div class="toy_search_bar" />
+                    </t>
+                    <div class="toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
         await makeWithSearch({
             serverData,
@@ -92,6 +94,14 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Rendering with default ControlPanel and SearchPanel", async (assert) => {
         class ToyComponent extends Component {
+            static template = xml`
+                <Layout className="'o_view_sample_data'" display="{
+                    controlPanel: {},
+                    searchPanel: true,
+                    }">
+                    <div class="toy_content" />
+                </Layout>`;
+            static components = { Layout };
             setup() {
                 this.searchModel = new SearchModel(this.env, {
                     user: useService("user"),
@@ -104,14 +114,6 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        ToyComponent.template = xml`
-            <Layout className="'o_view_sample_data'" display="{
-                controlPanel: {},
-                searchPanel: true,
-                }">
-                <div class="toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
 
         const env = await makeTestEnv();
         const toyEnv = Object.assign(Object.create(env), {
@@ -130,6 +132,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Nested layouts", async (assert) => {
         // Component C: bottom (no control panel)
         class ToyC extends Component {
+            static template = xml`
+                <Layout className="'toy_c'" display="display">
+                    <div class="toy_c_content" />
+                </Layout>`;
+            static components = { Layout };
             get display() {
                 return {
                     controlPanel: false,
@@ -137,17 +144,21 @@ QUnit.module("Views", (hooks) => {
                 };
             }
         }
-        ToyC.template = xml`
-            <Layout className="'toy_c'" display="display">
-                <div class="toy_c_content" />
-            </Layout>`;
-        ToyC.components = { Layout };
 
         // Component B: center (with custom search panel)
-        class SearchPanel extends Component {}
-        SearchPanel.template = xml`<div class="o_toy_search_panel" />`;
+        class SearchPanel extends Component {
+            static template = xml`<div class="o_toy_search_panel" />`;
+        }
 
         class ToyB extends Component {
+            static template = xml`
+                <Layout className="'toy_b'" display="props.display">
+                    <t t-set-slot="layout-actions">
+                        <div class="toy_b_breadcrumbs" />
+                    </t>
+                    <ToyC/>
+                </Layout>`;
+            static components = { Layout, ToyC };
             setup() {
                 useChildSubEnv({
                     config: {
@@ -157,25 +168,18 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        ToyB.template = xml`
-            <Layout className="'toy_b'" display="props.display">
-                <t t-set-slot="layout-actions">
-                    <div class="toy_b_breadcrumbs" />
-                </t>
-                <ToyC/>
-            </Layout>`;
-        ToyB.components = { Layout, ToyC };
 
         // Component A: top
-        class ToyA extends Component {}
-        ToyA.template = xml`
-            <Layout className="'toy_a'" display="props.display">
-                <t t-set-slot="layout-actions">
-                    <div class="toy_a_search" />
-                </t>
-                <ToyB display="props.display"/>
-            </Layout>`;
-        ToyA.components = { Layout, ToyB };
+        class ToyA extends Component {
+            static template = xml`
+                <Layout className="'toy_a'" display="props.display">
+                    <t t-set-slot="layout-actions">
+                        <div class="toy_a_search" />
+                    </t>
+                    <ToyB display="props.display"/>
+                </Layout>`;
+            static components = { Layout, ToyB };
+        }
 
         await makeWithSearch({
             serverData,
@@ -195,15 +199,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom control panel", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="props.display">
+                    <div class="o_toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
-        class ControlPanel extends Component {}
-        ControlPanel.template = xml`<div class="o_toy_search_panel" />`;
+        class ControlPanel extends Component {
+            static template = xml`<div class="o_toy_search_panel" />`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -219,15 +225,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom search panel", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="props.display">
+                    <div class="o_toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
-        class SearchPanel extends Component {}
-        SearchPanel.template = xml`<div class="o_toy_search_panel" />`;
+        class SearchPanel extends Component {
+            static template = xml`<div class="o_toy_search_panel" />`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -243,15 +251,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom banner: no bannerRoute in env", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="props.display">
+                    <div class="o_toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
-        class Banner extends Component {}
-        Banner.template = xml`<div class="o_toy_banner" />`;
+        class Banner extends Component {
+            static template = xml`<div class="o_toy_banner" />`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -266,15 +276,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Custom banner: with bannerRoute in env", async (assert) => {
-        class ToyComponent extends Component {}
-        ToyComponent.template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
+        class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="props.display">
+                    <div class="o_toy_content" />
+                </Layout>`;
+            static components = { Layout };
+        }
 
-        class Banner extends Component {}
-        Banner.template = xml`<div class="o_toy_banner" />`;
+        class Banner extends Component {
+            static template = xml`<div class="o_toy_banner" />`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -293,6 +305,14 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Simple rendering: with dynamically displayed search", async (assert) => {
         let displayLayoutActions = true;
         class ToyComponent extends Component {
+            static template = xml`
+                <Layout display="display">
+                    <t t-set-slot="layout-actions">
+                        <div class="toy_search_bar" />
+                    </t>
+                    <div class="toy_content" />
+                </Layout>`;
+            static components = { Layout };
             get display() {
                 return {
                     ...this.props.display,
@@ -303,14 +323,6 @@ QUnit.module("Views", (hooks) => {
                 };
             }
         }
-        ToyComponent.template = xml`
-            <Layout display="display">
-                <t t-set-slot="layout-actions">
-                    <div class="toy_search_bar" />
-                </t>
-                <div class="toy_content" />
-            </Layout>`;
-        ToyComponent.components = { Layout };
 
         const comp = await makeWithSearch({
             serverData,

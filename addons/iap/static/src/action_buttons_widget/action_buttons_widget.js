@@ -6,6 +6,13 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component } from "@odoo/owl";
 
 class IAPActionButtonsWidget extends Component {
+    static template = "iap.ActionButtonsWidget";
+    static props = {
+        ...standardWidgetProps,
+        serviceName: String,
+        showServiceButtons: Boolean,
+    };
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -23,12 +30,6 @@ class IAPActionButtonsWidget extends Component {
         });
     }
 }
-IAPActionButtonsWidget.template = "iap.ActionButtonsWidget";
-IAPActionButtonsWidget.props = {
-    ...standardWidgetProps,
-    serviceName: String,
-    showServiceButtons: Boolean,
-};
 
 export const iapActionButtonsWidget = {
     component: IAPActionButtonsWidget,

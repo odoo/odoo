@@ -6,6 +6,12 @@ import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quick_create";
 export class AttendeeCalendarController extends CalendarController {
+    static template = "calendar.AttendeeCalendarController";
+    static components = {
+        ...AttendeeCalendarController.components,
+        QuickCreateFormView: CalendarQuickCreate,
+    };
+
     setup() {
         super.setup();
         this.actionService = useService("action");
@@ -114,9 +120,4 @@ export class AttendeeCalendarController extends CalendarController {
             }
         });
     }
-}
-AttendeeCalendarController.template = "calendar.AttendeeCalendarController";
-AttendeeCalendarController.components = {
-    ...AttendeeCalendarController.components,
-    QuickCreateFormView: CalendarQuickCreate,
 }

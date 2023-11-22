@@ -13525,6 +13525,7 @@ QUnit.module("Views", (hooks) => {
         let renderCount = 0;
         let def;
         class MyField extends Component {
+            static template = xml`<span t-esc="renderCount"/>`;
             setup() {
                 onWillRender(() => {
                     renderCount++;
@@ -13534,7 +13535,6 @@ QUnit.module("Views", (hooks) => {
                 return renderCount;
             }
         }
-        MyField.template = xml`<span t-esc="renderCount"/>`;
         registry.category("fields").add("my_field", { component: MyField });
 
         serverData.models.partner.onchanges = { product_id: () => {} };

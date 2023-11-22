@@ -14,6 +14,11 @@ const ICON_BY_STATUS = {
     tentative: "fa-question",
 };
 export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
+    static template = "calendar.Many2ManyAttendee";
+    static components = {
+        ...Many2ManyAttendee.components,
+        TagsList: AttendeeTagsList,
+    };
     setup() {
         super.setup();
         this.specialData = useSpecialData((orm, props) => {
@@ -52,12 +57,6 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
         return tags;
     }
 }
-
-Many2ManyAttendee.template = "calendar.Many2ManyAttendee";
-Many2ManyAttendee.components = {
-    ...Many2ManyAttendee.components,
-    TagsList: AttendeeTagsList,
-};
 
 export const many2ManyAttendee = {
     ...many2ManyTagsAvatarField,

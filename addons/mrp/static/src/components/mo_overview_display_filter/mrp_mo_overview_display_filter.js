@@ -17,6 +17,15 @@ export const SHOW_OPTIONS = {
 };
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
+    static props = {
+        showOptions: SHOW_OPTIONS,
+        changeDisplay: Function,
+        limited: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        limited: false,
+    };
+
     setup() {
         if (!this.props.limited) {
             this.displayOptions = {
@@ -33,12 +42,3 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
         };
     }
 }
-
-MoOverviewDisplayFilter.props = {
-    showOptions: SHOW_OPTIONS,
-    changeDisplay: Function,
-    limited: { type: Boolean, optional: true },
-};
-MoOverviewDisplayFilter.defaultProps = {
-    limited: false,
-};

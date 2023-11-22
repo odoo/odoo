@@ -11,6 +11,26 @@ import { getFormattedDateSpan } from "@web/views/calendar/utils";
 import { Component } from "@odoo/owl";
 
 export class CalendarCommonPopover extends Component {
+    static template = "web.CalendarCommonPopover";
+    static subTemplates = {
+        popover: "web.CalendarCommonPopover.popover",
+        body: "web.CalendarCommonPopover.body",
+        footer: "web.CalendarCommonPopover.footer",
+    };
+    static components = {
+        Dialog,
+        Field,
+        Record,
+    };
+    static props = {
+        close: Function,
+        record: Object,
+        model: Object,
+        createRecord: Function,
+        deleteRecord: Function,
+        editRecord: Function,
+    };
+
     setup() {
         this.time = null;
         this.timeDuration = null;
@@ -82,22 +102,3 @@ export class CalendarCommonPopover extends Component {
         this.props.close();
     }
 }
-CalendarCommonPopover.components = {
-    Dialog,
-    Field,
-    Record,
-};
-CalendarCommonPopover.template = "web.CalendarCommonPopover";
-CalendarCommonPopover.subTemplates = {
-    popover: "web.CalendarCommonPopover.popover",
-    body: "web.CalendarCommonPopover.body",
-    footer: "web.CalendarCommonPopover.footer",
-};
-CalendarCommonPopover.props = {
-    close: Function,
-    record: Object,
-    model: Object,
-    createRecord: Function,
-    deleteRecord: Function,
-    editRecord: Function,
-};

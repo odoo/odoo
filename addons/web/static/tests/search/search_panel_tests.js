@@ -110,6 +110,12 @@ function getCounters(v) {
 function makeTestComponent({ onWillStart, onWillUpdateProps } = {}) {
     let domain;
     class TestComponent extends Component {
+        static components = { SearchBarMenu, SearchPanel };
+        static template = xml`
+            <div class="o_test_component">
+                <SearchPanel t-if="env.searchModel.display.searchPanel" />
+                <SearchBarMenu />
+            </div>`;
         setup() {
             onWillStartOWL(async () => {
                 if (onWillStart) {
@@ -125,13 +131,6 @@ function makeTestComponent({ onWillStart, onWillUpdateProps } = {}) {
             });
         }
     }
-
-    TestComponent.components = { SearchBarMenu, SearchPanel };
-    TestComponent.template = xml`
-        <div class="o_test_component">
-            <SearchPanel t-if="env.searchModel.display.searchPanel" />
-            <SearchBarMenu />
-        </div>`;
 
     return { TestComponent, getDomain: () => domain };
 }
@@ -2271,8 +2270,12 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("scroll kanban view with searchpanel and kept scroll position", async (assert) => {
         for (let i = 10; i < 20; i++) {
             serverData.models.category.records.push({ id: i, name: "Cat " + i });
-            for (let j = 0; j <9; j++)
-            serverData.models.partner.records.push({ id: 100 + i*10 +j, foo: `Record ${i*10 +j}` });
+            for (let j = 0; j < 9; j++) {
+                serverData.models.partner.records.push({
+                    id: 100 + i * 10 + j,
+                    foo: `Record ${i * 10 + j}`,
+                });
+            }
         }
 
         const container = document.createElement("div");

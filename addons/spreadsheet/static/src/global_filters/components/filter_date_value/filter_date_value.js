@@ -8,6 +8,14 @@ import { getPeriodOptions } from "@web/search/utils/dates";
 const { DateTime } = luxon;
 
 export class DateFilterValue extends Component {
+    static template = "spreadsheet_edition.DateFilterValue";
+    static components = { DateTimeInput };
+    static props = {
+        // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
+        onTimeRangeChanged: Function,
+        yearOffset: { type: Number, optional: true },
+        period: { type: String, optional: true },
+    };
     setup() {
         this._setStateFromProps(this.props);
         onWillUpdateProps(this._setStateFromProps);
@@ -65,12 +73,3 @@ export class DateFilterValue extends Component {
         });
     }
 }
-DateFilterValue.template = "spreadsheet_edition.DateFilterValue";
-DateFilterValue.components = { DateTimeInput };
-
-DateFilterValue.props = {
-    // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
-    onTimeRangeChanged: Function,
-    yearOffset: { type: Number, optional: true },
-    period: { type: String, optional: true },
-};

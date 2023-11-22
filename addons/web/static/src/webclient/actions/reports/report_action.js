@@ -20,6 +20,8 @@ import { Component, useRef, useSubEnv } from "@odoo/owl";
  * is detected.
  */
 export class ReportAction extends Component {
+    static components = { Layout };
+    static template = "web.ReportAction";
     setup() {
         useSubEnv({
             config: {
@@ -54,5 +56,3 @@ export class ReportAction extends Component {
         });
     }
 }
-ReportAction.components = { Layout };
-ReportAction.template = "web.ReportAction";

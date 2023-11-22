@@ -18,6 +18,7 @@ export const jsonPopOver = {
 };
 
 export class PopOverLeadDays extends JsonPopOver {
+    static template = "stock.leadDays";
     setup() {
         super.setup();
         const user = useService("user");
@@ -46,7 +47,6 @@ export class PopOverLeadDays extends JsonPopOver {
     }
 }
 
-PopOverLeadDays.template = "stock.leadDays";
 
 export const popOverLeadDays = {
     ...jsonPopOver,
@@ -54,8 +54,9 @@ export const popOverLeadDays = {
 };
 registry.category("fields").add("lead_days_widget", popOverLeadDays);
 
-export class ReplenishmentHistoryWidget extends JsonPopOver {}
-ReplenishmentHistoryWidget.template = "stock.replenishmentHistory";
+export class ReplenishmentHistoryWidget extends JsonPopOver {
+    static template = "stock.replenishmentHistory";
+}
 
 export const replenishmentHistoryWidget = {
     ...jsonPopOver,

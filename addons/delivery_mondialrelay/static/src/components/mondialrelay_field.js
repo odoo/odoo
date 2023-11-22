@@ -17,6 +17,8 @@ function corsIgnoredErrorHandler(env, error) {
 }
 
 export class MondialRelayField extends Component {
+    static template = xml`<div t-if="enabled" t-ref="root"/>`;
+
     setup() {
         this.root = useRef("root");
         this.state = useState({
@@ -85,7 +87,6 @@ export class MondialRelayField extends Component {
         $el.trigger("MR_RebindMap");
     }
 }
-MondialRelayField.template = xml`<div t-if="enabled" t-ref="root"/>`;
 
 export const mondialRelayField = {
     component: MondialRelayField,

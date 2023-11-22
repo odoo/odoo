@@ -23,22 +23,23 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("notebook with multiple pages given as slots", async (assert) => {
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<Notebook>
-                <t t-set-slot="page_about" title="'About'" isVisible="true">
-                    <h3>About the bird</h3>
-                    <p>Owls are birds from the order Strigiformes which includes over
-                    200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
-                </t>
-                <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
-                    <h3>Their favorite activity: hunting</h3>
-                    <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
-                </t>
-                <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
-                    <p>TODO find a great secret about OWLs.</p>
-                </t>
-            </Notebook>`;
-        Parent.components = { Notebook };
+        class Parent extends Component {
+            static template = xml`<Notebook>
+                    <t t-set-slot="page_about" title="'About'" isVisible="true">
+                        <h3>About the bird</h3>
+                        <p>Owls are birds from the order Strigiformes which includes over
+                        200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
+                    </t>
+                    <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
+                        <h3>Their favorite activity: hunting</h3>
+                        <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
+                    </t>
+                    <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
+                        <p>TODO find a great secret about OWLs.</p>
+                    </t>
+                </Notebook>`;
+            static components = { Notebook };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.o_notebook");
@@ -85,22 +86,23 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("notebook with defaultPage props", async (assert) => {
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<Notebook defaultPage="'page_hunting'">
-                <t t-set-slot="page_about" title="'About'" isVisible="true">
-                    <h3>About the bird</h3>
-                    <p>Owls are birds from the order Strigiformes which includes over
-                    200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
-                </t>
-                <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
-                    <h3>Their favorite activity: hunting</h3>
-                    <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
-                </t>
-                <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
-                    <p>TODO find a great secret about OWLs.</p>
-                </t>
-            </Notebook>`;
-        Parent.components = { Notebook };
+        class Parent extends Component {
+            static template = xml`<Notebook defaultPage="'page_hunting'">
+                    <t t-set-slot="page_about" title="'About'" isVisible="true">
+                        <h3>About the bird</h3>
+                        <p>Owls are birds from the order Strigiformes which includes over
+                        200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
+                    </t>
+                    <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
+                        <h3>Their favorite activity: hunting</h3>
+                        <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
+                    </t>
+                    <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
+                        <p>TODO find a great secret about OWLs.</p>
+                    </t>
+                </Notebook>`;
+            static components = { Notebook };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.o_notebook");
@@ -119,23 +121,24 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("notebook with defaultPage set on invisible page", async (assert) => {
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<Notebook defaultPage="'page_secret'">
-                <t t-set-slot="page_about" title="'About'" isVisible="true">
-                    <h3>About the bird</h3>
-                    <p>Owls are birds from the order Strigiformes which includes over
-                    200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
-                </t>
-                <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
-                    <h3>Their favorite activity: hunting</h3>
-                    <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
-                </t>
-                <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
-                    <h3>Oooops</h3>
-                    <p>TODO find a great secret to reveal about OWLs.</p>
-                </t>
-            </Notebook>`;
-        Parent.components = { Notebook };
+        class Parent extends Component {
+            static template = xml`<Notebook defaultPage="'page_secret'">
+                    <t t-set-slot="page_about" title="'About'" isVisible="true">
+                        <h3>About the bird</h3>
+                        <p>Owls are birds from the order Strigiformes which includes over
+                        200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
+                    </t>
+                    <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
+                        <h3>Their favorite activity: hunting</h3>
+                        <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
+                    </t>
+                    <t t-set-slot="page_secret" title="'Secret about OWLs'" isVisible="false">
+                        <h3>Oooops</h3>
+                        <p>TODO find a great secret to reveal about OWLs.</p>
+                    </t>
+                </Notebook>`;
+            static components = { Notebook };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.o_notebook");
@@ -161,19 +164,20 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("notebook set vertically", async (assert) => {
         const env = await makeTestEnv();
 
-        class Parent extends Component {}
-        Parent.template = xml`<Notebook orientation="'vertical'">
-                <t t-set-slot="page_about" title="'About'" isVisible="true">
-                    <h3>About the bird</h3>
-                    <p>Owls are birds from the order Strigiformes which includes over
-                    200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
-                </t>
-                <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
-                    <h3>Their favorite activity: hunting</h3>
-                    <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
-                </t>
-            </Notebook>`;
-        Parent.components = { Notebook };
+        class Parent extends Component {
+            static template = xml`<Notebook orientation="'vertical'">
+                    <t t-set-slot="page_about" title="'About'" isVisible="true">
+                        <h3>About the bird</h3>
+                        <p>Owls are birds from the order Strigiformes which includes over
+                        200 species of mostly solitary and nocturnal birds of prey typified by an upright stance, ...</p>
+                    </t>
+                    <t t-set-slot="page_hunting" title="'Owl Activities'" isVisible="true">
+                        <h3>Their favorite activity: hunting</h3>
+                        <p>Owls are called raptors, or birds of prey, which means they use sharp talons and curved bills to hunt, kill, and eat other animals.</p>
+                    </t>
+                </Notebook>`;
+            static components = { Notebook };
+        }
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.o_notebook");
@@ -192,17 +196,28 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("notebook pages rendered by a template component", async (assert) => {
         const env = await makeTestEnv();
 
-        class NotebookPageRenderer extends Component {}
-        NotebookPageRenderer.template = xml`
-                <h3 t-esc="props.heading"></h3>
-                <p t-esc="props.text" />
-            `;
-        NotebookPageRenderer.props = {
-            heading: String,
-            text: String,
-        };
+        class NotebookPageRenderer extends Component {
+            static template = xml`
+                    <h3 t-esc="props.heading"></h3>
+                    <p t-esc="props.text" />
+                `;
+            static props = {
+                heading: String,
+                text: String,
+            };
+        }
 
         class Parent extends Component {
+            static template = xml`<Notebook defaultPage="'page_three'" pages="pages">
+                    <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
+                        <h3>Page 1</h3>
+                        <p>First page set directly as a slot</p>
+                    </t>
+                    <t t-set-slot="page_four" title="'Page 4'" isVisible="true">
+                        <h3>Page 4</h3>
+                    </t>
+                </Notebook>`;
+            static components = { Notebook };
             setup() {
                 this.pages = [
                     {
@@ -227,16 +242,6 @@ QUnit.module("Components", (hooks) => {
                 ];
             }
         }
-        Parent.template = xml`<Notebook defaultPage="'page_three'" pages="pages">
-                <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
-                    <h3>Page 1</h3>
-                    <p>First page set directly as a slot</p>
-                </t>
-                <t t-set-slot="page_four" title="'Page 4'" isVisible="true">
-                    <h3>Page 4</h3>
-                </t>
-            </Notebook>`;
-        Parent.components = { Notebook };
 
         await mount(Parent, target, { env });
 
@@ -258,10 +263,13 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("each page is different", async (assert) => {
         const env = await makeTestEnv();
 
-        class Page extends Component {}
-        Page.template = xml`<h3>Coucou</h3>`;
+        class Page extends Component {
+            static template = xml`<h3>Coucou</h3>`;
+        }
 
         class Parent extends Component {
+            static template = xml`<Notebook pages="pages"/>`;
+            static components = { Notebook };
             setup() {
                 this.pages = [
                     {
@@ -277,8 +285,6 @@ QUnit.module("Components", (hooks) => {
                 ];
             }
         }
-        Parent.template = xml`<Notebook pages="pages"/>`;
-        Parent.components = { Notebook };
 
         await mount(Parent, target, { env });
 
@@ -296,23 +302,23 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("defaultPage recomputed when isVisible is dynamic", async (assert) => {
         let defaultPageVisible = false;
         class Parent extends Component {
+            static components = { Notebook };
+            static template = xml`
+                <Notebook defaultPage="'3'">
+                    <t t-set-slot="1" title="'page1'" isVisible="true">
+                        <div class="page1" />
+                    </t>
+                    <t t-set-slot="2" title="'page2'" isVisible="true">
+                        <div class="page2" />
+                    </t>
+                    <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                        <div class="page3" />
+                    </t>
+                </Notebook>`;
             get defaultPageVisible() {
                 return defaultPageVisible;
             }
         }
-        Parent.components = { Notebook };
-        Parent.template = xml`
-        <Notebook defaultPage="'3'">
-            <t t-set-slot="1" title="'page1'" isVisible="true">
-                <div class="page1" />
-            </t>
-             <t t-set-slot="2" title="'page2'" isVisible="true">
-                <div class="page2" />
-            </t>
-             <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
-                <div class="page3" />
-            </t>
-        </Notebook>`;
 
         const env = await makeTestEnv();
         const parent = await mount(Parent, target, { env });
@@ -336,20 +342,21 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("disabled pages are greyed out and can't be toggled", async (assert) => {
-        class Parent extends Component {}
-        Parent.components = { Notebook };
-        Parent.template = xml`
-        <Notebook defaultPage="'1'">
-            <t t-set-slot="1" title="'page1'" isVisible="true">
-                <div class="page1" />
-            </t>
-             <t t-set-slot="2" title="'page2'" isVisible="true" isDisabled="true">
-                <div class="page2" />
-            </t>
-             <t t-set-slot="3" title="'page3'" isVisible="true">
-                <div class="page3" />
-            </t>
-        </Notebook>`;
+        class Parent extends Component {
+            static components = { Notebook };
+            static template = xml`
+                <Notebook defaultPage="'1'">
+                    <t t-set-slot="1" title="'page1'" isVisible="true">
+                        <div class="page1" />
+                    </t>
+                    <t t-set-slot="2" title="'page2'" isVisible="true" isDisabled="true">
+                        <div class="page2" />
+                    </t>
+                    <t t-set-slot="3" title="'page3'" isVisible="true">
+                        <div class="page3" />
+                    </t>
+                </Notebook>`;
+        }
 
         const env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -369,6 +376,19 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("icons can be given for each page tab", async (assert) => {
         class Parent extends Component {
+            static components = { Notebook };
+            static template = xml`
+                <Notebook defaultPage="'1'" icons="icons">
+                    <t t-set-slot="1" title="'page1'" isVisible="true">
+                        <div class="page1" />
+                    </t>
+                    <t t-set-slot="2" title="'page2'" isVisible="true">
+                        <div class="page2" />
+                    </t>
+                    <t t-set-slot="3" title="'page3'" isVisible="true">
+                        <div class="page3" />
+                    </t>
+                </Notebook>`;
             get icons() {
                 return {
                     1: "fa-trash",
@@ -376,19 +396,6 @@ QUnit.module("Components", (hooks) => {
                 };
             }
         }
-        Parent.components = { Notebook };
-        Parent.template = xml`
-        <Notebook defaultPage="'1'" icons="icons">
-            <t t-set-slot="1" title="'page1'" isVisible="true">
-                <div class="page1" />
-            </t>
-             <t t-set-slot="2" title="'page2'" isVisible="true">
-                <div class="page2" />
-            </t>
-             <t t-set-slot="3" title="'page3'" isVisible="true">
-                <div class="page3" />
-            </t>
-        </Notebook>`;
 
         const env = await makeTestEnv();
         await mount(Parent, target, { env });

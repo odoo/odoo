@@ -14,6 +14,7 @@ import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
 import {KioskBarcodeScanner} from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 
 class kioskAttendanceApp extends Component{
+    static template = "hr_attendance.public_kiosk_app";
     static props = [];
     static components = {
         KioskBarcodeScanner,
@@ -117,8 +118,6 @@ class kioskAttendanceApp extends Component{
         this.lockScanner = false
     }
 }
-
-kioskAttendanceApp.template = "hr_attendance.public_kiosk_app";
 
 export async function createPublicKioskAttendance(document, kiosk_backend_info) {
     await whenReady();

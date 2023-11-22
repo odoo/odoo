@@ -8,6 +8,7 @@ import { DynamicModelFieldSelector } from "./dynamic_model_field_selector";
 import { _t } from "@web/core/l10n/translation";
 
 export class DynamicModelFieldSelectorChar extends CharField {
+    static template = "web.DynamicModelFieldSelectorChar";
     static components = {
         ...CharField.components,
         DynamicModelFieldSelector,
@@ -57,8 +58,6 @@ export class DynamicModelFieldSelectorChar extends CharField {
         return resModel;
     }
 }
-
-DynamicModelFieldSelectorChar.template = "web.DynamicModelFieldSelectorChar";
 
 export const dynamicModelFieldSelectorChar = {
     ...charField,

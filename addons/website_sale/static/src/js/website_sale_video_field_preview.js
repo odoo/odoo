@@ -3,8 +3,9 @@
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 
-export class FieldVideoPreview extends Component {}
-FieldVideoPreview.template = 'website_sale.FieldVideoPreview';
+export class FieldVideoPreview extends Component {
+    static template = "website_sale.FieldVideoPreview";
+}
 
 export const fieldVideoPreview = {
     component: FieldVideoPreview,

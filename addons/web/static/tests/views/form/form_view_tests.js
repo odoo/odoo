@@ -3903,11 +3903,11 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
 
         class MyField extends Component {
+            static template = xml`<div>ok</div>`;
             setup() {
                 assert.strictEqual(this.props.horizontal, true);
             }
         }
-        MyField.template = xml`<div>ok</div>`;
         fieldRegistry.add("my_field", {
             component: MyField,
             extractProps: function ({ options }) {
@@ -12844,11 +12844,11 @@ QUnit.module("Views", (hooks) => {
         assert.expectErrors();
 
         class MyComponent extends Component {
+            static template = xml`<div/>`;
             setup() {
                 throw new Error("test");
             }
         }
-        MyComponent.template = xml`<div/>`;
         registry.category("actions").add("someaction", MyComponent);
 
         serverData.views = {
@@ -13576,14 +13576,18 @@ QUnit.module("Views", (hooks) => {
             assert.expectErrors();
 
             class TestClientAction extends Component {
+                static template = xml`<div></div>`;
                 setup() {
                     throw new Error("Something went wrong");
                 }
             }
-            TestClientAction.template = xml`<div></div>`;
             registry.category("actions").add("TestClientAction", TestClientAction);
 
             class MyWidget extends Component {
+                static template = xml`
+                    <div class="test_widget">
+                        <button t-on-click="onClick">MyButton</button>
+                    </div>`;
                 setup() {
                     this.actionService = useService("action");
                 }
@@ -13595,10 +13599,6 @@ QUnit.module("Views", (hooks) => {
                     });
                 }
             }
-            MyWidget.template = xml`
-                <div class="test_widget">
-                    <button t-on-click="onClick">MyButton</button>
-                </div>`;
             const myWidget = {
                 component: MyWidget,
             };
@@ -13665,14 +13665,18 @@ QUnit.module("Views", (hooks) => {
             assert.expectErrors();
 
             class TestClientAction extends Component {
+                static template = xml`<div></div>`;
                 setup() {
                     throw new Error("Something went wrong");
                 }
             }
-            TestClientAction.template = xml`<div></div>`;
             registry.category("actions").add("TestClientAction", TestClientAction);
 
             class MyWidget extends Component {
+                static template = xml`
+                    <div class="test_widget">
+                        <button t-on-click="onClick">MyButton</button>
+                    </div>`;
                 setup() {
                     this.actionService = useService("action");
                 }
@@ -13684,10 +13688,6 @@ QUnit.module("Views", (hooks) => {
                     });
                 }
             }
-            MyWidget.template = xml`
-                <div class="test_widget">
-                    <button t-on-click="onClick">MyButton</button>
-                </div>`;
             const myWidget = {
                 component: MyWidget,
             };

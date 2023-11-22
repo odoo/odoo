@@ -19,12 +19,13 @@ const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
-class NavBarDropdownItem extends DropdownItem {}
-NavBarDropdownItem.template = "web.NavBar.DropdownItem";
-NavBarDropdownItem.props = {
-    ...DropdownItem.props,
-    style: { type: String, optional: true },
-};
+class NavBarDropdownItem extends DropdownItem {
+    static template = "web.NavBar.DropdownItem";
+    static props = {
+        ...DropdownItem.props,
+        style: { type: String, optional: true },
+    };
+}
 
 export class MenuDropdown extends Dropdown {
     setup() {
@@ -45,6 +46,10 @@ MenuDropdown.props.xmlid = {
 };
 
 export class NavBar extends Component {
+    static template = "web.NavBar";
+    static components = { Dropdown, DropdownItem: NavBarDropdownItem, MenuDropdown, ErrorHandler };
+    static props = {};
+
     setup() {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
@@ -214,6 +219,3 @@ export class NavBar extends Component {
         return "#" + parts.join("&");
     }
 }
-NavBar.template = "web.NavBar";
-NavBar.components = { Dropdown, DropdownItem: NavBarDropdownItem, MenuDropdown, ErrorHandler };
-NavBar.props = {};

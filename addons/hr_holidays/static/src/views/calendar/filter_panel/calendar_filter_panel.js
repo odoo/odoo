@@ -9,6 +9,15 @@ import { serializeDate } from "@web/core/l10n/dates";
 import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
+    static template = "hr_holidays.CalendarFilterPanel";
+    static components = {
+        ...TimeOffCalendarFilterPanel.components,
+        TimeOffCardMobile,
+    };
+    static subTemplates = {
+        filter: "hr_holidays.CalendarFilterPanel.filter",
+    };
+
     setup() {
         super.setup();
 
@@ -68,11 +77,3 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         this.leaveState.holidays = filterData;
     }
 }
-TimeOffCalendarFilterPanel.template = "hr_holidays.CalendarFilterPanel";
-TimeOffCalendarFilterPanel.components = {
-    ...TimeOffCalendarFilterPanel.components,
-    TimeOffCardMobile,
-};
-TimeOffCalendarFilterPanel.subTemplates = {
-    filter: "hr_holidays.CalendarFilterPanel.filter",
-};

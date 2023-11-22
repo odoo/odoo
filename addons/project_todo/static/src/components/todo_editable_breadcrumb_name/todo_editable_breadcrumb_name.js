@@ -7,6 +7,7 @@ import { CharField } from "@web/views/fields/char/char_field";
 import { useAutoresize } from "@web/core/utils/autoresize";
 
 export class TodoEditableBreadcrumbName extends CharField {
+    static template = "project_todo.TodoEditableBreadcrumbName";
     setup() {
         super.setup();
         this.placeholder = _t("Untitled to-do");;
@@ -53,5 +54,3 @@ export class TodoEditableBreadcrumbName extends CharField {
         this.stateTodo.isUntitled = this._isUntitled(value);
     }
 }
-
-TodoEditableBreadcrumbName.template = 'project_todo.TodoEditableBreadcrumbName';

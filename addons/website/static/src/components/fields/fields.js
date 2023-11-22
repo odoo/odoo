@@ -14,6 +14,13 @@ import { Component, useState } from "@odoo/owl";
  * is updated.
  */
 class PageUrlField extends Component {
+    static components = { Switch, PageDependencies };
+    static template = "website.PageUrlField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         this.orm = useService('orm');
         this.serverUrl = `${window.location.origin}/`;
@@ -49,13 +56,6 @@ class PageUrlField extends Component {
     }
 }
 
-PageUrlField.components = {Switch, PageDependencies};
-PageUrlField.template = 'website.PageUrlField';
-PageUrlField.props = {
-    ...standardFieldProps,
-    placeholder: {type: String, optional: true},
-};
-
 const pageUrlField = {
     component: PageUrlField,
     supportedTypes: ['char'],
@@ -71,6 +71,12 @@ registry.category("fields").add("page_url", pageUrlField);
  * Image src for each value can be added using the option 'images' on field XML.
  */
 export class ImageRadioField extends Component {
+    static template = "website.FieldImageRadio";
+    static props = {
+        ...standardFieldProps,
+        images: { type: Array, element: String },
+    };
+
     setup() {
         const selection = this.props.record.fields[this.props.name].selection;
         // Check if value / label exists for each selection item and add the
@@ -89,12 +95,6 @@ export class ImageRadioField extends Component {
         this.props.record.update({ [this.props.name]: value });
     }
 }
-
-ImageRadioField.template = 'website.FieldImageRadio';
-ImageRadioField.props = {
-    ...standardFieldProps,
-    images: {type: Array, element: String},
-};
 
 export const imageRadioField = {
     component: ImageRadioField,

@@ -6,6 +6,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 
 export class MovesListRenderer extends ListRenderer {
     static recordRowTemplate = "stock.MovesListRenderer.RecordRow";
+    static props = [...ListRenderer.props, "stockMoveOpen?"];
 
     processAllColumn(allColumns, list) {
         let cols = super.processAllColumn(...arguments);
@@ -20,9 +21,9 @@ export class MovesListRenderer extends ListRenderer {
     }
 }
 
-MovesListRenderer.props = [ ...ListRenderer.props, 'stockMoveOpen?']
 
 export class StockMoveX2ManyField extends X2ManyField {
+    static components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };
     setup() {
         super.setup();
         this.canOpenRecord = true;
@@ -45,7 +46,6 @@ export class StockMoveX2ManyField extends X2ManyField {
     }
 }
 
-StockMoveX2ManyField.components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };
 
 export const stockMoveX2ManyField = {
     ...x2ManyField,

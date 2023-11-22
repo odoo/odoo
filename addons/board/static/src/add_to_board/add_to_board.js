@@ -22,6 +22,9 @@ const cogMenuRegistry = registry.category("cogMenu");
  * @extends Component
  */
 export class AddToBoard extends Component {
+    static template = "board.AddToBoard";
+    static components = { Dropdown };
+
     setup() {
         this.notification = useService("notification");
         this.rpc = useService("rpc");
@@ -89,9 +92,6 @@ export class AddToBoard extends Component {
         }
     }
 }
-
-AddToBoard.template = "board.AddToBoard";
-AddToBoard.components = { Dropdown };
 
 export const addToBoardItem = {
     Component: AddToBoard,

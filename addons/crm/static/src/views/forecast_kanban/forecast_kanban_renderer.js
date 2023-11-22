@@ -5,6 +5,12 @@ import { useService } from "@web/core/utils/hooks";
 import { ForecastKanbanColumnQuickCreate } from "@crm/views/forecast_kanban/forecast_kanban_column_quick_create";
 
 export class ForecastKanbanRenderer extends CrmKanbanRenderer {
+    static template = "crm.ForecastKanbanRenderer";
+    static components = {
+        ...CrmKanbanRenderer.components,
+        ForecastKanbanColumnQuickCreate,
+    };
+
     setup() {
         super.setup(...arguments);
         this.fillTemporalService = useService("fillTemporalService");
@@ -45,9 +51,3 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
         await this.props.progressBarState?._updateProgressBar();
     }
 }
-
-ForecastKanbanRenderer.template = "crm.ForecastKanbanRenderer";
-ForecastKanbanRenderer.components = {
-    ...CrmKanbanRenderer.components,
-    ForecastKanbanColumnQuickCreate,
-};

@@ -31,6 +31,8 @@ QUnit.module("Web Components", (hooks) => {
 
     async function makeRecordSelector(props, { mockRPC } = {}) {
         class Parent extends Component {
+            static components = { RecordSelector };
+            static template = xml`<RecordSelector t-props="recordProps" />`;
             setup() {
                 this.state = useState({ resId: props.resId });
             }
@@ -47,9 +49,6 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.resId = resId;
             }
         }
-        Parent.components = { RecordSelector };
-        Parent.template = xml`
-        <RecordSelector t-props="recordProps" />`;
 
         const env = await makeTestEnv({ serverData, mockRPC });
         await mount(Parent, target, { env });

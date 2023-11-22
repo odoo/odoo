@@ -9,6 +9,13 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
 
 export class GaugeField extends Component {
+    static template = "web.GaugeField";
+    static props = {
+        ...standardFieldProps,
+        maxValueField: { type: String },
+        title: { type: String, optional: true },
+    };
+
     setup() {
         this.chart = null;
         this.canvasRef = useRef("canvas");
@@ -88,13 +95,6 @@ export class GaugeField extends Component {
         this.chart = new Chart(this.canvasRef.el, config);
     }
 }
-
-GaugeField.template = "web.GaugeField";
-GaugeField.props = {
-    ...standardFieldProps,
-    maxValueField: { type: String },
-    title: { type: String, optional: true },
-};
 
 export const gaugeField = {
     component: GaugeField,

@@ -29,6 +29,22 @@ export class MailingFilterDropdown extends Dropdown {
  *
  */
 export class FieldMany2OneMailingFilter extends Many2OneField {
+    static template = "mass_mailing.MailingFilter";
+    static components = {
+        ...Many2OneField.components,
+        MailingFilterDropdown,
+    };
+    static props = {
+        ...Many2OneField.props,
+        domain_field: { type: String, optional: true },
+        model_field: { type: String, optional: true },
+    };
+    static defaultProps = {
+        ...Many2OneField.defaultProps,
+        domain_field: "mailing_domain",
+        model_field: "mailing_model_id",
+    };
+
     setup() {
         super.setup();
         this.notification = useService("notification");
@@ -159,21 +175,6 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
         }
     }
 }
-FieldMany2OneMailingFilter.template = 'mass_mailing.MailingFilter';
-FieldMany2OneMailingFilter.components = {
-    ...Many2OneField.components,
-    MailingFilterDropdown,
-};
-FieldMany2OneMailingFilter.props = {
-    ...Many2OneField.props,
-    domain_field: { type: String, optional: true },
-    model_field: { type: String, optional: true },
-};
-FieldMany2OneMailingFilter.defaultProps = {
-    ...Many2OneField.defaultProps,
-    domain_field: "mailing_domain",
-    model_field: "mailing_model_id",
-};
 
 export const fieldMany2OneMailingFilter = {
     ...many2OneField,

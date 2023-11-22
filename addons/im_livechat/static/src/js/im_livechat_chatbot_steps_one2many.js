@@ -22,6 +22,10 @@ export class ChatbotStepsOne2manyRenderer extends ListRenderer {
 }
 
 export class ChatbotStepsOne2many extends X2ManyField {
+    static components = {
+        ...X2ManyField.components,
+        ListRenderer: ChatbotStepsOne2manyRenderer,
+    };
     /**
      * Overrides the "openRecord" method to overload the save.
      *
@@ -68,8 +72,3 @@ export const chatbotStepsOne2many = {
 };
 
 fieldRegistry.add("chatbot_steps_one2many", chatbotStepsOne2many);
-
-ChatbotStepsOne2many.components = {
-    ...X2ManyField.components,
-    ListRenderer: ChatbotStepsOne2manyRenderer,
-};

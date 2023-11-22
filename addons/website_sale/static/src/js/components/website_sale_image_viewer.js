@@ -7,6 +7,14 @@ import { onRendered, useRef, useEffect, useState } from "@odoo/owl";
 const ZOOM_STEP = 0.1;
 
 export class ProductImageViewer extends Dialog {
+    static template = "website_sale.ProductImageViewer";
+    static props = {
+        ...Dialog.props,
+        images: { type: NodeList, required: true },
+        selectedImageIdx: { type: Number, optional: true },
+        close: Function,
+    };
+
     setup() {
         super.setup();
         this.imageContainerRef = useRef("imageContainer");
@@ -135,11 +143,4 @@ export class ProductImageViewer extends Dialog {
         this.updateImage();
     }
 }
-ProductImageViewer.props = {
-    ...Dialog.props,
-    images: { type: NodeList, required: true },
-    selectedImageIdx: { type: Number, optional: true },
-    close: Function,
-};
 delete ProductImageViewer.props.slots;
-ProductImageViewer.template = "website_sale.ProductImageViewer";

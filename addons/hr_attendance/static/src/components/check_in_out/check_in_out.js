@@ -5,6 +5,13 @@ import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class CheckInOut extends Component {
+    static template = "hr_attendance.CheckInOut";
+    static props = {
+        checkedIn: Boolean,
+        employeeId: Number,
+        nextAction: String,
+    };
+
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
@@ -40,10 +47,3 @@ export class CheckInOut extends Component {
         }
     }
 }
-
-CheckInOut.template = "hr_attendance.CheckInOut";
-CheckInOut.props = {
-    checkedIn: Boolean,
-    employeeId: Number,
-    nextAction: String,
-};
