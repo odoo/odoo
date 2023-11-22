@@ -2042,6 +2042,7 @@ var FieldOne2Many = FieldX2Many.extend({
                     operation: 'CREATE',
                     position: this.editable || data.forceEditable,
                     context: data.context,
+                    isDirty: data.isDirty,
                 }, {
                     allowWarning: data.allowWarning
                 }).then(function () {
