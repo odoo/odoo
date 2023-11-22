@@ -12,6 +12,54 @@
             </field>
         </record>
 
+        <record id="view_stock_product_tree_account_group_inherit" model="ir.ui.view">
+            <field name="name">product.stock.tree.account.group.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_stock_product_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_available" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+                <field name="virtual_available" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_product_template_tree_account_group_inherit" model="ir.ui.view">
+            <field name="name">product.template.stock.tree.account.group.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_stock_product_template_tree"/>
+            <field name="arch" type="xml">
+                <field name="show_on_hand_qty_status_button" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+                <field name="qty_available" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+                <field name="virtual_available" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+                <field name="responsible_id" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_template_kanban_stock_view_account_group_inherit" model="ir.ui.view">
+            <field name="name">product.template.stock.kanban.account.group.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_kanban_stock_view"/>
+            <field name="arch" type="xml">
+                <field name="show_on_hand_qty_status_button" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </field>
+                <xpath expr="//t[@name='show_qty_available']" position="attributes">
+                    <attribute name="groups" separator="," add="account.group_account_invoice,account.group_account_readonly"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_category_property_form_stock" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit.stock</field>
             <field name="model">product.category</field>
