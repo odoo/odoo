@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
-import { BaseStore, makeStore } from "@mail/core/common/store_service";
+import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
