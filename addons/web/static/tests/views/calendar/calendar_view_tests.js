@@ -4565,11 +4565,11 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.test(`fields are added in the right order in popover`, async (assert) => {
         const def = makeDeferred();
         class DeferredWidget extends Component {
+            static template = xml``;
             setup() {
                 onWillStart(() => def);
             }
         }
-        DeferredWidget.template = xml``;
         fieldRegistry.add("deferred_widget", { component: DeferredWidget });
         registerCleanup(() => fieldRegistry.remove("deferred_widget"));
 
@@ -4871,9 +4871,9 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await clickEvent(target, 1);
         assert.deepEqual(
-            [...target.querySelectorAll(".o_popover [name='properties'] .o_card_property_field")].map(
-                (el) => el.textContent
-            ),
+            [
+                ...target.querySelectorAll(".o_popover [name='properties'] .o_card_property_field"),
+            ].map((el) => el.textContent),
             ["hello", "B"]
         );
     });

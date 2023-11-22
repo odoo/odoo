@@ -114,6 +114,40 @@ export async function loadSubViews(
 // -----------------------------------------------------------------------------
 
 export class FormController extends Component {
+    static template = `web.FormView`;
+    static components = {
+        FormStatusIndicator,
+        Layout,
+        ButtonBox,
+        ViewButton,
+        Field,
+        CogMenu,
+    };
+
+    static props = {
+        ...standardViewProps,
+        discardRecord: { type: Function, optional: true },
+        mode: {
+            optional: true,
+            validate: (m) => ["edit", "readonly"].includes(m),
+        },
+        saveRecord: { type: Function, optional: true },
+        removeRecord: { type: Function, optional: true },
+        Model: Function,
+        Renderer: Function,
+        Compiler: Function,
+        archInfo: Object,
+        buttonTemplate: String,
+        preventCreate: { type: Boolean, optional: true },
+        preventEdit: { type: Boolean, optional: true },
+        onDiscard: { type: Function, optional: true },
+        onSave: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        preventCreate: false,
+        preventEdit: false,
+    };
+
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.dialogService = useService("dialog");
@@ -571,36 +605,3 @@ export class FormController extends Component {
         return result;
     }
 }
-
-FormController.template = `web.FormView`;
-FormController.components = {
-    FormStatusIndicator,
-    Layout,
-    ButtonBox,
-    ViewButton,
-    Field,
-    CogMenu,
-};
-FormController.props = {
-    ...standardViewProps,
-    discardRecord: { type: Function, optional: true },
-    mode: {
-        optional: true,
-        validate: (m) => ["edit", "readonly"].includes(m),
-    },
-    saveRecord: { type: Function, optional: true },
-    removeRecord: { type: Function, optional: true },
-    Model: Function,
-    Renderer: Function,
-    Compiler: Function,
-    archInfo: Object,
-    buttonTemplate: String,
-    preventCreate: { type: Boolean, optional: true },
-    preventEdit: { type: Boolean, optional: true },
-    onDiscard: { type: Function, optional: true },
-    onSave: { type: Function, optional: true },
-};
-FormController.defaultProps = {
-    preventCreate: false,
-    preventEdit: false,
-};

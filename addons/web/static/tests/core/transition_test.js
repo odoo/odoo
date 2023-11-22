@@ -12,6 +12,7 @@ QUnit.test("useTransition hook", async (assert) => {
         disabled: false,
     });
     class Parent extends Component {
+        static template = xml`<div t-if="transition.shouldMount" t-att-class="transition.className"/>`;
         setup() {
             this.transition = useTransition({
                 name: "test",
@@ -19,7 +20,6 @@ QUnit.test("useTransition hook", async (assert) => {
             });
         }
     }
-    Parent.template = xml`<div t-if="transition.shouldMount" t-att-class="transition.className"/>`;
     const { execRegisteredTimeouts } = mockTimeout();
 
     const target = getFixture();
@@ -45,6 +45,12 @@ QUnit.test("Transition HOC", async (assert) => {
         disabled: false,
     });
     class Parent extends Component {
+        static template = xml`
+            <Transition name="'test'" visible="state.show" t-slot-scope="transition" onLeave="onLeave">
+                <div t-att-class="transition.className"/>
+            </Transition>
+        `;
+        static components = { Transition };
         setup() {
             this.state = useState({ show: true });
         }
@@ -52,12 +58,6 @@ QUnit.test("Transition HOC", async (assert) => {
             assert.step("leave");
         }
     }
-    Parent.template = xml`
-        <Transition name="'test'" visible="state.show" t-slot-scope="transition" onLeave="onLeave">
-            <div t-att-class="transition.className"/>
-        </Transition>
-    `;
-    Parent.components = { Transition };
     const { execRegisteredTimeouts } = mockTimeout();
 
     const target = getFixture();

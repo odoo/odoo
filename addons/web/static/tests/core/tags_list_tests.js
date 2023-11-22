@@ -23,6 +23,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Can be rendered with different tags", async (assert) => {
         class Parent extends Component {
+            static components = { TagsList };
+            static template = xml`<TagsList tags="tags" />`;
             setup() {
                 this.tags = [
                     {
@@ -51,9 +53,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { TagsList };
-        Parent.template = xml`
-        <TagsList tags="tags" />`;
 
         await mount(Parent, target, { env });
         assert.containsN(target, ".o_tag", 3);
@@ -67,6 +66,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags can be displayed with an image", async (assert) => {
         class Parent extends Component {
+            static components = { TagsList };
+            static template = xml`<TagsList tags="tags" />`;
             setup() {
                 this.tags = [
                     {
@@ -82,9 +83,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { TagsList };
-        Parent.template = xml`
-        <TagsList tags="tags" />`;
 
         await mount(Parent, target, { env });
         assert.containsN(target, ".o_tag", 2);
@@ -100,6 +98,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags can be displayed with an icon", async (assert) => {
         class Parent extends Component {
+            static components = { TagsList };
+            static template = xml`<TagsList tags="tags" />`;
             setup() {
                 this.tags = [
                     {
@@ -115,9 +115,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { TagsList };
-        Parent.template = xml`
-        <TagsList tags="tags" />`;
 
         await mount(Parent, target, { env });
         assert.containsN(target, ".o_tag", 2);
@@ -127,6 +124,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Limiting the visible tags displays a counter", async (assert) => {
         class Parent extends Component {
+            static components = { TagsList };
+            static template = xml`<TagsList tags="tags" itemsVisible="3" />`;
             setup() {
                 this.tags = [
                     {
@@ -157,9 +156,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { TagsList };
-        Parent.template = xml`
-        <TagsList tags="tags" itemsVisible="3" />`;
 
         await mount(Parent, target, { env });
         assert.containsN(target, ".o_tag", 2);
@@ -182,6 +178,8 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags with img have a backdrop only if they can be deleted", async (assert) => {
         class Parent extends Component {
+            static components = { TagsList };
+            static template = xml`<TagsList tags="tags" />`;
             setup() {
                 this.tags = [
                     {
@@ -199,8 +197,6 @@ QUnit.module("Web Components", (hooks) => {
                 ];
             }
         }
-        Parent.components = { TagsList };
-        Parent.template = xml`<TagsList tags="tags" />`;
 
         await mount(Parent, target, { env });
         assert.containsN(target, ".o_tag", 2);

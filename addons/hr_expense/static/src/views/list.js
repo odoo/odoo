@@ -80,13 +80,16 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     }
 }
 
-export class ExpenseListRenderer extends ExpenseDocumentDropZone(ExpenseMobileQRCode(ListRenderer)) {}
-ExpenseListRenderer.template = 'hr_expense.ListRenderer';
+export class ExpenseListRenderer extends ExpenseDocumentDropZone(
+    ExpenseMobileQRCode(ListRenderer)
+) {
+    static template = "hr_expense.ListRenderer";
+}
 
-export class ExpenseDashboardListRenderer extends ExpenseListRenderer {}
-
-ExpenseDashboardListRenderer.components = { ...ExpenseDashboardListRenderer.components, ExpenseDashboard};
-ExpenseDashboardListRenderer.template = 'hr_expense.DashboardListRenderer';
+export class ExpenseDashboardListRenderer extends ExpenseListRenderer {
+    static components = { ...ExpenseDashboardListRenderer.components, ExpenseDashboard };
+    static template = "hr_expense.DashboardListRenderer";
+}
 
 registry.category('views').add('hr_expense_tree', {
     ...listView,

@@ -5,14 +5,21 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
 
 export class LunchCurrency extends Component {
+    static template = "lunch.LunchCurrency";
+    static props = ["currency", "amount"];
+
     get amount() {
         return parseFloat(this.props.amount).toFixed(2);
     }
 }
-LunchCurrency.template = 'lunch.LunchCurrency';
-LunchCurrency.props = ["currency", "amount"];
 
 export class LunchOrderLine extends Component {
+    static template = "lunch.LunchOrderLine";
+    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine"];
+    static components = {
+        LunchCurrency,
+    };
+
     setup() {
         super.setup();
         this.orm = useService('orm');
@@ -45,50 +52,56 @@ export class LunchOrderLine extends Component {
         await this.props.onUpdateQuantity();
     }
 }
-LunchOrderLine.template = 'lunch.LunchOrderLine';
-LunchOrderLine.props = ["line", "currency", "onUpdateQuantity", "openOrderLine"];
-LunchOrderLine.components = {
-    LunchCurrency,
-};
 
 export class LunchAlert extends Component {
+    static props = ["message"];
+    static template = xml`<t t-out="message"/>`;
     get message() {
         return markup(this.props.message);
     }
 }
-LunchAlert.props = ["message"];
-LunchAlert.template = xml`<t t-out="message"/>`
 
-export class LunchAlerts extends Component {}
-LunchAlerts.components = {
-    LunchAlert,
+export class LunchAlerts extends Component {
+    static components = {
+        LunchAlert,
+    };
+    static props = ["alerts"];
+    static template = "lunch.LunchAlerts";
 }
-LunchAlerts.props = ["alerts"];
-LunchAlerts.template = 'lunch.LunchAlerts';
 
 export class LunchUser extends Component {
+    static components = {
+        Many2XAutocomplete,
+    };
+    static props = ["username", "isManager", "onUpdateUser"];
+    static template = "lunch.LunchUser";
     getDomain() {
         return [['share', '=', false]];
     }
 }
-LunchUser.components = {
-    Many2XAutocomplete,
-}
-LunchUser.props = ["username", "isManager", "onUpdateUser"];
-LunchUser.template = "lunch.LunchUser";
 
 export class LunchLocation extends Component {
+    static components = {
+        Many2XAutocomplete,
+    };
+    static props = ["location", "onUpdateLunchLocation"];
+    static template = "lunch.LunchLocation";
     getDomain() {
         return [];
     }
 }
-LunchLocation.components = {
-    Many2XAutocomplete,
-}
-LunchLocation.props = ["location", "onUpdateLunchLocation"];
-LunchLocation.template = "lunch.LunchLocation";
 
 export class LunchDashboard extends Component {
+    static components = {
+        LunchAlerts,
+        LunchCurrency,
+        LunchLocation,
+        LunchOrderLine,
+        LunchUser,
+        Many2XAutocomplete,
+    };
+    static props = ["openOrderLine"];
+    static template = "lunch.LunchDashboard";
     setup() {
         super.setup();
         this.rpc = useService("rpc");
@@ -166,13 +179,3 @@ export class LunchDashboard extends Component {
         this.env.searchModel.updateLocationId(value[0].id);
     }
 }
-LunchDashboard.components = {
-    LunchAlerts,
-    LunchCurrency,
-    LunchLocation,
-    LunchOrderLine,
-    LunchUser,
-    Many2XAutocomplete,
-};
-LunchDashboard.props = ["openOrderLine"];
-LunchDashboard.template = 'lunch.LunchDashboard';

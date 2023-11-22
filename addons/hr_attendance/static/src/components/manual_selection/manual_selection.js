@@ -5,6 +5,18 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class KioskManualSelection extends Component {
+    static template = "hr_attendance.public_kiosk_manual_selection";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        employees: { type: Array },
+        displayBackButton: { type: Boolean },
+        departments: { type: Array },
+        onSelectEmployee: { type: Function },
+    };
+
     setup() {
         this.state = useState({
             displayedEmployees : this.props.employees,
@@ -29,15 +41,3 @@ export class KioskManualSelection extends Component {
         }
     }
 }
-
-KioskManualSelection.template = "hr_attendance.public_kiosk_manual_selection";
-KioskManualSelection.components = {
-    Dropdown,
-    DropdownItem
-}
-KioskManualSelection.props = {
-    employees : {type : Array},
-    displayBackButton : {type : Boolean},
-    departments: {type : Array},
-    onSelectEmployee : {type : Function}
-};

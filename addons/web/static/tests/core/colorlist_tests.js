@@ -20,11 +20,12 @@ async function mountComponent(Picker, props) {
     serviceRegistry.add("ui", uiService);
     target = getFixture();
 
-    class Parent extends Component {}
-    Parent.template = xml/* xml */ `
-        <t t-component="props.Picker" t-props="props.props"/>
-        <div class="outsideDiv">Outside div</div>
-    `;
+    class Parent extends Component {
+        static template = xml`
+            <t t-component="props.Picker" t-props="props.props"/>
+            <div class="outsideDiv">Outside div</div>
+        `;
+    }
 
     const env = await makeTestEnv();
     if (!props.onColorSelected) {

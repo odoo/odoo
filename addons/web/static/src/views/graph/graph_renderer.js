@@ -45,6 +45,10 @@ function shortenLabel(label) {
 }
 
 export class GraphRenderer extends Component {
+    static template = "web.GraphRenderer";
+    static components = { Dropdown, DropdownItem };
+    static props = ["class?", "model", "buttonTemplate"];
+
     setup() {
         this.model = this.props.model;
 
@@ -760,7 +764,3 @@ export class GraphRenderer extends Component {
         this.model.updateMetaData({ cumulated: !cumulated });
     }
 }
-
-GraphRenderer.template = "web.GraphRenderer";
-GraphRenderer.components = { Dropdown, DropdownItem };
-GraphRenderer.props = ["class?", "model", "buttonTemplate"];

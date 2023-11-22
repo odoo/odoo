@@ -6,6 +6,28 @@ import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_ove
 import { Component, onWillUnmount, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class BomOverviewExtraBlock extends Component {
+    static template = "mrp.BomOverviewExtraBlock";
+    static components = {
+        BomOverviewLine,
+        BomOverviewSpecialLine,
+    };
+    static props = {
+        unfoldAll: { type: Boolean, optional: true },
+        type: {
+            type: String,
+            validate: (t) => ["operations", "byproducts"].includes(t),
+        },
+        showOptions: Object,
+        data: Object,
+        precision: Number,
+        changeFolded: Function,
+    };
+    static defaultProps = {
+        showAvailabilities: false,
+        showCosts: false,
+        extraColumnCount: 0,
+    };
+
     setup() {
         this.state = useState({
             isFolded: !this.props.unfoldAll,
@@ -47,25 +69,3 @@ export class BomOverviewExtraBlock extends Component {
         return `${this.props.type}_${this.props.data.index}`;
     }
 }
-
-BomOverviewExtraBlock.template = "mrp.BomOverviewExtraBlock";
-BomOverviewExtraBlock.components = {
-    BomOverviewLine,
-    BomOverviewSpecialLine,
-};
-BomOverviewExtraBlock.props = {
-    unfoldAll: { type: Boolean, optional: true },
-    type: {
-        type: String,
-        validate: t => ["operations", "byproducts"].includes(t),
-    },
-    showOptions: Object,
-    data: Object,
-    precision: Number,
-    changeFolded: Function,
-};
-BomOverviewExtraBlock.defaultProps = {
-    showAvailabilities: false,
-    showCosts: false,
-    extraColumnCount: 0,
-};

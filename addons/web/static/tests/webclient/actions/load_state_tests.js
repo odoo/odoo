@@ -188,8 +188,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("properly load client actions", async function (assert) {
         assert.expect(3);
-        class ClientAction extends Component {}
-        ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
+        class ClientAction extends Component {
+            static template = xml`<div class="o_client_action_test">Hello World</div>`;
+        }
         actionRegistry.add("HelloWorldTest", ClientAction);
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
@@ -775,6 +776,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
         const hashchangeDef = makeDeferred();
         class MyAction extends Component {
+            static template = xml`<div class="not-here" />`;
             setup() {
                 onMounted(() => {
                     assert.step("myAction mounted");
@@ -785,7 +787,6 @@ QUnit.module("ActionManager", (hooks) => {
                 });
             }
         }
-        MyAction.template = xml`<div class="not-here" />`;
         registry.category("actions").add("myAction", MyAction);
 
         browser.location.hash = "#action=myAction";
@@ -817,6 +818,7 @@ QUnit.module("ActionManager", (hooks) => {
         const baseURL = new URL(browser.location.href).toString();
 
         class MyAction extends Component {
+            static template = xml`<div class="not-here" />`;
             setup() {
                 onMounted(() => {
                     assert.step("myAction mounted");
@@ -826,7 +828,6 @@ QUnit.module("ActionManager", (hooks) => {
                 });
             }
         }
-        MyAction.template = xml`<div class="not-here" />`;
         registry.category("actions").add("myAction", MyAction);
 
         browser.location.hash = "#action=myAction";

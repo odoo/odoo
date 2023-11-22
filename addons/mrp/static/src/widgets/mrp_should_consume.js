@@ -14,6 +14,7 @@ import { useRef, onPatched, onMounted, useState } from "@odoo/owl";
  */
 
 export class MrpShouldConsumeOwl extends FloatField {
+    static template = "mrp.ShouldConsume";
     setup() {
         super.setup();
         this.fields = this.props.record.fields;
@@ -42,8 +43,6 @@ export class MrpShouldConsumeOwl extends FloatField {
         });
     }
 }
-
-MrpShouldConsumeOwl.template = "mrp.ShouldConsume";
 
 export const mrpShouldConsumeOwl = {
     ...floatField,

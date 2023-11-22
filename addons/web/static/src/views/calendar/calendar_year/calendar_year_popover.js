@@ -3,11 +3,29 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { getColor } from "../colors";
-import { getFormattedDateSpan } from '@web/views/calendar/utils';
+import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
 import { Component } from "@odoo/owl";
 
 export class CalendarYearPopover extends Component {
+    static components = { Dialog };
+    static template = "web.CalendarYearPopover";
+    static subTemplates = {
+        popover: "web.CalendarYearPopover.popover",
+        body: "web.CalendarYearPopover.body",
+        footer: "web.CalendarYearPopover.footer",
+        record: "web.CalendarYearPopover.record",
+    };
+    static props = {
+        close: Function,
+        date: true,
+        model: Object,
+        records: Array,
+        createRecord: Function,
+        deleteRecord: Function,
+        editRecord: Function,
+    };
+
     get recordGroups() {
         return this.computeRecordGroups();
     }
@@ -85,20 +103,3 @@ export class CalendarYearPopover extends Component {
         this.props.close();
     }
 }
-CalendarYearPopover.components = { Dialog };
-CalendarYearPopover.template = "web.CalendarYearPopover";
-CalendarYearPopover.subTemplates = {
-    popover: "web.CalendarYearPopover.popover",
-    body: "web.CalendarYearPopover.body",
-    footer: "web.CalendarYearPopover.footer",
-    record: "web.CalendarYearPopover.record",
-};
-CalendarYearPopover.props = {
-    close: Function,
-    date: true,
-    model: Object,
-    records: Array,
-    createRecord: Function,
-    deleteRecord: Function,
-    editRecord: Function,
-};

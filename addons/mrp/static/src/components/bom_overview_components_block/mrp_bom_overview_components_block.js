@@ -6,6 +6,24 @@ import { BomOverviewExtraBlock } from "../bom_overview_extra_block/mrp_bom_overv
 import { Component, onWillUnmount, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class BomOverviewComponentsBlock extends Component {
+    static template = "mrp.BomOverviewComponentsBlock";
+    static components = {
+        BomOverviewLine,
+        BomOverviewComponentsBlock,
+        BomOverviewExtraBlock,
+    };
+    static props = {
+        unfoldAll: { type: Boolean, optional: true },
+        showOptions: Object,
+        currentWarehouseId: { type: Number, optional: true },
+        data: Object,
+        precision: Number,
+        changeFolded: Function,
+    };
+    static defaultProps = {
+        unfoldAll: false,
+    };
+
     setup() {
         const childFoldstate = this.childIds.reduce((prev, curr) => ({ ...prev, [curr]: !this.props.unfoldAll}), {});
         this.state = useState({
@@ -63,7 +81,7 @@ export class BomOverviewComponentsBlock extends Component {
 
     get childIds() {
         return this.hasComponents ? this.data.components.map(c => this.getIdentifier(c)) : [];
-    } 
+    }
 
     get identifier() {
         return this.getIdentifier(this.data);
@@ -83,21 +101,3 @@ export class BomOverviewComponentsBlock extends Component {
         return `${type ? type : data.type}_${data.index}`;
     }
 }
-
-BomOverviewComponentsBlock.template = "mrp.BomOverviewComponentsBlock";
-BomOverviewComponentsBlock.components = {
-    BomOverviewLine,
-    BomOverviewComponentsBlock,
-    BomOverviewExtraBlock,
-};
-BomOverviewComponentsBlock.props = {
-    unfoldAll: { type: Boolean, optional: true },
-    showOptions: Object,
-    currentWarehouseId: { type: Number, optional: true },
-    data: Object,
-    precision: Number,
-    changeFolded: Function,
-};
-BomOverviewComponentsBlock.defaultProps = {
-    unfoldAll: false,
-};

@@ -8,6 +8,36 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Component } from "@odoo/owl";
 
 export class BomOverviewControlPanel extends Component {
+    static template = "mrp.BomOverviewControlPanel";
+    static components = {
+        Dropdown,
+        DropdownItem,
+        ControlPanel,
+        BomOverviewDisplayFilter,
+        Many2XAutocomplete,
+    };
+    static props = {
+        bomQuantity: Number,
+        showOptions: Object,
+        showVariants: { type: Boolean, optional: true },
+        variants: { type: Object, optional: true },
+        data: { type: Object, optional: true },
+        showUom: { type: Boolean, optional: true },
+        uomName: { type: String, optional: true },
+        currentWarehouse: Object,
+        warehouses: { type: Array, optional: true },
+        print: Function,
+        changeWarehouse: Function,
+        changeVariant: Function,
+        changeBomQuantity: Function,
+        changeDisplay: Function,
+        precision: Number,
+    };
+    static defaultProps = {
+        variants: {},
+        warehouses: [],
+    };
+
     setup() {
         this.controlPanelDisplay = {};
     }
@@ -39,33 +69,3 @@ export class BomOverviewControlPanel extends Component {
         return this.props.precision;
     }
 }
-
-BomOverviewControlPanel.template = "mrp.BomOverviewControlPanel";
-BomOverviewControlPanel.components = {
-    Dropdown,
-    DropdownItem,
-    ControlPanel,
-    BomOverviewDisplayFilter,
-    Many2XAutocomplete,
-};
-BomOverviewControlPanel.props = {
-    bomQuantity: Number,
-    showOptions: Object,
-    showVariants: { type: Boolean, optional: true },
-    variants: { type: Object, optional: true },
-    data: { type: Object, optional: true },
-    showUom: { type: Boolean, optional: true },
-    uomName: { type: String, optional: true },
-    currentWarehouse: Object,
-    warehouses: { type: Array, optional: true },
-    print: Function,
-    changeWarehouse: Function,
-    changeVariant: Function,
-    changeBomQuantity: Function,
-    changeDisplay: Function,
-    precision: Number,
-};
-BomOverviewControlPanel.defaultProps = {
-    variants: {},
-    warehouses: [],
-};

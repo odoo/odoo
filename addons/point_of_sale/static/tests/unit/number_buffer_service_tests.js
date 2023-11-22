@@ -22,6 +22,14 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
     const env = await makeTestEnv();
 
     class Root extends Component {
+        static template = xml/* html */ `
+            <div>
+                <p><t t-esc="state.buffer" /></p>
+                <button class="one" t-on-click="onClickOne">1</button>
+                <button class="two" t-on-click="onClickTwo">2</button>
+                <button class="reset" t-on-click="resetBuffer">reset</button>
+            </div>
+        `;
         setup() {
             this.state = useState({ buffer: "" });
             this.numberBuffer = useService("number_buffer");
@@ -40,14 +48,6 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
             this.numberBuffer.sendKey("2");
         }
     }
-    Root.template = xml/* html */ `
-            <div>
-                <p><t t-esc="state.buffer" /></p>
-                <button class="one" t-on-click="onClickOne">1</button>
-                <button class="two" t-on-click="onClickTwo">2</button>
-                <button class="reset" t-on-click="resetBuffer">reset</button>
-            </div>
-        `;
 
     await mount(Root, target, { env });
 

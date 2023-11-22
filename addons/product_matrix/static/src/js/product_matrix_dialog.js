@@ -7,6 +7,17 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Component, onMounted, markup, useRef } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
+    static template = "product_matrix.dialog";
+    static props = {
+        header: { type: Object },
+        rows: { type: Object },
+        editedCellAttributes: { type: String },
+        product_template_id: { type: Number },
+        record: { type: Object },
+        close: { type: Function },
+    };
+    static components = { Dialog };
+
     setup() {
         this.size = 'xl';
         this.title = _t("Choose Product Variants");
@@ -75,14 +86,3 @@ export class ProductMatrixDialog extends Component {
         this.props.close();
     }
 }
-
-ProductMatrixDialog.template = 'product_matrix.dialog';
-ProductMatrixDialog.props = {
-    header: { type: Object },
-    rows: { type: Object },
-    editedCellAttributes: { type: String },
-    product_template_id: { type: Number },
-    record: { type: Object },
-    close: { type: Function },
-};
-ProductMatrixDialog.components = { Dialog };

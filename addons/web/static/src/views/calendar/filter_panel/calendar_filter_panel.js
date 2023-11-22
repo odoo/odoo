@@ -11,6 +11,15 @@ import { Component, useState } from "@odoo/owl";
 let nextId = 1;
 
 export class CalendarFilterPanel extends Component {
+    static components = {
+        AutoComplete,
+        Transition,
+    };
+    static template = "web.CalendarFilterPanel";
+    static subTemplates = {
+        filter: "web.CalendarFilterPanel.filter",
+    };
+
     setup() {
         this.state = useState({
             collapsed: {},
@@ -177,12 +186,3 @@ export class CalendarFilterPanel extends Component {
         this.props.model.createFilter(fieldName, filterValue);
     }
 }
-
-CalendarFilterPanel.components = {
-    AutoComplete,
-    Transition,
-};
-CalendarFilterPanel.template = "web.CalendarFilterPanel";
-CalendarFilterPanel.subTemplates = {
-    filter: "web.CalendarFilterPanel.filter",
-};

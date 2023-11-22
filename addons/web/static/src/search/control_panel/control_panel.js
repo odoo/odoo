@@ -15,6 +15,18 @@ import { Component, useState, onMounted, useExternalListener, useRef, useEffect 
 const STICKY_CLASS = "o_mobile_sticky";
 
 export class ControlPanel extends Component {
+    static template = "web.ControlPanel";
+    static components = {
+        Pager,
+        SearchBar,
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        display: { type: Object, optional: true },
+        slots: { type: Object, optional: true },
+    };
+
     setup() {
         this.actionService = useService("action");
         this.pagerProps = this.env.config.pagerProps
@@ -199,15 +211,3 @@ export class ControlPanel extends Component {
         }
     }
 }
-
-ControlPanel.components = {
-    Pager,
-    SearchBar,
-    Dropdown,
-    DropdownItem,
-};
-ControlPanel.template = "web.ControlPanel";
-ControlPanel.props = {
-    display: { type: Object, optional: true },
-    slots: { type: Object, optional: true },
-};

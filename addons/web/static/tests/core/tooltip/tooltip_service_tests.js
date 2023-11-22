@@ -95,8 +95,9 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("basic rendering", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        }
         let simulateTimeout;
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
@@ -119,8 +120,9 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("basic rendering 2", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<span data-tooltip="hello" class="our_span"><span class="our_span">Action</span></span>`;
+        class MyComponent extends Component {
+            static template = xml`<span data-tooltip="hello" class="our_span"><span class="our_span">Action</span></span>`;
+        }
         let simulateTimeout;
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
@@ -151,15 +153,15 @@ QUnit.module("Tooltip service", (hooks) => {
     QUnit.test("remove element with opened tooltip", async (assert) => {
         let compState;
         class MyComponent extends Component {
+            static template = xml`
+                <div>
+                    <button t-if="state.visible" data-tooltip="hello">Action</button>
+                </div>`;
             setup() {
                 this.state = useState({ visible: true });
                 compState = this.state;
             }
         }
-        MyComponent.template = xml`
-            <div>
-                <button t-if="state.visible" data-tooltip="hello">Action</button>
-            </div>`;
         let simulateInterval;
         const mockSetInterval = (fn) => {
             simulateInterval = fn;
@@ -181,12 +183,13 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("rendering with several tooltips", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`
-            <div>
-                <button class="button_1" data-tooltip="tooltip 1">Action 1</button>
-                <button class="button_2" data-tooltip="tooltip 2">Action 2</button>
-            </div>`;
+        class MyComponent extends Component {
+            static template = xml`
+                <div>
+                    <button class="button_1" data-tooltip="tooltip 1">Action 1</button>
+                    <button class="button_2" data-tooltip="tooltip 2">Action 2</button>
+                </div>`;
+        }
         await makeParent(MyComponent);
 
         assert.containsNone(target, ".o_popover");
@@ -202,15 +205,16 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("positioning", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`
-            <div style="height: 400px; padding: 40px">
-                <button class="default" data-tooltip="default">Default</button>
-                <button class="top" data-tooltip="top" data-tooltip-position="top">Top</button>
-                <button class="right" data-tooltip="right" data-tooltip-position="right">Right</button>
-                <button class="bottom" data-tooltip="bottom" data-tooltip-position="bottom">Bottom</button>
-                <button class="left" data-tooltip="left" data-tooltip-position="left">Left</button>
-            </div>`;
+        class MyComponent extends Component {
+            static template = xml`
+                <div style="height: 400px; padding: 40px">
+                    <button class="default" data-tooltip="default">Default</button>
+                    <button class="top" data-tooltip="top" data-tooltip-position="top">Top</button>
+                    <button class="right" data-tooltip="right" data-tooltip-position="right">Right</button>
+                    <button class="bottom" data-tooltip="bottom" data-tooltip-position="bottom">Bottom</button>
+                    <button class="left" data-tooltip="left" data-tooltip-position="left">Left</button>
+                </div>`;
+        }
         await makeParent(MyComponent, {
             onPopoverAdded(...args) {
                 const { position } = args[3];
@@ -259,10 +263,11 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("tooltip with a template, no info", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`
-            <button data-tooltip-template="my_tooltip_template">Action</button>
-        `;
+        class MyComponent extends Component {
+            static template = xml`
+                <button data-tooltip-template="my_tooltip_template">Action</button>
+            `;
+        }
 
         const templates = {
             my_tooltip_template: "<i t-esc='env.tooltip_text'/>",
@@ -278,17 +283,17 @@ QUnit.module("Tooltip service", (hooks) => {
 
     QUnit.test("tooltip with a template and info", async (assert) => {
         class MyComponent extends Component {
+            static template = xml`
+                <button
+                    data-tooltip-template="my_tooltip_template"
+                    t-att-data-tooltip-info="info">
+                    Action
+                </button>
+            `;
             get info() {
                 return JSON.stringify({ x: 3, y: "abc" });
             }
         }
-        MyComponent.template = xml`
-            <button
-                data-tooltip-template="my_tooltip_template"
-                t-att-data-tooltip-info="info">
-                Action
-            </button>
-        `;
 
         const templates = {
             my_tooltip_template: `
@@ -312,11 +317,11 @@ QUnit.module("Tooltip service", (hooks) => {
 
     QUnit.test("empty tooltip, no template", async (assert) => {
         class MyComponent extends Component {
+            static template = xml`<button t-att-data-tooltip="tooltip">Action</button>`;
             get tooltip() {
                 return "";
             }
         }
-        MyComponent.template = xml`<button t-att-data-tooltip="tooltip">Action</button>`;
         let simulateTimeout = () => {};
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
@@ -333,8 +338,9 @@ QUnit.module("Tooltip service", (hooks) => {
 
     QUnit.test("tooltip with no delay (default delay)", async (assert) => {
         assert.expect(1);
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'">Action</button>`;
+        }
         const mockSetTimeout = (fn, delay) => {
             assert.strictEqual(delay, 400);
         };
@@ -345,8 +351,9 @@ QUnit.module("Tooltip service", (hooks) => {
 
     QUnit.test("tooltip with a delay", async (assert) => {
         assert.expect(1);
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
+        }
         const mockSetTimeout = (fn, delay) => {
             assert.strictEqual(delay, 2000);
         };
@@ -356,8 +363,9 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("touch rendering - hold-to-show", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button data-tooltip="hello">Action</button>`;
+        }
         let simulateTimeout;
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
@@ -387,8 +395,9 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("touch rendering - tap-to-show", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;
+        }
         let simulateTimeout;
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
@@ -421,8 +430,9 @@ QUnit.module("Tooltip service", (hooks) => {
     });
 
     QUnit.test("tooltip does not crash with disappearing target", async (assert) => {
-        class MyComponent extends Component {}
-        MyComponent.template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        class MyComponent extends Component {
+            static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        }
         let simulateTimeout;
         const mockSetTimeout = async (fn) => {
             simulateTimeout = fn;

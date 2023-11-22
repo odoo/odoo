@@ -15,6 +15,10 @@ import { useService } from "@web/core/utils/hooks";
 const formatters = registry.category("formatters");
 
 export class PivotRenderer extends Component {
+    static template = "web.PivotRenderer";
+    static components = { Dropdown, DropdownItem, CheckBox, PivotGroupByMenu };
+    static props = ["model"];
+
     setup() {
         this.actionService = useService("action");
         this.model = this.props.model;
@@ -239,6 +243,3 @@ export class PivotRenderer extends Component {
         this.openView(this.model.getGroupDomain(group), this.views, context);
     }
 }
-PivotRenderer.template = "web.PivotRenderer";
-PivotRenderer.components = { Dropdown, DropdownItem, CheckBox, PivotGroupByMenu };
-PivotRenderer.props = ["model"];

@@ -7,6 +7,10 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Component, useState, onWillStart } from "@odoo/owl";
 
 export class TimeOffDashboard extends Component {
+    static components = { TimeOffCard, DateTimeInput };
+    static template = "hr_holidays.TimeOffDashboard";
+    static props = ["employeeId"];
+
     setup() {
         this.orm = useService("orm");
         this.newRequest = useNewAllocationRequest();
@@ -55,7 +59,3 @@ export class TimeOffDashboard extends Component {
         return this.state.holidays.some((leave_type) => leave_type[1]["has_accrual_allocation"]);
     }
 }
-
-TimeOffDashboard.components = { TimeOffCard, DateTimeInput };
-TimeOffDashboard.template = "hr_holidays.TimeOffDashboard";
-TimeOffDashboard.props = ["employeeId"];

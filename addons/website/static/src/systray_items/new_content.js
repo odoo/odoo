@@ -17,6 +17,19 @@ export const MODULE_STATUS = {
 };
 
 class NewContentElement extends Component {
+    static template = "website.NewContentElement";
+    static props = {
+        name: { type: String, optional: true },
+        title: String,
+        onClick: Function,
+        status: { type: String, optional: true },
+        moduleXmlId: { type: String, optional: true },
+        slots: Object,
+    };
+    static defaultProps = {
+        status: MODULE_STATUS.INSTALLED,
+    };
+
     setup() {
         this.MODULE_STATUS = MODULE_STATUS;
     }
@@ -27,20 +40,11 @@ class NewContentElement extends Component {
         this.props.onClick();
     }
 }
-NewContentElement.template = "website.NewContentElement";
-NewContentElement.props = {
-    name: { type: String, optional: true },
-    title: String,
-    onClick: Function,
-    status: { type: String, optional: true },
-    moduleXmlId: { type: String, optional: true },
-    slots: Object,
-};
-NewContentElement.defaultProps = {
-    status: MODULE_STATUS.INSTALLED,
-};
 
 class InstallModuleDialog extends Component {
+    static components = { WebsiteDialog };
+    static template = "website.InstallModuleDialog";
+
     setup() {
         this.installButton = _t("Install");
     }
@@ -50,10 +54,11 @@ class InstallModuleDialog extends Component {
         this.props.installModule();
     }
 }
-InstallModuleDialog.components = { WebsiteDialog };
-InstallModuleDialog.template = "website.InstallModuleDialog";
 
 export class NewContentModal extends Component {
+    static template = "website.NewContentModal";
+    static components = { NewContentElement };
+
     setup() {
         this.user = useService('user');
         this.orm = useService('orm');
@@ -267,10 +272,11 @@ export class NewContentModal extends Component {
         });
     }
 }
-NewContentModal.template = "website.NewContentModal";
-NewContentModal.components = { NewContentElement };
 
 class NewContentSystray extends Component {
+    static template = "website.NewContentSystray";
+    static components = { NewContentModal };
+
     setup() {
         this.rpc = useService('rpc');
         this.website = useService('website');
@@ -281,8 +287,6 @@ class NewContentSystray extends Component {
         this.websiteContext.showNewContentModal = !this.websiteContext.showNewContentModal;
     }
 }
-NewContentSystray.template = "website.NewContentSystray";
-NewContentSystray.components = { NewContentModal };
 
 export const systrayItem = {
     Component: NewContentSystray,

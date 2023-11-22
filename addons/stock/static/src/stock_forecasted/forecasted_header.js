@@ -4,6 +4,9 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { Component } from "@odoo/owl";
 
 export class ForecastedHeader extends Component {
+    static template = "stock.ForecastedHeader";
+    static props = { docs: Object, openView: Function };
+
     setup(){
         this.orm = useService("orm");
         this.action = useService("action");
@@ -28,5 +31,3 @@ export class ForecastedHeader extends Component {
         return context;
     }
 }
-ForecastedHeader.template = 'stock.ForecastedHeader';
-ForecastedHeader.props = {docs: Object, openView: Function};

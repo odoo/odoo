@@ -7,6 +7,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class JournalDashboardActivity extends Component {
+    static template = "account.JournalDashboardActivity";
     static props = { ...standardFieldProps };
 
     setup() {
@@ -46,7 +47,6 @@ export class JournalDashboardActivity extends Component {
         });
     }
 }
-JournalDashboardActivity.template = "account.JournalDashboardActivity";
 
 export const journalDashboardActivity = {
     component: JournalDashboardActivity,

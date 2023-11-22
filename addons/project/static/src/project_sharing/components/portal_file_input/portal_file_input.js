@@ -3,6 +3,15 @@
 import { FileInput } from '@web/core/file_input/file_input';
 
 export class PortalFileInput extends FileInput {
+    static props = {
+        ...FileInput.props,
+        accessToken: { type: String, optional: true },
+    };
+    static defaultProps = {
+        ...FileInput.defaultProps,
+        accessToken: "",
+    };
+
     /**
      * @override
      */
@@ -35,12 +44,3 @@ export class PortalFileInput extends FileInput {
         return filesData;
     }
 }
-
-PortalFileInput.props = {
-    ...FileInput.props,
-    accessToken: { type: String, optional: true },
-};
-PortalFileInput.defaultProps = {
-    ...FileInput.defaultProps,
-    accessToken: '',
-};

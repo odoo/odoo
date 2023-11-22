@@ -9,6 +9,14 @@ import { Component, useState, onWillUpdateProps, status } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class ProjectMilestone extends Component {
+    static props = {
+        context: Object,
+        milestone: Object,
+        open: Function,
+        load: Function,
+    };
+    static template = "project.ProjectMilestone";
+
     setup() {
         this.orm = useService('orm');
         this.dialog = useService("dialog");
@@ -91,11 +99,3 @@ export class ProjectMilestone extends Component {
         }
     }
 }
-
-ProjectMilestone.props = {
-    context: Object,
-    milestone: Object,
-    open: Function,
-    load: Function,
-};
-ProjectMilestone.template = 'project.ProjectMilestone';

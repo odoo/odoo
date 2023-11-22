@@ -8,6 +8,30 @@ import { ChatterPager } from "./chatter_pager";
 import { Component, markup, onWillStart, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ChatterContainer extends Component {
+    static template = "project.ChatterContainer";
+    static components = {
+        ChatterComposer,
+        ChatterMessageCounter,
+        ChatterMessages,
+        ChatterPager,
+    };
+    static props = {
+        token: { type: String, optional: true },
+        resModel: String,
+        resId: { type: Number, optional: true },
+        pid: { type: String, optional: true },
+        hash: { type: String, optional: true },
+        pagerStart: { type: Number, optional: true },
+        twoColumns: { type: Boolean, optional: true },
+        projectSharingId: Number,
+    };
+    static defaultProps = {
+        token: "",
+        pid: "",
+        hash: "",
+        pagerStart: 1,
+    };
+
     setup() {
         this.rpc = useService('rpc');
         this.state = useState({
@@ -132,28 +156,3 @@ export class ChatterContainer extends Component {
         );
     }
 }
-
-ChatterContainer.components = {
-    ChatterComposer,
-    ChatterMessageCounter,
-    ChatterMessages,
-    ChatterPager,
-};
-
-ChatterContainer.props = {
-    token: { type: String, optional: true },
-    resModel: String,
-    resId: { type: Number, optional: true },
-    pid: { type: String, optional: true },
-    hash: { type: String, optional: true },
-    pagerStart: { type: Number, optional: true },
-    twoColumns: { type: Boolean, optional: true },
-    projectSharingId: Number,
-};
-ChatterContainer.defaultProps = {
-    token: '',
-    pid: '',
-    hash: '',
-    pagerStart: 1,
-};
-ChatterContainer.template = 'project.ChatterContainer';

@@ -7,6 +7,14 @@ import { CalendarYearRenderer } from "./calendar_year/calendar_year_renderer";
 import { Component } from "@odoo/owl";
 
 export class CalendarRenderer extends Component {
+    static template = "web.CalendarRenderer";
+    static components = {
+        day: CalendarCommonRenderer,
+        week: CalendarCommonRenderer,
+        month: CalendarCommonRenderer,
+        year: CalendarYearRenderer,
+        ActionSwiper,
+    };
     get calendarComponent() {
         return this.constructor.components[this.props.model.scale];
     }
@@ -27,11 +35,3 @@ export class CalendarRenderer extends Component {
         };
     }
 }
-CalendarRenderer.components = {
-    day: CalendarCommonRenderer,
-    week: CalendarCommonRenderer,
-    month: CalendarCommonRenderer,
-    year: CalendarYearRenderer,
-    ActionSwiper,
-};
-CalendarRenderer.template = "web.CalendarRenderer";

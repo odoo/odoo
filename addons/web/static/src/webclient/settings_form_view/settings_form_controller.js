@@ -10,6 +10,12 @@ import { SettingsFormRenderer } from "./settings_form_renderer";
 import { useSubEnv, useState, useRef, useEffect } from "@odoo/owl";
 
 export class SettingsFormController extends formView.Controller {
+    static template = "web.SettingsFormView";
+    static components = {
+        ...formView.Controller.components,
+        Renderer: SettingsFormRenderer,
+    };
+
     setup() {
         super.setup();
         useAutofocus();
@@ -137,9 +143,3 @@ export class SettingsFormController extends formView.Controller {
         return _continue;
     }
 }
-
-SettingsFormController.components = {
-    ...formView.Controller.components,
-    Renderer: SettingsFormRenderer,
-};
-SettingsFormController.template = "web.SettingsFormView";

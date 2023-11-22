@@ -51,9 +51,10 @@ QUnit.module("Search", (hooks) => {
     QUnit.module("Search Panel (mobile)");
 
     QUnit.test("basic search panel rendering", async (assert) => {
-        class Parent extends Component {}
-        Parent.components = { SearchPanel };
-        Parent.template = xml`<SearchPanel/>`;
+        class Parent extends Component {
+            static components = { SearchPanel };
+            static template = xml`<SearchPanel/>`;
+        }
         await makeWithSearch({
             serverData,
             resModel: "foo",

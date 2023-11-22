@@ -14,6 +14,7 @@ import {
 } from "@odoo/owl";
 
 export class WebsiteEditorComponent extends Component {
+    static template = "website.WebsiteEditorComponent";
     /**
      * @override
      */
@@ -150,4 +151,3 @@ export class WebsiteEditorComponent extends Component {
         this.websiteContext.edition = false;
     }
 }
-WebsiteEditorComponent.template = 'website.WebsiteEditorComponent';

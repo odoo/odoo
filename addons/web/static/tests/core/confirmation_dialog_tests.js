@@ -206,8 +206,9 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("Focus is correctly restored after confirmation", async function (assert) {
         const env = await makeDialogTestEnv();
 
-        class MyComp extends Component {}
-        MyComp.template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
+        class MyComp extends Component {
+            static template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
+        }
 
         await mount(MyComp, target, { env });
         target.querySelector(".my-input").focus();

@@ -102,13 +102,14 @@ QUnit.module("Record Component", (hooks) => {
     });
 
     QUnit.test("display a simple field", async function (assert) {
-        class Parent extends Component {}
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <Record resModel="'partner'" resId="1" fieldNames="['foo']" t-slot-scope="data">
-                <span>hello</span>
-                <Field name="'foo'" record="data.record"/>
-            </Record>`;
+        class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'partner'" resId="1" fieldNames="['foo']" t-slot-scope="data">
+                    <span>hello</span>
+                    <Field name="'foo'" record="data.record"/>
+                </Record>`;
+        }
         const env = await makeTestEnv({
             serverData,
             mockRPC(route) {
@@ -128,18 +129,18 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("can be updated with different resId", async function (assert) {
         class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
+                    <Field name="'foo'" record="data.record"/>
+                    <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
+                </Record>`;
             setup() {
                 this.state = useState({
                     resId: 1,
                 });
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
-                <Field name="'foo'" record="data.record"/>
-                <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
-            </Record>`;
         const env = await makeTestEnv({
             serverData,
             mockRPC(route) {
@@ -159,6 +160,12 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("predefined fields and values", async function (assert) {
         class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                    <Field name="'foo'" record="data.record"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -176,12 +183,6 @@ QUnit.module("Record Component", (hooks) => {
                 };
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Field name="'foo'" record="data.record"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -197,6 +198,12 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("provides a way to handle changes in the record", async function (assert) {
         class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                    <Field name="'foo'" record="data.record"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -220,12 +227,6 @@ QUnit.module("Record Component", (hooks) => {
                 assert.deepEqual(changes, { foo: "753" });
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
-                <Field name="'foo'" record="data.record"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -243,6 +244,12 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("provides a way to handle before/after saved the record", async function (assert) {
         class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <Record resModel="'partner'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
+                    <button class="save" t-on-click="() => data.record.save()">Save</button>
+                    <Field name="'foo'" record="data.record"/>
+                </Record>`;
             onRecordSaved(record) {
                 assert.step("onRecordSaved");
             }
@@ -251,12 +258,6 @@ QUnit.module("Record Component", (hooks) => {
                 assert.step("onWillSaveRecord");
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <Record resModel="'partner'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
-                <button class="save" t-on-click="() => data.record.save()">Save</button>
-                <Field name="'foo'" record="data.record"/>
-            </Record>`;
 
         const env = await makeTestEnv({
             serverData,
@@ -292,6 +293,12 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { Record, Many2OneField };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                    <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -311,12 +318,6 @@ QUnit.module("Record Component", (hooks) => {
                 assert.deepEqual(record.data, { foo: [3, "abc"] });
             }
         }
-        Parent.components = { Record, Many2OneField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -350,6 +351,12 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { Record, Many2OneField };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                    <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -369,12 +376,6 @@ QUnit.module("Record Component", (hooks) => {
                 assert.deepEqual(record.data, { foo: [3, "abc"] });
             }
         }
-        Parent.components = { Record, Many2OneField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -403,6 +404,12 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { Record, Many2OneField };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                    <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -422,12 +429,6 @@ QUnit.module("Record Component", (hooks) => {
                 assert.deepEqual(record.data, { foo: [3, "abc"] });
             }
         }
-        Parent.components = { Record, Many2OneField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -452,6 +453,12 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static components = { Record, Many2ManyTagsField };
+            static template = xml`
+                <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
+                    <Many2ManyTagsField name="'tags'" record="data.record"/>
+                </Record>
+            `;
             setup() {
                 this.activeFields = {
                     tags: {
@@ -477,12 +484,6 @@ QUnit.module("Record Component", (hooks) => {
                 };
             }
         }
-        Parent.components = { Record, Many2ManyTagsField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
-                <Many2ManyTagsField name="'tags'" record="data.record"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({
@@ -500,6 +501,12 @@ QUnit.module("Record Component", (hooks) => {
         "supports passing dynamic values -- full control to the user of Record",
         async (assert) => {
             class Parent extends Component {
+                static components = { Record, Field };
+                static template = xml`
+                    <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                        <Field name="'foo'" record="data.record"/>
+                    </Record>
+                `;
                 setup() {
                     this.fields = {
                         foo: {
@@ -524,12 +531,6 @@ QUnit.module("Record Component", (hooks) => {
                     this.values.foo = "357";
                 }
             }
-            Parent.components = { Record, Field };
-            Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
-                <Field name="'foo'" record="data.record"/>
-            </Record>
-        `;
 
             await mount(Parent, target, {
                 env: await makeTestEnv({
@@ -549,6 +550,14 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("can switch records", async (assert) => {
         class Parent extends Component {
+            static components = { Record, Field };
+            static template = xml`
+                <a id="increment" t-on-click="() => state.num++" t-esc="state.num" />
+                <a id="next" t-on-click="next">NEXT</a>
+                <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
+                    <Field name="'foo'" record="data.record"/>
+                </Record>
+            `;
             setup() {
                 this.fields = {
                     foo: {
@@ -568,14 +577,6 @@ QUnit.module("Record Component", (hooks) => {
                 this.state.num++;
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <a id="increment" t-on-click="() => state.num++" t-esc="state.num" />
-            <a id="next" t-on-click="next">NEXT</a>
-            <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
-                <Field name="'foo'" record="data.record"/>
-            </Record>
-        `;
 
         await mount(Parent, target, {
             env: await makeTestEnv({

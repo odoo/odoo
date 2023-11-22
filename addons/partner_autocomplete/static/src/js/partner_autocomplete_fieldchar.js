@@ -10,6 +10,11 @@ import { useInputField } from "@web/views/fields/input_field_hook";
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
 
 export class PartnerAutoCompleteCharField extends CharField {
+    static template = "partner_autocomplete.PartnerAutoCompleteCharField";
+    static components = {
+        ...CharField.components,
+        AutoComplete,
+    };
     setup() {
         super.setup();
 
@@ -75,12 +80,6 @@ export class PartnerAutoCompleteCharField extends CharField {
         this.props.record.update(data.company);
     }
 }
-
-PartnerAutoCompleteCharField.template = "partner_autocomplete.PartnerAutoCompleteCharField";
-PartnerAutoCompleteCharField.components = {
-    ...CharField.components,
-    AutoComplete,
-};
 
 export const partnerAutoCompleteCharField = {
     ...charField,

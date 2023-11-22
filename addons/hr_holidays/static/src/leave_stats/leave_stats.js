@@ -10,6 +10,8 @@ import { Component, useState, onWillStart } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LeaveStatsComponent extends Component {
+    static template = "hr_holidays.LeaveStatsComponent";
+
     setup() {
         this.orm = useService("orm");
 
@@ -114,8 +116,6 @@ export class LeaveStatsComponent extends Component {
         );
     }
 }
-
-LeaveStatsComponent.template = "hr_holidays.LeaveStatsComponent";
 
 export const leaveStatsComponent = {
     component: LeaveStatsComponent,

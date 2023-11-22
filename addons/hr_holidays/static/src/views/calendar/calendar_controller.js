@@ -14,6 +14,13 @@ import { useLeaveCancelWizard } from "../hooks";
 import { EventBus, useSubEnv } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
+    static components = {
+        ...TimeOffCalendarController.components,
+        Dropdown,
+        DropdownItem,
+        FilterPanel: TimeOffCalendarFilterPanel,
+    };
+    static template = "hr_holidays.CalendarController";
     setup() {
         super.setup();
         useSubEnv({
@@ -105,11 +112,3 @@ export class TimeOffCalendarController extends CalendarController {
         });
     }
 }
-TimeOffCalendarController.components = {
-    ...TimeOffCalendarController.components,
-    Dropdown,
-    DropdownItem,
-    FilterPanel: TimeOffCalendarFilterPanel,
-};
-
-TimeOffCalendarController.template = "hr_holidays.CalendarController";

@@ -6,6 +6,8 @@ import { Component, useEffect, useState } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 class WebsiteDashboard extends Component {
+    static template = "website.WebsiteDashboardMain";
+    static components = { Layout };
     setup() {
         super.setup();
         this.rpc = useService("rpc");
@@ -42,7 +44,5 @@ class WebsiteDashboard extends Component {
         Object.assign(this.state, dashboardData);
     }
 }
-WebsiteDashboard.template = "website.WebsiteDashboardMain";
-WebsiteDashboard.components = { Layout };
 
 registry.category("actions").add("backend_dashboard", WebsiteDashboard);

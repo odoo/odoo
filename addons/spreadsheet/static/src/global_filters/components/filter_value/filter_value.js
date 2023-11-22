@@ -11,6 +11,13 @@ import { useService } from "@web/core/utils/hooks";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
 
 export class FilterValue extends Component {
+    static template = "spreadsheet_edition.FilterValue";
+    static components = { DateFilterValue, DateFromToValue, MultiRecordSelector, TextFilterValue };
+    static props = {
+        filter: Object,
+        model: Object,
+    };
+
     setup() {
         this.getters = this.props.model.getters;
         this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
@@ -62,9 +69,3 @@ export class FilterValue extends Component {
         this.props.model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id });
     }
 }
-FilterValue.template = "spreadsheet_edition.FilterValue";
-FilterValue.components = { DateFilterValue, DateFromToValue, MultiRecordSelector, TextFilterValue };
-FilterValue.props = {
-    filter: Object,
-    model: Object,
-};

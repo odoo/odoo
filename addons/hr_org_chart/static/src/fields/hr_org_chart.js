@@ -7,6 +7,7 @@ import { onEmployeeSubRedirect } from './hooks';
 import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
 
 class HrOrgChartPopover extends Component {
+    static template = "hr_org_chart.hr_orgchart_emp_popover";
     async setup() {
         super.setup();
 
@@ -28,9 +29,9 @@ class HrOrgChartPopover extends Component {
         this.actionService.doAction(action); 
     }
 }
-HrOrgChartPopover.template = 'hr_org_chart.hr_orgchart_emp_popover';
 
 export class HrOrgChart extends Component {
+    static template = "hr_org_chart.hr_org_chart";
     async setup() {
         super.setup();
 
@@ -114,8 +115,6 @@ export class HrOrgChart extends Component {
         this.state.employee_id = managerId;
     }
 }
-
-HrOrgChart.template = 'hr_org_chart.hr_org_chart';
 
 export const hrOrgChart = {
     component: HrOrgChart,

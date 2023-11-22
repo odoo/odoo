@@ -18,6 +18,8 @@ registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
 });
 
 export class PublicReadonlySpreadsheet extends Component {
+    static template = "spreadsheet.PublicReadonlySpreadsheet";
+    static components = { Spreadsheet };
     static props = {
         dataUrl: String,
         downloadExcelUrl: String,
@@ -71,6 +73,3 @@ export class PublicReadonlySpreadsheet extends Component {
         this.state.isFilterShown = !this.state.isFilterShown;
     }
 }
-
-PublicReadonlySpreadsheet.template = "spreadsheet.PublicReadonlySpreadsheet";
-PublicReadonlySpreadsheet.components = { Spreadsheet };

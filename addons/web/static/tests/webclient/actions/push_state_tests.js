@@ -72,6 +72,10 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("actions can push state", async (assert) => {
         assert.expect(5);
         class ClientActionPushes extends Component {
+            static template = xml`
+                <div class="test_client_action" t-on-click="_actionPushState">
+                    ClientAction_<t t-esc="props.params and props.params.description" />
+                </div>`;
             setup() {
                 this.router = useService("router");
             }
@@ -79,10 +83,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = xml`
-      <div class="test_client_action" t-on-click="_actionPushState">
-        ClientAction_<t t-esc="props.params and props.params.description" />
-      </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
@@ -102,6 +102,10 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("actions override previous state", async (assert) => {
         assert.expect(5);
         class ClientActionPushes extends Component {
+            static template = xml`
+                <div class="test_client_action" t-on-click="_actionPushState">
+                    ClientAction_<t t-esc="props.params and props.params.description" />
+                </div>`;
             setup() {
                 this.router = useService("router");
             }
@@ -109,10 +113,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = xml`
-      <div class="test_client_action" t-on-click="_actionPushState">
-        ClientAction_<t t-esc="props.params and props.params.description" />
-      </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
@@ -133,6 +133,10 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("actions override previous state from menu click", async (assert) => {
         assert.expect(3);
         class ClientActionPushes extends Component {
+            static template = xml`
+                <div class="test_client_action" t-on-click="_actionPushState">
+                    ClientAction_<t t-esc="props.params and props.params.description" />
+                </div>`;
             setup() {
                 this.router = useService("router");
             }
@@ -140,10 +144,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = xml`
-      <div class="test_client_action" t-on-click="_actionPushState">
-        ClientAction_<t t-esc="props.params and props.params.description" />
-      </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;

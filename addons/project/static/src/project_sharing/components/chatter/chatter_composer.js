@@ -7,6 +7,33 @@ import { ChatterAttachmentsViewer } from './chatter_attachments_viewer';
 import { Component, useState, onWillUpdateProps, useRef } from "@odoo/owl";
 
 export class ChatterComposer extends Component {
+    static template = "project.ChatterComposer";
+    static components = {
+        ChatterAttachmentsViewer,
+        PortalAttachDocument,
+        TextField,
+    };
+    static props = {
+        resModel: String,
+        projectSharingId: Number,
+        resId: { type: Number, optional: true },
+        allowComposer: { type: Boolean, optional: true },
+        displayComposer: { type: Boolean, optional: true },
+        token: { type: String, optional: true },
+        messageCount: { type: Number, optional: true },
+        isUserPublic: { type: Boolean, optional: true },
+        partnerId: { type: Number, optional: true },
+        postProcessMessageSent: { type: Function, optional: true },
+        attachments: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        allowComposer: true,
+        displayComposer: false,
+        isUserPublic: true,
+        token: "",
+        attachments: [],
+    };
+
     setup() {
         this.rpc = useService('rpc');
         this.state = useState({
@@ -106,32 +133,3 @@ export class ChatterComposer extends Component {
         this.state.attachments = this.state.attachments.filter(a => a.id !== attachment.id);
     }
 }
-
-ChatterComposer.components = {
-    ChatterAttachmentsViewer,
-    PortalAttachDocument,
-    TextField,
-};
-
-ChatterComposer.props = {
-    resModel: String,
-    projectSharingId: Number,
-    resId: { type: Number, optional: true },
-    allowComposer: { type: Boolean, optional: true },
-    displayComposer: { type: Boolean, optional: true },
-    token: { type: String, optional: true },
-    messageCount: { type: Number, optional: true },
-    isUserPublic: { type: Boolean, optional: true },
-    partnerId: { type: Number, optional: true },
-    postProcessMessageSent: { type: Function, optional: true },
-    attachments: { type: Array, optional: true },
-};
-ChatterComposer.defaultProps = {
-    allowComposer: true,
-    displayComposer: false,
-    isUserPublic: true,
-    token: '',
-    attachments: [],
-};
-
-ChatterComposer.template = 'project.ChatterComposer';

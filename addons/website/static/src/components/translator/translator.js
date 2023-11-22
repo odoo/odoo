@@ -10,6 +10,8 @@ import { useEffect, useRef, Component, xml } from "@odoo/owl";
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
 export class AttributeTranslateDialog extends Component {
+    static components = { WebsiteDialog };
+    static template = "website.AttributeTranslateDialog";
     setup() {
         this.title = _t("Translate Attribute");
 
@@ -44,12 +46,22 @@ export class AttributeTranslateDialog extends Component {
         }, () => [this.props.node]);
     }
 }
-AttributeTranslateDialog.components = { WebsiteDialog };
-AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
 
 // Used to translate the text of `<select/>` options since it should not be
 // possible to interact with the content of `.o_translation_select` elements.
 export class SelectTranslateDialog extends Component {
+    static components = { WebsiteDialog };
+    static template = xml`
+    <WebsiteDialog close="props.close"
+        title="title"
+        showSecondaryButton="false">
+        <input
+            t-ref="input"
+            type="text" class="form-control my-3"
+            t-att-value="optionEl.textContent or ''"
+            t-on-keyup="onInputKeyup"/>
+    </WebsiteDialog>
+    `;
     setup() {
         this.title = _t("Translate Selection Option");
         this.inputEl = useRef('input');
@@ -65,20 +77,10 @@ export class SelectTranslateDialog extends Component {
         );
     }
 }
-SelectTranslateDialog.components = {WebsiteDialog};
-SelectTranslateDialog.template = xml`
-<WebsiteDialog close="props.close"
-    title="title"
-    showSecondaryButton="false">
-    <input
-        t-ref="input"
-        type="text" class="form-control my-3"
-        t-att-value="optionEl.textContent or ''"
-        t-on-keyup="onInputKeyup"/>
-</WebsiteDialog>
-`;
 
 export class TranslatorInfoDialog extends Component {
+    static components = { WebsiteDialog };
+    static template = "website.TranslatorInfoDialog";
     setup() {
         this.strongOkButton = _t("Ok, never show me this again");
         this.okButton = _t("Ok");
@@ -88,8 +90,6 @@ export class TranslatorInfoDialog extends Component {
         browser.localStorage.setItem(localStorageNoDialogKey, true);
     }
 }
-TranslatorInfoDialog.components = { WebsiteDialog };
-TranslatorInfoDialog.template = 'website.TranslatorInfoDialog';
 
 const savableSelector = '[data-oe-translation-initial-sha], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +

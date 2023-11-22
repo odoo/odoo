@@ -9,15 +9,14 @@ import { TextField, textField } from "@web/views/fields/text/text_field";
  * Extension of the FieldText that will add emojis support
  */
 export class EmojisTextField extends EmojisFieldCommon(TextField) {
+    static template = "mail.EmojisTextField";
+    static components = { ...TextField.components };
     setup() {
         super.setup();
         this.targetEditElement = this.textareaRef;
         this._setupOverride();
     }
 }
-
-EmojisTextField.template = "mail.EmojisTextField";
-EmojisTextField.components = { ...TextField.components };
 
 export const emojisTextField = {
     ...textField,

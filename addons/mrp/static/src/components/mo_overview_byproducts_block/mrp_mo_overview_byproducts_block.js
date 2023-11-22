@@ -4,6 +4,15 @@ import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_m
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 
 export class MoOverviewByproductsBlock extends MoOverviewOperationsBlock {
+    static components = {
+        MoOverviewLine,
+    };
+    static props = {
+        // Keep all props except "operations"
+        ...(({ operations, ...props }) => props)(MoOverviewOperationsBlock.props),
+        byproducts: Array,
+    };
+
     static template = "mrp.MoOverviewByproductsBlock";
 
     //---- Getters ----
@@ -16,15 +25,6 @@ export class MoOverviewByproductsBlock extends MoOverviewOperationsBlock {
         return this.hasByproducts ? this.props.byproducts[0].level - 1 : 0;
     }
 }
-
-MoOverviewByproductsBlock.components = {
-    MoOverviewLine,
-};
-MoOverviewByproductsBlock.props = {
-    // Keep all props except "operations"
-    ...(({ operations, ...props}) => props)(MoOverviewOperationsBlock.props),
-    byproducts: Array,
-};
 MoOverviewByproductsBlock.props.summary.shape = {
     ...MoOverviewByproductsBlock.props.summary.shape,
     product_cost: { type: Number, optional: true },

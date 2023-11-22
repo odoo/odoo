@@ -10,10 +10,23 @@ QUnit.module("utils", () => {
     QUnit.module("components");
 
     QUnit.test("ErrorHandler component", async function (assert) {
-        class Boom extends Component {}
-        Boom.template = xml`<div><t t-esc="this.will.throw"/></div>`;
+        class Boom extends Component {
+            static template = xml`<div><t t-esc="this.will.throw"/></div>`;
+        }
 
         class Parent extends Component {
+            static template = xml`
+            <div>
+              <t t-if="flag">
+                <ErrorHandler onError="() => this.handleError()">
+                  <Boom />
+                </ErrorHandler>
+              </t>
+              <t t-else="">
+                not boom
+              </t>
+            </div>`;
+            static components = { Boom, ErrorHandler };
             setup() {
                 this.flag = true;
             }
@@ -22,18 +35,6 @@ QUnit.module("utils", () => {
                 this.render();
             }
         }
-        Parent.template = xml`
-        <div>
-          <t t-if="flag">
-            <ErrorHandler onError="() => this.handleError()">
-              <Boom />
-            </ErrorHandler>
-          </t>
-          <t t-else="">
-            not boom
-          </t>
-        </div>`;
-        Parent.components = { Boom, ErrorHandler };
 
         const target = getFixture();
         await mount(Parent, target, { env: makeTestEnv() });

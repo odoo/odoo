@@ -11,6 +11,9 @@ import { Meter } from "./password_meter";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class PasswordField extends Component {
+    static props = standardFieldProps;
+    static components = { Meter };
+    static template = "auth_password_policy.PasswordField";
     setup() {
         this.state = useState({
             required: new ConcretePolicy({}),
@@ -29,9 +32,6 @@ export class PasswordField extends Component {
         this.recommendations = recommendations;
     }
 }
-PasswordField.props = standardFieldProps;
-PasswordField.components = { Meter };
-PasswordField.template = "auth_password_policy.PasswordField";
 
 export const passwordField = {
     component: PasswordField,

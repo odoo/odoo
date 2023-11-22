@@ -353,14 +353,14 @@ QUnit.module("Search", (hooks) => {
 
         let updateCount = 0;
         class TestComponent extends Component {
+            static template = xml`<SearchBar/>`;
+            static components = { SearchBar };
             setup() {
                 onWillUpdateProps(() => {
                     updateCount++;
                 });
             }
         }
-        TestComponent.template = xml`<SearchBar/>`;
-        TestComponent.components = { SearchBar };
 
         const controlPanel = await makeWithSearch({
             serverData,
@@ -412,14 +412,14 @@ QUnit.module("Search", (hooks) => {
 
         let updateCount = 0;
         class TestComponent extends Component {
+            static template = xml`<SearchBar/>`;
+            static components = { SearchBar };
             setup() {
                 onWillUpdateProps(() => {
                     updateCount++;
                 });
             }
         }
-        TestComponent.template = xml`<SearchBar/>`;
-        TestComponent.components = { SearchBar };
 
         await makeWithSearch({
             serverData,

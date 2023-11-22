@@ -5,6 +5,18 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Component, useRef, useState } from "@odoo/owl";
 
 export class HierarchyNavbar extends Component {
+    static template = "website.hierarchy_navbar";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        toggleInactive: Function,
+        websites: Object,
+        selectWebsite: Function,
+        searchView: Function,
+    };
+
     setup() {
         this.searchInput = useRef("search");
         this.websiteNames = useState(Array.from(this.props.websites.names));
@@ -27,15 +39,3 @@ export class HierarchyNavbar extends Component {
         this.props.searchView(this.searchInput.el.value, !event.shiftKey);
     }
 }
-
-HierarchyNavbar.components = {
-    Dropdown,
-    DropdownItem,
-};
-HierarchyNavbar.template = "website.hierarchy_navbar";
-HierarchyNavbar.props = {
-    toggleInactive: Function,
-    websites: Object,
-    selectWebsite: Function,
-    searchView: Function,
-};

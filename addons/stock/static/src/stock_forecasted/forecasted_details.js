@@ -4,6 +4,9 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 export class ForecastedDetails extends Component {
+    static template = "stock.ForecastedDetails";
+    static props = { docs: Object, openView: Function, reloadReport: Function };
+
     setup() {
         this.orm = useService("orm");
 
@@ -53,5 +56,3 @@ export class ForecastedDetails extends Component {
         return this.props.docs.virtual_available + this.props.docs.qty.in - this.props.docs.qty.out;
     }
 }
-ForecastedDetails.template = "stock.ForecastedDetails";
-ForecastedDetails.props = { docs: Object, openView: Function, reloadReport: Function };

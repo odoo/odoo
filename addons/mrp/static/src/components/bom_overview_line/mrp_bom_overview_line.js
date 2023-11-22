@@ -7,6 +7,30 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { Component } from "@odoo/owl";
 
 export class BomOverviewLine extends Component {
+    static template = "mrp.BomOverviewLine";
+    static props = {
+        isFolded: { type: Boolean, optional: true },
+        showOptions: {
+            type: Object,
+            shape: {
+                availabilities: Boolean,
+                costs: Boolean,
+                operations: Boolean,
+                leadTimes: Boolean,
+                uom: Boolean,
+                attachments: Boolean,
+            },
+        },
+        currentWarehouseId: { type: Number, optional: true },
+        data: Object,
+        precision: Number,
+        toggleFolded: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        isFolded: true,
+        toggleFolded: () => {},
+    };
+
     setup() {
         this.actionService = useService("action");
         this.ormService = useService("orm");
@@ -148,27 +172,3 @@ export class BomOverviewLine extends Component {
         }
     }
 }
-
-BomOverviewLine.template = "mrp.BomOverviewLine";
-BomOverviewLine.props = {
-    isFolded: { type: Boolean, optional: true },
-    showOptions: {
-        type: Object,
-        shape: {
-            availabilities: Boolean,
-            costs: Boolean,
-            operations: Boolean,
-            leadTimes: Boolean,
-            uom: Boolean,
-            attachments: Boolean,
-        },
-    },
-    currentWarehouseId: { type: Number, optional: true },
-    data: Object,
-    precision: Number,
-    toggleFolded: { type: Function, optional: true },
-};
-BomOverviewLine.defaultProps = {
-    isFolded: true,
-    toggleFolded: () => {},
-};

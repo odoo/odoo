@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 class ButtonWithNotification extends Component {
+    static template = "purchase.ButtonWithNotification";
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
@@ -17,7 +18,6 @@ class ButtonWithNotification extends Component {
         this.notification.add(message, { type: "success" });
     }
 }
-ButtonWithNotification.template = "purchase.ButtonWithNotification";
 
 export const buttonWithNotification = {
     component: ButtonWithNotification,

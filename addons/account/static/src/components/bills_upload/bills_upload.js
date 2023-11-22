@@ -17,6 +17,19 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component, useState } from "@odoo/owl";
 
 export class AccountFileUploader extends Component {
+    static template = "account.AccountFileUploader";
+    static components = {
+        FileUploader,
+    };
+    static props = {
+        ...standardWidgetProps,
+        record: { type: Object, optional: true },
+        togglerTemplate: { type: String, optional: true },
+        btnClass: { type: String, optional: true },
+        linkText: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+    };
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -61,18 +74,6 @@ export class AccountFileUploader extends Component {
         this.action.doAction(action);
     }
 }
-AccountFileUploader.components = {
-    FileUploader,
-};
-AccountFileUploader.template = "account.AccountFileUploader";
-AccountFileUploader.props = {
-    ...standardWidgetProps,
-    record: { type: Object, optional: true},
-    togglerTemplate: { type: String, optional: true },
-    btnClass: { type: String, optional: true },
-    linkText: { type: String, optional: true },
-    slots: { type: Object, optional: true },
-};
 //when file uploader is used on account.journal (with a record)
 
 export const accountFileUploader = {
@@ -91,6 +92,15 @@ export const accountFileUploader = {
 registry.category("view_widgets").add("account_file_uploader", accountFileUploader);
 
 export class AccountDropZone extends Component {
+    static template = "account.DropZone";
+    static props = {
+        visible: { type: Boolean, optional: true },
+        hideZone: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        hideZone: () => {},
+    };
+
     setup() {
         this.notificationService = useService("notification");
     }
@@ -113,29 +123,27 @@ export class AccountDropZone extends Component {
         this.props.hideZone();
     }
 }
-AccountDropZone.props = {
-    visible: { type: Boolean, optional: true },
-    hideZone: { type: Function, optional: true },
-}
-AccountDropZone.defaultProps = {
-    hideZone: () => {},
-};
-AccountDropZone.template = "account.DropZone";
 
 // Account Move List View
 export class AccountMoveUploadListRenderer extends ListRenderer {
+    static template = "account.ListRenderer";
+    static components = {
+        ...ListRenderer.components,
+        AccountDropZone,
+    };
+
     setup() {
         super.setup();
         this.state.dropzoneVisible = false;
     }
 }
-AccountMoveUploadListRenderer.template = "account.ListRenderer";
-AccountMoveUploadListRenderer.components = {
-    ...ListRenderer.components,
-    AccountDropZone,
-};
 
 export class AccountMoveListController extends ListController {
+    static components = {
+        ...ListController.components,
+        AccountFileUploader,
+    };
+
     setup() {
         super.setup();
         this.account_move_service = useService("account_move");
@@ -149,11 +157,6 @@ export class AccountMoveListController extends ListController {
     }
 };
 
-AccountMoveListController.components = {
-    ...ListController.components,
-    AccountFileUploader,
-};
-
 export const AccountMoveUploadListView = {
     ...listView,
     Controller: AccountMoveListController,
@@ -163,22 +166,23 @@ export const AccountMoveUploadListView = {
 
 // Account Move Kanban View
 export class AccountMoveUploadKanbanRenderer extends KanbanRenderer {
+    static template = "account.KanbanRenderer";
+    static components = {
+        ...KanbanRenderer.components,
+        AccountDropZone,
+    };
     setup() {
         super.setup();
         this.state.dropzoneVisible = false;
     }
 }
-AccountMoveUploadKanbanRenderer.template = "account.KanbanRenderer";
-AccountMoveUploadKanbanRenderer.components = {
-    ...KanbanRenderer.components,
-    AccountDropZone,
-};
 
-export class AccountMoveUploadKanbanController extends KanbanController {}
-AccountMoveUploadKanbanController.components = {
-    ...KanbanController.components,
-    AccountFileUploader,
-};
+export class AccountMoveUploadKanbanController extends KanbanController {
+    static components = {
+        ...KanbanController.components,
+        AccountFileUploader,
+    };
+}
 
 export const AccountMoveUploadKanbanView = {
     ...kanbanView,
@@ -197,6 +201,13 @@ export class DashboardKanbanDropdownMenuWrapper extends KanbanDropdownMenuWrappe
     }
 }
 export class DashboardKanbanRecord extends KanbanRecord {
+    static template = "account.DashboardKanbanRecord";
+    static components = {
+        ...DashboardKanbanRecord.components,
+        AccountDropZone,
+        AccountFileUploader,
+        KanbanDropdownMenuWrapper: DashboardKanbanDropdownMenuWrapper,
+    };
     setup() {
         super.setup();
         this.state = useState({
@@ -204,19 +215,13 @@ export class DashboardKanbanRecord extends KanbanRecord {
         });
     }
 }
-DashboardKanbanRecord.components = {
-    ...DashboardKanbanRecord.components,
-    AccountDropZone,
-    AccountFileUploader,
-    KanbanDropdownMenuWrapper: DashboardKanbanDropdownMenuWrapper,
-};
-DashboardKanbanRecord.template = "account.DashboardKanbanRecord";
 
-export class DashboardKanbanRenderer extends KanbanRenderer {}
-DashboardKanbanRenderer.components = {
-    ...KanbanRenderer.components,
-    KanbanRecord: DashboardKanbanRecord,
-};
+export class DashboardKanbanRenderer extends KanbanRenderer {
+    static components = {
+        ...KanbanRenderer.components,
+        KanbanRecord: DashboardKanbanRecord,
+    };
+}
 
 export const DashboardKanbanView = {
     ...kanbanView,

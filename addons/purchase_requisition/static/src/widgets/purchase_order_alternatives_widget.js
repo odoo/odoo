@@ -15,6 +15,11 @@ export class FieldMany2ManyAltPOsRenderer extends ListRenderer {
 FieldMany2ManyAltPOsRenderer.recordRowTemplate = "purchase_requisition.AltPOsListRenderer.RecordRow";
 
 export class FieldMany2ManyAltPOs extends X2ManyField {
+    static components = {
+        ...X2ManyField.components,
+        ListRenderer: FieldMany2ManyAltPOsRenderer,
+    };
+
    setup() {
       super.setup();
       this.orm = useService("orm");
@@ -39,11 +44,6 @@ export class FieldMany2ManyAltPOs extends X2ManyField {
       }
    }
 }
-
-FieldMany2ManyAltPOs.components = {
-   ...X2ManyField.components,
-   ListRenderer: FieldMany2ManyAltPOsRenderer,
-};
 
 export const fieldMany2ManyAltPOs = {
     ...x2ManyField,

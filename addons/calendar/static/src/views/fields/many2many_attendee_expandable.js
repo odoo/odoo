@@ -9,6 +9,7 @@ import {
 } from "@calendar/views/fields/many2many_attendee";
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
+    static template = "calendar.Many2ManyAttendeeExpandable";
     state = useState({ expanded: false });
 
     setup() {
@@ -32,8 +33,6 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.state.expanded = !this.state.expanded;
     }
 }
-
-Many2ManyAttendeeExpandable.template = "calendar.Many2ManyAttendeeExpandable";
 
 export const many2ManyAttendeeExpandable = {
     ...many2ManyAttendee,

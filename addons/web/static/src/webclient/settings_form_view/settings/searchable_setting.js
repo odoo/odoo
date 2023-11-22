@@ -7,6 +7,12 @@ import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_t
 import { HighlightText } from "../highlight_text/highlight_text";
 
 export class SearchableSetting extends Setting {
+    static template = "web.SearchableSetting";
+    static components = {
+        ...Setting.components,
+        FormLabel: FormLabelHighlightText,
+        HighlightText,
+    };
     setup() {
         this.settingRef = useRef("setting");
         this.state = useState({
@@ -46,9 +52,3 @@ export class SearchableSetting extends Setting {
         return false;
     }
 }
-SearchableSetting.template = "web.SearchableSetting";
-SearchableSetting.components = {
-    ...Setting.components,
-    FormLabel: FormLabelHighlightText,
-    HighlightText,
-};

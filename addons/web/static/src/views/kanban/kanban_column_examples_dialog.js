@@ -9,6 +9,7 @@ import { Component, useRef } from "@odoo/owl";
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 class KanbanExamplesNotebookTemplate extends Component {
+    static template = "web.KanbanExamplesNotebookTemplate";
     static defaultProps = {
         columns: [],
         foldedColumns: [],
@@ -31,9 +32,11 @@ class KanbanExamplesNotebookTemplate extends Component {
         }
     }
 }
-KanbanExamplesNotebookTemplate.template = "web.KanbanExamplesNotebookTemplate";
 
 export class KanbanColumnExamplesDialog extends Component {
+    static template = "web.KanbanColumnExamplesDialog";
+    static components = { Dialog, Notebook };
+    static title = _t("Kanban Examples");
     setup() {
         this.navList = useRef("navList");
         this.pages = [];
@@ -58,6 +61,3 @@ export class KanbanColumnExamplesDialog extends Component {
         this.props.close();
     }
 }
-KanbanColumnExamplesDialog.template = "web.KanbanColumnExamplesDialog";
-KanbanColumnExamplesDialog.components = { Dialog, Notebook };
-KanbanColumnExamplesDialog.title = _t("Kanban Examples");

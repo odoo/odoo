@@ -12,6 +12,14 @@ import { registry } from "@web/core/registry";
 import { useState } from "@odoo/owl";
 
 export class ProjectTaskStateSelection extends StateSelectionField {
+    static template = "project.ProjectTaskStateSelection";
+
+    static props = {
+        ...stateSelectionField.component.props,
+        isToggleMode: { type: Boolean, optional: true },
+        viewType: { type: String },
+    };
+
     setup() {
         this.state = useState({
             isStateButtonHighlighted: false,
@@ -167,14 +175,6 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     onMouseLeaveStateButton(ev) {
         this.state.isStateButtonHighlighted = false;
     }
-}
-
-ProjectTaskStateSelection.template = "project.ProjectTaskStateSelection";
-
-ProjectTaskStateSelection.props = {
-    ...stateSelectionField.component.props,
-    isToggleMode: { type: Boolean, optional: true },
-    viewType: { type: String },
 }
 
 export const projectTaskStateSelection = {

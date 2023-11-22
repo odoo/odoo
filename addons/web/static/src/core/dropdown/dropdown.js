@@ -42,6 +42,104 @@ export const DROPDOWN = Symbol("Dropdown");
  * @extends Component
  */
 export class Dropdown extends Component {
+    static template = "web.Dropdown";
+    static bus = new EventBus();
+    static defaultProps = {
+        menuDisplay: "d-block",
+        autoOpen: true,
+        holdOnHover: false,
+        onOpened: () => {},
+        onStateChanged: () => {},
+        onScroll: () => {},
+    };
+    static props = {
+        class: {
+            type: String,
+            optional: true,
+        },
+        disabled: {
+            type: Boolean,
+            optional: true,
+        },
+        toggler: {
+            type: String,
+            optional: true,
+            validate: (prop) => ["parent"].includes(prop),
+        },
+        skipTogglerTabbing: {
+            type: Boolean,
+            optional: true,
+        },
+        startOpen: {
+            type: Boolean,
+            optional: true,
+        },
+        autoOpen: {
+            type: Boolean,
+            optional: true,
+        },
+        menuClass: {
+            type: String,
+            optional: true,
+        },
+        menuDisplay: {
+            type: String,
+            optional: true,
+        },
+        beforeOpen: {
+            type: Function,
+            optional: true,
+        },
+        onOpened: {
+            type: Function,
+            optional: true,
+        },
+        onScroll: {
+            type: Function,
+            optional: true,
+        },
+        onStateChanged: {
+            type: Function,
+            optional: true,
+        },
+        togglerClass: {
+            type: String,
+            optional: true,
+        },
+        hotkey: {
+            type: String,
+            optional: true,
+        },
+        tooltip: {
+            type: String,
+            optional: true,
+        },
+        title: {
+            type: String,
+            optional: true,
+        },
+        position: {
+            type: String,
+            optional: true,
+        },
+        slots: {
+            type: Object,
+            optional: true,
+        },
+        showCaret: {
+            type: Boolean,
+            optional: true,
+        },
+        holdOnHover: {
+            type: Boolean,
+            optional: true,
+        },
+        container: {
+            type: [Element, Function],
+            optional: true,
+        },
+    };
+
     setup() {
         this.state = useState({
             open: this.props.startOpen,
@@ -156,11 +254,7 @@ export class Dropdown extends Component {
         } else {
             // Position menu relatively to inner toggler
             const togglerRef = useRef("togglerRef");
-            this.position = usePosition(
-                "menuRef",
-                () => togglerRef.el,
-                positioningOptions
-            );
+            this.position = usePosition("menuRef", () => togglerRef.el, positioningOptions);
         }
 
         useEffect(
@@ -330,100 +424,3 @@ export class Dropdown extends Component {
         }
     }
 }
-Dropdown.bus = new EventBus();
-Dropdown.defaultProps = {
-    menuDisplay: "d-block",
-    autoOpen: true,
-    holdOnHover: false,
-    onOpened: () => {},
-    onStateChanged: () => {},
-    onScroll: () => {},
-};
-Dropdown.props = {
-    class: {
-        type: String,
-        optional: true,
-    },
-    disabled: {
-        type: Boolean,
-        optional: true,
-    },
-    toggler: {
-        type: String,
-        optional: true,
-        validate: (prop) => ["parent"].includes(prop),
-    },
-    skipTogglerTabbing: {
-        type: Boolean,
-        optional: true,
-    },
-    startOpen: {
-        type: Boolean,
-        optional: true,
-    },
-    autoOpen: {
-        type: Boolean,
-        optional: true,
-    },
-    menuClass: {
-        type: String,
-        optional: true,
-    },
-    menuDisplay: {
-        type: String,
-        optional: true,
-    },
-    beforeOpen: {
-        type: Function,
-        optional: true,
-    },
-    onOpened: {
-        type: Function,
-        optional: true,
-    },
-    onScroll: {
-        type: Function,
-        optional: true,
-    },
-    onStateChanged: {
-        type: Function,
-        optional: true,
-    },
-    togglerClass: {
-        type: String,
-        optional: true,
-    },
-    hotkey: {
-        type: String,
-        optional: true,
-    },
-    tooltip: {
-        type: String,
-        optional: true,
-    },
-    title: {
-        type: String,
-        optional: true,
-    },
-    position: {
-        type: String,
-        optional: true,
-    },
-    slots: {
-        type: Object,
-        optional: true,
-    },
-    showCaret: {
-        type: Boolean,
-        optional: true,
-    },
-    holdOnHover: {
-        type: Boolean,
-        optional: true,
-    },
-    container: {
-        type: [Element, Function],
-        optional: true,
-    },
-};
-Dropdown.template = "web.Dropdown";

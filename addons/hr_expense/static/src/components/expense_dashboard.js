@@ -5,6 +5,7 @@ import { getCurrency } from '@web/core/currency';
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ExpenseDashboard extends Component {
+    static template = "hr_expense.ExpenseDashboard";
 
     setup() {
         super.setup();
@@ -33,4 +34,3 @@ export class ExpenseDashboard extends Component {
         return value;
     }
 }
-ExpenseDashboard.template = 'hr_expense.ExpenseDashboard';

@@ -9,6 +9,11 @@ import { CalendarYearPopover } from "./calendar_year_popover";
 import { Component, useEffect, useRef } from "@odoo/owl";
 
 export class CalendarYearRenderer extends Component {
+    static components = {
+        Popover: CalendarYearPopover,
+    };
+    static template = "web.CalendarYearRenderer";
+
     setup() {
         this.months = luxon.Info.months();
         this.fcs = {};
@@ -179,7 +184,3 @@ export class CalendarYearRenderer extends Component {
         this.updateSize();
     }
 }
-CalendarYearRenderer.components = {
-    Popover: CalendarYearPopover,
-};
-CalendarYearRenderer.template = "web.CalendarYearRenderer";

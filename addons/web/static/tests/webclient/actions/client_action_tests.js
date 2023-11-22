@@ -105,8 +105,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("can execute client actions from tag name", async function (assert) {
         assert.expect(4);
-        class ClientAction extends Component {}
-        ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
+        class ClientAction extends Component {
+            static template = xml`<div class="o_client_action_test">Hello World</div>`;
+        }
         actionRegistry.add("HelloWorldTest", ClientAction);
 
         const mockRPC = async function (route, args) {
@@ -161,6 +162,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("ClientAction receives breadcrumbs and exports title", async (assert) => {
         assert.expect(4);
         class ClientAction extends Component {
+            static template = xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
                 const { breadcrumbs } = this.env.config;
@@ -175,7 +177,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this.env.config.setDisplayName(this.breadcrumbTitle);
             }
         }
-        ClientAction.template = xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;
         actionRegistry.add("OwlClientAction", ClientAction);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 8);
@@ -192,11 +193,11 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("ClientAction receives arbitrary props from doAction", async (assert) => {
         assert.expect(1);
         class ClientAction extends Component {
+            static template = xml`<div class="my_owl_action"></div>`;
             setup() {
                 assert.strictEqual(this.props.division, "bell");
             }
         }
-        ClientAction.template = xml`<div class="my_owl_action"></div>`;
         actionRegistry.add("OwlClientAction", ClientAction);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, "OwlClientAction", {

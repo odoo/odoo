@@ -5,6 +5,34 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
 
 export class ColorList extends Component {
+    static COLORS = [
+        _t("No color"),
+        _t("Red"),
+        _t("Orange"),
+        _t("Yellow"),
+        _t("Cyan"),
+        _t("Purple"),
+        _t("Almond"),
+        _t("Teal"),
+        _t("Blue"),
+        _t("Raspberry"),
+        _t("Green"),
+        _t("Violet"),
+    ];
+    static template = "web.ColorList";
+    static defaultProps = {
+        forceExpanded: false,
+        isExpanded: false,
+    };
+    static props = {
+        canToggle: { type: Boolean, optional: true },
+        colors: Array,
+        forceExpanded: { type: Boolean, optional: true },
+        isExpanded: { type: Boolean, optional: true },
+        onColorSelected: Function,
+        selectedColor: { type: Number, optional: true },
+    };
+
     setup() {
         this.colorlistRef = useRef("colorlist");
         this.state = useState({ isExpanded: this.props.isExpanded });
@@ -34,31 +62,3 @@ export class ColorList extends Component {
         }
     }
 }
-
-ColorList.COLORS = [
-    _t("No color"),
-    _t("Red"),
-    _t("Orange"),
-    _t("Yellow"),
-    _t("Cyan"),
-    _t("Purple"),
-    _t("Almond"),
-    _t("Teal"),
-    _t("Blue"),
-    _t("Raspberry"),
-    _t("Green"),
-    _t("Violet"),
-];
-ColorList.template = "web.ColorList";
-ColorList.defaultProps = {
-    forceExpanded: false,
-    isExpanded: false,
-};
-ColorList.props = {
-    canToggle: { type: Boolean, optional: true },
-    colors: Array,
-    forceExpanded: { type: Boolean, optional: true },
-    isExpanded: { type: Boolean, optional: true },
-    onColorSelected: Function,
-    selectedColor: { type: Number, optional: true },
-};

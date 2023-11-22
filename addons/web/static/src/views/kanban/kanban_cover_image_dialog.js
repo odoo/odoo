@@ -9,6 +9,8 @@ import { Component, useState, onWillStart } from "@odoo/owl";
 let nextDialogId = 1;
 
 export class KanbanCoverImageDialog extends Component {
+    static template = "web.KanbanCoverImageDialog";
+    static components = { Dialog, FileInput };
     setup() {
         this.id = `o_cover_image_upload_${nextDialogId++}`;
         this.orm = useService("orm");
@@ -67,6 +69,3 @@ export class KanbanCoverImageDialog extends Component {
         this.state.selectFile = true;
     }
 }
-
-KanbanCoverImageDialog.template = "web.KanbanCoverImageDialog";
-KanbanCoverImageDialog.components = { Dialog, FileInput };

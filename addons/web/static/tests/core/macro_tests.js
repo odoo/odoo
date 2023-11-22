@@ -22,18 +22,18 @@ QUnit.module(
     },
     () => {
         class TestComponent extends Component {
+            static template = xml`
+                <div class="counter">
+                    <button class="inc" t-on-click="() => this.state.value++">increment</button>
+                    <button class="dec" t-on-click="() => this.state.value--">decrement</button>
+                    <button class="double" t-on-click="() => this.state.value = 2*this.state.value">double</button>
+                    <span class="value"><t t-esc="state.value"/></span>
+                    <input />
+                </div>`;
             setup() {
                 this.state = useState({ value: 0 });
             }
         }
-        TestComponent.template = xml`
-        <div class="counter">
-             <button class="inc" t-on-click="() => this.state.value++">increment</button>
-             <button class="dec" t-on-click="() => this.state.value--">decrement</button>
-             <button class="double" t-on-click="() => this.state.value = 2*this.state.value">double</button>
-             <span class="value"><t t-esc="state.value"/></span>
-             <input />
-        </div>`;
 
         QUnit.test("simple use", async function (assert) {
             await mount(TestComponent, target);

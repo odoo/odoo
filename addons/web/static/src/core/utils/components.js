@@ -3,19 +3,19 @@
 import { Component, onError, xml, useSubEnv } from "@odoo/owl";
 
 export class ErrorHandler extends Component {
+    static template = xml`<t t-slot="default" />`;
+    static props = ["onError", "slots"];
     setup() {
         onError((error) => {
             this.props.onError(error);
         });
     }
 }
-ErrorHandler.template = xml`<t t-slot="default" />`;
-ErrorHandler.props = ["onError", "slots"];
 
 export class WithEnv extends Component {
+    static template = xml`<t t-slot="default"/>`;
+    static props = ["env", "slots"];
     setup() {
         useSubEnv(this.props.env);
     }
 }
-WithEnv.template = xml`<t t-slot="default"/>`;
-WithEnv.props = ["env", "slots"];

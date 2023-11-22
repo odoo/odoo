@@ -11,14 +11,14 @@ import { formatMonetary } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component } from "@odoo/owl";
 
-class AccountPaymentPopOver extends Component {}
-AccountPaymentPopOver.props = {
-    "*": { optional: true },
+class AccountPaymentPopOver extends Component {
+    static props = { "*": { optional: true } };
+    static template = "account.AccountPaymentPopOver";
 }
-AccountPaymentPopOver.template = "account.AccountPaymentPopOver";
 
 export class AccountPaymentField extends Component {
     static props = { ...standardFieldProps };
+    static template = "account.AccountPaymentField";
 
     setup() {
         const position = localization.direction === "rtl" ? "bottom" : "left";
@@ -77,7 +77,6 @@ export class AccountPaymentField extends Component {
         this.action.doAction(action);
     }
 }
-AccountPaymentField.template = "account.AccountPaymentField";
 
 export const accountPaymentField = {
     component: AccountPaymentField,

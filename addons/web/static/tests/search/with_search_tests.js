@@ -57,8 +57,9 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("simple rendering", async function (assert) {
         assert.expect(2);
 
-        class TestComponent extends Component {}
-        TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+        class TestComponent extends Component {
+            static template = xml`<div class="o_test_component">Test component content</div>`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -75,8 +76,9 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("search model in sub env", async function (assert) {
         assert.expect(1);
 
-        class TestComponent extends Component {}
-        TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+        class TestComponent extends Component {
+            static template = xml`<div class="o_test_component">Test component content</div>`;
+        }
 
         const component = await makeWithSearch({
             serverData,
@@ -92,6 +94,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(4);
 
             class TestComponent extends Component {
+                static template = xml`<div class="o_test_component">Test component content</div>`;
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
                     assert.deepEqual(context, {
@@ -105,7 +108,6 @@ QUnit.module("Search", (hooks) => {
                     assert.deepEqual(orderBy, [{ name: "bar", asc: true }]);
                 }
             }
-            TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
 
             await makeWithSearch({
                 serverData,
@@ -122,8 +124,9 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("do not load search view description by default", async function (assert) {
         assert.expect(1);
 
-        class TestComponent extends Component {}
-        TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+        class TestComponent extends Component {
+            static template = xml`<div class="o_test_component">Test component content</div>`;
+        }
 
         await makeWithSearch({
             serverData,
@@ -144,8 +147,9 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            class TestComponent extends Component {}
-            TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+            class TestComponent extends Component {
+                static template = xml`<div class="o_test_component">Test component content</div>`;
+            }
 
             await makeWithSearch({
                 serverData,
@@ -178,8 +182,9 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            class TestComponent extends Component {}
-            TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+            class TestComponent extends Component {
+                static template = xml`<div class="o_test_component">Test component content</div>`;
+            }
 
             await makeWithSearch({
                 serverData,
@@ -203,8 +208,9 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            class TestComponent extends Component {}
-            TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+            class TestComponent extends Component {
+                static template = xml`<div class="o_test_component">Test component content</div>`;
+            }
 
             await makeWithSearch({
                 serverData,
@@ -232,13 +238,14 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            class TestComponent extends Component {}
-            TestComponent.components = { SearchBarMenu };
-            TestComponent.template = xml`
-                <div class="o_test_component">
-                    <SearchBarMenu/>
-                </div>
-            `;
+            class TestComponent extends Component {
+                static components = { SearchBarMenu };
+                static template = xml`
+                    <div class="o_test_component">
+                        <SearchBarMenu/>
+                    </div>
+                `;
+            }
 
             await makeWithSearch({
                 serverData,
@@ -265,6 +272,12 @@ QUnit.module("Search", (hooks) => {
             assert.expect(2);
 
             class TestComponent extends Component {
+                static components = { SearchBarMenu };
+                static template = xml`
+                    <div class="o_test_component">
+                        <SearchBarMenu/>
+                    </div>
+                `;
                 setup() {
                     onWillStart(() => {
                         assert.deepEqual(this.props.domain, []);
@@ -274,12 +287,6 @@ QUnit.module("Search", (hooks) => {
                     });
                 }
             }
-            TestComponent.components = { SearchBarMenu };
-            TestComponent.template = xml`
-                <div class="o_test_component">
-                    <SearchBarMenu/>
-                </div>
-            `;
 
             await makeWithSearch({
                 serverData,
@@ -296,6 +303,7 @@ QUnit.module("Search", (hooks) => {
         assert.expect(2);
 
         class TestComponent extends Component {
+            static template = xml`<div class="o_test_component">Test component content</div>`;
             setup() {
                 onWillStart(() => {
                     assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
@@ -305,12 +313,19 @@ QUnit.module("Search", (hooks) => {
                 });
             }
         }
-        TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
 
         const env = await makeTestEnv(serverData);
         const target = getFixture();
 
         class Parent extends Component {
+            static template = xml`
+                <WithSearch t-props="searchState" t-slot-scope="search">
+                    <TestComponent
+                        domain="search.domain"
+                    />
+                </WithSearch>
+            `;
+            static components = { WithSearch, TestComponent };
             setup() {
                 useSubEnv({ config: {} });
                 this.searchState = useState({
@@ -319,14 +334,6 @@ QUnit.module("Search", (hooks) => {
                 });
             }
         }
-        Parent.template = xml`
-            <WithSearch t-props="searchState" t-slot-scope="search">
-                <TestComponent
-                    domain="search.domain"
-                />
-            </WithSearch>
-        `;
-        Parent.components = { WithSearch, TestComponent };
 
         const parent = await mount(Parent, target, { env });
         parent.searchState.domain = [["type", "=", "herbivorous"]];

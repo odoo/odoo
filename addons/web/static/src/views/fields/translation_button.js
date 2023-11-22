@@ -40,6 +40,12 @@ export function useTranslationDialog() {
 }
 
 export class TranslationButton extends Component {
+    static template = "web.TranslationButton";
+    static props = {
+        fieldName: { type: String },
+        record: { type: Object },
+    };
+
     setup() {
         this.user = useService("user");
         this.translationDialog = useTranslationDialog();
@@ -57,8 +63,3 @@ export class TranslationButton extends Component {
         this.translationDialog({ fieldName, record });
     }
 }
-TranslationButton.template = "web.TranslationButton";
-TranslationButton.props = {
-    fieldName: { type: String },
-    record: { type: Object },
-};

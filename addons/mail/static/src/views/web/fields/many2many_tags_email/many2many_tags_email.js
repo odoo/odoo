@@ -11,10 +11,15 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 
-export class FieldMany2ManyTagsEmailTagsList extends TagsList {}
-FieldMany2ManyTagsEmailTagsList.template = "FieldMany2ManyTagsEmailTagsList";
+export class FieldMany2ManyTagsEmailTagsList extends TagsList {
+    static template = "FieldMany2ManyTagsEmailTagsList";
+}
 
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
+    static components = {
+        ...FieldMany2ManyTagsEmail.components,
+        TagsList: FieldMany2ManyTagsEmailTagsList,
+    };
     static props = {
         ...Many2ManyTagsField.props,
         context: { type: Object, optional: true },
@@ -96,11 +101,6 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         return tags;
     }
 }
-
-FieldMany2ManyTagsEmail.components = {
-    ...FieldMany2ManyTagsEmail.components,
-    TagsList: FieldMany2ManyTagsEmailTagsList,
-};
 
 export const fieldMany2ManyTagsEmail = {
     ...many2ManyTagsField,

@@ -11,6 +11,14 @@ import { MoOverviewComponentsBlock } from "../mo_overview_components_block/mrp_m
 import { formatMonetary } from "@web/views/fields/formatters";
 
 export class MoOverview extends Component {
+    static components = {
+        Layout,
+        MoOverviewLine,
+        MoOverviewDisplayFilter,
+        MoOverviewComponentsBlock,
+    };
+    static props = { ...standardActionServiceProps };
+
     static template = "mrp.MoOverview";
 
     setup() {
@@ -122,7 +130,7 @@ export class MoOverview extends Component {
     get showAvailabilities() {
         return this.state.showOptions.availabilities;
     }
-    
+
     get showReceipts() {
         return this.state.showOptions.receipts;
     }
@@ -172,13 +180,5 @@ export class MoOverview extends Component {
             + `&unfoldedIds=${JSON.stringify(Array.from(this.unfoldedIds))}`;
     }
 }
-
-MoOverview.components = {
-    Layout,
-    MoOverviewLine,
-    MoOverviewDisplayFilter,
-    MoOverviewComponentsBlock,
-};
-MoOverview.props = {...standardActionServiceProps };
 
 registry.category("actions").add("mrp_mo_overview", MoOverview);

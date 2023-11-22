@@ -3,6 +3,12 @@
 import { Component } from "@odoo/owl";
 
 export class CustomGroupByItem extends Component {
+    static template = "web.CustomGroupByItem";
+    static props = {
+        fields: Array,
+        onAddCustomGroup: Function,
+    };
+
     get choices() {
         return this.props.fields.map((f) => ({ label: f.string, value: f.name }));
     }
@@ -15,9 +21,3 @@ export class CustomGroupByItem extends Component {
         }
     }
 }
-
-CustomGroupByItem.template = "web.CustomGroupByItem";
-CustomGroupByItem.props = {
-    fields: Array,
-    onAddCustomGroup: Function,
-};

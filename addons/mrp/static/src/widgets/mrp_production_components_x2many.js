@@ -13,11 +13,12 @@ export class MrpProductionComponentsListRenderer extends MovesListRenderer  {
     }
 }
 
-export class MrpProductionComponentsX2ManyField extends StockMoveX2ManyField {}
-MrpProductionComponentsX2ManyField.components = {
-    ...StockMoveX2ManyField.components,
-    ListRenderer: MrpProductionComponentsListRenderer,
-};
+export class MrpProductionComponentsX2ManyField extends StockMoveX2ManyField {
+    static components = {
+        ...StockMoveX2ManyField.components,
+        ListRenderer: MrpProductionComponentsListRenderer,
+    };
+}
 
 export const mrpProductionComponentsX2ManyField = {
     ...stockMoveX2ManyField,

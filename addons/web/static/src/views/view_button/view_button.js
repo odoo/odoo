@@ -37,6 +37,32 @@ function iconFromString(iconString) {
 }
 
 export class ViewButton extends Component {
+    static template = "views.ViewButton";
+    static props = [
+        "id?",
+        "tag?",
+        "record?",
+        "attrs?",
+        "className?",
+        "context?",
+        "clickParams?",
+        "icon?",
+        "defaultRank?",
+        "disabled?",
+        "size?",
+        "tabindex?",
+        "title?",
+        "style?",
+        "string?",
+        "slots?",
+        "onClick?",
+    ];
+    static defaultProps = {
+        tag: "button",
+        className: "",
+        clickParams: {},
+    };
+
     setup() {
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
@@ -133,28 +159,3 @@ export class ViewButton extends Component {
         return classNames.join(" ");
     }
 }
-ViewButton.template = "views.ViewButton";
-ViewButton.props = [
-    "id?",
-    "tag?",
-    "record?",
-    "attrs?",
-    "className?",
-    "context?",
-    "clickParams?",
-    "icon?",
-    "defaultRank?",
-    "disabled?",
-    "size?",
-    "tabindex?",
-    "title?",
-    "style?",
-    "string?",
-    "slots?",
-    "onClick?",
-];
-ViewButton.defaultProps = {
-    tag: "button",
-    className: "",
-    clickParams: {},
-};

@@ -70,6 +70,13 @@ export async function makeWithSearch(params) {
     delete props.Component;
 
     class Parent extends Component {
+        static template = xml`
+            <WithSearch t-props="withSearchProps" t-slot-scope="search">
+                <Component t-props="getProps(search)"/>
+            </WithSearch>
+            <MainComponentsContainer />
+        `;
+        static components = { Component: params.Component, WithSearch, MainComponentsContainer };
         setup() {
             this.withSearchProps = props;
         }
@@ -86,14 +93,6 @@ export async function makeWithSearch(params) {
             return filterPropsForComponent(params.Component, props);
         }
     }
-
-    Parent.template = xml`
-        <WithSearch t-props="withSearchProps" t-slot-scope="search">
-            <Component t-props="getProps(search)"/>
-        </WithSearch>
-        <MainComponentsContainer />
-    `;
-    Parent.components = { Component: params.Component, WithSearch, MainComponentsContainer };
 
     const env = await makeTestEnv({ serverData, mockRPC });
     const searchEnv = Object.assign(Object.create(env), { config });

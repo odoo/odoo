@@ -6,6 +6,9 @@ import { FileUploadProgressBar } from "./file_upload_progress_bar";
 import { Component } from "@odoo/owl";
 
 export class FileUploadProgressRecord extends Component {
+    static components = {
+        FileUploadProgressBar,
+    };
     getProgressTexts() {
         const fileUpload = this.props.fileUpload;
         const percent = Math.round(fileUpload.progress * 100);
@@ -24,12 +27,11 @@ export class FileUploadProgressRecord extends Component {
         }
     }
 }
-FileUploadProgressRecord.components = {
-    FileUploadProgressBar,
-};
 
-export class FileUploadProgressKanbanRecord extends FileUploadProgressRecord {}
-FileUploadProgressKanbanRecord.template = "web.FileUploadProgressKanbanRecord";
+export class FileUploadProgressKanbanRecord extends FileUploadProgressRecord {
+    static template = "web.FileUploadProgressKanbanRecord";
+}
 
-export class FileUploadProgressDataRow extends FileUploadProgressRecord {}
-FileUploadProgressDataRow.template = "web.FileUploadProgressDataRow";
+export class FileUploadProgressDataRow extends FileUploadProgressRecord {
+    static template = "web.FileUploadProgressDataRow";
+}

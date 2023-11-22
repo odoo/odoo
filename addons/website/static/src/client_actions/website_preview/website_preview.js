@@ -27,10 +27,19 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 
-class BlockPreview extends Component {}
-BlockPreview.template = 'website.BlockPreview';
+class BlockPreview extends Component {
+    static template = "website.BlockPreview";
+}
 
 export class WebsitePreview extends Component {
+    static template = "website.WebsitePreview";
+    static components = {
+        WebsiteEditorComponent,
+        BlockPreview,
+        WebsiteTranslator,
+        ResourceEditor,
+        ResizablePanel,
+    };
     setup() {
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
@@ -524,13 +533,5 @@ export class WebsitePreview extends Component {
         );
     }
 }
-WebsitePreview.template = 'website.WebsitePreview';
-WebsitePreview.components = {
-    WebsiteEditorComponent,
-    BlockPreview,
-    WebsiteTranslator,
-    ResourceEditor,
-    ResizablePanel,
-};
 
 registry.category('actions').add('website_preview', WebsitePreview);

@@ -23,6 +23,12 @@ export class AccountMoveController extends FormController {
 };
 
 export class AccountMoveFormNotebook extends Notebook {
+    static template = "account.AccountMoveFormNotebook";
+    static props = {
+        ...Notebook.props,
+        onBeforeTabSwitch: { type: Function, optional: true },
+    };
+
     async changeTabTo(page_id) {
         if (this.props.onBeforeTabSwitch) {
             await this.props.onBeforeTabSwitch(page_id);
@@ -30,12 +36,13 @@ export class AccountMoveFormNotebook extends Notebook {
         this.state.currentPage = page_id;
     }
 }
-AccountMoveFormNotebook.template = "account.AccountMoveFormNotebook";
-AccountMoveFormNotebook.props = {
-    ...Notebook.props,
-    onBeforeTabSwitch: { type: Function, optional: true },
-}
+
 export class AccountMoveFormRenderer extends FormRenderer {
+    static components = {
+        ...FormRenderer.components,
+        AccountMoveFormNotebook: AccountMoveFormNotebook,
+    };
+
     async saveBeforeTabChange() {
         if (this.props.record.isInEdition && await this.props.record.isDirty()) {
             const contentEl = document.querySelector('.o_content');
@@ -46,10 +53,6 @@ export class AccountMoveFormRenderer extends FormRenderer {
             }
         }
     }
-}
-AccountMoveFormRenderer.components = {
-    ...FormRenderer.components,
-    AccountMoveFormNotebook: AccountMoveFormNotebook,
 }
 export class AccountMoveFormCompiler extends FormCompiler {
     compileNotebook(el, params) {

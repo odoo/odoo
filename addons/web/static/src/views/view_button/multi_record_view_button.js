@@ -3,6 +3,8 @@
 import { ViewButton } from "./view_button";
 
 export class MultiRecordViewButton extends ViewButton {
+    static props = [...ViewButton.props, "list", "domain"];
+
     async onClick() {
         const { clickParams, list } = this.props;
         const resIds = await list.getResIds(true);
@@ -23,5 +25,3 @@ export class MultiRecordViewButton extends ViewButton {
         });
     }
 }
-
-MultiRecordViewButton.props = [...ViewButton.props, "list", "domain"];

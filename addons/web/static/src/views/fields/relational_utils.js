@@ -181,6 +181,40 @@ export function useSpecialData(loadFn) {
 //
 
 export class Many2XAutocomplete extends Component {
+    static template = "web.Many2XAutocomplete";
+    static components = { AutoComplete };
+    static props = {
+        value: { type: String, optional: true },
+        activeActions: Object,
+        context: { type: Object, optional: true },
+        nameCreateField: { type: String, optional: true },
+        setInputFloats: { type: Function, optional: true },
+        update: Function,
+        resModel: String,
+        getDomain: Function,
+        searchLimit: { type: Number, optional: true },
+        quickCreate: { type: [Function, { value: null }], optional: true },
+        noSearchMore: { type: Boolean, optional: true },
+        searchMoreLimit: { type: Number, optional: true },
+        fieldString: String,
+        id: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+        autoSelect: { type: Boolean, optional: true },
+        isToMany: { type: Boolean, optional: true },
+        autocomplete_container: { type: Function, optional: true },
+        dropdown: { type: Boolean, optional: true },
+        autofocus: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        searchLimit: 7,
+        searchMoreLimit: 320,
+        nameCreateField: "name",
+        value: "",
+        setInputFloats: () => {},
+        quickCreate: null,
+        context: {},
+        dropdown: true,
+    };
     setup() {
         this.orm = useService("orm");
 
@@ -393,40 +427,6 @@ export class Many2XAutocomplete extends Component {
         }
     }
 }
-Many2XAutocomplete.template = "web.Many2XAutocomplete";
-Many2XAutocomplete.components = { AutoComplete };
-Many2XAutocomplete.props = {
-    value: { type: String, optional: true },
-    activeActions: Object,
-    context: { type: Object, optional: true },
-    nameCreateField: { type: String, optional: true },
-    setInputFloats: { type: Function, optional: true },
-    update: Function,
-    resModel: String,
-    getDomain: Function,
-    searchLimit: { type: Number, optional: true },
-    quickCreate: { type: [Function, { value: null }], optional: true },
-    noSearchMore: { type: Boolean, optional: true },
-    searchMoreLimit: { type: Number, optional: true },
-    fieldString: String,
-    id: { type: String, optional: true },
-    placeholder: { type: String, optional: true },
-    autoSelect: { type: Boolean, optional: true },
-    isToMany: { type: Boolean, optional: true },
-    autocomplete_container: { type: Function, optional: true },
-    dropdown: { type: Boolean, optional: true },
-    autofocus: { type: Boolean, optional: true },
-};
-Many2XAutocomplete.defaultProps = {
-    searchLimit: 7,
-    searchMoreLimit: 320,
-    nameCreateField: "name",
-    value: "",
-    setInputFloats: () => {},
-    quickCreate: null,
-    context: {},
-    dropdown: true,
-};
 
 export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
     mapRecordToOption(result) {
@@ -512,6 +512,19 @@ export function useOpenMany2XRecord({
 //
 
 export class X2ManyFieldDialog extends Component {
+    static template = "web.X2ManyFieldDialog";
+    static components = { Dialog, FormRenderer, ViewButton };
+    static props = {
+        archInfo: Object,
+        close: Function,
+        record: Object,
+        addNew: Function,
+        save: Function,
+        title: String,
+        delete: { optional: true },
+        deleteButtonLabel: { optional: true },
+        config: Object,
+    };
     setup() {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
@@ -615,19 +628,6 @@ export class X2ManyFieldDialog extends Component {
         }
     }
 }
-X2ManyFieldDialog.components = { Dialog, FormRenderer, ViewButton };
-X2ManyFieldDialog.props = {
-    archInfo: Object,
-    close: Function,
-    record: Object,
-    addNew: Function,
-    save: Function,
-    title: String,
-    delete: { optional: true },
-    deleteButtonLabel: { optional: true },
-    config: Object,
-};
-X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
 
 async function getFormViewInfo({ list, activeField, viewService, userService, env }) {
     let formArchInfo = activeField.views.form;

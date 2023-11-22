@@ -41,12 +41,12 @@ import { fieldService } from "@web/core/field_service";
 import { Component, xml } from "@odoo/owl";
 
 export class DebugMenuParent extends Component {
+    static template = xml`<DebugMenu/>`;
+    static components = { DebugMenu };
     setup() {
         useOwnDebugContext({ categories: ["default", "custom"] });
     }
 }
-DebugMenuParent.template = xml`<DebugMenu/>`;
-DebugMenuParent.components = { DebugMenu };
 
 const debugRegistry = registry.category("debug");
 let target;
@@ -474,11 +474,11 @@ QUnit.module("DebugMenu", (hooks) => {
         prepareRegistriesWithCleanup();
 
         class ToyController extends Component {
+            static template = xml`<div class="o-toy-view"/>`;
             setup() {
                 useSetupView();
             }
         }
-        ToyController.template = xml`<div class="o-toy-view"/>`;
 
         registry.category("views").add("toy", {
             type: "toy",

@@ -19,10 +19,23 @@ const seoContext = reactive({
     defaultTitle: '',
 });
 
-class MetaImage extends Component {}
-MetaImage.template = 'website.MetaImage';
+class MetaImage extends Component {
+    static template = "website.MetaImage";
+}
 
 class ImageSelector extends Component {
+    static template = "website.ImageSelector";
+    static components = {
+        MetaImage,
+    };
+    static props = {
+        previewDescription: String,
+        defaultTitle: String,
+        hasSocialDefaultImage: Boolean,
+        pageImages: Array,
+        url: String,
+    };
+
     setup() {
         this.website = useService('website');
         this.dialogs = useService('dialog');
@@ -119,19 +132,16 @@ class ImageSelector extends Component {
         });
     }
 }
-ImageSelector.template = 'website.ImageSelector';
-ImageSelector.components = {
-    MetaImage,
-};
-ImageSelector.props = {
-    previewDescription: String,
-    defaultTitle: String,
-    hasSocialDefaultImage: Boolean,
-    pageImages: Array,
-    url: String,
-};
 
 class Keyword extends Component {
+    static template = "website.Keyword";
+    static props = {
+        language: String,
+        keyword: String,
+        addKeyword: Function,
+        removeKeyword: Function,
+    };
+
     setup() {
         this.website = useService('website');
         this.rpc = useService('rpc');
@@ -184,15 +194,13 @@ class Keyword extends Component {
         return this.isKeywordIn(this.getBodyText());
     }
 }
-Keyword.template = "website.Keyword";
-Keyword.props = {
-    language: String,
-    keyword: String,
-    addKeyword: Function,
-    removeKeyword: Function,
-};
 
 class MetaKeywords extends Component {
+    static template = "website.MetaKeywords";
+    static components = {
+        Keyword,
+    };
+
     setup() {
         this.rpc = useService('rpc');
         this.website = useService('website');
@@ -239,12 +247,16 @@ class MetaKeywords extends Component {
         this.seoContext.keywords = this.seoContext.keywords.filter(kw => kw !== keyword);
     }
 }
-MetaKeywords.template = 'website.MetaKeywords';
-MetaKeywords.components = {
-    Keyword,
-};
 
 class SEOPreview extends Component {
+    static template = "website.SEOPreview";
+    static props = {
+        isIndexed: Boolean,
+        title: String,
+        description: String,
+        url: String,
+    };
+
     get description() {
         if (this.props.description.length > 160) {
             return this.props.description.substring(0, 159) + '…';
@@ -252,15 +264,23 @@ class SEOPreview extends Component {
         return this.props.description;
     }
 }
-SEOPreview.template = 'website.SEOPreview';
-SEOPreview.props = {
-    isIndexed: Boolean,
-    title: String,
-    description: String,
-    url: String,
-};
-
 class TitleDescription extends Component {
+    static template = "website.TitleDescription";
+    static props = {
+        canEditDescription: Boolean,
+        canEditUrl: Boolean,
+        canEditTitle: Boolean,
+        seoNameHelp: String,
+        seoNameDefault: { optional: true, String },
+        isIndexed: Boolean,
+        defaultTitle: String,
+        previewDescription: String,
+        url: String,
+    };
+    static components = {
+        SEOPreview,
+    };
+
     setup() {
         this.seoContext = useState(seoContext);
         useAutofocus();
@@ -346,23 +366,16 @@ class TitleDescription extends Component {
         this.seoContext.seoName = ev.target.value;
     }
 }
-TitleDescription.template = 'website.TitleDescription';
-TitleDescription.props = {
-    canEditDescription: Boolean,
-    canEditUrl: Boolean,
-    canEditTitle: Boolean,
-    seoNameHelp: String,
-    seoNameDefault: {optional: true, String},
-    isIndexed: Boolean,
-    defaultTitle: String,
-    previewDescription: String,
-    url: String,
-};
-TitleDescription.components = {
-    SEOPreview,
-};
 
 export class OptimizeSEODialog extends Component {
+    static template = "website.OptimizeSEODialog";
+    static components = {
+        WebsiteDialog,
+        TitleDescription,
+        ImageSelector,
+        MetaKeywords,
+    };
+
     setup() {
         this.rpc = useService('rpc');
         this.website = useService('website');
@@ -468,10 +481,3 @@ export class OptimizeSEODialog extends Component {
         this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
     }
 }
-OptimizeSEODialog.template = 'website.OptimizeSEODialog';
-OptimizeSEODialog.components = {
-    WebsiteDialog,
-    TitleDescription,
-    ImageSelector,
-    MetaKeywords,
-};

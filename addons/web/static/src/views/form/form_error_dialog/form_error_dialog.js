@@ -5,6 +5,8 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Component } from "@odoo/owl";
 
 export class FormErrorDialog extends Component {
+    static template = "web.FormErrorDialog";
+    static components = { Dialog };
     async discard() {
         await this.props.onDiscard();
         this.props.close();
@@ -15,5 +17,3 @@ export class FormErrorDialog extends Component {
         this.props.close();
     }
 }
-FormErrorDialog.template = "web.FormErrorDialog";
-FormErrorDialog.components = { Dialog };

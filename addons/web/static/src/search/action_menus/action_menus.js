@@ -23,6 +23,32 @@ export const ACTIONS_GROUP_NUMBER = 100;
  * @extends Component
  */
 export class ActionMenus extends Component {
+    static template = "web.ActionMenus";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        getActiveIds: Function,
+        context: Object,
+        resModel: String,
+        domain: { type: Array, optional: true },
+        isDomainSelected: { type: Boolean, optional: true },
+        items: {
+            type: Object,
+            shape: {
+                action: { type: Array, optional: true },
+                print: { type: Array, optional: true },
+            },
+        },
+        onActionExecuted: { type: Function, optional: true },
+        shouldExecuteAction: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        onActionExecuted: () => {},
+        shouldExecuteAction: () => true,
+    };
+
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
@@ -117,29 +143,3 @@ export class ActionMenus extends Component {
         }
     }
 }
-
-ActionMenus.components = {
-    Dropdown,
-    DropdownItem,
-};
-ActionMenus.props = {
-    getActiveIds: Function,
-    context: Object,
-    resModel: String,
-    domain: { type: Array, optional: true },
-    isDomainSelected: { type: Boolean, optional: true },
-    items: {
-        type: Object,
-        shape: {
-            action: { type: Array, optional: true },
-            print: { type: Array, optional: true },
-        },
-    },
-    onActionExecuted: { type: Function, optional: true },
-    shouldExecuteAction: { type: Function, optional: true },
-};
-ActionMenus.defaultProps = {
-    onActionExecuted: () => {},
-    shouldExecuteAction: () => true,
-};
-ActionMenus.template = "web.ActionMenus";

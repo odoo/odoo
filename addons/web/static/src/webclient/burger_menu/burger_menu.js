@@ -16,6 +16,14 @@ import { Component, onMounted, useState } from "@odoo/owl";
 const SWIPE_ACTIVATION_THRESHOLD = 100;
 
 export class BurgerMenu extends Component {
+    static template = "web.BurgerMenu";
+    static props = {};
+    static components = {
+        BurgerUserMenu,
+        MobileSwitchCompanyMenu,
+        Transition,
+    };
+
     setup() {
         this.company = useService("company");
         this.user = useService("user");
@@ -79,13 +87,6 @@ export class BurgerMenu extends Component {
         this.swipeStartX = null;
     }
 }
-BurgerMenu.template = "web.BurgerMenu";
-BurgerMenu.components = {
-    BurgerUserMenu,
-    MobileSwitchCompanyMenu,
-    Transition,
-};
-BurgerMenu.props = {};
 
 const systrayItem = {
     Component: BurgerMenu,

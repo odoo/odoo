@@ -42,6 +42,34 @@ import {
 // -----------------------------------------------------------------------------
 
 export class ListController extends Component {
+    static template = `web.ListView`;
+    static components = {
+        ActionMenus,
+        Layout,
+        ViewButton,
+        MultiRecordViewButton,
+        SearchBar,
+        CogMenu,
+    };
+    static props = {
+        ...standardViewProps,
+        allowSelectors: { type: Boolean, optional: true },
+        editable: { type: Boolean, optional: true },
+        onSelectionChanged: { type: Function, optional: true },
+        showButtons: { type: Boolean, optional: true },
+        Model: Function,
+        Renderer: Function,
+        buttonTemplate: String,
+        archInfo: Object,
+    };
+    static defaultProps = {
+        allowSelectors: true,
+        createRecord: () => {},
+        editable: true,
+        selectRecord: () => {},
+        showButtons: true,
+    };
+
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
@@ -627,31 +655,3 @@ export class ListController extends Component {
         });
     }
 }
-
-ListController.template = `web.ListView`;
-ListController.components = {
-    ActionMenus,
-    Layout,
-    ViewButton,
-    MultiRecordViewButton,
-    SearchBar,
-    CogMenu,
-};
-ListController.props = {
-    ...standardViewProps,
-    allowSelectors: { type: Boolean, optional: true },
-    editable: { type: Boolean, optional: true },
-    onSelectionChanged: { type: Function, optional: true },
-    showButtons: { type: Boolean, optional: true },
-    Model: Function,
-    Renderer: Function,
-    buttonTemplate: String,
-    archInfo: Object,
-};
-ListController.defaultProps = {
-    allowSelectors: true,
-    createRecord: () => {},
-    editable: true,
-    selectRecord: () => {},
-    showButtons: true,
-};

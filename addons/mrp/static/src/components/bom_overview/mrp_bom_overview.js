@@ -7,6 +7,11 @@ import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
 import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl";
 
 export class BomOverviewComponent extends Component {
+    static template = "mrp.BomOverviewComponent";
+    static components = {
+        BomOverviewControlPanel,
+        BomOverviewTable,
+    };
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
@@ -156,11 +161,5 @@ export class BomOverviewComponent extends Component {
         return reportName;
     }
 }
-
-BomOverviewComponent.template = "mrp.BomOverviewComponent";
-BomOverviewComponent.components = {
-    BomOverviewControlPanel,
-    BomOverviewTable,
-};
 
 registry.category("actions").add("mrp_bom_report", BomOverviewComponent);

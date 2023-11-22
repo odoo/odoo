@@ -12,6 +12,14 @@ import { NavBar } from "./navbar/navbar";
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
 
 export class WebClient extends Component {
+    static template = "web.WebClient";
+    static props = {};
+    static components = {
+        ActionContainer,
+        NavBar,
+        MainComponentsContainer,
+    };
+
     setup() {
         this.menuService = useService("menu");
         this.actionService = useService("action");
@@ -119,10 +127,3 @@ export class WebClient extends Component {
         }
     }
 }
-WebClient.components = {
-    ActionContainer,
-    NavBar,
-    MainComponentsContainer,
-};
-WebClient.template = "web.WebClient";
-WebClient.props = {};

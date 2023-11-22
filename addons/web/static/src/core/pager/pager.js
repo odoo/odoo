@@ -19,6 +19,21 @@ import { Component, useExternalListener, useState } from "@odoo/owl";
  * @extends Component
  */
 export class Pager extends Component {
+    static template = "web.Pager";
+    static defaultProps = {
+        isEditable: true,
+        withAccessKey: true,
+    };
+    static props = {
+        offset: Number,
+        limit: Number,
+        total: Number,
+        onUpdate: Function,
+        isEditable: { type: Boolean, optional: true },
+        withAccessKey: { type: Boolean, optional: true },
+        updateTotal: { type: Function, optional: true },
+    };
+
     setup() {
         this.state = useState({
             isEditing: false,
@@ -174,18 +189,3 @@ export class Pager extends Component {
         }
     }
 }
-Pager.template = "web.Pager";
-
-Pager.defaultProps = {
-    isEditable: true,
-    withAccessKey: true,
-};
-Pager.props = {
-    offset: Number,
-    limit: Number,
-    total: Number,
-    onUpdate: Function,
-    isEditable: { type: Boolean, optional: true },
-    withAccessKey: { type: Boolean, optional: true },
-    updateTotal: { type: Function, optional: true },
-};

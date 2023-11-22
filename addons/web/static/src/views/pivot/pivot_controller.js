@@ -11,6 +11,15 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Component, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
+    static template = "web.PivotView";
+    static components = { Layout, SearchBar, CogMenu };
+    static props = {
+        ...standardViewProps,
+        Model: Function,
+        modelParams: Object,
+        Renderer: Function,
+    };
+
     setup() {
         this.model = useModelWithSampleData(this.props.Model, this.props.modelParams);
 
@@ -35,13 +44,3 @@ export class PivotController extends Component {
         };
     }
 }
-
-PivotController.template = "web.PivotView";
-PivotController.components = { Layout, SearchBar, CogMenu };
-
-PivotController.props = {
-    ...standardViewProps,
-    Model: Function,
-    modelParams: Object,
-    Renderer: Function,
-};

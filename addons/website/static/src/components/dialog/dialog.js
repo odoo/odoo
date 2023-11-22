@@ -7,6 +7,33 @@ import { useState, Component } from "@odoo/owl";
 const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
+    static template = "website.WebsiteDialog";
+    static components = { Dialog };
+    static props = {
+        ...Dialog.props,
+        primaryTitle: { type: String, optional: true },
+        primaryClick: { type: Function, optional: true },
+        secondaryTitle: { type: String, optional: true },
+        secondaryClick: { type: Function, optional: true },
+        showSecondaryButton: { type: Boolean, optional: true },
+        close: { type: Function, optional: true },
+        closeOnClick: { type: Boolean, optional: true },
+        body: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        showFooter: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        ...Dialog.defaultProps,
+        title: _t("Confirmation"),
+        showFooter: true,
+        primaryTitle: _t("Ok"),
+        secondaryTitle: _t("Cancel"),
+        showSecondaryButton: true,
+        size: "md",
+        closeOnClick: true,
+        close: NO_OP,
+    };
+
     setup() {
         this.state = useState({
             disabled: false,
@@ -45,29 +72,3 @@ export class WebsiteDialog extends Component {
         return websiteDialogClass;
     }
 }
-WebsiteDialog.components = { Dialog };
-WebsiteDialog.props = {
-    ...Dialog.props,
-    primaryTitle: { type: String, optional: true },
-    primaryClick: { type: Function, optional: true },
-    secondaryTitle: { type: String, optional: true },
-    secondaryClick: { type: Function, optional: true },
-    showSecondaryButton: { type: Boolean, optional: true },
-    close: { type: Function, optional: true },
-    closeOnClick: { type: Boolean, optional: true },
-    body: { type: String, optional: true },
-    slots: { type: Object, optional: true },
-    showFooter: { type: Boolean, optional: true },
-};
-WebsiteDialog.defaultProps = {
-    ...Dialog.defaultProps,
-    title: _t("Confirmation"),
-    showFooter: true,
-    primaryTitle: _t("Ok"),
-    secondaryTitle: _t("Cancel"),
-    showSecondaryButton: true,
-    size: "md",
-    closeOnClick: true,
-    close: NO_OP,
-};
-WebsiteDialog.template = "website.WebsiteDialog";

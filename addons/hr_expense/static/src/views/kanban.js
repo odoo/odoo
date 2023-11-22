@@ -12,12 +12,16 @@ import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 
 export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {}
 
-export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(ExpenseMobileQRCode(KanbanRenderer)) {}
-ExpenseKanbanRenderer.template = 'hr_expense.KanbanRenderer';
+export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(
+    ExpenseMobileQRCode(KanbanRenderer)
+) {
+    static template = "hr_expense.KanbanRenderer";
+}
 
-export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {}
-ExpenseDashboardKanbanRenderer.components = { ...ExpenseDashboardKanbanRenderer.components, ExpenseDashboard};
-ExpenseDashboardKanbanRenderer.template = 'hr_expense.DashboardKanbanRenderer';
+export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {
+    static components = { ...ExpenseDashboardKanbanRenderer.components, ExpenseDashboard };
+    static template = "hr_expense.DashboardKanbanRenderer";
+}
 
 registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,

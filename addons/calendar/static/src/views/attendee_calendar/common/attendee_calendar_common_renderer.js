@@ -5,7 +5,11 @@ import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/cale
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 
 export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
-
+    static eventTemplate = "calendar.AttendeeCalendarCommonRenderer.event";
+    static components = {
+        ...CalendarCommonRenderer.components,
+        Popover: AttendeeCalendarCommonPopover,
+    };
     setup() {
         super.setup();
         this.user = useService("user");
@@ -59,8 +63,3 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
         return true;
     }
 }
-AttendeeCalendarCommonRenderer.eventTemplate = "calendar.AttendeeCalendarCommonRenderer.event";
-AttendeeCalendarCommonRenderer.components = {
-    ...CalendarCommonRenderer.components,
-    Popover: AttendeeCalendarCommonPopover,
-};

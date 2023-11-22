@@ -5,6 +5,7 @@ import { useService } from '@web/core/utils/hooks';
 import { Component, useState } from "@odoo/owl";
 
 class TranslateWebsiteSystray extends Component {
+    static template = "website.TranslateWebsiteSystray";
     setup() {
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);
@@ -24,7 +25,6 @@ class TranslateWebsiteSystray extends Component {
         }
     }
 }
-TranslateWebsiteSystray.template = "website.TranslateWebsiteSystray";
 
 export const systrayItem = {
     Component: TranslateWebsiteSystray,

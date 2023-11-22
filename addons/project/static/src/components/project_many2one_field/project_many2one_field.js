@@ -5,6 +5,7 @@ import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 
 export class ProjectMany2OneField extends Many2OneField {
+    static template = "project.ProjectMany2OneField";
     get Many2XAutocompleteProps() {
         const props = super.Many2XAutocompleteProps;
         const { project_id, parent_id } = this.props.record.data;
@@ -27,7 +28,6 @@ export class ProjectMany2OneField extends Many2OneField {
         super.updateRecord(value);
     }
 }
-ProjectMany2OneField.template = 'project.ProjectMany2OneField';
 
 export const projectMany2OneField = {
     ...many2OneField,

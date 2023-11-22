@@ -14,6 +14,7 @@ import { registry } from "@web/core/registry";
  * time the user changes the body.
  */
 export class SmsWidget extends EmojisTextField {
+    static template = "sms.SmsWidget";
     setup() {
         super.setup();
         this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
@@ -97,7 +98,6 @@ export class SmsWidget extends EmojisTextField {
         await this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
     }
 }
-SmsWidget.template = 'sms.SmsWidget';
 
 export const smsWidget = {
     ...emojisTextField,

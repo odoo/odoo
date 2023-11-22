@@ -6,6 +6,16 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { Component } from "@odoo/owl";
 export class ButtonBox extends Component {
+    static template = "web.Form.ButtonBox";
+    static components = { Dropdown, DropdownItem };
+    static props = {
+        slots: Object,
+        class: { type: String, optional: true },
+    };
+    static defaultProps = {
+        class: "",
+    };
+
     setup() {
         const ui = useService("ui");
         this.getMaxButtons = () => [3, 3, 3, 7, 3, 4, 7][ui.size] || 7;
@@ -27,12 +37,3 @@ export class ButtonBox extends Component {
         return { visible, additional };
     }
 }
-ButtonBox.template = "web.Form.ButtonBox";
-ButtonBox.components = { Dropdown, DropdownItem };
-ButtonBox.props = {
-    slots: Object,
-    class: { type: String, optional: true },
-};
-ButtonBox.defaultProps = {
-    class: "",
-};

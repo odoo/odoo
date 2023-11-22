@@ -34,10 +34,21 @@ import { Component, onWillStart } from "@odoo/owl";
 
 // Reorder Dialog
 
-export class ReorderConfirmationDialog extends ConfirmationDialog {}
-ReorderConfirmationDialog.template = "website_sale.ReorderConfirmationDialog";
+export class ReorderConfirmationDialog extends ConfirmationDialog {
+    static template = "website_sale.ReorderConfirmationDialog";
+}
 
 export class ReorderDialog extends Component {
+    static template = "website_sale.ReorderModal";
+    static props = {
+        close: Function,
+        orderId: Number,
+        accessToken: String,
+    };
+    static components = {
+        Dialog,
+    };
+
     setup() {
         this.rpc = useService("rpc");
         this.orm = useService("orm");
@@ -153,12 +164,3 @@ export class ReorderDialog extends Component {
         }
     }
 }
-ReorderDialog.props = {
-    close: Function,
-    orderId: Number,
-    accessToken: String,
-};
-ReorderDialog.components = {
-    Dialog,
-};
-ReorderDialog.template = "website_sale.ReorderModal";

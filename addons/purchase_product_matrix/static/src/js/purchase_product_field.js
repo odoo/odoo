@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class PurchaseOrderLineProductField extends Many2OneField {
-
+    static template = "purchase.PurchaseProductField";
     setup() {
         super.setup();
         this.dialog = useService("dialog");
@@ -102,8 +102,6 @@ export class PurchaseOrderLineProductField extends Many2OneField {
         });
     }
 }
-
-PurchaseOrderLineProductField.template = "purchase.PurchaseProductField";
 
 export const purchaseOrderLineProductField = {
     ...many2OneField,

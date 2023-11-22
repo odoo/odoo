@@ -8,6 +8,37 @@ import { MoOverviewByproductsBlock } from "../mo_overview_byproducts_block/mrp_m
 import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
 export class MoOverviewComponentsBlock extends Component {
+    static components = {
+        MoOverviewLine,
+        MoOverviewOperationsBlock,
+        MoOverviewByproductsBlock,
+        MoOverviewComponentsBlock,
+    };
+    static props = {
+        unfoldAll: { type: Boolean, optional: true },
+        components: { type: Array, optional: true },
+        operations: {
+            type: Object,
+            shape: {
+                summary: Object,
+                details: Array,
+            },
+            optional: true,
+        },
+        byproducts: {
+            type: Object,
+            shape: {
+                summary: Object,
+                details: Array,
+            },
+            optional: true,
+        },
+        showOptions: SHOW_OPTIONS,
+    };
+    static defaultProps = {
+        unfoldAll: false,
+    };
+
     static template = "mrp.MoOverviewComponentsBlock";
 
     setup() {
@@ -79,34 +110,3 @@ export class MoOverviewComponentsBlock extends Component {
         return this.hasComponents(replenishment) && !this.state.fold[replenishment?.summary.index];
     }
 }
-
-MoOverviewComponentsBlock.components = {
-    MoOverviewLine,
-    MoOverviewOperationsBlock,
-    MoOverviewByproductsBlock,
-    MoOverviewComponentsBlock,
-};
-MoOverviewComponentsBlock.props = {
-    unfoldAll: { type: Boolean, optional: true },
-    components: { type: Array, optional: true },
-    operations: {
-        type: Object,
-        shape: {
-            summary: Object,
-            details: Array,
-        },
-        optional: true,
-    },
-    byproducts: {
-        type: Object,
-        shape: {
-            summary: Object,
-            details: Array,
-        },
-        optional: true,
-    },
-    showOptions: SHOW_OPTIONS,
-};
-MoOverviewComponentsBlock.defaultProps = {
-    unfoldAll: false,
-};

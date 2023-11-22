@@ -114,6 +114,15 @@ export function useTransition({
  * to be created. @see useTransition
  */
 export class Transition extends Component {
+    static template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
+    static props = {
+        name: String,
+        visible: { type: Boolean, optional: true },
+        leaveDuration: { type: Number, optional: true },
+        onLeave: { type: Function, optional: true },
+        slots: Object,
+    };
+
     setup() {
         const { visible, leaveDuration, name, onLeave } = this.props;
         this.transition = useTransition({
@@ -127,12 +136,3 @@ export class Transition extends Component {
         });
     }
 }
-
-Transition.template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
-Transition.props = {
-    name: String,
-    visible: { type: Boolean, optional: true },
-    leaveDuration: { type: Number, optional: true },
-    onLeave: { type: Function, optional: true },
-    slots: Object,
-};

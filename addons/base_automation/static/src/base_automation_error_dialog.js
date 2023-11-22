@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class BaseAutomationErrorDialog extends RPCErrorDialog {
+    static template = "base_automation.ErrorDialog";
     setup() {
         super.setup(...arguments);
         const { id, name } = this.props.data.context.base_automation;
@@ -52,7 +53,5 @@ export class BaseAutomationErrorDialog extends RPCErrorDialog {
         this.props.close();
     }
 }
-
-BaseAutomationErrorDialog.template = "base_automation.ErrorDialog";
 
 registry.category("error_dialogs").add("base_automation", BaseAutomationErrorDialog);

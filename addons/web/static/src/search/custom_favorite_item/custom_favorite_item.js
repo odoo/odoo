@@ -11,6 +11,10 @@ import { Component, useRef, useState } from "@odoo/owl";
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export class CustomFavoriteItem extends Component {
+    static template = "web.CustomFavoriteItem";
+    static components = { CheckBox, AccordionItem };
+    static props = {};
+
     setup() {
         this.notificationService = useService("notification");
         this.descriptionRef = useRef("description");
@@ -90,9 +94,6 @@ export class CustomFavoriteItem extends Component {
     }
 }
 
-CustomFavoriteItem.template = "web.CustomFavoriteItem";
-CustomFavoriteItem.components = { CheckBox, AccordionItem };
-CustomFavoriteItem.props = {};
 favoriteMenuRegistry.add(
     "custom-favorite-item",
     { Component: CustomFavoriteItem, groupNumber: 3 },

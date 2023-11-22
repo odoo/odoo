@@ -5,7 +5,9 @@ import { patch } from "@web/core/utils/patch";
 
 import { ForecastedHeader as Parent } from "@stock/stock_forecasted/forecasted_header";
 
-export class StockAccountForecastedHeader extends Parent{}
+export class StockAccountForecastedHeader extends Parent {
+    static template = "stock_account.ForecastedHeader";
+}
 
 patch(Parent.prototype, {
     async _onClickValuation() {
@@ -22,4 +24,3 @@ patch(Parent.prototype, {
     }
 });
 
-StockAccountForecastedHeader.template = 'stock_account.ForecastedHeader';

@@ -13,29 +13,30 @@ import { click, getFixture, mount, nextTick, patchWithCleanup } from "../helpers
 import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
-class FileUploadProgressTestRecord extends FileUploadProgressRecord {}
-FileUploadProgressTestRecord.template = xml`
-    <t t-set="progressTexts" t-value="getProgressTexts()"/>
-    <div class="file_upload">
-        <div class="file_upload_progress_text_left" t-esc="progressTexts.left"/>
-        <div class="file_upload_progress_text_right" t-esc="progressTexts.right"/>
-        <FileUploadProgressBar fileUpload="props.fileUpload"/>
-    </div>
-`;
+class FileUploadProgressTestRecord extends FileUploadProgressRecord {
+    static template = xml`
+        <t t-set="progressTexts" t-value="getProgressTexts()"/>
+        <div class="file_upload">
+            <div class="file_upload_progress_text_left" t-esc="progressTexts.left"/>
+            <div class="file_upload_progress_text_right" t-esc="progressTexts.right"/>
+            <FileUploadProgressBar fileUpload="props.fileUpload"/>
+        </div>
+    `;
+}
 class Parent extends Component {
+    static components = {
+        FileUploadProgressContainer,
+    };
+    static template = xml`
+        <div class="parent">
+            <FileUploadProgressContainer fileUploads="fileUploadService.uploads" shouldDisplay="props.shouldDisplay" Component="FileUploadProgressTestRecord"/>
+        </div>
+    `;
     setup() {
         this.fileUploadService = useService("file_upload");
         this.FileUploadProgressTestRecord = FileUploadProgressTestRecord;
     }
 }
-Parent.components = {
-    FileUploadProgressContainer,
-};
-Parent.template = xml`
-    <div class="parent">
-        <FileUploadProgressContainer fileUploads="fileUploadService.uploads" shouldDisplay="props.shouldDisplay" Component="FileUploadProgressTestRecord"/>
-    </div>
-`;
 
 let env;
 let target;

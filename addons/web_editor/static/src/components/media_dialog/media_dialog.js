@@ -35,6 +35,16 @@ export const TABS = {
 };
 
 export class MediaDialog extends Component {
+    static template = "web_editor.MediaDialog";
+    static defaultProps = {
+        useMediaLibrary: true,
+    };
+    static components = {
+        ...Object.keys(TABS).map((key) => TABS[key].Component),
+        Dialog,
+        Notebook,
+    };
+
     setup() {
         this.size = 'xl';
         this.contentClass = 'o_select_media_dialog h-100';
@@ -271,12 +281,3 @@ export class MediaDialog extends Component {
         this.state.activeTab = tab;
     }
 }
-MediaDialog.template = 'web_editor.MediaDialog';
-MediaDialog.defaultProps = {
-    useMediaLibrary: true,
-};
-MediaDialog.components = {
-    ...Object.keys(TABS).map(key => TABS[key].Component),
-    Dialog,
-    Notebook,
-};

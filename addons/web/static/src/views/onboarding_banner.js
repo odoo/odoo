@@ -8,6 +8,9 @@ import { Component, markup, onWillStart, useRef, xml } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 
 export class OnboardingBanner extends Component {
+    static template = xml`<div t-if="transition.shouldMount" t-attf-class="o_onboarding_container w-100 {{transition.className}}" t-ref="onboardingContainer" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
+    static props = {};
+
     setup() {
         this.rpc = useService("rpc");
         this.user = useService("user");
@@ -65,6 +68,3 @@ export class OnboardingBanner extends Component {
         return markup(new XMLSerializer().serializeToString(banner));
     }
 }
-
-OnboardingBanner.template = xml`<div t-if="transition.shouldMount" t-attf-class="o_onboarding_container w-100 {{transition.className}}" t-ref="onboardingContainer" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
-OnboardingBanner.props = {};

@@ -44,6 +44,13 @@ const HOUR_FORMATS = {
 const { DateTime } = luxon;
 
 export class CalendarCommonRenderer extends Component {
+    static components = {
+        Popover: CalendarCommonPopover,
+    };
+    static template = "web.CalendarCommonRenderer";
+    static eventTemplate = "web.CalendarCommonRenderer.event";
+    static headerTemplate = "web.CalendarCommonRendererHeader";
+
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
@@ -339,9 +346,3 @@ export class CalendarCommonRenderer extends Component {
         });
     }
 }
-CalendarCommonRenderer.components = {
-    Popover: CalendarCommonPopover,
-};
-CalendarCommonRenderer.template = "web.CalendarCommonRenderer";
-CalendarCommonRenderer.eventTemplate = "web.CalendarCommonRenderer.event";
-CalendarCommonRenderer.headerTemplate = "web.CalendarCommonRendererHeader";

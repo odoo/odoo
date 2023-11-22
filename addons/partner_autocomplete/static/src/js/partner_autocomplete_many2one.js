@@ -62,11 +62,11 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
 
 }
 
-export class PartnerAutoCompleteMany2one extends Many2OneField {}
-
-PartnerAutoCompleteMany2one.components = {
-    ...Many2OneField.components,
-    Many2XAutocomplete: PartnerMany2XAutocomplete,
+export class PartnerAutoCompleteMany2one extends Many2OneField {
+    static components = {
+        ...Many2OneField.components,
+        Many2XAutocomplete: PartnerMany2XAutocomplete,
+    };
 }
 
 export const partnerAutoCompleteMany2one = {

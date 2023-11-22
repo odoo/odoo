@@ -6,6 +6,23 @@ import { browser } from "@web/core/browser/browser";
 import { EventBus, Component, useState, xml } from "@odoo/owl";
 
 export class BlockUI extends Component {
+    static props = {
+        bus: EventBus,
+    };
+
+    static template = xml`
+        <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100' : ''">
+          <t t-if="state.blockUI">
+            <div class="o_spinner mb-4">
+                <img src="/web/static/img/spin.svg" alt="Loading..."/>
+            </div>
+            <div class="o_message text-center px-4">
+                <t t-esc="state.line1"/> <br/>
+                <t t-esc="state.line2"/>
+            </div>
+          </t>
+        </div>`;
+
     setup() {
         this.messagesByDuration = [
             { time: 20, l1: _t("Loading...") },
@@ -72,19 +89,3 @@ export class BlockUI extends Component {
         this.state.line2 = "";
     }
 }
-BlockUI.props = {
-    bus: EventBus,
-};
-
-BlockUI.template = xml`
-    <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100' : ''">
-      <t t-if="state.blockUI">
-        <div class="o_spinner mb-4">
-            <img src="/web/static/img/spin.svg" alt="Loading..."/>
-        </div>
-        <div class="o_message text-center px-4">
-            <t t-esc="state.line1"/> <br/>
-            <t t-esc="state.line2"/>
-        </div>
-      </t>
-    </div>`;

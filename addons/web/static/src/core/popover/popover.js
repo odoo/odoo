@@ -6,6 +6,70 @@ import { usePosition } from "@web/core/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class Popover extends Component {
+    static template = "web.PopoverWowl";
+    static defaultProps = {
+        position: "bottom",
+        class: "",
+        fixedPosition: false,
+        arrow: true,
+        animation: true,
+    };
+    static props = {
+        ref: {
+            type: Function,
+            optional: true,
+        },
+        class: {
+            optional: true,
+            type: String,
+        },
+        position: {
+            type: String,
+            validate: (p) => {
+                const [d, v = "middle"] = p.split("-");
+                return (
+                    ["top", "bottom", "left", "right"].includes(d) &&
+                    ["start", "middle", "end", "fit"].includes(v)
+                );
+            },
+            optional: true,
+        },
+        onPositioned: {
+            type: Function,
+            optional: true,
+        },
+        fixedPosition: {
+            type: Boolean,
+            optional: true,
+        },
+        arrow: {
+            type: Boolean,
+            optional: true,
+        },
+        animation: {
+            type: Boolean,
+            optional: true,
+        },
+        target: {
+            validate: (target) => {
+                // target may be inside an iframe, so get the Element constructor
+                // to test against from its owner document's default view
+                const Element = target?.ownerDocument?.defaultView.Element;
+                return (
+                    Boolean(Element) &&
+                    (target instanceof Element || target instanceof window.Element)
+                );
+            },
+        },
+        slots: {
+            type: Object,
+            optional: true,
+            shape: {
+                default: { optional: true },
+            },
+        },
+    };
+
     static animationTime = 200;
     setup() {
         useActiveElement("ref");
@@ -96,64 +160,3 @@ export class Popover extends Component {
         }
     }
 }
-
-Popover.template = "web.PopoverWowl";
-Popover.defaultProps = {
-    position: "bottom",
-    class: "",
-    fixedPosition: false,
-    arrow: true,
-    animation: true,
-};
-Popover.props = {
-    ref: {
-        type: Function,
-        optional: true,
-    },
-    class: {
-        optional: true,
-        type: String,
-    },
-    position: {
-        type: String,
-        validate: (p) => {
-            const [d, v = "middle"] = p.split("-");
-            return (
-                ["top", "bottom", "left", "right"].includes(d) &&
-                ["start", "middle", "end", "fit"].includes(v)
-            );
-        },
-        optional: true,
-    },
-    onPositioned: {
-        type: Function,
-        optional: true,
-    },
-    fixedPosition: {
-        type: Boolean,
-        optional: true,
-    },
-    arrow: {
-        type: Boolean,
-        optional: true,
-    },
-    animation: {
-        type: Boolean,
-        optional: true,
-    },
-    target: {
-        validate: (target) => {
-            // target may be inside an iframe, so get the Element constructor
-            // to test against from its owner document's default view
-            const Element = target?.ownerDocument?.defaultView.Element;
-            return Boolean(Element) && (target instanceof Element || target instanceof window.Element);
-        },
-    },
-    slots: {
-        type: Object,
-        optional: true,
-        shape: {
-            default: { optional: true },
-        },
-    },
-};

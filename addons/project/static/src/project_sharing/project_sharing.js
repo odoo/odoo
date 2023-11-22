@@ -8,6 +8,10 @@ import { session } from '@web/session';
 import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
+    static props = {};
+    static components = { ActionContainer, MainComponentsContainer };
+    static template = "project.ProjectSharingWebClient";
+
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
         this.actionService = useService('action');
@@ -63,7 +67,3 @@ export class ProjectSharingWebClient extends Component {
         }
     }
 }
-
-ProjectSharingWebClient.props = {};
-ProjectSharingWebClient.components = { ActionContainer, MainComponentsContainer };
-ProjectSharingWebClient.template = 'project.ProjectSharingWebClient';

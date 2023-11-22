@@ -75,13 +75,13 @@ async function _makeView(params, inDialog = false) {
     if (inDialog) {
         let root;
         class RootDialog extends Component {
+            static components = { Dialog, View };
+            static template = rootDialogTemplate;
             setup() {
                 root = this;
                 useSubEnv(viewEnv);
             }
         }
-        RootDialog.components = { Dialog, View };
-        RootDialog.template = rootDialogTemplate;
         env.services.dialog.add(RootDialog, { viewProps: props });
         await nextTick();
         const rootNode = root.__owl__;

@@ -410,11 +410,11 @@ QUnit.module("ActionManager", (hooks) => {
             assert.expect(3);
             const slowWillStartDef = makeDeferred();
             class ClientAction extends Component {
+                static template = xml`<div class="client_action">ClientAction</div>`;
                 setup() {
                     onWillStart(() => slowWillStartDef);
                 }
             }
-            ClientAction.template = xml`<div class="client_action">ClientAction</div>`;
             actionRegistry.add("slowAction", ClientAction);
             const webClient = await createWebClient({ serverData });
             doAction(webClient, "slowAction");
@@ -612,6 +612,12 @@ QUnit.module("ActionManager", (hooks) => {
 
         let id = 1;
         class ToyController extends Component {
+            static template = xml`
+                <div class="o_toy_view">
+                    <ControlPanel />
+                    <SearchBar />
+                </div>`;
+            static components = { ControlPanel, SearchBar };
             setup() {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));
@@ -623,12 +629,6 @@ QUnit.module("ActionManager", (hooks) => {
                 onWillStart(() => def);
             }
         }
-        ToyController.template = xml`
-            <div class="o_toy_view">
-                <ControlPanel />
-                <SearchBar />
-            </div>`;
-        ToyController.components = { ControlPanel, SearchBar };
 
         registry.category("views").add("toy", {
             type: "toy",

@@ -25,8 +25,9 @@ import { Component, xml, onRendered } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
-class MySystrayItem extends Component {}
-MySystrayItem.template = xml`<li class="my-item">my item</li>`;
+class MySystrayItem extends Component {
+    static template = xml`<li class="my-item">my item</li>`;
+}
 let baseConfig;
 let target;
 
@@ -192,14 +193,18 @@ QUnit.test("navbar can display systray items", async (assert) => {
 });
 
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
-    class MyItem1 extends Component {}
-    MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
-    class MyItem2 extends Component {}
-    MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
-    class MyItem3 extends Component {}
-    MyItem3.template = xml`<li class="my-item-3">my item 3</li>`;
-    class MyItem4 extends Component {}
-    MyItem4.template = xml`<li class="my-item-4">my item 4</li>`;
+    class MyItem1 extends Component {
+        static template = xml`<li class="my-item-1">my item 1</li>`;
+    }
+    class MyItem2 extends Component {
+        static template = xml`<li class="my-item-2">my item 2</li>`;
+    }
+    class MyItem3 extends Component {
+        static template = xml`<li class="my-item-3">my item 3</li>`;
+    }
+    class MyItem4 extends Component {
+        static template = xml`<li class="my-item-4">my item 4</li>`;
+    }
 
     clearRegistryWithCleanup(systrayRegistry);
     systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
@@ -214,8 +219,9 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
 });
 
 QUnit.test("navbar updates after adding a systray item", async (assert) => {
-    class MyItem1 extends Component {}
-    MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
+    class MyItem1 extends Component {
+        static template = xml`<li class="my-item-1">my item 1</li>`;
+    }
 
     clearRegistryWithCleanup(systrayRegistry);
     systrayRegistry.add("addon.myitem1", { Component: MyItem1 });
@@ -226,8 +232,9 @@ QUnit.test("navbar updates after adding a systray item", async (assert) => {
         setup() {
             onRendered(() => {
                 if (!systrayRegistry.contains("addon.myitem2")) {
-                    class MyItem2 extends Component {}
-                    MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
+                    class MyItem2 extends Component {
+                        static template = xml`<li class="my-item-2">my item 2</li>`;
+                    }
                     systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
                 }
             });

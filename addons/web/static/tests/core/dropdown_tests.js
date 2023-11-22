@@ -48,9 +48,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.module("Dropdown");
 
     QUnit.test("can be rendered", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`<Dropdown/>`;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`<Dropdown/>`;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.strictEqual(
@@ -62,9 +63,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("DropdownItem can be rendered as <span/>", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`<DropdownItem>coucou</DropdownItem>`;
-        Parent.components = { DropdownItem };
+        class Parent extends Component {
+            static template = xml`<DropdownItem>coucou</DropdownItem>`;
+            static components = { DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.strictEqual(
@@ -74,9 +76,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("DropdownItem (with href prop) can be rendered as <a/>", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
-        Parent.components = { DropdownItem };
+        class Parent extends Component {
+            static template = xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
+            static components = { DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.strictEqual(
@@ -98,13 +101,14 @@ QUnit.module("Components", ({ beforeEach }) => {
                 assert.ok(href !== null ? ev.defaultPrevented : !ev.defaultPrevented);
             },
         });
-        class Parent extends Component {}
-        Parent.template = xml`
-            <Dropdown>
-                <DropdownItem class="'link'" href="'#'"/>
-                <DropdownItem class="'nolink'" />
-            </Dropdown>`;
-        Parent.components = { Dropdown, DropdownItem };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <DropdownItem class="'link'" href="'#'"/>
+                    <DropdownItem class="'nolink'" />
+                </Dropdown>`;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         // The item containing the link class contains an href prop,
@@ -118,12 +122,13 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("can be styled", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown class="'one'" togglerClass="'two'" menuClass="'three'">
-            <DropdownItem class="'four'" />
-        </Dropdown>`;
-        Parent.components = { Dropdown, DropdownItem };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown class="'one'" togglerClass="'two'" menuClass="'three'">
+                    <DropdownItem class="'four'" />
+                </Dropdown>`;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -139,6 +144,8 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("menu can be toggled", async (assert) => {
         const beforeOpenProm = makeDeferred();
         class Parent extends Component {
+            static template = xml`<Dropdown beforeOpen="beforeOpen"/>`;
+            static components = { Dropdown };
             constructor() {
                 super(...arguments);
                 this.beforeOpen = () => {
@@ -147,8 +154,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 };
             }
         }
-        Parent.template = xml`<Dropdown beforeOpen="beforeOpen"/>`;
-        Parent.components = { Dropdown };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -168,6 +173,8 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("initial open state can be true", async (assert) => {
         assert.expect(3);
         class Parent extends Component {
+            static template = xml`<Dropdown startOpen="true" beforeOpen="beforeOpen"/>`;
+            static components = { Dropdown };
             constructor() {
                 super(...arguments);
                 this.beforeOpen = () => {
@@ -175,8 +182,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 };
             }
         }
-        Parent.template = xml`<Dropdown startOpen="true" beforeOpen="beforeOpen"/>`;
-        Parent.components = { Dropdown };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.verifySteps(["beforeOpen"]);
@@ -191,6 +196,13 @@ QUnit.module("Components", ({ beforeEach }) => {
             },
         });
         class Parent extends Component {
+            static template = xml`
+            <div>
+              <div class="outside" t-on-click.stop="clicked">outside</div>
+              <Dropdown/>
+            </div>
+          `;
+            static components = { Dropdown };
             clicked() {
                 assert.verifySteps(
                     ["dropdown will close"],
@@ -198,13 +210,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 );
             }
         }
-        Parent.template = xml`
-        <div>
-          <div class="outside" t-on-click.stop="clicked">outside</div>
-          <Dropdown/>
-        </div>
-      `;
-        Parent.components = { Dropdown };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -214,13 +219,14 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("close on item selection", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown>
-            <DropdownItem/>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown, DropdownItem };
+        class Parent extends Component {
+            static template = xml`
+            <Dropdown>
+                <DropdownItem/>
+            </Dropdown>
+          `;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -268,16 +274,16 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("payload received on item selection", async (assert) => {
         class Parent extends Component {
+            static template = xml`
+            <Dropdown>
+                <DropdownItem onSelected="() => onItemSelected(42)"/>
+            </Dropdown>
+          `;
+            static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.equal(value, 42);
             }
         }
-        Parent.template = xml`
-        <Dropdown>
-            <DropdownItem onSelected="() => onItemSelected(42)"/>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown, DropdownItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -285,15 +291,16 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: can be rendered and toggled", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown>
-            <Dropdown>
-                <Dropdown/>
-            </Dropdown>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <Dropdown>
+                        <Dropdown/>
+                    </Dropdown>
+                </Dropdown>
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle:last-child");
@@ -303,33 +310,35 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: initial open state can be true", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown startOpen="true">
-            <Dropdown startOpen="true">
-                <Dropdown startOpen="true"/>
-            </Dropdown>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown startOpen="true">
+                    <Dropdown startOpen="true">
+                        <Dropdown startOpen="true"/>
+                    </Dropdown>
+                </Dropdown>
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsN(target, ".dropdown-menu", 3);
     });
 
     QUnit.test("multi-level dropdown: close on outside click", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <div>
-          <div class="outside">outside</div>
-          <Dropdown>
-              <Dropdown>
-                  <Dropdown/>
-              </Dropdown>
-          </Dropdown>
-        </div>
-      `;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`
+                <div>
+                <div class="outside">outside</div>
+                <Dropdown>
+                    <Dropdown>
+                        <Dropdown/>
+                    </Dropdown>
+                </Dropdown>
+                </div>
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle:last-child");
@@ -341,15 +350,16 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: close on item selection", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown>
-            <Dropdown>
-                <DropdownItem/>
-            </Dropdown>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown, DropdownItem };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <Dropdown>
+                        <DropdownItem/>
+                    </Dropdown>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle:last-child");
@@ -363,18 +373,19 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: parent closing modes on item selection", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <Dropdown>
-            <Dropdown>
-                <DropdownItem class="'item1'" parentClosingMode="'none'" />
-                <DropdownItem class="'item2'" parentClosingMode="'closest'" />
-                <DropdownItem class="'item3'" parentClosingMode="'all'" />
-                <DropdownItem class="'item4'" />
-            </Dropdown>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown, DropdownItem };
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <Dropdown>
+                        <DropdownItem class="'item1'" parentClosingMode="'none'" />
+                        <DropdownItem class="'item2'" parentClosingMode="'closest'" />
+                        <DropdownItem class="'item3'" parentClosingMode="'all'" />
+                        <DropdownItem class="'item4'" />
+                    </Dropdown>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         // Open the 2-level dropdowns
@@ -404,6 +415,8 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
         class Parent extends Component {
+            static template = "recursive.Template";
+            static components = { Dropdown, DropdownItem };
             setup() {
                 this.name = "foo";
                 this.items = [
@@ -434,8 +447,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 ];
             }
         }
-        Parent.template = "recursive.Template";
-        Parent.components = { Dropdown, DropdownItem };
         env = await makeTestEnv();
         const app = new App(Parent, {
             env,
@@ -492,6 +503,15 @@ QUnit.module("Components", ({ beforeEach }) => {
             assert.expect(13);
             const beforeOpenProm = makeDeferred();
             class Parent extends Component {
+                static template = xml`
+                    <div>
+                        <Dropdown class="'one'" />
+                        <Dropdown class="'two'" beforeOpen="beforeOpen"/>
+                        <Dropdown class="'three'" />
+                        <div class="outside">OUTSIDE</div>
+                    </div>
+                `;
+                static components = { Dropdown };
                 constructor() {
                     super(...arguments);
                     this.beforeOpen = () => {
@@ -500,15 +520,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                     };
                 }
             }
-            Parent.template = xml`
-        <div>
-          <Dropdown class="'one'" />
-          <Dropdown class="'two'" beforeOpen="beforeOpen"/>
-          <Dropdown class="'three'" />
-          <div class="outside">OUTSIDE</div>
-        </div>
-      `;
-            Parent.components = { Dropdown };
             env = await makeTestEnv();
             await mount(Parent, target, { env });
             // Click on ONE
@@ -549,15 +560,16 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test(
         "siblings dropdowns: when non-sibling is open, other must not be toggled on mouse-enter",
         async (assert) => {
-            class Parent extends Component {}
-            Parent.template = xml`
-        <div>
-          <div><Dropdown class="'foo'" /></div>
-          <Dropdown class="'bar1'" />
-          <Dropdown class="'bar2'" />
-        </div>
-      `;
-            Parent.components = { Dropdown };
+            class Parent extends Component {
+                static template = xml`
+                    <div>
+                        <div><Dropdown class="'foo'" /></div>
+                        <Dropdown class="'bar1'" />
+                        <Dropdown class="'bar2'" />
+                    </div>
+                `;
+                static components = { Dropdown };
+            }
             env = await makeTestEnv();
             await mount(Parent, target, { env });
             // Click on FOO
@@ -575,15 +587,16 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test(
         "siblings dropdowns: when one is open, then non-sibling toggled, siblings must not be toggled on mouse-enter",
         async (assert) => {
-            class Parent extends Component {}
-            Parent.template = xml`
-        <div>
-          <div><Dropdown class="'foo'" /></div>
-          <Dropdown class="'bar1'" />
-          <Dropdown class="'bar2'" />
-        </div>
-      `;
-            Parent.components = { Dropdown };
+            class Parent extends Component {
+                static template = xml`
+                    <div>
+                    <div><Dropdown class="'foo'" /></div>
+                    <Dropdown class="'bar1'" />
+                    <Dropdown class="'bar2'" />
+                    </div>
+                `;
+                static components = { Dropdown };
+            }
             env = await makeTestEnv();
             await mount(Parent, target, { env });
             // Click on BAR1
@@ -602,17 +615,18 @@ QUnit.module("Components", ({ beforeEach }) => {
     );
 
     QUnit.test("siblings dropdowns with autoOpen", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <div>
-          <Dropdown class="'one'" autoOpen="false"/>
-          <Dropdown class="'two'" autoOpen="false"/>
-          <Dropdown class="'three'"/>
-          <Dropdown class="'four'"/>
-          <div class="outside">OUTSIDE</div>
-        </div>
-      `;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`
+                <div>
+                    <Dropdown class="'one'" autoOpen="false"/>
+                    <Dropdown class="'two'" autoOpen="false"/>
+                    <Dropdown class="'three'"/>
+                    <Dropdown class="'four'"/>
+                    <div class="outside">OUTSIDE</div>
+                </div>
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         // Click on one
@@ -652,14 +666,15 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-        <div>
-            <Dropdown class="'one'" />
-            <Dropdown class="'two'" />
-        </div>
-        `;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`
+                <div>
+                    <Dropdown class="'one'" />
+                    <Dropdown class="'two'" />
+                </div>
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         // Click on one
@@ -677,18 +692,18 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("dropdowns keynav", async (assert) => {
         assert.expect(41);
         class Parent extends Component {
+            static template = xml`
+                <Dropdown hotkey="'m'">
+                    <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
+                    <DropdownItem class="'item2'" hotkey="'2'" onSelected="() => onItemSelected(2)">item2</DropdownItem>
+                    <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.step(value.toString());
             }
         }
-        Parent.template = xml`
-        <Dropdown hotkey="'m'">
-            <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
-            <DropdownItem class="'item2'" hotkey="'2'" onSelected="() => onItemSelected(2)">item2</DropdownItem>
-            <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
-        </Dropdown>
-      `;
-        Parent.components = { Dropdown, DropdownItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsNone(target, ".dropdown-menu", "menu is closed at start");
@@ -773,13 +788,14 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("dropdowns keynav is not impacted by bootstrap", async (assert) => {
-        class Parent extends Component {}
-        Parent.components = { Dropdown };
-        Parent.template = xml`
-            <Dropdown startOpen="true">
-                <select><option>foo</option></select>
-            </Dropdown>
-        `;
+        class Parent extends Component {
+            static components = { Dropdown };
+            static template = xml`
+                <Dropdown startOpen="true">
+                    <select><option>foo</option></select>
+                </Dropdown>
+            `;
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".dropdown-menu", "menu is opened at start");
@@ -810,19 +826,20 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("props toggler='parent'", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-            <div>
-                <div class="my_custom_toggler">
-                    Click Me
-                    <Dropdown toggler="'parent'">
-                        <DropdownItem>Element 1</DropdownItem>
-                        <DropdownItem>Element 2</DropdownItem>
-                    </Dropdown>
+        class Parent extends Component {
+            static template = xml`
+                <div>
+                    <div class="my_custom_toggler">
+                        Click Me
+                        <Dropdown toggler="'parent'">
+                            <DropdownItem>Element 1</DropdownItem>
+                            <DropdownItem>Element 2</DropdownItem>
+                        </Dropdown>
+                    </div>
                 </div>
-            </div>`;
-
-        Parent.components = { Dropdown, DropdownItem };
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".dropdown");
@@ -836,18 +853,20 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("props toggler='parent': refocus toggler on close with keynav", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-            <div>
-                <div class="my_custom_toggler">
-                    Click Me
-                    <Dropdown toggler="'parent'">
-                        <DropdownItem>Element 1</DropdownItem>
-                        <DropdownItem>Element 2</DropdownItem>
-                    </Dropdown>
+        class Parent extends Component {
+            static template = xml`
+                <div>
+                    <div class="my_custom_toggler">
+                        Click Me
+                        <Dropdown toggler="'parent'">
+                            <DropdownItem>Element 1</DropdownItem>
+                            <DropdownItem>Element 2</DropdownItem>
+                        </Dropdown>
+                    </div>
                 </div>
-            </div>`;
-        Parent.components = { Dropdown, DropdownItem };
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
 
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -869,25 +888,25 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("multi-level dropdown: keynav", async (assert) => {
         assert.expect(213);
         class Parent extends Component {
+            static template = xml`
+                <Dropdown class="'first'" hotkey="'1'">
+                    <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
+                    <Dropdown class="'second'">
+                        <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
+                        <Dropdown class="'third'">
+                            <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
+                            <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
+                        </Dropdown>
+                        <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
+                    </Dropdown>
+                    <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.step(value);
             }
         }
-        Parent.template = xml`
-            <Dropdown class="'first'" hotkey="'1'">
-                <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
-                <Dropdown class="'second'">
-                    <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
-                    <Dropdown class="'third'">
-                        <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
-                        <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
-                    </Dropdown>
-                    <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
-                </Dropdown>
-                <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown, DropdownItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsNone(target, ".dropdown-menu", "menus are closed at start");
@@ -982,16 +1001,17 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("multi-level dropdown: keynav when rtl direction", async (assert) => {
         assert.expect(10);
-        class Parent extends Component {}
-        Parent.template = xml`
-            <Dropdown class="'first'" hotkey="'1'">
-                <DropdownItem class="'first-first'">O</DropdownItem>
-                <Dropdown class="'second'">
-                    <DropdownItem class="'second-first'">O</DropdownItem>
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown class="'first'" hotkey="'1'">
+                    <DropdownItem class="'first-first'">O</DropdownItem>
+                    <Dropdown class="'second'">
+                        <DropdownItem class="'second-first'">O</DropdownItem>
+                    </Dropdown>
                 </Dropdown>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown, DropdownItem };
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
         serviceRegistry.add("localization", makeFakeLocalizationService({ direction: "rtl" }));
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -1053,21 +1073,21 @@ QUnit.module("Components", ({ beforeEach }) => {
         });
         let parentState;
         class Parent extends Component {
+            static template = /* xml */ xml`
+                <Dropdown class="'outer'">
+                    <t t-set-slot="toggler">Outer</t>
+                    <Dropdown class="'inner'">
+                        <t t-set-slot="toggler">Inner</t>
+                        <DropdownItem t-if="state.foo">Inner</DropdownItem>
+                    </Dropdown>
+                </Dropdown>
+            `;
+            static components = { Dropdown, DropdownItem };
             setup() {
                 this.state = useState({ foo: false });
                 parentState = this.state;
             }
         }
-        Parent.template = /* xml */ xml`
-            <Dropdown class="'outer'">
-                <t t-set-slot="toggler">Outer</t>
-                <Dropdown class="'inner'">
-                    <t t-set-slot="toggler">Inner</t>
-                    <DropdownItem t-if="state.foo">Inner</DropdownItem>
-                </Dropdown>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown, DropdownItem };
 
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -1088,16 +1108,17 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("showCaret props adds caret class", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`
-            <Dropdown class="'first'" hotkey="'1'" showCaret="true">
-                <DropdownItem class="'first-first'">O</DropdownItem>
-                <Dropdown class="'second'" showCaret="false">
-                    <DropdownItem class="'second-first'">O</DropdownItem>
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown class="'first'" hotkey="'1'" showCaret="true">
+                    <DropdownItem class="'first-first'">O</DropdownItem>
+                    <Dropdown class="'second'" showCaret="false">
+                        <DropdownItem class="'second-first'">O</DropdownItem>
+                    </Dropdown>
                 </Dropdown>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown, DropdownItem };
+            `;
+            static components = { Dropdown, DropdownItem };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.containsNone(
@@ -1157,14 +1178,15 @@ QUnit.module("Components", ({ beforeEach }) => {
         "multi-level dropdown: mouseentering a dropdown item should close any subdropdown",
         async (assert) => {
             assert.expect(4);
-            class Parent extends Component {}
-            Parent.template = xml`
-                <Dropdown togglerClass="'main'">
-                    <Dropdown togglerClass="'sub'" />
-                    <DropdownItem class="'item'" />
-                </Dropdown>
-            `;
-            Parent.components = { Dropdown, DropdownItem };
+            class Parent extends Component {
+                static template = xml`
+                    <Dropdown togglerClass="'main'">
+                        <Dropdown togglerClass="'sub'" />
+                        <DropdownItem class="'item'" />
+                    </Dropdown>
+                `;
+                static components = { Dropdown, DropdownItem };
+            }
             env = await makeTestEnv();
             await mount(Parent, target, { env });
             assert.containsNone(target, ".dropdown-menu", "menus are closed at start");
@@ -1185,15 +1207,16 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("multi-level dropdown: unsubscribe all keynav when root close", async (assert) => {
         assert.expect(14);
-        class Parent extends Component {}
-        Parent.template = xml`
-            <Dropdown togglerClass="'first'">
-                <Dropdown togglerClass="'second'">
-                    <Dropdown togglerClass="'third'"/>
+        class Parent extends Component {
+            static template = xml`
+                <Dropdown togglerClass="'first'">
+                    <Dropdown togglerClass="'second'">
+                        <Dropdown togglerClass="'third'"/>
+                    </Dropdown>
                 </Dropdown>
-            </Dropdown>
-        `;
-        Parent.components = { Dropdown };
+            `;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         let hotkeyRegistrationsCount = 0;
         patchWithCleanup(env.services.hotkey, {
@@ -1248,9 +1271,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("Dropdown with a tooltip", async (assert) => {
         assert.expect(1);
 
-        class Parent extends Component {}
-        Parent.template = xml`<Dropdown tooltip="'My tooltip'"></Dropdown>`;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`<Dropdown tooltip="'My tooltip'"></Dropdown>`;
+            static components = { Dropdown };
+        }
 
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -1263,12 +1287,13 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("Dropdown with a tooltip", async (assert) => {
         assert.expect(2);
 
-        class MyComponent extends Component {}
-        MyComponent.template = xml`
-            <Dropdown tooltip="'My tooltip'">
-                <DropdownItem/>
-            </Dropdown>`;
-        MyComponent.components = { Dropdown };
+        class MyComponent extends Component {
+            static template = xml`
+                <Dropdown tooltip="'My tooltip'">
+                    <DropdownItem/>
+                </Dropdown>`;
+            static components = { Dropdown };
+        }
 
         await makeParent(MyComponent);
         await mouseEnter(target, "button.dropdown-toggle");
@@ -1280,16 +1305,17 @@ QUnit.module("Components", ({ beforeEach }) => {
         "Dropdown with a date picker inside do not close when a click occurs in date picker",
         async (assert) => {
             registry.category("services").add("datetime_picker", datetimePickerService);
-            class MyComponent extends Component {}
-            MyComponent.template = xml`
-                <Dropdown>
-                    <t t-set-slot="toggler">
-                        Dropdown toggler
-                    </t>
-                    <DateTimeInput />
-                </Dropdown>
-            `;
-            MyComponent.components = { DateTimeInput, Dropdown };
+            class MyComponent extends Component {
+                static template = xml`
+                    <Dropdown>
+                        <t t-set-slot="toggler">
+                            Dropdown toggler
+                        </t>
+                        <DateTimeInput />
+                    </Dropdown>
+                `;
+                static components = { DateTimeInput, Dropdown };
+            }
 
             await makeParent(MyComponent);
 
@@ -1318,6 +1344,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("onOpened callback props called after the menu has been mounted", async (assert) => {
         const beforeOpenProm = makeDeferred();
         class Parent extends Component {
+            static template = xml`
+                <Dropdown onOpened.bind="onOpenedCallback" beforeOpen.bind="beforeOpenCallback" />
+            `;
+            static components = { Dropdown, DropdownItem };
             beforeOpenCallback() {
                 assert.step("beforeOpened");
                 return beforeOpenProm;
@@ -1326,10 +1356,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 assert.step("onOpened");
             }
         }
-        Parent.template = xml`
-            <Dropdown onOpened.bind="onOpenedCallback" beforeOpen.bind="beforeOpenCallback" />
-        `;
-        Parent.components = { Dropdown, DropdownItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, "button.dropdown-toggle");
@@ -1340,9 +1366,10 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("dropdown button can be disabled", async (assert) => {
-        class Parent extends Component {}
-        Parent.template = xml`<Dropdown disabled="true"/>`;
-        Parent.components = { Dropdown };
+        class Parent extends Component {
+            static template = xml`<Dropdown disabled="true"/>`;
+            static components = { Dropdown };
+        }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         assert.strictEqual(
@@ -1353,6 +1380,18 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("Dropdown with CheckboxItem: toggle value", async (assert) => {
         class Parent extends Component {
+            static template = xml`
+                <Dropdown>
+                    <t t-set-slot="toggler">Click to open</t>
+                    <CheckboxItem
+                        class="{ selected: state.checked }"
+                        checked="state.checked"
+                        parentClosingMode="'none'"
+                        onSelected.bind="onSelected">
+                        My checkbox item
+                    </CheckboxItem>
+                </Dropdown>`;
+            static components = { Dropdown, CheckboxItem };
             setup() {
                 this.state = useState({ checked: false });
             }
@@ -1360,18 +1399,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 this.state.checked = !this.state.checked;
             }
         }
-        Parent.template = xml`
-            <Dropdown>
-                <t t-set-slot="toggler">Click to open</t>
-                <CheckboxItem
-                    class="{ selected: state.checked }"
-                    checked="state.checked"
-                    parentClosingMode="'none'"
-                    onSelected.bind="onSelected">
-                    My checkbox item
-                </CheckboxItem>
-            </Dropdown>`;
-        Parent.components = { Dropdown, CheckboxItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
         await click(target, ".dropdown-toggle");

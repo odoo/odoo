@@ -8,6 +8,15 @@ import { TimeOffCalendarYearRenderer } from './year/calendar_year_renderer';
 import { TimeOffDashboard } from '../../dashboard/time_off_dashboard';
 
 export class TimeOffCalendarRenderer extends CalendarRenderer {
+    static template = "hr_holidays.CalendarRenderer";
+    static components = {
+        ...TimeOffCalendarRenderer.components,
+        day: TimeOffCalendarCommonRenderer,
+        week: TimeOffCalendarCommonRenderer,
+        month: TimeOffCalendarCommonRenderer,
+        year: TimeOffCalendarYearRenderer,
+        TimeOffDashboard,
+    };
     get employeeId() {
         return this.props.model.employeeId;
     }
@@ -16,15 +25,6 @@ export class TimeOffCalendarRenderer extends CalendarRenderer {
         return false;
     }
 }
-TimeOffCalendarRenderer.template = 'hr_holidays.CalendarRenderer';
-TimeOffCalendarRenderer.components = {
-    ...TimeOffCalendarRenderer.components,
-    day: TimeOffCalendarCommonRenderer,
-    week: TimeOffCalendarCommonRenderer,
-    month: TimeOffCalendarCommonRenderer,
-    year: TimeOffCalendarYearRenderer,
-    TimeOffDashboard,
-};
 
 export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
     get showDashboard() {

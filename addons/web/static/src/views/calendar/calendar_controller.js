@@ -43,6 +43,19 @@ function useUniqueDialog() {
 }
 
 export class CalendarController extends Component {
+    static components = {
+        DatePicker: DateTimePicker,
+        FilterPanel: CalendarFilterPanel,
+        MobileFilterPanel: CalendarMobileFilterPanel,
+        QuickCreate: CalendarQuickCreate,
+        QuickCreateFormView: FormViewDialog,
+        Layout,
+        SearchBar,
+        ViewScaleSelector,
+        CogMenu,
+    };
+    static template = "web.CalendarController";
+
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
@@ -370,15 +383,3 @@ export class CalendarController extends Component {
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
     }
 }
-CalendarController.components = {
-    DatePicker: DateTimePicker,
-    FilterPanel: CalendarFilterPanel,
-    MobileFilterPanel: CalendarMobileFilterPanel,
-    QuickCreate: CalendarQuickCreate,
-    QuickCreateFormView: FormViewDialog,
-    Layout,
-    SearchBar,
-    ViewScaleSelector,
-    CogMenu,
-};
-CalendarController.template = "web.CalendarController";

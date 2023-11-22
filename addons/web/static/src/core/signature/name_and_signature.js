@@ -13,6 +13,25 @@ import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
+    static template = "web.NameAndSignature";
+    static components = { Dropdown, DropdownItem };
+    static props = {
+        signature: { type: Object },
+        defaultFont: { type: String, optional: true },
+        displaySignatureRatio: { type: Number, optional: true },
+        fontColor: { type: String, optional: true },
+        signatureType: { type: String, optional: true },
+        noInputName: { type: Boolean, optional: true },
+        mode: { type: String, optional: true },
+    };
+    static defaultProps = {
+        defaultFont: "",
+        displaySignatureRatio: 3.0,
+        fontColor: "DarkBlue",
+        signatureType: "signature",
+        noInputName: false,
+    };
+
     setup() {
         this.rpc = useService("rpc");
 
@@ -350,22 +369,3 @@ export class NameAndSignature extends Component {
         return signature ? `width: ${signature.width}px; height: ${signature.height}px` : "";
     }
 }
-
-NameAndSignature.template = "web.NameAndSignature";
-NameAndSignature.components = { Dropdown, DropdownItem };
-NameAndSignature.props = {
-    signature: { type: Object },
-    defaultFont: { type: String, optional: true },
-    displaySignatureRatio: { type: Number, optional: true },
-    fontColor: { type: String, optional: true },
-    signatureType: { type: String, optional: true },
-    noInputName: { type: Boolean, optional: true },
-    mode: { type: String, optional: true },
-};
-NameAndSignature.defaultProps = {
-    defaultFont: "",
-    displaySignatureRatio: 3.0,
-    fontColor: "DarkBlue",
-    signatureType: "signature",
-    noInputName: false,
-};

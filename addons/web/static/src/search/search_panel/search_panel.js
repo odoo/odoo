@@ -35,6 +35,15 @@ const nameOfCheckedValues = (values) => {
  * Its state is directly affected by its model (@see SearchModel).
  */
 export class SearchPanel extends Component {
+    static template = "web.SearchPanel";
+    static props = {
+        importedState: { type: String, optional: true },
+    };
+    static subTemplates = {
+        category: "web.SearchPanel.Category",
+        filtersGroup: "web.SearchPanel.FiltersGroup",
+    };
+
     setup() {
         this.state = useState({
             active: {},
@@ -270,12 +279,3 @@ export class SearchPanel extends Component {
         }
     }
 }
-
-SearchPanel.props = {
-    importedState: { type: String, optional: true },
-};
-SearchPanel.subTemplates = {
-    category: "web.SearchPanel.Category",
-    filtersGroup: "web.SearchPanel.FiltersGroup",
-};
-SearchPanel.template = "web.SearchPanel";

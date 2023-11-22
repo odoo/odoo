@@ -5,6 +5,12 @@ import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 export class ForecastedButtons extends Component {
+    static template = "stock.ForecastedButtons";
+    static props = {
+        action: Object,
+        resModel: { type: String, optional: true },
+        reloadReport: Function,
+    };
 
     setup() {
         this.actionService = useService("action");
@@ -51,10 +57,3 @@ export class ForecastedButtons extends Component {
         return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
     }
 }
-
-ForecastedButtons.props = {
-    action : Object,
-    resModel: {type: String, optional: true},
-    reloadReport : Function,
-};
-ForecastedButtons.template = 'stock.ForecastedButtons';

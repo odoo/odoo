@@ -6,6 +6,11 @@ import { _t } from "@web/core/l10n/translation";
 import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
+    static props = {
+        bus: EventBus,
+    };
+    static template = "website.website_loader";
+
     setup() {
         this.rpc = useService("rpc");
 
@@ -259,7 +264,3 @@ export class WebsiteLoader extends Component {
         }
     };
 }
-WebsiteLoader.props = {
-    bus: EventBus,
-};
-WebsiteLoader.template = 'website.website_loader';

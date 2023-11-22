@@ -7,6 +7,8 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
 
 export class ViewHierarchy extends Component {
+    static components = { Layout, HierarchyNavbar };
+    static template = "website.view_hierarchy";
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
@@ -244,8 +246,5 @@ export class ViewHierarchy extends Component {
         });
     }
 }
-
-ViewHierarchy.components = { Layout, HierarchyNavbar };
-ViewHierarchy.template = "website.view_hierarchy";
 
 registry.category("actions").add("website_view_hierarchy", ViewHierarchy);

@@ -7,6 +7,10 @@ import { TimeOffCalendarCommonPopover } from './calendar_common_popover';
 
 
 export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
+    static components = {
+        ...TimeOffCalendarCommonRenderer,
+        Popover: TimeOffCalendarCommonPopover,
+    };
     setup() {
         super.setup();
         this.mandatoryDays = useMandatoryDays(this.props);
@@ -16,8 +20,4 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
         super.onDayRender(info);
         this.mandatoryDays(info);
     }
-}
-TimeOffCalendarCommonRenderer.components = {
-    ...TimeOffCalendarCommonRenderer,
-    Popover: TimeOffCalendarCommonPopover,
 }

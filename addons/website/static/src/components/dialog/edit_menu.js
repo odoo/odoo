@@ -32,6 +32,16 @@ const useControlledInput = (initialValue, validate) => {
 };
 
 export class MenuDialog extends Component {
+    static template = "website.MenuDialog";
+    static components = { WebsiteDialog };
+    static props = {
+        name: { type: String, optional: true },
+        url: { type: String, optional: true },
+        isMegaMenu: { type: Boolean, optional: true },
+        save: Function,
+        close: Function,
+    };
+
     setup() {
         this.website = useService('website');
         this.title = _t("Add a menu item");
@@ -69,17 +79,18 @@ export class MenuDialog extends Component {
         }
     }
 }
-MenuDialog.template = 'website.MenuDialog';
-MenuDialog.props = {
-    name: { type: String, optional: true },
-    url: { type: String, optional: true },
-    isMegaMenu: { type: Boolean, optional: true },
-    save: Function,
-    close: Function,
-};
-MenuDialog.components = { WebsiteDialog };
 
 class MenuRow extends Component {
+    static template = "website.MenuRow";
+    static props = {
+        menu: Object,
+        edit: Function,
+        delete: Function,
+    };
+    static components = {
+        MenuRow,
+    };
+
     edit() {
         this.props.edit(this.props.menu.fields['id']);
     }
@@ -88,17 +99,14 @@ class MenuRow extends Component {
         this.props.delete(this.props.menu.fields['id']);
     }
 }
-MenuRow.props = {
-    menu: Object,
-    edit: Function,
-    delete: Function,
-};
-MenuRow.template = 'website.MenuRow';
-MenuRow.components = {
-    MenuRow,
-};
 
 export class EditMenuDialog extends Component {
+    static template = "website.EditMenuDialog";
+    static components = {
+        MenuRow,
+        WebsiteDialog,
+    };
+
     setup() {
         this.orm = useService('orm');
         this.website = useService('website');
@@ -255,8 +263,3 @@ export class EditMenuDialog extends Component {
         }
     }
 }
-EditMenuDialog.template = 'website.EditMenuDialog';
-EditMenuDialog.components = {
-    MenuRow,
-    WebsiteDialog,
-};

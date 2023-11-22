@@ -4,6 +4,8 @@ import { Component } from "@odoo/owl";
 import { getColor } from "../colors";
 
 export class CalendarMobileFilterPanel extends Component {
+    static components = {};
+    static template = "web.CalendarMobileFilterPanel";
     get caretDirection() {
         return this.props.sideBarShown ? "down" : "left";
     }
@@ -28,5 +30,3 @@ export class CalendarMobileFilterPanel extends Component {
         });
     }
 }
-CalendarMobileFilterPanel.components = {};
-CalendarMobileFilterPanel.template = "web.CalendarMobileFilterPanel";

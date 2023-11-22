@@ -11,6 +11,14 @@ import { FormController } from '@web/views/form/form_controller';
 import { useLeaveCancelWizard } from '../hooks';
 
 export class TimeOffDialogFormController extends FormController {
+    static props = {
+        ...FormController.props,
+        onCancelLeave: Function,
+        onRecordDeleted: Function,
+        onLeaveCancelled: Function,
+        onLeaveUpdated: Function,
+    };
+
     setup() {
         super.setup();
         this.leaveCancelWizard = useLeaveCancelWizard();
@@ -54,14 +62,6 @@ export class TimeOffDialogFormController extends FormController {
     }
 }
 
-TimeOffDialogFormController.props = {
-    ...FormController.props,
-    onCancelLeave: Function,
-    onRecordDeleted: Function,
-    onLeaveCancelled: Function,
-    onLeaveUpdated: Function,
-}
-
 registry.category('views').add('timeoff_dialog_form', {
     ...formView,
     Controller: TimeOffDialogFormController,
@@ -69,6 +69,12 @@ registry.category('views').add('timeoff_dialog_form', {
 
 
 export class TimeOffFormViewDialog extends FormViewDialog {
+    static props = {
+        ...TimeOffFormViewDialog.props,
+        onRecordDeleted: Function,
+        onLeaveCancelled: Function,
+    };
+
     setup() {
         super.setup();
 
@@ -88,9 +94,4 @@ export class TimeOffFormViewDialog extends FormViewDialog {
             onLeaveCancelled: this.props.onLeaveCancelled.bind(this),
         })
     }
-}
-TimeOffFormViewDialog.props = {
-    ...TimeOffFormViewDialog.props,
-    onRecordDeleted: Function,
-    onLeaveCancelled: Function,
 }

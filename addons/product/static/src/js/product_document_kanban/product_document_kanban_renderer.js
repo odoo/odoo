@@ -7,16 +7,16 @@ import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_p
 import { FileUploadProgressKanbanRecord } from "@web/core/file_upload/file_upload_progress_record";
 
 export class ProductDocumentKanbanRenderer extends KanbanRenderer {
+    static components = {
+        ...KanbanRenderer.components,
+        FileUploadProgressContainer,
+        FileUploadProgressKanbanRecord,
+        KanbanRecord: ProductDocumentKanbanRecord,
+    };
+    static template = "product.ProductDocumentKanbanRenderer";
     setup() {
         super.setup();
         this.fileUploadService = useService("file_upload");
     }
 }
 
-ProductDocumentKanbanRenderer.components = {
-    ...KanbanRenderer.components,
-    FileUploadProgressContainer,
-    FileUploadProgressKanbanRecord,
-    KanbanRecord: ProductDocumentKanbanRecord,
-};
-ProductDocumentKanbanRenderer.template = "product.ProductDocumentKanbanRenderer";

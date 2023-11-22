@@ -8,6 +8,22 @@ import { checkFileSize } from "@web/core/utils/files";
 import { Component, useRef, useState } from "@odoo/owl";
 
 export class FileUploader extends Component {
+    static template = "web.FileUploader";
+    static props = {
+        onClick: { type: Function, optional: true },
+        onUploaded: Function,
+        onUploadComplete: { type: Function, optional: true },
+        multiUpload: { type: Boolean, optional: true },
+        inputName: { type: String, optional: true },
+        fileUploadClass: { type: String, optional: true },
+        acceptedFileExtensions: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        showUploadingText: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        showUploadingText: true,
+    };
+
     setup() {
         this.notification = useService("notification");
         this.fileInputRef = useRef("fileInput");
@@ -64,19 +80,3 @@ export class FileUploader extends Component {
         this.fileInputRef.el.click();
     }
 }
-
-FileUploader.template = "web.FileUploader";
-FileUploader.props = {
-    onClick: { type: Function, optional: true },
-    onUploaded: Function,
-    onUploadComplete: { type: Function, optional: true },
-    multiUpload: { type: Boolean, optional: true },
-    inputName: { type: String, optional: true },
-    fileUploadClass: { type: String, optional: true },
-    acceptedFileExtensions: { type: String, optional: true },
-    slots: { type: Object, optional: true },
-    showUploadingText: { type: Boolean, optional: true },
-};
-FileUploader.defaultProps = {
-    showUploadingText: true,
-};

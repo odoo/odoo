@@ -103,6 +103,8 @@ async function makeDomainSelector(params = {}) {
     delete props.mockRPC;
 
     class Parent extends Component {
+        static components = { DomainSelector };
+        static template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
         setup() {
             this.domainSelectorProps = {
                 resModel: "partner",
@@ -124,8 +126,6 @@ async function makeDomainSelector(params = {}) {
             await nextTick();
         }
     }
-    Parent.components = { DomainSelector };
-    Parent.template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
 
     const env = await makeTestEnv({ serverData, mockRPC });
     await mount(MainComponentsContainer, target, { env });
@@ -519,6 +519,15 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("multi selection", async (assert) => {
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`
+                <DomainSelector
+                    resModel="'partner'"
+                    domain="domain"
+                    readonly="false"
+                    update="(domain) => this.onUpdate(domain)"
+                />
+            `;
             setup() {
                 this.domain = `[("state", "in", ["a", "b", "c"])]`;
             }
@@ -527,15 +536,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                domain="domain"
-                readonly="false"
-                update="(domain) => this.onUpdate(domain)"
-            />
-        `;
 
         // Create the domain selector and its mock environment
         const comp = await mountComponent(Parent);
@@ -570,28 +570,28 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("parse -1", async (assert) => {
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`
+                <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
+            `;
             setup() {
                 this.domain = `[("id", "=", -1)]`;
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
-        `;
         await mountComponent(Parent);
         assert.strictEqual(getCurrentValue(target), "-1");
     });
 
     QUnit.test("parse 3-1", async (assert) => {
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`
+                <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
+            `;
             setup() {
                 this.domain = `[("id", "=", 3-1)]`;
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
-        `;
         await mountComponent(Parent);
         assert.strictEqual(getCurrentValue(target), "3 - 1");
     });
@@ -691,6 +691,16 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("debug input in model field selector popover", async (assert) => {
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`
+                <DomainSelector
+                    resModel="'partner'"
+                    domain="domain"
+                    readonly="false"
+                    isDebugMode="true"
+                    update="(domain) => this.onUpdate(domain)"
+                />
+            `;
             setup() {
                 this.domain = `[("id", "=", 1)]`;
             }
@@ -700,16 +710,6 @@ QUnit.module("Components", (hooks) => {
                 this.render();
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                domain="domain"
-                readonly="false"
-                isDebugMode="true"
-                update="(domain) => this.onUpdate(domain)"
-            />
-        `;
         await mountComponent(Parent);
         await openModelFieldSelectorPopover(target);
         await editInput(target, ".o_model_field_selector_debug", "a");
@@ -948,12 +948,12 @@ QUnit.module("Components", (hooks) => {
         ];
 
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
             setup() {
                 this.state = useState({ domain: `[]` });
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
 
         const parent = await mountComponent(Parent);
 
@@ -1065,12 +1065,12 @@ QUnit.module("Components", (hooks) => {
         ];
 
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="state.domain"/>`;
             setup() {
                 this.state = useState({ domain: `[]` });
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="state.domain"/>`;
 
         const parent = await mountComponent(Parent);
 
@@ -1292,12 +1292,12 @@ QUnit.module("Components", (hooks) => {
         ];
 
         class Parent extends Component {
+            static components = { DomainSelector };
+            static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
             setup() {
                 this.state = useState({ domain: `[]` });
             }
         }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
 
         const parent = await mountComponent(Parent);
 

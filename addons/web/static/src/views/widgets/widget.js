@@ -15,6 +15,40 @@ const viewWidgetRegistry = registry.category("view_widgets");
  * It supports instancing components from the "view_widgets" registry.
  */
 export class Widget extends Component {
+    static template = xml/*xml*/ `
+        <div t-att-class="classNames" t-att-style="props.style">
+            <t t-component="widget.component" t-props="widgetProps" />
+        </div>`;
+
+    static parseWidgetNode = function (node) {
+        const name = node.getAttribute("name");
+        const widget = viewWidgetRegistry.get(name);
+        const widgetInfo = {
+            name,
+            widget,
+            options: {},
+            attrs: {},
+        };
+
+        for (const { name, value } of node.attributes) {
+            if (["name", "widget"].includes(name)) {
+                // avoid adding name and widget to attrs
+                continue;
+            }
+            if (name === "options") {
+                widgetInfo.options = evaluateExpr(value);
+            } else if (!name.startsWith("t-att")) {
+                // all other (non dynamic) attributes
+                widgetInfo.attrs[name] = value;
+            }
+        }
+
+        return widgetInfo;
+    };
+    static props = {
+        "*": true,
+    };
+
     setup() {
         if (this.props.widgetInfo) {
             this.widget = this.props.widgetInfo.widget;
@@ -62,36 +96,3 @@ export class Widget extends Component {
         };
     }
 }
-Widget.template = xml/*xml*/ `
-    <div t-att-class="classNames" t-att-style="props.style">
-        <t t-component="widget.component" t-props="widgetProps" />
-    </div>`;
-
-Widget.parseWidgetNode = function (node) {
-    const name = node.getAttribute("name");
-    const widget = viewWidgetRegistry.get(name);
-    const widgetInfo = {
-        name,
-        widget,
-        options: {},
-        attrs: {},
-    };
-
-    for (const { name, value } of node.attributes) {
-        if (["name", "widget"].includes(name)) {
-            // avoid adding name and widget to attrs
-            continue;
-        }
-        if (name === "options") {
-            widgetInfo.options = evaluateExpr(value);
-        } else if (!name.startsWith("t-att")) {
-            // all other (non dynamic) attributes
-            widgetInfo.attrs[name] = value;
-        }
-    }
-
-    return widgetInfo;
-};
-Widget.props = {
-    "*": true,
-};

@@ -15,6 +15,7 @@ import { useEffect } from "@odoo/owl";
  * a link redirecting to the record's form view otherwise.
  */
 export class SaleProgressBarField extends KanbanProgressBarField {
+    static template = "sale.SaleProgressBarField";
     /**
      * Anything used by the component is defined on the setup method.
      */
@@ -38,11 +39,6 @@ export class SaleProgressBarField extends KanbanProgressBarField {
         this.actionService.doAction(action, { props: { mode: "edit" } });
     }
 }
-
-/**
- * Define the template name used on the component.
- */
-SaleProgressBarField.template = "sale.SaleProgressBarField";
 
 export const saleProgressBarField = {
     ...kanbanProgressBarField,

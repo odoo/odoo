@@ -7,6 +7,35 @@ import { View } from "@web/views/view";
 import { Component, onMounted } from "@odoo/owl";
 
 export class FormViewDialog extends Component {
+    static template = "web.FormViewDialog";
+    static components = { Dialog, View };
+    static props = {
+        close: Function,
+        resModel: String,
+
+        context: { type: Object, optional: true },
+        mode: {
+            optional: true,
+            validate: (m) => ["edit", "readonly"].includes(m),
+        },
+        onRecordSaved: { type: Function, optional: true },
+        onRecordDiscarded: { type: Function, optional: true },
+        removeRecord: { type: Function, optional: true },
+        resId: { type: [Number, Boolean], optional: true },
+        title: { type: String, optional: true },
+        viewId: { type: [Number, Boolean], optional: true },
+        preventCreate: { type: Boolean, optional: true },
+        preventEdit: { type: Boolean, optional: true },
+        isToMany: { type: Boolean, optional: true },
+        size: Dialog.props.size,
+    };
+    static defaultProps = {
+        onRecordSaved: () => {},
+        preventCreate: false,
+        preventEdit: false,
+        isToMany: false,
+    };
+
     setup() {
         super.setup();
 
@@ -75,32 +104,3 @@ export class FormViewDialog extends Component {
         this.props.close();
     }
 }
-
-FormViewDialog.components = { Dialog, View };
-FormViewDialog.props = {
-    close: Function,
-    resModel: String,
-
-    context: { type: Object, optional: true },
-    mode: {
-        optional: true,
-        validate: (m) => ["edit", "readonly"].includes(m),
-    },
-    onRecordSaved: { type: Function, optional: true },
-    onRecordDiscarded: { type: Function, optional: true },
-    removeRecord: { type: Function, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
-    title: { type: String, optional: true },
-    viewId: { type: [Number, Boolean], optional: true },
-    preventCreate: { type: Boolean, optional: true },
-    preventEdit: { type: Boolean, optional: true },
-    isToMany: { type: Boolean, optional: true },
-    size: Dialog.props.size,
-};
-FormViewDialog.defaultProps = {
-    onRecordSaved: () => {},
-    preventCreate: false,
-    preventEdit: false,
-    isToMany: false,
-};
-FormViewDialog.template = "web.FormViewDialog";

@@ -8,6 +8,15 @@ import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 import { Component, useExternalListener, useState, useRef } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
+    static template = "web.KanbanColumnQuickCreate";
+    static props = {
+        exampleData: [Object, { value: null }],
+        onFoldChange: Function,
+        onValidate: Function,
+        folded: Boolean,
+        groupByField: Object,
+    };
+
     setup() {
         this.dialog = useService("dialog");
         this.root = useRef("root");
@@ -89,11 +98,3 @@ export class KanbanColumnQuickCreate extends Component {
         });
     }
 }
-KanbanColumnQuickCreate.props = {
-    exampleData: [Object, { value: null }],
-    onFoldChange: Function,
-    onValidate: Function,
-    folded: Boolean,
-    groupByField: Object,
-};
-KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";

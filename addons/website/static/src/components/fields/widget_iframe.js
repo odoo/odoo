@@ -5,6 +5,7 @@ import { useBus } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 
 class FieldIframePreview extends Component {
+    static template = "website.iframeWidget";
     setup() {
         this.state = useState({isMobile: false});
 
@@ -13,7 +14,6 @@ class FieldIframePreview extends Component {
         });
     }
 }
-FieldIframePreview.template = 'website.iframeWidget';
 
 export const fieldIframePreview = {
     component: FieldIframePreview,

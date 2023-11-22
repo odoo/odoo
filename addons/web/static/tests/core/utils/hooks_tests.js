@@ -25,15 +25,15 @@ QUnit.module("utils", () => {
 
         QUnit.test("useAutofocus: simple usecase", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" t-ref="autofocus" />
+                    </span>
+                `;
                 setup() {
                     this.inputRef = useAutofocus();
                 }
             }
-            MyComponent.template = xml`
-                <span>
-                    <input type="text" t-ref="autofocus" />
-                </span>
-            `;
 
             registry.category("services").add("ui", uiService);
 
@@ -53,15 +53,15 @@ QUnit.module("utils", () => {
             "useAutofocus: simple usecase when input type is number",
             async function (assert) {
                 class MyComponent extends Component {
+                    static template = xml`
+                        <span>
+                            <input type="number" t-ref="autofocus" />
+                        </span>
+                    `;
                     setup() {
                         this.inputRef = useAutofocus();
                     }
                 }
-                MyComponent.template = xml`
-                <span>
-                    <input type="number" t-ref="autofocus" />
-                </span>
-            `;
 
                 registry.category("services").add("ui", uiService);
 
@@ -79,16 +79,16 @@ QUnit.module("utils", () => {
 
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input t-if="showInput" type="text" t-ref="autofocus" />
+                    </span>
+                `;
                 setup() {
                     this.inputRef = useAutofocus();
                     this.showInput = true;
                 }
             }
-            MyComponent.template = xml`
-                <span>
-                    <input t-if="showInput" type="text" t-ref="autofocus" />
-                </span>
-            `;
 
             registry.category("services").add("ui", uiService);
 
@@ -113,6 +113,11 @@ QUnit.module("utils", () => {
         QUnit.test("useAutofocus returns also a ref when isSmall is true", async function (assert) {
             assert.expect(2);
             class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" t-ref="autofocus" />
+                    </span>
+                `;
                 setup() {
                     this.inputRef = useAutofocus();
                     assert.ok(this.env.isSmall);
@@ -121,11 +126,6 @@ QUnit.module("utils", () => {
                     });
                 }
             }
-            MyComponent.template = xml`
-                <span>
-                    <input type="text" t-ref="autofocus" />
-                </span>
-            `;
 
             const fakeUIService = {
                 start(env) {
@@ -151,15 +151,15 @@ QUnit.module("utils", () => {
             "useAutofocus works when isSmall and you provide mobile param",
             async function (assert) {
                 class MyComponent extends Component {
+                    static template = xml`
+                        <span>
+                            <input type="text" t-ref="autofocus" />
+                        </span>
+                    `;
                     setup() {
                         this.inputRef = useAutofocus({ mobile: true });
                     }
                 }
-                MyComponent.template = xml`
-                <span>
-                    <input type="text" t-ref="autofocus" />
-                </span>
-            `;
 
                 const fakeUIService = {
                     start(env) {
@@ -186,15 +186,15 @@ QUnit.module("utils", () => {
             "useAutofocus does not focus when isSmall and you don't provide mobile param",
             async function (assert) {
                 class MyComponent extends Component {
+                    static template = xml`
+                        <span>
+                            <input type="text" t-ref="autofocus" />
+                        </span>
+                    `;
                     setup() {
                         this.inputRef = useAutofocus();
                     }
                 }
-                MyComponent.template = xml`
-                <span>
-                    <input type="text" t-ref="autofocus" />
-                </span>
-            `;
 
                 const fakeUIService = {
                     start(env) {
@@ -220,6 +220,12 @@ QUnit.module("utils", () => {
 
         QUnit.test("supports different ref names", async (assert) => {
             class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" t-ref="first" />
+                        <input t-if="state.showSecond" type="text" t-ref="second" />
+                    </span>
+                `;
                 setup() {
                     this.secondRef = useAutofocus({ refName: "second" });
                     this.firstRef = useAutofocus({ refName: "first" });
@@ -227,12 +233,6 @@ QUnit.module("utils", () => {
                     this.state = useState({ showSecond: true });
                 }
             }
-            MyComponent.template = xml`
-                <span>
-                    <input type="text" t-ref="first" />
-                    <input t-if="state.showSecond" type="text" t-ref="second" />
-                </span>
-            `;
 
             registry.category("services").add("ui", uiService);
 
@@ -254,15 +254,15 @@ QUnit.module("utils", () => {
 
         QUnit.test("can select an entire text", async (assert) => {
             class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" value="abcdefghij" t-ref="autofocus" />
+                    </span>
+                `;
                 setup() {
                     this.inputRef = useAutofocus({ selectAll: true });
                 }
             }
-            MyComponent.template = xml`
-                <span>
-                    <input type="text" value="abcdefghij" t-ref="autofocus" />
-                </span>
-            `;
 
             registry.category("services").add("ui", uiService);
 
@@ -276,49 +276,53 @@ QUnit.module("utils", () => {
             assert.strictEqual(comp.inputRef.el.selectionEnd, 10);
         });
 
-        QUnit.test("useAutofocus: autofocus outside of active element doesn't work (CommandPalette)", async function (assert) {
-            class MyComponent extends Component {
-                setup() {
-                    this.inputRef = useAutofocus();
+        QUnit.test(
+            "useAutofocus: autofocus outside of active element doesn't work (CommandPalette)",
+            async function (assert) {
+                class MyComponent extends Component {
+                    static template = xml`
+                    <div>
+                        <input type="text" t-ref="autofocus" />
+                        <div class="o_dialog_container"/>
+                        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+                    </div>
+                `;
+                    setup() {
+                        this.inputRef = useAutofocus();
+                    }
+                    get OverlayContainer() {
+                        return registry.category("main_components").get("OverlayContainer");
+                    }
                 }
-                get OverlayContainer() {
-                    return registry.category("main_components").get("OverlayContainer");
-                }
+
+                registry.category("services").add("ui", uiService);
+                registry.category("services").add("dialog", dialogService);
+                registry.category("services").add("hotkey", hotkeyService);
+
+                const config = { providers: [] };
+                const env = await makeTestEnv();
+                const target = getFixture();
+                const comp = await mount(MyComponent, target, { env });
+                await nextTick();
+
+                assert.strictEqual(document.activeElement, comp.inputRef.el);
+
+                env.services.dialog.add(CommandPalette, { config });
+                await nextTick();
+                assert.containsOnce(target, ".o_command_palette");
+                assert.notStrictEqual(document.activeElement, comp.inputRef.el);
+
+                comp.render();
+                await nextTick();
+                assert.notStrictEqual(document.activeElement, comp.inputRef.el);
             }
-            MyComponent.template = xml`
-                <div>
-                    <input type="text" t-ref="autofocus" />
-                    <div class="o_dialog_container"/>
-                    <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
-                </div>
-            `;
-
-            registry.category("services").add("ui", uiService);
-            registry.category("services").add("dialog", dialogService);
-            registry.category("services").add("hotkey", hotkeyService);
-
-            const config = { providers: [] };
-            const env = await makeTestEnv();
-            const target = getFixture();
-            const comp = await mount(MyComponent, target , { env });
-            await nextTick();
-
-            assert.strictEqual(document.activeElement, comp.inputRef.el);
-
-            env.services.dialog.add(CommandPalette, { config });
-            await nextTick();
-            assert.containsOnce(target, ".o_command_palette");
-            assert.notStrictEqual(document.activeElement, comp.inputRef.el);
-
-            comp.render();
-            await nextTick();
-            assert.notStrictEqual(document.activeElement, comp.inputRef.el);
-        });
+        );
 
         QUnit.module("useBus");
 
         QUnit.test("useBus hook: simple usecase", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`<div/>`;
                 setup() {
                     useBus(this.env.bus, "test-event", this.myCallback);
                 }
@@ -326,7 +330,6 @@ QUnit.module("utils", () => {
                     assert.step("callback");
                 }
             }
-            MyComponent.template = xml`<div/>`;
 
             const env = await makeTestEnv();
             const target = getFixture();
@@ -345,11 +348,11 @@ QUnit.module("utils", () => {
 
         QUnit.test("useService: unavailable service", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`<div/>`;
                 setup() {
                     useService("toy_service");
                 }
             }
-            MyComponent.template = xml`<div/>`;
 
             const env = await makeTestEnv();
             const target = getFixture();
@@ -362,11 +365,11 @@ QUnit.module("utils", () => {
 
         QUnit.test("useService: service that returns null", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`<div/>`;
                 setup() {
                     this.toyService = useService("toy_service");
                 }
             }
-            MyComponent.template = xml`<div/>`;
 
             serviceRegistry.add("toy_service", {
                 name: "toy_service",
@@ -386,12 +389,12 @@ QUnit.module("utils", () => {
             let nbCalls = 0;
             let def = makeDeferred();
             class MyComponent extends Component {
+                static template = xml`<div/>`;
                 setup() {
                     this.objectService = useService("object_service");
                     this.functionService = useService("function_service");
                 }
             }
-            MyComponent.template = xml`<div/>`;
 
             serviceRegistry.add("object_service", {
                 name: "object_service",
@@ -461,12 +464,12 @@ QUnit.module("utils", () => {
             let nbCalls = 0;
             let def = makeDeferred();
             class MyComponent extends Component {
+                static template = xml`<div/>`;
                 setup() {
                     this.objectService = useService("object_service");
                     this.functionService = useService("function_service");
                 }
             }
-            MyComponent.template = xml`<div/>`;
 
             serviceRegistry.add("object_service", {
                 name: "object_service",
@@ -536,11 +539,11 @@ QUnit.module("utils", () => {
 
         QUnit.test("useSpellCheck: ref is on the textarea", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
                 setup() {
                     useSpellCheck();
                 }
             }
-            MyComponent.template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
 
             const env = await makeTestEnv();
             const target = getFixture();
@@ -564,11 +567,11 @@ QUnit.module("utils", () => {
 
         QUnit.test("useSpellCheck: use a different refName", async function (assert) {
             class MyComponent extends Component {
+                static template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
                 setup() {
                     useSpellCheck({ refName: "myreference" });
                 }
             }
-            MyComponent.template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
 
             const env = await makeTestEnv();
             const target = getFixture();
@@ -594,15 +597,15 @@ QUnit.module("utils", () => {
             "useSpellCheck: ref is on the root element and two editable elements",
             async function (assert) {
                 class MyComponent extends Component {
+                    static template = xml`
+                        <div t-ref="spellcheck">
+                            <textarea class="textArea"/>
+                            <div contenteditable="true" class="editableDiv"/>
+                        </div>`;
                     setup() {
                         useSpellCheck();
                     }
                 }
-                MyComponent.template = xml`
-                <div t-ref="spellcheck">
-                    <textarea class="textArea"/>
-                    <div contenteditable="true" class="editableDiv"/>
-                </div>`;
 
                 const env = await makeTestEnv();
                 const target = getFixture();
@@ -657,15 +660,15 @@ QUnit.module("utils", () => {
             "useSpellCheck: ref is on the root element and one element has disabled the spellcheck",
             async function (assert) {
                 class MyComponent extends Component {
+                    static template = xml`
+                        <div t-ref="spellcheck">
+                            <textarea class="textArea"/>
+                            <div contenteditable="true" spellcheck="false" class="editableDiv"/>
+                        </div>`;
                     setup() {
                         useSpellCheck();
                     }
                 }
-                MyComponent.template = xml`
-                <div t-ref="spellcheck">
-                    <textarea class="textArea"/>
-                    <div contenteditable="true" spellcheck="false" class="editableDiv"/>
-                </div>`;
 
                 const env = await makeTestEnv();
                 const target = getFixture();
@@ -716,19 +719,19 @@ QUnit.module("utils", () => {
             let childRef;
             let parentRef;
             class Child extends Component {
+                static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
                 setup() {
                     childRef = useForwardRefToParent("someRef");
                 }
             }
-            Child.template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
             class Parent extends Component {
+                static template = xml`<div><Child someRef="someRef"/></div>`;
+                static components = { Child };
                 setup() {
                     this.someRef = useChildRef();
                     parentRef = this.someRef;
                 }
             }
-            Parent.template = xml`<div><Child someRef="someRef"/></div>`;
-            Parent.components = { Child };
 
             const env = await makeTestEnv();
             const target = getFixture();
@@ -740,19 +743,19 @@ QUnit.module("utils", () => {
 
         QUnit.test("useForwardRefToParent in a conditional child", async function (assert) {
             class Child extends Component {
+                static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
                 setup() {
                     useForwardRefToParent("someRef");
                 }
             }
-            Child.template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
             class Parent extends Component {
+                static template = xml`<div><Child t-if="state.hasChild" someRef="someRef"/></div>`;
+                static components = { Child };
                 setup() {
                     this.someRef = useChildRef();
                     this.state = useState({ hasChild: true });
                 }
             }
-            Parent.template = xml`<div><Child t-if="state.hasChild" someRef="someRef"/></div>`;
-            Parent.components = { Child };
 
             const env = await makeTestEnv();
             const target = getFixture();

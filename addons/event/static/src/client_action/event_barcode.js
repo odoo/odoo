@@ -8,6 +8,9 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { EventRegistrationSummaryDialog } from "./event_registration_summary_dialog";
 
 export class EventScanView extends Component {
+    static template = "event.EventScanView";
+    static components = { BarcodeScanner };
+
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
@@ -104,8 +107,5 @@ export class EventScanView extends Component {
         }
     }
 }
-
-EventScanView.template = "event.EventScanView";
-EventScanView.components = { BarcodeScanner };
 
 registry.category("actions").add("event.event_barcode_scan_view", EventScanView);

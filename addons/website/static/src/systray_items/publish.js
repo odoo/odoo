@@ -9,6 +9,17 @@ import { Component, xml, useState } from "@odoo/owl";
 const websiteSystrayRegistry = registry.category('website_systray');
 
 class PublishSystray extends Component {
+    static template = xml`
+        <div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto" data-hotkey="p" t-att-data-processing="state.processing and 1">
+            <a href="#" class="o_nav_entry">
+                <Switch value="state.published" disabled="true" extraClasses="'mb-0 o_switch_danger_success'"/>
+                <span class="d-none d-md-block ms-1" t-esc="this.label"/>
+            </a>
+        </div>`;
+    static components = {
+        Switch,
+    };
+
     setup() {
         this.website = useService('website');
         this.rpc = useService('rpc');
@@ -53,16 +64,6 @@ class PublishSystray extends Component {
         );
     }
 }
-PublishSystray.template = xml`
-<div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto" data-hotkey="p" t-att-data-processing="state.processing and 1">
-    <a href="#" class="o_nav_entry">
-        <Switch value="state.published" disabled="true" extraClasses="'mb-0 o_switch_danger_success'"/>
-        <span class="d-none d-md-block ms-1" t-esc="this.label"/>
-    </a>
-</div>`;
-PublishSystray.components = {
-    Switch
-};
 
 export const systrayItem = {
     Component: PublishSystray,

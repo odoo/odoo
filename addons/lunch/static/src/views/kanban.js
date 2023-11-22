@@ -18,13 +18,13 @@ export class LunchKanbanRecord extends KanbanRecord {
     }
 }
 
-export class LunchKanbanRenderer extends LunchRendererMixin(KanbanRenderer) {}
-
-LunchKanbanRenderer.template = 'lunch.KanbanRenderer';
-LunchKanbanRenderer.components = {
-    ...LunchKanbanRenderer.components,
-    LunchDashboard,
-    KanbanRecord: LunchKanbanRecord,
+export class LunchKanbanRenderer extends LunchRendererMixin(KanbanRenderer) {
+    static template = "lunch.KanbanRenderer";
+    static components = {
+        ...LunchKanbanRenderer.components,
+        LunchDashboard,
+        KanbanRecord: LunchKanbanRecord,
+    };
 }
 
 registry.category('views').add('lunch_kanban', {

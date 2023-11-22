@@ -260,6 +260,12 @@ QUnit.module("Search", (hooks) => {
             assert.expect(14);
 
             class ToyController extends Component {
+                static components = { SearchBar };
+                static template = xml`
+                    <div>
+                        <SearchBar/>
+                    </div>
+                `;
                 setup() {
                     assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
                     onWillUpdateProps((nextProps) => {
@@ -267,12 +273,6 @@ QUnit.module("Search", (hooks) => {
                     });
                 }
             }
-            ToyController.components = { SearchBar };
-            ToyController.template = xml`
-                <div>
-                    <SearchBar/>
-                </div>
-            `;
 
             viewRegistry.add("toy", {
                 type: "toy",

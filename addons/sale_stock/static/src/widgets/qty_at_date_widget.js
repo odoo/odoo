@@ -8,6 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { Component, onWillRender } from "@odoo/owl";
 
 export class QtyAtDatePopover extends Component {
+    static template = "sale_stock.QtyAtDatePopover";
     setup() {
         this.actionService = useService("action");
     }
@@ -25,9 +26,10 @@ export class QtyAtDatePopover extends Component {
     }
 }
 
-QtyAtDatePopover.template = "sale_stock.QtyAtDatePopover";
 
 export class QtyAtDateWidget extends Component {
+    static components = { Popover: QtyAtDatePopover };
+    static template = "sale_stock.QtyAtDate";
     setup() {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.calcData = {};
@@ -77,9 +79,6 @@ export class QtyAtDateWidget extends Component {
         });
     }
 }
-
-QtyAtDateWidget.components = { Popover: QtyAtDatePopover };
-QtyAtDateWidget.template = "sale_stock.QtyAtDate";
 
 export const qtyAtDateWidget = {
     component: QtyAtDateWidget,

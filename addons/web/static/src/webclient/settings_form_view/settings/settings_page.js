@@ -4,6 +4,13 @@ import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export class SettingsPage extends Component {
+    static template = "web.SettingsPage";
+    static components = { ActionSwiper };
+    static props = {
+        modules: Array,
+        initialTab: { type: String, optional: 1 },
+        slots: Object,
+    };
     setup() {
         this.state = useState({
             selectedTab: "",
@@ -75,10 +82,3 @@ export class SettingsPage extends Component {
         this.env.searchState.value = "";
     }
 }
-SettingsPage.template = "web.SettingsPage";
-SettingsPage.components = { ActionSwiper };
-SettingsPage.props = {
-    modules: Array,
-    initialTab: { type: String, optional: 1 },
-    slots: Object,
-};

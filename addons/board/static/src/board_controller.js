@@ -13,6 +13,13 @@ import { BoardAction } from "./board_action";
 import { blockDom, Component, useState, useRef } from "@odoo/owl";
 
 export class BoardController extends Component {
+    static template = "board.BoardView";
+    static components = { BoardAction, Dropdown, DropdownItem };
+    static props = {
+        ...standardViewProps,
+        board: Object,
+    };
+
     setup() {
         this.board = useState(this.props.board);
         this.rpc = useService("rpc");
@@ -124,12 +131,5 @@ export class BoardController extends Component {
         this.env.bus.trigger("CLEAR-CACHES");
     }
 }
-
-BoardController.template = "board.BoardView";
-BoardController.components = { BoardAction, Dropdown, DropdownItem };
-BoardController.props = {
-    ...standardViewProps,
-    board: Object,
-};
 
 const xmlSerializer = new XMLSerializer();

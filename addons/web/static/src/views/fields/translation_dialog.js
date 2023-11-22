@@ -7,6 +7,8 @@ import { loadLanguages, _t } from "@web/core/l10n/translation";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
+    static template = "web.TranslationDialog";
+    static components = { Dialog };
     setup() {
         super.setup();
         this.title = _t("Translate: %s", this.props.fieldName);
@@ -98,5 +100,3 @@ export class TranslationDialog extends Component {
         this.props.close();
     }
 }
-TranslationDialog.template = "web.TranslationDialog";
-TranslationDialog.components = { Dialog };

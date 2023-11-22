@@ -19,6 +19,25 @@ const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 let nextItemId = 1;
 
 export class SearchBar extends Component {
+    static template = "web.SearchBar";
+    static components = {
+        SearchBarMenu,
+    };
+    static props = {
+        autofocus: { type: Boolean, optional: true },
+        slots: {
+            type: Object,
+            optional: true,
+            shape: {
+                default: { optional: true },
+                "search-bar-additional-menu": { optional: true },
+            },
+        },
+    };
+    static defaultProps = {
+        autofocus: true,
+    };
+
     setup() {
         this.dialogService = useService("dialog");
         this.fields = this.env.searchModel.searchViewFields;
@@ -238,12 +257,13 @@ export class SearchBar extends Component {
     }
 
     getFieldType(searchItem) {
-        const { type } = searchItem.type === "field_property"
-            ? searchItem.propertyFieldDefinition
-            : this.fields[searchItem.fieldName];
+        const { type } =
+            searchItem.type === "field_property"
+                ? searchItem.propertyFieldDefinition
+                : this.fields[searchItem.fieldName];
         const fieldType = type === "reference" ? "char" : type;
 
-        return fieldType
+        return fieldType;
     }
 
     /**
@@ -578,22 +598,3 @@ export class SearchBar extends Component {
         }
     }
 }
-
-SearchBar.template = "web.SearchBar";
-SearchBar.components = {
-    SearchBarMenu,
-};
-SearchBar.props = {
-    autofocus: { type: Boolean, optional: true },
-    slots: {
-        type: Object,
-        optional: true,
-        shape: {
-            default: { optional: true },
-            "search-bar-additional-menu": { optional: true },
-        },
-    },
-};
-SearchBar.defaultProps = {
-    autofocus: true,
-};

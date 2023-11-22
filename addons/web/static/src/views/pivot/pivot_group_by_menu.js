@@ -12,6 +12,25 @@ import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { Component } from "@odoo/owl";
 
 export class PivotGroupByMenu extends Component {
+    static template = "web.PivotGroupByMenu";
+    static components = {
+        CustomGroupByItem,
+        Dropdown,
+        CheckboxItem,
+        PropertiesGroupByItem,
+    };
+    static defaultProps = {
+        showCaretDown: false,
+    };
+    static props = {
+        ...Dropdown.props,
+        showCaretDown: { type: Boolean, optional: true },
+        cell: Object,
+        customGroupBys: Object,
+        onAddCustomGroupBy: Function,
+        onItemSelected: Function,
+    };
+
     setup() {
         this.icon = FACET_ICONS.groupBy;
         this.dropdownProps = Object.keys(this.props)
@@ -106,21 +125,3 @@ export class PivotGroupByMenu extends Component {
         this.props.onAddCustomGroupBy(fieldName);
     }
 }
-PivotGroupByMenu.components = {
-    CustomGroupByItem,
-    Dropdown,
-    CheckboxItem,
-    PropertiesGroupByItem,
-};
-PivotGroupByMenu.template = "web.PivotGroupByMenu";
-PivotGroupByMenu.defaultProps = {
-    showCaretDown: false,
-};
-PivotGroupByMenu.props = {
-    ...Dropdown.props,
-    showCaretDown: { type: Boolean, optional: true },
-    cell: Object,
-    customGroupBys: Object,
-    onAddCustomGroupBy: Function,
-    onItemSelected: Function,
-};

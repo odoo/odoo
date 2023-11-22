@@ -12,6 +12,10 @@ import { Component } from "@odoo/owl";
 const userMenuRegistry = registry.category("user_menuitems");
 
 export class UserMenu extends Component {
+    static template = "web.UserMenu";
+    static components = { Dropdown, DropdownItem, CheckBox };
+    static props = {};
+
     setup() {
         this.user = useService("user");
         const { origin } = browser.location;
@@ -31,9 +35,6 @@ export class UserMenu extends Component {
         return sortedItems;
     }
 }
-UserMenu.template = "web.UserMenu";
-UserMenu.components = { Dropdown, DropdownItem, CheckBox };
-UserMenu.props = {};
 
 export const systrayItem = {
     Component: UserMenu,

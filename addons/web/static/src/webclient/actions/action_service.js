@@ -643,6 +643,11 @@ function makeActionManager(env) {
         };
 
         class ControllerComponent extends Component {
+            static template = ControllerComponentTemplate;
+            static Component = controller.Component;
+            static props = {
+                "*": true,
+            };
             setup() {
                 this.Component = controller.Component;
                 this.titleService = useService("title");
@@ -766,11 +771,6 @@ function makeActionManager(env) {
                 return componentProps;
             }
         }
-        ControllerComponent.template = ControllerComponentTemplate;
-        ControllerComponent.Component = controller.Component;
-        ControllerComponent.props = {
-            "*": true,
-        };
         let nextDialog = null;
         if (action.target === "new") {
             const actionDialogProps = {
