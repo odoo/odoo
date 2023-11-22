@@ -352,6 +352,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
+        for line_vals in vals['vals']['invoice_line_vals']:
+            if not line_vals['item_vals'].get('name'):
+                # [BR-25]-Each Invoice line (BG-25) shall contain the Item name (BT-153).
+                constraints.update({'cen_en16931_item_name': _("Each invoice line should have a product or a label.")})
+                break
+
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
