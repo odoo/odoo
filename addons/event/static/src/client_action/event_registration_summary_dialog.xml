@@ -21,7 +21,7 @@
                             <span>This ticket is not for an ongoing event</span>
                         </t>
                         <t t-elif="registration.status === 'canceled_registration'">
-                            <span>Canceled registration</span>
+                            <span>Cancelled registration</span>
                         </t>
                         <t t-elif="registration.status == 'already_registered'">
                             <t t-out="registration.name"/><span> is already registered</span>

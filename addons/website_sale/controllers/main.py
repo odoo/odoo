@@ -1978,7 +1978,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise ValidationError(_("The access token is invalid."))
 
         if order_sudo.state == "cancel":
-            raise ValidationError(_("The order has been canceled."))
+            raise ValidationError(_("The order has been cancelled."))
 
         order_sudo._check_cart_is_ready_to_be_paid()
 

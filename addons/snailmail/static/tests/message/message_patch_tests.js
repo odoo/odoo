@@ -34,7 +34,7 @@ QUnit.test("Sent", async () => {
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Sent" });
 });
 
-QUnit.test("Canceled", async () => {
+QUnit.test("Cancelled", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -56,7 +56,7 @@ QUnit.test("Canceled", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-trash-o");
-    await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Canceled" });
+    await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Cancelled" });
 });
 
 QUnit.test("Pending", async () => {

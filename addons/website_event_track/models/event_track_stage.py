@@ -31,7 +31,7 @@ class TrackStage(models.Model):
     is_fully_accessible = fields.Boolean(
         string='Fully accessible', compute='_compute_is_fully_accessible', store=True,
         help='If checked, automatically publish tracks so that access links to customers are provided.')
-    is_cancel = fields.Boolean(string='Canceled Stage')
+    is_cancel = fields.Boolean(string='Cancelled Stage')
 
     @api.depends('is_cancel', 'is_fully_accessible')
     def _compute_is_visible_in_agenda(self):

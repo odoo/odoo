@@ -49,7 +49,7 @@ class SmsSms(models.Model):
         ('pending', 'Sent'),
         ('sent', 'Delivered'),  # As for notifications and traces
         ('error', 'Error'),
-        ('canceled', 'Canceled')
+        ('canceled', 'Cancelled')
     ], 'SMS Status', readonly=True, copy=False, default='outgoing', required=True)
     failure_type = fields.Selection([
         ("unknown", "Unknown error"),

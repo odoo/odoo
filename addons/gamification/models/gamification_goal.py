@@ -39,7 +39,7 @@ class Goal(models.Model):
         ('inprogress', "In progress"),
         ('reached', "Reached"),
         ('failed', "Failed"),
-        ('canceled', "Canceled"),
+        ('canceled', "Cancelled"),
     ], default='draft', string='State', required=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal')
