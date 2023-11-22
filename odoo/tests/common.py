@@ -4,6 +4,8 @@ The module :mod:`odoo.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.
 
 """
+from __future__ import annotations
+
 import base64
 import concurrent.futures
 import contextlib
@@ -858,9 +860,9 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_class, success_signal: Callable[[str], bool], headless: bool = True):
-        self._logger = test_class._logger
-        self.test_class = test_class
+    def __init__(self, test_case: HttpCase, success_signal: Callable[[str], bool], headless: bool = True):
+        self._logger = test_case._logger
+        self.test_case = test_case
         self.success_signal = success_signal
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
@@ -882,8 +884,8 @@ class ChromeBrowser:
 
         self.chrome, self.devtools_port = self._chrome_start(
             user_data_dir=self.user_data_dir,
-            window_size=test_class.browser_size,
-            touch_enabled=test_class.touch_enabled,
+            window_size=test_case.browser_size,
+            touch_enabled=test_case.touch_enabled,
             headless=headless,
         )
         self.ws = self._open_websocket()
@@ -1242,7 +1244,7 @@ class ChromeBrowser:
                 r = yield self._websocket_send("Runtime.getHeapUsage", with_future=True)
                 _logger.info("heap %d (allocated %d)", r['usedSize'], r['totalSize'])
 
-            if self.test_class.allow_end_on_form:
+            if self.test_case.allow_end_on_form:
                 self._result.set_result(True)
                 return
 
@@ -1339,7 +1341,7 @@ which leads to stray network requests and inconsistencies."""
                 self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
                 return
             decoded = base64.b64decode(base_png, validate=True)
-            save_test_file(self.test_class.__name__, decoded, prefix, logger=self._logger)
+            save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
@@ -1639,6 +1641,8 @@ class HttpCase(TransactionCase):
     def setUp(self):
         super().setUp()
 
+        self._logger = self._logger.getChild(self._testMethodName)
+
         self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
         self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
@@ -1742,9 +1746,9 @@ class HttpCase(TransactionCase):
             timeout = timeout * 1.5
 
         if watch:
-            _logger.warning('watch mode is only suitable for local testing')
+            self._logger.warning('watch mode is only suitable for local testing')
 
-        browser = ChromeBrowser(type(self), headless=not watch, success_signal=success_signal or (lambda s: 'test successful' in s))
+        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal or (lambda s: 'test successful' in s))
         try:
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
