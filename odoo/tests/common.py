@@ -700,6 +700,49 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             **kwargs)
 
 
+class Like:
+    """
+        A string-like object comparable to other strings but where the substring
+        '...' can match anything in the other string.
+
+        Example of usage:
+
+            self.assertEqual("SELECT field1, field2, field3 FROM model", Like('SELECT ... FROM model'))
+            self.assertIn(Like('Company ... (SF)'), ['TestPartner', 'Company 8 (SF)', 'SomeAdress'])
+            self.assertEqual([
+                'TestPartner',
+                'Company 8 (SF)',
+                'Anything else'
+            ], [
+                'TestPartner',
+                Like('Company ... (SF)'),
+                Like('...'),
+            ])
+
+        In case of mismatch, here is an example of error message
+
+            AssertionError: Lists differ: ['TestPartner', 'Company 8 (LA)', 'Anything else'] != ['TestPartner', ~Company ... (SF), ~...]
+
+            First differing element 1:
+            'Company 8 (LA)'
+            ~Company ... (SF)~
+
+            - ['TestPartner', 'Company 8 (LA)', 'Anything else']
+            + ['TestPartner', ~Company ... (SF), ~...]
+
+
+        """
+    def __init__(self, pattern):
+        self.pattern = pattern
+        self.regex = '.*'.join([re.escape(part.strip()) for part in self.pattern.split('...')])
+
+    def __eq__(self, other):
+        return re.fullmatch(self.regex, other.strip(), re.DOTALL)
+
+    def __repr__(self):
+        return repr(self.pattern)
+
+
 savepoint_seq = itertools.count()
 
 
