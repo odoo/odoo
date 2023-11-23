@@ -63,6 +63,14 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 }, {
     trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
     isCheck: true,
+},
+// check that additional line is kept if selected but not edited with a click followed by a check
+{
+    trigger: 'td.o_data_cell:contains("Chair floor protection")',
+    run: 'click'
+}, {
+    trigger: 'div[name="tax_totals"]',
+    run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
     isCheck: true,
