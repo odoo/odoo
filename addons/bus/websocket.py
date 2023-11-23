@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 from weakref import WeakSet
 
 from werkzeug.local import LocalStack
-from werkzeug.exceptions import BadRequest, HTTPException
+from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
 from odoo import api
@@ -802,6 +802,10 @@ class WebsocketConnectionHandler:
     }
 
     @classmethod
+    def websocket_allowed(cls, request):
+        return not request.registry.in_test_mode()
+
+    @classmethod
     def open_connection(cls, request):
         """
         Open a websocket connection if the handshake is successfull.
@@ -811,6 +815,8 @@ class WebsocketConnectionHandler:
         versions the client supports and those we support.
         :raise: BadRequest if the handshake data is incorrect.
         """
+        if not cls.websocket_allowed(request):
+            raise ServiceUnavailable("Websocket is disabled in test mode")
         cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
