@@ -5,7 +5,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
-    const { useState } = owl;
+    const { useState, useRef } = owl;
     const { useValidateCashInput } = require('point_of_sale.custom_hooks');
     const { parse } = require('web.field_utils');
 
@@ -14,6 +14,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             super.setup();
             this.manualInputCashCount = false;
             this.cashControl = this.env.pos.config.cash_control;
+            this.closingCashInputRef = useRef('closingCashInput');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
             Object.assign(this, this.props.info);
@@ -91,6 +92,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
         }
         updateCountedCash({ total, moneyDetailsNotes, moneyDetails }) {
+            this.closingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
