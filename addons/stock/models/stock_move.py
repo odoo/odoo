@@ -867,6 +867,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
+        if moves_to_unreserve and self.env.context.get('unreserve_parent'):
+            self.env['stock.move'].browse(moves_to_unreserve._rollup_move_origs())._do_unreserve()
         return True
 
     def _generate_serial_numbers(self, next_serial_count=False):
@@ -2138,6 +2140,15 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
+
+    def _rollup_move_origs(self, seen=False):
+        if not seen:
+            seen = OrderedSet()
+        for dst in self.move_orig_ids:
+            if dst.id not in seen and dst.state not in ('done', 'cancel'):
+                seen.add(dst.id)
+                dst._rollup_move_origs(seen)
+        return seen
 
     def _rollup_move_dests(self, seen):
         for dst in self.move_dest_ids:
