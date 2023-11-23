@@ -416,10 +416,10 @@ export class ProductScreen extends Component {
                 return true;
             }
             if (newQuantity >= selectedLine.saved_quantity) {
+                selectedLine.set_quantity(newQuantity);
                 if (newQuantity == 0) {
                     order._unlinkOrderline(selectedLine);
                 }
-                selectedLine.set_quantity(newQuantity);
                 return true;
             }
             const newLine = selectedLine.clone();
