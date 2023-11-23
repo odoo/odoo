@@ -72,7 +72,7 @@
                 </t>
             </t>
             <t t-foreach="threads" t-as="thread" t-key="thread.localId">
-                <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestMessage : thread.needactionMessages.at(-1)"/>
+                <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     body="message?.inlineBody"
                     counter="thread.needactionCounter"
