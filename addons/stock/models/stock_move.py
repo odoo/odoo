@@ -867,6 +867,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
+        if self.env.context.get('unreserve_parent'):
+            moves_orig_to_unreserve = moves_to_unreserve.move_orig_ids.filtered(lambda move: move.reserved_availability)
+            if moves_orig_to_unreserve.picking_id:
+                moves_orig_to_unreserve.picking_id.do_unreserve()
         return True
 
     def _generate_serial_numbers(self, next_serial_count=False):
