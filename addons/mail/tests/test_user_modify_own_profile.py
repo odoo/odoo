@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @tagged('-at_install', 'post_install')
-class TestUserModifyOwnProfile(HttpCase):
+class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
         """" A user should be able to modify their own profile.
