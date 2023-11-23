@@ -214,7 +214,7 @@ class TestSaleToInvoice(TestSaleCommon):
         }
         # Let's do an invoice for a down payment of 50
         self.env['sale.advance.payment.inv'].with_context(context).create({
-            'sale_order_ids': [Command.set(sale_order.ids)],
+            'order_ids': [Command.set(sale_order.ids)],
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
         }).create_invoices()
@@ -1053,7 +1053,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'delivered',
-            'sale_order_ids': [Command.set((sale_order_1 + sale_order_2).ids)],
+            'order_ids': [Command.set((sale_order_1 + sale_order_2).ids)],
         }).create_invoices()
 
         sale_order_1.invoice_ids.action_post()
@@ -1091,7 +1091,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'delivered',
-            'sale_order_ids': [Command.set((sale_order_2).ids)],
+            'order_ids': [Command.set((sale_order_2).ids)],
         }).create_invoices()
 
         sale_order_1.invoice_ids = sale_order_2.invoice_ids

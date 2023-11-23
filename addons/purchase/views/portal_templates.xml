@@ -309,8 +309,9 @@
                     <tbody class="purchase_tbody">
 
                           <t t-set="current_subtotal" t-value="0"/>
+                          <t t-set="lines_to_report" t-value="order._get_order_lines_to_report()"/>
 
-                          <t t-foreach="order.order_line" t-as="line">
+                          <t t-foreach="lines_to_report" t-as="line">
 
                               <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
@@ -350,7 +351,7 @@
                                     <td t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
                                     </td>
-                                    <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']">
+                                    <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done'] and not line.is_downpayment">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                     </td>
                                 </t>
@@ -368,7 +369,7 @@
                                 </t>
                             </tr>
 
-                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type == 'line_section') and order.state in ['purchase', 'done']">
+                            <t t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and order.state in ['purchase', 'done'] and not line.is_downpayment">
                                 <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
