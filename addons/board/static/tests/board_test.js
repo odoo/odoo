@@ -133,7 +133,10 @@ QUnit.module("Board", (hooks) => {
                     return Promise.resolve(true);
                 }
                 if (args.method === "get_views" && args.model == "partner") {
-                    assert.deepEqual(args.kwargs.views.find((v) => v[1] === 'list'), [4, "list"]);
+                    assert.deepEqual(
+                        args.kwargs.views.find((v) => v[1] === "list"),
+                        [4, "list"]
+                    );
                 }
             },
         });
@@ -689,6 +692,10 @@ QUnit.module("Board", (hooks) => {
                 return {
                     doAction(action) {
                         assert.step("do action");
+                        assert.deepEqual(action.views, [
+                            [false, "list"],
+                            [false, "form"],
+                        ]);
                     },
                 };
             },
