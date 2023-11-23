@@ -249,7 +249,13 @@ export class KanbanController extends Component {
         if (!create) {
             return false;
         }
-        return list.isGrouped ? list.groups.length > 0 || !createGroup : true;
+        if (list.isGrouped) {
+            if (list.groupByField.type !== "many2one") {
+                return true;
+            }
+            return list.groups.length || !createGroup;
+        }
+        return true;
     }
 
     get canQuickCreate() {
