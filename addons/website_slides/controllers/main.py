@@ -438,7 +438,7 @@ class WebsiteSlides(WebsiteProfile):
         )
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-        _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
+        search_count, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
             limit=1000, order=order, options=options)
         channels = details[0].get('results', request.env['slide.channel'])
 
@@ -461,6 +461,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_slide_category': slide_category,
             'search_my': my,
             'search_tags': search_tags,
+            'search_count': search_count,
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
             'slide_query_url': QueryURL('/slides/all', ['tag']),
