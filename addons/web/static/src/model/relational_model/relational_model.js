@@ -15,13 +15,13 @@ import { Group } from "./group";
 import { Record } from "./record";
 import { StaticList } from "./static_list";
 import {
-    FetchRecordError,
     extractInfoFromGroupData,
     getBasicEvalContext,
     getFieldsSpec,
     isRelational,
     makeActiveField,
 } from "./utils";
+import { FetchRecordError } from "./errors";
 
 /**
  * @typedef Params
@@ -167,7 +167,17 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
-        const data = await this.keepLast.add(this._loadData(config));
+        let data;
+        try {
+            data = await this.keepLast.add(this._loadData(config));
+        } catch (e) {
+            if (e instanceof FetchRecordError) {
+                this._updateConfig(this.config, {
+                    resIds: this.config.resIds.filter(id => id !== config.resId),
+                }, {reload: false});
+            }
+            throw e;
+        }
         this.root = this._createRoot(config, data);
         this.config = config;
     }

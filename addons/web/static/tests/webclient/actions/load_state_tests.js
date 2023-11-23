@@ -646,7 +646,7 @@ QUnit.module("ActionManager", (hooks) => {
             res_model: "partner",
             type: "ir.actions.act_window",
             view_type: "form",
-            red_id: 999,
+            res_id: 999,
             views: [
                 [false, "list"],
                 [false, "form"],

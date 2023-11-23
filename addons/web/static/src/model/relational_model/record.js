@@ -9,13 +9,13 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
-    FetchRecordError,
     createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
     parseServerValue,
 } from "./utils";
+import { FetchRecordError } from "./errors";
 
 export class Record extends DataPoint {
     static type = "Record";
@@ -1002,7 +1002,7 @@ export class Record extends DataPoint {
             throw e;
         }
         if (reload && !records.length) {
-            throw new FetchRecordError(nextId || this.resId, this.resModel);
+            throw new FetchRecordError([nextId || this.resId], this.resModel);
         }
         if (creation) {
             const resId = records[0].id;
