@@ -113,18 +113,18 @@
                                     Reserved from stock
                                     <button t-if="line['move_out'] and line['move_out'].picking_id"
                                         class="btn btn-sm btn-primary o_report_replenish_unreserve"
-                                        t-attf-model="stock.picking"
-                                        t-att-model-id="line['move_out'].picking_id.id"
+                                        t-attf-model="report.stock.report_product_product_replenishment"
+                                        t-att-move_id="line['move_out'].id"
                                         name="unreserve_link">
                                         Unreserve
                                     </button>
                                 </t>
                                 <t t-elif="line['replenishment_filled']">
                                     <t t-if="line['document_out']">Inventory On Hand
-                                        <button t-if="line['move_out'] and line['move_out'].state in ('confirmed', 'partially_available') and line['move_out'].picking_id"
+                                        <button t-if="line['move_out']"
                                             class="btn btn-sm btn-primary o_report_replenish_reserve"
-                                            t-attf-model="stock.picking"
-                                            t-att-model-id="line['move_out'].picking_id.id"
+                                            t-attf-model="report.stock.report_product_product_replenishment"
+                                            t-att-move_id="line['move_out'].id"
                                             name="reserve_link">
                                             Reserve
                                         </button>
