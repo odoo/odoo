@@ -14,7 +14,7 @@ class StockMoveLine(models.Model):
     _name = "stock.move.line"
     _description = "Product Moves (Stock Move Line)"
     _rec_name = "product_id"
-    _order = "result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id"
+    _order = "result_package_id desc, id"
 
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', auto_join=True,
