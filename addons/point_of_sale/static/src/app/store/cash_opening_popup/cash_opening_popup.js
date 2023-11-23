@@ -4,7 +4,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaita
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
-import { useState } from "@odoo/owl";
+import { useState, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useValidateCashInput } from "@point_of_sale/app/utils/hooks";
@@ -27,6 +27,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         useAutofocus({ refName: "cash-input" });
         this.hardwareProxy = useService("hardware_proxy");
         useValidateCashInput("cash-input", this.pos.pos_session.cash_register_balance_start);
+        this.openingCashInputRef = useRef('cash-input');
     }
     //@override
     async confirm() {
@@ -49,6 +50,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         if (confirmed) {
             const { total, moneyDetails, moneyDetailsNotes } = payload;
+            this.openingCashInputRef.el.value = this.env.utils.formatCurrency(total, false);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;

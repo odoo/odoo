@@ -7,7 +7,7 @@ import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/
 import { useService } from "@web/core/utils/hooks";
 import { AlertPopup } from "@point_of_sale/app/utils/alert_popup/alert_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useState } from "@odoo/owl";
+import { useState, useRef } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { _t } from "@web/core/l10n/translation";
@@ -37,6 +37,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+        this.closingCashInputRef = useRef('closingCashInput');
         useValidateCashInput("closingCashInput");
         if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
             this.otherPaymentMethods.forEach(pm => {
@@ -92,6 +93,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         });
         if (confirmed) {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
+            this.closingCashInputRef.el.value = this.env.utils.formatCurrency(total, false);
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.utils.roundCurrency(
