@@ -72,7 +72,7 @@ export class BasePrinter {
     async htmlToImg(el) {
         const elClone = el.cloneNode(true);
         const receiptContainer = document.querySelector(".pos-receipt-print");
-        receiptContainer.appendChild(elClone);
+        receiptContainer.innerHTML = elClone.outerHTML;
         const receipt = receiptContainer.querySelector(".pos-receipt");
         // Odoo RTL support automatically flip left into right but html2canvas
         // won't work as expected if the receipt is aligned to the right of the
