@@ -5626,6 +5626,46 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("filter -> sort -> unfilter should not crash", async function (assert) {
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="bar" type="row"/>
+                    </pivot>
+                `,
+            searchViewArch: `
+                <search>
+                    <filter name="xphone" domain="[('product_id', '=', 37)]" />
+                </search>
+            `,
+            context: {
+                search_default_xphone: true,
+            },
+        });
+
+        assert.deepEqual(getFacetTexts(target), ["xphone"]);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "Yes"]
+        );
+        assert.strictEqual(getCurrentValues(target), ["1", "1", "1"].join());
+
+        await click(target, ".o_pivot_measure_row");
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "xphone");
+
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "Yes", "xpad"]
+        );
+        assert.strictEqual(getCurrentValues(target), ["4", "1", "1", "3"].join());
+    });
+
     QUnit.test(
         "no class 'o_view_sample_data' when real data are presented",
         async function (assert) {
