@@ -16,7 +16,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'account_account_template_2045',
             'property_stock_account_output_categ_id': 'account_account_template_2045',
             'property_stock_valuation_account_id': 'account_account_template_2040',
-            'code_digits': '1',
+            'code_digits': '6',
             'use_anglo_saxon': True,
         }
 
