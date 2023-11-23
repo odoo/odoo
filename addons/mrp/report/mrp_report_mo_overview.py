@@ -453,7 +453,7 @@ class ReportMoOverview(models.AbstractModel):
             'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
             'unit_cost': self._get_unit_cost(move_raw),
             'mo_cost': currency.round(replenish_mo_cost + missing_quantity_cost),
-            'real_cost': currency.round(self._get_component_real_cost(move_raw, move_raw.product_uom_qty)),
+            'real_cost': currency.round(self._get_component_real_cost(move_raw, quantity)),
             'currency_id': currency.id,
             'currency': currency,
         }
