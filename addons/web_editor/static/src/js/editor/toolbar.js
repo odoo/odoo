@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 
 import {
@@ -97,6 +97,6 @@ export class Toolbar extends Component {
     }
 
     isMobile() {
-        return isMobileOS();
+        return uiUtils.isSmall();
     }
 }
