@@ -1,6 +1,14 @@
 /* @odoo-module */
 
-import { onMounted, onPatched, onWillUnmount, useComponent, useRef, useState } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    useComponent,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -122,37 +130,25 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
 export function useVisible(refName, cb, { init = false } = {}) {
     const ref = useRef(refName);
     const state = { isVisible: init };
-    const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-            const newVal = entry.isIntersecting;
-            if (state.isVisible !== newVal) {
-                state.isVisible = newVal;
-                cb();
-            }
-        }
-    });
-    let el;
-    onMounted(observe);
-    onWillUnmount(() => {
-        if (!el) {
-            return;
-        }
-        observer.unobserve(el);
-    });
-    onPatched(observe);
-
-    function observe() {
-        if (ref.el !== el) {
-            if (el) {
-                observer.unobserve(el);
-                state.isVisible = false;
-            }
-            if (ref.el) {
-                observer.observe(ref.el);
-            }
-        }
-        el = ref.el;
+    function setValue(value) {
+        state.isVisible = value;
+        cb();
     }
+    const observer = new IntersectionObserver((entries) => {
+        setValue(entries.at(-1).isIntersecting);
+    });
+    useEffect(
+        (el) => {
+            if (el) {
+                observer.observe(el);
+                return () => {
+                    setValue(false);
+                    observer.unobserve(el);
+                };
+            }
+        },
+        () => [ref.el]
+    );
     return state;
 }
 
