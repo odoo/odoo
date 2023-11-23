@@ -58,6 +58,7 @@ class AccountMove(models.Model):
                 move.company_id.account_peppol_proxy_state == 'active',
                 move.partner_id.account_peppol_is_endpoint_valid,
                 move.state == 'posted',
+                move.move_type in ('out_invoice', 'out_refund', 'out_receipt'),
                 not move.peppol_move_state,
             ]):
                 move.peppol_move_state = 'ready'
