@@ -202,7 +202,14 @@ export const useDateTimePicker = (hookParams) => {
         if (!popover.isOpen) {
             const popoverTarget = getPopoverTarget();
             if (env.isSmall) {
+                const { marginBottom } = popoverTarget.style;
+                // Adds enough space for the popover to be displayed below the target
+                // even on small screens.
+                popoverTarget.style.marginBottom = `100vh`;
                 popoverTarget.scrollIntoView(true);
+                restoreTargetMargin = async () => {
+                    popoverTarget.style.marginBottom = marginBottom;
+                };
             }
             popover.open(popoverTarget, { pickerProps });
         }
@@ -352,6 +359,10 @@ export const useDateTimePicker = (hookParams) => {
             updateValueFromInputs();
             checkAndApply();
             setFocusClass(null);
+            if (restoreTargetMargin) {
+                restoreTargetMargin();
+                restoreTargetMargin = null;
+            }
         },
     });
     /** @type {DateTimePickerProps} */
@@ -392,6 +403,8 @@ export const useDateTimePicker = (hookParams) => {
     let inputsChanged = [];
     let lastAppliedDate;
     let lastIsRange = isRange(pickerProps.value);
+    /** @type {(() => void) | null} */
+    let restoreTargetMargin = null;
     let shouldFocusOnPatched = false;
 
     subscribeToPickerProps();
