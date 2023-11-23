@@ -427,10 +427,11 @@ QUnit.test("mark unread channel as read", async (assert) => {
             Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: partnerId }),
         ],
+        name: "My Channel",
     });
     const [messagId_1] = pyEnv["mail.message"].create([
-        { author_id: partnerId, model: "discuss.channel", res_id: channelId },
-        { author_id: partnerId, model: "discuss.channel", res_id: channelId },
+        { author_id: partnerId, body: "not empty", model: "discuss.channel", res_id: channelId },
+        { author_id: partnerId, body: "not empty", model: "discuss.channel", res_id: channelId },
     ]);
     const [currentMemberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
@@ -447,8 +448,8 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.verifySteps(["set_last_seen_message"]);
     await contains(".o-mail-NotificationItem.text-muted");
+    assert.verifySteps(["set_last_seen_message"]);
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
