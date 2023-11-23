@@ -4,7 +4,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitab
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
-import { useState } from "@odoo/owl";
+import { useState, useRef } from "@odoo/owl";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 
@@ -25,6 +25,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         this.orm = useService("orm");
         useAutofocus({ refName: "cash-input" });
         useValidateCashInput("cash-input", this.pos.globalState.pos_session.cash_register_balance_start);
+        this.openingCashInputRef = useRef('cash-input');
     }
     //@override
     async confirm() {
@@ -44,6 +45,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         if (confirmed) {
             const { total, moneyDetails, moneyDetailsNotes } = payload;
+            this.openingCashInputRef.el.value = this.env.utils.formatCurrency(total, false);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
