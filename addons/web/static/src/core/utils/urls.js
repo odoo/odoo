@@ -98,5 +98,5 @@ export function redirect(url) {
     if (_url.origin !== origin) {
         throw new RedirectionError("Can't redirect to another origin");
     }
-    browser.location = _url.href;
+    browser.location.assign(_url.href);
 }

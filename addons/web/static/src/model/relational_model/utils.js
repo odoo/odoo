@@ -50,14 +50,6 @@ export function makeActiveField({
 
 const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 
-export class FetchRecordError extends Error {
-    constructor(resIds, resModel) {
-        super(`Can't fetch record(s) ${resIds} on model ${resModel}. They might have been deleted.`);
-        this.resIds = resIds;
-        this.resModel = resModel;
-    }
-}
-
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
     for (const field of fieldDependencies) {
         if (!("readonly" in field)) {

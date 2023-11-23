@@ -6053,6 +6053,38 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(form.env.services.router.current.hash.id, 2);
     });
 
+    QUnit.test("switching to non-existing record", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout(fn) {
+                return fn(); // update the router hash directly
+            },
+        });
+        registry.category("services").add("error", errorService);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"></field></form>',
+            resId: 1,
+            resIds: [1, 999, 2],
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "3");
+        assert.strictEqual(form.env.services.router.current.hash.id, 1);
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.containsOnce(target, ".o_notification.border-danger");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(form.env.services.router.current.hash.id, 1);
+
+        await click(target.querySelector(".o_pager_next"));
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(form.env.services.router.current.hash.id, 2);
+    });
+
     QUnit.test("modifiers are reevaluated when creating new record", async function (assert) {
         await makeView({
             type: "form",
