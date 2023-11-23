@@ -1060,6 +1060,8 @@ class Message(models.Model):
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
+            if vals['model'] and self.env[vals['model']]._original_module:
+                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)  # deprecated
             if vals['model'] and vals['res_id']:
                 originThread = {'model': vals['model'], 'id': vals['res_id']}
                 if vals['model'] != 'discuss.channel':
@@ -1132,6 +1134,7 @@ class Message(models.Model):
             # set value for user being a follower, fallback to False if not prepared
             follower_id_by_pid = vals.pop('follower_id_by_partner_id', {})
             follower_id = follower_id_by_pid.get(partner_id, False)
+            vals['user_follower_id'] = follower_id  # legacy
             if follower_id:
                 vals['originThread']['selfFollower'] = {
                     'id': follower_id,
@@ -1145,6 +1148,7 @@ class Message(models.Model):
             'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
+            'starred_partner_ids',  # list of partner ids for whom the message is starred (legacy)
         ]
 
     def _message_notification_format(self):
@@ -1157,6 +1161,9 @@ class Message(models.Model):
         return [{
             'author': {'id': message.author_id.id, 'type': "partner"} if message.author_id else False,
             'id': message.id,
+            'res_id': message.res_id,  # legacy
+            'model': message.model,  # legacy
+            'res_model_name': message.env['ir.model']._get(message.model).display_name,  # legacy
             'date': message.date,
             'message_type': message.message_type,
             'body': message.body,

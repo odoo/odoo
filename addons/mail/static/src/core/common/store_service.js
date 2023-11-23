@@ -77,6 +77,26 @@ export class Store extends BaseStore {
             );
         },
         eager: true,
+        /**
+         * @this {import("models").Store}
+         * @param {import("models").Persona}
+         */
+        onAdd(r) {
+            this.env.services["mail.messaging"].registeredImStatusPartners.push(r.id);
+        },
+        /**
+         * @this {import("models").Store}
+         * @param {import("models").Persona}
+         */
+        onDelete(r) {
+            const index = this.env.services["mail.messaging"].registeredImStatusPartners.indexOf(
+                (i) => i === r.id
+            );
+            if (index !== -1) {
+                this.env.services["mail.messaging"].registeredImStatusPartners.splice(index, 1);
+            }
+        },
+        /** @this {import("models").Store} */
         onUpdate() {
             this.env.services["im_status"].registerToImStatus(
                 "res.partner",

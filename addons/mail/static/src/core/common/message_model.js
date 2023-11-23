@@ -59,6 +59,20 @@ export class Message extends Record {
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
     originThread = Record.one("Thread");
+    /** @deprecated */
+    res_id = Record.attr(0, {
+        /** @this {import("models").Message} */
+        compute() {
+            return this.originThread?.id;
+        },
+    });
+    /** @deprecated */
+    model = Record.attr("", {
+        /** @this {import("models").Message} */
+        compute() {
+            return this.originThread?.model;
+        },
+    });
     /** @type {string} */
     scheduledDatetime;
     starredPersonas = Record.many("Persona");
@@ -74,6 +88,13 @@ export class Message extends Record {
     translationSource;
     /** @type {string|undefined} */
     translationErrors;
+    /** @deprecated */
+    type = Record.attr("", {
+        /** @this {import("models").Message} */
+        compute() {
+            return this.message_type;
+        },
+    });
     /** @type {string} */
     message_type;
     /** @type {string} */

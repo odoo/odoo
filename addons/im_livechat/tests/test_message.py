@@ -78,6 +78,7 @@ class TestImLivechatMessage(HttpCase):
             'message_type': 'notification',
             'reactions': [],
             'model': 'discuss.channel',
+            'module_icon': '/mail/static/description/icon.png',  # deprecated
             'needaction_partner_ids': [],
             'notifications': [],
             'originThread': {
@@ -96,6 +97,7 @@ class TestImLivechatMessage(HttpCase):
             'res_id': channel_livechat_1.id,
             'scheduledDatetime': False,
             'sms_ids': [],
+            'starred_partner_ids': [],  # legacy
             'starredPersonas': [],
             'subject': False,
             'subtype_description': False,

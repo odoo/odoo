@@ -25,6 +25,16 @@ export class ChannelMemberList extends Component {
         });
     }
 
+    /** @deprecated */
+    get onlineMembers() {
+        return this.props.thread.onlineMembers;
+    }
+
+    /** @deprecated */
+    get offlineMembers() {
+        return this.props.thread.offlineMembers;
+    }
+
     canOpenChatWith(member) {
         if (this.store.inPublicPage) {
             return false;

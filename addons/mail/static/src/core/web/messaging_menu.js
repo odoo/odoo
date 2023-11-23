@@ -71,7 +71,7 @@ export class MessagingMenu extends Component {
 
     get hasPreviews() {
         return (
-            this.store.menuThreads.length > 0 ||
+            this.threads.length > 0 ||
             (this.store.failures.length > 0 &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
@@ -109,6 +109,15 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 this.notification.permission === "prompt",
         };
+    }
+
+    /** @deprecated */
+    getThreads() {
+        return this.store.menuThreads;
+    }
+
+    get threads() {
+        return this.store.menuThreads;
     }
 
     /**
