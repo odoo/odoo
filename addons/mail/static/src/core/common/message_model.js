@@ -109,6 +109,14 @@ export class Message extends Record {
     linkPreviews = Record.many("LinkPreview", { inverse: "message" });
     /** @type {number[]} */
     needaction_partner_ids = [];
+    originThread = Record.one("Thread", {
+        inverse: "allMessages",
+        compute() {
+            if (this.model && this.res_id) {
+                return { model: this.model, id: this.res_id };
+            }
+        },
+    });
     /** @type {number[]} */
     history_partner_ids = [];
     parentMessage = Record.one("Message");
@@ -239,10 +247,6 @@ export class Message extends Record {
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
-    }
-
-    get originThread() {
-        return this._store.Thread.get({ model: this.model, id: this.res_id });
     }
 
     get resUrl() {

@@ -248,11 +248,13 @@ QUnit.test("marked as read thread notifications are ordered by last message date
     ]);
     pyEnv["mail.message"].create([
         {
+            body: "not empty",
             date: "2019-01-01 00:00:00",
             model: "discuss.channel",
             res_id: channelId_1,
         },
         {
+            body: "not empty",
             date: "2020-01-01 00:00:00",
             model: "discuss.channel",
             res_id: channelId_2,
