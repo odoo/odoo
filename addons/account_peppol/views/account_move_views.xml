@@ -76,7 +76,9 @@
             </xpath>
             <xpath expr="//filter[@name='to_check']" position='after'>
                 <separator/>
-                <filter name="peppol_ready" string="Peppol Ready" domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready')]"/>
+                <filter name="peppol_ready"
+                        string="Peppol Ready"
+                        domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready'), ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]"/>
                 <separator/>
             </xpath>
         </field>
