@@ -570,7 +570,7 @@ class AccountEdiFormat(models.Model):
                                         "the response.  Make sure it is not because of a wrong configuration."))
 
             elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
-                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+                return self.with_context(error_1117=True)._l10n_es_edi_sii_post_invoices(invoices)
 
 
             else:
