@@ -324,7 +324,7 @@ class SaleOrder(models.Model):
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
             points = self._get_real_points_for_coupon(coupon)
-            if reward.program_type == 'loyalty':
+            if not reward.program_id.is_payment_program:
                 # Rewards cannot be partially offered to customers
                 points = points // reward.required_points * reward.required_points
             max_discount = min(max_discount,
