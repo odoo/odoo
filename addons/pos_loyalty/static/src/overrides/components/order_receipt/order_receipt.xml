@@ -5,7 +5,7 @@
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
             <t t-foreach="props.data.loyaltyStats or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                 <!-- Show only if portal_visible. -->
-                <div t-if="_loyaltyStat.program.portal_visible" class='loyalty'>
+                <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
                     <span class="pos-receipt-center-align">
                         <div>--------------------------------</div>
                         <br/>
