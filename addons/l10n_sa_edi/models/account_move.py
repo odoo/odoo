@@ -101,7 +101,7 @@ class AccountMove(models.Model):
             seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
             seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, journal_id.company_id.vat.encode())
             timestamp_enc = self._l10n_sa_get_qr_code_encoding(3,
-                                                               invoice_datetime.strftime("%Y-%m-%dT%H:%M:%SZ").encode())
+                                                               invoice_datetime.strftime("%Y-%m-%dT%H:%M:%S").encode())
             amount_total_enc = self._l10n_sa_get_qr_code_encoding(4, float_repr(abs(amount_total), 2).encode())
             amount_tax_enc = self._l10n_sa_get_qr_code_encoding(5, float_repr(abs(amount_tax), 2).encode())
             invoice_hash_enc = self._l10n_sa_get_qr_code_encoding(6, invoice_hash)
