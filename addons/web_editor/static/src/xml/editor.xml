@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <t t-if="!this.isMobile()">
+            <t t-if="!this.isSmall()">
                 <div t-if="props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
@@ -132,7 +132,7 @@
                 </div>
             </div>
 
-            <t t-if="this.isMobile()">
+            <t t-if="this.isSmall()">
                 <button type="button" class="btn dropdown-toggle"
                     data-bs-toggle="dropdown" title="List" tabindex="-1"
                     data-bs-original-title="List" aria-expanded="false">
