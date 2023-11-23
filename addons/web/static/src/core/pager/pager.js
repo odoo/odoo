@@ -130,9 +130,12 @@ export class Pager extends Component {
      */
     async update(offset, limit, hasNavigated) {
         this.state.isDisabled = true;
-        await this.props.onUpdate({ offset, limit }, hasNavigated);
-        this.state.isDisabled = false;
-        this.state.isEditing = false;
+        try {
+            await this.props.onUpdate({ offset, limit }, hasNavigated);
+        } finally {
+            this.state.isDisabled = false;
+            this.state.isEditing = false;
+        }
     }
 
     async updateTotal() {

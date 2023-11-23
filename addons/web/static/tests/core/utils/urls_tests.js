@@ -83,9 +83,13 @@ QUnit.module("URLS", (hooks) => {
                 host: "testhost",
                 origin: "http://www.test.com",
                 pathname: "/some/tests",
+                href: "http://www.test.com",
+                assign: (url) => {
+                    browser.location.href = url;
+                }
             };
             redirect(url);
-            return browser.location;
+            return browser.location.href;
         }
 
         assert.strictEqual(testRedirect("abc"), "http://www.test.com/some/abc");
