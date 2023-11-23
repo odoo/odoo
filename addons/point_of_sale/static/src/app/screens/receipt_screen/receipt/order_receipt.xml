@@ -5,7 +5,7 @@
             <ReceiptHeader data="props.data.headerData" />
             <OrderWidget lines="props.data.orderlines" t-slot-scope="scope">
                 <t t-set="line" t-value="scope.line"/>
-                <Orderline line="omit(scope.line, 'customerNote')">
+                <Orderline line="omit(scope.line, 'customerNote')" class="{ 'pe-none': true }">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-esc="line.customerNote" />
