@@ -253,12 +253,25 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertFalse(leave.overtime_id.exists())
 
     def test_public_leave_overtime(self):
-        self.env['resource.calendar.leaves'].create([{
+        leave = self.env['resource.calendar.leaves'].create([{
             'name': 'Public Holiday',
             'date_from': datetime(2022, 5, 5, 6),
             'date_to': datetime(2022, 5, 5, 18),
-            'time_type': 'leave',
         }])
 
-        self.new_attendance(check_in=datetime(2022, 5, 5, 8), check_out=datetime(2022, 5, 5, 16))
-        self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
+        leave.company_id.write({
+            'hr_attendance_overtime': True,
+            'overtime_start_date': datetime(2021, 1, 1),
+        })
+        self.assertNotEqual(leave.company_id, self.employee.company_id)
+        self.manager.company_id = leave.company_id.id
+
+        for emp in [self.employee, self.manager]:
+            self.env['hr.attendance'].create({
+                'employee_id': emp.id,
+                'check_in': datetime(2022, 5, 5, 8),
+                'check_out': datetime(2022, 5, 5, 16),
+            })
+
+        self.assertEqual(self.employee.total_overtime, 0, "Should have 0 hours of overtime as the public holiday doesn't impact his company")
+        self.assertEqual(self.manager.total_overtime, 8, "Should have 8 hours of overtime")
