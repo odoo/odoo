@@ -47,11 +47,7 @@
     resize: none;
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 
-    .o-extended:not(.o-isUiSmall) & {
-        max-height: 400px;
-    }
-
-    .o-extended.o-isUiSmall & {
+    .o-extended & {
         max-height: Min(400px, 30vh);
     }
 
