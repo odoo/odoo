@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="product_expiry.ExpirationDateWidget" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+        <xpath expr="//*[@t-if='props.readonly']/parent::div" position="attributes">
+                <attribute name="t-attf-class" add="{{isExpired ? 'text-danger' : ''}}" separator=" "/>
+        </xpath>
+    </t>
+</templates>
+        <!-- <xpath expr="//*[@t-esc='getFormattedValue(0)']" position="attributes"> -->
+            <!-- <attribute name="class">text-danger</attribute> -->
+        <!-- </xpath> -->
+        <!-- <xpath expr="//*[@t-esc='getFormattedValue(1)']" position="attributes"> -->
+            <!-- <attribute name="class">text-warning</attribute> -->
