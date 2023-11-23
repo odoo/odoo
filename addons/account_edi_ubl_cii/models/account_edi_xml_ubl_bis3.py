@@ -257,6 +257,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'peppol_endpoint_is_set_supplier':  self._check_required_fields(vals['supplier'], 'peppol_endpoint'),
             'peppol_endpoint_is_set_customer':  self._check_required_fields(vals['customer'], 'peppol_endpoint'),
         })
+        for line_vals in vals['vals']['invoice_line_vals']:
+            constraints.update({
+                f"peppol_line_label_is_set_{line_vals['id']}": self._check_required_fields(line_vals['item_vals'], 'name', _("Every invoice line should have a label.")),
+            })
 
         constraints.update(
             self._invoice_constraints_peppol_en16931_ubl(invoice, vals)

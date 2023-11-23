@@ -219,7 +219,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'description': description,
 
             # The name of the item.
-            'name': product.name,
+            'name': product.name or line.name,
 
             # Identifier of the product.
             'sellers_item_identification_vals': {'id': product.code},
