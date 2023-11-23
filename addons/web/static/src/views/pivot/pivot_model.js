@@ -1518,7 +1518,7 @@ export class PivotModel extends Model {
             const subTree = tree.directSubTrees.get(subTreeKey);
             if (!oldTree.directSubTrees.has(subTreeKey)) {
                 subTree.directSubTrees.clear();
-                delete subTreeKey.sortedKeys;
+                delete subTree.sortedKeys;
             } else {
                 const oldSubTree = oldTree.directSubTrees.get(subTreeKey);
                 this._pruneTree(subTree, oldSubTree);
