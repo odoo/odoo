@@ -1677,9 +1677,9 @@ var SnippetEditor = Widget.extend({
         const bottom = top + columnHeight;
         let left = x - rowElLeft - this.mousePositionXOnElement;
 
-        // Horizontal & vertical overflow.
+        // Horizontal and top overflow.
         left = clamp(left, 0, rowEl.clientWidth - columnWidth);
-        top = clamp(top, 0, rowEl.clientHeight - columnHeight);
+        top = top < 0 ? 0 : top;
 
         columnEl.style.top = top + 'px';
         columnEl.style.left = left + 'px';
