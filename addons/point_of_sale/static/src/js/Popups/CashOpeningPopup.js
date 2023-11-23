@@ -6,7 +6,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { parse } = require('web.field_utils');
 
-    const { useState } = owl;
+    const { useState, useRef } = owl;
 
     class CashOpeningPopup extends AbstractAwaitablePopup {
         setup() {
@@ -18,6 +18,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 displayMoneyDetailsPopup: false,
             });
             useValidateCashInput("openingCashInput", this.env.pos.pos_session.cash_register_balance_start);
+            this.openingCashInputRef = useRef('openingCashInput');
         }
         //@override
         async confirm() {
@@ -39,6 +40,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.state.displayMoneyDetailsPopup = false;
         }
         updateCashOpening({ total, moneyDetailsNotes }) {
+            this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
