@@ -77,6 +77,7 @@
     .o_kanban_record {
         position: relative;
         min-width: 150px;
+        margin: 0 0 (-$border-width);
 
         > div:not(.o_dropdown_kanban) {
             padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
@@ -384,6 +385,8 @@
 
         &:focus-visible,
         &:focus-within {
+            z-index: 2;
+
             @include global-click-selector {
                 outline: thin solid mix($o-main-link-color, map-get($grays, "300"));
                 outline-offset: -1px;
@@ -481,10 +484,6 @@
 
         .o_kanban_record {
             width: 100%;
-
-            & + .o_kanban_record:not(.o_dragged) .oe_kanban_card {
-                border-top: none;
-            }
         }
 
         .o_kanban_group {
