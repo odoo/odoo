@@ -528,8 +528,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
-        self = self.with_context(lang=self.partner_id.lang)
-        reward = reward.with_context(lang=self.partner_id.lang)
+        self = self.with_context(lang=self._get_lang())
+        reward = reward.with_context(lang=self._get_lang())
         if reward.reward_type == 'discount':
             return self._get_reward_values_discount(reward, coupon, **kwargs)
         elif reward.reward_type == 'product':
