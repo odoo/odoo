@@ -185,7 +185,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True">
+                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <field name="company_id" column_invisible="True" force_save="1"/>
                     <field name="picking_id" column_invisible="True" force_save="1"/>
                     <field name="move_id" column_invisible="True" force_save="1" />
@@ -240,7 +240,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1">
+                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <header>
                         <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
                     </header>
