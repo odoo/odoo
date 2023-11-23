@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_advance_payment" model="ir.ui.view">
+        <field name="model">account.advance.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="display_draft_invoice_warning" invisible="1"/>
+                <field name="has_down_payments" invisible="1"/>
+                <div class="alert alert-warning py-1" role="alert" invisible="not display_draft_invoice_warning">
+                    <a name="view_draft_invoices" type="object"></a>
+                    <p invisible="advance_payment_method != 'delivered'" name="deduct_draft"></p>
+                </div>
+                <group>
+                    <field name="order_ids" invisible="1"/>
+                    <field name="count" invisible="count == 1"/>
+                    <field name="advance_payment_method" class="oe_inline"
+                        widget="radio"
+                        invisible="count &gt; 1"/>
+                </group>
+                <group name="down_payment_specification"
+                    invisible="advance_payment_method not in ('fixed', 'percentage')">
+                    <field name="company_id" invisible="1"/>
+                    <label for="amount"/>
+                    <div id="payment_method_details">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="display_invoice_amount_warning" invisible="1"/>
+                        <field name="fixed_amount"
+                            invisible="advance_payment_method != 'fixed'"
+                            required="advance_payment_method == 'fixed'"
+                            class="oe_inline"/>
+                        <field name="amount"
+                            invisible="advance_payment_method != 'percentage'"
+                            required="advance_payment_method == 'percentage'"
+                            class="oe_inline"/>
+                        <span invisible="advance_payment_method != 'percentage'"
+                            class="oe_inline">% </span>
+                        <span invisible="not display_invoice_amount_warning"
+                              class="oe_inline text-danger"
+                              name="amount_warning"
+                              title="title">
+                            <i class="fa fa-warning"/>
+                        </span>
+                    </div>
+                </group>
+                <group invisible="not has_down_payments and not amount_invoiced">
+                    <field name="amount_invoiced"/>
+                    <field name="amount_to_invoice"/>
+                </group>
+                <footer>
+                    <button name="create_invoices"
+                            type="object"
+                            id="create_invoice_open"
+                            string="Create Draft"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

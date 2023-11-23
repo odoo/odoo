@@ -2910,10 +2910,21 @@ class AccountMove(models.Model):
             ))
 
     def unlink(self):
+        downpayment_lines = (
+            self.mapped('line_ids')
+                ._get_order_lines()
+                .filtered(
+                    lambda line:
+                        line.is_downpayment
+                        and line.invoice_lines <= self.mapped('line_ids')  # See https://github.com/odoo/odoo/pull/52648
+                )
+        )
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
         self.line_ids.unlink()
         res = super().unlink()
+        if downpayment_lines:
+            downpayment_lines.unlink()
         if logger_message:
             _logger.info(logger_message)
         return res
@@ -4539,7 +4550,28 @@ class AccountMove(models.Model):
             }
         if other_moves:
             other_moves._post(soft=False)
-        return False
+        res = False
+        # Update any linked downpayment lines
+        dp_lines = (
+            self.line_ids._get_order_lines()
+                .filtered(
+                    lambda l:
+                        l.is_downpayment and
+                        not l.display_type
+                )
+        )
+        dp_lines._compute_name()  # Update the description of DP lines (Draft -> Posted)
+        downpayment_lines = dp_lines.filtered(lambda ol: not ol.order_id._is_locked())
+        other_order_lines = downpayment_lines.order_id.order_line - downpayment_lines
+        real_invoices = set(other_order_lines.invoice_lines.move_id)
+        for dpl in downpayment_lines:
+            dpl.price_unit = sum(
+                l.price_unit if l.move_id.move_type in ('out_invoice', 'in_invoice') else -l.price_unit
+                for l in dpl.invoice_lines
+                if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
+            )
+            dpl.tax_id = dpl.invoice_lines.tax_ids
+        return res
 
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
@@ -4609,6 +4641,8 @@ class AccountMove(models.Model):
 
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
+        # Update any linked downpayments
+        self.line_ids.filtered('is_downpayment')._get_order_lines().filtered(lambda ol: not ol.display_type)._compute_name()
 
     def button_hash(self):
         self._hash_moves(force_hash=True)
@@ -4630,6 +4664,8 @@ class AccountMove(models.Model):
             raise UserError(_("Only draft journal entries can be cancelled."))
 
         self.write({'auto_post': 'no', 'state': 'cancel'})
+        # Update any linked downpayments
+        self.line_ids.filtered('is_downpayment')._get_order_lines().filtered(lambda ol: not ol.display_type)._compute_name()
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
