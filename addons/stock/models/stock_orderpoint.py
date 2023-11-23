@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from pytz import timezone, UTC
 from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
@@ -579,7 +580,7 @@ class StockWarehouseOrderpoint(models.Model):
         return True
 
     def _get_orderpoint_procurement_date(self):
-        return datetime.combine(self.lead_days_date, time.min)
+        return timezone(self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(self.lead_days_date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
     def _get_orderpoint_products(self):
         return self.env['product.product'].search([('type', '=', 'product'), ('stock_move_ids', '!=', False)])
