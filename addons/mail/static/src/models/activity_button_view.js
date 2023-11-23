@@ -20,50 +20,51 @@ registerModel({
                 this.update({ activityListPopoverView: this.activityListPopoverView ? clear() : {} });
             }
         },
+        computeButtonClass() {
+            if (!this.thread) {
+                return clear();
+            }
+            const classes = [];
+            switch (this.webRecord.data.activity_state) {
+                case 'overdue':
+                    classes.push('text-danger');
+                    break;
+                case 'today':
+                    classes.push('text-warning');
+                    break;
+                case 'planned':
+                    classes.push('text-success');
+                    break;
+                default:
+                    classes.push('text-muted');
+                    break;
+            }
+            switch (this.webRecord.data.activity_exception_decoration) {
+                case 'warning':
+                    classes.push('text-warning');
+                    classes.push(this.webRecord.data.activity_exception_icon);
+                    break;
+                case 'danger':
+                    classes.push('text-danger');
+                    classes.push(this.webRecord.data.activity_exception_icon);
+                    break;
+                default:
+                    if (this.webRecord.data.activity_type_icon) {
+                        classes.push(this.webRecord.data.activity_type_icon);
+                        break;
+                    }
+                    classes.push('fa-clock-o');
+                    break;
+            }
+            return classes.join(' ');
+        }
     },
     fields: {
         activityListPopoverView: one('PopoverView', {
             inverse: 'activityButtonViewOwnerAsActivityList',
         }),
         buttonClass: attr({
-            compute() {
-                if (!this.thread) {
-                    return clear();
-                }
-                const classes = [];
-                switch (this.webRecord.data.activity_state) {
-                    case 'overdue':
-                        classes.push('text-danger');
-                        break;
-                    case 'today':
-                        classes.push('text-warning');
-                        break;
-                    case 'planned':
-                        classes.push('text-success');
-                        break;
-                    default:
-                        classes.push('text-muted');
-                        break;
-                }
-                switch (this.webRecord.data.activity_exception_decoration) {
-                    case 'warning':
-                        classes.push('text-warning');
-                        classes.push(this.webRecord.data.activity_exception_icon);
-                        break;
-                    case 'danger':
-                        classes.push('text-danger');
-                        classes.push(this.webRecord.data.activity_exception_icon);
-                        break;
-                    default:
-                        if (this.webRecord.data.activity_type_icon) {
-                            classes.push(this.webRecord.data.activity_type_icon);
-                            break;
-                        }
-                        classes.push('fa-clock-o');
-                        break;
-                }
-                return classes.join(' ');
-            },
+            compute: 'computeButtonClass',
         }),
         buttonRef: attr(),
         kanbanFieldActivityViewOwner: one('KanbanFieldActivityView', {

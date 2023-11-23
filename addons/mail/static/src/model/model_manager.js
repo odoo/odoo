@@ -468,7 +468,7 @@ export class ModelManager {
                 }
                 // 4. Computed field.
                 if (field.compute) {
-                    if (typeof field.compute !== 'function') {
+                    if (typeof field.compute !== 'function' && typeof field.compute !== 'string') {
                         throw new Error(`Property "compute" of field ${model}/${fieldName} must be a string (instance method name) or a function (the actual compute).`);
                     }
                     if ('readonly' in field) {
@@ -810,8 +810,13 @@ export class ModelManager {
                         isPartOfUpdateCycle: true,
                         name: `compute ${field} of ${record}`,
                         onChange: (info) => {
+                            let res;
                             this.startListening(listener);
-                            const res = field.compute.call(record);
+                            if (typeof field.compute === 'function') {
+                                res = field.compute.call(record);
+                            } else {
+                                res = record[field.compute].call(record);
+                            }
                             this.stopListening(listener);
                             this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
                         },

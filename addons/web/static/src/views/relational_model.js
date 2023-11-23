@@ -2802,6 +2802,7 @@ export class StaticList extends DataPoint {
         // async computation that depends on previous params
         // to be initialized
         this.records = [];
+        this._commands = [];
 
         this._cache = {};
         this._mapping = {}; // maps record.resId || record.virtualId to record.id

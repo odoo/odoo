@@ -426,3 +426,76 @@ QUnit.test("auto save on click of activity widget in list view", async (assert) 
 });
 
 });
+
+QUnit.test('list activity widget: do not reload view', async function (assert) {
+    assert.expect(14);
+
+    const pyEnv = await startServer();
+    pyEnv['res.users'].create({});
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
+    const mailActivityId1 = pyEnv['mail.activity'].create({
+        display_name: "Call with Al",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
+        state: "today",
+        user_id: pyEnv.currentUserId,
+        create_uid: pyEnv.currentUserId,
+        activity_type_id: mailActivityTypeId1,
+    });
+
+    const views = {
+        'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
+    };
+    const { click, openView } = await start({
+        mockRPC: function (route, args) {
+            if (
+                args.method !== 'get_views' &&
+                !['/mail/init_messaging', '/mail/load_message_failures', '/bus/im_status', ...ROUTES_TO_IGNORE].includes(route)
+            ) {
+                assert.step(args.method || route);
+            }
+            if (args.method === 'create') {
+                pyEnv['res.users'].write([args.kwargs.context.default_res_id], {
+                    activity_ids: [mailActivityId1],
+                    activity_state: 'today',
+                    activity_summary: 'Call with Al',
+                    activity_type_id: mailActivityTypeId1,
+                    activity_type_icon: 'fa-phone',
+                });
+            }
+        },
+        serverData: { views },
+    });
+
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
+    });
+
+    await click('.o_pager_value');
+    await editInput(document.body, '.o_pager_value', '1-1');
+    await click('button.fa-chevron-right');
+    // The current page should be the second of two
+    assert.containsOnce(document.body, '.o_pager_counter:contains(2)');
+    assert.containsOnce(document.body, '.o_pager_limit:contains(2)');
+
+    await click('.o_ActivityButtonView'); // open the popover
+    await click('.o_ActivityListView_addActivityButton'); // add an activity
+    await click('.o_form_button_save'); // save the activity form
+    await nextAnimationFrame();
+
+    assert.containsOnce(document.body, '.o_ActivityButtonView_icon.text-warning.fa-phone');
+    assert.containsOnce(document.body, '.o_pager_counter:contains(2)');
+    assert.containsOnce(document.body, '.o_pager_limit:contains(2)');
+
+    assert.verifySteps([
+        'web_search_read',
+        'web_search_read',
+        'web_search_read',
+        'onchange',
+        'create',
+        'read',
+        '/mail/thread/data',
+        'read',
+    ]);
+});
