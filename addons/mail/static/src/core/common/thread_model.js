@@ -143,6 +143,9 @@ export class Thread extends Record {
     uuid;
     /** @type {string} */
     model;
+    allMessages = Record.many("Message", {
+        inverse: "originThread",
+    });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
     attachments = Record.many("Attachment");
@@ -396,6 +399,14 @@ export class Thread extends Record {
 
     get newestPersistentMessage() {
         return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
+    }
+
+    get newestPersistentNotEmptyOfAllMessage() {
+        const allPersistentMessages = this.allMessages.filter(
+            (message) => Number.isInteger(message.id) && !message.isEmpty
+        );
+        allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
+        return allPersistentMessages[0];
     }
 
     get oldestPersistentMessage() {

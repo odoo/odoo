@@ -167,14 +167,28 @@ export class MessagingMenu extends Component {
             if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
                 return 1;
             }
-            if (!a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+            if (
+                !a.newestPersistentNotEmptyOfAllMessage?.datetime &&
+                b.newestPersistentNotEmptyOfAllMessage?.datetime
+            ) {
                 return 1;
             }
-            if (!b.newestPersistentMessage?.datetime && a.newestPersistentMessage?.datetime) {
+            if (
+                !b.newestPersistentNotEmptyOfAllMessage?.datetime &&
+                a.newestPersistentNotEmptyOfAllMessage?.datetime
+            ) {
                 return -1;
             }
-            if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
-                return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
+            if (
+                a.newestPersistentNotEmptyOfAllMessage?.datetime &&
+                b.newestPersistentNotEmptyOfAllMessage?.datetime &&
+                a.newestPersistentNotEmptyOfAllMessage?.datetime !==
+                    b.newestPersistentNotEmptyOfAllMessage?.datetime
+            ) {
+                return (
+                    b.newestPersistentNotEmptyOfAllMessage.datetime -
+                    a.newestPersistentNotEmptyOfAllMessage.datetime
+                );
             }
             return b.localId > a.localId ? 1 : -1;
         });

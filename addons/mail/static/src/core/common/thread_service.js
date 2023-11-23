@@ -83,12 +83,13 @@ export class ThreadService {
     /**
      * @param {import("models").Thread} thread
      */
-    async markAsRead(thread) {
-        if (!thread.isLoaded) {
-            await thread.isLoadedDeferred;
-            await new Promise(setTimeout);
+    markAsRead(thread) {
+        const newestPersistentMessage = thread.newestPersistentNotEmptyOfAllMessage;
+        if (!newestPersistentMessage && !thread.isLoaded) {
+            thread.isLoadedDeferred
+                .then(() => new Promise(setTimeout))
+                .then(() => this.markAsRead(thread));
         }
-        const newestPersistentMessage = thread.newestPersistentMessage;
         thread.seen_message_id = newestPersistentMessage?.id ?? false;
         if (
             thread.message_unread_counter > 0 &&
@@ -98,13 +99,15 @@ export class ThreadService {
             this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
-            }).then(() => {
-                this.updateSeen(thread, newestPersistentMessage.id);
-            }).catch((e) => {
-                if (e.code !== 404) {
-                    throw e;
-                }
-            });
+            })
+                .then(() => {
+                    this.updateSeen(thread, newestPersistentMessage.id);
+                })
+                .catch((e) => {
+                    if (e.code !== 404) {
+                        throw e;
+                    }
+                });
         } else if (newestPersistentMessage) {
             this.updateSeen(thread);
         }
@@ -113,7 +116,7 @@ export class ThreadService {
         }
     }
 
-    updateSeen(thread, lastSeenId = thread.newestPersistentMessage?.id) {
+    updateSeen(thread, lastSeenId = thread.newestPersistentNotEmptyOfAllMessage?.id) {
         const lastReadIndex = thread.messages.findIndex((message) => message.id === lastSeenId);
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
@@ -143,7 +146,7 @@ export class ThreadService {
             needactionMessages: [],
             message_unread_counter: 0,
             message_needaction_counter: 0,
-            seen_message_id: thread.newestPersistentMessage?.id,
+            seen_message_id: thread.newestPersistentNotEmptyOfAllMessage?.id,
         });
     }
 
@@ -327,15 +330,9 @@ export class ThreadService {
             for (const preview of previews) {
                 const thread = this.store.Thread.get({ model: "discuss.channel", id: preview.id });
                 const message = this.store.Message.insert(preview.last_message, { html: true });
-                if (!thread.isLoaded) {
-                    thread.messages.push(message);
-                    if (message.isNeedaction) {
-                        thread.needactionMessages.add(message);
-                    }
+                if (message.isNeedaction) {
+                    thread.needactionMessages.add(message);
                 }
-                thread.isLoaded = true;
-                thread.loadOlder = true;
-                thread.status = "ready";
             }
         }
     });
@@ -867,10 +864,16 @@ export class ThreadService {
         }
         if (thread?.model === "discuss.channel") {
             if (persona.type === "partner") {
-                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`, urlParams);
+                return url(
+                    `/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`,
+                    urlParams
+                );
             }
             if (persona.type === "guest") {
-                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`, urlParams);
+                return url(
+                    `/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`,
+                    urlParams
+                );
             }
         }
         if (persona.type === "partner" && persona?.id) {
