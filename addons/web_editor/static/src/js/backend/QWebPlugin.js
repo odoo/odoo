@@ -194,8 +194,6 @@ export class QWebPlugin {
         );
     }
     _updateBranchingSelectionPosition(target) {
-        window.addEventListener('mousewheel', this._hideBranchingSelection);
-
         const box = target.getBoundingClientRect();
         const selBox = this._selectElWrapper.getBoundingClientRect();
         const parentBox = this._getContextFromParentRect();
@@ -207,6 +205,7 @@ export class QWebPlugin {
         this._selectElWrapper.style.top = `${top}px`;
     }
     _renderBranchingSelection(target) {
+        this._document.addEventListener('scroll', this._hideBranchingSelection);
         const selectEl = document.createElement('select');
         const groupId = parseInt(target.getAttribute('data-oe-t-group'));
         const groupElements = target.parentElement.querySelectorAll(
@@ -244,6 +243,6 @@ export class QWebPlugin {
     _hideBranchingSelection() {
         this._selectElWrapper.style.display = 'none';
         this._selectElWrapper.innerHTML = ``;
-        window.removeEventListener('mousewheel', this._hideBranchingSelection);
+        this._document.removeEventListener('scroll', this._hideBranchingSelection);
     }
 }
