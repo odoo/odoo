@@ -249,10 +249,11 @@ class PurchaseOrderLine(models.Model):
            :return: desired Schedule Date for the PO line
         """
         date_order = po.date_order if po else self.order_id.date_order
+        delay = (seller.delay or 0) + (self.order_id.company_id.po_lead or 0)
         if date_order:
-            return date_order + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=delay)
         else:
-            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
+            return datetime.today() + relativedelta(days=delay)
 
     @api.depends('product_id', 'order_id.partner_id')
     def _compute_analytic_distribution(self):

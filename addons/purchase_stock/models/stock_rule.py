@@ -273,6 +273,7 @@ class StockRule(models.Model):
         params origins: procuremets origins to write on the PO
         """
         purchase_date = min([value.get('date_order') or fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
+        purchase_date = purchase_date - relativedelta(days=self.company_id.po_lead)
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from

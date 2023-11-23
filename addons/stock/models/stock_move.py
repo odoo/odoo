@@ -4,6 +4,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from re import findall as regex_findall
 
@@ -1420,6 +1421,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         }
 
     def _get_mto_procurement_date(self):
+        if self.rule_id.action == 'pull_push':
+            return self.date - relativedelta(days=self.rule_id.delay or 0)
         return self.date
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):

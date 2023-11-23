@@ -103,6 +103,7 @@ class ProductReplenish(models.TransientModel):
     def _prepare_orderpoint_values(self):
         values = {
             'location_id': self.warehouse_id.lot_stock_id.id,
+            'date_planned': self.date_planned,
             'product_id': self.product_id.id,
             'qty_to_order': self.quantity,
         }

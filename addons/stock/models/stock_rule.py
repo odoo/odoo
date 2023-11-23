@@ -299,6 +299,9 @@ class StockRule(models.Model):
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
         date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
+        if self.action == 'pull_push':
+            date_scheduled = values.get('date_planned')
+            date_deadline = values.get('date_deadline') or False
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
         if partner:
             product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
@@ -378,6 +381,13 @@ class StockRule(models.Model):
         if global_visibility_days:
             delay_description.append((_('Global Visibility Days'), _('+ %d day(s)', int(global_visibility_days))))
         return delays, delay_description
+
+    def delay_deadline(self):
+        delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
+        if global_visibility_days:
+            delay += int(global_visibility_days)
+        return delay
 
 
 class ProcurementGroup(models.Model):

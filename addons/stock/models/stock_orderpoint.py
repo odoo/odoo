@@ -73,6 +73,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     lead_days_date = fields.Date(compute='_compute_lead_days')
+    date_planned = fields.Datetime()
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
@@ -113,7 +114,8 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
-            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
+            schedule_date = orderpoint.date_planned or fields.Date.today()
+            lead_days_date = schedule_date + relativedelta.relativedelta(days=lead_days['total_delay'])
             orderpoint.lead_days_date = lead_days_date
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
@@ -482,12 +484,14 @@ class StockWarehouseOrderpoint(models.Model):
         be used in move/po creation.
         """
         date_deadline = date or fields.Date.today()
+        deadline = date - relativedelta.relativedelta(days=self.rule_ids.delay_deadline())
         dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
+        rule_action = self.rule_ids.mapped('action')
         return {
             'route_ids': self.route_id,
-            'date_planned': dates_info['date_planned'],
-            'date_order': dates_info['date_order'],
-            'date_deadline': date or False,
+            'date_planned': dates_info['date_planned'] if 'pull_push' not in rule_action and 'buy' not in rule_action else date or fields.Date.today(),
+            'date_order': dates_info['date_order'] if 'pull_push' not in rule_action and 'buy' not in rule_action else date or fields.Date.today(),
+            'date_deadline': deadline or False,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
             'group_id': group or self.group_id,
