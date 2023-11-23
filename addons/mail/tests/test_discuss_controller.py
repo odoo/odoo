@@ -4,12 +4,13 @@
 import json
 
 import odoo
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.tests import HttpCase
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestDiscussController(HttpCase):
+class TestDiscussController(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
