@@ -17,6 +17,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 openingCash: this.env.pos.bank_statement.balance_start || 0,
             });
             this.moneyDetailsRef = useRef('moneyDetails');
+            this.openingCashInputRef = useRef('openingCashInput');
             useValidateCashInput("openingCashInput", this.env.pos.bank_statement.balance_start);
         }
         openDetailsPopup() {
@@ -41,6 +42,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         }
         updateCashOpening(event) {
             const { total, moneyDetailsNotes } = event.detail;
+            this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
