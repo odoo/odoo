@@ -213,7 +213,7 @@ class ProductTemplate(models.Model):
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
-            if base_price and base_price != price_reduce:
+            if base_price and price_reduce and base_price != price_reduce:
                 if not template.compare_list_price:
                     # Compare_list_price are never tax included
                     base_price = self.env['account.tax']._fix_tax_included_price_company(
@@ -274,13 +274,6 @@ class ProductTemplate(models.Model):
                 combination_info['price_extra'], product_taxes, taxes, company_id, pricelist,
                 product, partner
             )
-            base_unit_price = product._get_base_unit_price(list_price)
-            if pricelist.currency_id != product.currency_id:
-                base_unit_price = pricelist.currency_id._convert(
-                    base_unit_price,
-                    pricelist.currency_id,
-                    company_id,
-                    fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
 
@@ -291,7 +284,7 @@ class ProductTemplate(models.Model):
 
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
+                base_unit_price=product._get_base_unit_price(list_price),
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,

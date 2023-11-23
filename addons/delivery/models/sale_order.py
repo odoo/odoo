@@ -190,9 +190,7 @@ class SaleOrderLine(models.Model):
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def unlink(self):
-        for line in self:
-            if line.is_delivery:
-                line.order_id.carrier_id = False
+        self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
         return super(SaleOrderLine, self).unlink()
 
     def _is_delivery(self):

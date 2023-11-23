@@ -501,7 +501,7 @@ const LinkTools = Link.extend({
             return;
         }
         const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
-        const content = this._link.innerText;
+        const content = this._link.innerText.trim().replaceAll('\u200B', '');
         if (content === previousUrl || content === protocolLessPrevUrl) {
             const newUrl = this.el.querySelector('input[name="url"]').value;
             const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')

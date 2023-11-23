@@ -334,6 +334,10 @@ class SaleOrder(models.Model):
                         product not in products and
                         (not product.company_id or product.company_id == line.company_id) and
                         product._is_variant_possible(parent_combination=combination)
+                        and (
+                            not self.website_id.prevent_zero_price_sale
+                            or product._get_contextual_price()
+                        )
                 )
 
         return random.sample(all_accessory_products, len(all_accessory_products))
