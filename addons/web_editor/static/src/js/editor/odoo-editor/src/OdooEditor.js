@@ -824,6 +824,10 @@ export class OdooEditor extends EventTarget {
      */
     computeFontSizeSelectorValues(fontSizeDropdownEl) {
         fontSizeDropdownEl = fontSizeDropdownEl || this.toolbar.querySelector("#font-size");
+        // On some screen size, the fontsize dropdown might be hidden.
+        if (!fontSizeDropdownEl) {
+            return;
+        }
 
         let previousItem = null;
         let previousValue = -1;
