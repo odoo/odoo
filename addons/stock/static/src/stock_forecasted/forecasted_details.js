@@ -28,9 +28,20 @@ export class ForecastedDetails extends Component {
 
     async _unreserve(move_id){
         await this.orm.call(
+<<<<<<< HEAD
             'stock.forecasted_product_product',
             'action_unreserve_linked_picks',
             [move_id],
+||||||| parent of 1717f7079105 (temp)
+            model,
+            'do_unreserve',
+            [[modelId]],
+=======
+            model,
+            'do_unreserve',
+            [[modelId]],
+            {context: {unreserve_parent: true}},
+>>>>>>> 1717f7079105 (temp)
         );
         this.props.reloadReport();
     }
