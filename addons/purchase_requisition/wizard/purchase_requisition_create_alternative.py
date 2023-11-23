@@ -80,7 +80,10 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'origin': self.origin_po_id.origin,
         }
         if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create(self._get_alternative_line_value(line)) for line in self.origin_po_id.order_line]
+            vals['order_line'] = [
+                Command.create(self._get_alternative_line_value(line))
+                for line in self.origin_po_id.order_line if not line.is_downpayment
+            ]
         return vals
 
     @api.model

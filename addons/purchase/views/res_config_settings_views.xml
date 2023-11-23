@@ -45,6 +45,9 @@
                         <setting id="three_way_matching" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Make sure you only pay bills for which you received the goods you ordered">
                             <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
                         </setting>
+                        <setting id="down_payments" help="Allow creating vendor bills for down payments on purchase orders">
+                            <field name="group_down_payment"/>
+                        </setting>
                     </block>
                     <block title="Products" name="matrix_setting_container">
                         <setting id="variant_options" help="Purchase variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">

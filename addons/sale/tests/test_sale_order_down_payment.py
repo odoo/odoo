@@ -997,7 +997,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         invoicing_wizard = self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'fixed',
             'fixed_amount': sale_order.amount_total / 2.0,
-            'sale_order_ids': [Command.link(sale_order.id)],
+            'order_ids': [Command.link(sale_order.id)],
         })
 
         # Down payment invoice
@@ -1013,7 +1013,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
 
         # Full Invoice
         invoicing_wizard = self.env['sale.advance.payment.inv'].create({
-            'sale_order_ids': [Command.link(sale_order.id)],
+            'order_ids': [Command.link(sale_order.id)],
             'advance_payment_method': 'delivered',
         })
         self.assertEqual(sale_order.invoice_status, 'to invoice')

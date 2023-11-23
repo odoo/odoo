@@ -60,7 +60,8 @@
                 </thead>
                 <tbody>
                     <t t-set="current_subtotal" t-value="0"/>
-                    <t t-foreach="o.order_line" t-as="line">
+                    <t t-set="lines_to_report" t-value="o._get_order_lines_to_report()"/>
+                    <t t-foreach="lines_to_report" t-as="line">
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
@@ -76,16 +77,18 @@
                                     <span t-field="line.date_planned"/>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="line.product_qty"/>
-                                    <span t-field="line.product_uom.name" groups="uom.group_uom"/>
-                                    <span t-if="line.product_packaging_id">
+                                    <t t-if="not line.is_downpayment">
+                                        <span t-field="line.product_qty"/>
+                                        <span t-field="line.product_uom.name" groups="uom.group_uom"/>
+                                        <span t-if="line.product_packaging_id">
                                         (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
-                                    </span>
+                                        </span>
+                                    </t>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_unit"/>
                                 </td>
-                                <td class="text-end">
+                                <td t-if="not line.is_downpayment" class="text-end">
                                     <span t-field="line.price_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
@@ -103,7 +106,7 @@
                                 </td>
                             </t>
                         </tr>
-                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type == 'line_section')">
+                        <t t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and not line.is_downpayment">
                             <tr class="is-subtotal text-end">
                                 <td colspan="99" id="subtotal">
                                     <strong class="mr16">Subtotal</strong>
