@@ -5679,4 +5679,49 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("leaf row with subTreeKeys", async function (assert) {
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('product_id', '=', 37)]"/>
+                </search>
+            `,
+        });
+
+        // Add filter
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll(".o_value")].map((el) => el.textContent),
+            ["1"]
+        );
+
+        await click(pivot.el, "tbody .o_pivot_header_cell_closed");
+        await click(pivot.el.querySelectorAll("tbody .o_group_by_menu .o_menu_item")[0]); // select "Company Type"
+        await click(pivot.el, "tbody .o_pivot_header_cell_closed");
+        await click(pivot.el.querySelectorAll("tbody .o_group_by_menu .o_menu_item")[4]); // select "Product"
+
+        // Toggle column order
+        await click(pivot.el, ".o_pivot_measure_row");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll(".o_value")].map((el) => el.textContent),
+            ["1", "1", "1"]
+        );
+
+        // Remove filter
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "My Filter");
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll(".o_value")].map((el) => el.textContent),
+            ["4", "2", "1", "1", "2"]
+        );
+    });
 });

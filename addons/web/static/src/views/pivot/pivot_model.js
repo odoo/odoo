@@ -1311,11 +1311,13 @@ export class PivotModel extends Model {
             subGroupMeasurements: subGroupMeasurements,
         });
 
-        const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
-        subTreeKeys.forEach((subTreeKey) => {
-            const subTree = tree.directSubTrees.get(subTreeKey);
-            rows = rows.concat(this._getTableRows(subTree, columns));
-        });
+        if (!isLeaf) {
+            const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
+            subTreeKeys.forEach((subTreeKey) => {
+                const subTree = tree.directSubTrees.get(subTreeKey);
+                rows = rows.concat(this._getTableRows(subTree, columns));
+            });
+        }
 
         return rows;
     }
