@@ -6,7 +6,7 @@
             <t t-if='receipt.loyaltyStats'>
                 <t t-foreach="receipt.loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                     <!-- Show only if portal_visible. -->
-                    <div t-if="_loyaltyStat.program.portal_visible" class='loyalty'>
+                    <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
                         <span class="pos-receipt-center-align">
                             <div>--------------------------------</div>
                             <br/>
