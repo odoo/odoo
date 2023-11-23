@@ -612,7 +612,7 @@ class ReportBomStructure(models.AbstractModel):
         elif route_info:
             resupply_state, resupply_delay = self._get_resupply_availability(route_info, components)
 
-        if resupply_state == "unavailable" and route_info == {} and components and report_line:
+        if resupply_state == "unavailable" and route_info == {} and components and report_line and report_line['phantom_bom']:
             val = self._get_last_availability(report_line)
             return val
 
