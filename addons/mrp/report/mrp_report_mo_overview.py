@@ -265,7 +265,7 @@ class ReportMoOverview(models.AbstractModel):
                 operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
                 bom_duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
                     operation.workcenter_id._get_expected_duration(production.product_id)
-                real_cost = expected_cost / workorder.duration_expected * bom_duration_expected
+                real_cost = expected_cost / (workorder.duration_expected or 1) * bom_duration_expected
             else:
                 real_cost = expected_cost
 
