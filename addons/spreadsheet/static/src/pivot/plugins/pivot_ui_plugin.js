@@ -5,7 +5,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
-import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
+import { NO_RECORD_AT_THIS_POSITION } from "../spreadsheet_pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { PivotDataSource } from "../pivot_data_source";
 
