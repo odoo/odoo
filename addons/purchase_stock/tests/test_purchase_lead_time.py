@@ -21,7 +21,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         company.write({'po_lead': 3.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        date_planned = fields.datetime.now() + timedelta(days=10)
+        date_planned = fields.datetime.now() + timedelta(days=10 + company.po_lead + self.product_1.seller_ids.delay)
         self._create_make_procurement(self.product_1, 15.00, date_planned=date_planned)
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
@@ -29,11 +29,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + company.po_lead)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Purchase Lead Time - Delivery Lead Time.')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + company.po_lead)
         self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
@@ -110,14 +110,14 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         rule_delay = sum(self.warehouse_1.reception_route_id.rule_ids.mapped('delay'))
 
-        date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
+        date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10 + company.po_lead + rule_delay + self.product_1.seller_ids.delay))
         # Create procurement order of product_1
         self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
             self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company,
             {
                 'warehouse_id': self.warehouse_1,
                 'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-                'date_deadline': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+                'date_deadline': fields.Datetime.from_string(date_planned) - timedelta(days=rule_delay),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
                 'rule_id': self.warehouse_1.buy_pull_id,
                 'group_id': False,
                 'route_ids': [],
@@ -129,11 +129,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
         self.assertEqual(date_planned, str(schedule_date), 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
 
         # Check the picking crated or not
@@ -141,15 +141,15 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of Internal Type shipment
         incoming_shipment1 = self.env['stock.picking'].search([('move_ids.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
-        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay + incoming_shipment1.move_ids.rule_id.delay + company.po_lead)
         self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
-        self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date)
+        self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date - timedelta(days=incoming_shipment1.move_ids.rule_id.delay))
         old_deadline1 = incoming_shipment1.date_deadline
 
         incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
-        incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_ids[0].rule_id.delay)
+        incoming_shipment2_date = schedule_date
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
-        self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date)
+        self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date - timedelta(days=rule_delay))
         old_deadline2 = incoming_shipment2.date_deadline
 
         # Modify the date_planned of the purchase -> propagate the deadline
