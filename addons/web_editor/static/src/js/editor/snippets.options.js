@@ -1778,6 +1778,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
         }
         this.colorPaletteWrapper?.destroy();
+        const sidebarDocument = this.colorPaletteEl.ownerDocument; 
+        if (!(this.colorPaletteEl instanceof sidebarDocument.defaultView.HTMLElement)) {
+            // When inside an iframe, the element for mounting a component must
+            // be an instance of the iframe's HTMLElement, or else target
+            // validation for attachComponent fails.
+            const newEl = sidebarDocument.importNode(this.colorPaletteEl, true);
+            this.colorPaletteEl.before(newEl);
+            this.colorPaletteEl.remove();
+            this.colorPaletteEl = newEl;
+        }
         this.colorPaletteWrapper = await attachComponent(this, this.colorPaletteEl, ColorPalette, options);
     },
     /**
