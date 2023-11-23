@@ -9,7 +9,7 @@ from unittest.mock import Mock, MagicMock, patch
 import werkzeug
 
 import odoo
-from odoo.tools.misc import DotDict
+from odoo.tools.misc import hmac, DotDict
 
 
 def get_video_embed_code(video_url):
@@ -200,3 +200,28 @@ def get_unaccent_sql_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
         return lambda x: sql.SQL("unaccent({wrapped_sql})").format(wrapped_sql=x)
     return lambda x: x
+
+
+def add_form_signature(html_fragment, env_sudo):
+    for form in html_fragment.iter('form'):
+        if '/website/form/' not in form.attrib.get('action', ''):
+            continue
+
+        existing_hash_node = form.find('.//input[@type="hidden"][@name="website_form_signature"]')
+        if existing_hash_node is not None:
+            existing_hash_node.getparent().remove(existing_hash_node)
+        input_nodes = form.xpath('.//input[contains(@name, "email_")]')
+        form_values = {input_node.attrib['name']: input_node for input_node in input_nodes}
+        # if this form does not send an email, ignore. But at this stage,
+        # the value of email_to can still be None in case of default value
+        if 'email_to' not in form_values:
+            continue
+        elif not form_values['email_to'].attrib.get('value'):
+            form_values['email_to'].attrib['value'] = env_sudo.company.email or ''
+        has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
+        value = form_values['email_to'].attrib['value'] + (':email_cc' if has_cc else '')
+        hash_value = hmac(env_sudo, 'website_form_signature', value)
+        if has_cc:
+            hash_value += ':email_cc'
+        hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
+        form_values['email_to'].addnext(hash_node)
