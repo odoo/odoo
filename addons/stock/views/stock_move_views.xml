@@ -219,7 +219,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="reserved_uom_qty==qty_done" decoration-danger="qty_done &gt; reserved_uom_qty and state != 'done' and picking_code != 'incoming'">
+                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="reserved_uom_qty==qty_done" decoration-danger="qty_done &gt; reserved_uom_qty and state != 'done' and picking_code != 'incoming'" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <field name="company_id" invisible="1" force_save="1"/>
                     <field name="picking_id" invisible="1" force_save="1"/>
                     <field name="move_id" invisible="1" force_save="1" />
@@ -266,7 +266,8 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;reserved_uom_qty and state!='done' and parent.picking_type_code != 'incoming'" decoration-success="qty_done==reserved_uom_qty and state!='done' and not result_package_id">
+                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;reserved_uom_qty and state!='done' and parent.picking_type_code != 'incoming'"
+                      decoration-success="qty_done==reserved_uom_qty and state!='done' and not result_package_id" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <field name="product_id" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="move_id" invisible="1"/>
