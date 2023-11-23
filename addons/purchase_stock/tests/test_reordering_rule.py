@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime as dt
+from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
@@ -899,9 +899,8 @@ class TestReorderingRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         self.env.company.days_to_purchase = 10
-        expected_order_date = dt.combine(dt.today() + td(days=10), dt.min.time())
+        expected_order_date = dt.combine(dt.today() + td(days=10), time(12))
         expected_delivery_date = expected_order_date + td(days=1.0)
-        # expected_delivery_date = expected_delivery_date.replace(hour=12, minute=0, second=0)
 
         product_02 = self.env['product.product'].create({
             'name': 'Super Product',
