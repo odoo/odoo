@@ -439,7 +439,7 @@ class HrContract(models.Model):
             for contract in self:
                 date_from = max(contract.date_start, contract.date_generated_from.date())
                 date_to = min(contract.date_end or date.max, contract.date_generated_to.date())
-                if date_from != date_to:
+                if date_from != date_to and self.employee_id:
                     contract._recompute_work_entries(date_from, date_to)
         return result
 
