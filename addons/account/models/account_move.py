@@ -1757,6 +1757,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = json.dumps(False)
 
+    @api.depends_context('lang')
     @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals_json(self):
         """ Computed field used for custom widget's rendering.
