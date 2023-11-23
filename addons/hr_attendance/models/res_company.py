@@ -10,6 +10,9 @@ from werkzeug.urls import url_join
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    def _default_company_token(self):
+        return str(uuid.uuid4())
+
     hr_attendance_overtime = fields.Boolean(string="Count Extra Hours")
     overtime_start_date = fields.Date(string="Extra Hours Starting Date")
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
@@ -35,6 +38,29 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(company.get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+            Overridden here because we need to generate different access tokens
+            and by default _init_column calls the default method once and applies
+            it for every record.
+        """
+        if column_name != 'attendance_kiosk_key':
+            super(ResCompany, self)._init_column(column_name)
+        else:
+            self.env.cr.execute("SELECT id FROM %s WHERE attendance_kiosk_key IS NULL" % self._table)
+            attendance_ids = self.env.cr.dictfetchall()
+            values_args = [(attendance_id['id'], self._default_company_token()) for attendance_id in attendance_ids]
+            query = """
+                UPDATE {table}
+                SET attendance_kiosk_key = vals.token
+                FROM (VALUES %s) AS vals(id, token)
+                WHERE {table}.id = vals.id
+            """.format(table=self._table)
+            self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):
         search_domain = False  # Overtime to generate
