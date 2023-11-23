@@ -344,6 +344,7 @@ class SaleOrder(models.Model):
             else:
                 order.expected_date = False
 
+    @api.depends_context('lang')
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals_json(self):
         def compute_taxes(order_line):

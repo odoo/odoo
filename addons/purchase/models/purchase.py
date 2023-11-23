@@ -205,8 +205,9 @@ class PurchaseOrder(models.Model):
             result.append((po.id, name))
         return result
 
+    @api.depends_context('lang')
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
-    def  _compute_tax_totals_json(self):
+    def _compute_tax_totals_json(self):
         def compute_taxes(order_line):
             return order_line.taxes_id._origin.compute_all(**order_line._prepare_compute_all_values())
 
