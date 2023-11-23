@@ -223,7 +223,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(self.sale_order.tasks_count, 1, "The SO should have only one task")
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
         self.assertFalse(so_line1.task_id.user_ids, "The created task should be unassigned")
-        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.project_id.allocated_hours, "The planned hours on the project should be the same as the ordered quantity of the native SO line")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours on the task should be the same as the ordered quantity of the native SO line")
 
         so_line1.write({'product_uom_qty': 20})
         self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
