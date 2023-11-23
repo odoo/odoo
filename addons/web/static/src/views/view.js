@@ -127,6 +127,7 @@ const STANDARD_PROPS = [
     "fields",
     "relatedModels",
     "viewId",
+    "views",
     "actionMenus",
     "loadActionMenus",
 

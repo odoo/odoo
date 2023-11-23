@@ -39,6 +39,11 @@ export class BoardAction extends Component {
             if (view) {
                 this.viewProps.viewId = view[0];
             }
+            const searchView = result.views.find((v) => v[1] === "search");
+            this.viewProps.views = [
+                [this.viewProps.viewId || false, viewMode],
+                [(searchView && searchView[0]) || false, "search"],
+            ];
 
             if (action.context) {
                 this.viewProps.context = makeContext([
