@@ -632,3 +632,12 @@ class SaleOrder(models.Model):
     def _is_public_order(self):
         self.ensure_one()
         return self.partner_id.id == request.website.user_id.sudo().partner_id.id
+
+    def _get_lang(self):
+        res = super()._get_lang()
+
+        if self.website_id and request and request.is_frontend:
+            # Use request lang as cart lang if request comes from frontend
+            return request.env.lang
+
+        return res
