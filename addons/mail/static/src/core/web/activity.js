@@ -86,10 +86,11 @@ export class Activity extends Component {
     }
 
     async onFileUploaded(data) {
+        const thread = this.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.activityService.markAsDone(this.props.data, [attachmentId]);
-        this.props.onUpdate();
-        await this.threadService.fetchNewMessages(this.thread);
+        this.props.onUpdate(thread);
+        await this.threadService.fetchNewMessages(thread);
     }
 
     onClickAvatar(ev) {
@@ -102,15 +103,17 @@ export class Activity extends Component {
     }
 
     async edit() {
+        const thread = this.thread;
         const id = this.props.data.id;
         await this.env.services["mail.activity"].edit(id);
-        this.props.onUpdate();
+        this.props.onUpdate(thread);
     }
 
     async unlink() {
+        const thread = this.thread;
         this.activityService.delete(this.props.data);
         await this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
-        this.props.onUpdate();
+        this.props.onUpdate(thread);
     }
 
     get thread() {
