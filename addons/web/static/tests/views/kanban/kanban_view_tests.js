@@ -592,6 +592,35 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["rendered"]);
     });
 
+    QUnit.test("basic grouped rendering with no record", async (assert) => {
+        serverData.models.partner.records = [];
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="bar" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+        });
+        assert.containsOnce(target, ".o_kanban_grouped");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new",
+            "There should be a 'New' button even though there is no column when groupby is not a many2one"
+        );
+    });
+
     QUnit.test(
         "basic grouped rendering with active field (archivable by default)",
         async (assert) => {
