@@ -6,6 +6,7 @@ import base64
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from itertools import product
+import json
 from markupsafe import escape, Markup
 from unittest.mock import patch
 
@@ -19,7 +20,7 @@ from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase
 
 
 class TestMessagePostCommon(MailCommon, TestRecipients):
@@ -1418,6 +1419,55 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
+
+
+class TestMessageController(HttpCase, TestMessagePostCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # We use an archivable test record to test controller action on an archived record.
+        cls.test_record = cls.env['mail.test.activity'].with_context(cls._test_context).create({})
+        cls.message_body = "<p><b>Hello {self.user_employee.name}</b>, ... </p>"
+        cls.message_payload = {
+            "params": {
+                "thread_model": cls.test_record._name,
+                "thread_id": cls.test_record.id,
+                "post_data": {
+                    "body": cls.message_body,
+                    "partner_ids": cls.partner_employee_2.ids,
+                },
+            },
+        }
+
+    @users('employee')
+    def test_post_message(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        with self.mock_mail_gateway():
+            res1 = self.url_open(
+                url="/mail/message/post",
+                data=json.dumps(self.message_payload),
+                headers={"Content-Type": "application/json"},
+            )
+        self.assertEqual(res1.status_code, 200)
+        self.assertTrue(self._new_mails)
+        self.assertEqual(self.message_body, self._new_mails[0].body)
+        self.assertEqual(self._new_mails[0].recipient_ids, self.partner_employee_2)
+
+    @users('employee')
+    def test_post_message_on_archived_record(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        self.test_record.action_archive()
+
+        with self.mock_mail_gateway():
+            res2 = self.url_open(
+                url="/mail/message/post",
+                data=json.dumps(self.message_payload),
+                headers={"Content-Type": "application/json"},
+            )
+        self.assertEqual(res2.status_code, 200)
+        self.assertTrue(self._new_mails)
+        self.assertEqual(self.message_body, self._new_mails[0].body)
+        self.assertEqual(self._new_mails[0].recipient_ids, self.partner_employee_2)
 
 
 @tagged('mail_post')
