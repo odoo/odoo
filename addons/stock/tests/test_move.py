@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from dateutil.relativedelta import relativedelta
+
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import TransactionCase
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class StockMove(TransactionCase):
@@ -60,6 +63,14 @@ class StockMove(TransactionCase):
             'type': 'consu',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.user_stock_user = mail_new_test_user(
+            cls.env,
+            name='Stock user',
+            login='stock_user',
+            email='s.u@example.com',
+            notification_type='inbox',
+            groups='stock.group_stock_user',
+        )
 
     def gather_relevant(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
@@ -6154,3 +6165,35 @@ class StockMove(TransactionCase):
         self.assertRecordValues(receipt.move_ids.move_line_ids[-1], [
             {'location_dest_id': child_location.id, 'product_id': self.product.id, 'qty_done': 2},
         ])
+
+    def test_scheduled_date_after_backorder(self):
+        today = fields.Datetime.today()
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.product
+                move.product_uom_qty = 1
+                move.date = today + relativedelta(day=5)
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.product_consu
+                move.product_uom_qty = 1
+                move.date = today + relativedelta(day=10)
+            picking = picking_form.save()
+
+        # Set different scheduled dates for each move
+        move_product = picking.move_ids.filtered(lambda m: m.product_id == self.product)
+        move_product.date = today + relativedelta(day=5)
+        move_consu = picking.move_ids.filtered(lambda m: m.product_id == self.product_consu)
+        move_consu.date = today + relativedelta(day=10)
+        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
+        picking.action_confirm()
+
+        # Complete one move and create a backorder with the remaining move
+        move_product.quantity_done = 1
+        backorder_wizard_dict = picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.with_user(self.user_stock_user).process()
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+
+        self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))
+        self.assertEqual(backorder.scheduled_date, today + relativedelta(day=10))
