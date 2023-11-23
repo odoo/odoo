@@ -17,6 +17,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             super(...arguments);
             this.manualInputCashCount = false;
             this.moneyDetailsRef = useRef('moneyDetails');
+            this.closingCashInputRef = useRef('closingCashInput');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
             Object.assign(this, this.props.info);
@@ -81,6 +82,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         }
         updateCountedCash(event) {
             const { total, moneyDetailsNotes, moneyDetails } = event.detail;
+            this.closingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
