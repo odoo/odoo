@@ -5,7 +5,7 @@ import Registries from "@point_of_sale/js/Registries";
 import { parse } from "web.field_utils";
 import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 
-const { useState } = owl;
+const { useState, useRef } = owl;
 
 class CashOpeningPopup extends AbstractAwaitablePopup {
     setup() {
@@ -17,6 +17,7 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
             openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
         });
         useValidateCashInput("openingCashInput", this.env.pos.pos_session.cash_register_balance_start);
+        this.openingCashInputRef = useRef('openingCashInput');
     }
     //@override
     async confirm() {
@@ -36,6 +37,7 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         if (confirmed) {
             const { total, moneyDetails, moneyDetailsNotes } = payload;
+            this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;

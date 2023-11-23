@@ -6,7 +6,7 @@ import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers"
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { parse } from "web.field_utils";
 import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
-const { useState } = owl;
+const { useState, useRef } = owl;
 
 class ClosePosPopup extends AbstractAwaitablePopup {
     setup() {
@@ -20,6 +20,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+        this.closingCashInputRef = useRef('closingCashInput');
         useValidateCashInput("closingCashInput");
         if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
             this.otherPaymentMethods.forEach(pm => {
@@ -72,6 +73,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
         });
         if (confirmed) {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
+            this.closingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(
