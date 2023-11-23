@@ -5679,4 +5679,44 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("filter -> sort -> unfilter should not crash", async function (assert) {
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <pivot>
+                        <field name="product_id" type="row"/>
+                        <field name="bar" type="row"/>
+                    </pivot>
+                `,
+            searchViewArch: `
+                <search>
+                    <filter name="xphone" domain="[('product_id', '=', 37)]" />
+                </search>
+            `,
+            context: {
+                search_default_xphone: true,
+            },
+        });
+
+        assert.deepEqual(getFacetTexts(pivot), ["xphone"]);
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "true"]
+        );
+        assert.strictEqual(getCurrentValues(pivot), ["1", "1", "1"].join());
+
+        await click(pivot.el, ".o_pivot_measure_row");
+        await toggleFilterMenu(pivot);
+        await toggleMenuItem(pivot, "xphone");
+
+        assert.deepEqual(getFacetTexts(pivot), []);
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map((el) => el.innerText),
+            ["Total", "xphone", "true", "xpad"]
+        );
+        assert.strictEqual(getCurrentValues(pivot), ["4", "1", "1", "3"].join());
+    });
 });
