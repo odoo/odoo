@@ -1077,7 +1077,10 @@ export class Orderline extends PosModel {
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price: this.env.utils.formatCurrency(this.get_display_price()),
+            price:
+                this.get_discount_str() === "100"
+                    ? "free"
+                    : this.env.utils.formatCurrency(this.get_display_price()),
             qty: this.get_quantity_str(),
             unit: this.get_unit().name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),

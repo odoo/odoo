@@ -7,16 +7,23 @@
                 <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
                     <span class="text-wrap" t-esc="line.productName"/>
                     <t t-slot="product-name"/>
-            </div>
-                <div t-esc="line.price" class="price fw-bolder"/>
+                </div>
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-if="line.price === 'free'">
+                        Free
+                    </t>
+                    <t t-else="" t-esc="line.price"/>
+                </div>
             </div>
             <ul class="info-list ms-2">
                 <li class="price-per-unit">
                     <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" /> 
-                    x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
-                    <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
+                    <t t-if="line.price !== 0">
+                        x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
+                        <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
+                    </t>
                 </li>
-                <li t-if="line.discount and line.discount !== '0'">
+                <li t-if="line.price !== 0 and line.discount and line.discount !== '0'">
                     With a <em><t t-esc="line.discount" />% </em> discount
                 </li>
                 <t t-slot="default" />
