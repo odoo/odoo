@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { createFile, inputFiles } from "web.test_utils_file";
-
 import tour from "web_tour.tour";
+import { contains } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -16,6 +16,13 @@ tour.register(
         test: true,
     },
     [
+        {
+            content: "Wait for the chatter to be fully loaded",
+            trigger: ".o_Chatter",
+            async run() {
+                await contains(".o_Message", { count: 2 });
+            },
+        },
         {
             content: "Click on Send Message",
             trigger: ".o_ChatterTopbar_buttonSendMessage",
@@ -65,8 +72,9 @@ tour.register(
             content: "Check composer content is kept",
             trigger: '.o_field_html[name="body"]',
             run() {
-                const bodyContent = document.querySelector('.o_field_html[name="body"]')
-                    .textContent;
+                const bodyContent = document.querySelector(
+                    '.o_field_html[name="body"]'
+                ).textContent;
                 if (!bodyContent.includes("blahblah")) {
                     console.error(
                         `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`
