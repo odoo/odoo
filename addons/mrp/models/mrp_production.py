@@ -688,9 +688,6 @@ class MrpProduction(models.Model):
             if order.state in ['confirmed', 'progress', 'to_close'] and order.product_id.tracking == 'serial' and \
                     float_compare(order.product_qty, 1, precision_rounding=order.product_uom_id.rounding) > 0 and \
                     float_compare(order.qty_producing, order.product_qty, precision_rounding=order.product_uom_id.rounding) < 0:
-                moves_with_tracking = order.move_raw_ids.filtered(lambda m: m.has_tracking)
-                if any(len(m.move_line_ids.lot_id) > 1 for m in moves_with_tracking):
-                    continue
                 order.show_serial_mass_produce = True
 
     @api.depends('state', 'move_finished_ids')
