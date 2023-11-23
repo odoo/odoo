@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id', 'pos_module_pos_discount', 'pos_config_id')
     def _compute_pos_discount_product_id(self):
-        default_product = self.env.ref("point_of_sale.product_product_consumable", raise_if_not_found=False) or self.env['product.product']
+        default_product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False) or self.env['product.product']
         for res_config in self:
             discount_product = res_config.pos_config_id.discount_product_id or default_product
             if res_config.pos_module_pos_discount and (not discount_product.company_id or discount_product.company_id == res_config.company_id):
