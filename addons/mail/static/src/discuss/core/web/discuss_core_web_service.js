@@ -24,20 +24,6 @@ export class DiscussCoreWeb {
 
     setup() {
         this.messagingService.isReady.then((data) => {
-            for (const channelData of data.channels) {
-                const thread = this.discussCoreCommonService.createChannelThread(channelData);
-                if (
-                    channelData.is_minimized &&
-                    channelData.state !== "closed" &&
-                    !this.ui.isSmall
-                ) {
-                    this.store.ChatWindow.insert({
-                        autofocus: 0,
-                        folded: channelData.state === "folded",
-                        thread,
-                    });
-                }
-            }
             this.store.discuss.channels.isOpen =
                 data.current_user_settings.is_discuss_sidebar_category_channel_open;
             this.store.discuss.chats.isOpen =

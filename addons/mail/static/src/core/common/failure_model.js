@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { assignIn, onChange } from "@mail/utils/common/misc";
+import { assignIn } from "@mail/utils/common/misc";
 import { markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -14,7 +14,7 @@ export class Failure extends Record {
     static new(data) {
         /** @type {import("models").Failure} */
         const failure = super.new(data);
-        onChange(failure, "notifications", () => {
+        Record.onChange(failure, "notifications", () => {
             if (failure.notifications.length === 0) {
                 failure.delete();
             }

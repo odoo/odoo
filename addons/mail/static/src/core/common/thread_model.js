@@ -2,7 +2,7 @@
 
 import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
+import { assignDefined, assignIn } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -33,9 +33,9 @@ export class Thread extends Record {
         /** @type {import("models").Thread} */
         const thread = super.new(data);
         thread.composer = {};
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
+        Record.onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        Record.onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
+        Record.onChange(thread, "is_pinned", () => {
             if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
                 this.store.discuss.thread = undefined;
             }
@@ -64,7 +64,6 @@ export class Thread extends Record {
         assignDefined(this, { id, name, description });
         if (attachments) {
             this.attachments = attachments;
-            this.attachments.sort((a1, a2) => a2.id - a1.id);
         }
         if (serverData) {
             assignDefined(this, serverData, [
@@ -144,11 +143,17 @@ export class Thread extends Record {
     /** @type {string} */
     model;
     allMessages = Record.many("Message", {
-        inverse: "originThread",
+        inverse: "originThread2",
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    attachments = Record.many("Attachment");
+    attachments = Record.many("Attachment", {
+        /**
+         * @param {import("models").Attachment} a1
+         * @param {import("models").Attachment} a2
+         */
+        sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
+    });
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;

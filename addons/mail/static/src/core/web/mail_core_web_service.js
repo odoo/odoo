@@ -23,7 +23,6 @@ export class MailCoreWeb {
         this.messagingService.isReady.then(() => {
             this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
                 this.store.Message.insert(messages, { html: true });
-                this.store.failures.sort((f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id);
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {
                 if (payload.activity_created) {
@@ -96,7 +95,14 @@ export class MailCoreWeb {
 }
 
 export const mailCoreWeb = {
-    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "rpc", "mail.thread"],
+    dependencies: [
+        "bus_service",
+        "mail.message",
+        "mail.messaging",
+        "mail.store",
+        "rpc",
+        "mail.thread",
+    ],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

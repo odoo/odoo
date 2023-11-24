@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
@@ -21,17 +20,12 @@ export class Attachment extends FileModelMixin(Record) {
     static new(data) {
         /** @type {import("models").Attachment} */
         const attachment = super.new(data);
-        onChange(attachment, ["extension", "name"], () => {
+        Record.onChange(attachment, ["extension", "name"], () => {
             if (!attachment.extension && attachment.name) {
                 attachment.extension = attachment.name.split(".").pop();
             }
         });
         return attachment;
-    }
-
-    update(data) {
-        super.update(data);
-        this.originThread?.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
     }
 
     originThread = Record.one("Thread", { inverse: "attachments" });
