@@ -693,7 +693,7 @@ export const editorCommands = {
             setSelection(...newPosition, ...newPosition, false);
         }
         const [table] = editorCommands.insert(editor, parseHTML(editor.document, tableHtml));
-        setCursorStart(table.querySelector('td'));
+        setCursorStart(table.querySelector('p'));
     },
     addColumn: (editor, beforeOrAfter, referenceCell) => {
         if (!referenceCell) {
