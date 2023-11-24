@@ -33,10 +33,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Check the order id and the access token
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token)
-        except MissingError as error:
-            raise error
-        except AccessError:
-            raise ValidationError(_("The access token is invalid."))
+        except MissingError:
+            raise
+        except AccessError as e:
+            raise ValidationError(_("The access token is invalid.")) from e
 
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been cancelled."))

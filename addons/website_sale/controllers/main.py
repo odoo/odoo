@@ -25,7 +25,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 _logger = logging.getLogger(__name__)
 
 
-class TableCompute(object):
+class TableCompute:
 
     def __init__(self):
         self.table = {}
@@ -728,7 +728,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'suggested_products': [],
         })
         if order:
-            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+            order.order_line.filtered(lambda sol: not sol.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
@@ -769,7 +769,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect("/shop/cart")
 
-    @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
+    @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(
         self, product_id, line_id=None, add_qty=None, set_qty=None, display=True,
         product_custom_attribute_values=None, no_variant_attribute_values=None, **kw
@@ -815,7 +815,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values['cart_quantity'] = order.cart_quantity
         values['minor_amount'] = payment_utils.to_minor_currency_units(
             order.amount_total, order.currency_id
-        ),
+        )
         values['amount'] = order.amount_total
 
         if not display:
@@ -841,7 +841,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
         request.session['website_sale_shop_layout_mode'] = layout_mode
 
-    @route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
+    @route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True)
     def cart_quantity(self):
         if 'website_sale_cart_quantity' not in request.session:
             return request.website.sale_get_order().cart_quantity
@@ -989,7 +989,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # mode: tuple ('new|edit', 'billing|shipping')
         # all_form_values: all values before preprocess
         # data: values after preprocess
-        error = dict()
+        error = {}
         error_message = []
 
         if data.get('partner_id'):
@@ -1086,7 +1086,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return partner_id
 
     def values_preprocess(self, values):
-        new_values = dict()
+        new_values = {}
         partner_fields = request.env['res.partner']._fields
 
         for k, v in values.items():
@@ -1109,9 +1109,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # don't drop empty value, it could be a field to reset
             if k in authorized_fields and v is not None:
                 new_values[k] = v
-            else:  # DEBUG ONLY
-                if k not in ('field_required', 'partner_id', 'callback', 'submitted'): # classic case
-                    _logger.debug("website_sale postprocess: %s value has been dropped (empty or not writable)" % k)
+            elif k not in ('field_required', 'partner_id', 'callback', 'submitted'): # classic case
+                _logger.debug("website_sale postprocess: %s value has been dropped (empty or not writable)", k)
 
         if request.website.specific_user_account:
             new_values['website_id'] = request.website.id
@@ -1424,7 +1423,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
         sanitized_custom_values = {
             k: v for k, v in custom_values.items()
-            if k in self.WRITABLE_PARTNER_FIELDS + ['partner_id', 'parent_id', 'type']
+            if k in [*self.WRITABLE_PARTNER_FIELDS, 'partner_id', 'parent_id', 'type']
         }
 
         if request.website.specific_user_account:
@@ -1467,12 +1466,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
         country = country and country.exists() or def_country_id
 
-        res = {
+        return {
             'country': country,
             'country_states': country.get_website_sale_states(mode=mode[1]),
             'countries': country.get_website_sale_countries(mode=mode[1]),
         }
-        return res
 
     @route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
@@ -1746,8 +1744,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
             return request.render("website_sale.confirmation", values)
-        else:
-            return request.redirect('/shop')
+        return request.redirect('/shop')
 
     def _prepare_shop_payment_confirmation_values(self, order):
         """
@@ -1765,10 +1762,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             pdf, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [sale_order_id])
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', '%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        else:
-            return request.redirect('/shop')
+        return request.redirect('/shop')
 
     # ------------------------------------------------------
     # Edit
@@ -1856,13 +1852,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, mode, **kw):
-        return dict(
-            fields=country.get_address_fields(),
-            states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code,
-            zip_required=country.zip_required,
-            state_required=country.state_required,
-        )
+        return {
+            'fields': country.get_address_fields(),
+            'states': [(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
+            'phone_code': country.phone_code,
+            'zip_required': country.zip_required,
+            'state_required': country.state_required,
+        }
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed

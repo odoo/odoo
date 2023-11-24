@@ -1,17 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-from uuid import uuid4
 from unittest.mock import Mock, patch
+
 from werkzeug import urls
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery as WebsiteSaleDeliveryController
-from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -279,7 +277,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
         delivery_carrier_mock.rate_shipment = Mock(
             # Since we didn't mock the product ids for the mocked carrier, we return an unsuccessful
             # response to skip the part where the product ids are checked on the carrier.
-            return_value=dict(self.rate_shipment_result, **{'success': False})
+            return_value=dict(self.rate_shipment_result, success=False)
         )
 
         WebsiteSaleDeliveryController._get_rate(
@@ -310,7 +308,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             )
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
 
-            self.make_jsonrpc_request(urls.url_join(self.base_url(), WebsiteSale._express_checkout_route), params={
+            self.make_jsonrpc_request(urls.url_join(self.base_url(), WebsiteSaleDeliveryController._express_checkout_route), params={
                 'billing_address': dict(self.express_checkout_billing_values),
                 'shipping_address': dict(self.express_checkout_demo_shipping_values),
                 'shipping_option': shipping_options[0],
