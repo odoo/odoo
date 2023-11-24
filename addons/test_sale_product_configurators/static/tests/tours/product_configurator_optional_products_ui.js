@@ -46,6 +46,9 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_advanced_configurator_modal',
 }, {
+    trigger: '.o-default-button',
+    extra_trigger: '.modal-title:contains(Warning for Conference Chair (TEST))',
+}, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
