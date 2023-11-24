@@ -77,19 +77,18 @@ class Partner(models.Model):
             meeting_data = self.env.cr.fetchall()
 
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
-            meetings = {p.id: set() for p in all_partners}
-            for m in meeting_data:
-                meetings[m[0]].add(m[1])
+            meetings = {}
+            for p_id, m_id, _ in meeting_data:
+                meetings.setdefault(p_id, set()).add(m_id)
 
             # Add the events linked to the children of the partner
-            all_partners.read(['parent_id'])
-            for p in all_partners:
+            for p in self.browse(meetings.keys()):
                 partner = p
-                while partner:
+                while partner.parent_id:
+                    partner = partner.parent_id
                     if partner in self:
                         meetings[partner.id] |= meetings[p.id]
-                    partner = partner.parent_id
-            return {p.id: list(meetings[p.id]) for p in self if p.id}
+            return {p_id: list(meetings[p_id]) if p_id in meetings else [] for p_id in self.ids}
         return {}
 
 
