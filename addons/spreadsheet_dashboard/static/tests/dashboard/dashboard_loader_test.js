@@ -12,6 +12,7 @@ import { getDashboardServerData } from "../utils/data";
 
 import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
 import { getCellValue } from "@spreadsheet/../tests/utils/getters";
+import { RPCError } from "@web/core/network/rpc";
 
 /**
  * @param {object} [params]
@@ -197,16 +198,19 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
                 args.method === "get_readonly_dashboard" &&
                 args.model === "spreadsheet.dashboard"
             ) {
-                throw new Error("Bip");
+                const error = new RPCError();
+                error.data = { message: "Bip" };
+                throw error;
             }
         },
     });
     await loader.load();
     const result = loader.getDashboard(3);
     assert.strictEqual(result.status, Status.Loading);
-    await nextTick();
+    await result.promise.catch(() => assert.step("error"));
     assert.strictEqual(result.status, Status.Error);
-    assert.strictEqual(result.error.message, "Bip");
+    assert.strictEqual(result.error.data.message, "Bip");
+    assert.verifySteps(["error"], "error is thrown");
 });
 
 QUnit.test("async formulas are correctly evaluated", async (assert) => {
