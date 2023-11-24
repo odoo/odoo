@@ -7,7 +7,8 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.models.res_users import Users
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests import HttpCase, tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
@@ -51,7 +52,7 @@ class TestUser(MailCommon):
 
 
 @tagged('-at_install', 'post_install')
-class TestUserModifyOwnProfile(HttpCase):
+class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
         """" A user should be able to modify their own profile.
