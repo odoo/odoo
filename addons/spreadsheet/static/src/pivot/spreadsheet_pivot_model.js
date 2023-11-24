@@ -9,6 +9,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
+import { isDateField, parseGroupField } from "@spreadsheet/assets_backend/pivot/pivot_utils";
 
 const { toString, toNumber, toBoolean } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -32,37 +33,6 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
  * @property {Object} domain
  * @property {Object} context
  */
-
-/**
- * Parses the positional char (#), the field and operator string of pivot group.
- * e.g. "create_date:month"
- * @param {Record<string, Field>} allFields
- * @param {string} groupFieldString
- * @returns {{field: Field, aggregateOperator: string, isPositional: boolean}}
- */
-function parseGroupField(allFields, groupFieldString) {
-    let fieldName = groupFieldString;
-    let aggregateOperator = undefined;
-    const index = groupFieldString.indexOf(":");
-    if (index !== -1) {
-        fieldName = groupFieldString.slice(0, index);
-        aggregateOperator = groupFieldString.slice(index + 1);
-    }
-    const isPositional = fieldName.startsWith("#");
-    fieldName = isPositional ? fieldName.substring(1) : fieldName;
-    const field = allFields[fieldName];
-    if (field === undefined) {
-        throw new Error(sprintf(_t("Field %s does not exist"), fieldName));
-    }
-    if (["date", "datetime"].includes(field.type)) {
-        aggregateOperator = aggregateOperator || "month";
-    }
-    return {
-        isPositional,
-        field,
-        aggregateOperator,
-    };
-}
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
 export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
@@ -127,26 +97,6 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  * that we need in spreadsheet (display_name, isUsedInSheet, ...)
  */
 export class SpreadsheetPivotModel extends PivotModel {
-    /**
-     * Mapping `[groupBy][dateValueInReadGroup]: normalizedDateValue`.
-     *
-     * The mapping is useful because it's not always possible to transform on the fly a string date that was obtained
-     * from a read_group into a normalized date value (because the read_group dates strings are localized).
-     *
-     * @example
-     * {
-     *   "create_date:day": {
-     *       "12 Nov 2023": "11/12/2023",
-     *       "30 Dec 2024": "12/30/2024",
-     *   },
-     *   "date_deadline:month": {
-     *       "March 2020":   "03/2020",
-     *       "January 2022": "01/2022",
-     *   }
-     * }
-     */
-    _readGroupDateValuesMapping = {};
-
     /**
      * @param {Object} params
      * @param {PivotMetaData} params.metaData
@@ -270,7 +220,7 @@ export class SpreadsheetPivotModel extends PivotModel {
     isGroupedOnlyByOneDate(dimension) {
         const groupBys =
             dimension === "COLUMN" ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys;
-        return groupBys.length === 1 && this._isDateField(this.parseGroupField(groupBys[0]).field);
+        return groupBys.length === 1 && isDateField(this.parseGroupField(groupBys[0]).field);
     }
     /**
      * @param {string} dimension COLUMN | ROW
@@ -333,7 +283,7 @@ export class SpreadsheetPivotModel extends PivotModel {
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
-        if (this._isDateField(field)) {
+        if (isDateField(field)) {
             // TODO include this parsing to the pivot time adapters and extend it to other time periods
             if (value && aggregateOperator === "day") {
                 return toNumber(value, DEFAULT_LOCALE);
@@ -366,7 +316,7 @@ export class SpreadsheetPivotModel extends PivotModel {
             const { field } = this.parseGroupField(groupFieldString);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
             const fieldValue = this._isCol(field) ? cols.at(-1) : rows.at(-1);
-            return this._isDateField(field)
+            return isDateField(field)
                 ? this._getNormalizedDateValueFromReadGroupDate(groupFieldString, fieldValue)
                 : fieldValue;
         }
@@ -429,6 +379,8 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @override
      */
     async _loadData(config) {
+        const sortedColumn = config.metaData.sortedColumn;
+        config.metaData.sortedColumn = undefined;
         /** @type {(groupFieldString: string) => ReturnType<parseGroupField>} */
         this.parseGroupField = parseGroupField.bind(null, this.metaData.fields);
         /*
@@ -468,6 +420,13 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         registerLabels(this.data.colGroupTree, this.metaData.fullColGroupBys);
         registerLabels(this.data.rowGroupTree, this.metaData.fullRowGroupBys);
+
+        if (sortedColumn) {
+            const localizedSortedColumn = this._localizeSortedColumn(sortedColumn);
+            if (localizedSortedColumn) {
+                this._sortRows(localizedSortedColumn, config);
+            }
+        }
     }
 
     /**
@@ -479,60 +438,6 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     _isDateField(field) {
         return ["date", "datetime"].includes(field.type);
-    }
-
-    /**
-     * @override
-     * Override _prepareData to build the mapping "readGroupDates" <-> "normalizedDates"
-     */
-    _prepareData(rootGroup, groupSubdivisions, config) {
-        super._prepareData(rootGroup, groupSubdivisions, config);
-        for (const groupSubdivision of groupSubdivisions) {
-            for (const subGroup of groupSubdivision.subGroups) {
-                this._buildReadGroupDateMapping(subGroup, groupSubdivision.rowGroupBy);
-                this._buildReadGroupDateMapping(subGroup, groupSubdivision.colGroupBy);
-            }
-        }
-    }
-
-    _buildReadGroupDateMapping(group, groupBys) {
-        for (const groupBy of groupBys) {
-            const { field, aggregateOperator } = this.parseGroupField(groupBy);
-            if (this._isDateField(field)) {
-                const normalized = pivotTimeAdapter(aggregateOperator).normalizeServerValue(
-                    groupBy,
-                    field,
-                    group
-                );
-
-                if (!this._readGroupDateValuesMapping[groupBy]) {
-                    this._readGroupDateValuesMapping[groupBy] = {};
-                }
-                this._readGroupDateValuesMapping[groupBy][group[groupBy]] = normalized.toString();
-            }
-        }
-    }
-
-    _getNormalizedDateValueFromReadGroupDate(groupBy, date) {
-        if (date === false) {
-            return date;
-        }
-        if (groupBy.startsWith("#")) {
-            groupBy = groupBy.slice(1);
-        }
-        return this._readGroupDateValuesMapping[groupBy][date];
-    }
-
-    _getReadGroupDateValueFromNormalizedDate(groupBy, normalizedDate) {
-        if (normalizedDate === false) {
-            return normalizedDate;
-        }
-        if (groupBy.startsWith("#")) {
-            groupBy = groupBy.slice(1);
-        }
-        const normalizedDateString = normalizedDate.toString();
-        const values = this._readGroupDateValuesMapping[groupBy];
-        return Object.keys(values).find((key) => values[key] === normalizedDateString);
     }
 
     /**
@@ -611,7 +516,7 @@ export class SpreadsheetPivotModel extends PivotModel {
                 value = toNormalizedPivotValue(field, groupValue, aggregateOperator);
             }
 
-            if (this._isDateField(field) && !isPositional) {
+            if (isDateField(field) && !isPositional) {
                 value = this._getReadGroupDateValueFromNormalizedDate(groupFieldString, value);
             }
 
@@ -653,7 +558,7 @@ export class SpreadsheetPivotModel extends PivotModel {
             const groupBy = groupBys[i];
             const { field } = this.parseGroupField(groupBy);
             value = value.toString();
-            if (this._isDateField(field)) {
+            if (isDateField(field)) {
                 return this._getNormalizedDateValueFromReadGroupDate(groupBy, value);
             }
             return value;

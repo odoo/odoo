@@ -23,6 +23,7 @@ export async function insertPivotInSpreadsheet(model, params) {
             rowGroupBys: archInfo.rowGroupBys,
             activeMeasures: archInfo.activeMeasures,
             resModel: params.resModel || "partner",
+            sortedColumn: params.sortedColumn,
         },
         searchParams: {
             domain: [],
@@ -73,7 +74,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
         serverData: params.serverData,
     });
     const arch = params.arch || serverData.views["partner,false,pivot"];
-    await insertPivotInSpreadsheet(model, { arch });
+    await insertPivotInSpreadsheet(model, { arch, sortedColumn: params.sortedColumn });
     const env = model.config.custom.env;
     env.model = model;
     await waitForDataSourcesLoaded(model);
