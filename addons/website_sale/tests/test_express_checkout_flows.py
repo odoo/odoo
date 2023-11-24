@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-from uuid import uuid4
 from werkzeug import urls
 
 from odoo import Command
@@ -9,7 +7,7 @@ from odoo.http import root
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.website_sale.controllers.main import WebsiteSale as WebsiteSaleController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('at_install')
@@ -55,7 +53,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
 
         self.make_jsonrpc_request(
             urls.url_join(
-                self.base_url(), WebsiteSaleController._express_checkout_route
+                self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
             }
@@ -82,7 +80,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
 
         self.make_jsonrpc_request(
             urls.url_join(
-                self.base_url(), WebsiteSaleController._express_checkout_route
+                self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': {
                     'name': self.user_demo.partner_id.name,
@@ -129,7 +127,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
 
         self.make_jsonrpc_request(
             urls.url_join(
-                self.base_url(), WebsiteSaleController._express_checkout_route
+                self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
             }
@@ -150,7 +148,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
 
         self.make_jsonrpc_request(
             urls.url_join(
-                self.base_url(), WebsiteSaleController._express_checkout_route
+                self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
             }
