@@ -23,6 +23,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'data/l10n_pl.l10n_pl_tax_office.csv',

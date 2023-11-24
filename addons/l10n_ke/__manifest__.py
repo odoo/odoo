@@ -12,6 +12,7 @@ This provides a base chart of accounts and taxes template for use in Odoo.
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'views/account_tax_views.xml',
         'views/l10n_ke_item_code_views.xml',

@@ -16,6 +16,7 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',

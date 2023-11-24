@@ -8,6 +8,7 @@
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'author': 'OpenERP Italian Community',
     'description': """
 Piano dei conti italiano di un'impresa generica.

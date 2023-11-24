@@ -11,6 +11,7 @@
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'description': """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
 It also adds the Registration Number for Romania in Odoo.

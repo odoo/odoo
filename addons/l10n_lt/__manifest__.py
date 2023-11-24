@@ -22,6 +22,7 @@ This module also includes:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
         'data/res_bank_data.xml',

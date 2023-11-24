@@ -14,6 +14,7 @@ Ukraine - Chart of accounts.
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
     ],

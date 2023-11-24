@@ -17,6 +17,7 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_template_data.xml',
     ],

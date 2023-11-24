@@ -37,6 +37,7 @@ position.
         'account',
         'base_iban',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/tax_report.xml',
         'views/res_partner_view.xml',

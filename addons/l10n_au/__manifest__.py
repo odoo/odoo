@@ -18,6 +18,7 @@ Also:
     - sets up Australian taxes.
     """,
     'depends': ['account'],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',

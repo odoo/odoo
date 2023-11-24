@@ -18,6 +18,7 @@ It also includes the invoice OCR payment reference handling.
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',

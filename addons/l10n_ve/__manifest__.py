@@ -38,6 +38,7 @@ but you will need set manually account defaults for taxes.
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'demo': [
         'demo/demo_company.xml',
     ],

@@ -9,7 +9,9 @@
     'description': ' This is the base module to manage chart of accounting and localization for Hong Kong ',
     'depends': [
         'account_qr_code_emv',
+        'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_chart_template_data.xml',
         'views/res_bank_views.xml',

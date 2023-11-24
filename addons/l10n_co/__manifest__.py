@@ -13,6 +13,7 @@
         'l10n_latam_base',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/l10n_latam.identification.type.csv',

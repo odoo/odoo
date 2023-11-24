@@ -56,6 +56,7 @@ Same as the l10n_br_avatax module with the extension to the sales order module.
         'l10n_latam_base',
         'l10n_latam_invoice_document',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/l10n_latam.identification.type.csv',

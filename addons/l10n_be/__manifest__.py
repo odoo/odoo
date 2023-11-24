@@ -41,6 +41,7 @@ Wizards provided by this module:
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/l10n_be_sequence_data.xml',

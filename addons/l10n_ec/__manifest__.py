@@ -46,6 +46,7 @@ Master Data:
         'l10n_latam_base',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
