@@ -326,6 +326,10 @@ class TestPrivateReadGroup(common.TransactionCase):
         with self.assertRaises(ValueError):
             Model._read_group([], ['"date:week'])
 
+        with self.assertRaises(ValueError) as error:
+            Model._read_group([], ['date:month', 'date:month'])
+        self.assertEqual(str(error.exception), "The groupby=['date:month', 'date:month'] param contains duplication of 'date:month'")
+
         # Test malformed aggregate clause
         with self.assertRaises(ValueError):
             Model._read_group([], aggregates=['value'])  # No aggregate

@@ -1863,6 +1863,8 @@ class BaseModel(metaclass=MetaModel):
 
         groupby_terms: dict[str, SQL] = {}
         for spec in groupby:
+            if spec in groupby_terms:
+                raise ValueError(f"The {groupby=!r} param contains duplication of {spec!r}")
             groupby_terms[spec], fnames_used = self._read_group_groupby(spec, query)
             fnames_to_flush.update(fnames_used)
 
