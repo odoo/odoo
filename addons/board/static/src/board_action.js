@@ -54,6 +54,19 @@ export class BoardAction extends Component {
                     const groupBy = this.viewProps.context.group_by;
                     this.viewProps.groupBy = typeof groupBy === "string" ? [groupBy] : groupBy;
                 }
+                if ("comparison" in this.viewProps.context) {
+                    const comparison = this.viewProps.context.comparison;
+                    if (
+                        comparison !== null &&
+                        typeof comparison === "object" &&
+                        "domains" in comparison &&
+                        "fieldName" in comparison
+                    ) {
+                        // Some comparison object with the wrong form might have been stored in db.
+                        // This is why we make the checks on the keys domains and fieldName
+                        this.viewProps.comparison = comparison;
+                    }
+                }
             }
             if (action.domain) {
                 this.viewProps.domain = action.domain;
