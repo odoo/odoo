@@ -282,6 +282,7 @@ class Module(models.Model):
     sequence = fields.Integer('Sequence', default=100)
     dependencies_id = fields.One2many('ir.module.module.dependency', 'module_id',
                                        string='Dependencies', readonly=True)
+    country_ids = fields.Many2many('res.country', 'module_country', 'module_id', 'country_id')
     exclusion_ids = fields.One2many('ir.module.module.exclusion', 'module_id',
                                     string='Exclusions', readonly=True)
     auto_install = fields.Boolean('Automatic Installation',
@@ -384,16 +385,20 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_install(self):
+        company_countries = self.env['res.company'].search([]).country_id
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
 
         # determine whether an auto-install module must be installed:
         #  - all its dependencies are installed or to be installed,
         #  - at least one dependency is 'to install'
+        #  - if the module is country specific, at least one company is in one of the countries
         install_states = frozenset(('installed', 'to install', 'to upgrade'))
         def must_install(module):
             states = {dep.state for dep in module.dependencies_id if dep.auto_install_required}
-            return states <= install_states and 'to install' in states
+            return states <= install_states and 'to install' in states and (
+                not module.country_ids or module.country_ids & company_countries
+            )
 
         modules = self
         while modules:
@@ -772,6 +777,7 @@ class Module(models.Model):
                 res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
+            mod._update_countries(terp.get('countries', []))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
 
@@ -789,6 +795,16 @@ class Module(models.Model):
                          (list(auto_install_requirements or ()), self.id))
         self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
         self.invalidate_recordset(['dependencies_id'])
+
+    def _update_countries(self, countries=()):
+        existing = set(self.country_ids.ids)
+        needed = set(self.env['res.country'].search([('code', 'in', [c.upper() for c in countries])]).ids)
+        for dep in (needed - existing):
+            self._cr.execute('INSERT INTO module_country (module_id, country_id) values (%s, %s)', (self.id, dep))
+        for dep in (existing - needed):
+            self._cr.execute('DELETE FROM module_country WHERE module_id = %s and country_id = %s', (self.id, dep))
+        self.invalidate_recordset(['country_ids'])
+        self.env['res.company'].invalidate_model(['uninstalled_l10n_module_ids'])
 
     def _update_exclusions(self, excludes=None):
         self.env['ir.module.module.exclusion'].flush_model()
