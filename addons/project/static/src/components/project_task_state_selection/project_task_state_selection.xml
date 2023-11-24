@@ -15,7 +15,7 @@
         <xpath expr="//t[@t-if='props.readonly']" position="after">
             <t t-elif="currentValue == '04_waiting_normal' and isView(['activity', 'kanban', 'list', 'calendar'])">
                 <button class="d-flex align-items-center btn fw-normal p-0 justify-content-center " title="This task is blocked by another unfinished task" t-att-class="{'o_task_state_list_view': isView(['list'])}">
-                    <i class="fa fa-lg fa-hourglass-o btn-outline-info"></i>
+                    <i class="fa fa-lg fa-hourglass-o text-info"></i>
                 </button>
             </t>
         </xpath>
