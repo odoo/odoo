@@ -20,6 +20,7 @@ Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
         'data/vat_report.xml',

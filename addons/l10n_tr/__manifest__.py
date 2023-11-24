@@ -18,6 +18,7 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'demo': [
         'demo/demo_company.xml',
     ],

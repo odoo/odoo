@@ -12,6 +12,7 @@ This provides a base chart of accounts and taxes template for use in Odoo for Ka
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/tax_report.xml',
     ],

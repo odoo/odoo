@@ -27,6 +27,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         'base_vat',
         'l10n_din5008',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/res.country.state.csv',
         'data/account_account_tag.xml',

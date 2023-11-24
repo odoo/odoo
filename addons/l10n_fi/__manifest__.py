@@ -24,6 +24,7 @@ Set the payment reference type from the Sales Journal.
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
         'data/account_tax_report_line.xml',

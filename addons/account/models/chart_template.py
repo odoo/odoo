@@ -13,7 +13,6 @@ from psycopg2.extras import Json
 
 from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.account import SYSCOHADA_LIST
 from odoo.exceptions import AccessError
 from odoo.tools import file_open, groupby
 from odoo.tools.translate import TranslationImporter
@@ -31,6 +30,9 @@ TEMPLATE_MODELS = (
 )
 
 TAX_TAG_DELIMITER = '||'
+
+SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE',
+                  'CD', 'SN', 'TD', 'TG']
 
 
 def preserve_existing_tags_on_taxes(env, module):

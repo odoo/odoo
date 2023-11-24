@@ -18,6 +18,7 @@ This module consists of:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',

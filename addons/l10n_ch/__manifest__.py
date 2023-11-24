@@ -16,7 +16,7 @@ A QR-bill will be generated if:
     - A correct account number/QR IBAN is set on your bank journal
     - (when using a QR-IBAN): the payment reference of the invoice is a QR-reference
 
-The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail. 
+The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.
 
     """,
     'version': '11.1',
@@ -26,6 +26,7 @@ The generation of the QR-bill is automatic if you meet the previous criteria. Th
         'base_iban',
         'l10n_din5008',
     ],
+    'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',

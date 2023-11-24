@@ -25,6 +25,7 @@ Spanish charts of accounts (PGCE 2008).
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/res_partner_data.xml',
         'views/account_move_views.xml',

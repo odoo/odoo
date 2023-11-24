@@ -18,6 +18,7 @@ https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/l10n_hr_chart_data.xml',
         'data/account_tax_report_data.xml',

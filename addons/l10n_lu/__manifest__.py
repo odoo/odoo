@@ -26,6 +26,7 @@ Notes:
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/l10n_lu_chart_data.xml',
         'data/tax_report/section_1.xml',

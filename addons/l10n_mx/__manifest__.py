@@ -29,6 +29,7 @@ With this module you will have:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
         'data/account_report_diot.xml',

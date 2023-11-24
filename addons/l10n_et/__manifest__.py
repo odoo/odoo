@@ -20,6 +20,7 @@ This is the latest Ethiopian Odoo localization and consists of:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
     ],

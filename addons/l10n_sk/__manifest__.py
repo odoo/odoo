@@ -27,6 +27,7 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'views/res_partner_views.xml',
         'views/res_company_views.xml',

@@ -36,6 +36,7 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'base',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'views/account_move_view.xml',
         'views/account_report.xml',
