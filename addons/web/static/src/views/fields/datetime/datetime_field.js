@@ -24,7 +24,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  maxDate?: string;
  *  minDate?: string;
  *  placeholder?: string;
- *  required?: string | boolean;
+ *  required?: boolean;
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
@@ -41,7 +41,7 @@ export class DateTimeField extends Component {
         maxDate: { type: String, optional: true },
         minDate: { type: String, optional: true },
         placeholder: { type: String, optional: true },
-        required: { type: [Boolean, String], optional: true },
+        required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
@@ -192,12 +192,13 @@ export class DateTimeField extends Component {
 
     /**
      * @param {DateTimePickerProps["value"]} value
+     * @returns {boolean}
      */
     isRange(value) {
-        return (
-            this.relatedField &&
-            (this.props.required || ensureArray(value).filter(Boolean).length === 2)
-        );
+        if (!this.relatedField) {
+            return false;
+        }
+        return this.props.required || ensureArray(value).filter(Boolean).length === 2;
     }
 
     /**
@@ -210,6 +211,9 @@ export class DateTimeField extends Component {
         return this.field.type === "date" ? deserializeDate(value) : deserializeDateTime(value);
     }
 
+    /**
+     * @return {boolean}
+     */
     shouldShowSeparator() {
         return (
             this.state.range &&
@@ -272,7 +276,7 @@ export const dateField = {
         maxDate: options.max_date,
         minDate: options.min_date,
         placeholder: attrs.placeholder,
-        required: "required" in attrs ? attrs.required : dynamicInfo.required,
+        required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: archParseBoolean(options.warn_future),
