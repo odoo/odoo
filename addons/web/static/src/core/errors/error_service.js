@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "../browser/browser";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
 import { isIOS, isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -23,20 +22,20 @@ export class UncaughtError extends Error {
 }
 
 export class UncaughtClientError extends UncaughtError {
-    constructor(message = _t("Uncaught Javascript Error")) {
+    constructor(message = "Uncaught Javascript Error") {
         super(message);
     }
 }
 
 export class UncaughtPromiseError extends UncaughtError {
-    constructor(message = _t("Uncaught Promise")) {
+    constructor(message = "Uncaught Promise") {
         super(message);
         this.unhandledRejectionEvent = null;
     }
 }
 
 export class UncaughtCorsError extends UncaughtError {
-    constructor(message = _t("Uncaught CORS Error")) {
+    constructor(message = "Uncaught CORS Error") {
         super(message);
     }
 }
@@ -93,12 +92,11 @@ export const errorService = {
                     return;
                 }
                 uncaughtError = new UncaughtCorsError();
-                uncaughtError.traceback = _t(
+                uncaughtError.traceback =
                     `Unknown CORS error\n\n` +
-                        `An unknown CORS error occured.\n` +
-                        `The error probably originates from a JavaScript file served from a different origin.\n` +
-                        `(Opening your browser console might give you a hint on the error.)`
-                );
+                    `An unknown CORS error occured.\n` +
+                    `The error probably originates from a JavaScript file served from a different origin.\n` +
+                    `(Opening your browser console might give you a hint on the error.)`;
             } else {
                 uncaughtError = new UncaughtClientError();
                 uncaughtError.event = ev;
