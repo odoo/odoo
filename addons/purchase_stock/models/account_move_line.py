@@ -15,24 +15,12 @@ class AccountMoveLine(models.Model):
         return self.purchase_line_id.move_ids.filtered(
             lambda m: m.state == 'done' and m.product_qty != 0)
 
+    # TODO master delete (dead code)
     def _get_out_and_not_invoiced_qty(self, in_moves):
-        self.ensure_one()
-        if not in_moves:
-            return 0
-        aml_qty = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-        invoiced_qty = sum(line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
-                           for line in self.purchase_line_id.invoice_lines - self)
-        layers = in_moves.stock_valuation_layer_ids
-        layers_qty = sum(layers.mapped('quantity'))
-        out_qty = layers_qty - sum(layers.mapped('remaining_qty'))
-        total_out_and_not_invoiced_qty = max(0, out_qty - invoiced_qty)
-        out_and_not_invoiced_qty = min(aml_qty, total_out_and_not_invoiced_qty)
-        return self.product_id.uom_id._compute_quantity(out_and_not_invoiced_qty, self.product_uom_id)
+        return
 
     def _get_price_diff_account(self):
         self.ensure_one()
-        if self.product_id.cost_method == 'standard':
-            return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)
         return accounts['expense']
 
@@ -262,12 +250,9 @@ class AccountMoveLine(models.Model):
             total_layer_qty_to_invoice = qty_to_invoice_per_layer[layer][0]
             remaining_qty = layer.remaining_qty
             out_layer_qty = total_layer_qty_to_invoice - remaining_qty
-            if self.is_refund:
+            if self.is_refund and invoice.reversed_entry_id:
                 sign = -1
                 reversed_invoice = invoice.reversed_entry_id
-                if not reversed_invoice:
-                    # this is a refund for a returned quantity, we don't have anything to do
-                    continue
                 initial_invoiced_qty = layers_and_invoices_qties[(layer, reversed_invoice)][0]
                 initial_pdiff_svl = layer.stock_valuation_layer_ids.filtered(lambda svl: svl.account_move_line_id.move_id == reversed_invoice)
                 if not initial_pdiff_svl or float_is_zero(initial_invoiced_qty, precision_rounding=product_uom.rounding):
@@ -305,6 +290,8 @@ class AccountMoveLine(models.Model):
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()
+            if self.is_refund and not invoice.reversed_entry_id:
+                aml_gross_price_unit = -aml_gross_price_unit
             aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.date, round=False)
             aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
 
