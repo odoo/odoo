@@ -197,6 +197,7 @@ class Partner(models.Model):
 
     name = fields.Char(index=True, default_export_compatible=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
+    translated_display_name = fields.Char(compute='_compute_translated_display_name')
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -345,6 +346,13 @@ class Partner(models.Model):
         names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    @api.depends_context('lang')
+    @api.depends('display_name')
+    def _compute_translated_display_name(self):
+        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+        for partner in self:
+            partner.translated_display_name = names.get(partner.id)
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -846,7 +854,8 @@ class Partner(models.Model):
 
         if partner.company_name or partner.parent_id:
             if not name and partner.type in ['invoice', 'delivery', 'other']:
-                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+                types = dict(self._fields['type']._description_selection(self.env))
+                name = types[partner.type]
             if not partner.is_company:
                 name = self._get_contact_name(partner, name)
         if self._context.get('show_address_only'):
