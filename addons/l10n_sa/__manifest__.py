@@ -14,6 +14,7 @@ Odoo Arabic localization for most Saudi Arabia.
         'l10n_gcc_invoice',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_data.xml',
         'data/account_tax_report_data.xml',

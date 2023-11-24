@@ -15,7 +15,9 @@ Thai accounting chart and localization.
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/thailand.html',
     'depends': [
         'account_qr_code_emv',
+        'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'views/report_invoice.xml',

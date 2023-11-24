@@ -12,6 +12,7 @@
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'wizard/generate_2307_wizard_views.xml',
         'views/account_move_views.xml',

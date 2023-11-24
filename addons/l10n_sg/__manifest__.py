@@ -19,7 +19,9 @@ This module add, for accounting:
     """,
     'depends': [
         'account_qr_code_emv',
+        'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/l10n_sg_chart_data.xml',
         'data/account_tax_report_data.xml',

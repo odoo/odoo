@@ -16,6 +16,7 @@ Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racu
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/menuitem_data.xml',

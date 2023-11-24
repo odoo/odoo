@@ -33,6 +33,7 @@ configuration of their taxes and fiscal positions manually.
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account_data.xml',

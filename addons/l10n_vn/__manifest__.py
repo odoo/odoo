@@ -26,7 +26,9 @@ This is the module to manage the accounting chart, bank information for Vietnam 
     'depends': [
         'account_qr_code_emv',
         'base_iban',
+        'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'views/res_bank_views.xml',

@@ -23,6 +23,7 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/l10n_cr_res_partner_title.xml',
     ],

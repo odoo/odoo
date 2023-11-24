@@ -3,6 +3,8 @@
     'name': 'OHADA - Accounting',
     'category': 'Accounting/Localizations/Account Charts',
     'icon': '/l10n_syscohada/static/description/icon.jpeg',
+    'countries': ['bj', 'bf', 'cm', 'cf', 'km', 'cg', 'ci', 'ga', 'gn', 'gw', 'gq', 'ml', 'ne',
+                  'cd', 'sn', 'td', 'tg'],
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================
@@ -21,6 +23,7 @@ Countries that use OHADA are the following:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/menuitem_data.xml',
     ],

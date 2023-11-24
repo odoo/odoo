@@ -93,6 +93,7 @@ Produkt setup:
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
         'data/account.account.tag.csv',

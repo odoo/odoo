@@ -16,6 +16,7 @@ This module applies to companies based in Algeria.
         'base_vat',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/tax_report.xml',
     ],

@@ -13,6 +13,7 @@ Mozambican Accounting localization
         'base',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/tax_report.xml',
     ],

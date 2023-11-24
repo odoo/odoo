@@ -16,6 +16,7 @@
         'account_debit_note',
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'views/account_tax_view.xml',

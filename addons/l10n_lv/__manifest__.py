@@ -1,6 +1,8 @@
 {
     'name': "Latvia - Accounting",
     'version': '1.0.0',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['lv'],
     'description': """
 Chart of Accounts (COA) Template for Latvia's Accounting.
 This module also includes:
@@ -20,6 +22,7 @@ co-author is Chick.Farm (visit for more information https://www.myacc.cloud)
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/vat_tax_report.xml',
     ],

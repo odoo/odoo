@@ -23,6 +23,7 @@ Tento modul definuje:
         'base_iban',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
