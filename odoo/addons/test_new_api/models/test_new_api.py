@@ -597,6 +597,7 @@ class ComputeRecursive(models.Model):
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
     full_name = fields.Char(compute='_compute_full_name', recursive=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
+    context_dependent_name = fields.Char(compute='_compute_context_dependent_name', recursive=True)
 
     @api.depends('name', 'parent.full_name')
     def _compute_full_name(self):
@@ -613,6 +614,18 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.parent.display_name + " / " + rec.name
             else:
                 rec.display_name = rec.name
+
+    # This field is recursive, non-stored and context-dependent. Its purpose is
+    # to reproduce a bug in modified(), which might not detect that the field
+    # is present in cache if it has values in another context.
+    @api.depends_context('bozo')
+    @api.depends('name', 'parent.context_dependent_name')
+    def _compute_context_dependent_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.context_dependent_name = rec.parent.context_dependent_name + " / " + rec.name
+            else:
+                rec.context_dependent_name = rec.name
 
 
 class ComputeRecursiveTree(models.Model):
