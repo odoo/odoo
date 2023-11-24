@@ -12,7 +12,7 @@ import {
     pasteHtml,
     pasteOdooEditorHtml,
 } from "../utils.js";
-import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
+import { CLIPBOARD_WHITELISTS, setSelection } from "../../src/OdooEditor.js";
 
 describe('Copy', () => {
     describe('range collapsed', async () => {
@@ -2217,6 +2217,35 @@ describe('Paste', () => {
                 },
                 contentAfter: '<p>a[]b</p>',
             });
+        });
+    });
+    describe('editable in iframe', () => {
+        it('should paste odoo-editor html', async () => {
+            // Setup
+            const testContainer = document.querySelector('#editor-test-container');
+            const iframe = document.createElement('iframe');
+            testContainer.append(iframe);
+            const iframeDocument = iframe.contentDocument;
+            const editable = iframeDocument.createElement('div');
+            iframeDocument.body.append(editable);
+            const editor = new BasicEditor(editable, { document: iframeDocument });
+
+            // Action: paste
+            setSelection(editable.querySelector('p'), 0);
+            const clipboardData = new DataTransfer();
+            clipboardData.setData('text/odoo-editor', '<p>text<b>bold text</b>more text</p>');
+            await triggerEvent(editor.editable, 'paste', { clipboardData });
+
+            // Clean-up
+            editor.clean();
+            editor.destroy();
+            iframe.remove();
+
+            // Assertion
+            window.chai.expect(editable.innerHTML).to.be.equal(
+                '<p>text<b>bold text</b>more text<br></p>',
+                'should paste content in the paragraph'
+            );
         });
     });
 });
