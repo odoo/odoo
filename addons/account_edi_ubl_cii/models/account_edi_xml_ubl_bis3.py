@@ -353,6 +353,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         }
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
+            if invoice.currency_id.compare_amounts(line.price_unit, 0) == -1:
+                # [BR-27]-The Item net price (BT-146) shall NOT be negative.
+                constraints.update({'cen_en16931_positive_item_net_price': _(
+                    "The invoice contains line(s) with a negative unit price, which is not allowed."
+                    " You might need to set a negative quantity instead.")})
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
