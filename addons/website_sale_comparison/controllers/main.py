@@ -2,7 +2,7 @@
 
 import json
 
-from odoo.http import request, route, Controller
+from odoo.http import Controller, request, route
 
 
 class WebsiteSaleProductComparison(Controller):
