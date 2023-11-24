@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
+
+from odoo import Command
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.tests.common import Form
 
@@ -67,3 +69,47 @@ class TestConfigureShops(TestPoSCommon):
 
         self.assertEqual(pos_config.receipt_header, False)
         self.assertEqual(pos_config.receipt_footer, False)
+
+    def test_properly_set_pos_config_x2many_fields(self):
+        """Simulate what is done from the res.config.settings view when editing x2 many fields."""
+
+        self._remove_on_payment_taxes()
+        pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+            'payment_method_ids': [
+                Command.create({
+                    'name': 'Bank 1',
+                    'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+                    'is_cash_count': False,
+                    'split_transactions': False,
+                    'company_id': self.env.company.id,
+                }),
+                Command.create({
+                    'name': 'Bank 2',
+                    'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+                    'is_cash_count': False,
+                    'split_transactions': False,
+                    'company_id': self.env.company.id,
+                }),
+                Command.create({
+                    'name': 'Cash',
+                    'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+                    'is_cash_count': True,
+                    'company_id': self.env.company.id,
+                })
+            ]
+        })
+
+        # Manually simulate the unlinking of the second record and then save the settings.
+        # It will be a set of link commands except the one we want to delete.
+        linked_ids = pos_config.payment_method_ids.ids
+        second_id = linked_ids[1]
+        commands = [Command.link(_id) for _id in linked_ids if _id != second_id]
+
+        pos_config.with_context(from_settings_view=True).write({
+            'payment_method_ids': commands
+        })
+
+        self.assertTrue(second_id not in pos_config.payment_method_ids.ids)
+        self.assertTrue(len(pos_config.payment_method_ids) == 2)

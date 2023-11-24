@@ -434,6 +434,8 @@ class PosConfig(models.Model):
                     "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
                     ", ".join(forbidden_fields)
                 ))
+
+        self._preprocess_x2many_vals_from_settings_view(vals)
         result = super(PosConfig, self).write(vals)
 
         self.sudo()._set_fiscal_position()
@@ -442,6 +444,41 @@ class PosConfig(models.Model):
         if 'is_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
+
+    def _preprocess_x2many_vals_from_settings_view(self, vals):
+        """ From the res.config.settings view, changes in the x2many fields always result to an array of link commands or a single set command.
+            - As a result, the items that should be unlinked are not properly unlinked.
+            - So before doing the write, we inspect the commands to determine which records should be unlinked.
+            - We only care about the link command.
+            - We can consider set command as absolute as it will replace all.
+        """
+        from_settings_view = self.env.context.get('from_settings_view')
+        if not from_settings_view:
+            # If vals is not from the settings view, we don't need to preprocess.
+            return
+
+        # Only ensure one when write is from settings view.
+        self.ensure_one()
+
+        fields_to_preprocess = []
+        for f in self.fields_get([]).values():
+            if f['type'] in ['many2many', 'one2many']:
+                fields_to_preprocess.append(f['name'])
+
+        for x2many_field in fields_to_preprocess:
+            if x2many_field in vals:
+                linked_ids = set(self[x2many_field].ids)
+
+                for command in vals[x2many_field]:
+                    if command[0] == 4:
+                        _id = command[1]
+                        if _id in linked_ids:
+                            linked_ids.remove(_id)
+
+                # Remaining items in linked_ids should be unlinked.
+                unlink_commands = [Command.unlink(_id) for _id in linked_ids]
+
+                vals[x2many_field] = unlink_commands + vals[x2many_field]
 
     def _get_forbidden_change_fields(self):
         forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
@@ -799,4 +836,6 @@ class PosConfig(models.Model):
         return False
 
     def _get_special_products(self):
-        return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+        default_discount_product = self.env.ref('point_of_sale.product_product_consumable', raise_if_not_found=False) or self.env['product.product']
+        default_tip_product = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+        return default_tip_product | default_discount_product

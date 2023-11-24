@@ -63,11 +63,7 @@ class MrpProduction(models.Model):
             raise UserError(_("This MO isn't related to a subcontracted move"))
         if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
-        if self.product_tracking != 'none' and not self.lot_producing_id:
-            raise UserError(_('You must enter a serial number for %s', self.product_id.name))
-        for sml in self.move_raw_ids.move_line_ids:
-            if sml.tracking != 'none' and not sml.lot_id:
-                raise UserError(_('You must enter a serial number for each line of %s', sml.product_id.display_name))
+
         if self.move_raw_ids and not any(self.move_raw_ids.mapped('quantity')):
             raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
         consumption_issues = self._get_consumption_issues()
@@ -96,6 +92,9 @@ class MrpProduction(models.Model):
         if self._get_subcontract_move():
             return True
         return super().pre_button_mark_done()
+
+    def _should_postpone_date_finished(self, date_finished):
+        return super()._should_postpone_date_finished(date_finished) and not self._get_subcontract_move()
 
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
@@ -152,10 +151,6 @@ class MrpProduction(models.Model):
                 return False
             if not mo.subcontracting_has_been_recorded:
                 return False
-            if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
-                return False
-            if mo.product_tracking != 'none' and not mo.lot_producing_id:
-                return False
             return True
 
         return self.filtered(filter_in)
@@ -180,3 +175,12 @@ class MrpProduction(models.Model):
 
     def _get_writeable_fields_portal_user(self):
         return ['move_line_raw_ids', 'lot_producing_id', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']
+
+    def _subcontract_sanity_check(self):
+        for production in self:
+            if production.product_tracking != 'none' and not self.lot_producing_id:
+                raise UserError(_('You must enter a serial number for %s', production.product_id.name))
+            for sml in production.move_raw_ids.move_line_ids:
+                if sml.tracking != 'none' and not sml.lot_id:
+                    raise UserError(_('You must enter a serial number for each line of %s', sml.product_id.display_name))
+        return True

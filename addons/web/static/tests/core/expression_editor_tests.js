@@ -3,7 +3,6 @@
 import {
     click,
     editInput,
-    editSelect,
     getFixture,
     getNodesTextContent,
     mount,
@@ -27,7 +26,10 @@ import {
     setupConditionTreeEditorServices,
     getOperatorOptions,
     getValueOptions,
+    isNotSupportedPath,
+    clearNotSupported,
 } from "./condition_tree_editor_helpers";
+import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 
 export {
     clickOnButtonAddBranch,
@@ -39,6 +41,8 @@ export {
     makeServerData,
     selectOperator,
     setupConditionTreeEditorServices,
+    isNotSupportedPath,
+    clearNotSupported,
 } from "./condition_tree_editor_helpers";
 
 let serverData;
@@ -48,11 +52,6 @@ export const SELECTORS = {
     ...treeEditorSELECTORS,
     debugArea: ".o_expression_editor_debug_container textarea",
 };
-
-export async function selectPath(target, path, index = 0) {
-    const el = get(target, SELECTORS.pathEditor, index);
-    await editSelect(el, "select", path);
-}
 
 async function editExpression(target, value, index = 0) {
     const input = get(target, SELECTORS.complexConditionInput, index);
@@ -208,7 +207,8 @@ QUnit.module("Components", (hooks) => {
             { level: 1, value: ["Bar", "is not", "blabla"] },
         ]);
         const tree = getTreeEditorContent(target, { node: true });
-        await selectPath(tree[1].node, "foo");
+        await openModelFieldSelectorPopover(target);
+        await click(target.querySelectorAll(".o_model_field_selector_popover_item_name")[4]);
         await selectOperator(tree[1].node, "not in");
         await editValue(target, ["Doku", "Lukaku", "KDB"]);
         assert.deepEqual(getTreeEditorContent(target), [
@@ -384,13 +384,8 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("check condition by default when creating a new rule", async (assert) => {
         patchWithCleanup(odoo, { debug: false });
-        await makeExpressionEditor({
-            fields: {
-                ...serverData.fields,
-                country_id: { string: "Country ID", type: "char" },
-            },
-            expression: "expr",
-        });
+        serverData.models.partner.fields.country_id = { string: "Country ID", type: "char" };
+        await makeExpressionEditor({ expression: "expr" });
         await click(target, "a[role='button']");
         assert.deepEqual(getTreeEditorContent(target), [
             { level: 0, value: "all" },
@@ -405,7 +400,8 @@ QUnit.module("Components", (hooks) => {
             { level: 0, value: "all" },
             { level: 1, value: ["ID", "is set"] },
         ]);
-        await selectPath(target, "bar");
+        await openModelFieldSelectorPopover(target);
+        await click(target.querySelector(".o_model_field_selector_popover_item_name"));
         assert.deepEqual(getTreeEditorContent(target), [
             { level: 0, value: "all" },
             { level: 1, value: ["Bar", "is", "set"] },
@@ -418,5 +414,77 @@ QUnit.module("Components", (hooks) => {
         assert.deepEqual(getValueOptions(target), ["1"]);
         assert.deepEqual(getOperatorOptions(target, -1), ["="]);
         assert.deepEqual(getValueOptions(target, -1), ["1"]);
+    });
+
+    QUnit.test("no field of type properties in model field selector", async (assert) => {
+        patchWithCleanup(odoo, { debug: false });
+        serverData.models.partner.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "product_id",
+            definition_record_field: "definitions",
+            searchable: true,
+        };
+        serverData.models.product.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+
+        await makeExpressionEditor({
+            expression: `properties`,
+            fields: Object.fromEntries(
+                Object.entries(serverData.models.partner.fields).filter(([name]) =>
+                    ["bar", "foo", "properties"].includes(name)
+                )
+            ),
+            update(expression) {
+                assert.step(expression);
+            },
+        });
+        assert.deepEqual(getTreeEditorContent(target), [
+            {
+                level: 0,
+                value: "all",
+            },
+            {
+                level: 1,
+                value: ["Properties", "is set"],
+            },
+        ]);
+        assert.ok(isNotSupportedPath(target));
+
+        await clearNotSupported(target);
+        assert.verifySteps([`foo == ""`]);
+
+        await openModelFieldSelectorPopover(target);
+        assert.deepEqual(
+            getNodesTextContent([
+                ...target.querySelectorAll(".o_model_field_selector_popover_item_name"),
+            ]),
+            ["Bar", "Foo"]
+        );
+    });
+
+    QUnit.test("between operator", async (assert) => {
+        await makeExpressionEditor({
+            expression: `id == 1`,
+            update(expression) {
+                assert.step(expression);
+            },
+        });
+        assert.deepEqual(getOperatorOptions(target), [
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "is between",
+            "is set",
+            "is not set",
+        ]);
+        assert.verifySteps([]);
+        await selectOperator(target, "between");
+        assert.verifySteps([`id >= 1 and id <= 1`]);
     });
 });

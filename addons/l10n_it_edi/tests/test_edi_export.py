@@ -43,6 +43,26 @@ class TestItEdiExport(TestItEdi):
             'is_company': True,
         })
 
+    def test_vat_not_equals_codice(self):
+        self.company.partner_id.vat = '01698911003'
+        self.company.l10n_it_codice_fiscale = '07149930583'
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'invoice_vat_not_equals_codice.xml')
+
     def test_export_invoice_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the
         sum(subtotals) * tax_rate is not equal to taxable base * tax rate (there is a constraint in the edi where
@@ -179,6 +199,7 @@ class TestItEdiExport(TestItEdi):
         self._assert_export_invoice(invoice, 'invoice_below_400_codice_simplified.xml')
 
     def test_invoice_total_400_VAT_simplified(self):
+        self.company.l10n_it_codice_fiscale = '07149930583'
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',

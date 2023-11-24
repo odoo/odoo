@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-
 from freezegun import freeze_time
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
-class TestGamificationCommon(TransactionCaseWithUserDemo):
+class TestGamificationCommon(TransactionCaseGamification):
 
     def setUp(self):
         super(TestGamificationCommon, self).setUp()

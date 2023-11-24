@@ -65,7 +65,7 @@ export class FollowerList extends Component {
     async onClickEdit(ev, follower) {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
             follower,
-            onFollowerChanged: () => this.props.onFollowerChanged?.(),
+            onFollowerChanged: () => this.props.onFollowerChanged?.(this.props.thread),
         });
         document.body.click(); // hack to close dropdown
     }
@@ -75,7 +75,8 @@ export class FollowerList extends Component {
      * @param {import("models").Follower} follower
      */
     async onClickRemove(ev, follower) {
+        const thread = this.props.thread;
         await this.threadService.removeFollower(follower);
-        this.props.onFollowerChanged?.();
+        this.props.onFollowerChanged?.(thread);
     }
 }
