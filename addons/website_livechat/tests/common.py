@@ -3,12 +3,14 @@
 
 import random
 
-from odoo import fields, tests
+from odoo import fields
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-class TestLivechatCommon(tests.TransactionCase):
+class TestLivechatCommon(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestLivechatCommon, self).setUp()
+        self.env.ref("base.main_partner").email = "info@mycompany.com"
         self.base_datetime = fields.Datetime.from_string("2019-11-11 21:30:00")
 
         self.group_user = self.env.ref('base.group_user')
@@ -40,8 +42,8 @@ class TestLivechatCommon(tests.TransactionCase):
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.de').id,
             'website_id': self.env.ref('website.default_website').id,
-            'partner_id': self.env.ref('base.user_demo').partner_id.id,
-            'access_token': self.env.ref('base.user_demo').partner_id.id,
+            'partner_id': self.partner_demo.id,
+            'access_token': self.partner_demo.id,
         }] + [
             dict(visitor_vals, access_token='%032x' % random.randrange(16**32))
             for _ in range(self.max_sessions_per_operator)
