@@ -669,8 +669,7 @@
      *
      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes
      */
-    const whiteSpaceCharacters = [
-        " ",
+    const whiteSpaceSpecialCharacters = [
         "\t",
         "\f",
         "\v",
@@ -685,8 +684,7 @@
         String.fromCharCode(parseInt("3000", 16)),
         String.fromCharCode(parseInt("feff", 16)),
     ];
-    const whiteSpaceRegexp = new RegExp(whiteSpaceCharacters.join("|"), "g");
-    const newLineRegex = /\r\n|\r|\n/g;
+    const whiteSpaceRegexp = new RegExp(whiteSpaceSpecialCharacters.join("|") + "|(\r\n|\r|\n)", "g");
     /**
      * Replace all the special spaces in a string (non-breaking, tabs, ...) by normal spaces, and all the
      * different newlines types by \n.
@@ -694,9 +692,9 @@
     function replaceSpecialSpaces(text) {
         if (!text)
             return "";
-        text = text.replace(whiteSpaceRegexp, " ");
-        text = text.replace(newLineRegex, NEWLINE);
-        return text;
+        if (!whiteSpaceRegexp.test(text))
+            return text;
+        return text.replace(whiteSpaceRegexp, (match, newLine) => (newLine ? NEWLINE : " "));
     }
     /**
      * Determine if the numbers are consecutive.
@@ -4266,6 +4264,7 @@
         CommandResult[CommandResult["NoActiveSheet"] = 94] = "NoActiveSheet";
         CommandResult[CommandResult["InvalidLocale"] = 95] = "InvalidLocale";
         CommandResult[CommandResult["AlreadyInPaintingFormatMode"] = 96] = "AlreadyInPaintingFormatMode";
+        CommandResult[CommandResult["NoChanges"] = 97] = "NoChanges";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
@@ -4355,12 +4354,12 @@
         }
     }
     /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
+    const normalizeString = memoize(function normalizeString(str) {
         return str
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "");
-    }
+    });
     /**
      * Normalize a value.
      * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
@@ -14171,7 +14170,7 @@
         return result;
     }
     function tokenizeDebugger(chars) {
-        if (chars.current() === "?") {
+        if (chars.current === "?") {
             chars.shift();
             return { type: "DEBUGGER", value: "?" };
         }
@@ -14182,7 +14181,7 @@
         ")": "RIGHT_PAREN",
     };
     function tokenizeMisc(chars) {
-        if (chars.current() in misc) {
+        if (chars.current in misc) {
             const value = chars.shift();
             const type = misc[value];
             return { type, value };
@@ -14190,7 +14189,7 @@
         return null;
     }
     function tokenizeArgsSeparator(chars, locale) {
-        if (chars.current() === locale.formulaArgSeparator) {
+        if (chars.current === locale.formulaArgSeparator) {
             const value = chars.shift();
             const type = "ARG_SEPARATOR";
             return { type, value };
@@ -14215,14 +14214,13 @@
         return null;
     }
     function tokenizeString(chars) {
-        if (chars.current() === '"') {
+        if (chars.current === '"') {
             const startChar = chars.shift();
             let letters = startChar;
-            while (chars.current() &&
-                (chars.current() !== startChar || letters[letters.length - 1] === "\\")) {
+            while (chars.current && (chars.current !== startChar || letters[letters.length - 1] === "\\")) {
                 letters += chars.shift();
             }
-            if (chars.current() === '"') {
+            if (chars.current === '"') {
                 letters += chars.shift();
             }
             return {
@@ -14249,14 +14247,14 @@
         let result = "";
         // there are two main cases to manage: either something which starts with
         // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars.current() === "'") {
+        if (chars.current === "'") {
             let lastChar = chars.shift();
             result += lastChar;
-            while (chars.current()) {
+            while (chars.current) {
                 lastChar = chars.shift();
                 result += lastChar;
                 if (lastChar === "'") {
-                    if (chars.current() && chars.current() === "'") {
+                    if (chars.current && chars.current === "'") {
                         lastChar = chars.shift();
                         result += lastChar;
                     }
@@ -14272,7 +14270,7 @@
                 };
             }
         }
-        while (chars.current() && separatorRegexp.test(chars.current())) {
+        while (chars.current && separatorRegexp.test(chars.current)) {
             result += chars.shift();
         }
         if (result.length) {
@@ -14287,14 +14285,14 @@
     }
     function tokenizeSpace(chars) {
         let length = 0;
-        while (chars.current() === NEWLINE) {
+        while (chars.current === NEWLINE) {
             length++;
             chars.shift();
         }
         if (length) {
             return { type: "SPACE", value: NEWLINE.repeat(length) };
         }
-        while (chars.current() === " ") {
+        while (chars.current === " ") {
             length++;
             chars.shift();
         }
@@ -14313,17 +14311,20 @@
     class TokenizingChars {
         text;
         currentIndex = 0;
+        current;
         constructor(text) {
             this.text = text;
-        }
-        current() {
-            return this.text[this.currentIndex];
+            this.current = text[0];
         }
         shift() {
-            return this.text[this.currentIndex++];
+            const current = this.current;
+            const next = this.text[++this.currentIndex];
+            this.current = next;
+            return current;
         }
         advanceBy(length) {
             this.currentIndex += length;
+            this.current = this.text[this.currentIndex];
         }
         isOver() {
             return this.currentIndex >= this.text.length;
@@ -31167,6 +31168,14 @@
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_BORDER":
+                    return this.checkBordersUnchanged(cmd);
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
         handle(cmd) {
             switch (cmd.type) {
                 case "ADD_MERGE":
@@ -31586,6 +31595,14 @@
                 this.setBorders(sheetId, [{ ...zone, left: right }], "right", bordersTopLeft.right);
             }
         }
+        checkBordersUnchanged(cmd) {
+            const currentBorder = this.getCellBorder(cmd);
+            const areAllNewBordersUndefined = !cmd.border?.bottom && !cmd.border?.left && !cmd.border?.right && !cmd.border?.top;
+            if ((!currentBorder && areAllNewBordersUndefined) || deepEquals(currentBorder, cmd.border)) {
+                return 97 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
@@ -31693,8 +31710,9 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
+                    return this.checkCellOutOfSheet(cmd);
                 case "CLEAR_CELL":
-                    return this.checkCellOutOfSheet(cmd.sheetId, cmd.col, cmd.row);
+                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -31853,14 +31871,9 @@
          */
         getCellById(cellId) {
             // this must be as fast as possible
-            for (const sheetId in this.cells) {
-                const sheet = this.cells[sheetId];
-                const cell = sheet[cellId];
-                if (cell) {
-                    return cell;
-                }
-            }
-            return undefined;
+            const position = this.getters.getCellPosition(cellId);
+            const sheet = this.cells[position.sheetId];
+            return sheet[cellId];
         }
         /*
          * Reconstructs the original formula string based on a normalized form and its dependencies
@@ -32086,12 +32099,22 @@
                 dependencies: [],
             };
         }
-        checkCellOutOfSheet(sheetId, col, row) {
+        checkCellOutOfSheet(cmd) {
+            const { sheetId, col, row } = cmd;
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
                 return 28 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
             return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 19 /* CommandResult.TargetOutOfSheet */;
+        }
+        checkUselessClearCell(cmd) {
+            const cell = this.getters.getCell(cmd);
+            if (!cell)
+                return 97 /* CommandResult.NoChanges */;
+            if (!cell.content && !cell.style && !cell.format) {
+                return 97 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
     class FormulaCellWithDependencies {
@@ -35161,10 +35184,13 @@
             // begin with the end.
             rows.sort((a, b) => b - a);
             for (let group of groupConsecutive(rows)) {
+                // indexes are sorted in the descending order
+                const from = group[group.length - 1];
+                const to = group[0];
                 // Move the cells.
-                this.moveCellOnRowsDeletion(sheet, group[group.length - 1], group[0]);
-                // Effectively delete the element and recompute the left-right/top-bottom.
-                group.map((row) => this.updateRowsStructureOnDeletion(row, sheet));
+                this.moveCellOnRowsDeletion(sheet, from, to);
+                // Effectively delete the rows
+                this.updateRowsStructureOnDeletion(sheet, from, to);
             }
             const count = rows.filter((row) => row < sheet.panes.ySplit).length;
             if (count) {
@@ -35186,8 +35212,6 @@
             this.addEmptyRows(sheet, quantity);
             // Move the cells.
             this.moveCellsOnAddition(sheet, index, quantity, "rows");
-            // Recompute the left-right/top-bottom.
-            this.updateRowsStructureOnAddition(sheet, row, quantity);
             if (index < sheet.panes.ySplit) {
                 this.setPaneDivisions(sheet.id, sheet.panes.ySplit + quantity, "ROW");
             }
@@ -35288,33 +35312,18 @@
                 }
             }
         }
-        updateRowsStructureOnDeletion(index, sheet) {
+        updateRowsStructureOnDeletion(sheet, deleteFromRow, deleteToRow) {
             const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
+            const cellsQueue = sheet.rows.map((row) => row.cells).reverse();
             for (let i in sheet.rows) {
-                if (Number(i) === index) {
+                const row = Number(i);
+                if (row >= deleteFromRow && row <= deleteToRow) {
                     continue;
                 }
                 rows.push({
-                    cells: cellsQueue.shift(),
+                    cells: cellsQueue.pop(),
                 });
             }
-            this.history.update("sheets", sheet.id, "rows", rows);
-        }
-        /**
-         * Update the rows of the sheet after an addition:
-         * - Rename the rows
-         *
-         * @param sheet Sheet on which the deletion occurs
-         * @param addedRow Index of the added row
-         * @param rowsToAdd Number of the rows to add
-         */
-        updateRowsStructureOnAddition(sheet, addedRow, rowsToAdd) {
-            const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
-            sheet.rows.forEach(() => rows.push({
-                cells: cellsQueue.shift(),
-            }));
             this.history.update("sheets", sheet.id, "rows", rows);
         }
         /**
@@ -35432,6 +35441,7 @@
         getters;
         computeCell;
         evalContext;
+        rangeCache = {};
         constructor(context, getters, computeCell) {
             this.getters = getters;
             this.computeCell = computeCell;
@@ -35517,25 +35527,32 @@
             if (!_zone) {
                 return { value: [[]], format: [[]] };
             }
+            const { top, left, bottom, right } = zone;
+            const cacheKey = `${sheetId}-${top}-${left}-${bottom}-${right}`;
+            if (cacheKey in this.rangeCache) {
+                return this.rangeCache[cacheKey];
+            }
             const height = _zone.bottom - _zone.top + 1;
             const width = _zone.right - _zone.left + 1;
-            const value = Array.from({ length: width }, () => Array.from({ length: height }));
-            const format = Array.from({ length: width }, () => Array.from({ length: height }));
+            const value = new Array(width);
+            const format = new Array(width);
             // Performance issue: nested loop is faster than a map here
             for (let col = _zone.left; col <= _zone.right; col++) {
+                const colIndex = col - _zone.left;
+                value[colIndex] = new Array(height);
+                format[colIndex] = new Array(height);
                 for (let row = _zone.top; row <= _zone.bottom; row++) {
-                    const evaluatedCell = this.getEvaluatedCellIfNotEmpty({ sheetId: sheetId, col, row });
-                    if (evaluatedCell) {
-                        const colIndex = col - _zone.left;
-                        const rowIndex = row - _zone.top;
-                        value[colIndex][rowIndex] = evaluatedCell.value;
-                        if (evaluatedCell.format !== undefined) {
-                            format[colIndex][rowIndex] = evaluatedCell.format;
-                        }
+                    const evaluatedCell = this.getEvaluatedCellIfNotEmpty({ sheetId, col, row });
+                    const rowIndex = row - _zone.top;
+                    value[colIndex][rowIndex] = evaluatedCell?.value;
+                    if (evaluatedCell?.format !== undefined) {
+                        format[colIndex][rowIndex] = evaluatedCell.format;
                     }
                 }
             }
-            return { value, format };
+            const result = { value, format };
+            this.rangeCache[cacheKey] = result;
+            return result;
         }
     }
 
@@ -35733,6 +35750,7 @@
             this.formulaDependencies().addDependencies(positionId, dependencies);
         }
         updateCompilationParameters() {
+            // rebuild the compilation parameters (with a clean cache)
             this.compilationParams = buildCompilationParameters(this.context, this.getters, this.computeAndSave.bind(this));
         }
         evaluateCells(positions) {
@@ -35776,6 +35794,15 @@
             this.evaluatedCells = new Map();
             this.evaluate(this.getAllCells());
         }
+        evaluateFormula(sheetId, formulaString) {
+            const compiledFormula = compile(formulaString);
+            const ranges = [];
+            for (let xc of compiledFormula.dependencies) {
+                ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
+            }
+            this.updateCompilationParameters();
+            return compiledFormula.execute(ranges, ...this.compilationParams).value;
+        }
         getAllCells() {
             const positionIds = new JetSet();
             for (const sheetId of this.getters.getSheetIds()) {
@@ -35802,6 +35829,7 @@
             this.nextPositionsToUpdate = cells;
             let currentIteration = 0;
             while (this.nextPositionsToUpdate.size && currentIteration++ < MAX_ITERATION) {
+                this.updateCompilationParameters();
                 const positionIds = Array.from(this.nextPositionsToUpdate);
                 this.nextPositionsToUpdate.clear();
                 for (let i = 0; i < positionIds.length; ++i) {
@@ -36186,7 +36214,6 @@
     // of other cells depending on it, at the next iteration.
     //#endregion
     class EvaluationPlugin extends UIPlugin {
-        config;
         static getters = [
             "evaluateFormula",
             "getRangeFormattedValues",
@@ -36198,12 +36225,9 @@
         ];
         shouldRebuildDependenciesGraph = true;
         evaluator;
-        compilationParams;
         positionsToUpdate = [];
         constructor(config) {
             super(config);
-            this.config = config;
-            this.compilationParams = this.getCompilationParameters();
             this.evaluator = new Evaluator(config.custom, this.getters);
         }
         // ---------------------------------------------------------------------------
@@ -36228,10 +36252,6 @@
                 case "EVALUATE_CELLS":
                     this.evaluator.evaluateAllCells();
                     break;
-                case "UPDATE_LOCALE":
-                    this.compilationParams = this.getCompilationParameters();
-                    this.evaluator.updateCompilationParameters();
-                    break;
             }
         }
         finalize() {
@@ -36249,12 +36269,7 @@
         // Getters
         // ---------------------------------------------------------------------------
         evaluateFormula(sheetId, formulaString) {
-            const compiledFormula = compile(formulaString);
-            const ranges = [];
-            for (let xc of compiledFormula.dependencies) {
-                ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
-            }
-            return compiledFormula.execute(ranges, ...this.compilationParams).value;
+            return this.evaluator.evaluateFormula(sheetId, formulaString);
         }
         /**
          * Return the value of each cell in the range as they are displayed in the grid.
@@ -36352,9 +36367,6 @@
                 return spreadingFormulaCell;
             }
             return undefined;
-        }
-        getCompilationParameters() {
-            return buildCompilationParameters(this.config.custom, this.getters, (position) => this.evaluator.getEvaluatedCell(position));
         }
     }
     function isBadExpression(formula) {
@@ -42072,8 +42084,8 @@
                     this.lastPasteState = this.state;
                     if (this.paintFormatStatus === "oneOff") {
                         this.paintFormatStatus = "inactive";
-                        this.status = "invisible";
                     }
+                    this.status = "invisible";
                     break;
                 case "CLEAN_CLIPBOARD_HIGHLIGHT":
                     this.status = "invisible";
@@ -47890,9 +47902,9 @@
      * Apply the changes of the given HistoryChange to the state
      */
     function applyChange(change, target) {
-        let val = change.root;
-        let key = change.path[change.path.length - 1];
-        for (let pathIndex = 0; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
+        let val = change.path[0];
+        const key = change.path[change.path.length - 1];
+        for (let pathIndex = 1; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
             const p = change.path[pathIndex];
             if (val[p] === undefined) {
                 const nextPath = change.path[pathIndex + 1];
@@ -48573,13 +48585,14 @@
         }
         addChange(...args) {
             const val = args.pop();
-            const [root, ...path] = args;
+            const root = args[0];
             let value = root;
-            let key = path[path.length - 1];
-            for (let pathIndex = 0; pathIndex <= path.length - 2; pathIndex++) {
-                const p = path[pathIndex];
+            let key = args[args.length - 1];
+            const pathLength = args.length - 2;
+            for (let pathIndex = 1; pathIndex <= pathLength; pathIndex++) {
+                const p = args[pathIndex];
                 if (value[p] === undefined) {
-                    const nextPath = path[pathIndex + 1];
+                    const nextPath = args[pathIndex + 1];
                     value[p] = createEmptyStructure(nextPath);
                 }
                 value = value[p];
@@ -48588,8 +48601,7 @@
                 return;
             }
             this.changes.push({
-                root,
-                path,
+                path: args,
                 before: value[key],
                 after: val,
             });
@@ -50439,19 +50451,22 @@
          * Check if the given command is allowed by all the plugins and the history.
          */
         checkDispatchAllowed(command) {
-            if (isCoreCommand(command)) {
-                return this.checkDispatchAllowedCoreCommand(command);
+            const results = isCoreCommand(command)
+                ? this.checkDispatchAllowedCoreCommand(command)
+                : this.checkDispatchAllowedLocalCommand(command);
+            if (results.some((r) => r !== 0 /* CommandResult.Success */)) {
+                return new DispatchResult(results.flat());
             }
-            return this.checkDispatchAllowedLocalCommand(command);
+            return DispatchResult.Success;
         }
         checkDispatchAllowedCoreCommand(command) {
             const results = this.corePlugins.map((handler) => handler.allowDispatch(command));
             results.push(this.range.allowDispatch(command));
-            return new DispatchResult(results.flat());
+            return results;
         }
         checkDispatchAllowedLocalCommand(command) {
             const results = this.uiHandlers.map((handler) => handler.allowDispatch(command));
-            return new DispatchResult(results.flat());
+            return results;
         }
         finalize() {
             this.status = 3 /* Status.Finalizing */;
@@ -50777,9 +50792,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.14';
-    __info__.date = '2023-11-16T13:26:20.978Z';
-    __info__.hash = '66c6f47';
+    __info__.version = '16.4.15';
+    __info__.date = '2023-11-24T13:27:05.214Z';
+    __info__.hash = '141943d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
