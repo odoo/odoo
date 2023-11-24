@@ -272,9 +272,9 @@ class AccountJournal(models.Model):
                                                - pay_methods_by_journal.get(journal._origin.id, set())
 
                     if payment_type == 'inbound':
-                        lines = journal.inbound_payment_method_line_ids
+                        lines = journal._origin.inbound_payment_method_line_ids
                     else:
-                        lines = journal.outbound_payment_method_line_ids
+                        lines = journal._origin.outbound_payment_method_line_ids
 
                     already_used = payment_method in lines.payment_method_id
                     is_protected = payment_method.id in protected_pay_method_ids
