@@ -15,6 +15,11 @@ import {
     switchTextHighlight,
     getCurrentTextHighlight
 } from "@website/js/text_processing";
+import { registry } from "@web/core/registry";
+
+const snippetsEditorRegistry = registry.category("snippets_editor");
+snippetsEditorRegistry.add("no_parent_editor_snippets", ["s_popup", "o_mega_menu"]);
+
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -501,6 +506,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _getOptionTextClass(buttonEl) {
         return buttonEl.dataset.textSelector.slice(1);
+    },
+    /**
+     * The goal here is to disable parents editors for snippets that should not
+     * display their parents options.
+     *
+     * @override
+     */
+     _allowParentsEditors($snippet) {
+        return this._super(...arguments) && !snippetsEditorRegistry.get("no_parent_editor_snippets")
+            .some(snippetClass => $snippet[0].classList.contains(snippetClass));
     },
 
     //--------------------------------------------------------------------------
