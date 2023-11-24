@@ -394,6 +394,26 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual([g['title_count'] for g in groups_data], [2, 4], 'Incorrect number of results')
         self.assertEqual([g['color'] for g in groups_data], [-1, 10], 'Incorrect aggregation of int column')
 
+    def test_display_name_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.ref('base.module_base')._update_translations(['fr_FR'])
+
+        res_partner = self.env['res.partner']
+
+        parent_contact = res_partner.create({
+            'name': 'Parent',
+            'type': 'contact',
+        })
+
+        child_contact = res_partner.create({
+            'type': 'other',
+            'parent_id': parent_contact.id,
+        })
+
+        self.assertEqual(child_contact.with_context(lang='en_US').display_name, 'Parent, Other Address')
+
+        self.assertEqual(child_contact.with_context(lang='fr_FR').display_name, 'Parent, Autre adresse')
+
 
 @tagged('res_partner')
 class TestPartnerAddressCompany(TransactionCase):
