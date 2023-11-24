@@ -7,6 +7,15 @@
             <field name="arch" type="xml">
                 <form string="Company" duplicate="0">
                   <field name="all_child_ids" invisible="1"/>
+                  <field name="uninstalled_l10n_module_ids" invisible="1"/>
+
+                  <div class="alert alert-info" role="alert" invisible="not uninstalled_l10n_module_ids">
+                    Localization features are available for this country:
+                    <button name="install_l10n_modules"
+                            type="object"
+                            string="Install"
+                            class="btn btn-link p-0 align-baseline"/>
+                  </div>
                   <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
