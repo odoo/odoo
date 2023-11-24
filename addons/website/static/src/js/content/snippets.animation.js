@@ -23,6 +23,7 @@ import {
     switchTextHighlight,
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
+import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -713,7 +714,8 @@ const MobileYoutubeAutoplayMixin = {
     },
 };
 
-registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
+registry.mediaVideo = publicWidget.Widget.extend(
+    MobileYoutubeAutoplayMixin, ObservingCookieWidgetMixin, {
     selector: '.media_iframe_video',
 
     /**
@@ -733,6 +735,17 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             iframeEl = this._generateIframe();
         }
 
+        if (this.el.dataset.needCookiesApproval) {
+            const sizeContainerEl = this.el.querySelector(":scope > .media_iframe_video_size");
+            sizeContainerEl.classList.add("d-none");
+            this._showSizeContainerEl = () => {
+                sizeContainerEl.classList.remove("d-none");
+            };
+            document.addEventListener(
+                "optionalCookiesAccepted", this._showSizeContainerEl, { once: true }
+            );
+        }
+
         // We don't want to cause an error that would prevent entering edit mode
         // if there is an iframe that doesn't have a src (this was possible for
         // a while with the media dialog).
@@ -746,6 +759,16 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         return Promise.all(proms).then(() => {
             this._triggerAutoplay(iframeEl);
         });
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this._showSizeContainerEl) {
+            document.removeEventListener("optionalCookiesAccepted", this._showSizeContainerEl);
+            this._showSizeContainerEl();
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -778,18 +801,25 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             return;
         }
         var domain = m[1].replace(/^www\./, '');
-        var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
+        const supportedDomains = [
+            "youtu.be", "youtube.com", "youtube-nocookie.com",
+            "instagram.com",
+            "player.vimeo.com", "vimeo.com",
+            "dailymotion.com",
+            "player.youku.com", "youku.com",
+        ];
         if (!supportedDomains.includes(domain)) {
             // Unsupported domain, don't inject iframe
             return;
         }
+
         const iframeEl = $('<iframe/>', {
-            src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
             "aria-label": _t("Media video"),
         })[0];
         this.$el.append(iframeEl);
+        this._manageIframeSrc(this.el, src);
         return iframeEl;
     },
 });
@@ -856,6 +886,10 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         if (this.$bgVideoContainer) {
             this.$bgVideoContainer.remove();
         }
+        document.removeEventListener(
+            "optionalCookiesAccepted",
+            this.__onEnableVideoPostCookiesAccepted
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -902,9 +936,11 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
      * @private
      */
     _appendBgVideo: function () {
+        const allowedCookies = !this.el.dataset.needCookiesApproval;
+
         var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
         this.$bgVideoContainer = $(renderToElement('website.background.video', {
-            videoSrc: this.videoSrc,
+            videoSrc: allowedCookies ? this.videoSrc : "about:blank",
             iframeID: this.iframeID,
         }));
         this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
@@ -917,6 +953,19 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         });
         this.$bgVideoContainer.prependTo(this.$el);
         $oldContainer.remove();
+
+        if (!allowedCookies) {
+            // We don't add the optional cookies warning for background videos
+            // so that the fallback message doesn't appear behind the content.
+            this.__onEnableVideoPostCookiesAccepted = () => {
+                this.$iframe[0].src = this.videoSrc;
+            };
+            document.addEventListener(
+                "optionalCookiesAccepted",
+                this.__onEnableVideoPostCookiesAccepted,
+                { once: true }
+            );
+        }
 
         this._adjustIframe();
         this._triggerAutoplay(this.$iframe[0]);
