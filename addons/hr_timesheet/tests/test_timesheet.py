@@ -551,6 +551,7 @@ class TestTimesheet(TestCommonTimesheet):
             timesheet1.unit_amount + timesheet2.unit_amount,
             'The total timesheet time of this project should be equal to 4.'
         )
+
     def test_create_timesheet_with_archived_employee(self):
         ''' the timesheet can be created or edited only with an active employee
         '''
