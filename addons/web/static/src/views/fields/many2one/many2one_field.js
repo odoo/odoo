@@ -65,7 +65,8 @@ export class Many2OneField extends Component {
         canWrite: { type: Boolean, optional: true },
         canQuickCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
-        context: { type: String, optional: true },
+        context: { type: Object, optional: true },
+        openActionContext: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
         nameCreateField: { type: String, optional: true },
         searchLimit: { type: Number, optional: true },
@@ -171,8 +172,7 @@ export class Many2OneField extends Component {
         return this.props.canOpen && !!this.value && !this.state.isFloating;
     }
     get context() {
-        const { context, record } = this.props;
-        return makeContext([context], record.evalContext);
+        return this.props.context;
     }
     get classFromDecoration() {
         const evalContext = this.props.record.evalContextWithVirtualIds;
@@ -235,8 +235,13 @@ export class Many2OneField extends Component {
         return getFieldDomain(this.props.record, this.props.name, this.props.domain);
     }
     async openAction() {
+        const { name, openActionContext, record } = this.props;
+        const context = makeContext(
+            [openActionContext || this.context, record.fields[name].context],
+            record.evalContext
+        );
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
-            context: this.context,
+            context,
         });
         await this.action.doAction(action);
     }
@@ -370,7 +375,8 @@ export const many2OneField = {
             canWrite: attrs.can_write && evaluateBooleanExpr(attrs.can_write),
             canQuickCreate: canCreate && !options.no_quick_create,
             canCreateEdit: canCreate && !options.no_create_edit,
-            context: context,
+            context: dynamicInfo.context,
+            openActionContext: context || "{}",
             decorations,
             domain: dynamicInfo.domain,
             nameCreateField: options.create_name_field,
