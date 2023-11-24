@@ -4,11 +4,12 @@ import base64
 from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
+from urllib.parse import urlencode
 from freezegun import freeze_time
 
 import odoo
 from odoo.tests import new_test_user, tagged
-from odoo.tools import config, file_open, image_process
+from odoo.tools import config, file_path, file_open, image_process
 
 from .test_common import TestHttpBase
 
@@ -309,6 +310,14 @@ class TestHttpStatic(TestHttpStaticCommon):
             })
         self.assertFalse(att.checksum)
         self.assertDownloadGizeh(f'/web/image/{att.id}')
+
+    def test_static19_image_cors(self):
+        path = file_path('test_http/static/image_cors.html')
+        query = urlencode({'baseUrl': self.base_url()})
+        self.browser_js(
+            f'file://{path}?{query}',  # file:// so that it is cross-origin
+            'console.log("test successfulness cannot be determined via JS");',
+        )
 
 
 @tagged('post_install', '-at_install')

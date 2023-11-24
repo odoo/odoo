@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        const baseUrl = new URLSearchParams(location.search).get('baseUrl');
+    </script>
+</head>
+<body>
+    <img src='data:' onerror="event.target.src = `${baseUrl}/web/image/test_http.gizeh_png?nocache=1&filename=fetch.png`;">
+    <script type=text/javascript>(async () => {
+        await fetch(`${baseUrl}/web/image/test_http.gizeh_png?nocache=1&filename=fetch.png`);
+    })()</script>
+</body>
+</html>
