@@ -57,16 +57,6 @@
                                 <field name="last_update_status" readonly="1" widget="status_with_color" status_label="Project Status"/>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" invisible="privacy_visibility != 'portal'">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="collaborator_count" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Collaborators
-                                </span>
-                            </div>
-                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
