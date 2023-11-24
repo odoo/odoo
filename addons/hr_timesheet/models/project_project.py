@@ -141,10 +141,11 @@ class Project(models.Model):
             # Timesheets may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
             # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = 0.0
-            for product_uom, unit_amount in timesheet_time_dict[project.id]:
-                factor = (product_uom or project.timesheet_encode_uom_id).factor_inv
-                total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
+            total_time = sum([
+                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
+                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
+            ], 0.0)
+
             # Now convert to the proper unit of measure set in the settings
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
