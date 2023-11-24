@@ -44,6 +44,52 @@ DEFAULT_CDN_FILTERS = [
 DEFAULT_WEBSITE_ENDPOINT = 'https://website.api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
+DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
+    'youtu.be', 'youtube.com', 'youtube-nocookie.com',
+    'instagram.com', 'instagr.am', 'ig.me',
+    'vimeo.com',  # 'player.vimeo.com', 'vimeo.com',
+    'dailymotion.com', 'dai.ly',
+    'youku.com',  # 'player.youku.com', 'youku.com',
+    'tudou.com',
+    'facebook.com', 'facebook.net', 'fb.com', 'fb.me', 'fb.watch',
+    'tiktok.com',
+    'x.com', 'twitter.com', 't.co',
+    'googletagmanager.com', 'google-analytics.com',
+    # List from https://www.google.com/supported_domains
+    'google.com', 'google.ad', 'google.ae', 'google.com.af', 'google.com.ag', 'google.al',
+    'google.am', 'google.co.ao', 'google.com.ar', 'google.as', 'google.at', 'google.com.au',
+    'google.az', 'google.ba', 'google.com.bd', 'google.be', 'google.bf', 'google.bg',
+    'google.com.bh', 'google.bi', 'google.bj', 'google.com.bn', 'google.com.bo', 'google.com.br',
+    'google.bs', 'google.bt', 'google.co.bw', 'google.by', 'google.com.bz', 'google.ca',
+    'google.cd', 'google.cf', 'google.cg', 'google.ch', 'google.ci', 'google.co.ck', 'google.cl',
+    'google.cm', 'google.cn', 'google.com.co', 'google.co.cr', 'google.com.cu', 'google.cv',
+    'google.com.cy', 'google.cz', 'google.de', 'google.dj', 'google.dk', 'google.dm',
+    'google.com.do', 'google.dz', 'google.com.ec', 'google.ee', 'google.com.eg', 'google.es',
+    'google.com.et', 'google.fi', 'google.com.fj', 'google.fm', 'google.fr', 'google.ga',
+    'google.ge', 'google.gg', 'google.com.gh', 'google.com.gi', 'google.gl', 'google.gm',
+    'google.gr', 'google.com.gt', 'google.gy', 'google.com.hk', 'google.hn', 'google.hr',
+    'google.ht', 'google.hu', 'google.co.id', 'google.ie', 'google.co.il', 'google.im',
+    'google.co.in', 'google.iq', 'google.is', 'google.it', 'google.je', 'google.com.jm',
+    'google.jo', 'google.co.jp', 'google.co.ke', 'google.com.kh', 'google.ki', 'google.kg',
+    'google.co.kr', 'google.com.kw', 'google.kz', 'google.la', 'google.com.lb', 'google.li',
+    'google.lk', 'google.co.ls', 'google.lt', 'google.lu', 'google.lv', 'google.com.ly',
+    'google.co.ma', 'google.md', 'google.me', 'google.mg', 'google.mk', 'google.ml',
+    'google.com.mm', 'google.mn', 'google.com.mt', 'google.mu', 'google.mv', 'google.mw',
+    'google.com.mx', 'google.com.my', 'google.co.mz', 'google.com.na', 'google.com.ng',
+    'google.com.ni', 'google.ne', 'google.nl', 'google.no', 'google.com.np', 'google.nr',
+    'google.nu', 'google.co.nz', 'google.com.om', 'google.com.pa', 'google.com.pe', 'google.com.pg',
+    'google.com.ph', 'google.com.pk', 'google.pl', 'google.pn', 'google.com.pr', 'google.ps',
+    'google.pt', 'google.com.py', 'google.com.qa', 'google.ro', 'google.ru', 'google.rw',
+    'google.com.sa', 'google.com.sb', 'google.sc', 'google.se', 'google.com.sg', 'google.sh',
+    'google.si', 'google.sk', 'google.com.sl', 'google.sn', 'google.so', 'google.sm', 'google.sr',
+    'google.st', 'google.com.sv', 'google.td', 'google.tg', 'google.co.th', 'google.com.tj',
+    'google.tl', 'google.tm', 'google.tn', 'google.to', 'google.com.tr', 'google.tt',
+    'google.com.tw', 'google.co.tz', 'google.com.ua', 'google.co.ug', 'google.co.uk',
+    'google.com.uy', 'google.co.uz', 'google.com.vc', 'google.co.ve', 'google.co.vi',
+    'google.com.vn', 'google.vu', 'google.ws', 'google.rs', 'google.co.za', 'google.co.zm',
+    'google.co.zw', 'google.cat',
+])
+
 
 class Website(models.Model):
 
@@ -75,6 +121,17 @@ class Website(models.Model):
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
+    block_third_party_domains = fields.Boolean(
+        'Block 3rd-party domains',
+        help="Block 3rd-party domains that may track users (YouTube, Google Maps, etc.).",
+        default=True)
+    custom_blocked_third_party_domains = fields.Text(
+        'User list of blocked 3rd-party domains',
+        groups='website.group_website_designer',
+        translate=False)
+    blocked_third_party_domains = fields.Text(
+        'List of blocked 3rd-party domains',
+        compute='_compute_blocked_third_party_domains')
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -182,6 +239,19 @@ class Website(models.Model):
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
             website.menu_id = top_menus and top_menus[0].id or False
+
+    @api.depends('custom_blocked_third_party_domains')
+    def _compute_blocked_third_party_domains(self):
+        for website in self:
+            custom_list = website.sudo().custom_blocked_third_party_domains
+            if custom_list:
+                full_list = f'{DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS}\n{custom_list}'
+            else:
+                full_list = DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS
+            website.blocked_third_party_domains = full_list
+
+    def _get_blocked_third_party_domains_list(self):
+        return self.blocked_third_party_domains.split('\n')
 
     # self.env.uid for ir.rule groups on menu
     @tools.ormcache('self.env.uid', 'self.id', cache='templates')

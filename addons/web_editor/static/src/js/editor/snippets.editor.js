@@ -2293,7 +2293,7 @@ class SnippetsMenu extends Component {
             this._defLoadSnippets = cacheSnippetTemplate[this.options.snippets];
             return this._defLoadSnippets;
         }
-        const context = Object.assign({}, this.options.context);
+        const context = Object.assign({}, this.options.context, {rendering_bundle: true});
         if (context.user_lang) {
             context.lang = this.options.context.user_lang;
             context.snippet_lang = this.options.context.lang;

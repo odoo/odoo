@@ -145,6 +145,18 @@
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
+    <xpath expr="//head/script" position="before">
+        <t t-if="website and website.cookies_bar and website.block_third_party_domains
+                 and not request.env['ir.http']._is_allowed_cookie('optional')
+                 and not editable and not translatable
+                 and not request.env.user.has_group('website.group_website_restricted_editor')">
+            <script src="/website/static/src/js/content/cookie_watcher.js"/>
+            <script>
+                watch3rdPartyScripts(<t t-out="json.dumps(website._get_blocked_third_party_domains_list())"/>);
+            </script>
+        </t>
+    </xpath>
+
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
         <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
@@ -183,7 +195,7 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
+        <t t-if="website.google_analytics_key and not editable">
             <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
             <script>
                 window.dataLayer = window.dataLayer || [];

@@ -80,6 +80,22 @@
                         <setting id="website_cookies_bar_setting" help="Display a customizable cookies bar on your website"
                             documentation="/applications/websites/website/configuration/cookies_bar.html">
                             <field name="website_cookies_bar"/>
+                            <div class="content-group" invisible="not website_cookies_bar">
+                                <div>
+                                    <field name="website_block_third_party_domains" required="website_cookies_bar"/>
+                                    <label class="o_light_label" string="Block tracking 3rd-party services" for="website_block_third_party_domains"/>
+                                </div>
+                                <div>
+                                    <small class="text-muted">
+                                        Block 3rd-party services that track users (e.g. YouTube, Google Maps, Facebook...) when the user has not given their consent.
+                                    </small>
+                                </div>
+                                <div class="mt4">
+                                    <button type="object" name="action_open_blocked_third_party_domains"
+                                        string="Add domains to the block list" class="btn-link"
+                                        icon="fa-ban" noSaveDialog="true"/>
+                                </div>
+                            </div>
                         </setting>
                         <setting id="shared_user_account_setting" groups="website.group_multi_website" help="Accounts are usable across all your multiple websites">
                             <field name="shared_user_account"/>

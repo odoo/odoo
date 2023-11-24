@@ -289,11 +289,13 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website_page': 2,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
+            'website': 1,
+            # Check if website.cookies_bar is active
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
         }
-        self._check_url_hot_query(self.page.url, 5, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 5)
+        self._check_url_hot_query(self.page.url, 6, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 6)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
