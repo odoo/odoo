@@ -176,7 +176,7 @@
                 }
                 const container = document.createElement("div");
                 container.className =
-                    "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
+                    "o_module_error position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
                 container.style.zIndex = "10000";
                 const alert = document.createElement("div");
                 alert.className = "alert alert-danger o_error_detail fw-bold m-auto";
