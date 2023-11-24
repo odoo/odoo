@@ -176,6 +176,8 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
                 (6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])
             ]
         })
+        self.product_product_conf_chair.sale_line_warn = 'warning'
+        self.product_product_conf_chair.sale_line_warn_msg = 'sold'
         self.product_product_custo_desk.optional_product_ids = [
             (4, self.product_product_conf_chair.id)
         ]
