@@ -1020,6 +1020,22 @@
         return lazyValue;
     }
     /**
+     * Creates a version of the function that's memoized on the value of its first
+     * argument, if any.
+     */
+    function memoize(func) {
+        const cache = new Map();
+        const funcName = func.name ? func.name + " (memoized)" : "memoized";
+        return {
+            [funcName](...args) {
+                if (!cache.has(args[0])) {
+                    cache.set(args[0], func(...args));
+                }
+                return cache.get(args[0]);
+            },
+        }[funcName];
+    }
+    /**
      * Find the next defined value after the given index in an array of strings. If there is no defined value
      * after the index, return the closest defined value before the index. Return an empty string if no
      * defined value was found.
@@ -3691,12 +3707,12 @@
         }
     }
     /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
+    const normalizeString = memoize(function normalizeString(str) {
         return str
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "");
-    }
+    });
     /**
      * Normalize a value.
      * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
@@ -4427,6 +4443,7 @@
         CommandResult[CommandResult["SplitWillOverwriteContent"] = 90] = "SplitWillOverwriteContent";
         CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
         CommandResult[CommandResult["NoActiveSheet"] = 92] = "NoActiveSheet";
+        CommandResult[CommandResult["NoChanges"] = 93] = "NoChanges";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
@@ -28992,6 +29009,14 @@
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_BORDER":
+                    return this.checkBordersUnchanged(cmd);
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
         handle(cmd) {
             switch (cmd.type) {
                 case "ADD_MERGE":
@@ -29411,6 +29436,14 @@
                 this.setBorders(sheetId, [{ ...zone, left: right }], "right", bordersTopLeft.right);
             }
         }
+        checkBordersUnchanged(cmd) {
+            const currentBorder = this.getCellBorder(cmd);
+            const areAllNewBordersUndefined = !cmd.border?.bottom && !cmd.border?.left && !cmd.border?.right && !cmd.border?.top;
+            if ((!currentBorder && areAllNewBordersUndefined) || deepEquals(currentBorder, cmd.border)) {
+                return 93 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
@@ -29518,8 +29551,9 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
+                    return this.checkCellOutOfSheet(cmd);
                 case "CLEAR_CELL":
-                    return this.checkCellOutOfSheet(cmd.sheetId, cmd.col, cmd.row);
+                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -29678,14 +29712,9 @@
          */
         getCellById(cellId) {
             // this must be as fast as possible
-            for (const sheetId in this.cells) {
-                const sheet = this.cells[sheetId];
-                const cell = sheet[cellId];
-                if (cell) {
-                    return cell;
-                }
-            }
-            return undefined;
+            const position = this.getters.getCellPosition(cellId);
+            const sheet = this.cells[position.sheetId];
+            return sheet[cellId];
         }
         /*
          * Reconstructs the original formula string based on a normalized form and its dependencies
@@ -29922,12 +29951,22 @@
                 dependencies: [],
             };
         }
-        checkCellOutOfSheet(sheetId, col, row) {
+        checkCellOutOfSheet(cmd) {
+            const { sheetId, col, row } = cmd;
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
                 return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
             return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
+        }
+        checkUselessClearCell(cmd) {
+            const cell = this.getters.getCell(cmd);
+            if (!cell)
+                return 93 /* CommandResult.NoChanges */;
+            if (!cell.content && !cell.style && !cell.format) {
+                return 93 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
 
@@ -33031,10 +33070,13 @@
             // begin with the end.
             rows.sort((a, b) => b - a);
             for (let group of groupConsecutive(rows)) {
+                // indexes are sorted in the descending order
+                const from = group[group.length - 1];
+                const to = group[0];
                 // Move the cells.
-                this.moveCellOnRowsDeletion(sheet, group[group.length - 1], group[0]);
-                // Effectively delete the element and recompute the left-right/top-bottom.
-                group.map((row) => this.updateRowsStructureOnDeletion(row, sheet));
+                this.moveCellOnRowsDeletion(sheet, from, to);
+                // Effectively delete the rows
+                this.updateRowsStructureOnDeletion(sheet, from, to);
             }
             const count = rows.filter((row) => row < sheet.panes.ySplit).length;
             if (count) {
@@ -33056,8 +33098,6 @@
             this.addEmptyRows(sheet, quantity);
             // Move the cells.
             this.moveCellsOnAddition(sheet, index, quantity, "rows");
-            // Recompute the left-right/top-bottom.
-            this.updateRowsStructureOnAddition(sheet, row, quantity);
             if (index < sheet.panes.ySplit) {
                 this.setPaneDivisions(sheet.id, sheet.panes.ySplit + quantity, "ROW");
             }
@@ -33158,33 +33198,18 @@
                 }
             }
         }
-        updateRowsStructureOnDeletion(index, sheet) {
+        updateRowsStructureOnDeletion(sheet, deleteFromRow, deleteToRow) {
             const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
+            const cellsQueue = sheet.rows.map((row) => row.cells).reverse();
             for (let i in sheet.rows) {
-                if (Number(i) === index) {
+                const row = Number(i);
+                if (row >= deleteFromRow && row <= deleteToRow) {
                     continue;
                 }
                 rows.push({
-                    cells: cellsQueue.shift(),
+                    cells: cellsQueue.pop(),
                 });
             }
-            this.history.update("sheets", sheet.id, "rows", rows);
-        }
-        /**
-         * Update the rows of the sheet after an addition:
-         * - Rename the rows
-         *
-         * @param sheet Sheet on which the deletion occurs
-         * @param addedRow Index of the added row
-         * @param rowsToAdd Number of the rows to add
-         */
-        updateRowsStructureOnAddition(sheet, addedRow, rowsToAdd) {
-            const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
-            sheet.rows.forEach(() => rows.push({
-                cells: cellsQueue.shift(),
-            }));
             this.history.update("sheets", sheet.id, "rows", rows);
         }
         /**
@@ -33637,6 +33662,7 @@
                 }
                 return evaluatedCell;
             };
+            const rangeCache = {};
             /**
              * Return the values of the cell(s) used in reference, but always in the format of a range even
              * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
@@ -33653,21 +33679,26 @@
                 // Performance issue: Avoid fetching data on positions that are out of the spreadsheet
                 // e.g. A1:ZZZ9999 in a sheet with 10 cols and 10 rows should ignore everything past J10 and return a 10x10 array
                 const sheetZone = getters.getSheetZone(sheetId);
-                const result = [];
                 const zone = intersection(range.zone, sheetZone);
                 if (!zone) {
-                    result.push([]);
-                    return result;
+                    return [[]];
                 }
+                const { top, left, bottom, right } = zone;
+                const cacheKey = `${sheetId}-${top}-${left}-${bottom}-${right}`;
+                if (cacheKey in rangeCache) {
+                    return rangeCache[cacheKey];
+                }
+                const result = new Array(right - left + 1);
                 // Performance issue: nested loop is faster than a map here
-                for (let col = zone.left; col <= zone.right; col++) {
-                    const rowValues = [];
-                    for (let row = zone.top; row <= zone.bottom; row++) {
+                for (let col = left; col <= right; col++) {
+                    const rowValues = new Array(bottom - top + 1);
+                    for (let row = top; row <= bottom; row++) {
                         const cell = evalContext.getters.getCell({ sheetId: range.sheetId, col, row });
-                        rowValues.push(cell ? getEvaluatedCell(cell) : undefined);
+                        rowValues[row - top] = cell ? getEvaluatedCell(cell) : undefined;
                     }
-                    result.push(rowValues);
+                    result[col - left] = rowValues;
                 }
+                rangeCache[cacheKey] = result;
                 return result;
             }
             /**
@@ -44939,9 +44970,9 @@
      * Apply the changes of the given HistoryChange to the state
      */
     function applyChange(change, target) {
-        let val = change.root;
-        let key = change.path[change.path.length - 1];
-        for (let pathIndex = 0; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
+        let val = change.path[0];
+        const key = change.path[change.path.length - 1];
+        for (let pathIndex = 1; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
             const p = change.path[pathIndex];
             if (val[p] === undefined) {
                 const nextPath = change.path[pathIndex + 1];
@@ -45608,13 +45639,14 @@
         }
         addChange(...args) {
             const val = args.pop();
-            const [root, ...path] = args;
+            const root = args[0];
             let value = root;
-            let key = path[path.length - 1];
-            for (let pathIndex = 0; pathIndex <= path.length - 2; pathIndex++) {
-                const p = path[pathIndex];
+            let key = args[args.length - 1];
+            const pathLength = args.length - 2;
+            for (let pathIndex = 1; pathIndex <= pathLength; pathIndex++) {
+                const p = args[pathIndex];
                 if (value[p] === undefined) {
-                    const nextPath = path[pathIndex + 1];
+                    const nextPath = args[pathIndex + 1];
                     value[p] = createEmptyStructure(nextPath);
                 }
                 value = value[p];
@@ -45623,8 +45655,7 @@
                 return;
             }
             this.changes.push({
-                root,
-                path,
+                path: args,
                 before: value[key],
                 after: val,
             });
@@ -47474,19 +47505,22 @@
          * Check if the given command is allowed by all the plugins and the history.
          */
         checkDispatchAllowed(command) {
-            if (isCoreCommand(command)) {
-                return this.checkDispatchAllowedCoreCommand(command);
+            const results = isCoreCommand(command)
+                ? this.checkDispatchAllowedCoreCommand(command)
+                : this.checkDispatchAllowedLocalCommand(command);
+            if (results.some((r) => r !== 0 /* CommandResult.Success */)) {
+                return new DispatchResult(results.flat());
             }
-            return this.checkDispatchAllowedLocalCommand(command);
+            return DispatchResult.Success;
         }
         checkDispatchAllowedCoreCommand(command) {
             const results = this.corePlugins.map((handler) => handler.allowDispatch(command));
             results.push(this.range.allowDispatch(command));
-            return new DispatchResult(results.flat());
+            return results;
         }
         checkDispatchAllowedLocalCommand(command) {
             const results = this.uiHandlers.map((handler) => handler.allowDispatch(command));
-            return new DispatchResult(results.flat());
+            return results;
         }
         finalize() {
             this.status = 3 /* Status.Finalizing */;
@@ -47804,9 +47838,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.17';
-    __info__.date = '2023-11-16T13:25:13.936Z';
-    __info__.hash = '4049460';
+    __info__.version = '16.3.18';
+    __info__.date = '2023-11-24T13:26:01.244Z';
+    __info__.hash = '45f745e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
