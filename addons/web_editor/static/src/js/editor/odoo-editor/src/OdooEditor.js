@@ -4752,7 +4752,9 @@ export class OdooEditor extends EventTarget {
         }
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(this.document, odooEditorHtml);
-            DOMPurify.sanitize(fragment, { IN_PLACE: true });
+            // Instantiate DOMPurify with the correct window.
+            this.DOMPurify ??= DOMPurify(this.document.defaultView);
+            this.DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
