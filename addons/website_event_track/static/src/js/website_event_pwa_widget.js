@@ -6,13 +6,14 @@
      * to avoid missed-events (as the browser can trigger it very early in the page lifecycle).
      */
     var deferredPrompt = new Promise(function (resolve, reject) {
-        if (!("serviceWorker" in navigator)) {
-            return reject();
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("beforeinstallprompt", function (ev) {
+                ev.preventDefault();
+                resolve(ev);
+            });
+        } else {
+            console.log("ServiceWorker not supported");
         }
-        window.addEventListener("beforeinstallprompt", function (ev) {
-            ev.preventDefault();
-            resolve(ev);
-        });
     });
 
     import publicWidget from "@web/legacy/js/public/public_widget";
@@ -57,9 +58,7 @@
                 .then(this._registerServiceWorker.bind(this))
                 .then(function () {
                     // Don't wait for the prompt's Promise as it may never resolve.
-                    deferredPrompt.then(self._showInstallBanner.bind(self)).catch(function () {
-                        console.log("ServiceWorker not supported");
-                    });
+                    deferredPrompt.then(self._showInstallBanner.bind(self));
                 })
                 .then(this._prefetch.bind(this));
         },
@@ -195,9 +194,6 @@
                             console.log("User dismissed the install prompt");
                         }
                     });
-                })
-                .catch(function () {
-                    console.log("ServiceWorker not supported");
                 });
         },
     });
