@@ -318,17 +318,25 @@ QUnit.module("Board", (hooks) => {
             const mockRPC = (route, args) => {
                 if (route === "/board/add_to_dashboard") {
                     assert.deepEqual(args.context_to_save.comparison, {
-                        comparisonId: "previous_period",
-                        fieldName: "date",
-                        fieldDescription: "Date",
-                        rangeDescription: "July 2020",
-                        range: ["&", ["date", ">=", "2020-07-01"], ["date", "<=", "2020-07-31"]],
-                        comparisonRange: [
-                            "&",
-                            ["date", ">=", "2020-06-01"],
-                            ["date", "<=", "2020-06-30"],
+                        domains: [
+                            {
+                                arrayRepr: [
+                                    "&",
+                                    ["date", ">=", "2020-07-01"],
+                                    ["date", "<=", "2020-07-31"],
+                                ],
+                                description: "July 2020",
+                            },
+                            {
+                                arrayRepr: [
+                                    "&",
+                                    ["date", ">=", "2020-06-01"],
+                                    ["date", "<=", "2020-06-30"],
+                                ],
+                                description: "June 2020",
+                            },
                         ],
-                        comparisonRangeDescription: "June 2020",
+                        fieldName: "date",
                     });
                     return Promise.resolve(true);
                 }
