@@ -650,6 +650,56 @@ QUnit.module("Board", (hooks) => {
         });
     });
 
+    QUnit.test("Dashboard should read comparison from context", async function (assert) {
+        assert.expect(2);
+        serverData.views["partner,4,pivot"] =
+            '<pivot><field name="int_field" type="measure"/></pivot>';
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action
+                                name="356"
+                                string="Sales Analysis pivot"
+                                view_mode="pivot"
+                                context="{
+                                    'comparison': {
+                                        'fieldName': 'date',
+                                        'domains': [
+                                            {
+                                                'arrayRepr': [],
+                                                'description': 'February 2023',
+                                            },
+                                            {
+                                                'arrayRepr': [],
+                                                'description': 'January 2023',
+                                            },
+                                        ]
+                                    },
+                                }"
+                            />
+                        </column>
+                    </board>
+                </form>`,
+            mockRPC(route, args) {
+                if (route === "/web/action/load") {
+                    return Promise.resolve({
+                        res_model: "partner",
+                        views: [[4, "pivot"]],
+                    });
+                }
+            },
+        });
+        const columns = document.querySelectorAll(".o_pivot_origin_row");
+        assert.equal(columns[0].firstChild.textContent, "January 2023");
+        assert.equal(columns[1].firstChild.textContent, "February 2023");
+    });
+
     QUnit.test(
         "Dashboard should use correct groupby when defined as a string of one field",
         async function (assert) {
