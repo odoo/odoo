@@ -3,6 +3,7 @@
 import { createFile, inputFiles } from "web.test_utils_file";
 
 import { registry } from "@web/core/registry";
+import { contains } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -10,11 +11,16 @@ import { registry } from "@web/core/registry";
  * an action (action manager) which is not possible to test with QUnit.
  * @see mail/tests/test_mail_full_composer.py
  */
-registry.category("web_tour.tours").add(
-    "mail/static/tests/tours/mail_full_composer_test_tour.js",
-    {
-        test: true,
-        steps: [
+registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
+    test: true,
+    steps: [
+        {
+            content: "Wait for the chatter to be fully loaded",
+            trigger: ".o_Chatter",
+            async run() {
+                await contains(".o_Message", { count: 2 });
+            },
+        },
         {
             content: "Click on Send Message",
             trigger: ".o_ChatterTopbar_buttonSendMessage",
@@ -64,8 +70,9 @@ registry.category("web_tour.tours").add(
             content: "Check composer content is kept",
             trigger: '.o_field_html[name="body"]',
             run() {
-                const bodyContent = document.querySelector('.o_field_html[name="body"]')
-                    .textContent;
+                const bodyContent = document.querySelector(
+                    '.o_field_html[name="body"]'
+                ).textContent;
                 if (!bodyContent.includes("blahblah")) {
                     console.error(
                         `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`
@@ -95,5 +102,5 @@ registry.category("web_tour.tours").add(
             content: "Check message contains the attachment",
             trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
         },
-    ]
+    ],
 });
