@@ -1,10 +1,12 @@
-# coding: utf-8
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
-from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
 from odoo.fields import Command
+from odoo.tests import TransactionCase, tagged
+
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.payment import PaymentPortal
 
 
 @tagged('post_install', '-at_install')
