@@ -38,6 +38,7 @@ QUnit.module("Fields", (hooks) => {
                         date: { string: "A date", type: "date", searchable: true },
                         datetime: { string: "A datetime", type: "datetime", searchable: true },
                         datetime_end: { string: "Datetime End", type: "datetime" },
+                        bool_field: { string: "A boolean", type: "boolean" },
                     },
                     records: [
                         {
@@ -871,10 +872,18 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: /* xml */ `
                 <form>
-                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" required="datetime and datetime_end"/>
+                    <field name="bool_field"/>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" required="bool_field"/>
                 </form>`,
             resId: 1,
         });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.containsNone(target, ".o_add_date");
+
+        await click(target, ".o_field_boolean input");
 
         assert.strictEqual(getInputs().length, 2);
         assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
@@ -909,6 +918,10 @@ QUnit.module("Fields", (hooks) => {
         assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
         assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
         assert.containsNone(target, ".o_add_date");
+
+        // Open the picker, this checks that props validation for the picker isn't
+        // broken by required being present
+        await click(getInputs()[0]);
     });
 
     QUnit.test("related start date, both start date and end date empty", async (assert) => {
