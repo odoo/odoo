@@ -2330,3 +2330,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.assertEqual(invoice.currency_id, chf,
                          "Changing to a journal with a set currency should change invoice currency")
+
+    def test_onchange_payment_reference(self):
+        """
+        Ensure payment reference propagation from move to payment term
+        line is done correctly
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        with Form(self.invoice) as move_form:
+            move_form.payment_reference = 'test'
+        self.assertEqual(payment_term_line.name, 'test')
+        with Form(self.invoice) as move_form:
+            move_form.payment_reference = False
+        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')

@@ -460,10 +460,7 @@ class AccountMoveLine(models.Model):
     def _compute_name(self):
         for line in self:
             if line.display_type == 'payment_term':
-                if line.move_id.payment_reference:
-                    line.name = line.move_id.payment_reference
-                elif not line.name:
-                    line.name = ''
+                line.name = line.move_id.payment_reference or ''
                 continue
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
