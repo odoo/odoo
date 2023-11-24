@@ -7,6 +7,7 @@ from . import test_delivery_controller
 from . import test_delivery_express_checkout_flows
 from . import test_delivery_ui
 from . import test_express_checkout_flows
+from . import test_fuzzy
 from . import test_sale_process
 from . import test_sitemap
 from . import test_website_sale_add_to_cart_snippet
