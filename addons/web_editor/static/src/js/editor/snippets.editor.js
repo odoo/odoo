@@ -3112,7 +3112,7 @@ var SnippetsMenu = Widget.extend({
         }
 
         var def;
-        if (!$snippet[0].classList.contains('o_no_parent_editor')) {
+        if (this._allowParentsEditors($snippet)) {
             var $parent = globalSelector.closest($snippet.parent());
             if ($parent.length) {
                 def = this._createSnippetEditor($parent);
@@ -3706,6 +3706,12 @@ var SnippetsMenu = Widget.extend({
      */
     _isMobile() {
         return weUtils.isMobileView(this.$body[0]);
+    },
+    /**
+     * @private
+     */
+    _allowParentsEditors($snippet) {
+        return !this.options.enableTranslation;
     },
 
     //--------------------------------------------------------------------------

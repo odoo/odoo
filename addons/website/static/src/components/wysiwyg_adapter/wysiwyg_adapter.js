@@ -924,7 +924,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
             return this.snippetsMenu.activateSnippet(false);
         }
-        megaMenuEl.classList.add('o_no_parent_editor');
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     }
     /**
