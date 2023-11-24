@@ -1,18 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from odoo import http, _
-from odoo.http import request
+
+from odoo import _
+from odoo.exceptions import UserError
+from odoo.http import request, route
+
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.exceptions import UserError
 
 
 class WebsiteSaleDelivery(WebsiteSale):
     _express_checkout_shipping_route = '/shop/express/shipping_address_change'
 
-    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True)
+    @route('/shop/update_carrier', type='json', auth='public', methods=['POST'], website=True)
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
         if not post.get('no_reset_access_point_address'):
@@ -24,11 +25,11 @@ class WebsiteSaleDelivery(WebsiteSale):
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
-    @http.route(['/shop/carrier_rate_shipment'], type='json', auth='public', methods=['POST'], website=True)
+    @route('/shop/carrier_rate_shipment', type='json', auth='public', methods=['POST'], website=True)
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
         order = request.website.sale_get_order(force_create=True)
 
-        if not int(carrier_id) in order._get_delivery_methods().ids:
+        if int(carrier_id) not in order._get_delivery_methods().ids:
             raise UserError(_('It seems that a delivery method is not compatible with your address. Please refresh the page and try again.'))
 
         Monetary = request.env['ir.qweb.field.monetary']
@@ -47,7 +48,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             res['error_message'] = rate['error_message']
         return res
 
-    @http.route(
+    @route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
         website=True, sitemap=False
     )
@@ -113,7 +114,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         } for carrier in order_sudo._get_delivery_methods()],
         key=lambda carrier: carrier['minorAmount'])
 
-    @http.route('/shop/access_point/set', type='json', auth='public', methods=['POST'], website=True, sitemap=False)
+    @route('/shop/access_point/set', type='json', auth='public', methods=['POST'], website=True, sitemap=False)
     def set_access_point(self, access_point_encoded):
         order = request.website.sale_get_order()
         if hasattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations'):
@@ -121,7 +122,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             access_point = use_location and (json.loads(access_point_encoded) if access_point_encoded else False) or False
             order.write({'access_point_address': access_point})
 
-    @http.route('/shop/access_point/get', type='json', auth='public', website=True, sitemap=False)
+    @route('/shop/access_point/get', type='json', auth='public', website=True, sitemap=False)
     def get_access_point(self):
         order = request.website.sale_get_order()
         if not order.carrier_id.delivery_type or not order.carrier_id.display_name:
@@ -133,7 +134,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         name = order_location['pick_up_point_name']
         return {order.carrier_id.delivery_type + '_access_point': address, 'name': name, 'delivery_name': order.carrier_id.display_name}
 
-    @http.route('/shop/access_point/close_locations', type='json', auth='public', website=True, sitemap=False)
+    @route('/shop/access_point/close_locations', type='json', auth='public', website=True, sitemap=False)
     def get_close_locations(self):
         order = request.website.sale_get_order()
         try:
