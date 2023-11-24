@@ -1,0 +1,9 @@
+{
+    'name':'estate',
+    'depends':[
+        'base'
+    ],
+    'application':True,
+    'installable':True,
+    'auto_install':False
+}
