@@ -16,11 +16,9 @@ import sys
 import threading
 import time
 import unittest
-from itertools import chain
 
 import psutil
 import werkzeug.serving
-from werkzeug.debug import DebuggedApplication
 
 from ..tests import loader
 
@@ -204,21 +202,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         t.start_time = time.time()
         t.start()
 
-    # TODO: Remove this method as soon as either of the revision
-    # - python/cpython@8b1f52b5a93403acd7d112cd1c1bc716b31a418a for Python 3.6,
-    # - python/cpython@908082451382b8b3ba09ebba638db660edbf5d8e for Python 3.7,
-    # is included in all Python 3 releases installed on all operating systems supported by Odoo.
-    # These revisions are included in Python from releases 3.6.8 and Python 3.7.2 respectively.
     def _handle_request_noblock(self):
-        """
-        In the python module `socketserver` `process_request` loop,
-        the __shutdown_request flag is not checked between select and accept.
-        Thus when we set it to `True` thanks to the call `httpd.shutdown`,
-        a last request is accepted before exiting the loop.
-        We override this function to add an additional check before the accept().
-        """
-        if self._BaseServer__shutdown_request:
-            return
         if self.max_http_threads and not self.http_threads_sem.acquire(timeout=0.1):
             # If the semaphore is full we will return immediately to the upstream (most probably
             # socketserver.BaseServer's serve_forever loop  which will retry immediately as the
