@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 from odoo.addons.base.models.res_users import Users
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 from unittest.mock import patch
 
 
 @tagged('-at_install', 'post_install')
-class TestUserModifyOwnProfile(HttpCase):
+class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
         """" A user should be able to modify their own profile.
@@ -17,4 +18,4 @@ class TestUserModifyOwnProfile(HttpCase):
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
         with patch.object(Users, 'preference_save', lambda self: True):
             self.start_tour("/web", "mail/static/tests/tours/user_modify_own_profile_tour.js", login="demo", step_delay=100)
-        self.assertEqual(self.env.ref('base.user_demo').email, "updatedemail@example.com")
+        self.assertEqual(self.partner_demo.email, "updatedemail@example.com")
