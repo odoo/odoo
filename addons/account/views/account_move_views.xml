@@ -1186,7 +1186,7 @@
                                     <group string="Accounting"
                                            name="accounting_info_group"
                                            attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
-                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="invoice_incoterm_id"/>
                                         <field name="fiscal_position_id"/>
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding"/>
