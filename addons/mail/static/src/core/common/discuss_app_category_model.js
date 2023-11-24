@@ -13,6 +13,19 @@ export class DiscussAppCategory extends Record {
         return super.insert(...arguments);
     }
 
+    /**
+     * @param {import("models").Thread} t1
+     * @param {import("models").Thread} t2
+     */
+    sortThreads(t1, t2) {
+        if (this.id === "channels") {
+            return String.prototype.localeCompare.call(t1.name, t2.name);
+        }
+        if (this.id === "chats") {
+            return t2.lastInterestDateTime.ts - t1.lastInterestDateTime.ts;
+        }
+    }
+
     /** @type {string} */
     extraClass;
     /** @string */
@@ -28,7 +41,11 @@ export class DiscussAppCategory extends Record {
     addTitle;
     /** @type {string} */
     addHotkey;
-    threads = Record.many("Thread");
+    threads = Record.many("Thread", {
+        sort(t1, t2) {
+            return this.sortThreads(t1, t2);
+        },
+    });
 }
 
 DiscussAppCategory.register();

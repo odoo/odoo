@@ -28,6 +28,7 @@ patch(ThreadService.prototype, {
         return super.canUnpin(thread);
     },
 
+    /** @deprecated */
     sortChannels() {
         super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
