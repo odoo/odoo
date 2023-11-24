@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 import { x2ManyCommands } from "@web/core/orm_service";
+import { useSubEnv } from "@odoo/owl";
 
 patch(FormController.prototype, {
     setup() {
@@ -11,9 +12,15 @@ patch(FormController.prototype, {
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
         }
+        useSubEnv({
+            chatter: {
+                fetchOnWillUpdateProps: false,
+            },
+        });
     },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
+        this.env.chatter.fetchOnWillUpdateProps = true;
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;

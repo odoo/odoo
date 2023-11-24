@@ -125,7 +125,7 @@ export class Chatter extends Component {
                 }
                 if (isDragSourceExternalFile(ev.dataTransfer)) {
                     const files = [...ev.dataTransfer.files];
-                    if (!this.props.threadId) {
+                    if (!this.state.thread.id) {
                         const saved = await this.props.saveRecord?.();
                         if (!saved) {
                             return;
@@ -138,36 +138,20 @@ export class Chatter extends Component {
             "o-mail-Chatter-dropzone"
         );
 
-        onMounted(async () => {
-            if (this.props.threadId) {
-                this.state.thread = this.store.Thread.insert({
-                    id: this.props.threadId,
-                    model: this.props.threadModel,
-                    name: this.props.webRecord?.data?.display_name || undefined,
-                });
-            }
-            await this.load(this.props.threadId, [
-                "followers",
-                "attachments",
-                "suggestedRecipients",
-            ]);
+        onMounted(() => {
+            this.changeThread(this.props.threadModel, this.props.threadId, this.props.webRecord);
+            this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
         });
         onWillUpdateProps((nextProps) => {
-            this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
-            if (nextProps.threadId === false) {
-                this.state.composerType = false;
+            if (
+                this.props.threadId !== nextProps.threadId ||
+                this.props.threadModel !== nextProps.threadModel
+            ) {
+                this.changeThread(nextProps.threadModel, nextProps.threadId, nextProps.webRecord);
             }
-            this.attachmentUploader.thread = this.threadService.getThread(
-                nextProps.threadModel,
-                nextProps.threadId
-            );
-            if (this.onNextUpdate) {
-                if (!this.onNextUpdate(nextProps)) {
-                    this.onNextUpdate = null;
-                }
-            }
-            if (nextProps.threadId) {
-                this.closeSearch();
+            if (this.env.chatter?.fetchOnWillUpdateProps) {
+                this.env.chatter.fetchOnWillUpdateProps = false;
+                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
             }
         });
         useEffect(
@@ -223,7 +207,7 @@ export class Chatter extends Component {
      * @returns {boolean}
      */
     get isDisabled() {
-        return !this.props.threadId || !this.state.thread?.hasReadAccess;
+        return !this.state.thread.id || !this.state.thread?.hasReadAccess;
     }
 
     get attachments() {
@@ -252,56 +236,60 @@ export class Chatter extends Component {
         return markup(formatter.format(recipients));
     }
 
+    changeThread(threadModel, threadId, webRecord) {
+        this.state.thread = this.threadService.getThread(threadModel, threadId);
+        this.state.thread.name = webRecord?.data?.display_name || undefined;
+        this.attachmentUploader.thread = this.state.thread;
+        if (threadId === false) {
+            this.state.composerType = false;
+        } else {
+            this.onThreadCreated?.(this.state.thread);
+            this.onThreadCreated = null;
+            this.closeSearch();
+        }
+    }
+
     /**
-     * @param {number} threadId
+     * Fetch data for the thread according to the request list.
+     * @param {import("models").Thread} thread
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
-    load(
-        threadId = this.props.threadId,
-        requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
-    ) {
-        const { threadModel } = this.props;
-        this.state.thread = this.threadService.getThread(threadModel, threadId);
-        if (!threadId) {
+    load(thread, requestList = ["followers", "attachments", "messages", "suggestedRecipients"]) {
+        if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.threadService.fetchData(this.state.thread, requestList);
+        this.threadService.fetchData(thread, requestList);
     }
 
-    async _follow(threadModel, threadId) {
-        await this.orm.call(threadModel, "message_subscribe", [[threadId]], {
+    async _follow(thread) {
+        await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
             partner_ids: [this.store.self.id],
         });
-        this.onFollowerChanged();
+        this.onFollowerChanged(thread);
     }
 
     async onClickFollow() {
-        if (this.props.threadId) {
-            this._follow(this.props.threadModel, this.props.threadId);
+        if (this.state.thread.id) {
+            this._follow(this.state.thread);
         } else {
-            this.onNextUpdate = (nextProps) => {
-                if (nextProps.threadId) {
-                    this._follow(nextProps.threadModel, nextProps.threadId);
-                } else {
-                    return true;
-                }
-            };
+            this.onThreadCreated = this._follow;
             await this.props.saveRecord?.();
         }
     }
 
     async onClickUnfollow() {
-        await this.threadService.removeFollower(this.state.thread.selfFollower);
-        this.onFollowerChanged();
+        const thread = this.state.thread;
+        await this.threadService.removeFollower(thread.selfFollower);
+        this.onFollowerChanged(thread);
     }
 
-    onFollowerChanged() {
+    onFollowerChanged(thread) {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
-        this.load(this.props.threadId, ["followers", "suggestedRecipients"]);
+        this.load(thread, ["followers", "suggestedRecipients"]);
     }
 
     onPostCallback() {
@@ -311,11 +299,11 @@ export class Chatter extends Component {
         this.toggleComposer();
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
+        this.load(this.state.thread, ["followers", "messages", "suggestedRecipients"]);
     }
 
     onAddFollowers() {
-        this.load(this.state.thread.id, ["followers", "suggestedRecipients"]);
+        this.load(this.state.thread, ["followers", "suggestedRecipients"]);
         if (this.props.hasParentReloadOnFollowersUpdate) {
             this.reloadParentView();
         }
@@ -337,19 +325,10 @@ export class Chatter extends Component {
                 this.state.composerType = mode;
             }
         };
-        if (this.props.threadId) {
+        if (this.state.thread.id) {
             toggle();
         } else {
-            this.onNextUpdate = (nextProps) => {
-                // @returns {boolean} retry on next update
-                // if there is no threadId, the save operation probably failed
-                // probably because some required field is not set
-                if (nextProps.threadId) {
-                    toggle();
-                } else {
-                    return true;
-                }
-            };
+            this.onThreadCreated = toggle;
             this.props.saveRecord?.();
         }
     }
@@ -360,20 +339,14 @@ export class Chatter extends Component {
 
     async scheduleActivity() {
         this.closeSearch();
-        const schedule = async (threadId) => {
-            await this.activityService.schedule(this.props.threadModel, [threadId]);
-            this.load(this.props.threadId, ["activities", "messages"]);
+        const schedule = async (thread) => {
+            await this.activityService.schedule(thread.model, [thread.id]);
+            this.load(thread, ["activities", "messages"]);
         };
-        if (this.props.threadId) {
-            schedule(this.props.threadId);
+        if (this.state.thread.id) {
+            schedule(this.state.thread);
         } else {
-            this.onNextUpdate = (nextProps) => {
-                if (nextProps.threadId) {
-                    schedule(nextProps.threadId);
-                } else {
-                    return true;
-                }
-            };
+            this.onThreadCreated = schedule;
             this.props.saveRecord?.();
         }
     }
@@ -420,7 +393,7 @@ export class Chatter extends Component {
     }
 
     async onClickAttachFile(ev) {
-        if (this.props.threadId) {
+        if (this.state.thread.id) {
             return;
         }
         const saved = await this.props.saveRecord?.();
