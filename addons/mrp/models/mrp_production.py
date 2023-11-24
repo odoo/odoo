@@ -695,7 +695,7 @@ class MrpProduction(models.Model):
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             production.date_planned_finished = date_planned_finished
 
-    @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'date_planned_start')
+    @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id')
     def _compute_move_raw_ids(self):
         for production in self:
             if production.state != 'draft':
@@ -859,7 +859,23 @@ class MrpProduction(models.Model):
             if not vals.get('procurement_group_id'):
                 procurement_group_vals = self._prepare_procurement_group_vals(vals)
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        return super().create(vals_list)
+        res = super().create(vals_list)
+        # Make sure that the date passed in vals_list are taken into account and not modified by a compute
+        for rec, vals in zip(res, vals_list):
+            if (rec.move_raw_ids
+                and rec.move_raw_ids[0].date
+                and vals.get('date_planned_start')
+                and rec.move_raw_ids[0].date != vals['date_planned_start']):
+                rec.move_raw_ids.write({
+                    'date': vals['date_planned_start'],
+                    'date_deadline': vals['date_planned_start']
+                })
+            if (rec.move_finished_ids
+                and rec.move_finished_ids[0].date
+                and vals.get('date_planned_finished')
+                and rec.move_finished_ids[0].date != vals['date_planned_finished']):
+                rec.move_finished_ids.write({'date': vals['date_planned_finished']})
+        return res
 
     def unlink(self):
         self.action_cancel()
