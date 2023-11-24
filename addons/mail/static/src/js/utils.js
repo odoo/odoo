@@ -84,12 +84,10 @@ function linkify(text, attrs) {
     if (attrs.target === "_blank") {
         attrs.rel = "noreferrer noopener";
     }
-    attrs = Object.keys(attrs || {})
-        .map((key) => {
-            const value = attrs[key];
-            return `${key}="${escape(value)}"`;
-        })
-        .join(" ");
+    attrs = Object.keys(attrs || {}).map((key) => {
+        const value = attrs[key];
+        return `${key}="${escape(value)}"`;
+    }).join(" ");
     let curIndex = 0;
     let result = "";
     let match;
@@ -97,7 +95,7 @@ function linkify(text, attrs) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         const url = match[0];
         const href = !/^https?:\/\//i.test(url) ? "http://" + encodeURI(url) : encodeURI(url);
-        result += "<a " + attrs + ' href="' + href + '">' + _escapeEntities(url) + "</a>";
+        result += `<a ${attrs} href="${href}">${_escapeEntities(url)}`;
         curIndex = match.index + match[0].length;
     }
     return result + _escapeEntities(text.slice(curIndex));
