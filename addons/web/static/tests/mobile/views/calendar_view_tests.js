@@ -383,4 +383,24 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(target, ".fc-timeGridDay-view");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");
     });
+
+    QUnit.test("calendar should show date information", async function (assert) {
+        patchDate(2015, 11, 26, 9, 0, 0);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `<calendar date_start="start" mode="week"/>`,
+        });
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
+
+        const header = target.querySelector(".o_calendar_header");
+        assert.equal(header.textContent, "December 2015 Week 52");
+        await changeScale(target, "day");
+        assert.equal(header.textContent, "26 December 2015");
+        await changeScale(target, "month");
+        assert.equal(header.textContent, "December 2015");
+        await changeScale(target, "year");
+        assert.equal(header.textContent, "2015");
+    });
 });
