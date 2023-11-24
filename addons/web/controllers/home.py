@@ -112,6 +112,8 @@ class Home(http.Controller):
             try:
                 uid = request.session.authenticate(request.db, request.params['login'], request.params['password'])
                 request.params['login_success'] = True
+                # TODO probably don't want to log that one as default
+                request.session.source = "password"
                 return request.redirect(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 if e.args == odoo.exceptions.AccessDenied().args:
