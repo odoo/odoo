@@ -234,7 +234,7 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         let node = isList ? block.parentElement : block;
 
         // Sanitize the tree.
-        while (node?.isConnected && root.contains(node)) {
+        while (node && !(root.isConnected && !node.isConnected) && root.contains(node)) {
             if (!isProtected(node)) {
                 node = sanitizeNode(node, root); // The node itself might be replaced during sanitization.
             }
