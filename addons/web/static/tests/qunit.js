@@ -3,7 +3,6 @@
 import { isVisible as isElemVisible } from "@web/core/utils/ui";
 import { fullTraceback, fullAnnotatedTraceback } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
-import { escape } from "@web/core/utils/strings";
 import { Component, whenReady } from "@odoo/owl";
 
 const consoleError = console.error;
@@ -253,69 +252,19 @@ export function setupQUnit() {
     }
 
     /**
-     * Waits for the module system to end processing the JS modules, so that we can
-     * make the suite fail if some modules couldn't be loaded (e.g. because of a
-     * missing dependency).
-     *
-     * @returns {Promise<boolean>}
-     */
-    async function checkModules() {
-        // do not mark the suite as successful already, as we still need to ensure
-        // that all modules have been correctly loaded
-        document.querySelector("#qunit-banner").classList.remove("qunit-pass");
-        const modulesAlert = document.createElement("div");
-        modulesAlert.classList.add("alert");
-        modulesAlert.classList.add("alert-info");
-        modulesAlert.textContent = "Waiting for modules check...";
-        document.getElementById("qunit").appendChild(modulesAlert);
-        const info = odoo.loader.findErrors();
-        if (info.missing.length || info.failed.length || info.unloaded.length) {
-            document.querySelector("#qunit-banner").classList.add("qunit-fail");
-            modulesAlert.classList.toggle("alert-danger");
-            modulesAlert.classList.toggle("alert-info");
-            let error = "Some modules couldn't be started:<ul>";
-            if (info.failed.length) {
-                const failedList = info.failed.map((mod) => "<li>" + escape(mod) + "</li>");
-                error += `<li> Failed modules: <ul>${failedList.join("")}</ul> </li>`;
-            }
-            if (info.missing.length) {
-                const missingList = info.missing.map((mod) => "<li>" + escape(mod) + "</li>");
-                error += `<li> Missing dependencies: <ul>${missingList.join("")}</ul> </li>`;
-            }
-            if (info.unloaded.length) {
-                const unloadedList = info.unloaded.map((mod) => "<li>" + escape(mod) + "</li>");
-                error += `
-                    <li> Non loaded modules due to missing dependencies:
-                        <ul>${unloadedList.join("")}</ul>
-                    </li>`;
-                if (info.cycle) {
-                    error += `<li> Cycle: ${info.cycle} </li>`;
-                }
-            }
-            error += "</ul>";
-
-            modulesAlert.innerHTML = error;
-            errorMessages.unshift(error);
-            return false;
-        } else {
-            modulesAlert.classList.toggle("alert-success");
-            modulesAlert.classList.toggle("alert-info");
-            modulesAlert.textContent = "All modules have been correctly loaded.";
-            document.querySelector("#qunit-banner").classList.add("qunit-pass");
-            return true;
-        }
-    }
-
-    /**
      * If we want to log several errors, we have to log all of them at once, as
      * browser_js is closed as soon as an error is logged.
      */
     QUnit.done(async (result) => {
-        const allModulesLoaded = await checkModules();
+        await odoo.loader.checkErrorProm;
+        const moduleLoadingError = document.querySelector(".o_module_error");
+        if (moduleLoadingError) {
+            errorMessages.unshift(moduleLoadingError.innerText);
+        }
         if (result.failed) {
             errorMessages.push(`${result.failed} / ${result.total} tests failed.`);
         }
-        if (!result.failed && allModulesLoaded) {
+        if (!result.failed && !moduleLoadingError) {
             console.log("QUnit test suite done.");
             console.log("test successful"); // for ChromeBowser to know it's over and ok
         } else {
