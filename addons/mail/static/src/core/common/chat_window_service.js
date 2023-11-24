@@ -86,7 +86,7 @@ export class ChatWindowService {
     makeVisible(chatWindow) {
         const swaped = this.visible[this.visible.length - 1];
         this.hide(swaped);
-        this.show(chatWindow);
+        this.show(chatWindow, { notifyState: false });
     }
 
     toggleFold(chatWindow) {
@@ -105,8 +105,6 @@ export class ChatWindowService {
 
     hide(chatWindow) {
         chatWindow.hidden = true;
-        chatWindow.folded = true;
-        chatWindow.thread.state = "folded";
     }
 
     async close(chatWindow, options = {}) {
