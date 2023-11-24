@@ -58,6 +58,10 @@ class ResConfigSettings(models.TransientModel):
     website_cookies_bar = fields.Boolean(
         related='website_id.cookies_bar',
         readonly=False)
+    website_block_third_party_domains = fields.Boolean(
+        'Block 3rd-party domains',
+        related='website_id.block_third_party_domains',
+        readonly=False)
     google_analytics_key = fields.Char(
         'Google Analytics Key',
         related='website_id.google_analytics_key',
@@ -223,5 +227,16 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'website.robots',
             'type': 'ir.actions.act_window',
             "views": [[False, "form"]],
+            'target': 'new',
+        }
+
+    def action_open_blocked_third_party_domains(self):
+        self.website_id._force()
+        return {
+            'name': _("Add external websites"),
+            'view_mode': 'form',
+            'res_model': 'website.custom_blocked_third_party_domains',
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
             'target': 'new',
         }
