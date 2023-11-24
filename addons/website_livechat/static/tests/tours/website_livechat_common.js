@@ -15,9 +15,9 @@ Patch({
         /**
          * Alter this method for test purposes.
          *
-         * Force fetch notifications after sending the message: listen/notify
-         * mechanism is not active during tests, but available messages
-         * are directly sent when updating channel subscription.
+         * Fake the notification after sending message as bus is not available,
+         * it's necessary to add the message in the chatter + in
+         * livechat.messages
          *
          * Add a class to the chatter window after sendFeedback is done
          * to force the test to wait until feedback is really done
@@ -37,7 +37,18 @@ Patch({
                     if (!in_test_mode) {
                         return;
                     }
-                    this.env.services['bus_service'].forceUpdateChannels();
+                    this.messaging.publicLivechatGlobal.notificationHandler._handleNewMessage({
+                        id: this.messaging.publicLivechatGlobal.publicLivechat.id,
+                        message: {
+                            id: this.messaging.publicLivechatGlobal.messages.length + 1,
+                            author_id: [0, 'Website Visitor Test'],
+                            email_from: 'Website Visitor Test',
+                            body: '<p>' + message.content + '</p>',
+                            is_discussion: true,
+                            subtype_id: [1, "Discussions"],
+                            date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        },
+                    });
                 });
             }
         },
