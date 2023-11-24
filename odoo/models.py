@@ -6071,7 +6071,7 @@ class BaseModel(metaclass=MetaModel):
                     ids = (marked.get(field) or set()) | (tomark.get(field) or set())
                     records = records.browse(id_ for id_ in records._ids if id_ not in ids)
                 else:
-                    records = records & self.env.cache.get_records(records, field)
+                    records = records & self.env.cache.get_records(records, field, all_contexts=True)
                 if not records:
                     continue
                 # recursively trigger recomputation of field's dependents

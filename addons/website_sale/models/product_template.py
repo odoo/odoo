@@ -213,7 +213,7 @@ class ProductTemplate(models.Model):
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
-            if base_price and price_reduce and base_price != price_reduce:
+            if base_price and base_price != price_reduce:
                 if not template.compare_list_price:
                     # Compare_list_price are never tax included
                     base_price = self.env['account.tax']._fix_tax_included_price_company(
