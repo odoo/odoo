@@ -10,7 +10,7 @@
                 <span 
                     t-att-class="orderCountClass" 
                     class="badge d-flex align-items-center justify-content-center position-absolute rounded-pill" 
-                    t-attf-class="{{ orderCount === 0 ? 'd-none' : ''}}" 
+                    t-attf-class="{{ orderCount === 0 or pos.isEditMode ? 'd-none' : ''}}"
                     t-att-style="badgeStyle"
                     t-esc="orderCount"/>
             </div>
