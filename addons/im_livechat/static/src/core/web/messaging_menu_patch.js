@@ -9,19 +9,6 @@ patch(MessagingMenu.prototype, {
     /**
      * @override
      */
-    tabToThreadType(tab) {
-        const threadTypes = super.tabToThreadType(tab);
-        if (tab === "chat" && !this.ui.isSmall) {
-            threadTypes.push("livechat");
-        }
-        if (tab === "livechat") {
-            threadTypes.push("livechat");
-        }
-        return threadTypes;
-    },
-    /**
-     * @override
-     */
     get tabs() {
         const items = super.tabs;
         const hasLivechats = Object.values(this.store.Thread.records).some(

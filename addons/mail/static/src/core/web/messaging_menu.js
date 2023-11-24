@@ -4,7 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -35,7 +35,6 @@ export class MessagingMenu extends Component {
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
-        onWillRender(() => (this.threads = this.getThreads()));
     }
 
     beforeOpen() {
@@ -67,11 +66,12 @@ export class MessagingMenu extends Component {
     }
 
     /**
+     * @deprecated
      * @param {'chat' | 'group'} tab
      * @returns Thread types matching the given tab.
      */
     tabToThreadType(tab) {
-        return tab === "chat" ? ["chat", "group"] : [tab];
+        return this.store.tabToThreadType(tab);
     }
 
     get canPromptToInstall() {
@@ -120,78 +120,12 @@ export class MessagingMenu extends Component {
         };
     }
 
+    get threads() {
+        return this.getThreads();
+    }
+
     getThreads() {
-        /** @type {import("@mail/core/common/thread_model").Thread[]} */
-        let threads = Object.values(this.store.Thread.records).filter(
-            (thread) =>
-                thread.displayToSelf ||
-                (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
-        );
-        const tab = this.store.discuss.activeTab;
-        if (tab !== "main") {
-            threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
-        } else if (tab === "main" && this.env.inDiscussApp) {
-            threads = threads.filter(({ type }) => this.tabToThreadType("mailbox").includes(type));
-        }
-        return threads.sort((a, b) => {
-            /**
-             * Ordering:
-             * - threads with needaction
-             * - unread channels
-             * - read channels
-             * - odoobot chat
-             *
-             * In each group, thread with most recent message comes first
-             */
-            if (
-                a.correspondent?.eq(this.store.odoobot) &&
-                !b.correspondent?.eq(this.store.odoobot)
-            ) {
-                return 1;
-            }
-            if (
-                b.correspondent?.eq(this.store.odoobot) &&
-                !a.correspondent?.eq(this.store.odoobot)
-            ) {
-                return -1;
-            }
-            if (a.needactionMessages.length > 0 && b.needactionMessages.length === 0) {
-                return -1;
-            }
-            if (b.needactionMessages.length > 0 && a.needactionMessages.length === 0) {
-                return 1;
-            }
-            if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
-                return -1;
-            }
-            if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
-                return 1;
-            }
-            if (
-                !a.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                b.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
-                return 1;
-            }
-            if (
-                !b.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                a.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
-                return -1;
-            }
-            if (
-                a.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                b.newestPersistentNotEmptyOfAllMessage?.datetime &&
-                a.newestPersistentNotEmptyOfAllMessage?.datetime !==
-                    b.newestPersistentNotEmptyOfAllMessage?.datetime
-            ) {
-                return (
-                    b.newestPersistentNotEmptyOfAllMessage.datetime -
-                    a.newestPersistentNotEmptyOfAllMessage.datetime
-                );
-            }
-            return b.localId > a.localId ? 1 : -1;
-        });
+        return this.store.menuThreads;
     }
 
     /**
