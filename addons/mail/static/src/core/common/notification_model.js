@@ -32,7 +32,7 @@ export class Notification extends Record {
             if (!this.message?.author?.eq(this._store.self)) {
                 return;
             }
-            const failure = this._store.failures.find((f) => {
+            const failure = Object.values(this._store.Failure.records).find((f) => {
                 return (
                     f.resModel === thread?.model &&
                     f.type === this.notification_type &&
@@ -46,6 +46,7 @@ export class Notification extends Record {
                   }
                 : false;
         },
+        eager: true,
     });
     /** @type {string} */
     failure_type;

@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
-import { BaseStore, makeStore } from "@mail/core/common/store_service";
+import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -113,10 +112,23 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     assert.ok(thread.messages.length === 0);
 });
 
-QUnit.test("Computed relational field", async (assert) => {
+QUnit.test("Computed fields", async (assert) => {
     (class Thread extends Record {
         static id = "name";
         name;
+        type = Record.attr("", {
+            compute() {
+                if (this.members.length === 0) {
+                    return "empty chat";
+                } else if (this.members.length === 1) {
+                    return "self-chat";
+                } else if (this.members.length === 2) {
+                    return "dm chat";
+                } else {
+                    return "group chat";
+                }
+            },
+        });
         admin = Record.one("Persona", {
             compute() {
                 return this.members[0];
@@ -130,11 +142,78 @@ QUnit.test("Computed relational field", async (assert) => {
     }).register();
     const store = await start();
     const thread = store.Thread.insert("General");
-    const [john, marc] = store.Persona.insert(["John", "Marc"]);
+    const [john, marc, antony] = store.Persona.insert(["John", "Marc", "Antony"]);
     Object.assign(thread, { members: [john, marc] });
     assert.ok(thread.admin.eq(john));
+    assert.strictEqual(thread.type, "dm chat");
     thread.members.delete(john);
     assert.ok(thread.admin.eq(marc));
+    assert.strictEqual(thread.type, "self-chat");
+    thread.members.unshift(antony, john);
+    assert.ok(thread.admin.eq(antony));
+    assert.strictEqual(thread.type, "group chat");
+});
+
+QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
+    let logs = [];
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        computeType() {
+            if (this.members.length === 0) {
+                return "empty chat";
+            } else if (this.members.length === 1) {
+                return "self-chat";
+            } else if (this.members.length === 2) {
+                return "dm chat";
+            } else {
+                return "group chat";
+            }
+        }
+        typeLazy = Record.attr("", {
+            compute() {
+                logs.push("LAZY");
+                return this.computeType();
+            },
+        });
+        typeEager = Record.attr("", {
+            compute() {
+                logs.push("EAGER");
+                return this.computeType();
+            },
+            eager: true,
+        });
+        members = Record.many("Persona");
+    }).register();
+    (class Persona extends Record {
+        static id = "name";
+        name;
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    assert.deepEqual(logs, ["EAGER"]);
+    logs = [];
+    assert.strictEqual(thread.typeEager, "empty chat");
+    assert.deepEqual(logs, []);
+    assert.strictEqual(thread.typeLazy, "empty chat");
+    assert.deepEqual(logs, ["LAZY"]);
+    logs = [];
+    thread.members.add("John");
+    assert.deepEqual(logs, ["EAGER"]);
+    logs = [];
+    assert.strictEqual(thread.typeEager, "self-chat");
+    assert.deepEqual(logs, []);
+    thread.members.add("Antony");
+    assert.deepEqual(logs, ["EAGER"]);
+    logs = [];
+    assert.strictEqual(thread.typeEager, "dm chat");
+    assert.deepEqual(logs, []);
+    thread.members.add("Demo");
+    assert.deepEqual(logs, ["EAGER"]);
+    assert.strictEqual(thread.typeEager, "group chat");
+    logs = [];
+    assert.strictEqual(thread.typeLazy, "group chat");
+    assert.deepEqual(logs, ["LAZY"]);
 });
 
 QUnit.test("Trusted insert on html field with { html: true }", async (assert) => {

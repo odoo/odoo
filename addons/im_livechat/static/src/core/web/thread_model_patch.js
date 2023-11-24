@@ -11,7 +11,6 @@ patch(Thread, {
         if (thread.type === "livechat") {
             assignIn(thread, data, ["anonymous_name", "anonymous_country"]);
             this.store.discuss.livechat.threads.add(thread);
-            this.env.services["mail.thread"].sortChannels();
         }
         return thread;
     },

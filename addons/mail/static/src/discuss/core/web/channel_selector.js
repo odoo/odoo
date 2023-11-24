@@ -158,7 +158,6 @@ export class ChannelSelector extends Component {
                     ])
                     .then((data) => {
                         const channel = this.discussCoreCommonService.createChannelThread(data);
-                        this.threadService.sortChannels();
                         this.threadService.open(channel);
                     });
             } else {

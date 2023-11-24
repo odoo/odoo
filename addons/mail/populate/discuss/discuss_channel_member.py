@@ -41,7 +41,7 @@ class ChannelMember(models.Model):
                     random.choices([1, 2], weights=[1, 100], k=1)[0]
                     if channel.channel_type == "chat"
                     else big
-                    if big_done < 2
+                    if big_done < 2 and channel.channel_type == "channel"
                     else random.randrange(max_users)
                 )
                 if number_users >= big and admin in users_by_channel[channel]:

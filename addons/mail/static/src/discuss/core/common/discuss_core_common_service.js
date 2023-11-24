@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -23,12 +24,18 @@ export class DiscussCoreCommon {
         this.threadService = services["mail.thread"];
     }
 
+    /** @returns {import("models").Thread} */
+    insertInitChannel(data) {
+        return this.createChannelThread(data);
+    }
+
     setup() {
         this.messagingService.isReady.then((data) => {
-            for (const channelData of data.channels) {
-                this.createChannelThread(channelData);
-            }
-            this.threadService.sortChannels();
+            Record.MAKE_UPDATE(() => {
+                for (const channelData of data.channels) {
+                    this.insertInitChannel(channelData);
+                }
+            });
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert({
@@ -48,9 +55,6 @@ export class DiscussCoreCommon {
                 const channel = this.store.Thread.get({ model: "discuss.channel", id });
                 if (channel) {
                     channel.last_interest_dt = last_interest_dt;
-                    if (channel.type !== "channel") {
-                        this.threadService.sortChannels();
-                    }
                 }
             });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
@@ -204,7 +208,6 @@ export class DiscussCoreCommon {
             partners_to,
         });
         const channel = this.createChannelThread(data);
-        this.threadService.sortChannels();
         this.threadService.open(channel);
         return channel;
     }
@@ -314,7 +317,7 @@ export const discussCoreCommon = {
      */
     start(env, services) {
         const discussCoreCommon = reactive(new DiscussCoreCommon(env, services));
-        discussCoreCommon.setup();
+        discussCoreCommon.setup(env, services);
         return discussCoreCommon;
     },
 };

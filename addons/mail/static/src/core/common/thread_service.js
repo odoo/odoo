@@ -413,6 +413,7 @@ export class ThreadService {
         });
     }
 
+    /** @deprecated */
     sortChannels() {
         this.store.discuss.channels.threads.sort((t1, t2) =>
             String.prototype.localeCompare.call(t1.name, t2.name)
@@ -541,7 +542,6 @@ export class ThreadService {
             type: "channel",
             channel: { avatarCacheKey: "hello" },
         });
-        this.sortChannels();
         this.open(thread);
         return thread;
     }
@@ -555,7 +555,6 @@ export class ThreadService {
             model: "discuss.channel",
             type: "chat",
         });
-        this.sortChannels();
         return thread;
     }
 
