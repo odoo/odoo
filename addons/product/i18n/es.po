@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +94,8 @@ msgstr "%s (copia)"
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
 msgstr ""
+"%s: la fecha de finalización (%s) debe ser posterior a la fecha de inicio "
+"(%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
@@ -498,6 +500,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Es posible mostrar %s cantidades al mismo tiempo. Elimine una cantidad "
+"seleccionada para agregar otras."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2062,7 +2066,7 @@ msgstr "Otra tarifa"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "Tipo de paquete A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2102,7 +2106,7 @@ msgstr "Píldoras"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Ingrese un número entero positivo."
 
 #. module: product
 #. odoo-python
@@ -2339,7 +2343,7 @@ msgstr "Atributos del producto"
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Mixin de catálogo de producto"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2399,12 +2403,12 @@ msgstr "Reporte de etiquetas del producto"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "Informe de la etiqueta del producto 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "Informe de la etiqueta del prodcuto 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
@@ -2414,7 +2418,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "Informe de la etiqueta del producto 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2997,6 +3001,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"El atributo %(attribute)sdebe tener al menos un valor para el producto "
+"%(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3690,6 +3696,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"No puede cambiar el producto del valor %(value)s establecido en el producto "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3699,6 +3707,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"No puede cambiar el valor del valor %(value)s establecido en el producto "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3740,6 +3750,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"No puede eliminar el atributo %(attribute)s, se utiliza en los siguientes productos:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3750,6 +3762,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"No puede eliminar el valor %(value)s, se utiliza en los siguientes productos:\n"
+"%(products)s\n"
+"Si el valor se ha asociado a un producto en el pasado, no podrá eliminarlo."
 
 #. module: product
 #. odoo-python
@@ -3791,6 +3806,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"No puede mover el atributo %(attribute)s del producto %(product_src)s al "
+"producto %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -3812,6 +3829,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Debe definir un producto para todo lo que venda o compre,\n"
+"                            ya sea un prodcuto almacenable, consumible o un servicio."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

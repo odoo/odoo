@@ -1747,11 +1747,13 @@ msgid ""
 " provider allows it). When paying with another currency, this payment method"
 " is not available to customers."
 msgstr ""
+"قائمة العملات التي تدعمها طريقة الدفع هذه (إذا كان المزود يسمح بذلك). عند "
+"الدفع بعملة أخرى، لن تكون طريقة الدفع هذه متاحة للعملاء. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "قائمة مزودي الدفع الذين يدعمون طريقة الدفع هذه. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1810,11 +1812,13 @@ msgid ""
 "The primary payment method of the current payment method, if the latter is a brand.\n"
 "For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
 msgstr ""
+"طريقة الدفع الأساسية لطريقة الدفع الحالية، إذا كانت الثاني عبارة عن علامة تجارية.\n"
+"على سبيل المثال، \"البطاقة\" هي طريقة الدفع الأساسية للعلامة التجارية للبطاقة \"VISA\". "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction."
-msgstr ""
+msgstr "مرجع مزود الدفع لرمز المعاملة. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
@@ -1824,7 +1828,7 @@ msgstr "مرجع مزود الدفع للمعاملة "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
 msgid "The resized image displayed on the payment form."
-msgstr ""
+msgstr "الصورة التي تم تغيير حجمها والمعروضة على استمارة الدفع. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1841,7 +1845,7 @@ msgstr "المعاملة المصدرية للمعاملات التابعة ذا
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "الكود التقني لطريقة الدفع هذه. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1937,6 +1941,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method. Archiving tokens is irreversible."
 msgstr ""
+"سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s المسجلة مع طريقة الدفع هذه. لا "
+"يمكنك التراجع عن أرشفة الرمز. "
 
 #. module: payment
 #. odoo-python
@@ -1946,8 +1952,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
-"سيقوم هذا الإجراء أيضاً بأرشفة رموز %s المسجلة مع مزود الدفع هذا. لا يمكنك "
-"التراجع عن أرشفة الرمز. "
+"سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s المسجلة مع مزود الدفع هذا. لا يمكنك"
+" التراجع عن أرشفة الرمز. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1988,6 +1994,8 @@ msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
 msgstr ""
+"تتطلب طريقة الدفع هذه شريكاً في الجريمة؛ سيتوجب عليك تمكين مزود الدفع الذي "
+"يدعم هذه الطريقة أولاً. "
 
 #. module: payment
 #. odoo-python
@@ -2017,6 +2025,8 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"الترميز الآلي هو عملية حفظ تفاصيل الدفع كرمز يمكن إعادة استخدامه لاحقاً دون "
+"الحاجة إلى إدخال تفاصيل الدفع مرة أخرى. "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
@@ -2043,7 +2053,7 @@ msgstr "نوع عمليات الاسترداد المدعومة "
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Unable to contact the server. Please wait."
-msgstr ""
+msgstr "تعذّر الاتصال بالخادم. يرجى الانتظار. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -2104,7 +2114,7 @@ msgstr "لم نتمكن من العثور على عملية الدفع الحا�
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment. Please wait."
-msgstr ""
+msgstr "جاري معالجة الدفع. يرجى الانتظار. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2145,7 +2155,7 @@ msgstr "تحويل بنكي"
 msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
-msgstr ""
+msgstr "لا يمكنك حذف مزود الدفع %s؛ قم بتعطيله أو إلغاء تثبيته عوضاً عن ذلك. "
 
 #. module: payment
 #. odoo-python

@@ -43,7 +43,7 @@ msgstr "#LINK"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%(row_count)s rows and %(column_count)s columns selected"
-msgstr ""
+msgstr "เลือกแถว %(row_count)s และคอลัมน์ %(column_count)s แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -95,6 +95,8 @@ msgid ""
 "%s duplicate rows found and removed.\n"
 "%s unique rows remain."
 msgstr ""
+"%s พบและลบแถวที่ซ้ำกัน\n"
+"%s แถวที่ไม่ซ้ำกันยังคงอยู่"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -247,7 +249,7 @@ msgstr "สามารถสร้างตัวกรองได้เฉพ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A flag specifying wheter to compute the slope or not"
-msgstr ""
+msgstr "ธงที่ระบุว่าจะคำนวณความชันหรือไม่"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -255,7 +257,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A flag specifying whether to compute the intercept or not."
-msgstr ""
+msgstr "ธงที่ระบุว่าจะคำนวณการสกัดกั้นหรือไม่"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -266,6 +268,8 @@ msgid ""
 "A flag specifying whether to return additional regression statistics or only"
 " the linear coefficients and the y-intercept"
 msgstr ""
+"ธงที่ระบุว่าจะส่งกลับสถิติการถดถอยเพิ่มเติมหรือเฉพาะค่าสัมประสิทธิ์เชิงเส้นและค่าตัดแกน"
+" y"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -322,7 +326,7 @@ msgstr "ตัวเลขที่แสดงถึงวันที่เร
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number representing the way to display ties."
-msgstr ""
+msgstr "ตัวเลขที่แสดงถึงวิธีการแสดงความสัมพันธ์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -513,7 +517,7 @@ msgstr "เพิ่ม"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add another item"
-msgstr ""
+msgstr "เพิ่มรายการอื่น"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1342,6 +1346,7 @@ msgid ""
 "Calculates the expected y-value for a specified x based on a linear "
 "regression of a dataset."
 msgstr ""
+"คำนวณค่า y ที่คาดหวังสำหรับ x ที่ระบุโดยยึดตามการถดถอยเชิงเส้นของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1383,6 +1388,8 @@ msgid ""
 "Calculates the standard error of the predicted y-value for each x in the "
 "regression of a dataset."
 msgstr ""
+"คำนวณข้อผิดพลาดมาตรฐานของค่า y ที่คาดการณ์ไว้สำหรับ x "
+"แต่ละค่าในการถดถอยของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1447,14 +1454,14 @@ msgstr "ไม่พบไฟล์สัมพันธ์ของสมุด
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot hide all the columns of a sheet."
-msgstr ""
+msgstr "ไม่สามารถซ่อนคอลัมน์ทั้งหมดของแผ่นงานได้"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot hide all the rows of a sheet."
-msgstr ""
+msgstr "ไม่สามารถซ่อนแถวทั้งหมดของแผ่นงานได้"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1468,7 +1475,7 @@ msgstr "ไม่สามารถคูณเมทริกซ์ : ขนา
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot remove duplicates for an unknown reason"
-msgstr ""
+msgstr "ไม่สามารถลบรายการที่ซ้ำกันโดยไม่ทราบสาเหตุ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1553,7 +1560,7 @@ msgstr "กล่องกาเครื่องหมาย"
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_text_value/filter_text_value.xml:0
 #, python-format
 msgid "Choose a value..."
-msgstr ""
+msgstr "เลือกค่า..."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1638,42 +1645,42 @@ msgstr "โค้ด"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Collapse all column groups"
-msgstr ""
+msgstr "ย่อกลุ่มคอลัมน์ทั้งหมด"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Collapse all row groups"
-msgstr ""
+msgstr "ย่อกลุ่มแถวทั้งหมด"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Collapse column group"
-msgstr ""
+msgstr "ย่อกลุ่มคอลัมน์"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Collapse row group"
-msgstr ""
+msgstr "ย่อกลุ่มแถว"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color Down"
-msgstr ""
+msgstr "ลงสี"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color Up"
-msgstr ""
+msgstr "เติมสี"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1730,7 +1737,7 @@ msgstr "คอลัมน์ด้านขวา"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Columns to analyze"
-msgstr ""
+msgstr "คอลัมน์ที่จะวิเคราะห์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1758,7 +1765,7 @@ msgstr "เปรียบเทียบค่าตัวเลขสองค
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the Matthews correlation coefficient of a dataset."
-msgstr ""
+msgstr "คำนวณค่าสัมประสิทธิ์สหสัมพันธ์ของแมทธิวส์ของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1767,20 +1774,21 @@ msgstr ""
 msgid ""
 "Compute the Pearson product-moment correlation coefficient of a dataset."
 msgstr ""
+"คำนวณค่าสัมประสิทธิ์สหสัมพันธ์ช่วงเวลาผลิตภัณฑ์แบบเพียร์สันของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the Spearman rank correlation coefficient of a dataset."
-msgstr ""
+msgstr "คำนวณค่าสัมประสิทธิ์สหสัมพันธ์อันดับแบบสเปียร์แมนของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the coefficients of polynomial regression of the dataset."
-msgstr ""
+msgstr "คำนวณค่าสัมประสิทธิ์การถดถอยพหุนามของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1789,14 +1797,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the intercept of the linear regression."
-msgstr ""
+msgstr "คำนวณจุดตัดของการถดถอยเชิงเส้น"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compute the slope of the linear regression."
-msgstr ""
+msgstr "คำนวณความชันของการถดถอยเชิงเส้น"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1806,6 +1814,7 @@ msgid ""
 "Compute the square of r, the Pearson product-moment correlation coefficient "
 "of a dataset."
 msgstr ""
+"คำนวณกำลังสองของ r ซึ่งเป็นค่าสัมประสิทธิ์สหสัมพันธ์แบบเพียร์สันของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2090,7 +2099,7 @@ msgstr "เกณฑ์"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cumulative data"
-msgstr ""
+msgstr "ข้อมูลสะสม"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2182,14 +2191,14 @@ msgstr "รูปแบบสกุลเงินที่กำหนดเอ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom formula"
-msgstr ""
+msgstr "สูตรที่กำหนดเอง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom formula %s"
-msgstr ""
+msgstr "สูตรที่กำหนดเอง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2227,21 +2236,21 @@ msgstr "ชุดข้อมูล"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Data Validation"
-msgstr ""
+msgstr "การตรวจสอบข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Data cleanup"
-msgstr ""
+msgstr "การล้างข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Data has header row"
-msgstr ""
+msgstr "ข้อมูลมีแถวส่วนหัว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2270,7 +2279,7 @@ msgstr "ช่วงข้อมูล"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Data validation"
-msgstr ""
+msgstr "การตรวจสอบข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2313,14 +2322,14 @@ msgstr "วันที่หลังจากจำนวนวันทำง
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_date_from_to_value/filter_date_from_to_value.js:0
 #, python-format
 msgid "Date from..."
-msgstr ""
+msgstr "วันที่จาก..."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is"
-msgstr ""
+msgstr "วันที่คือ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2328,14 +2337,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is %s"
-msgstr ""
+msgstr "วันที่คือ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is after"
-msgstr ""
+msgstr "วันที่อยู่หลังจาก"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2343,14 +2352,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is after %s"
-msgstr ""
+msgstr "วันที่อยู่หลังจาก %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is before"
-msgstr ""
+msgstr "วันที่อยู่ก่อนหน้า"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2358,42 +2367,42 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is before %s"
-msgstr ""
+msgstr "วันที่อยู่ก่อนหน้า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is between"
-msgstr ""
+msgstr "วันที่อยู่ระหว่าง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is between %s and %s"
-msgstr ""
+msgstr "วันที่อยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is not between"
-msgstr ""
+msgstr "วันที่ไม่อยู่ระหว่าง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is not between %s and %s"
-msgstr ""
+msgstr "วันที่ไม่อยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or after"
-msgstr ""
+msgstr "วันที่เป็นหรือหลังจาก"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2401,14 +2410,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or after %s"
-msgstr ""
+msgstr "วันที่เป็นหรือหลังจาก %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or before"
-msgstr ""
+msgstr "วันที่เป็นหรือก่อนหน้า"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2416,14 +2425,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is on or before %s"
-msgstr ""
+msgstr "วันที่เป็นหรือก่อนหน้า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date is valid"
-msgstr ""
+msgstr "วันที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2451,7 +2460,7 @@ msgstr "วันเวลา:"
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_date_from_to_value/filter_date_from_to_value.js:0
 #, python-format
 msgid "Date to..."
-msgstr ""
+msgstr "วันที่..."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2465,14 +2474,14 @@ msgstr "วันที่:"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Day and full month"
-msgstr ""
+msgstr "วันและเดือนแบบเต็ม"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Day and short month"
-msgstr ""
+msgstr "วันและเดือนแบบสั้น"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2680,7 +2689,7 @@ msgstr "อัตราส่วนลดของหลักทรัพย์
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Display style"
-msgstr ""
+msgstr "รูปแบบการแสดงผล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2815,28 +2824,28 @@ msgstr "จำนวนปีที่แน่นอนระหว่างว
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Expand all column groups"
-msgstr ""
+msgstr "ขยายกลุ่มคอลัมน์ทั้งหมด"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Expand all row groups"
-msgstr ""
+msgstr "ขยายกลุ่มแถวทั้งหมด"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Expand column group"
-msgstr ""
+msgstr "ขยายกลุ่มคอลัมน์"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Expand row group"
-msgstr ""
+msgstr "ขยายกลุ่มแถว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2997,14 +3006,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Fits points to exponential growth trend."
-msgstr ""
+msgstr "ปรับจุดให้พอดีกับแนวโน้มการเติบโตแบบทวีคูณ"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Fits points to linear trend derived via least-squares."
-msgstr ""
+msgstr "ปรับจุดให้พอดีกับแนวโน้มเชิงเส้นที่ได้รับจากกำลังสองน้อยที่สุด"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3111,21 +3120,21 @@ msgstr "เวอร์ชั่นตรึง ทุกคนสามาร�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Full date time"
-msgstr ""
+msgstr "วันที่และเวลาเต็ม"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Full month"
-msgstr ""
+msgstr "เต็มเดือน"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Full week day and month"
-msgstr ""
+msgstr "วันและเดือนเต็มสัปดาห์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3215,6 +3224,7 @@ msgid ""
 "Function [[FUNCTION_NAME]] A regression of order less than 1 cannot be "
 "possible."
 msgstr ""
+"ฟังก์ชัน [[FUNCTION_NAME]] การถดถอยของลำดับที่น้อยกว่า 1 ไม่สามารถทำได้"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3253,7 +3263,7 @@ msgstr "ฟังก์ชัน [[FUNCTION_NAME]] คาดว่า criteria_r
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
-msgstr ""
+msgstr "ฟังก์ชัน [[FUNCTION_NAME]] ต้องการค่าตัวเลขสำหรับ %s แต่ได้รับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3304,7 +3314,7 @@ msgstr "กำลังสร้างลิงก์การแชร์"
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Get a pivot table."
-msgstr ""
+msgstr "รับตาราง pivot"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3363,6 +3373,9 @@ msgid ""
 "Given a general exponential form of y = b*m^x for a curve fit, calculates b "
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
+"เมื่อกำหนดรูปแบบเลขชี้กำลังทั่วไปของ y = b*m^x สำหรับเส้นโค้งที่พอดี "
+"ให้คำนวณ b หากเป็น TRUE หรือบังคับให้ b เป็น 1 และคำนวณเฉพาะค่า m หากเป็น "
+"FALSE"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3373,6 +3386,9 @@ msgid ""
 "TRUE or forces b to be 0 and only calculates the m values if FALSE, i.e. "
 "forces the curve fit to pass through the origin."
 msgstr ""
+"เมื่อกำหนดรูปแบบเชิงเส้นทั่วไปของ y = m*x+b สำหรับเส้นโค้งที่พอดี ให้คำนวณ b"
+" หากเป็น TRUE หรือบังคับให้ b เป็น 0 และคำนวณเฉพาะค่า m หากเป็น FALSE "
+"กล่าวคือ บังคับเส้นโค้งให้พอดีผ่านจุดเริ่มต้น"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3393,28 +3409,28 @@ msgstr "กลุ่ม"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Group column %s"
-msgstr ""
+msgstr "คอลัมน์กลุ่ม %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Group columns %s - %s"
-msgstr ""
+msgstr "คอลัมน์กลุ่ม %s - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Group row %s"
-msgstr ""
+msgstr "แถวกลุ่ม %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Group rows %s - %s"
-msgstr ""
+msgstr "แถวกลุ่ม %s - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3609,7 +3625,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "If the data is invalid"
-msgstr ""
+msgstr "หากข้อมูลไม่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3649,7 +3665,7 @@ msgstr "เพิ่มตำแหน่งทศนิยม"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Index out of range."
-msgstr ""
+msgstr "จัดทำดัชนีอยู่นอกช่วง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4065,7 +4081,7 @@ msgstr "เท่ากับ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is greater or equal to"
-msgstr ""
+msgstr "มีค่ามากกว่าหรือเท่ากับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4087,7 +4103,7 @@ msgstr "มากกว่าหรือเท่ากับ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is less or equal to"
-msgstr ""
+msgstr "มีค่าน้อยกว่าหรือเท่ากับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4132,7 +4148,7 @@ msgstr "ไม่เท่ากับ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is valid date"
-msgstr ""
+msgstr "เป็นวันที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4489,7 +4505,7 @@ msgstr "คณิตศาสตร์"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Matrix is not invertible"
-msgstr ""
+msgstr "เมทริกซ์ไม่สามารถกลับด้านได้"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4721,7 +4737,7 @@ msgstr "เดือนของปีที่มีวันที่ตรง
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More date formats"
-msgstr ""
+msgstr "รูปแบบวันที่เพิ่มเติม"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4917,7 +4933,7 @@ msgstr "ไม่มีแถว"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No selected cells had whitespace trimmed."
-msgstr ""
+msgstr "ไม่มีเซลล์ที่เลือกที่มีช่องว่างถูกตัดออก"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5235,35 +5251,35 @@ msgstr "Pivot #%s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Plain text"
-msgstr ""
+msgstr "ข้อความตัวอักษร"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Please enter a number between 0 and 10000."
-msgstr ""
+msgstr "โปรดป้อนตัวเลขระหว่าง 0 ถึง 10,000"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Please select a range of cells containing values."
-msgstr ""
+msgstr "โปรดเลือกช่วงของเซลล์ที่มีค่า"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Please select at latest one column to analyze."
-msgstr ""
+msgstr "โปรดเลือกอย่างน้อยหนึ่งคอลัมน์เพื่อวิเคราะห์"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Please select only one range of cells"
-msgstr ""
+msgstr "โปรดเลือกเพียงช่วงเดียวของเซลล์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5298,7 +5314,7 @@ msgstr "รากที่สองที่เป็นบวกของจำ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Predict value by computing a polynomial regression of the dataset."
-msgstr ""
+msgstr "ทำนายค่าโดยการคำนวณการถดถอยพหุนามของชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5369,7 +5385,7 @@ msgstr "ผลคูณของค่าจากช่วงที่เหม
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "Q%(quarter)s %(year)s"
-msgstr ""
+msgstr "Q%(quarter)s %(year)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5418,14 +5434,14 @@ msgstr "อ้างอิงถึงเซลล์ที่จะตรวจ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Reject the input"
-msgstr ""
+msgstr "ปฏิเสธการป้อนข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Remove column group"
-msgstr ""
+msgstr "ลบกลุ่มคอลัมน์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5434,7 +5450,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Remove duplicates"
-msgstr ""
+msgstr "ลบรายการที่ซ้ำกัน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5462,7 +5478,7 @@ msgstr "ลบตัวอักษรที่ไม่สามารถพิ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Remove row group"
-msgstr ""
+msgstr "ลบกลุ่มแถว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5637,7 +5653,7 @@ msgstr "ส่งกลับค่าตรงข้ามกับค่าต
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the content of a cell, specified by row and column offset."
-msgstr ""
+msgstr "ส่งกลับเนื้อหาของเซลล์ที่ระบุโดยการชดเชยแถวและคอลัมน์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5651,7 +5667,7 @@ msgstr "ส่งกลับค่าความผิดพลาด #N/A"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the first n items in a data set after performing a sort."
-msgstr ""
+msgstr "ส่งคืน n รายการแรกในชุดข้อมูลหลังจากดำเนินการเรียงลำดับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5697,7 +5713,7 @@ msgstr "ส่งกลับค่าผกผันการคูณของ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the rank of a specified value in a dataset."
-msgstr ""
+msgstr "ส่งกลับอันดับของค่าที่ระบุในชุดข้อมูล"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6007,28 +6023,28 @@ msgstr "เลื่อนขึ้น"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Short month"
-msgstr ""
+msgstr "เดือนที่สั้น"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Short week day"
-msgstr ""
+msgstr "วันในสัปดาห์ที่สั้น"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
 #, python-format
 msgid "Show Filters"
-msgstr ""
+msgstr "แสดงตัวกรอง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Show a warning"
-msgstr ""
+msgstr "แสดงคำเตือน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6118,6 +6134,7 @@ msgid ""
 "Sorts the rows of a given array or range by the values in one or more "
 "columns."
 msgstr ""
+"จัดเรียงแถวของอาร์เรย์หรือช่วงที่กำหนดตามค่าในคอลัมน์ตั้งแต่ 1 คอลัมน์ขึ้นไป"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6349,6 +6366,8 @@ msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
 msgstr ""
+"TRUE หรือ FALSE ระบุว่าจะเรียงลำดับ sort_column ตามลำดับจากน้อยไปมากหรือไม่ "
+"FALSE เรียงลำดับจากมากไปน้อย"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6386,42 +6405,42 @@ msgstr "สีข้อความ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text contains"
-msgstr ""
+msgstr "ข้อความประกอบด้วย"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text contains \"%s\""
-msgstr ""
+msgstr "ข้อความประกอบด้วย \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text does not contain \"%s\""
-msgstr ""
+msgstr "ข้อความไม่ประกอบด้วย \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text does not contains"
-msgstr ""
+msgstr "ข้อความไม่ประกอบด้วย"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is exactly"
-msgstr ""
+msgstr "ข้อความที่ตรงกัน"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is exactly \"%s\""
-msgstr ""
+msgstr "ข้อความที่ตรงกัน \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6429,7 +6448,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is valid email"
-msgstr ""
+msgstr "ข้อความเป็นอีเมลที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6437,7 +6456,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is valid link"
-msgstr ""
+msgstr "ข้อความเป็นลิงค์ที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6644,6 +6663,8 @@ msgid ""
 "The array or range containing dependent (y) values that are already known, "
 "used to curve fit an ideal exponential growth curve."
 msgstr ""
+"อาร์เรย์หรือช่วงที่มีค่าขึ้นอยู่กับ (y) ที่ทราบอยู่แล้ว "
+"ซึ่งใช้ในการโค้งให้พอดีกับเส้นโค้งการเติบโตแบบทวีคูณในอุดมคติ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6653,6 +6674,8 @@ msgid ""
 "The array or range containing dependent (y) values that are already known, "
 "used to curve fit an ideal linear trend."
 msgstr ""
+"อาร์เรย์หรือช่วงที่มีค่าขึ้นอยู่กับ (y) ที่ทราบอยู่แล้ว "
+"ซึ่งใช้ในการโค้งให้พอดีกับแนวโน้มเชิงเส้นในอุดมคติ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6989,7 +7012,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data points to return the y values for on the ideal curve fit."
-msgstr ""
+msgstr "จุดข้อมูลที่จะส่งคืนค่า y สำหรับเส้นโค้งที่เหมาะสมที่สุด"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7011,7 +7034,7 @@ msgstr "ข้อมูลที่ต้องการกรอง"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data to be sorted."
-msgstr ""
+msgstr "ข้อมูลที่จะจัดเรียง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7028,6 +7051,8 @@ msgid ""
 "The data you entered in %s violates the data validation rule set on the cell:\n"
 "%s"
 msgstr ""
+"ข้อมูลที่คุณป้อนใน %s ละเมิดกฎการตรวจสอบข้อมูลที่ตั้งไว้ในเซลล์:\n"
+"%s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7817,7 +7842,7 @@ msgstr ""
 msgid ""
 "The index of the column in range or a range outside of range containing the "
 "values by which to sort."
-msgstr ""
+msgstr "ดัชนีของคอลัมน์ในช่วงหรือช่วงนอกช่วงที่มีค่าที่จะเรียงลำดับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7826,7 +7851,7 @@ msgstr ""
 msgid ""
 "The index of the column to be returned from within the reference range of "
 "cells."
-msgstr ""
+msgstr "ดัชนีของคอลัมน์ที่จะส่งคืนจากภายในช่วงการอ้างอิงของเซลล์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7835,7 +7860,7 @@ msgstr ""
 msgid ""
 "The index of the row to be returned from within the reference range of "
 "cells."
-msgstr ""
+msgstr "ดัชนีของแถวที่จะส่งคืนจากภายในช่วงการอ้างอิงของเซลล์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8087,6 +8112,8 @@ msgid ""
 "The menu linked to this chart doesn't have an corresponding action. Please "
 "link the chart to another menu."
 msgstr ""
+"เมนูที่เชื่อมโยงกับแผนภูมินี้ไม่มีการดำเนินการที่เกี่ยวข้อง "
+"โปรดเชื่อมโยงแผนภูมิไปยังเมนูอื่น"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8259,7 +8286,7 @@ msgstr "จำนวนการจ่ายดอกเบี้ยหรือ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of items to return."
-msgstr ""
+msgstr "จำนวนรายการที่จะส่งกลับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8363,7 +8390,7 @@ msgstr "จำนวนแถวในอาร์เรย์ที่ขยา
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "The number of rows must be positive."
-msgstr ""
+msgstr "จำนวนแถวต้องเป็นค่าบวก"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8573,7 +8600,7 @@ msgstr "อาร์เรย์หนึ่งมิติที่จะค้
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The order of the polynomial to fit the data, between 1 and 6."
-msgstr ""
+msgstr "ลำดับของพหุนามเพื่อให้พอดีกับข้อมูล ระหว่าง 1 ถึง 6"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8792,7 +8819,7 @@ msgstr "purchase_date (%s) จะต้องอยู่ก่อน first_peri
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range containing the dataset to consider."
-msgstr ""
+msgstr "ช่วงที่มีชุดข้อมูลที่ต้องพิจารณา"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8865,7 +8892,7 @@ msgstr "ช่วงของเซลล์ที่จะนับจำนว
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range of cells from which the values are returned."
-msgstr ""
+msgstr "ช่วงของเซลล์ที่ใช้ส่งคืนค่า"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8921,14 +8948,14 @@ msgstr "ช่วงที่แสดงอาร์เรย์หรือเ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range representing the array or matrix of observed data."
-msgstr ""
+msgstr "ช่วงที่แสดงถึงอาร์เรย์หรือเมทริกซ์ของข้อมูลที่สังเกตได้"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range representing the array or matrix of predicted data."
-msgstr ""
+msgstr "ช่วงที่แสดงอาร์เรย์หรือเมทริกซ์ของข้อมูลที่คาดการณ์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9747,7 +9774,7 @@ msgstr "ค่า (%s) ต้องเป็นค่าบวกเท่าน
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value does not match the custom formula data validation rule"
-msgstr ""
+msgstr "ค่าไม่ตรงกับกฎการตรวจสอบข้อมูลสูตรที่กำหนดเอง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9828,21 +9855,21 @@ msgstr "ค่าที่ใช้คำนวณลอการิทึม �
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be %s"
-msgstr ""
+msgstr "มูลค่าจะต้องเป็น %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a boolean"
-msgstr ""
+msgstr "ค่าต้องเป็นบูลีน"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date"
-msgstr ""
+msgstr "ค่าจะต้องเป็นวันที่"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9850,7 +9877,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date after %s"
-msgstr ""
+msgstr "ค่าจะต้องเป็นวันที่หลังจาก %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9858,21 +9885,21 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date before %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ก่อนหน้า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date between %s and %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date not between %s and %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ไม่อยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9880,7 +9907,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date on or after %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ในหรือหลังจาก %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9888,161 +9915,161 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a date on or before %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ในหรือก่อนหน้า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a formula"
-msgstr ""
+msgstr "ค่าต้องเป็นสูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a number"
-msgstr ""
+msgstr "ค่าต้องเป็นตัวเลข"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a text that contains \"%s\""
-msgstr ""
+msgstr "ค่าต้องเป็นข้อความที่มี \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a text that does not contain \"%s\""
-msgstr ""
+msgstr "ค่าต้องเป็นข้อความที่ไม่มี \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a valid date"
-msgstr ""
+msgstr "ค่าจะต้องเป็นวันที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a valid email address"
-msgstr ""
+msgstr "ค่าจะต้องเป็นที่อยู่อีเมลที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a valid link"
-msgstr ""
+msgstr "ค่าจะต้องเป็นลิงก์ที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a valid range"
-msgstr ""
+msgstr "ค่าต้องเป็นช่วงที่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be a value in the range %s"
-msgstr ""
+msgstr "ค่าจะต้องเป็นค่าในช่วง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be between %s and %s"
-msgstr ""
+msgstr "ค่าต้องอยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be equal to %s"
-msgstr ""
+msgstr "ค่าจะต้องเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be exactly \"%s\""
-msgstr ""
+msgstr "ค่าจะต้องตรงกับ \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be greater or equal to %s"
-msgstr ""
+msgstr "ค่าต้องมากกว่าหรือเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be greater than %s"
-msgstr ""
+msgstr "ค่าต้องมากกว่า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be less or equal to %s"
-msgstr ""
+msgstr "ค่าต้องน้อยกว่าหรือเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be less than %s"
-msgstr ""
+msgstr "ค่าต้องน้อยกว่า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be one of: %s"
-msgstr ""
+msgstr "ค่าจะต้องเป็นหนึ่งใน: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must be the date %s"
-msgstr ""
+msgstr "ค่าต้องเป็นวันที่ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must not be a formula"
-msgstr ""
+msgstr "ค่าต้องไม่ใช่สูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must not be between %s and %s"
-msgstr ""
+msgstr "ค่าต้องไม่อยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must not be empty"
-msgstr ""
+msgstr "ค่าต้องไม่ว่างเปล่า"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value must not be equal to %s"
-msgstr ""
+msgstr "ค่าต้องไม่เท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10302,7 +10329,7 @@ msgstr "ค่าที่ค่า 2 จะถูกผนวกเข้าไ
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value whose rank will be determined."
-msgstr ""
+msgstr "ค่าที่จะกำหนดอันดับ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10325,7 +10352,7 @@ msgstr "ค่าที่จะแพด"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value(s) on the x-axis to forecast."
-msgstr ""
+msgstr "ค่าบนแกน x ที่จะคาดการณ์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10334,7 +10361,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The values of the independent variable(s) corresponding with known_data_y."
-msgstr ""
+msgstr "ค่าของตัวแปรอิสระที่สัมพันธ์กับ known_data_y"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10488,7 +10515,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "This operation is not allowed due to an overlapping frozen pane."
-msgstr ""
+msgstr "ไม่อนุญาตให้ดำเนินการนี้เนื่องจากมีบานหน้าต่างที่ตรึงทับซ้อนกัน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10610,14 +10637,14 @@ msgstr "ถือว่าป้ายกำกับเป็นข้อคว
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Trim whitespace"
-msgstr ""
+msgstr "ตัดช่องว่าง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Trimmed whitespace from %s cells."
-msgstr ""
+msgstr "ตัดช่องว่างออกจากเซลล์ %s แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10683,28 +10710,28 @@ msgstr "เลิกตรึง"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ungroup column %s"
-msgstr ""
+msgstr "ยกเลิกการจัดกลุ่มคอลัมน์ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ungroup columns %s - %s"
-msgstr ""
+msgstr "ยกเลิกการจัดกลุ่มคอลัมน์ %s - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ungroup row %s"
-msgstr ""
+msgstr "ยกเลิกการจัดกลุ่มแถว %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ungroup rows %s - %s"
-msgstr ""
+msgstr "ยกเลิกการจัดกลุ่มแถว %s - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10818,6 +10845,8 @@ msgid ""
 "Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
 "expect a number or a range."
 msgstr ""
+"ค่าสำหรับพารามิเตอร์ %d หายไป ในขณะที่ฟังก์ชัน [[FUNCTION_NAME]] "
+"คาดว่าจะเป็นตัวเลขหรือช่วง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10838,21 +10867,21 @@ msgstr "ถ้าค่าไม่ใช่ข้อผิดพลาด จ�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value in list"
-msgstr ""
+msgstr "ค่าในรายการ"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value in range"
-msgstr ""
+msgstr "ค่าในช่วง"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value in range %s"
-msgstr ""
+msgstr "ค่าในช่วง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10866,56 +10895,56 @@ msgstr "ค่าตีความเป็นเปอร์เซ็นต์
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is between %s and %s"
-msgstr ""
+msgstr " ค่าอยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is equal to %s"
-msgstr ""
+msgstr "ค่าเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is greater or equal to %s"
-msgstr ""
+msgstr "ค่ามากกว่าหรือเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is greater than %s"
-msgstr ""
+msgstr "ค่ามากกว่า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is less or equal to %s"
-msgstr ""
+msgstr "ค่าน้อยกว่าหรือเท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is less than %s"
-msgstr ""
+msgstr "ค่าน้อยกว่า %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is not between %s and %s"
-msgstr ""
+msgstr "ค่าไม่อยู่ระหว่าง %s ถึง %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value is not equal to %s"
-msgstr ""
+msgstr "ค่าไม่เท่ากับ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10938,14 +10967,14 @@ msgstr "ค่าที่ใกล้กับควอไทล์เฉพา
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value not found in the given data."
-msgstr ""
+msgstr "ไม่พบค่าในข้อมูลที่ให้มา"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Value one of: %s"
-msgstr ""
+msgstr "มูลค่าหนึ่งของ:%s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10953,7 +10982,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Value or formula"
-msgstr ""
+msgstr "ค่าหรือสูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11062,7 +11091,7 @@ msgstr "ดู"
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "W%(week)s %(year)s"
-msgstr ""
+msgstr "W%(week)s %(year)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11248,7 +11277,7 @@ msgstr "ไม่ว่าเซลล์ที่อ้างอิงจะว
 #, python-format
 msgid ""
 "Whether to consider the values in data in descending or ascending order."
-msgstr ""
+msgstr "ไม่ว่าจะพิจารณาค่าในข้อมูลตามลำดับจากมากไปน้อยหรือจากน้อยไปหามาก"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11262,14 +11291,14 @@ msgstr "ว่าจะกรองข้อมูลตามคอลัมน
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Whether to include the column titles or not."
-msgstr ""
+msgstr "ไม่ว่าจะรวมชื่อคอลัมน์หรือไม่"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Whether to include total/sub-totals or not."
-msgstr ""
+msgstr "ไม่ว่าจะรวมผลรวม/ผลรวมย่อยหรือไม่"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11364,7 +11393,7 @@ msgstr "จำนวนอาร์กิวเมนต์ไม่ถูกต
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong size for %s. Expected a range of size 1x%s. Got %sx%s."
-msgstr ""
+msgstr "ขนาดไม่ถูกต้องสำหรับ %s คาดว่าจะมีช่วงขนาด 1x%s ได้ %sx%s แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11374,13 +11403,15 @@ msgid ""
 "Wrong value of 'display_ties_mode'. Expected a positive number between 0 and"
 " 3. Got %s."
 msgstr ""
+"ค่า 'display_ties_mode' ไม่ถูกต้อง คาดว่าจะเป็นจำนวนบวกระหว่าง 0 ถึง 3 ได้ "
+"%s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrong value of 'n'. Expected a positive number. Got %s."
-msgstr ""
+msgstr "ค่า 'n' ไม่ถูกต้อง คาดว่าจะเป็นจำนวนบวก ได้ %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11452,7 +11483,7 @@ msgstr "[[FUNCTION_NAME]] ประเมินค่าแถวที่อย
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr ""
+msgstr "[[FUNCTION_NAME]] คาดว่าช่วงที่ไม่ว่างเปล่าสำหรับพารามิเตอร์ทั้งสอง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11482,6 +11513,7 @@ msgstr "[[FUNCTION_NAME]] จำนวนอาร์กิวเมนต์ %s
 msgid ""
 "[[FUNCTION_NAME]] has mismatched dimensions for argument %s (%s vs %s)."
 msgstr ""
+"[[FUNCTION_NAME]] มีมิติข้อมูลที่ไม่ตรงกันสำหรับอาร์กิวเมนต์ %s (%s กับ %s)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11507,7 +11539,7 @@ msgstr "[[FUNCTION_NAME]] ไม่มีข้อมูลอินพุตท
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] needs at least two values for both parameters"
-msgstr ""
+msgstr "[[FUNCTION_NAME]] ต้องมีอย่างน้อยสองค่าสำหรับพารามิเตอร์ทั้งสอง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11522,7 +11554,7 @@ msgstr "และ"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "and value or formula"
-msgstr ""
+msgstr "และค่าหรือสูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11545,7 +11577,7 @@ msgstr "ค่าเริ่มต้น:"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "exact date"
-msgstr ""
+msgstr "วันที่แน่นอน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11553,7 +11585,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past month"
-msgstr ""
+msgstr "ในเดือนที่ผ่านมา"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11561,7 +11593,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past week"
-msgstr ""
+msgstr "ในสัปดาห์ที่ผ่านมา"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11569,7 +11601,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "in the past year"
-msgstr ""
+msgstr "ในปีที่ผ่านมา"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11590,35 +11622,35 @@ msgstr "matchMode ควรเป็นค่าใน [-1, 0, 1]"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "more rows at the bottom"
-msgstr ""
+msgstr "แถวด้านล่างมากขึ้น"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "number of rows"
-msgstr ""
+msgstr "จำนวนแถว"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "one month ago"
-msgstr ""
+msgstr "หนึ่งเดือนที่แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "one week ago"
-msgstr ""
+msgstr "หนึ่งสัปดาห์ที่แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "one year ago"
-msgstr ""
+msgstr "หนึ่งปีที่แล้ว"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11673,4 +11705,4 @@ msgstr "พรุ่งนี้"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "yesterday"
-msgstr ""
+msgstr "เมื่อวาน"

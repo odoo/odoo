@@ -6,6 +6,7 @@
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2023
+# Gelo Joga, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Gelo Joga, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -459,6 +460,8 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"Si la función Agrupación de albaranes automáticos está activada, debe "
+"seleccionarse al menos una opción \"Agrupar por\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -527,12 +530,12 @@ msgstr "Número de Lote"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr ""
+msgstr "Líneas máximas por agrupación de albarán"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr ""
+msgstr "Albaranes máximos por agrupación de albarán"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -861,6 +864,10 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"El objetivo de la transferencia por olas es agrupar operaciones de diferentes albaranes\n"
+"                   para aumentar su eficacia.\n"
+"                   También puede ser útil asignar trabajos (una persona = un lote) o\n"
+"                     ayudar a la gestión del calendario de operaciones (tareas que deben realizarse a las 13.00 horas)."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -994,7 +1001,7 @@ msgstr "Historial de comunicaciones del sitio web"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr ""
+msgstr "Si está marcada, crea la agrupación de albaranes en estado borrador"
 
 #. module: stock_picking_batch
 #. odoo-python

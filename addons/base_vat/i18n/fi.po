@@ -43,6 +43,7 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"Yhteys VIES-palvelimeen epäonnistui. ALV-numeroa %s ei voitu vahvistaa."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -54,6 +55,7 @@ msgstr "Kontakti"
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
+"Eurooppalaiset ALV-numerot tarkistetaan automaattisesti VIES-palvelusta."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -66,18 +68,20 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Jos valittu, sovellettava oletusarvoinen verokanta riippuu eurooppalaisen "
+"VIES-palvelun suorittaman tarkastuksen tuloksesta."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Kelvollinen Yhteisön sisäinen"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Suorita VIES-tarkastus"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -111,7 +115,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "VIES-palvelin ei pystynyt tulkitsemaan ALV-numeroa %s."
 
 #. module: base_vat
 #. odoo-python
@@ -144,7 +148,7 @@ msgstr "Varmista ALV-numerot eurooppalaisen VIES-palvelun avulla"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "VIES-palveluin ALV tarkastettavaksi"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form

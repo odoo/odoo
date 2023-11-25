@@ -29,6 +29,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"ملاحظة: لن يتم عرض المنتجات التي لا تملك صلاحية الوصول إليها أعلاه. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -44,12 +47,12 @@ msgstr "عدد المنتجات"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "$14.00"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "$15.00"
 
 #. module: product
 #. odoo-python
@@ -138,12 +141,12 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 وحدات "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -199,6 +202,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        الأسعار الإضافية\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        السعر الإضافي\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -309,12 +318,12 @@ msgstr "رمز الوصول "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "أداة Acme "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "أداة Acme - أزرق "
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -573,14 +582,14 @@ msgstr "التوافر"
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Order"
-msgstr ""
+msgstr "الرجوع إلى الطلب "
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "العودة إلى عرض السعر "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -797,7 +806,7 @@ msgstr "تهيئة "
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "تهيئة علامات التصنيف "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -902,7 +911,7 @@ msgstr "إنشاء متغير جديد لمنتج "
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "أنشئ منتجاً "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1005,7 +1014,7 @@ msgstr "قائمة الأسعار الافتراضية %s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "السعر الإضافي الافتراضي "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1112,7 +1121,7 @@ msgstr "خصم على البنود"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "السعر المخفض "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1217,7 +1226,7 @@ msgstr "ديناميكياً "
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "E.G: product description, ebook, legal notice, ..."
-msgstr ""
+msgstr "مثال: وصف المنتج، الكتاب الإلكتروني، الإشعار القانوني، ... "
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1227,7 +1236,7 @@ msgstr " يجب تحديد كل قيمة مرة واحدة فقط لكل خاص�
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "كرسي خشبي صديق للبيئة "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1415,7 +1424,7 @@ msgstr "يعرض ترتيب التسلسل عند عرض قائمة منتج "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "قائمة أسعار الأعضاء الذهبيين "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1855,13 +1864,13 @@ msgstr "أقل كمية"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox (option)"
-msgstr ""
+msgstr "مربعات الاختيار المتعددة (خيار) "
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
-msgstr ""
+msgstr "نوع عرض مربعات الاختيار المتعددة غير متوافق مع إنشاء المتغيرات "
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
@@ -1944,7 +1953,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "No products could be found."
-msgstr ""
+msgstr "لم يتم العثور على أي منتجات. "
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2059,7 +2068,7 @@ msgstr "قوائم الأسعار الأخرى "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "طرد من نوع (أ) "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2333,7 +2342,7 @@ msgstr "خصائص المنتج"
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Mixin كتالوج المنتجات "
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2368,22 +2377,22 @@ msgstr "بطاقة عنوان المنتج (PDF)"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "بطاقة عنوان المنتج 2x7 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "بطاقة عنوان المنتج 4x12 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "بطاقة عنوان المنتج 4x12 بلا سعر (PDF) "
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "بطاقة عنوان المنتج 4x7 (PDF) "
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
@@ -2393,22 +2402,22 @@ msgstr "تقرير بطاقة عنوان المنتج "
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "تقرير بطاقة عنوان المنتج 2x7 "
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "تقرير بطاقة عنوان المنتج 4x12 "
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "تقرير بطاقة عنوان المنتج 4x12 بلا سعر  "
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "تقرير بطاقة عنوان المنتج 4x7 "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2445,7 +2454,7 @@ msgstr "تعبئات المنتج "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 msgid "Product Properties"
-msgstr ""
+msgstr "خصائص المنتج "
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -3060,6 +3069,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"عدد المتغيرات الذي تحاول إنشاءه أكبر من الحد المسموح به. عليك إما ألا تقوم "
+"بإنشاء متغيرات لكل تركيبة خيارات جديدة تؤدي أو أن تقوم بالإنشاء حسب الطلب من"
+" أمر المبيعات. للقيام بذلك، افتح واجهة نموذج الخصائص وغير وضع *إنشاء "
+"المتغيرات*. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3229,7 +3242,7 @@ msgstr "نوع النشاط المستثنى في السجل. "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "وحدة القياس"
 
 #. module: product
 #. odoo-python
@@ -3294,7 +3307,7 @@ msgstr "رفع"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "قم برفع الملفات في منتج "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3314,7 +3327,7 @@ msgstr "رابط URL "
 msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers."
-msgstr ""
+msgstr "استخدم هذه الخاصية لتخزين أي ملفات ترغب في مشاركتها مع عملائك. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3628,7 +3641,7 @@ msgstr "يمكنك أن ترفع ملفًا من جهازك أو تنسخ وتل
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr ""
+msgstr "يمكنك رفع صورة سيتم استخدامها كلون قيمة الخاصية. "
 
 #. module: product
 #. odoo-javascript
@@ -3803,6 +3816,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"يجب عليك تحديد منتج لكل شيئ تقوم ببيعه أو شرائه،\n"
+"                            سواءً كان منتجاً قابلاً للتخزين أو استهلاكي أو خدمة. "
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

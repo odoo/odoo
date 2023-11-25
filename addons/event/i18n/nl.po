@@ -85,12 +85,12 @@ msgstr "%s (kopie)"
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'Bezoekerslijst - %s' % (object.naam)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'Aanwezigheidslijst'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -98,11 +98,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'Badge - %s - %s' % ((object.event_id.name of 'Event').replace('/',''), "
+"(object.name of '').replace('/', ''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Badge - %s' % (object.naam of 'Gebeurtenis').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -122,7 +124,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "+123456789"
-msgstr ""
+msgstr "+123456789"
 
 #. module: event
 #. odoo-python
@@ -150,7 +152,7 @@ msgstr "10-14"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "1000 Brussel"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
@@ -165,7 +167,7 @@ msgstr "18+"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 per vel"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
@@ -266,7 +268,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -274,6 +276,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -305,7 +309,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -328,7 +332,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -370,7 +374,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">Mijn Placeholder-bedrijf</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -378,7 +382,7 @@ msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Registration\n"
 "                                </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Registratie</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1042,6 +1046,178 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\"><t t-set=\"date_begin\" "
+"t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', "
+"dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t><t t-set=\"date_end\" "
+"t-value=\"format_datetime(object.event_id.date_end, tz='UTC', "
+"dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t><t t-set=\"is_online\" "
+"t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"></t><t t-set=\"event_organizer\" "
+"t-value=\"object.event_id.organizer_id\"></t><t t-set=\"event_address\" "
+"t-value=\"object.event_id.address_id\"></t><table border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; "
+"background-color: white; color: #454748; border-"
+"collapse:separate;\"><tbody><!-- HEADER --><tr><td align=\"center\" "
+"style=\"min-width: 590px;\"><table width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
+"valign=\"middle\"> <span style=\"font-size: 10px;\">Uw "
+"registratie</span><br><t t-out=\"object.name or 'Guest'\"></t></td><td "
+"valign=\"middle\" align=\"right\"> <a t-attf-href=\"/event/{{ "
+"object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ "
+"object.ids }}&amp;tickets_hash={{ "
+"object.event_id._get_tickets_access_hash(object.ids) }}\" target=\"_blank\" "
+"style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration:"
+" none !important; font-weight: 400; background-color: #875A7B; border: 0px "
+"solid #875A7B; border-radius:3px\">Badge downloaden</a> <t t-if=\"not "
+"object.company_id.uses_default_logo\"><img t-att-"
+"src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; "
+"margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"></t></td></tr><tr><td colspan=\"2\" style=\"text-"
+"align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px "
+"0px;\"></td></tr></table></td></tr><!-- EVENT DESCRIPTION --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table width=\"590\" "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"top\" style=\"font-size: 14px;\"><div>"
+" Hallo<t t-out=\"object.name or 'Guest'\"></t> ,<br> In bijlage vindt u uw "
+"badge voor<t t-if=\"is_online\"> <a t-att-"
+"href=\"object.event_id.website_url\" style=\"color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">Online onthulling "
+"van OpenWood Collection</a></t><t t-else=\"\"> <strong "
+"t-out=\"object.event_id.name or ''\">OpenWood Collection online "
+"onthullen</strong> .</t></div><div><br> <strong>Voeg dit evenement toe aan "
+"uw agenda</strong> <a t-attf-"
+"href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ "
+"object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end "
+"}}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid "
+"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" "
+"target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\""
+" style=\"vertical-align:middle;\" height=\"16\" alt=\"\">Googlen</a> <a "
+"t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px "
+"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
+"radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" "
+"style=\"vertical-align:middle;\" height=\"16\" alt=\"\">iCal/Outlook</a> <a "
+"t-attf-"
+"href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ "
+"object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ "
+"format_datetime(object.event_id.date_begin, tz='UTC', "
+"dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ "
+"format_datetime(object.event_id.date_end, tz='UTC', "
+"dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px "
+"solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" "
+"target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\""
+" style=\"vertical-align:middle;\" height=\"16\" "
+"alt=\"\">Yahoo</a><br><br></div><div> Tot snel,<br> <span style=\"color: "
+"#454748;\">--<br></span><t t-if=\"event_organizer\"><t "
+"t-out=\"event_organizer.name or ''\"> <span style=\"color: #454748;\">Jouw "
+"bedrijf</span></t></t><t t-else=\"\"> <span style=\"color: "
+"#454748;\">De</span><t t-out=\"object.event_id.name or ''\"> <span "
+"style=\"color: #454748;\">Online onthulling van OpenWood "
+"Collection</span></t> <span style=\"color: #454748;\">Team</span> "
+"</t></div></td></tr><tr><td style=\"text-align:center;\"><hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></td></tr></table></td></tr><!-- DETAILS "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"590\""
+" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"top\" style=\"font-size: "
+"14px;\"><table style=\"width:100%;\"><tr><td style=\"vertical-"
+"align:top;\"><img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" "
+"style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"></td><td "
+"style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-"
+"align:top;\"><div><t t-out=\"object.event_id.name or ''\"> Online onthulling"
+" van OpenWood Collection</t></div><div> <strong>Van</strong><t "
+"t-out=\"object.event_id.date_begin_located or ''\"> 4 mei 2021, 07:00:00 "
+"uur</t></div><div> <strong>Naar</strong><t "
+"t-out=\"object.event_id.date_end_located or ''\"> 6 mei 2021, 17:00:00 "
+"uur</t></div><div style=\"font-size:12px;color:#9e9e9e\"> <i>(</i><t "
+"t-out=\"object.event_id.date_tz or ''\"> <i>Europa/Brussel</i></t> "
+"<i>)</i></div></td><td style=\"vertical-align:top;\"><t "
+"t-if=\"event_address\"><img "
+"src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" "
+"style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"></t></td><td"
+" style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\"><t "
+"t-if=\"event_address\"><t t-set=\"location\" t-value=\"''\"></t><t "
+"t-if=\"object.event_id.address_id.name\"><div "
+"t-out=\"object.event_id.address_id.name\"> Teksa SpA</div></t><t "
+"t-if=\"object.event_id.address_id.street\"><div "
+"t-out=\"object.event_id.address_id.street\"> Puerto Madero 9710</div><t "
+"t-set=\"location\" t-value=\"object.event_id.address_id.street\"></t></t><t "
+"t-if=\"object.event_id.address_id.street2\"><div "
+"t-out=\"object.event_id.address_id.street2\"> Van A15, Santiago (RM)</div><t"
+" t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.street2}}\"></t></t><div><t "
+"t-if=\"object.event_id.address_id.city\"><t "
+"t-out=\"object.event_id.address_id.city\"> Pudahuël</t> ,<t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.city}}\"></t></t><t "
+"t-if=\"object.event_id.address_id.state_id.name\"><t "
+"t-out=\"object.event_id.address_id.state_id.name\"> C1</t> ,<t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.state_id.name}}\"></t></t><t "
+"t-if=\"object.event_id.address_id.zip\"><t "
+"t-out=\"object.event_id.address_id.zip\"> 98450</t><t t-set=\"location\" "
+"t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.zip}}\"></t></t></div><t "
+"t-if=\"object.event_id.address_id.country_id.name\"><div "
+"t-out=\"object.event_id.address_id.country_id.name\"> Argentinië </div><t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.country_id.name}}\"></t></t></t></td></tr></table></td></tr><tr><td"
+" style=\"text-align:center;\"><t t-if=\"event_organizer\"><hr width=\"100%\""
+" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></t></td></tr><tr><td valign=\"top\" "
+"style=\"font-size: 14px;\"><!-- CONTACT ORGANIZER --><t "
+"t-if=\"event_organizer\"><div> <span style=\"font-weight:300;margin:10px "
+"0px\">Vragen over dit evenement?</span><div> Neem dan contact op met de "
+"organisator:</div><ul><li><t t-out=\"event_organizer.name or ''\"> Jouw "
+"bedrijf</t></li><t t-if=\"event_organizer.email\"><li> Mail: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" "
+"t-out=\"event_organizer.email\">info@uwbedrijf.com</a></li></t><t "
+"t-if=\"event_organizer.phone\"><li> Telefoon:<t "
+"t-out=\"event_organizer.phone\"> +1 650-123-4567 "
+"</t></li></t></ul></div></t></td></tr><tr><td style=\"text-"
+"align:center;\"><!-- CONTACT ORGANIZER SEPARATION --><t t-if=\"is_online or "
+"event_address\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
+"0px;\"></t></td></tr><tr><td valign=\"top\" style=\"font-size: 14px;\"><!-- "
+"PWA MARKGETING --><t t-if=\"is_online\"><div> <strong>Krijg de beste mobiele"
+" ervaring.</strong> <a href=\"/event\">Installeer onze mobiele app</a> "
+"</div></t></td></tr><tr><td style=\"text-align:center;\"><!-- PWA MARKGETING"
+" SEPARATION--><t t-if=\"is_online and event_address\"><hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></t></td></tr><tr><td valign=\"top\" "
+"style=\"font-size: 14px;\"><!-- GOOGLE MAPS LINK --><t t-if=\"event_address "
+"and location\"><table style=\"width:100%;\"><tr><td><div><i class=\"fa fa-"
+"map-marker\"></i><a t-attf-href=\"https://maps.google.com/maps?q={{ location"
+" }}\" target=\"new\"><img t-if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-att-"
+"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"></a><t t-else=\"\"><a t-attf-"
+"href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">Bekijk"
+" locatie op Google Maps</a> "
+"</t></div></td></tr></table></t></td></tr></table></td></tr></tbody></table></td></tr><!--"
+" FOOTER BY --><tr><td align=\"center\" style=\"min-width: 590px;\"><t "
+"t-if=\"object.company_id\"><table width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-"
+"collapse:separate;\"><tr><td style=\"text-align: center; font-size: 14px;\">"
+" Verzonden door <a target=\"_blank\" t-attf-href=\"{{ "
+"object.company_id.website }}\" style=\"color: #875A7B;\" "
+"t-out=\"object.company_id.name or ''\">UwBedrijf</a><t "
+"t-if=\"is_online\"><br> Ontdek <a href=\"/event\" "
+"style=\"color:#875A7B;\">al onze evenementen</a> "
+".</t></td></tr></table></t></td></tr></table>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -1282,6 +1458,191 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\"><t t-set=\"date_begin\" "
+"t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', "
+"dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t><t t-set=\"date_end\" "
+"t-value=\"format_datetime(object.event_id.date_end, tz='UTC', "
+"dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t><t t-set=\"is_online\" "
+"t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"></t><t t-set=\"is_sale\" "
+"t-value=\"'sale_order_id' in object and object.sale_order_id\"></t><t "
+"t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"></t><t "
+"t-set=\"event_address\" t-value=\"object.event_id.address_id\"></t><table "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\"><tbody><!-- HEADER --><tr><td align=\"center\" "
+"style=\"min-width: 590px;\"><table width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\"><tr><td "
+"valign=\"middle\"> <span style=\"font-size: 10px;\">Uw "
+"registratie</span><br><t t-out=\"object.name or 'Guest'\"></t></td><td "
+"valign=\"middle\" align=\"right\"><div style=\"margin-bottom: 5px;\"> <a "
+"t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?registration_ids={{"
+" object.ids }}&amp;tickets_hash={{ "
+"object.event_id._get_tickets_access_hash(object.ids) "
+"}}&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; "
+"font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-"
+"weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\">Bekijk kaartje</a> </div><t t-if=\"object.barcode\"><div "
+"style=\"margin-bottom: 5px;\"><img t-attf-"
+"src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\""
+" alt=\"QR Code\"></div></t><t t-if=\"not "
+"object.company_id.uses_default_logo\"><img t-att-"
+"src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; "
+"margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"></t></td></tr><tr><td colspan=\"2\" style=\"text-"
+"align:center;\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px "
+"0px;\"></td></tr></table></td></tr><!-- EVENT DESCRIPTION --><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table width=\"590\" "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"top\" style=\"font-size: 14px;\"><div>"
+" Hallo<t t-out=\"object.name or 'Guest'\"></t> ,<br> Wij bevestigen graag uw"
+" inschrijving voor het evenement<t t-if=\"is_online\"> <a t-att-"
+"href=\"object.event_id.website_url\" style=\"color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">Online onthulling "
+"van OpenWood Collection</a></t><t t-else=\"\"> <strong "
+"t-out=\"object.event_id.name or ''\">Online onthulling van OpenWood "
+"Collection</strong></t> .<t t-if=\"object.partner_id and "
+"object.partner_id.name and object.partner_id.name != object.name\"> Dit "
+"ticket is geregistreerd door<t t-out=\"object.partner_id.name\"></t> "
+".</t></div><div t-if=\"is_sale\"><br> De bestelling voor dit ticket heeft "
+"een referentie<t t-out=\"object.sale_order_id.name\"></t> en werd erop "
+"geplaatst<t t-out=\"object.sale_order_id.date_order.date()\"></t><t "
+"t-if=\"object.sale_order_line_id.price_unit\"> voor een bedrag van<t "
+"t-out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"'monetary', 'display_currency': "
+"object.sale_order_line_id.currency_id}\"></t></t> .</div><div><br> "
+"<strong>Voeg dit evenement toe aan uw agenda</strong> <a t-attf-"
+"href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ "
+"object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end "
+"}}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid "
+"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" "
+"target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\""
+" style=\"vertical-align:middle;\" height=\"16\" alt=\"\">Googlen</a> <a "
+"t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px "
+"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
+"radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" "
+"style=\"vertical-align:middle;\" height=\"16\" alt=\"\">iCal/Outlook</a> <a "
+"t-attf-"
+"href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ "
+"object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ "
+"format_datetime(object.event_id.date_begin, tz='UTC', "
+"dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ "
+"format_datetime(object.event_id.date_end, tz='UTC', "
+"dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px "
+"solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" "
+"target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\""
+" style=\"vertical-align:middle;\" height=\"16\" "
+"alt=\"\">Yahoo</a><br><br></div><div> Tot snel,<br> <span style=\"color: "
+"#454748;\">--<br></span><t t-if=\"event_organizer\"><t "
+"t-out=\"event_organizer.name\"> <span style=\"color: #454748;\">Jouw "
+"bedrijf</span></t></t><t t-else=\"\"> <span style=\"color: "
+"#454748;\">De</span><t t-out=\"object.event_id.name or ''\"> <span "
+"style=\"color: #454748;\">Online onthulling van OpenWood "
+"Collection</span></t> <span style=\"color: #454748;\">Team</span> "
+"</t></div></td></tr><tr><td style=\"text-align:center;\"><hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></td></tr></table></td></tr><!-- DETAILS "
+"--><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"590\""
+" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; "
+"background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\"><tr><td valign=\"top\" style=\"font-size: "
+"14px;\"><table style=\"width:100%;\"><tr><td style=\"vertical-"
+"align:top;\"><img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" "
+"style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"></td><td "
+"style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-"
+"align:top;\"><div><t t-out=\"object.event_id.name or ''\"> Online onthulling"
+" van OpenWood Collection</t></div><div> <strong>Van</strong><t "
+"t-out=\"object.event_id.date_begin_located or ''\"> 4 mei 2021, 07:00:00 "
+"uur</t></div><div> <strong>Naar</strong><t "
+"t-out=\"object.event_id.date_end_located or ''\"> 6 mei 2021, 17:00:00 "
+"uur</t></div><div style=\"font-size:12px;color:#9e9e9e\"> <i>(</i><t "
+"t-out=\"object.event_id.date_tz or ''\"> <i>Europa/Brussel</i></t> "
+"<i>)</i></div></td><td style=\"vertical-align:top;\"><t "
+"t-if=\"event_address\"><img "
+"src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" "
+"style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"></t></td><td"
+" style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\"><t "
+"t-if=\"event_address\"><t t-set=\"location\" t-value=\"''\"></t><t "
+"t-if=\"object.event_id.address_id.name\"><div "
+"t-out=\"object.event_id.address_id.name\"> Teksa SpA</div></t><t "
+"t-if=\"object.event_id.address_id.street\"><div "
+"t-out=\"object.event_id.address_id.street\"> Puerto Madero 9710</div><t "
+"t-set=\"location\" t-value=\"object.event_id.address_id.street\"></t></t><t "
+"t-if=\"object.event_id.address_id.street2\"><div "
+"t-out=\"object.event_id.address_id.street2\"> Van A15, Santiago (RM)</div><t"
+" t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.street2}}\"></t></t><div><t "
+"t-if=\"object.event_id.address_id.city\"><t "
+"t-out=\"object.event_id.address_id.city\"> Pudahuël</t> ,<t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.city}}\"></t></t><t "
+"t-if=\"object.event_id.address_id.state_id.name\"><t "
+"t-out=\"object.event_id.address_id.state_id.name\"> C1</t> ,<t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.state_id.name}}\"></t></t><t "
+"t-if=\"object.event_id.address_id.zip\"><t "
+"t-out=\"object.event_id.address_id.zip\"> 98450</t><t t-set=\"location\" "
+"t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.zip}}\"></t></t></div><t "
+"t-if=\"object.event_id.address_id.country_id.name\"><div "
+"t-out=\"object.event_id.address_id.country_id.name\"> Argentinië </div><t "
+"t-set=\"location\" t-valuef=\"{{location}}, "
+"{{object.event_id.address_id.country_id.name}}\"></t></t></t></td></tr></table></td></tr><tr><td"
+" style=\"text-align:center;\"><t t-if=\"event_organizer\"><hr width=\"100%\""
+" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></t></td></tr><tr><td valign=\"top\" "
+"style=\"font-size: 14px;\"><!-- CONTACT ORGANIZER --><t "
+"t-if=\"event_organizer\"><div> <span style=\"font-weight:300;margin:10px "
+"0px\">Vragen over dit evenement?</span><div> Neem dan contact op met de "
+"organisator:</div><ul><li><t t-out=\"event_organizer.name or ''\"> Jouw "
+"bedrijf</t></li><t t-if=\"event_organizer.email\"><li> Mail: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or "
+"''\">info@uwbedrijf.com</a></li></t><t t-if=\"event_organizer.phone\"><li> "
+"Telefoon:<t t-out=\"event_organizer.phone\"> +1 650-123-4567 "
+"</t></li></t></ul></div></t></td></tr><tr><td style=\"text-"
+"align:center;\"><!-- CONTACT ORGANIZER SEPARATION --><t t-if=\"is_online or "
+"event_address\"><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px "
+"0px;\"></t></td></tr><tr><td valign=\"top\" style=\"font-size: 14px;\"><!-- "
+"PWA MARKGETING --><t t-if=\"is_online\"><div> <strong>Krijg de beste mobiele"
+" ervaring.</strong> <a href=\"/event\">Installeer onze mobiele app</a> "
+"</div></t></td></tr><tr><td style=\"text-align:center;\"><!-- PWA MARKGETING"
+" SEPARATION--><t t-if=\"is_online and event_address\"><hr width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"></t></td></tr><tr><td valign=\"top\" "
+"style=\"font-size: 14px;\"><!-- GOOGLE MAPS LINK --><t t-if=\"event_address "
+"and location\"><table style=\"width:100%;\"><tr><td><div><i class=\"fa fa-"
+"map-marker\"></i><a t-attf-href=\"https://maps.google.com/maps?q={{ location"
+" }}\" target=\"new\"><img t-if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-att-"
+"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"></a><t t-else=\"\"><a t-attf-"
+"href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">Bekijk"
+" locatie op Google Maps</a> "
+"</t></div></td></tr></table></t></td></tr></table></td></tr></tbody></table></td></tr><!--"
+" FOOTER BY --><tr><td align=\"center\" style=\"min-width: 590px;\"><t "
+"t-if=\"object.company_id\"><table width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-"
+"collapse:separate;\"><tr><td style=\"text-align: center; font-size: 14px;\">"
+" Verzonden door <a target=\"_blank\" t-attf-href=\"{{ "
+"object.company_id.website }}\" style=\"color: #875A7B;\" "
+"t-out=\"object.company_id.name or ''\">UwBedrijf</a><t "
+"t-if=\"is_online\"><br> Ontdek <a href=\"/event\" "
+"style=\"color:#875A7B;\">al onze evenementen</a> "
+".</t></td></tr></table></t></td></tr></table>"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -1294,7 +1655,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 opvouwbaar"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
@@ -1400,6 +1761,8 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"Alle communicatie-e-mails die naar de deelnemers worden verzonden, worden in"
+" deze taal vertaald."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1510,7 +1873,7 @@ msgstr "Deelnemer"
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "Bezoekerslijst"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1520,7 +1883,7 @@ msgstr "Naam deelnemer"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "Aanwezigheidslijst"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1549,17 +1912,17 @@ msgstr "Badge"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Kentekenachtergrond"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "Badge-afmeting"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "Badgevoorbeeld"
 
 #. module: event
 #. odoo-python
@@ -2022,12 +2385,12 @@ msgstr "E-mailsjablonen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "Schakel het scannen van streepjescodes in"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr ""
+msgstr "Schakel de functionaliteit van gebeurtenisbarcodes in of uit."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -3107,7 +3470,7 @@ msgstr "Aantal registraties"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "Aantal ingenomen zitplaatsen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -3434,7 +3797,7 @@ msgstr "Inschrijvingsmails"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "Registratie-eigenschappen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -3519,12 +3882,12 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Responsief HTML-ticket voor volledige pagina"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Paixstraat 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -3792,7 +4155,7 @@ msgstr "Genomen"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "Zitplaatsen ingenomen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4044,7 +4407,7 @@ msgstr "Ticketsoort"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "Tickettype"
 
 #. module: event
 #. odoo-javascript
@@ -4130,7 +4493,7 @@ msgstr "Activeren"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr "Trigger"
+msgstr "Trigger "
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3
@@ -4195,12 +4558,12 @@ msgstr "Aankomend/Bezig"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "Gebruik streepjescode"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "Gebruik gebeurtenisbarcode"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -4251,7 +4614,7 @@ msgstr "Locatie"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr "Locatie (opgemaakt voor gebruik op één lijn)"
+msgstr "Locatie (opgemaakt voor gebruik op één regel)"
 
 #. module: event
 #. odoo-javascript
@@ -4335,7 +4698,7 @@ msgstr "Wat is er nieuw?"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr "Of het evenement is begonnen."
+msgstr "Of het evenement is begonnen"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
@@ -4443,7 +4806,7 @@ msgstr "events@yourcompany.com"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr ""
+msgstr "https://www.example.com"
 
 #. module: event
 #. odoo-python
@@ -4497,7 +4860,7 @@ msgstr "of"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr ""
+msgstr "organisator@email.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

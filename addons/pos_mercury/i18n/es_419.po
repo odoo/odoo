@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgstr "EL TITULAR DE LA TARJETA LE PAGARÁ AL EMISOR DE LA TARJETA"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "Card Brand"
-msgstr "Marca de la tarjeta"
+msgstr "Tipo de tarjeta"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_number
@@ -148,9 +149,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Para gestionar pedidos rápidamente: solo debe pasar la tarjeta de crédito\n"
-"cuando esté en la pantalla de pago (sin haber presionado nada más) para que se cobre\n"
-"la cantidad total del pedido en la tarjeta."
+"Para gestionar órdenes con rapidez solo debe pasar la tarjeta de crédito\n"
+"cuando esté en la pantalla de pago (sin presionar nada más) para que se cobre\n"
+"el importe total de la orden en la tarjeta."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -175,7 +176,8 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr "ID del vendedor para autenticarlo en el servidor del método de pago"
+msgstr ""
+"ID del vendedor para autenticarle en el servidor del proveedor de pagos"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -287,8 +289,8 @@ msgstr "Aprobado parcialmente"
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Contraseña del comerciante para identificarlo en el servidor del proveedor "
-"de pagos"
+"Contraseña del vendedor para identificarle en el servidor del proveedor de "
+"pagos"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -397,7 +399,7 @@ msgstr "La configuración de Vantiv utilizada para este diario"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr "Los 4 últimos números de la tarjeta usada para pagar"
+msgstr "Los 4 últimos números de la tarjeta que se usó para pagar"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -431,8 +433,8 @@ msgid ""
 "                                can be swiped through the card reader device."
 msgstr ""
 "Usar la integración de Vantiv en el punto de venta es fácil: solo debe presionar el\n"
-"              método de pago asociado. Puede ajustar la cantidad después de eso (por ejemplo, para devolver dinero)\n"
-"             al igual que en cualquier otra línea de pago. Cada vez que se configura la línea de pago, puede\n"
+"              método de pago asociado. Puede ajustar el importe después de eso (por ejemplo, para devolver dinero)\n"
+"             al igual que en cualquier otra línea de pago. Cada vez que configura la línea de pago, puede\n"
 "              pasar una tarjeta por el lector de tarjetas."
 
 #. module: pos_mercury
@@ -486,8 +488,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"Actualmente aceptamos el dispositivo lector de tarjetas MagTek Dynamag. Se puede conectar\n"
-"           directamente al dispositivo de punto de venta o se puede conectar a la caja IoT."
+"Actualmente aceptamos el lector de tarjetas MagTek Dynamag. Se puede conectar\n"
+"           directamente al dispositivo de punto de venta o a la caja IoT."
 
 #. module: pos_mercury
 #. odoo-javascript

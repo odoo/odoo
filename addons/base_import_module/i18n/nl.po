@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,8 @@ msgstr "Afsluiten"
 #, python-format
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
 msgstr ""
+"Verbinding met %s mislukt. De lijst met branchemodules kan niet worden "
+"opgehaald"
 
 #. module: base_import_module
 #. odoo-python
@@ -55,6 +58,7 @@ msgstr ""
 #, python-format
 msgid "Connection to %s failed, the module %s cannot be downloaded."
 msgstr ""
+"Verbinding met %s is mislukt, de module %s kan niet worden gedownload."
 
 #. module: base_import_module
 #. odoo-python
@@ -80,6 +84,7 @@ msgstr "Schermnaam"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
@@ -118,12 +123,12 @@ msgstr "Importeer module"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import demo data"
-msgstr ""
+msgstr "Importeer demo gegevens"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr ""
+msgstr "Importeer demogegevens van de module"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -143,7 +148,7 @@ msgstr "Installeren"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "Installeer de applicatie"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -168,7 +173,7 @@ msgstr "ZIP-bestand module"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
-msgstr ""
+msgstr "Soort module"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -178,7 +183,7 @@ msgstr "Module bestand (.zip)"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
 msgid "Modules Dependencies"
-msgstr ""
+msgstr "Afhankelijkheden van modules"
 
 #. module: base_import_module
 #. odoo-python
@@ -196,7 +201,7 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
-msgstr ""
+msgstr "Officiële apps"
 
 #. module: base_import_module
 #. odoo-python
@@ -236,7 +241,7 @@ msgstr "Studio aanpassingen vereisen de Odoo Studio app."
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will be also installed:\n"
-msgstr ""
+msgstr "De volgende modules worden ook geïnstalleerd:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -245,13 +250,15 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
+"De lijst met branchetoepassingen kan niet worden opgehaald. Probeer het "
+"later opnieuw"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The module %s cannot be downloaded"
-msgstr ""
+msgstr "De module %s kan niet worden gedownload"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit

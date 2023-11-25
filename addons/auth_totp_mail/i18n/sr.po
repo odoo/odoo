@@ -3,6 +3,7 @@
 # 	* auth_totp_mail
 # 
 # Translators:
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
 # Milan Bojovic, 2023
 # 
 msgid ""
@@ -39,6 +40,22 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Poštovani <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> zatražio da aktivirate dvofaktornu autentifikaciju da biste zaštitili svoj nalog.<br><br>\n"
+"        Dvofaktorska autentifikacija („2FA“) je sistem dvostruke autentifikacije.\n"
+"        Prvi se radi pomoću vaše lozinke, a drugi kodom koji dobijate iz namenske mobilne aplikacije.\n"
+"        Popularni uključuju Authi, Google Authenticator ili Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Aktivirajte moju dvofaktorsku autentifikaciju\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
@@ -65,7 +82,7 @@ msgstr ""
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
-msgstr ""
+msgstr "Bezbednost naloga"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
@@ -76,6 +93,7 @@ msgstr ""
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr ""
+"Poziv za aktiviranje dvofaktorske autentifikacije na vašem Odoo nalogu"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -85,16 +103,18 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"Poziv za korišćenje dvofaktorske autentifikacije je poslat za sledeće "
+"korisnike: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "Pozovite da koristite 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "Pozovite da koristite dvofaktornu autentifikaciju"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -104,7 +124,7 @@ msgstr "Naziv"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "Otvorena dvofaktorska konfiguracija autentifikacije"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -137,7 +157,7 @@ msgstr ""
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Podešavanja: 2FA pozivnice"
 
 #. module: auth_totp_mail
 #. odoo-python

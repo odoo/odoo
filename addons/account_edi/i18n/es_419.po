@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "Errores en la facturación electrónica"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr "Información de la facturación electrónica"
+msgstr "Información sobre la facturación electrónica"
 
 #. module: account_edi
 #. odoo-python
@@ -102,8 +103,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"No es posible desactivar (%s) en este diario debido a que no se "
-"sincronizaron todos los documentos"
+"No es posible desactivar (%s) en este diario, no todos los documentos están "
+"sincronizados."
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -156,7 +157,7 @@ msgstr "Formato EDI compatible con los movimientos en este diario"
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr "EDI: Ejecutar operaciones del servicio web"
+msgstr "EDI: ejecutar operaciones del servicio web"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -234,7 +235,7 @@ msgstr "Facturación electrónica"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr "Se necesita el procesamiento de la facturación electrónica "
+msgstr "Se necesita procesar la facturación electrónica "
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
@@ -365,8 +366,7 @@ msgstr "Estado"
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr ""
-"El estado agregado de todos los EDI con el servicio de internet de este "
-"movimiento"
+"El estado agregado de todos los EDI con el servicio web de este movimiento"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -430,8 +430,8 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"No puede editar el siguiente asiento contable %s porque ya se envió un "
-"documento electrónico, use el botón de \"Solicitar cancelación EDI\"."
+"No puede editar el siguiente asiento contable %s, ya se envió un documento "
+"electrónico. Use el botón de \"Solicitar cancelación EDI\"."
 
 #. module: account_edi
 #. odoo-python

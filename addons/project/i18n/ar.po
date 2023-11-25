@@ -97,14 +97,14 @@ msgstr "#{task.stage_id.name}"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -464,7 +464,7 @@ msgstr "<small class=\"text-end\">المرحلة:</small> "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">الأفراد المسند إليهم</small> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -493,22 +493,22 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"الشر�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> تم الانتهاء</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> المهام</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">تم الإغلاق</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">المهام الفرعية</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -546,6 +546,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">سيتم إرسال طلب تقييم بمجرد أن تصل المهمة إلى المرحلة التي يكون فيها قالب البريد الإلكتروني للتقييم محدداً.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">سيتم إرسال طلبات التقييم طالما أن المهمة باقية في مرحلة يكون فيها قالب البريد الإلكتروني للتقييم محدداً.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1279,12 +1284,12 @@ msgstr "عدد المهام الفرعية المغلقة "
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "عدد المهام المغلقة "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "نسبة المهام المغلقة "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1422,7 +1427,7 @@ msgstr "جهة الاتصال"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "تحويل المهمة "
 
 #. module: project
 #. odoo-python
@@ -1430,7 +1435,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "التحويل إلى مهمة/مهمة فرعية "
 
 #. module: project
 #. odoo-javascript
@@ -1815,6 +1820,9 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"سيؤدي حذف المهمة إلى حذف المهام الفرعية المرتبطة بها أيضاً. إذا كنت ترغب في "
+"الاحتفاظ بالمهام الفرعية، فتأكد من إلغاء ربطها بالمهمة الرئيسية مسبقاً. هل "
+"انت متأكد أنك ترغب في المتابعة؟ "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1990,6 +1998,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"يجب أن يكون لدى كل مستخدم مرحلة شخصية واحدة على الأقل. قم بإنشاء مرحلة جديدة"
+" يمكن أن يتم تحويل المهام إليها بعد أن يتم حذف المهام المحددة. "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2129,12 +2139,12 @@ msgstr "مطوي في عرض كانبان"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "قم بمتابعة المهام في مشاريعك والتعليق عليها "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "قم بمتابعة تطور مشاريعك "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2559,7 +2569,7 @@ msgstr "تم تخطي مؤشر التقدم "
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "وضع التبديل "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -3032,7 +3042,7 @@ msgstr "الطلبات الجديدة "
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "مشروع جديد "
 
 #. module: project
 #. odoo-javascript
@@ -3053,7 +3063,7 @@ msgstr "طلب جديد"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "مهمة جديدة "
 
 #. module: project
 #. odoo-python
@@ -3393,6 +3403,8 @@ msgstr ""
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"سيكون للأشخاص المدعوين للتعاون في المشروع صلاحيات الوصول إلى البوابة "
+"الإلكترونية. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3450,7 +3462,7 @@ msgstr "حالة المرحلة الشخصية "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "المراحل الشخصية "
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3573,6 +3585,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
+"لا يمكن تحويل المهام الخاصة إلى مهام فرعية. يرجى تعيين مشروع للمهمة للوصول "
+"إلى هذه الخاصية. "
 
 #. module: project
 #. odoo-javascript
@@ -4509,7 +4523,7 @@ msgstr "المهام الفرعية"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "الوقت المخصص للمهام الفرعية "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4630,7 +4644,7 @@ msgstr "سجلات المهمة"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "خطط المهام "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4955,6 +4969,10 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"يمكنهم تحرير مهام المشروع المشتركة وعرض مستندات محددة في وضع القراءة فقط على"
+" موقعك الإلكتروني. يتضمن ذلك العملاء المهتمين/الفرص، وعروض الأسعار/أوامر "
+"البيع، وأوامر الشراء، وفواتير العملاء وفواتير المورّدين، والجداول الزمنية، "
+"والتذاكر. "
 
 #. module: project
 #. odoo-python
@@ -4994,6 +5012,9 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"هذا المشروع مرتبط بـ %s، بينما تنتمي المرحلة المحددة إلى %s. هناك خياران يجب"
+" أخذهما بعين الاعتبار: إما إزالة تعيين الشركة من المشروع أو من المرحلة، أو "
+"يمكنك تحديث معلومات الشركة لهذه السجلات لمواءمتها ضمن نفس الشركة. "
 
 #. module: project
 #. odoo-python
@@ -5005,6 +5026,9 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"هذا المشروع غير مرتبط بأي شركة، بينما المرحلة مرتبطة بـ %s. هناك خياران يجب "
+"وضعهما بعين الاعتبار: إما تغيير شركة المشروع لتتوافق مع شركة المرحلة أو "
+"إزالة تعيين الشركة من المرحلة "
 
 #. module: project
 #. odoo-javascript
@@ -5101,6 +5125,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"لتحويل مهمة إلى مهمة فرعية، قم بتحديد مهمة أصلية. وإلا، فيمكنك ترك حقل "
+"المهمة الأصلية فارغاً لتحويل مهمة فرعية إلى مهمة مستقلة بذاتها. "
 
 #. module: project
 #. odoo-python
@@ -5151,6 +5177,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"تتبع تكاليف المشروع وإيراداته وهامش الربح عن طريق تعيين الحساب التحليلي "
+"المرتبط بالمشروع في المستندات ذات الصلة. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5456,6 +5484,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"عندما تقوم بمشاركة مشروع في وضع التحرير، فإنك تمنح الأشخاص إمكانية الوصول إلى نوافذ عرض كانبان والقائمة الخاصة بمهامك.\n"
+"                    سيكون بوسع المتعاونون عرض وتعديل جزء من معلومات المهام. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5463,6 +5493,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"عندما تقوم بمشاركة مشروع في وضع القراءة فقط، فإنك تمنح الأشخاص إمكانية الوصول إلى المهام الموجودة في بوابتهم الإلكترونية.\n"
+"                    سيكون بوسع هؤلاء الأشخاص عرض المهام، ولكن لن يتمكنوا من تحريرها. "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5553,6 +5585,9 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"لا يمكنك تبديل الشركة في هذه المرحلة إلى %(company_name)s لأنها تتضمن حالياً"
+" مشاريع مرتبطة بـ %(project_company_name)s. يرجى التأكد من أن هذه المرحلة "
+"تتألف فقط من المشاريع المرتبطة بـ %(company_name)s. "
 
 #. module: project
 #. odoo-python
@@ -5625,6 +5660,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"بيدك التحكم الكامل ويمكنك إلغاء الوصول إلى البوابة في أي وقت. هل أنت مستعد "
+"للاستمرار؟ "
 
 #. module: project
 #. odoo-python
@@ -5729,7 +5766,7 @@ msgstr "مثال: المهام "
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "مثال: قائمة المهام "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project

@@ -97,14 +97,14 @@ msgstr "#{task.stage_id.name}"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -418,6 +418,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"พึงพอใจ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"โอเค\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"ไม่พอใจ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -462,12 +465,12 @@ msgstr "<small class=\"text-end\">สถานะ:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">ผู้รับมอบหมาย</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">ลูกค้า</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -491,22 +494,22 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"พาร์ทเนอร
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\">เสร็จสิ้น</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\">งาน</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">ปิดแล้ว</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">งานย่อย</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -544,6 +547,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">คำขอการให้คะแนนจะถูกส่งทันทีที่งานถึงขั้นตอนที่มีการกำหนดเทมเพลตอีเมลการให้คะแนน</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">คำขอการให้คะแนนจะถูกส่งเท่าที่งานยังคงอยู่ในขั้นตอนที่มีการกำหนดเทมเพลตอีเมลการให้คะแนน</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1276,12 +1284,12 @@ msgstr "จำนวนงานย่อยที่ปิดแล้ว"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "จำนวนงานที่ปิดแล้ว"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "เปอร์เซ็นต์งานที่ปิดแล้ว"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1419,7 +1427,7 @@ msgstr "ติดต่อ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "แปลงงาน"
 
 #. module: project
 #. odoo-python
@@ -1427,7 +1435,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "แปลงเป็นงาน/งานย่อย"
 
 #. module: project
 #. odoo-javascript
@@ -1812,6 +1820,9 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"การลบงานจะเป็นการลบงานย่อยที่เกี่ยวข้องด้วย หากคุณต้องการเก็บงานย่อยไว้ "
+"ตรวจสอบให้แน่ใจว่าได้ยกเลิกการเชื่อมโยงงานเหล่านั้นจากงานหลักไว้ล่วงหน้า "
+"คุณยังต้องการดำเนินการต่อหรือไม่?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1987,6 +1998,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"ผู้ใช้แต่ละคนควรมีขั้นตอนส่วนตัวอย่างน้อยหนึ่งขั้นตอน "
+"การสร้างขั้นตอนใหม่จะสามารถถ่ายโอนงานได้หลังจากลบงานที่เลือกแล้ว"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2127,12 +2140,12 @@ msgstr "พับในคัมบัง"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "ติดตามและแสดงความคิดเห็นเกี่ยวกับงานของโปรเจ็กต์ของคุณ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "ติดตามการพัฒนาของโปรเจ็กต์ของคุณ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2557,7 +2570,7 @@ msgstr "ได้เกินไมล์สโตนแล้ว"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "เป็นโหมดสลับ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -3026,7 +3039,7 @@ msgstr "คำสั่งซื้อใหม่"
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "โปรเจ็กต์ใหม่"
 
 #. module: project
 #. odoo-javascript
@@ -3047,7 +3060,7 @@ msgstr "คำร้องขอใหม่"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "งานใหม่"
 
 #. module: project
 #. odoo-python
@@ -3386,7 +3399,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
-msgstr ""
+msgstr "ผู้ที่ได้รับเชิญให้ทำงานร่วมกันในโปรเจ็กต์จะมีสิทธิ์การเข้าถึงพอร์ทัล"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3444,7 +3457,7 @@ msgstr "สถานะขั้นตอนส่วนตัว"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "ขั้นตอนส่วนตัว"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3566,6 +3579,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
+"งานส่วนตัวไม่สามารถแปลงเป็นงานย่อยได้ "
+"โปรดกำหนดโปรเจ็กต์สำหรับงานเพื่อเข้าถึงฟีเจอร์นี้"
 
 #. module: project
 #. odoo-javascript
@@ -4502,7 +4517,7 @@ msgstr "งานย่อย"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "งานย่อยที่จัดสรรเวลา"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4622,7 +4637,7 @@ msgstr "Logs"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "แผนงาน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4702,7 +4717,7 @@ msgstr "งาน:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "งาน: การขอคะแนน"
 
 #. module: project
 #. odoo-python
@@ -4948,6 +4963,9 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"พวกเขาสามารถแก้ไขงานโปรเจ็กต์ที่ใช้ร่วมกันและดูเอกสารเฉพาะในโหมดอ่านอย่างเดียวบนเว็บไซต์ของคุณได้"
+" ซึ่งรวมถึงลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อ ใบเสนอราคา/ใบสั่งขาย "
+"ใบสั่งซื้อ ใบแจ้งหนี้และใบเรียกเก็บเงิน ใบบันทึกเวลา และทิกเก็ต"
 
 #. module: project
 #. odoo-python
@@ -4986,6 +5004,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"โปรเจ็กต์นี้เชื่อมโยงกับ %s ในขณะที่ขั้นตอนที่เลือกเป็นของ %s "
+"มีสองตัวเลือกที่ควรพิจารณา: "
+"ลบการกำหนดบริษัทออกจากโปรเจ็กต์หรือออกจากพื้นที่งาน "
+"หรือคุณสามารถอัปเดตข้อมูลบริษัทสำหรับบึนทึกเหล่านี้เพื่อจัดเรียงภายใต้บริษัทเดียวกันได้"
 
 #. module: project
 #. odoo-python
@@ -4997,6 +5019,10 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"โปรเจ็กต์นี้ไม่เกี่ยวข้องกับบริษัทใดๆ ในขณะที่ขั้นตอนเชื่อมโยงกับ %s "
+"มีสองตัวเลือกที่ควรพิจารณา: "
+"เปลี่ยนบริษัทของโปรเจ็กต์ให้ตรงกับบริษัทของขั้นตอน "
+"หรือลบการกำหนดบริษัทออกจากขั้นตอน"
 
 #. module: project
 #. odoo-javascript
@@ -5092,6 +5118,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"หากต้องการแปลงงานให้เป็นงานย่อย ให้เลือกงานหลัก หรือปล่อยฟิลด์งานหลักว่างไว้"
+" เพื่อแปลงงานย่อยให้เป็นงานเดี่ยว"
 
 #. module: project
 #. odoo-python
@@ -5142,6 +5170,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"ติดตามต้นทุน รายได้ และกำไรขั้นต้นของโปรเจ็กต์ "
+"โดยการตั้งค่าบัญชีการวิเคราะห์ของโปรเจ็กต์ในเอกสารที่เกี่ยวข้อง"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5450,6 +5480,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"เมื่อแชร์โปรเจ็กต์ในโหมดแก้ไข คุณกำลังให้ผู้อื่นเข้าถึงมุมมองคัมบังและรายการงานของคุณ\n"
+"                    ผู้ทำงานร่วมกันจะสามารถดูและแก้ไขข้อมูลบางส่วนของงานได้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5457,6 +5489,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"เมื่อแชร์โปรเจ็กต์ในโหมดอ่านอย่างเดียว คุณกำลังให้สิทธิ์ผู้อื่นเข้าถึงงานในพอร์ทัลของพวกเขา\n"
+"                    บุคคลเหล่านี้จะสามารถดูงานได้ แต่จะไม่สามารถแก้ไขได้"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5549,6 +5583,10 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนบริษัทของขั้นตอนนี้เป็น %(company_name)s ได้ "
+"เนื่องจากปัจจุบันมีโปรเจ็กต์ที่เกี่ยวข้องกับ %(project_company_name)s "
+"โปรดตรวจสอบให้แน่ใจว่าขั้นตอนนี้ประกอบด้วยโปรเจ็กต์ที่เชื่อมโยงกับ "
+"%(company_name)s โดยเฉพาะ"
 
 #. module: project
 #. odoo-python
@@ -5622,6 +5660,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"คุณสามารถควบคุมได้อย่างสมบูรณ์และสามารถเพิกถอนการเข้าถึงพอร์ทัลได้ตลอดเวลา "
+"คุณต้องการที่จะดำเนินการต่อหรือไม่?"
 
 #. module: project
 #. odoo-python
@@ -5726,7 +5766,7 @@ msgstr "เช่น งาน"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "เช่น To Do"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5747,7 +5787,7 @@ msgstr "เช่น การเปิดตัวสินค้า"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "fs-4"
-msgstr ""
+msgstr "fs-4"
 
 #. module: project
 #. odoo-javascript
