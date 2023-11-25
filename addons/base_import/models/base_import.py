@@ -1311,6 +1311,7 @@ class Import(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
+        self = self.with_context(tracking_disable=False)
         self._cr.execute('SAVEPOINT import')
 
         try:
