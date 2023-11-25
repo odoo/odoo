@@ -95,7 +95,7 @@ function linkify(text, attrs) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         const url = match[0];
         const href = !/^https?:\/\//i.test(url) ? "http://" + encodeURI(url) : encodeURI(url);
-        result += `<a ${attrs} href="${href}">${_escapeEntities(url)}`;
+        result += `<a ${attrs} href="${href}">${_escapeEntities(url)}</a>`;
         curIndex = match.index + match[0].length;
     }
     return result + _escapeEntities(text.slice(curIndex));
