@@ -18,15 +18,15 @@
 # Egon Raamat <egon@avalah.ee>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Martin Talts <martin.t@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Patrick-Jordan Kiudorv, 2022
-# Triine Aavik <triine@avalah.ee>, 2023
 # Leaanika Randmets, 2023
 # Martin Trigaux, 2023
 # Anna, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
 # JanaAvalah, 2023
+# Martin Talts <martin.t@avalah.ee>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9637,6 +9637,13 @@ msgid "Compute"
 msgstr "Arvuta"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -11852,6 +11859,16 @@ msgstr "Viga"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Veateade ilmub piirangu rikkumisel. "
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -14669,7 +14686,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Kehtetu rühmitamise parameeter"
 
 #. module: base
-#. odoo-python
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -14818,6 +14846,15 @@ msgstr "Vigane liik"
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
 msgstr ""
 
 #. module: base
@@ -21778,6 +21815,19 @@ msgid "Send text messages when project/task stage move"
 msgstr "Tekstsõnumite saatmine projekti/ülesande etapi muutmisel"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Saada oma pakid UPS-i kaudu ja jälgi neid veebis"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Saatke oma küsitlusi või jagage neid reaalajas."
@@ -22464,7 +22514,6 @@ msgstr "Alusta seadistamist"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -22507,6 +22556,7 @@ msgstr "Maakonnad"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "Staatus"
@@ -24582,6 +24632,16 @@ msgstr ""
 "U - TÄIENDAVATE TERRITORIAALSETE ORGANISATSIOONIDE JA ASUTUSTE TEGEVUS"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS transport"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -24648,6 +24708,13 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "Ei leia sellest süsteemist Wkhtmltopdf'i. PDF'i ei saa luua."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26061,6 +26128,15 @@ msgid "You can not create recursive tags."
 msgstr "Rekursiivseid silte ei saa luua."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "Teil ei saa olla kahte sama sisselogimisega kasutajat!"
@@ -26189,6 +26265,12 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -26218,6 +26300,13 @@ msgstr ""
 "Pigem tuleb need arhiveerida pärast nendega seotud kasutaja arhiveerimist.\n"
 "\n"
 "Seotud aktiivsed kasutajad : %(names)s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26252,6 +26341,13 @@ msgid ""
 msgstr ""
 "Te ei saa vähendada raamatupidamiskandes juba kasutatud valuuta "
 "kümnendkohtade arvu."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

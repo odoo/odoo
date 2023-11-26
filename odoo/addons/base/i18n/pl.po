@@ -43,6 +43,7 @@
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -50,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13243,6 +13244,16 @@ msgstr "Komunikat o błędzie zwracany w przypadku naruszenia ograniczenia."
 
 #. module: base
 #. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -16122,6 +16133,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Nieprawidłowy parametr \"grupuj według\""
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -16281,6 +16298,15 @@ msgstr "Niepoprawny typ"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Nieprawidłowa wartość dla %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -24477,6 +24503,19 @@ msgid "Send text messages when project/task stage move"
 msgstr "Wysyłanie wiadomości tekstowych po zmianie etapu projektu/zadania"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Wyślij swoje przesyłki za pośrednictwem UPS i śledź je online"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Wysyłaj ankiety lub udostępniaj je na żywo."
@@ -27355,6 +27394,16 @@ msgstr "Typ:"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - DZIAŁALNOŚĆ ORGANIZACJI I ORGANÓW EKSTERYTORIALNYCH"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS Dostawa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

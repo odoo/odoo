@@ -18,11 +18,9 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # CristianCruzParra, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Pete M, 2022
 # Arnau Ros, 2022
 # Harcogourmet, 2022
 # Cristian Cruz, 2022
-# marcescu, 2023
 # martioodo hola, 2023
 # Jonatan Gk, 2023
 # Guspy12, 2023
@@ -31,6 +29,8 @@
 # Ivan Espinola, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Josep Anton Belchi, 2023
+# Pete M, 2023
+# marcescu, 2023
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Josep Anton Belchi, 2023\n"
+"Last-Translator: marcescu, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6945,7 +6945,7 @@ msgstr "'%s' no sembla una data vàlida pel camp '%%(field)s'"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr "'%s' no sembla una data vàlida pel camp '%%(field)s'"
+msgstr "'%s' no sembla una data vàlida pel camp '%%(camp)s'"
 
 #. module: base
 #. odoo-python
@@ -16189,6 +16189,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paràmetre 'group by' no vàlid"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -16212,7 +16218,7 @@ msgstr "Camp compost no vàlid %(definition)s a %(use)s"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
-msgstr "Id. de la base de dades '%s' no vàlid pel camp '%%(field)s'"
+msgstr "Id. de la base de dades '%s' no vàlid pel camp '%%(camp)s'"
 
 #. module: base
 #. odoo-python
@@ -16348,6 +16354,15 @@ msgstr "Tipus invàlid "
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Valor no vàlid per a %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -18914,7 +18929,7 @@ msgid ""
 "'%%(field)s'"
 msgstr ""
 "No s'han trobat registres coincidents per %(field_type)s '%(value)s' al camp"
-" '%%(field)s'"
+" '%%(camp)s'"
 
 #. module: base
 #. odoo-python
@@ -24571,6 +24586,20 @@ msgid "Send text messages when project/task stage move"
 msgstr "Envieu missatges de text quan es mogui l'etapa del projecte/tasca"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr ""
+"Envieu els vostres enviaments a través d'UPS i feu-ne un seguiment en línia"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Envieu les vostres enquestes o compartiu-les en directe."
@@ -27461,6 +27490,16 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - ACTIVITATS D'ORGANITZACIONS I ÒRGANS EXTRATERRITORIALS"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "Enviament UPS"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -28213,7 +28252,7 @@ msgstr "Valor"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
-msgstr "El valor '%s' no s'ha trobat al camp de selecció '%%(field)s'"
+msgstr "El valor '%s' no s'ha trobat al camp de selecció '%%(camp)s'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_binary

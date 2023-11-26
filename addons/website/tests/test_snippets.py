@@ -39,6 +39,14 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
+        IrAttachment = self.env['ir.attachment']
+        base = "http://%s:%s" % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_banner_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image',
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
         self.assertEqual(
             self.env['website'].browse(1).social_instagram,
