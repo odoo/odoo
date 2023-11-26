@@ -142,10 +142,10 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def send_header(self, keyword, value):
         # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
         # since it is incompatible with websocket.
-        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
-            # Do not keep processing requests.
-            self.close_connection = True
-            return
+        if keyword == 'Connection' and value == 'close' and hasattr(self,"environ"):
+            if 'Upgrade' in self.environ.get('HTTP_CONNECTION', '') and self.environ.get('HTTP_UPGRADE', '').lower() == 'websocket' and 'GET' in self.environ.get('REQUEST_METHOD', ''):
+                self.close_connection = True
+                return
         super().send_header(keyword, value)
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
