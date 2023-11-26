@@ -13,6 +13,7 @@
 # Martin Trigaux, 2023
 # Ana Sanjuán, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,14 +43,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is not from your department"
-msgstr ""
+msgstr "%s: No es de su departamento "
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is your own expense"
-msgstr ""
+msgstr "%s: Son sus propios gastos "
 
 #. module: hr_expense
 #. odoo-python
@@ -88,7 +89,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense Report</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Informe de gastos</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -213,6 +214,8 @@ msgstr "Todos los informes"
 #, python-format
 msgid "All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
+"Todos los gastos en un informe de gastos deben tener el mismo criterio "
+"\"pagado por\". "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -291,7 +294,7 @@ msgstr "Fecha de aprobación"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_state
 msgid "Approval State"
-msgstr ""
+msgstr "Estado de aprobación "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1209,7 +1212,7 @@ msgstr "Volvamos a sus gastos."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Lunch with customer $12.32"
-msgstr ""
+msgstr "Almuerzo con cliente 12,32 e"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1513,13 +1516,13 @@ msgstr "Pago creado para: %s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr ""
+msgstr "Método de pago permitido para los gastos cubiertos por la empresa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr ""
+msgstr "Métodos de pago disponibles para los gastos cubiertos por la empresa"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1767,7 +1770,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
 msgid "Selectable Payment Method Line"
-msgstr ""
+msgstr "Línea de método de pago seleccionable "
 
 #. module: hr_expense
 #. odoo-python
@@ -1923,7 +1926,7 @@ msgstr "Subtotal"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Subtotal In Currency"
-msgstr ""
+msgstr "Subtotal en moneda"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
@@ -2282,6 +2285,8 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
+"No puede aprobar:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2295,7 +2300,7 @@ msgstr "No puedes eliminar un gasto contabilizado o aprobado."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr "No puede eliminar un gasto contabilizado o aprobado."
+msgstr "No puede eliminar un gasto contabilizado o pagado."
 
 #. module: hr_expense
 #. odoo-python
@@ -2373,7 +2378,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "Su informe de gastos "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2412,7 +2417,7 @@ msgstr "a ser reembolsado"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr ""
+msgstr "por enviar"
 
 #. module: hr_expense
 #. odoo-python
