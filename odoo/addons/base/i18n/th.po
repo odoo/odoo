@@ -414,6 +414,9 @@ msgid ""
 "\n"
 "This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
 msgstr ""
+"\n"
+"\n"
+"โมดูลนี้จะช่วยให้คุณสามารถดูส่วนต่างของคำสั่งซื้อระบบขายหน้าร้านของคุณได้ในรายงานส่วนต่างยอดขาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -1878,6 +1881,23 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* เพิ่มรายงานสมุดบัญชี VAT ซึ่งเป็นข้อกำหนดทางกฎหมายในอาร์เจนตินา และที่เก็บข้อมูลรายละเอียด VAT ของการขายหรือการซื้อที่เกิดขึ้นในช่วงเวลาหนึ่ง\n"
+"* เพิ่มรายงานสรุป VAT ที่ใช้ในการวิเคราะห์การออกใบแจ้งหนี้\n"
+"* เพิ่มฟังก์ชันสมุด VAT ดิจิทัลที่ให้เราสร้างไฟล์ TXT เพื่อนำเข้าใน AFIP สิ่งที่เราดำเนินการคือ:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"เอกสารอย่างเป็นทางการ AFIP\n"
+"\n"
+"* สมุด VAT ดิจิทัล - การออกแบบบันทึก https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - การออกแบบบันทึก (เช่นเดียวกับสมุด VAT ดิจิทัล): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - ข้อกำหนด (ให้ข้อมูลเพิ่มเติมเกี่ยวกับวิธีการจัดรูปแบบตัวเลขและการเติมช่องตัวเลข/ตัวอักษร): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1933,6 +1953,12 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"โมดูลที่เพิ่มการจัดการสต็อกในรายงานอินทราสแทต\n"
+"============================================================\n"
+"\n"
+"โมดูลนี้ให้รายละเอียดของสินค้าที่มีการซื้อขายระหว่างประเทศใน\n"
+"สหภาพยุโรป"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -2046,6 +2072,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"การโอนเครดิต ABA\n"
+"===================\n"
+"\n"
+"โมดูลนี้อนุญาตให้สร้างชุดการชำระเงินเป็นไฟล์ข้อความ ABA (Australian\n"
+"Bankers Association) ไฟล์ 'aba' ที่สร้างขึ้นสามารถอัปโหลดไปยัง\n"
+"ธนาคารหลายแห่งในประเทศออสเตรเลียได้\n"
+"\n"
+"การตั้งค่า\n"
+"-----\n"
+"\n"
+"- *บัญชี > การกำหนดค่า > การออกใบแจ้งหนี้ > สมุดรายวัน*\n"
+"\n"
+"    หากจำเป็น ให้สร้างสมุดรายวันใหม่หรือเลือกสมุดรายวันที่มีอยู่ด้วย **ประเภท**\n"
+"    เป็น *“ธนาคาร”*\n"
+"\n"
+"    ใน **การตั้งค่าขั้นสูง** ตรวจสอบให้แน่ใจว่าได้ทำเครื่องหมายการโอนเครดิต ABA แล้ว\n"
+"\n"
+"    บนแท็บ **บัญชีธนาคาร** ให้ป้อน **หมายเลขบัญชี**\n"
+"\n"
+"    บนแท็บเดียวกัน ตรวจสอบให้แน่ใจว่าได้ตั้งค่าข้อมูลการโอน ABA แล้ว\n"
+"\n"
+"    **BSB** - ต้องมี 6 หลัก และจะถูกจัดรูปแบบอัตโนมัติ\n"
+"\n"
+"    **รหัสสถาบันการเงิน** - จำเป็น (ได้รับจากธนาคารหรือดูได้\n"
+"    ใน Google) เป็นอักษรตัวใหญ่ 3 ตัว 3 ตัว\n"
+"\n"
+"    การระบุชื่อผู้ใช้** - ธนาคารบางแห่งอนุญาตให้มีรูปแบบอิสระ บางธนาคาร\n"
+"    อาจปฏิเสธไฟล์ ABA หากชื่อผู้ใช้ในการจัดหาไม่เป็นไปตามที่คาดไว้\n"
+"    ต้องมีความยาวไม่เกิน 26 ตัวอักษร\n"
+"\n"
+"    **หมายเลขประจำตัว APCA** - หมายเลขประจำตัวผู้ใช้ได้รับการจัดสรร\n"
+"    จากธนาคาร เป็นตัวเลข 6 หลัก\n"
+"\n"
+"    **รวมธุรกรรม Self Balancing** - สถาบันบางแห่งกำหนดให้รายการ\n"
+"    สุดท้ายเป็นธุรกรรม Self Balancing ซึ่งใช้เป็นการยืนยัน\n"
+"\n"
+"- *การบัญชี > การกำหนดค่า > การชำระเงิน > บัญชีธนาคาร*\n"
+"\n"
+"    บัญชีจะแสดงในรายการเป็นชื่อสมุดรายวัน\n"
+"\n"
+"    การแก้ไขจะแสดง **หมายเลขบัญชี** สิ่งนี้สำคัญเนื่องจากถูกใช้โดย\n"
+"    กระบวนการ ABA\n"
+"\n"
+"    **ธนาคาร** เป็นตัวเลือก\n"
+"\n"
+"- *ผู้ติดต่อ > การกำหนดค่า > บัญชีธนาคาร > บัญชีธนาคาร*\n"
+"\n"
+"    บัญชีการชำระเงินจะแสดงในรายการเป็นหมายเลขบัญชี\n"
+"\n"
+"    **ชื่อเจ้าของบัญชี** - สามารถป้อนได้ที่นี่ หากจำเป็น โดยทั่วไปจะไม่ผ่าน\n"
+"    การตรวจสอบโดยธนาคารเกี่ยวกับการโอนไฟล์ ABA แต่อาจปรากฏในใบแจ้งยอดธนาคารของผู้รับเงิน\n"
+"    เทียบกับการชำระเงิน\n"
+"\n"
+"- บัญชีธนาคารของผู้ขายสามารถตั้งค่าได้ในที่เดียวกัน อย่างไรก็ตาม\n"
+"  โดยทั่วไปจะง่ายกว่าในการตั้งค่าจากพาร์ทเนอร์สำหรับผู้ขาย\n"
+"\n"
+"- *การบัญชี > ผู้ขาย > ผู้ขาย*\n"
+"\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
+"    vendor bank account can be created or edited.\n"
+"\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
+"\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
+"\n"
+"    **Account Holder Name** - Optional.\n"
+"\n"
+"Use\n"
+"---\n"
+"\n"
+"- Create a vendor payment in the normal way.\n"
+"\n"
+"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
+"\n"
+"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
+"\n"
+"    Select **ABA Credit Transfer** radio button.\n"
+"\n"
+"    If the vendor has multiple bank account, you may need to select the\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
+"\n"
+"    Enter payment amount, etc.\n"
+"\n"
+"- *Vendors > Payments*\n"
+"\n"
+"    After payment(s) are confirmed, they will show up in the payments list.\n"
+"\n"
+"    Using filters, or sorting, select the payments to be included.  Under\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2064,6 +2186,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"ข้อมูลสาธิตการรวมบัญชี\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -2075,6 +2200,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"สิทธิการเข้าถึงบัญชี\n"
+"========================\n"
+"ช่วยให้ผู้ใช้ผู้ดูแลระบบสามารถเข้าถึงฟีเจอร์ทางบัญชีทั้งหมด เช่น รายการสมุดรายวันและผังบัญชี\n"
+"\n"
+"โดยจะมอบหมายสิทธิ์การเข้าถึงของผู้จัดการและผู้ใช้ให้กับผู้ดูแลระบบสำหรับแอปพลิเคชันระบบบัญชี และสิทธิ์ผู้ใช้เฉพาะให้กับผู้ใช้สาธิตเท่านั้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -2445,6 +2576,8 @@ msgid ""
 "\n"
 "Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 msgstr ""
+"\n"
+"เพิ่มข้อมูลการรับเหมาช่วงในรายงานการวิเคราะห์ต้นทุนและการวิเคราะห์การผลิต\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -2504,6 +2637,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"เพิ่มแบบจำลองใหม่ที่ชื่อ \"ชนิดการระบุ\" ที่ขยายฟังก์ชันฟิลด์ vat ในพาร์ทเนอร์ และให้ผู้ใช้สามารถระบุ (เป็นใบแจ้งหนี้ในท้ายที่สุด) ให้กับผู้ติดต่อไม่เพียงแต่ด้วยหมายเลขประจำตัวผู้เสียภาษีทางการเงิน (VAT) ของพวกเขาเท่านั้น แต่ยังมีชนิดอื่นๆ ของการระบุเช่นเอกสารประจำชาติ หนังสือเดินทาง บัตรประจำตัวต่างประเทศและอื่นๆ เมื่อติดตั้งโมดูลนี้แล้ว คุณจะเห็นมุมมองสองฟิลด์ในฟอร์มพาร์ทเนอร์:\n"
+"\n"
+"* ประเภทการระบุตัวตน\n"
+"* หมายเลขประจำตัว\n"
+"\n"
+"ลักษณะการทำงานนี้เป็นข้อกำหนดทั่วไปสำหรับบางประเทศละติน เช่น ประเทศอาร์เจนตินาและชิลี หากการประยุกต์ใช้ของคุณมีข้อกำหนดนี้ คุณจะต้องพึ่งพาโมดูลนี้และกำหนดประเภทการระบุตัวตนที่ใช้ในประเทศของคุณในโมดูลการประยุกต์ใช้ในประเทศของคุณ โดยทั่วไปการระบุประเภทเหล่านี้ถูกกำหนดโดยหน่วยงานของรัฐที่ควบคุมการดำเนินงานทางการเงิน ตัวอย่างเช่น:\n"
+"\n"
+"* AFIP ในประเทศอาร์เจนตินากำหนด DNI, CUIT (vat สำหรับนิติบุคคล), CUIL (vat สำหรับบุคคลธรรมดา) และประเภทการระบุตัวตนที่ถูกต้องอีก 80 ประเภท\n"
+"\n"
+"ข้อมูลประจำตัวแต่ละรายการจะเก็บข้อมูลนี้ไว้:\n"
+"\n"
+"* ชื่อ: ชื่อสั้นของข้อมูลประจำตัว\n"
+"* คำอธิบาย: อาจเป็นชื่อสั้นหรือชื่อยาวที่เหมือนกัน\n"
+"* country_id: ประเทศที่ข้อมูลระบุตัวตนนี้อยู่\n"
+"* is_vat: ระบุบันทึกนี้เป็นภาษีมูลค่าเพิ่มที่เกี่ยวข้องสำหรับประเทศใดประเทศหนึ่ง\n"
+"* ลำดับ: ให้เราจัดเรียงประเภทการระบุตัวตนตามประเภทที่ใช้มากที่สุด\n"
+"* ใช้งานอยู่: เราสามารถ เปิดใช้งาน/ปิดใช้งาน การระบุตัวตนเพื่อให้ลูกค้าใช้งานได้ง่ายขึ้น\n"
+"\n"
+"เพื่อให้โมดูลนี้เข้ากันได้กับการใช้งานที่มีอยู่ในหลายบริษัท ซึ่งเรามีบริษัทที่ไม่ต้องการ/สนับสนุนข้อกำหนดนี้ เราได้เพิ่มประเภทการระบุตัวตนทั่วไปและกฎทั่วไปเพื่อจัดการข้อมูลการติดต่อ และทำให้โปร่งใสสำหรับผู้ใช้เมื่อใช้เท่านั้น VAT อย่างที่เราทราบกันดีอยู่แล้ว\n"
+"\n"
+"ข้อมูลประจำตัวทั่วไป:\n"
+"\n"
+"* VAT: หมายเลขประจำตัวผู้เสียภาษีทางการเงิน หรือหมายเลข VAT โดยค่าเริ่มต้นจะถูกเลือกเป็นชนิดรหัส ดังนั้นผู้ใช้จะต้องเพิ่มหมายเลขภาษีที่เกี่ยวข้องเท่านั้น\n"
+"* หนังสือเดินทาง\n"
+"* บัตรประจำตัวต่างประเทศ (เอกสารประจำตัวต่างประเทศ)\n"
+"\n"
+"กฎเมื่อสร้างพาร์ทเนอร์ใหม่: เราจะเห็นเฉพาะประเภทการระบุตัวตนที่มีความหมายโดยคำนึงถึงกฎเหล่านี้:\n"
+"\n"
+"* หากพาร์ทเนอร์ไม่ได้กำหนดที่อยู่ประเทศ: จะแสดงประเภทการระบุตัวตนทั่วไปบวกกับประเภทที่กำหนดไว้ในประเทศบริษัทที่เกี่ยวข้องของพาร์ทเนอร์ (หากพาร์ทเนอร์ไม่ได้ระบุบริษัทไว้ จะแสดงประเภทการระบุที่เกี่ยวข้องกับบริษัทผู้ใช้ปัจจุบัน)\n"
+"\n"
+"* หากพาร์ทเนอร์มีที่อยู่ประเทศ: จะแสดงประเภทการระบุตัวตนทั่วไปบวกกับประเภทที่กำหนดไว้สำหรับประเทศของพาร์ทเนอร์\n"
+"\n"
+"เมื่อสร้างบริษัทใหม่ จะตั้งค่าให้พาร์ทเนอร์ที่เกี่ยวข้องเสมอเป็นประเภทการระบุประเทศ is_vat\n"
+"\n"
+"ประเภทการระบุตัวตนที่กำหนดไว้ทั้งหมดสามารถตรวจสอบและเปิดใช้งาน/ปิดใช้งานได้ในเมนู \"ผู้ติดต่อ/การกำหนดค่า / ประเภทการระบุตัวตน\"\n"
+"\n"
+"โมดูลนี้เข้ากันได้กับโมดูล base_vat เพื่อให้สามารถตรวจสอบหมายเลข VAT สำหรับแต่ละประเทศที่มีหรือไม่มีความเป็นไปได้ในการจัดการรหัสประจำตัวหลายประเภท\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -2541,6 +2712,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"เพิ่มความสามารถให้กับแบบฟอร์มเว็บไซต์ของคุณเพื่อสร้างลูกค้าเป้าหมายหรือโอกาสทางการขายในแอปลูกค้าสัมพันธ์\n"
+"จะต้องปรับแต่งแบบฟอร์มภายใน *ตัวสร้างเว็บไซต์* เพื่อสร้างลูกค้าเป้าหมาย\n"
+"\n"
+"โมดูลนี้ประกอบด้วยการตรวจสอบหมายเลขโทรศัพท์ติดต่อและหมายเลขโทรศัพท์มือถือ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -2567,6 +2743,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"เพิ่มข้อมูลความสัมพันธ์ระหว่างใบสั่งขายและใบสั่งซื้อ หากเปิดใช้งานการผลิตตามสั่ง (MTO) บนผลิตภัณฑ์ที่ขายหนึ่งรายการ\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -2574,6 +2752,8 @@ msgid ""
 "\n"
 "Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"เพิ่มการรองรับเพื่อกรอกช่องตัวเลือกสามช่องที่ใช้ เมื่อใช้ Chorus Pro โดยเฉพาะการออกใบแจ้งหนี้บริการสาธารณะ\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2581,6 +2761,8 @@ msgid ""
 "\n"
 "Add the ability to create invoices from the document module.\n"
 msgstr ""
+"\n"
+"เพิ่มความสามารถในการสร้างใบแจ้งหนี้จากโมดูลเอกสาร\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_sign
@@ -2589,6 +2771,9 @@ msgid ""
 "Add the ability to create signatures from the document module.\n"
 "The first element of the selection (in DRM) will be used as the signature attachment.\n"
 msgstr ""
+"\n"
+"เพิ่มความสามารถในการสร้างลายเซ็นจากโมดูลเอกสาร\n"
+"องค์ประกอบแรกของการเลือก (ใน DRM) จะถูกใช้เป็นไฟล์แนบลายเซ็น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment
@@ -2596,6 +2781,8 @@ msgid ""
 "\n"
 "Add the ability to manage resumés and letters from the Documents app.\n"
 msgstr ""
+"\n"
+"เพิ่มความสามารถในการจัดการเรซูเม่และจดหมายจากแอปเอกสาร\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -2618,6 +2805,8 @@ msgid ""
 "\n"
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
+"\n"
+"เพิ่มการดำเนินการเพื่อลงนามในเอกสารที่แนบมากับงาน\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -2625,6 +2814,8 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
+"\n"
+"เพิ่มข้อมูลยานพาหนะลงในเอกสาร\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -2633,6 +2824,9 @@ msgid ""
 "Adds the ability to create products from the document module and adds the\n"
 "option to send products' attachments to the documents app.\n"
 msgstr ""
+"\n"
+"เพิ่มความสามารถในการสร้างผลิตภัณฑ์จากโมดูลเอกสารและเพิ่ม\n"
+"ตัวเลือกในการส่งไฟล์แนบของผลิตภัณฑ์ไปยังแอปเอกสาร\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project_sale
@@ -2640,6 +2834,8 @@ msgid ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
 msgstr ""
+"\n"
+"เพิ่มความสามารถในการตั้งค่าเทมเพลตพื้นที่ทำงานบนผลิตภัณฑ์\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -2656,6 +2852,9 @@ msgid ""
 "Advanced features for the PoS like better views \n"
 "for IoT Box config.   \n"
 msgstr ""
+"\n"
+"ฟีเจอร์ขั้นสูงสำหรับ PoS เช่น มุมมองที่ดีขึ้น\n"
+"สำหรับการกำหนดค่ากล่อง IoT   \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment
@@ -2665,6 +2864,10 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"อนุญาตให้ลูกค้ากำหนดเวลาการนัดหมายผ่านเว็บไซต์ของคุณ\n"
+"-------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -2718,6 +2921,10 @@ msgid ""
 "-----------------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"อนุญาตให้สร้างลูกค้าเป้าหมายจากการนัดหมายตามกำหนดการผ่านเว็บไซต์ของคุณ\n"
+"-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -2757,6 +2964,8 @@ msgid ""
 "\n"
 "Allows customers to pay for their orders at a shop, instead of paying online.\n"
 msgstr ""
+"\n"
+"ช่วยให้ลูกค้าชำระเงินค่าสินค้าที่ร้านค้าแทนการชำระเงินออนไลน์ได้\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account
@@ -2766,6 +2975,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"ช่วยให้สามารถคำนวณบางส่วนของการทำกำไรของโปรเจ็กต์ได้\n"
+"==================================================================================================\n"
+"โมดูลนี้ช่วยให้สามารถคำนวณส่วน 'ใบเรียกเก็บเงินของผู้ขาย' 'ต้นทุนอื่นๆ' และ 'รายได้อื่นๆ' สำหรับการทำกำไรของโปรเจ็กต์ ในมุมมองโปรเจ็กต์อัปเดต\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -2783,6 +2996,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"ช่วยให้สามารถคำนวณอัตรากำไรขั้นต้นที่ถูกต้องสำหรับการขายบริการ\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -2792,6 +3008,10 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"อนุญาตให้สร้างงานจากใบสั่งขายของคุณ\n"
+"=============================================\n"
+"โมดูลนี้อนุญาตให้สร้าง โปรเจ็กต์/งาน จากใบสั่งขาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_service
@@ -2801,6 +3021,10 @@ msgid ""
 "===========================================================\n"
 "Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). \n"
 msgstr ""
+"\n"
+"อนุญาตให้แสดงข้อมูลการขายในแอปบริการ SOL\n"
+"===========================================================\n"
+"ข้อมูลเพิ่มเติมจะแสดงในชื่อของ SOL เมื่อใช้ในแอปบริการ (โปรเจ็กต์และการวางแผน)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -2821,6 +3045,13 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"อนุญาตให้ขายใบบันทึกเวลาในใบสั่งขายของคุณ\n"
+"=============================================\n"
+"\n"
+"โมดูลนี้ตั้งค่าผลิตภัณฑ์ที่ถูกต้องในรายการใบบันทึกเวลาทั้งหมด\n"
+"ตามคำสั่ง/สัญญาที่คุณดำเนินการ ซึ่งช่วยให้\n"
+"มีปริมาณที่จัดส่งจริงในใบสั่งขาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_iot
@@ -2829,6 +3060,9 @@ msgid ""
 "Allows to use in the Point of Sale the devices that are connected to an IoT Box.\n"
 "Supported devices include payment terminals, receipt printers, scales and customer displays.\n"
 msgstr ""
+"\n"
+"อนุญาตให้ใช้ในอุปกรณ์การขายหน้าร้านที่เชื่อมต่อกับกล่อง IoT\n"
+"อุปกรณ์ที่รองรับ ได้แก่ เครื่องชำระเงิน เครื่องพิมพ์ใบเสร็จ เครื่องชั่ง และหน้าจอแสดงข้อมูลลูกค้า\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
@@ -2862,6 +3096,8 @@ msgid ""
 "\n"
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
+"\n"
+"ช่วยให้สามารถใช้อุปกรณ์ IoT เช่น เครื่องชั่งและเครื่องพิมพ์ ในการดำเนินการจัดส่ง\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -2872,6 +3108,11 @@ msgid ""
 "\n"
 "When creating invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"ช่วยให้คุณเพิ่มวิธีการจัดส่งในการรับสินค้า\n"
+"===============================================\n"
+"\n"
+"เมื่อสร้างใบแจ้งหนี้จากการรับสินค้า ระบบจะสามารถเพิ่มและคำนวณการจัดส่งได้\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -2882,6 +3123,11 @@ msgid ""
 "You can define your own carrier for prices.\n"
 "The system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"ช่วยให้คุณสามารถเพิ่มวิธีการจัดส่งในใบสั่งขายได้\n"
+"==================================================\n"
+"คุณสามารถกำหนดราคาจากผู้ให้บริการขนส่งของคุณเองได้\n"
+"ระบบสามารถเพิ่มและคำนวณสายการขนส่งได้\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account_enterprise
@@ -2892,6 +3138,11 @@ msgid ""
 "\n"
 "* Cost structure report\n"
 msgstr ""
+"\n"
+"การบัญชีวิเคราะห์ในระบบการผลิต\n"
+"==========================\n"
+"\n"
+"* รายงานโครงสร้างต้นทุน\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account
@@ -2907,6 +3158,16 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"การบัญชีวิเคราะห์ในระบบการผลิต\n"
+"==========================\n"
+"\n"
+"* รายงานโครงสร้างต้นทุน\n"
+"\n"
+"นอกจากนี้ยังช่วยให้คำนวณต้นทุนของผลิตภัณฑ์ตาม BoM โดยใช้ต้นทุนของส่วนประกอบและการดำเนินงานของศูนย์งาน\n"
+"โดยจะเพิ่มปุ่มบนตัวผลิตภัณฑ์ แต่ยังเพิ่มการดำเนินการในมุมมองรายการของผลิตภัณฑ์ด้วย\n"
+"หากการประเมินมูลค่าสินค้าคงคลังแบบอัตโนมัติเปิดใช้งานอยู่ รายการบัญชีที่จำเป็นจะถูกสร้างขึ้น\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports_annual_vat_2023
@@ -2972,6 +3233,13 @@ msgid ""
 "\n"
 "The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
+"\n"
+"รายการเอกสารแนบและการจัดทำดัชนีเอกสาร\n"
+"========================================\n"
+"* แสดงเอกสารแนบที่ด้านบนของแบบฟอร์ม\n"
+"* การจัดทำดัชนีเอกสาร: odt, pdf, xlsx, docx\n"
+"\n"
+"จะต้องติดตั้งไลบรารี Python `pdfminer.six` เพื่อสร้างดัชนีไฟล์ PDF\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -3270,6 +3538,11 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"โมดูลตัวเชื่อมต่อระหว่างแอประบบบัญชีและเอกสาร โดยจะเปิดใช้งาน\n"
+"การสร้างใบแจ้งหนี้จากโมดูลเอกสาร และเพิ่มปุ่ม\n"
+"ในรายงานของการบัญชีเพื่อให้สามารถบันทึกรายงานลงใน\n"
+"แอปเอกสารในรูปแบบที่ต้องการได้\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -3281,6 +3554,12 @@ msgid ""
 "Display a preview of the last chatter attachment in the form view for large\n"
 "screen devices.\n"
 msgstr ""
+"\n"
+"โมดูลตัวเชื่อมต่อสำหรับเมลและองค์กร\n"
+"=====================================\n"
+"\n"
+"แสดงตัวอย่างไฟล์แนบการสนทนาล่าสุดในมุมมองแบบฟอร์มสำหรับอุปกรณ์หน้าจอ\n"
+"ขนาดใหญ่\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise
@@ -3379,6 +3658,33 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"ผังบัญชีสำหรับประเทศเวเนซุเอลา\n"
+"===============================\n"
+"\n"
+"เวเนซุเอลาไม่มีผังบัญชีตามกฎหมาย แต่ค่าเริ่มต้นที่เสนอ\n"
+"ใน Odoo ควรเป็นไปตามแนวทางปฏิบัติที่ดีที่สุดที่ได้รับการยอมรับในเวเนซุเอลา\n"
+"แผนนี้สอดคล้องกับแนวปฏิบัตินี้\n"
+"\n"
+"โมดูลนี้ได้รับการทดสอบเป็นฐานสำหรับบริษัทมากกว่า 1,000 แห่ง เนื่องจาก\n"
+"มีพื้นฐานมาจากการผสมผสานของซอฟต์แวร์ทั่วไปในตลาดของประเทศเวเนซุเอลา\n"
+"ซึ่งจะช่วยให้นักบัญชีรู้สึกว่าก้าวแรกกับ Odoo สะดวกสบายยิ่งขึ้นอย่างแน่นอน\n"
+"\n"
+"โมดูลนี้ไม่ได้อ้างว่าเป็นการประยุกต์ใช้สำหรับภาษาท้องถิ่นทั้งหมดสำหรับประเทศเวเนซุเอลา\n"
+"แต่มันจะช่วยให้คุณเริ่มต้นใช้งานกับ Odoo ในประเทศนี้ได้เร็วมากขึ้น\n"
+"\n"
+"โมดูลนี้ให้\n"
+"---------------------\n"
+"\n"
+"- ภาษีพื้นฐานสำหรับประเทศเวเนซุเอลา\n"
+"- มีข้อมูลพื้นฐานสำหรับดำเนินการทดสอบด้วยการประยุกต์ใช้เป็นภาษาท้องถิ่นของคอมมูนิตี้\n"
+"- เริ่มต้นบริษัทจาก 0 หากความต้องการของคุณเป็นพื้นฐานจาก PoV การบัญชี\n"
+"\n"
+"เราเสนอให้ใช้ account_anglo_saxon หากคุณต้องการประเมินมูลค่า\n"
+"หุ้นของคุณ เหมือนกับที่ประเทศเวเนซุเอลาทำโดยไม่มีใบแจ้งหนี้\n"
+"\n"
+"หากคุณติดตั้งโมดูลนี้ และเลือกแผนภูมิแบบกำหนดเอง ระบบจะเสนอแผนภูมิพื้นฐาน\n"
+"แต่คุณจะต้องตั้งค่าเริ่มต้นบัญชีสำหรับภาษีด้วยตนเอง\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -29338,7 +29644,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "To-Do"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
