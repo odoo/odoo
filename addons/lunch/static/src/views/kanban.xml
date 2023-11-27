@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.KanbanRenderer" owl="1">
-        <div class="o_lunch_content d-flex flex-column h-100">
+        <div class="o_lunch_content d-flex flex-column h-lg-100">
+        <t t-call="web.KanbanRenderer"/>
             <LunchDashboard openOrderLine.bind="openOrderLine"/>
-
-            <div class="overflow-auto border-top">
-                <t t-call="web.KanbanRenderer"/>
-            </div>
         </div>
     </t>
 </templates>
