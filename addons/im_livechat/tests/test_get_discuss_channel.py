@@ -18,8 +18,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
         for i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
-            channel_operators = [channel_info['operator_pid'] for channel_info in discuss_channels]
-            channel_operator_ids = [channel_operator[0] for channel_operator in channel_operators]
+            channel_operator_ids = [channel_info['operator']['id'] for channel_info in discuss_channels]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
     def test_channel_get_livechat_visitor_info(self):
@@ -111,7 +110,12 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             'user_id': operator.id,
             'channel_id': self.livechat_channel.id,
         })
-        self.assertEqual(channel_info['operator_pid'], [operator.partner_id.id, "Michel Operator"])
+        self.assertEqual(channel_info['operator'], {
+            "id": operator.partner_id.id,
+            "user_livechat_username": "Michel Operator",
+            "type": "partner",
+            "write_date": fields.Datetime.to_string(operator.partner_id.write_date)
+        })
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info['anonymous_country'], False)
         self.assertEqual(channel_info['channelMembers'], [['ADD', [

@@ -185,12 +185,11 @@ class LivechatController(http.Controller):
             return False
         if not persisted:
             operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
-            display_name = operator_partner.user_livechat_username or operator_partner.display_name
             return {
                 'name': channel_vals['name'],
                 'chatbot_current_step_id': channel_vals['chatbot_current_step_id'],
                 'state': 'open',
-                'operator_pid': (operator_partner.id, display_name.replace(',', '')),
+                'operator': operator_partner.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[operator_partner],
                 'chatbot_script_id': chatbot_script.id if chatbot_script else None
             }
         channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)

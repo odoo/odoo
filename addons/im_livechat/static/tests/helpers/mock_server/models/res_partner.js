@@ -52,4 +52,20 @@ patch(MockServer.prototype, {
         }
         return result;
     },
+    /**
+     * Overrides to add out of office to employees.
+     *
+     * @override
+     */
+    _mockResPartnerMailPartnerFormat(ids) {
+        const partnerFormats = super._mockResPartnerMailPartnerFormat(...arguments);
+        const partners = this.getRecords("res.partner", [["id", "in", ids]], {
+            active_test: false,
+        });
+        for (const partner of partners) {
+            // Not a real field but ease the testing
+            partnerFormats.get(partner.id).user_livechat_username = partner.user_livechat_username;
+        }
+        return partnerFormats;
+    },
 });

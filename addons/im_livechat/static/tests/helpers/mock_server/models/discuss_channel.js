@@ -23,10 +23,9 @@ patch(MockServer.prototype, {
                         ["id", "=", channel.livechat_operator_id],
                     ])[0];
                     // livechat_username ignored for simplicity
-                    channelInfo.operator_pid = [
-                        operator.id,
-                        operator.display_name.replace(",", ""),
-                    ];
+                    channelInfo.operator = this._mockResPartnerMailPartnerFormat([operator.id]).get(
+                        operator.id
+                    );
                 }
             }
         }

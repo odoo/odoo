@@ -107,7 +107,7 @@ class MailRtcSession(models.Model):
                 fields={
                     "id": True,
                     "channel": {},
-                    "persona": {"partner": {"id", "name", "im_status"}, "guest": {"id", "name", "im_status"}},
+                    "persona": {"partner": {"id": True, "name": True, "im_status": True}, "guest": {"id": True, "name": True, "im_status": True}},
                 }
             ).get(self.channel_member_id),
         }

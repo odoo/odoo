@@ -20,7 +20,12 @@ QUnit.test("chat request opens chat window", async (assert) => {
             chat_request_session: {
                 folded: false,
                 id: channel.id,
-                operator_pid: [adminPartner.id, adminPartner.name],
+                operator: {
+                    id: adminPartner.id,
+                    name: adminPartner.display_name,
+                    type: "partner",
+                    write_date: adminPartner.write_date,
+                },
                 name: channel.name,
                 uuid: channel.uuid,
                 isChatRequest: true,

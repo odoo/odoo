@@ -455,7 +455,7 @@ class Channel(models.Model):
         self.env['bus.bus']._sendmany(invitation_notifications)
         channel_data = {'id': self.id, 'model': 'discuss.channel'}
         if members:
-            channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+            channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
             self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
         return channel_data
 
@@ -818,7 +818,7 @@ class Channel(models.Model):
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
             # add RTC sessions info
             info.update({
-                'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))],
+                'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))],
                 'rtcSessions': [('ADD', rtc_sessions_by_channel.get(channel, []))],
             })
             channel_infos.append(info)
