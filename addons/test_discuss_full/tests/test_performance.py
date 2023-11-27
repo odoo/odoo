@@ -18,6 +18,11 @@ class TestDiscussFullPerformance(HttpCase):
         super().setUp()
         self.group_user = self.env.ref('base.group_user')
         self.password = 'Pl1bhD@2!kXZ'
+        self.env['mail.shortcode'].search([]).unlink()
+        self.shortcodes = self.env['mail.shortcode'].create([
+            {'source': 'hello', 'substitution': 'Hello, how may I help you?'},
+            {'source': 'bye', 'substitution': 'Thanks for your feedback. Goodbye!'},
+        ])
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
@@ -64,6 +69,7 @@ class TestDiscussFullPerformance(HttpCase):
     def test_init_messaging(self):
         """Test performance of `_init_messaging`."""
         self.channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
+        self.channel_general.message_ids.unlink() # Remove messages to avoid depending on demo data.
         self.env['discuss.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
         self.user_root = self.env.ref('base.user_root')
         # create public channels
@@ -163,7 +169,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'custom_channel_name': False,
                     'id': self.channel_general.id,
                     'memberCount': len(self.group_user.users),
-                    'message_unread_counter': 5,
+                    'message_unread_counter': 0,
                     'model': "discuss.channel",
                     'create_uid': self.user_root.id,
                     'defaultDisplayMode': False,
@@ -1007,12 +1013,12 @@ class TestDiscussFullPerformance(HttpCase):
             'companyName': 'YourCompany',
             'shortcodes': [
                 {
-                    'id': 1,
+                    'id': self.shortcodes[0].id,
                     'source': 'hello',
                     'substitution': 'Hello, how may I help you?',
                 },
                 {
-                    'id': 2,
+                    'id': self.shortcodes[1].id,
                     'source': 'bye',
                     'substitution': 'Thanks for your feedback. Goodbye!',
                 },
