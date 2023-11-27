@@ -221,7 +221,7 @@ class SaleOrderLine(models.Model):
             } for name, fold, sequence in [
                 (_('To Do'), False, 5),
                 (_('In Progress'), False, 10),
-                (_('Done'), True, 15),
+                (_('Done'), False, 15),
                 (_('Cancelled'), True, 20),
             ]])
 
