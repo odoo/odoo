@@ -61,11 +61,11 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'company_registry': '123 568 941 00056',
             'ubl_cii_format': 'oioubl_201',
         })
-        cls.dk_local_sale_tax_1 = cls.env["account.chart.template"].ref('tax120')
-        cls.dk_local_sale_tax_2 = cls.env["account.chart.template"].ref('tax110')
-        cls.dk_foreign_sale_tax_1 = cls.env["account.chart.template"].ref('tax210')
-        cls.dk_foreign_sale_tax_2 = cls.env["account.chart.template"].ref('tax220')
-        cls.dk_local_purchase_tax_goods = cls.env["account.chart.template"].ref('tax400')
+        cls.dk_local_sale_tax_1 = cls.env["account.chart.template"].ref('tax_s1y')
+        cls.dk_local_sale_tax_2 = cls.env["account.chart.template"].ref('tax_s1')
+        cls.dk_foreign_sale_tax_1 = cls.env["account.chart.template"].ref('tax_s0')
+        cls.dk_foreign_sale_tax_2 = cls.env["account.chart.template"].ref('tax_s7')
+        cls.dk_local_purchase_tax_goods = cls.env["account.chart.template"].ref('tax_k1')
 
     def create_post_and_send_invoice(self, partner=None, move_type='out_invoice'):
         if not partner:

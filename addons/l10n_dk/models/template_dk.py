@@ -36,3 +36,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_k1',
             },
         }
+
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        super()._setup_utility_bank_accounts(template_code, company, template_data)
+        if template_code == 'dk':
+            company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_dk.account_tag_6482')
+            company.account_journal_payment_debit_account_id.tag_ids = self.env.ref('l10n_dk.account_tag_6483')
+            company.account_journal_payment_credit_account_id.tag_ids = self.env.ref('l10n_dk.account_tag_6484')
+            company.transfer_account_id.tag_ids = self.env.ref('l10n_dk.account_tag_6831')
