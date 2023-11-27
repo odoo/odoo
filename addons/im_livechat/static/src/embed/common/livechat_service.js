@@ -117,8 +117,8 @@ export class LivechatService {
         cookie.delete(this.SESSION_COOKIE);
         cookie.delete(this.OPERATOR_COOKIE);
         cookie.set(this.SESSION_COOKIE, JSON.stringify(session).replaceAll("→", " "), 60 * 60 * 24); // 1 day cookie.
-        if (session?.operator_pid) {
-            cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
+        if (session?.operator) {
+            cookie.set(this.OPERATOR_COOKIE, session.operator.id, 7 * 24 * 60 * 60); // 1 week cookie.
         }
     }
 
@@ -200,7 +200,7 @@ export class LivechatService {
                 { shadow: true }
             );
         }
-        if (!threadData?.operator_pid) {
+        if (!threadData?.operator) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leaveSession({ notifyServer: false });
             return;

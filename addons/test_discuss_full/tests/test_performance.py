@@ -926,7 +926,12 @@ class TestDiscussFullPerformance(HttpCase):
                     'name': 'test1 Ernest Employee',
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
+                    'operator': {
+                        'id': self.users[0].partner_id.id,
+                        'name': 'Ernest Employee',
+                        'type': 'partner',
+                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date)
+                    },
                     'rtcSessions': [('ADD', [])],
                     'seen_partners_info': [
                         {
@@ -1007,7 +1012,12 @@ class TestDiscussFullPerformance(HttpCase):
                     'name': 'anon 2 Ernest Employee',
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
+                    'operator': {
+                        'id': self.users[0].partner_id.id,
+                        'name': 'Ernest Employee',
+                        'type': 'partner',
+                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date)
+                    },
                     'rtcSessions': [('ADD', [])],
                     'seen_partners_info': [
                         {

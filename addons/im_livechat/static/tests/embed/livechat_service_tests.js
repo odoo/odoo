@@ -42,7 +42,10 @@ QUnit.test("previous operator prioritized", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const userId = pyEnv["res.users"].create({ name: "John Doe", im_status: "online" });
-    const previousOperatorId = pyEnv["res.partner"].create({ user_ids: [userId] });
+    const previousOperatorId = pyEnv["res.partner"].create({
+        name: "John Doe",
+        user_ids: [userId],
+    });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
     cookie.set("im_livechat_previous_operator_pid", JSON.stringify(previousOperatorId));
     start();
