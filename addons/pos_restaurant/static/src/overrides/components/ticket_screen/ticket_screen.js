@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Component, useState } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
@@ -60,7 +59,9 @@ patch(TicketScreen.prototype, {
     async settleTips() {
         // set tip in each order
         for (const order of this.getFilteredOrderList()) {
-            const tipAmount = parseFloat(order.uiState.TipScreen.inputTipAmount || "0");
+            const tipAmount = this.env.utils.parseValidFloat(
+                order.uiState.TipScreen.inputTipAmount
+            );
             const serverId = this.pos.validated_orders_name_server_id_map[order.name];
             if (!serverId) {
                 console.warn(
@@ -143,7 +144,9 @@ export class TipCell extends Component {
         useAutofocus();
     }
     get tipAmountStr() {
-        return this.env.utils.formatCurrency(parseFloat(this.orderUiState.inputTipAmount || "0"));
+        return this.env.utils.formatCurrency(
+            this.env.utils.parseValidFloat(this.orderUiState.inputTipAmount)
+        );
     }
     onBlur() {
         this.state.isEditing = false;
