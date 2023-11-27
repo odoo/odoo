@@ -798,6 +798,23 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         finally:
             self.env.user.company_id = old_company
 
+    def test_update_available_quantity_vacuum(self):
+        """ edit product price precision and update on hand quantity
+        """
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 6
+        self.product1.write({"standard_price": 0.0123})
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'inventory_quantity': -2000,
+            'location_id': self.stock_location.id
+        }).action_apply_inventory()
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'inventory_quantity': 2000,
+            'location_id': self.stock_location.id
+        }).action_apply_inventory()
+        self.assertEqual(self.product1.value_svl, 0.0)
+
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.
