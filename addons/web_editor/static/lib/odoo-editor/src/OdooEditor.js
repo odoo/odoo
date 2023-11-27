@@ -3389,11 +3389,11 @@ export class OdooEditor extends EventTarget {
                             description: this.options._t('Embed the youtube video in the document.'),
                             fontawesome: 'fa-youtube-play',
                             shouldPreValidate: () => false,
-                            callback: () => {
+                            callback: async () => {
                                 revertTextInsertion();
                                 let videoElement;
                                 if (this.options.getYoutubeVideoElement) {
-                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                    videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
                                 } else {
                                     videoElement = document.createElement('iframe');
                                     videoElement.setAttribute('width', '560');
