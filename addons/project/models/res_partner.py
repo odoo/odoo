@@ -1,18 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import email_normalize
 
 
 class ResPartner(models.Model):
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
-    _check_company_auto = True
 
-    project_ids = fields.One2many('project.project', 'partner_id', string='Projects', check_company=True)
-    task_ids = fields.One2many('project.task', 'partner_id', string='Tasks', check_company=True)
+    project_ids = fields.One2many('project.project', 'partner_id', string='Projects')
+    task_ids = fields.One2many('project.task', 'partner_id', string='Tasks')
     task_count = fields.Integer(compute='_compute_task_count', string='# Tasks')
+
+    @api.constrains('company_id', 'project_ids')
+    def _ensure_same_company_than_projects(self):
+        for partner in self:
+            if partner.company_id and partner.project_ids.company_id and partner.project_ids.company_id != partner.company_id:
+                raise UserError(_("Partner company cannot be different from its assigned projects' company"))
+
+    @api.constrains('company_id', 'task_ids')
+    def _ensure_same_company_than_tasks(self):
+        for partner in self:
+            if partner.company_id and partner.task_ids.company_id and partner.task_ids.company_id != partner.company_id:
+                raise UserError(_("Partner company cannot be different from its assigned tasks' company"))
 
     def _compute_task_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
