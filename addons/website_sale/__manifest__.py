@@ -22,6 +22,7 @@
 
         'views/account_move_views.xml',
         'views/crm_team_views.xml',
+        'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
@@ -45,7 +46,6 @@
         'views/website_pages_views.xml',
         'views/website_sale_delivery_templates.xml',
         'views/website_sale_menus.xml',
-        'views/website_sale_delivery_views.xml',
         'views/variant_templates.xml',
     ],
     'demo': [
