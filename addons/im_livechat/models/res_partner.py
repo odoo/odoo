@@ -38,3 +38,13 @@ class Partners(models.Model):
     def _compute_user_livechat_username(self):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
+
+    def mail_partner_format(self, fields=None):
+        partner_format = super().mail_partner_format(fields=fields)
+        if fields and fields.get("user_livechat_username"):
+            for partner in self:
+                if partner.user_livechat_username:
+                    partner_format.get(partner)["user_livechat_username"] = partner.user_livechat_username
+                else:
+                    partner_format.get(partner)["name"] = partner.name
+        return partner_format

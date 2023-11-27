@@ -215,6 +215,13 @@ export class Message extends Component {
         };
     }
 
+    get authorName() {
+        if (this.message.author) {
+            return this.message.author.name;
+        }
+        return this.message.email_from;
+    }
+
     get authorAvatarUrl() {
         if (
             this.message.type &&

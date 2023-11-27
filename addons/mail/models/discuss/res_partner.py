@@ -84,8 +84,8 @@ class ResPartner(models.Model):
                         ._discuss_channel_member_format(
                             fields={
                                 "id": True,
-                                "channel": {"id"},
-                                "persona": {"partner": {"id"}},
+                                "channel": {"id": True},
+                                "persona": {"partner": {"id": True}},
                             }
                         )
                         .get(member_by_partner.get(partner)),

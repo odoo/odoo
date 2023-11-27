@@ -95,14 +95,13 @@ patch(MockServer.prototype, {
             const [operatorPartner] = this.pyEnv["res.partner"].searchRead([
                 ["id", "=", channelVals.livechat_operator_id],
             ]);
-            const [operator] = this.pyEnv["res.users"].searchRead([
-                ["partner_id", "=", operatorPartner.id],
-            ]);
             return {
                 name: channelVals["name"],
                 chatbot_current_step_id: channelVals.chatbot_current_step_id,
                 state: "open",
-                operator_pid: [operatorPartner.id, operator.name],
+                operator: this._mockResPartnerMailPartnerFormat([operatorPartner.id]).get(
+                    operatorPartner.id
+                ),
             };
         }
         const channelId = this.pyEnv["discuss.channel"].create(channelVals);
