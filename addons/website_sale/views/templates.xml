@@ -918,7 +918,8 @@
                                 <li class="breadcrumb-item o_not_editable">
                                     <a t-att-href="keep(category=0)">All Products</a>
                                 </li>
-                                <li t-if="category" class="breadcrumb-item">
+                                <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
+                                    t-if="category" class="breadcrumb-item">
                                     <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
                                 </li>
                                 <li class="breadcrumb-item active">
