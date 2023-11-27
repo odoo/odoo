@@ -610,4 +610,68 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.equal(img.dataset['src'], '/test_image_url.png?access_token=1234');
         assert.ok(!img.classList.contains('o_b64_image_to_save'));
     });
+
+    QUnit.module('Paste');
+
+    QUnit.test("Embed video by pasting video URL", async (assert) => {
+        assert.expect(4);
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "<p><br></p>",
+        });
+
+        const mockRPC = async function (route, args) {
+            if (route === '/web_editor/video_url/data') {
+                return Promise.resolve({
+                    platform: "youtube",
+                    embed_url: "//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+                });
+            }
+        };
+
+        // Add the ajax service (legacy), because wysiwyg RPCs use it.
+        patchWithCleanup(legacyEnv, {
+            services: {
+                ...legacyEnv.services,
+                ajax: {
+                    rpc: mockRPC,
+                },
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'allowCommandVideo': true}"/>
+                </form>`,
+            mockRPC: mockRPC,
+        });
+
+        const editable = document.querySelector(".odoo-editor-editable");
+        const p = editable.firstElementChild;
+        Wysiwyg.setRange(p);
+
+        // Paste a video URL.
+        const clipboardData = new DataTransfer();
+        clipboardData.setData('text/plain', 'https://www.youtube.com/watch?v=qxb74CMR748');
+        p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
+        assert.strictEqual(p.outerHTML, '<p>https://www.youtube.com/watch?v=qxb74CMR748<br></p>',
+            "The URL should be inserted as text");
+        assert.isVisible($('.oe-powerbox-wrapper:contains("Embed Youtube Video")'),
+            "The powerbox should be opened");
+
+        // Press Enter to select first option in the powerbox ("Embed Youtube Video").
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await nextTick();
+        assert.strictEqual(p.outerHTML, '<p></p>', "URL insertion should be reverted");
+        assert.containsOnce(
+            editable,
+            'div.media_iframe_video iframe[data-src="//www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0"]',
+            "The video should be embedded as an iframe"
+        );
+    });
 });
