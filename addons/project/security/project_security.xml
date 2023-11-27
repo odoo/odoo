@@ -314,6 +314,16 @@
         <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
     </record>
 
+    <record id="project_milestone_rule_portal_project_sharing" model="ir.rule">
+        <field name="name">Project/milestone portal users: portal user can read with project sharing feature</field>
+        <field name="model_id" ref="project.model_project_milestone"/>
+        <field name="domain_force">[
+            ('project_id.privacy_visibility', '=', 'portal'),
+            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
     <record id="mail_plan_rule_group_project_manager_task" model="ir.rule">
         <field name="name">Manager can manage project/task plans</field>
         <field name="groups" eval="[(4, ref('group_project_manager'))]"/>
