@@ -24,7 +24,7 @@ patch(ActivityMenu.prototype, {
             },
             {
                 category: "to-do",
-                hotkey: "alt+control+l",
+                hotkey: "alt+shift+t",
                 global: true,
             }
         );
