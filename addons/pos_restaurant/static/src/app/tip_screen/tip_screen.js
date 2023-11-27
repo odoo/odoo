@@ -26,7 +26,9 @@ export class TipScreen extends Component {
         });
     }
     get overallAmountStr() {
-        const tipAmount = parseFloat(this.state.inputTipAmount || "0");
+        const tipAmount = this.env.utils.isValidFloat(this.state.inputTipAmount)
+            ? parseFloat(this.state.inputTipAmount)
+            : 0;
         const original = this.env.utils.formatCurrency(this.totalAmount);
         const tip = this.env.utils.formatCurrency(tipAmount);
         const overall = this.env.utils.formatCurrency(this.totalAmount + tipAmount);
@@ -46,7 +48,9 @@ export class TipScreen extends Component {
         ];
     }
     async validateTip() {
-        const amount = parseFloat(this.state.inputTipAmount) || 0;
+        const amount = this.env.utils.isValidFloat(this.state.inputTipAmount)
+            ? parseFloat(this.state.inputTipAmount)
+            : 0;
         const order = this.pos.get_order();
         const serverId = this.pos.validated_orders_name_server_id_map[order.name];
 
