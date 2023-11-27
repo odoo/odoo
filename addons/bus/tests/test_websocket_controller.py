@@ -2,10 +2,11 @@
 
 import json
 
-from odoo.tests import common, JsonRpcException
+from odoo.tests import JsonRpcException
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-class TestWebsocketController(common.HttpCase):
+class TestWebsocketController(HttpCaseWithUserDemo):
     def test_websocket_peek(self):
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],

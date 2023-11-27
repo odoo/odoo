@@ -2,10 +2,11 @@
 
 import odoo.tests
 from odoo import Command
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestUi(HttpCaseWithUserDemo):
 
     def test_01_mail_tour(self):
         self.start_tour("/web", 'discuss_channel_tour', login="admin")
