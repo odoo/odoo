@@ -462,8 +462,9 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @override
      */
     _getGroupValues(group, groupBys) {
-        return groupBys.map((groupBy) => {
-            const { field, aggregateOperator } = this.parseGroupField(groupBy);
+        return groupBys.map((gb) => {
+            const groupBy = this._normalize(gb);
+            const { field, aggregateOperator } = this.parseGroupField(gb);
             if (this._isDateField(field)) {
                 return pivotTimeAdapter(aggregateOperator).normalizeServerValue(
                     groupBy,
