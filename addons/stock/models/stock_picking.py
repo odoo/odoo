@@ -136,6 +136,12 @@ class PickingType(models.Model):
                     })
         return super(PickingType, self).write(vals)
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'sequence_code' not in default and 'sequence_id' not in default:
+            default.update(sequence_code=_("%s (copy)") % self.sequence_code)
+        return super().copy(default)
+
     @api.depends('code')
     def _compute_hide_reservation_method(self):
         for rec in self:
@@ -221,6 +227,23 @@ class PickingType(models.Model):
     def _onchange_show_operations(self):
         if self.show_operations and self.code != 'incoming':
             self.show_reserved = True
+
+    @api.onchange('sequence_code')
+    def _onchange_sequence_code(self):
+        if not self.sequence_code:
+            return
+        domain = [('sequence_code', '=', self.sequence_code), '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)]
+        if self._origin.id:
+            domain += [('id', '!=', self._origin.id)]
+        picking_type = self.env['stock.picking.type'].search(domain, limit=1)
+        if picking_type and picking_type.sequence_id != self.sequence_id:
+            return {
+                'warning': {
+                    'message': _(
+                        "This sequence prefix is already being used by another operation type. It is recommended that you select a unique prefix "
+                        "to avoid issues and/or repeated reference values or assign the existing reference sequence to this operation type.")
+                }
+            }
 
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
