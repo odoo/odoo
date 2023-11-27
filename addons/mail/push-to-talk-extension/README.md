@@ -6,7 +6,8 @@ extension allows you to effortlessly utilize Push-to-Talk across your entire
 system. Whether Chrome is in focus or not, on the same tab or not, enjoy
 seamless communication in Odoo Discuss without any constraints.
 
-> Note that this extension only works for Odoo 17 and higher
+> Please note that this extension only works for Odoo 17 and higher and is not
+> compatible with ChromeOS.
 
 ## Installing the extension
 
