@@ -986,27 +986,19 @@ export class PivotModel extends Model {
      * @param {Object} group
      * @param {string[]} rowGroupBy
      * @param {string[]} colGroupBy
-     * @param {Config} config
+     * @param {Object} params
      */
-    async _getGroupSubdivision(group, rowGroupBy, colGroupBy, config) {
-        const groupDomain = this._getGroupDomain(group, config);
-        const measureSpecs = this._getMeasureSpecs(config);
+    async _getGroupSubdivision(group, rowGroupBy, colGroupBy, params) {
         const groupBy = this._getGroupBySpecs(rowGroupBy, colGroupBy);
-        const kwargs = { lazy: false, context: this.searchParams.context };
-        const subGroups = await this.orm.readGroup(
-            config.metaData.resModel,
-            groupDomain,
-            measureSpecs,
-            groupBy,
-            kwargs
-        );
+        const subGroups = await this._getSubGroups(groupBy, params);
         return {
-            group: group,
-            subGroups: subGroups,
+            group,
+            subGroups,
             rowGroupBy: rowGroupBy,
             colGroupBy: colGroupBy,
         };
     }
+
     /**
      * Returns the group sanitized values.
      *
@@ -1208,6 +1200,20 @@ export class PivotModel extends Model {
         });
 
         return originRow;
+    }
+    /**
+     * @protected
+     * @param {string[]} groupBy
+     * @param {Object} params
+     * @returns {Promise<Object[]>}
+     */
+    async _getSubGroups(groupBy, params) {
+        const { resModel, groupDomain, measureSpecs, kwargs, mapping } = params;
+        const key = JSON.stringify(groupBy);
+        if (!mapping[key]) {
+            mapping[key] = this.orm.readGroup(resModel, groupDomain, measureSpecs, groupBy, kwargs);
+        }
+        return mapping[key];
     }
     /**
      * Returns the list of header rows of the pivot table: the col group rows
@@ -1632,8 +1638,21 @@ export class PivotModel extends Model {
                     colValues: group.colValues,
                     originIndex: originIndex,
                 };
+                const groupDomain = this._getGroupDomain(subGroup, config);
+                const measureSpecs = this._getMeasureSpecs(config);
+                const resModel = config.metaData.resModel;
+                const kwargs = { lazy: false, context: this.searchParams.context };
+                const mapping = {};
                 divisors.forEach((divisor) => {
-                    acc.push(this._getGroupSubdivision(subGroup, divisor[0], divisor[1], config));
+                    acc.push(
+                        this._getGroupSubdivision(subGroup, divisor[0], divisor[1], {
+                            resModel,
+                            groupDomain,
+                            measureSpecs,
+                            kwargs,
+                            mapping,
+                        })
+                    );
                 });
             }
             return acc;
