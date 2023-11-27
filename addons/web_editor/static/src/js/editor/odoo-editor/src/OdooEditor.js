@@ -4522,7 +4522,7 @@ export class OdooEditor extends EventTarget {
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
                 const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
-                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
                 // A url cannot be transformed inside an existing link.
@@ -4580,11 +4580,11 @@ export class OdooEditor extends EventTarget {
                             name: this.options._t('Embed Youtube Video'),
                             description: this.options._t('Embed the youtube video in the document.'),
                             fontawesome: 'fa-youtube-play',
-                            callback: () => {
+                            callback: async () => {
                                 revertTextInsertion();
                                 let videoElement;
                                 if (this.options.getYoutubeVideoElement) {
-                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                    videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
                                 } else {
                                     videoElement = document.createElement('iframe');
                                     videoElement.setAttribute('width', '560');
