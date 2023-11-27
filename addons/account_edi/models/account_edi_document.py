@@ -18,7 +18,7 @@ class AccountEdiDocument(models.Model):
     _description = 'Electronic Document for an account.move'
 
     # == Stored fields ==
-    move_id = fields.Many2one('account.move', required=True, ondelete='cascade')
+    move_id = fields.Many2one('account.move', required=True, ondelete='cascade', index='btree_not_null')
     edi_format_id = fields.Many2one('account.edi.format', required=True)
     attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
