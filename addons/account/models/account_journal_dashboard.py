@@ -480,7 +480,7 @@ class account_journal(models.Model):
                 late_query_results[journal.id] = late_bills_query_results[journal.id]
 
         to_check_vals = {
-            journal: (amount_total_signed_sum, count)
+            journal.id: (amount_total_signed_sum, count)
             for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
                 domain=[('journal_id', 'in', sale_purchase_journals.ids), ('to_check', '=', True)],
                 groupby=['journal_id'],
@@ -516,7 +516,7 @@ class account_journal(models.Model):
         if not general_journals:
             return
         to_check_vals = {
-            journal: (amount_total_signed_sum, count)
+            journal.id: (amount_total_signed_sum, count)
             for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
                 domain=[('journal_id', 'in', general_journals.ids), ('to_check', '=', True)],
                 groupby=['journal_id'],
