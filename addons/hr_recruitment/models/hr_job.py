@@ -4,7 +4,7 @@ import ast
 from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-
+from odoo.tools import SQL
 
 class Job(models.Model):
     _name = "hr.job"
@@ -253,6 +253,16 @@ class Job(models.Model):
                 alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')
                 job.alias_defaults = alias_default_vals
         return res
+
+    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
+        if field_name == 'is_favorite':
+            sql_field = SQL(
+                "%s IN (SELECT job_id FROM job_favorite_user_rel WHERE user_id = %s)",
+                SQL.identifier(alias, 'id'), self.env.uid,
+            )
+            return SQL("%s %s %s", sql_field, direction, nulls)
+
+        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
