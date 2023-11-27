@@ -1580,16 +1580,15 @@ class Website(models.Model):
         """
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
+        count, results = self._search_exact(search_details, search, limit, order)
+        if count > 0:
+            return count, results, fuzzy_term
         if search and options.get('allowFuzzy', True):
             fuzzy_term = self._search_find_fuzzy_term(search_details, search)
             if fuzzy_term:
                 count, results = self._search_exact(search_details, fuzzy_term, limit, order)
                 if fuzzy_term.lower() == search.lower():
                     fuzzy_term = False
-            else:
-                count, results = self._search_exact(search_details, search, limit, order)
-        else:
-            count, results = self._search_exact(search_details, search, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, limit, order):
