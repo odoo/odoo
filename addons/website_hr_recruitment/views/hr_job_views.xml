@@ -5,6 +5,9 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_order">is_published desc, is_favorite desc, create_date DESC</attribute>
+            </xpath>
             <xpath expr="//div[hasclass('o_kanban_card_header')]" position="before">
                 <field name="website_published" invisible="1"/>
                 <div class="ribbon ribbon-top-right" invisible="not website_published">
