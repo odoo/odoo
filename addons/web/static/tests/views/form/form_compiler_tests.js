@@ -360,6 +360,26 @@ QUnit.module("Form Compiler", (hooks) => {
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
+
+    QUnit.test("properly compile empty ButtonBox", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                </sheet>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="o_form_sheet_bg">
+                <div class="o_form_sheet position-relative">
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                </div>
+            </div>`;
+
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
 });
 
 QUnit.module("Form Renderer", (hooks) => {
