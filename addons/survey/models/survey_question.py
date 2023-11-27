@@ -83,6 +83,8 @@ class SurveyQuestion(models.Model):
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
         help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.")
+    has_image_only_suggested_answer = fields.Boolean(
+        "Has image only suggested answer", compute='_compute_has_image_only_suggested_answer')
     # -- scoreable/answerable simple answer_types: numerical_box / date / datetime
     answer_numerical_box = fields.Float('Correct numerical answer', help="Correct number answer for this question.")
     answer_date = fields.Date('Correct date answer', help="Correct date answer for this question.")
@@ -183,6 +185,13 @@ class SurveyQuestion(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('suggested_answer_ids', 'suggested_answer_ids.value')
+    def _compute_has_image_only_suggested_answer(self):
+        questions_with_image_only_answer = self.env['survey.question'].search(
+            [('id', 'in', self.ids), ('suggested_answer_ids.value', 'in', [False, ''])])
+        questions_with_image_only_answer.has_image_only_suggested_answer = True
+        (self - questions_with_image_only_answer).has_image_only_suggested_answer = False
 
     @api.depends('question_type')
     def _compute_question_placeholder(self):
@@ -563,16 +572,16 @@ class SurveyQuestion(models.Model):
                 count_data[line.suggested_answer_id] += 1
 
         table_data = [{
-            'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
-            'suggested_answer': sug_answer,
-            'count': count_data[sug_answer]
+            'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+            'suggested_answer': suggested_answer,
+            'count': count_data[suggested_answer]
             }
-            for sug_answer in suggested_answers]
+            for suggested_answer in suggested_answers]
         graph_data = [{
-            'text': _('Other (see comments)') if not sug_answer else sug_answer.value,
-            'count': count_data[sug_answer]
+            'text': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+            'count': count_data[suggested_answer]
             }
-            for sug_answer in suggested_answers]
+            for suggested_answer in suggested_answers]
 
         return table_data, graph_data
 
@@ -588,19 +597,19 @@ class SurveyQuestion(models.Model):
         table_data = [{
             'row': row,
             'columns': [{
-                'suggested_answer': sug_answer,
-                'count': count_data[(row, sug_answer)]
-            } for sug_answer in suggested_answers],
+                'suggested_answer': suggested_answer,
+                'count': count_data[(row, suggested_answer)]
+            } for suggested_answer in suggested_answers],
         } for row in matrix_rows]
         graph_data = [{
-            'key': sug_answer.value,
+            'key': suggested_answer.value,
             'values': [{
                 'text': row.value,
-                'count': count_data[(row, sug_answer)]
+                'count': count_data[(row, suggested_answer)]
                 }
                 for row in matrix_rows
             ]
-        } for sug_answer in suggested_answers]
+        } for suggested_answer in suggested_answers]
 
         return table_data, graph_data
 
@@ -710,34 +719,54 @@ class SurveyQuestionAnswer(models.Model):
     sequence = fields.Integer('Label Sequence order', default=10)
     scoring_type = fields.Selection(related='question_id.scoring_type')
     # answer related fields
-    value = fields.Char('Suggested value', translate=True, required=True)
+    value = fields.Char('Suggested value', translate=True)
     value_image = fields.Image('Image', max_width=1024, max_height=1024)
     value_image_filename = fields.Char('Image Filename')
+    value_label = fields.Char('Value Label', compute='_compute_value_label',
+                              help="Answer label as either the value itself if not empty "
+                                   "or a letter representing the index of the answer otherwise.")
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.depends('value', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
+    _sql_constraints = [
+        ('value_not_empty', "CHECK (value IS NOT NULL OR value_image_filename IS NOT NULL)",
+         'Suggested answer value must not be empty (a text and/or an image must be provided).'),
+    ]
+
+    @api.depends('value_label', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
     def _compute_display_name(self):
-        """Render an answer name as "Question title : Answer value", making sure it is not too long.
+        """Render an answer name as "Question title : Answer label value", making sure it is not too long.
 
         Unless the answer is part of a matrix-type question, this implementation makes sure we have
         at least 30 characters for the question title, then we elide it, leaving the rest of the
         space for the answer.
         """
         for answer in self:
+            answer_label = answer.value_label
             if not answer.question_id or answer.question_id.question_type == 'matrix':
-                answer.display_name = answer.value
+                answer.display_name = answer_label
                 continue
             title = answer.question_id.title or _("[Question Title]")
-            n_extra_characters = len(title) + len(answer.value) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
+            n_extra_characters = len(title) + len(answer_label) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
             if n_extra_characters <= 0:
-                answer.display_name = f'{title} : {answer.value}'
+                answer.display_name = f'{title} : {answer_label}'
             else:
                 answer.display_name = shorten(
-                    f'{shorten(title, max(30, len(title) - n_extra_characters), placeholder="...")} : {answer.value}',
+                    f'{shorten(title, max(30, len(title) - n_extra_characters), placeholder="...")} : {answer_label}',
                     self.MAX_ANSWER_NAME_LENGTH,
                     placeholder="..."
                 )
+
+    @api.depends('question_id.suggested_answer_ids', 'sequence', 'value')
+    def _compute_value_label(self):
+        """ Compute the label as the value if not empty or a letter representing the index of the answer otherwise. """
+        for answer in self:
+            # using image -> use a letter to represent the value
+            if not answer.value and answer.question_id and answer.id:
+                answer_idx = answer.question_id.suggested_answer_ids.ids.index(answer.id)
+                answer.value_label = chr(65 + answer_idx) if answer_idx < 27 else ''
+            else:
+                answer.value_label = answer.value or ''
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):
