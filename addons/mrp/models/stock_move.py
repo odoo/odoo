@@ -291,6 +291,17 @@ class StockMove(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'product_id' in vals:
+            move_to_unlink = self.filtered(lambda m: m.product_id.id != vals.get('product_id'))
+            other_move = self - move_to_unlink
+            if move_to_unlink.production_id and move_to_unlink.state not in ['draft', 'cancel', 'done']:
+                moves_data = move_to_unlink.copy_data()
+                for move_data in moves_data:
+                    move_data.update({'product_id': vals.get('product_id')})
+                updated_product_move = self.create(moves_data)
+                updated_product_move._action_confirm()
+                move_to_unlink.unlink()
+                self = other_move + updated_product_move
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
