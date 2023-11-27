@@ -934,6 +934,19 @@ export class PivotModel extends Model {
         }
     }
     /**
+     * @protected
+     * @param {string[]} rowGroupBy
+     * @param {string[]} colGroupBy
+     * @returns {string[]}
+     */
+    _getGroupBySpecs(rowGroupBy, colGroupBy) {
+        const set = rowGroupBy.concat(colGroupBy).reduce((acc, gb) => {
+            acc.add(this._normalize(gb));
+            return acc;
+        }, new Set());
+        return [...set];
+    }
+    /**
      * Returns a domain representation of a group
      *
      * @protected
@@ -959,7 +972,8 @@ export class PivotModel extends Model {
      * @returns {string[]}
      */
     _getGroupLabels(group, groupBys, config) {
-        return groupBys.map((groupBy) => {
+        return groupBys.map((gb) => {
+            const groupBy = this._normalize(gb);
             return this._sanitizeLabel(group[groupBy], groupBy, config);
         });
     }
@@ -977,7 +991,7 @@ export class PivotModel extends Model {
     async _getGroupSubdivision(group, rowGroupBy, colGroupBy, config) {
         const groupDomain = this._getGroupDomain(group, config);
         const measureSpecs = this._getMeasureSpecs(config);
-        const groupBy = rowGroupBy.concat(colGroupBy);
+        const groupBy = this._getGroupBySpecs(rowGroupBy, colGroupBy);
         const kwargs = { lazy: false, context: this.searchParams.context };
         const subGroups = await this.orm.readGroup(
             config.metaData.resModel,
@@ -1002,7 +1016,8 @@ export class PivotModel extends Model {
      * @returns {Array}
      */
     _getGroupValues(group, groupBys) {
-        return groupBys.map((groupBy) => {
+        return groupBys.map((gb) => {
+            const groupBy = this._normalize(gb);
             return this._sanitizeValue(group[groupBy]);
         });
     }
@@ -1410,6 +1425,20 @@ export class PivotModel extends Model {
 
         this.data = config.data;
         this.metaData = config.metaData;
+    }
+    /**
+     * @protected
+     * @param {string} gb
+     * @returns {string}
+     */
+    _normalize(gb) {
+        const [fieldName, interval] = gb.split(":");
+        const field = this.metaData.fields[fieldName];
+        if (["date", "datetime"].includes(field.type)) {
+            return `${fieldName}:${interval || "month"}`;
+        } else {
+            return fieldName;
+        }
     }
     /**
      * Extract the information in the read_group results (groupSubdivisions)

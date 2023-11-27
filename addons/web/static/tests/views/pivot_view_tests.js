@@ -5753,4 +5753,24 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(columns[1].innerText, "aaa");
         assert.strictEqual(columns[2].innerText, "bbb");
     });
+
+    QUnit.test("avoid duplicates in read_group parameter 'groupby'", async function (assert) {
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <pivot sample="1">
+                        <field name="date" type="row"/>
+                        <field name="date" type="col" interval="month"/>
+                    </pivot>
+                `,
+            mockRPC(_, { method, kwargs }) {
+                if (method === "read_group") {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                }
+            },
+        });
+        assert.verifySteps([`[]`, `["date:month"]`, `["date:month"]`, `["date:month"]`]);
+    });
 });
