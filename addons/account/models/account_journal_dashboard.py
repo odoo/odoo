@@ -98,13 +98,15 @@ class account_journal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
     def _query_has_sequence_holes(self):
+        self.env['res.company'].flush_model(['fiscalyear_lock_date'])
+        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'sequence_number', 'state'])
         self.env.cr.execute("""
             SELECT move.journal_id,
                    move.sequence_prefix
               FROM account_move move
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
-               AND move.state = 'posted'
+               AND (move.state = 'posted' OR (move.state = 'draft' AND move.sequence_prefix IS NOT NULL))
                AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
