@@ -15,6 +15,7 @@
                 <field name="page_id" invisible="1" required="False"/>
                 <field name="sequence" invisible="1"/>
                 <field name="scoring_type" invisible="1"/>
+                <field name="has_image_only_suggested_answer" invisible="1"/>
                 <sheet>
                     <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
                     <div class="float-end d-flex flex-column text-center" invisible="not is_page">
@@ -143,14 +144,14 @@
                             <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="value" string="Choices"/>
+                                    <field name="value" string="Choices" required="not value_image"/>
                                     <field name="is_correct"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="answer_score"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
-                                    <field name="value_image_filename" column_invisible="True"/>
+                                    <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
-                                        column_invisible="parent.question_type == 'matrix'"/>
+                                        column_invisible="parent.question_type == 'matrix'" required="not value"/>
                                 </tree>
                             </field>
 
