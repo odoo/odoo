@@ -54,4 +54,7 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
             this.pos.logEmployeeMessage(this.props.action, "ACTION_CANCELLED");
         }
     }
+    _parseFloat(value) {
+        return parseFloat(value);
+    }
 }

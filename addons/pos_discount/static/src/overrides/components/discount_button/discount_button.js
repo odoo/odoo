@@ -7,6 +7,7 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { parseFloat } from "@web/views/fields/parsers";
 
 export class DiscountButton extends Component {
     static template = "pos_discount.DiscountButton";
