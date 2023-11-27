@@ -19,4 +19,22 @@
             }
         }
     }
+
+    @for $-i from 1 through length($o-colors-complete) {
+        $-color: nth($o-colors-complete, $i);
+
+        .o_cw_filter_color_#{$i - 1} {
+            &.form-check:hover .o_cw_filter_input_bg:not(.no_filter_color) {
+                border-color: shade-color($-color, 20%);
+            }
+
+            .o_cw_filter_input_bg {
+                border-color: $-color;
+
+                &:checked {
+                    background-color: $-color;
+                }
+            }
+        }
+    }
 }
