@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -26,6 +25,10 @@
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
+        'views/product_image_views.xml',
+        'views/product_pricelist_views.xml',
+        'views/product_public_category_views.xml',
+        'views/product_ribbon_views.xml',
         'views/product_tag_views.xml',
         'views/product_views.xml',
         'views/sale_order_views.xml',
