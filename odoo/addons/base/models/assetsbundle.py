@@ -201,20 +201,21 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         is_css = extension in ['css', 'min.css', 'css.map']
-        url = self.get_asset_url(
+        to_clean_pattern = self.get_asset_url(
             extra='%s' % ('rtl/' if is_css and self.rtl else ''),
             name=self.name,
             extension=extension,
         )
-
+        keep_url = self.get_asset_url(unique=self.get_version('css' if is_css else 'js'), sep='%')
         domain = [
-            ('url', '=like', url),
-            '!', ('url', '=like', self.get_asset_url(unique=self.get_version('css' if is_css else 'js'), sep='%'))
+            ('url', '=like', to_clean_pattern),
+            '!', ('url', '=like', keep_url),
         ]
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
+            _logger.info('Deleting attachments %s (matching %s) because it was replaced with %s', attachments.ids, to_clean_pattern, keep_url)
             self._unlink_attachments(attachments)
             # clear_cache was removed
 
@@ -350,6 +351,8 @@ class AssetsBundle(object):
 
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
+
+        _logger.info('Generating a new asset bundle attachment %s (id:%s)', attachment.url, attachment.id)
 
         self.clean_attachments(extension)
 
