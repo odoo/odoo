@@ -13,7 +13,7 @@ class MrpWorkcenter(models.Model):
     @api.depends('analytic_distribution')
     def _compute_costs_hour_account_ids(self):
         for record in self:
-            record.costs_hour_account_ids = list(map(int, record.analytic_distribution.keys())) if record.analytic_distribution else []
+            record.costs_hour_account_ids = list(map(int, (key for key in record.analytic_distribution.keys() if key.isdigit()))) if record.analytic_distribution else []
 
     @api.constrains('analytic_distribution')
     def _check_analytic(self):
