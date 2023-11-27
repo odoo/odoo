@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tools import mute_logger
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
@@ -201,8 +201,14 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         # Setup Currency
         usd = self.env.ref('base.USD')
         eur = self.env.ref('base.EUR')
-        self.env['res.currency.rate'].create({'currency_id': usd.id, 'rate': 1})
-        self.env['res.currency.rate'].create({'currency_id': eur.id, 'rate': 2})
+        self.env['res.currency.rate'].create({
+            'name': Datetime.today(),
+            'currency_id': usd.id,
+            'rate': 1})
+        self.env['res.currency.rate'].create({
+            'name': Datetime.today(),
+            'currency_id': eur.id,
+            'rate': 2})
 
         # Create Purchase
         po_form = Form(self.env['purchase.order'])
