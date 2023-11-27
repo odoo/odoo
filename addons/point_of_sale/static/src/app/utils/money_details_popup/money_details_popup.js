@@ -53,4 +53,7 @@ export class MoneyDetailsPopup extends Component {
         });
         this.props.close();
     }
+    _parseFloat(value) {
+        return parseFloat(value);
+    }
 }

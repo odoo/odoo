@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
@@ -25,7 +24,7 @@ export class TipScreen extends Component {
         });
     }
     get overallAmountStr() {
-        const tipAmount = parseFloat(this.state.inputTipAmount || "0");
+        const tipAmount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const original = this.env.utils.formatCurrency(this.totalAmount);
         const tip = this.env.utils.formatCurrency(tipAmount);
         const overall = this.env.utils.formatCurrency(this.totalAmount + tipAmount);
@@ -45,7 +44,7 @@ export class TipScreen extends Component {
         ];
     }
     async validateTip() {
-        const amount = parseFloat(this.state.inputTipAmount) || 0;
+        const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.get_order();
         const serverId = this.pos.validated_orders_name_server_id_map[order.name];
 
