@@ -124,7 +124,7 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileButtonBox(el, params) {
-        if (!el.childNodes.length) {
+        if (!el.children.length) {
             return this.compileGenericNode(el, params);
         }
 
