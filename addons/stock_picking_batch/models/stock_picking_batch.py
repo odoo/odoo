@@ -64,6 +64,12 @@ class StockPickingBatch(models.Model):
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
+    show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+
+    @api.depends('picking_type_id')
+    def _compute_show_lots_text(self):
+        for batch in self:
+            batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
