@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition" owl="1">
+<<<<<<< HEAD
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
             <div class="d-flex justify-content-between px-3 border-bottom">
                 <div class="border-end py-1">
+||||||| parent of f684d9cc07bd (temp)
+        <div class="o_field_property_definition o_field_widget d-block" t-ref="propertyDefinition">
+            <div class="o_field_property_definition_header d-flex flex-row align-items-center justify-content-between m-3">
+                <h6 t-if="props.readonly" t-out="state.propertyDefinition.string" class="text-truncate"/>
+                <input
+                    t-else=""
+                    class="o_input px-2 me-3"
+                    type="text"
+                    required=""
+                    placeholder="Property Name"
+                    autocomplete="true"
+                    t-model="state.propertyDefinition.string"
+                    t-on-change="onPropertyLabelChange"
+                    t-on-keypress="onPropertyLabelKeypress"
+                />
+                <div class="d-flex flex-row me-3">
+=======
+        <div class="o_field_property_definition o_field_widget d-block" t-ref="propertyDefinition">
+            <div class="o_field_property_definition_header d-flex flex-row align-items-center justify-content-between m-3">
+                <h6 t-if="props.readonly" t-out="state.propertyDefinition.string" class="text-truncate"/>
+                <input
+                    t-else=""
+                    class="o_input px-2 me-3"
+                    type="text"
+                    required=""
+                    placeholder="Property Name"
+                    autocomplete="off"
+                    t-model="state.propertyDefinition.string"
+                    t-on-change="onPropertyLabelChange"
+                    t-on-keypress="onPropertyLabelKeypress"
+                />
+                <div class="d-flex flex-row me-3">
+>>>>>>> f684d9cc07bd (temp)
                     <button
                         t-attf-class="btn btn-link ps-0 {{this.isFirst ? 'disabled' : ''}}"
                         t-on-click="() => this.onPropertyMove('up')" title="Move this Property up">
