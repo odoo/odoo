@@ -295,3 +295,30 @@ class TestProjectSharing(TestProjectSharingCommon):
             [],
         )
         self.assertFalse(task_read_group[0]['__count'], 'No result should found with the read_group since the domain is falsy.')
+
+    def test_milestone_read_access_right(self):
+        """ This test ensures that a portal user has read access on the milestone of the project that was shared with him """
+
+        project_milestone = self.env['project.milestone'].create({
+            'name': 'Test Project Milestone',
+            'project_id': self.project_portal.id,
+        })
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to access to a milestone if he's not a collaborator of its project."):
+            project_milestone.with_user(self.user_portal).read(['name'])
+
+        self.project_portal.write({
+            'collaborator_ids': [Command.create({
+                'partner_id': self.user_portal.partner_id.id,
+            })],
+        })
+        # Reading the milestone should no longer trigger an access error.
+        project_milestone.with_user(self.user_portal).read(['name'])
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to update a milestone."):
+            project_milestone.with_user(self.user_portal).write(['name'])
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to delete a milestone."):
+            project_milestone.with_user(self.user_portal).unlink()
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to create a milestone."):
+            self.env['project.milestone'].with_user(self.user_portal).create({
+                'name': 'Test Project new Milestone',
+                'project_id': self.project_portal.id,
+            })
