@@ -11,7 +11,13 @@
  * @property {Object} context
  * @property {string} name
  * @property {string} id
- * @property {Object | null} sortedColumn
+ * @property {PivotSortedColumn | null} sortedColumn
+ *
+ * @typedef {Object} PivotSortedColumn
+ * @property {[[], Array<string | boolean | number>]} groupId
+ * @property {string} measure
+ * @property {"asc" | "desc"} order
+ * @property {Array<number>} originIndexes
  *
  * @typedef {Object} Pivot
  * @property {string} id
@@ -63,6 +69,13 @@ export class PivotCorePlugin extends CorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
+            case "UPDATE_ODOO_PIVOT_DOMAIN":
+            case "UPDATE_PIVOT_SORTING": {
+                if (!(cmd.pivotId in this.pivots)) {
+                    return CommandResult.PivotIdNotFound;
+                }
+                break;
+            }
             case "INSERT_PIVOT":
                 if (cmd.id !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
@@ -137,6 +150,17 @@ export class PivotCorePlugin extends CorePlugin {
                     "searchParams",
                     "domain",
                     cmd.domain
+                );
+                break;
+            }
+            case "UPDATE_PIVOT_SORTING": {
+                this.history.update(
+                    "pivots",
+                    cmd.pivotId,
+                    "definition",
+                    "metaData",
+                    "sortedColumn",
+                    cmd.sortedColumn
                 );
                 break;
             }

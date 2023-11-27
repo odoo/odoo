@@ -128,6 +128,11 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                 this._setupPivotDataSource(newPivotId);
                 break;
             }
+            case "UPDATE_PIVOT_SORTING": {
+                const dataSource = this.getPivotDataSource(cmd.pivotId);
+                dataSource.sortRows(cmd.sortedColumn);
+                break;
+            }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
                 const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
                 const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);

@@ -7,6 +7,7 @@ import {
     getCellValue,
     getEvaluatedCell,
     getBorders,
+    getEvaluatedGrid,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
@@ -910,5 +911,70 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             newPivotId: "66",
         });
         assert.deepEqual(result.reasons, [CommandResult.InvalidNextId]);
+    });
+
+    QUnit.test("Can edit a pivot sorting", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="bar" type="col"/>
+                    <field name="id" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        const sortedColumn = {
+            measure: "probability",
+            order: "asc",
+            groupId: [[], [true]],
+            originIndexes: [0],
+        };
+        model.dispatch("UPDATE_PIVOT_SORTING", {
+            pivotId: "1",
+            sortedColumn,
+        });
+        assert.deepEqual(model.getters.getPivotDefinition("1").sortedColumn, sortedColumn);
+        assert.deepEqual(
+            model.getters.getPivotDataSource("1")._metaData.sortedColumn,
+            sortedColumn
+        );
+
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:C6", "42"), [
+            ["(#1) Partner Pivot",  "No",           "Yes",        ],
+            ["",                    "Probability",  "Probability",],
+            [4,                     15,             "",           ],
+            [1,                     "",             10,           ],
+            [2,                     "",             11,           ],
+            [3,                     "",             95,           ],
+        ]);
+
+        model.dispatch("UPDATE_PIVOT_SORTING", {
+            pivotId: "1",
+            sortedColumn: { ...sortedColumn, order: "desc" },
+        });
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:C6", "42"), [
+            ["(#1) Partner Pivot",  "No",           "Yes",        ],
+            ["",                    "Probability",  "Probability",],
+            [3,                     "",             95,           ],
+            [2,                     "",             11,           ],
+            [1,                     "",             10,           ],
+            [4,                     15,             "",           ],
+        ]);
+    });
+
+    QUnit.test("Cannot change the sorting of an unknown pivot", async (assert) => {
+        const model = new Model();
+        const result = model.dispatch("UPDATE_PIVOT_SORTING", {
+            pivotId: "hello",
+            sortedColumn: {
+                measure: "probability",
+                order: "asc",
+                groupId: [[], []],
+            },
+        });
+        assert.deepEqual(result.reasons, [CommandResult.PivotIdNotFound]);
     });
 });

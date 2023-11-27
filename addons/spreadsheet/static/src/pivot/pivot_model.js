@@ -344,6 +344,26 @@ export class SpreadsheetPivotModel extends PivotModel {
     }
 
     /**
+     * Same as {@link getGroupByDisplayLabel} but the argument groupValue is the raw vale from the read_group (not normalized),
+     * and returned dates values are formatted
+     */
+    _getGroupByFormattedLabelFromServerValue(groupField, groupValue, locale = DEFAULT_LOCALE) {
+        const { field, aggregateOperator } = this.parseGroupField(groupField);
+        if (!this._isDateField(field)) {
+            return this.getGroupByDisplayLabel(groupField, groupValue, locale);
+        }
+        const normalizedValue = this._getNormalizedDateValueFromReadGroupDate(
+            groupField,
+            groupValue
+        );
+        const label = this.getGroupByDisplayLabel(groupField, normalizedValue, locale);
+
+        return label && aggregateOperator === "day" && groupValue !== "false"
+            ? pivotTimeAdapter(aggregateOperator).format(label, locale)
+            : label;
+    }
+
+    /**
      * Get the label of the last group by of the domain
      *
      * @param {string[]} domain Domain of the formula
@@ -407,6 +427,14 @@ export class SpreadsheetPivotModel extends PivotModel {
             ? this.getFormattedGroupBy(this.metaData.rowGroupBys[0])
             : "";
         return new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
+    }
+
+    /**
+     * @override
+     */
+    sortRows(sortedColumn) {
+        this._tableStructure = undefined; // Delete cached table structure
+        super.sortRows(sortedColumn);
     }
 
     //--------------------------------------------------------------------------
@@ -715,5 +743,58 @@ export class SpreadsheetPivotModel extends PivotModel {
         });
 
         return headers;
+    }
+
+    getColGroupByPossibleValuesAndLabels(domainValues, locale) {
+        const tree = this.data.colGroupTree;
+        let currentBranch = tree;
+        for (const domainValue of domainValues) {
+            currentBranch = currentBranch.directSubTrees.get(domainValue);
+        }
+        if (!currentBranch) {
+            return [];
+        }
+        const valuesAndLabels = [];
+        const groupBy = this.metaData.colGroupBys[domainValues.length];
+        for (const leaf of currentBranch.directSubTrees.values()) {
+            const value = leaf.root.values.at(-1);
+            const label = this._getGroupByFormattedLabelFromServerValue(groupBy, value, locale);
+            valuesAndLabels.push({ label, value });
+        }
+        return valuesAndLabels;
+    }
+
+    getValuesOfSortedColumn(locale) {
+        const groupBys = this.metaData.colGroupBys;
+        const groupByValues = this.metaData.sortedColumn?.groupId[1] || [];
+
+        const displayValues = [];
+        for (let i = 0; i < groupBys.length; i++) {
+            const groupBy = groupBys[i];
+            const groupByValue = groupByValues[i];
+            const label = this._getGroupByFormattedLabelFromServerValue(
+                groupBy,
+                groupByValue,
+                locale
+            );
+            const fieldLabel = this.getFormattedGroupBy(groupBy);
+            displayValues.push({ fieldLabel, label, field: groupBy, value: groupByValue });
+        }
+
+        return displayValues;
+    }
+
+    getAllActiveMeasures() {
+        return this.metaData.activeMeasures.map((measure) => this._getMeasureInfo(measure));
+    }
+
+    _getMeasureInfo(measure) {
+        const measureDisplayName = this.getGroupByDisplayLabel("measure", measure);
+        return {
+            fieldLabel: "Measure",
+            field: "measure",
+            label: measureDisplayName,
+            value: measure,
+        };
     }
 }

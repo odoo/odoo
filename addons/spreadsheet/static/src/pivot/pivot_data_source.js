@@ -24,7 +24,7 @@ export class PivotDataSource extends OdooViewsDataSource {
         this._model = new SpreadsheetPivotModel(
             { _t },
             {
-                metaData: this._metaData,
+                metaData: this._initialMetaData,
                 searchParams: this._searchParams,
             },
             {
@@ -227,5 +227,37 @@ export class PivotDataSource extends OdooViewsDataSource {
     async prepareForTemplateGeneration() {
         this._assertDataIsLoaded();
         await this._model.prepareForTemplateGeneration();
+    }
+
+    getValuesOfSortedColumn(locale) {
+        this._assertDataIsLoaded();
+        return this._model.getValuesOfSortedColumn(locale);
+    }
+
+    sortRows(sortedColumn) {
+        this._assertDataIsLoaded();
+        return this._model.sortRows(sortedColumn);
+    }
+
+    getColGroupByPossibleValuesAndLabels(domainValues, locale) {
+        this._assertDataIsLoaded();
+        return this._model.getColGroupByPossibleValuesAndLabels(domainValues, locale);
+    }
+
+    getAllActiveMeasures() {
+        this._assertDataIsLoaded();
+        return this._model.getAllActiveMeasures();
+    }
+
+    get _metaData() {
+        return this._model ? this._model.metaData : this._initialMetaData;
+    }
+
+    set _metaData(metaData) {
+        if (!this._model) {
+            this._initialMetaData = metaData;
+            return;
+        }
+        throw new Error("metaData on PivotDataSource is readonly");
     }
 }

@@ -29,18 +29,22 @@ coreTypes.add("REMOVE_PIVOT");
 coreTypes.add("RE_INSERT_PIVOT");
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 coreTypes.add("DUPLICATE_PIVOT");
+coreTypes.add("UPDATE_PIVOT_SORTING");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
+invalidateEvaluationCommands.add("UPDATE_PIVOT_SORTING");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
 invalidateEvaluationCommands.add("INSERT_PIVOT");
 invalidateEvaluationCommands.add("RENAME_ODOO_PIVOT");
 
 invalidateDependenciesCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
+invalidateDependenciesCommands.add("UPDATE_PIVOT_SORTING");
 invalidateDependenciesCommands.add("REMOVE_PIVOT");
 invalidateDependenciesCommands.add("INSERT_PIVOT");
 invalidateDependenciesCommands.add("RENAME_ODOO_PIVOT");
 
 invalidateCFEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
+invalidateCFEvaluationCommands.add("UPDATE_PIVOT_SORTING");
 invalidateCFEvaluationCommands.add("REMOVE_PIVOT");
 invalidateCFEvaluationCommands.add("INSERT_PIVOT");
 invalidateCFEvaluationCommands.add("RENAME_ODOO_PIVOT");
@@ -64,6 +68,7 @@ inverseCommandRegistry
     .add("RENAME_ODOO_PIVOT", identity)
     .add("REMOVE_PIVOT", identity)
     .add("UPDATE_ODOO_PIVOT_DOMAIN", identity)
+    .add("UPDATE_PIVOT_SORTING", identity)
     .add("RE_INSERT_PIVOT", identity);
 
 export { PivotCorePlugin, PivotUIPlugin };
