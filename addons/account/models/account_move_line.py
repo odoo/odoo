@@ -801,7 +801,10 @@ class AccountMoveLine(models.Model):
     @api.depends('display_type')
     def _compute_quantity(self):
         for line in self:
-            line.quantity = 1 if line.display_type == 'product' else False
+            if line.display_type == 'product':
+                line.quantity = line.quantity if line.quantity else 1
+            else:
+                line.quantity = False
 
     @api.depends('display_type')
     def _compute_sequence(self):
