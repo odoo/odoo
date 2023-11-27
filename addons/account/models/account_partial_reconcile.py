@@ -19,7 +19,7 @@ class AccountPartialReconcile(models.Model):
     full_reconcile_id = fields.Many2one(
         comodel_name='account.full.reconcile',
         string="Full Reconcile", copy=False)
-    exchange_move_id = fields.Many2one(comodel_name='account.move')
+    exchange_move_id = fields.Many2one(comodel_name='account.move', index='btree_not_null')
 
     # ==== Currency fields ====
     company_currency_id = fields.Many2one(
