@@ -3,6 +3,7 @@
     <data noupdate="1">
         <record id="mailing_list_data" model="mailing.list">
             <field name="name">Newsletter</field>
+            <field name="is_public">True</field>
         </record>
         <record id="mass_mail_contact_0" model="mailing.contact">
             <field name="name" model="res.users" eval="obj().env.ref('base.user_admin').name"/>
