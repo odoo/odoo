@@ -5771,6 +5771,6 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-        assert.verifySteps([`[]`, `["date:month"]`, `["date:month"]`, `["date:month"]`]);
+        assert.verifySteps([`[]`, `["date:month"]`]);
     });
 });
