@@ -62,6 +62,7 @@ class StockLandedCost(models.Model):
         copy=False, readonly=True, tracking=True)
     account_move_id = fields.Many2one(
         'account.move', 'Journal Entry',
+        index='btree_not_null',
         copy=False, readonly=True)
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
