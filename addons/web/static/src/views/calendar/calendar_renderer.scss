@@ -9,34 +9,39 @@
         border-top: 1px solid var(--o-cw-border-color);
     }
 
-    .fc-event {
+    .o_event {
         // `web/lib/fullcalendar/core/main.css` gives events with links and draggable events a hand mouse pointer,
         // but doesn't take into account that events have popovers.
         cursor: pointer;
-        color: $body-color;
         background-color: $o-view-background-color;
-        transition: right .3s, left .3s;
         overflow: hidden;
 
         @include media-breakpoint-down (md) {
             line-height: 1.2;
         }
 
-        &:hover {
+        &, &:hover {
             color: $body-color;
-
-            &:not(.o_event_dot) .fc-bg {
-                --o-bg-opacity: .35;
-            }
         }
 
         &:not(.o_event_dot) {
             --o-overlay-opacity: .5;
 
-            &.o_event_hatched {
+            border-color: var(--o-event-bg--subtle, #{$info});
+
+            &:hover .fc-bg {
+                --o-bg-opacity: 1;
+            }
+
+            &:not(.fc-dragging).o_cw_custom_highlight {
+                box-shadow: 0px 8px 8px -7px rgba(0, 0, 0, 0.2);
+                z-index: 2; // for the shadow to go over the events below
+            }
+
+            &.o_event_hatched, &.o_attendee_status_tentative {
                 --o-bg-opacity: .5;
 
-                .fc-bg {
+                &.fc-bgevent, .fc-bg {
                     background: repeating-linear-gradient(
                         45deg,
                         RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3),
@@ -47,6 +52,21 @@
                 }
             }
 
+            &.fc-bgevent, .fc-bg {
+                background-color: var(--o-event-bg--subtle, #{$info});
+                opacity: var(--o-bg-opacity, .5);
+            }
+
+            &.fc-bgevent {
+                border-radius: $border-radius;
+
+                &.o_event_striked {
+                    background: linear-gradient(
+                        transparent 0 45%,
+                        var(--o-event-bg, #{$info}) 45% 55%,
+                        transparent 55% 100%);
+                }
+            }
         }
 
         &.o_event_dot {
@@ -56,28 +76,43 @@
             align-items: center;
             gap: map-get($spacers, 1 );
             border: none;
+            padding: 0 map-get($spacers, 1);
             background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
 
+            @include media-breakpoint-down(md) {
+                margin: 0;
+            }
+
+            @include media-breakpoint-up(md) {
+                padding: 0 map-get($spacers, 1);
+            }
+
             &:before {
+                content: var(--o-event-dot-icon, '\f111'); // fa-circle
                 z-index: 2;
                 display: inline-block;
                 font-family: Fontawesome;
                 color: var(--o-event-bg, #{$info});
-                content: '\f111'; // fa-circle
+
+                @include media-breakpoint-down(md) {
+                    font-size: $o-font-size-base-smaller / 2;
+                }
             }
 
             &:hover {
-                --o-bg-opacity: 1;
+                --o-bg-opacity: .5;
             }
 
             &.o_event_hatched {
-                &:before {
-                    content: "\f1db"; // fa-circle-thin
-                }
+                --o-event-dot-icon: '\f1db'; // fa-circle-thin
+            }
+
+            &.o_event_striked {
+                --o-event-dot-icon: '\f1db'; // fa-circle-thin
             }
         }
 
-        &.o_event_striked {
+        &.o_event_striked, &.o_attendee_status_declined {
             .fc-content {
                 text-decoration: line-through;
             }
@@ -92,6 +127,10 @@
             }
         }
 
+        &:not(.fc-mirror):not(.fc-dragging) {
+            transition: right .3s, left .3s;
+        }
+
         &.fc-mirror {
             background-color: rgba($o-action, var(--o-bg-opacity));
         }
@@ -104,26 +143,8 @@
             background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
         }
 
-        &:not(.o_event_dot):not(.fc-dragging).o_cw_custom_highlight {
-            box-shadow: 0px 8px 8px -7px rgba(0, 0, 0, 0.2);
-            z-index: 2; // for the shadow to go over the events below
-        }
-
         .fc-bg {
             transition: $transition-base;
-        }
-
-        .fc-content {
-            > .o_event_title {
-                @include media-breakpoint-down(lg){
-                    text-overflow: unset;
-                    white-space: break-spaces;
-
-                    > span {
-                        word-break: break-word;
-                    }
-                }
-            }
         }
     }
 
@@ -196,7 +217,7 @@
         }
 
         .o_calendar_disabled {
-            background-color: rgba($gray-200, .5);
+            --o-cw-day-bg: #{to-rgb($gray-200)};
         }
 
         // ======  Specific agenda types ======
@@ -260,7 +281,6 @@
                 &.fc-today {
                     color: $primary;
                     .o_cw_day_number {
-                        position:relative;
                         color: $o-view-background-color;
 
                         &:before {
@@ -272,7 +292,6 @@
                             border-radius: $border-radius-pill;
                             background: $primary;
                             aspect-ratio: 1;
-                            color: $o-view-background-color;
                         }
                     }
                 }
@@ -343,15 +362,9 @@
                 box-shadow: inset 0 1px 0 var(--o-cw-border-color);
             }
 
-            .fc-day.fc-widget-content.fc-today:not(.o_calendar_disabled) {
-                background: $o-view-background-color;
-            }
-
             .fc-event {
-                --o-bg-opacity: .25;
-
                 // Prevent events with similar color to visually overlap each other
-                &:not(.o_event_allday):not(.o_homework_event) {
+                &:not(.o_event_allday):not(.o_homework_event):not(.o_cw_custom_highlight) {
                     box-shadow: 0 0 0 1px $o-view-background-color;
                 }
 
@@ -368,6 +381,17 @@
                     @include media-breakpoint-up(md) {
                         margin-top: 0;
                         margin-bottom: 0;
+                    }
+
+                    > .o_event_title {
+                        @include media-breakpoint-down(lg){
+                            text-overflow: unset;
+                            white-space: break-spaces;
+
+                            > span {
+                                word-break: break-word;
+                            }
+                        }
                     }
                 }
             }
@@ -468,10 +492,6 @@
                 border-left: none;
             }
 
-            .fc-bg .fc-today:not(.o_calendar_disabled) {
-                background: none;
-            }
-
             .fc-more-cell {
                 > div,
                 .fc-more {
@@ -482,11 +502,15 @@
             .fc-event {
                 padding: 0 map-get($spacers, 1);
                 @include media-breakpoint-up(lg) {
-                    margin: 0 3px 2px;
+                    margin-bottom: 2px;
+
+                    &:not(.o_event_dot) {
+                        margin-left: 3px;
+                        margin-right: 3px;
+                    }
                 }
 
                 .fc-content {
-                    display: flex;
                     justify-content: start;
                     flex-direction: row;
                     max-height: 1.2em;
@@ -594,6 +618,10 @@
                         text-align: center;
                         cursor: pointer;
                     }
+
+                    .o_event.fc-bgevent:not(.o_event_dot) {
+                        --o-bg-opacity: .5;
+                    }
                 }
             }
         }
@@ -629,38 +657,22 @@
     }
 }
 
-.o_calendar_renderer .fc-view {
-    .fc-event:not(.o_event_dot):not(.fc-dragging) {
-        &.o_cw_custom_highlight, &.o_calendar_popover_open {
-            box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
-            z-index: 2; // for the shadow to go over the events below
-        }
-    }
-}
-
 
 // ===============  Generate color classes ===============
 @for $-i from 1 through length($o-colors-complete) {
     $-color: nth($o-colors-complete, $-i);
     $-color-subtle: mix($o-white, $-color, 55%);
+    $-filter-border-color: shade-color($-color, 20%);
 
-    .o_calendar_renderer .fc-view {
-        .o_calendar_color_#{$-i - 1} {
-            &.fc-bgevent, &:not(.o_event_dot) .fc-bg {
-                background-color: $-color-subtle;
-            }
+    .o_calendar_renderer .o_event.o_calendar_color_#{$-i - 1} {
+        --o-event-bg: #{$-color};
+        --o-event-bg-rgb: #{to-rgb($-color)};
+        --o-event-bg--subtle: #{$-color-subtle};
+        --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
+    }
 
-            &.fc-event {
-                --o-event-bg: #{$-color};
-                --o-event-bg-rgb: #{to-rgb($-color)};
-                --o-event-bg--subtle: #{$-color-subtle};
-                --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
-
-                &:not(.o_event_dot):not(.fc-dragging) {
-                    color: color-contrast($-color-subtle);
-                    border-color: tint-color($-color, 50%);
-                }
-            }
-        }
+    .o_cw_filter_color_#{$-i - 1} {
+        --o-cw-filter-border: #{$-filter-border-color};
+        --o-cw-filter-bg: #{$-color};
     }
 }

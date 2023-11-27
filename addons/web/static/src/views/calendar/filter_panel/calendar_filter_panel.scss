@@ -10,31 +10,44 @@
         max-height: 100%; // max-height is required to properly trigger transition
         overflow: auto;
     }
+
     .o_calendar_filter_item {
+        &.form-check:hover .o_cw_filter_input_bg:not(.no_filter_color) {
+            border-color: var(--o-cw-filter-border, $o-white);
+        }
+
         &.no_filter_color, &.o_cw_filter_color_false, &:not([class*='o_cw_filter_color']) {
             input, input:hover {
                 border-color: $light;
                 background-color: transparent !important;
                 filter: invert(1) grayscale(1);
+                box-shadow: none;
+            }
+        }
+
+        &, & ~ .o_calendar_filter_items_checkall {
+            button.o_remove {
+                transform: translate(100%, -50%);
+            }
+
+            &:hover {
+                button.o_remove {
+                    transform: translate(0%, -50%);
+                }
+            }
+        }
+
+        .o_cw_filter_input_bg {
+            border-color: var(--o-cw-filter-bg);
+
+            &:checked {
+                background-color: var(--o-cw-filter-bg);
             }
         }
     }
 
-    @for $-i from 1 through length($o-colors-complete) {
-        $-color: nth($o-colors-complete, $i);
-
-        .o_cw_filter_color_#{$i - 1} {
-            &.form-check:hover .o_cw_filter_input_bg:not(.no_filter_color) {
-                border-color: shade-color($-color, 20%);
-            }
-
-            .o_cw_filter_input_bg {
-                border-color: $-color;
-
-                &:checked {
-                    background-color: $-color;
-                }
-            }
-        }
+    .o_field_many2one {
+        margin-top: 1rem;
+        width: 100%;
     }
 }

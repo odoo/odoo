@@ -2,16 +2,6 @@
 $o-cw-color-today-accent: $o-danger;
 $o-cw-filter-avatar-size: 20px;
 
-// Animations
-@keyframes backgroundfade {
-    from {
-        background-color: rgba($info, 0.5);
-    }
-    to {
-        background-color: rgba($info, 0.1);
-    }
-}
-
 .o_calendar_container {
     grid-template-columns: auto minmax(auto, 210px);
 
@@ -62,28 +52,6 @@ $o-cw-filter-avatar-size: 20px;
         // sync buttons are only displayed on calendar.event views
         .o_calendar_sync {
             padding-bottom: 0.5em;
-        }
-    }
-
-    .o_calendar_filter {
-
-        .o_calendar_filter_items_checkall,
-        .o_calendar_filter_item {
-
-            button.o_remove {
-                transform: translate(100%, -50%);
-            }
-
-            &:hover {
-                button.o_remove {
-                    transform: translate(0%, -50%);
-                }
-            }
-        }
-
-        .o_field_many2one {
-            margin-top: 1rem;
-            width: 100%;
         }
     }
 }
