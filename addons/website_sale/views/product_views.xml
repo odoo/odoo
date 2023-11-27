@@ -13,7 +13,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_product_website_tree_view">
+    <record id="product_product_website_tree_view" model="ir.ui.view">
         <field name="name">product.product.website.tree</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_tree_view"/>
@@ -29,7 +29,7 @@
     </record>
 
     <!-- We want website_id to be shown outside of website module like other models -->
-    <record model="ir.ui.view" id="product_template_view_tree">
+    <record id="product_template_view_tree" model="ir.ui.view">
         <field name="name">product.template.view.tree.inherit.website_sale</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_tree_view"/>
@@ -41,14 +41,14 @@
     </record>
 
     <!-- only website module template view should use the website_sequence -->
-    <record model="ir.ui.view" id="product_template_view_tree_website_sale">
+    <record id="product_template_view_tree_website_sale" model="ir.ui.view">
         <field name="name">product.template.view.tree.website_sale</field>
         <field name="mode">primary</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
         <field name="arch" type="xml">
             <tree position="attributes">
-              <attribute name="default_order">website_sequence</attribute>
+                <attribute name="default_order">website_sequence</attribute>
             </tree>
             <field name="priority" position="before">
                 <field name="website_sequence" widget="handle"/>
@@ -60,14 +60,14 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_view_kanban_website_sale">
+    <record id="product_template_view_kanban_website_sale" model="ir.ui.view">
         <field name="name">product.template.view.kanban.website_sale</field>
         <field name="mode">primary</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_kanban_view"/>
         <field name="arch" type="xml">
             <kanban position="attributes">
-              <attribute name="default_order">website_sequence</attribute>
+                <attribute name="default_order">website_sequence</attribute>
             </kanban>
             <field name="id" position="after">
                 <field name="website_sequence"/>
@@ -81,7 +81,11 @@
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="view_id"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1, 'tree_view_ref':'website_sale.product_template_view_tree_website_sale', 'kanban_view_ref':'website_sale.product_template_view_kanban_website_sale'}</field>
+        <field name="context">{
+            'search_default_published': 1,
+            'tree_view_ref': 'website_sale.product_template_view_tree_website_sale',
+            'kanban_view_ref': 'website_sale.product_template_view_kanban_website_sale'
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -91,7 +95,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_only_website_form_view">
+    <record id="product_template_only_website_form_view" model="ir.ui.view">
         <field name="name">product.template.product.only.website.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
@@ -113,13 +117,13 @@
                     <div class="d-flex flex-row" invisible="base_unit_price == 0 or product_variant_count &gt; 1">
                         (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </div>
-                    <span class='text-muted' invisible="product_variant_count &lt;= 1">Based on variants</span>
+                    <span class="text-muted" invisible="product_variant_count &lt;= 1">Based on variants</span>
                 </div>
             </field>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_product_normal_website_form_view">
+    <record id="product_product_normal_website_form_view" model="ir.ui.view">
         <field name="name">product.product.normal.view.website</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
@@ -137,7 +141,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_form_view">
+    <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
