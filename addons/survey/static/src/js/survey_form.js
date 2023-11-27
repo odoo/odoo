@@ -185,7 +185,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * @param {Event} ev
      */
     _onChoiceImgClick: function (ev) {
-        ev.preventDefault();
+        if (!uiUtils.isSmall()) {
+            // On large screen, it prevents the answer to be selected as the user only want to enlarge the image.
+            // We don't do it on small device as it can be hard to click outside the picture to select the answer.
+            ev.preventDefault();
+        }
         this.imgZoomer = new SurveyImageZoomer({
             sourceImage: $(ev.currentTarget).attr('src')
         });
