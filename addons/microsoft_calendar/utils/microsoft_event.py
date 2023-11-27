@@ -151,6 +151,89 @@ class MicrosoftEvent(abc.Set):
                     'need_sync_m': False,
                 })
 
+        # 3. Try matching events using their name and date when there is only one event in Odoo with this exact info.
+        # For recurrences, try matching their base_event_id start and stop information with the information given by Microsoft.
+        # This step covers the scenario where Outlook app is reinstalled in the same DB and odoo records lose their 'microsoft_id'.
+        # Otherwise the events and recurrences will be recreated and spam attendees since they lost their 'microsoft_id'.
+        unmapped_events = self.filter(lambda e: e.id not in mapped_events and not e.is_cancelled() and e.start)
+        if unmapped_events:
+            # Convert microsoft values to odoo values for later using it to match with odoo events.
+            odoo_values_ms_events = []
+            for ev in unmapped_events:
+                if model_env._table == 'calendar_event':
+                    odoo_values_ms_events.append({'odoo_values': env['calendar.event']._microsoft_match_odoo_values(ev), 'ms_event': ev})
+                elif model_env._table == 'calendar_recurrence':
+                    odoo_values_ms_events.append({'odoo_values': env['calendar.event']._microsoft_to_odoo_recurrence_values(ev), 'ms_event': ev})
+
+            if model_env._table == 'calendar_event':
+                # Fetch odoo events which have the current user as attendee, same name and event date information.
+                env.cr.execute(
+                    """
+                    SELECT ce.id
+                    FROM %s ce
+                    JOIN calendar_attendee ca ON ce.id = ca.event_id
+                    WHERE ce.name IN %%s
+                    AND ce.start IN %%s
+                    AND ce.stop IN %%s
+                    AND ce.microsoft_id IS NULL
+                    AND ca.partner_id = %%s
+                    """ % model_env._table, (
+                       tuple(ev['odoo_values']['name'] for ev in odoo_values_ms_events),
+                       tuple(ev['odoo_values']['start'] for ev in odoo_values_ms_events),
+                       tuple(ev['odoo_values']['stop'] for ev in odoo_values_ms_events),
+                       env.user.partner_id.id
+                    )
+                )
+            elif model_env._table == 'calendar_recurrence':
+                # Fetch recurrences which base event have the current user as attendee, are unmapped and match date info.
+                env.cr.execute(
+                    """
+                    SELECT cr.id
+                    FROM %s cr
+                    JOIN calendar_event ce ON cr.base_event_id = ce.id
+                    JOIN calendar_attendee ca ON cr.base_event_id = ca.event_id
+                    WHERE ce.start IN %%s
+                    AND ce.stop IN %%s
+                    AND ce.microsoft_id IS NULL
+                    AND ce.microsoft_recurrence_master_id is NULL
+                    AND cr.microsoft_id is NULL
+                    AND ca.partner_id = %%s
+                    """ % model_env._table, (
+                        tuple(ev['odoo_values']['start'] for ev in odoo_values_ms_events),
+                        tuple(ev['odoo_values']['stop'] for ev in odoo_values_ms_events),
+                        env.user.partner_id.id
+                    )
+                )
+            res = env.cr.fetchall()
+            odoo_events_ids = [val[0] for val in res]
+            odoo_events = model_env.browse(odoo_events_ids)
+
+            # Create dictionary tuples for the unmatched odoo events/recurrences using name and date.
+            odoo_events_by_name_date = {}
+            for e in odoo_events:
+                odoo_key = None
+                if model_env._table == 'calendar_event':
+                    odoo_key = (e.name, e.start, e.stop)
+                else:
+                    odoo_key = (e.base_event_id.start, e.base_event_id.stop)
+                odoo_events_by_name_date.setdefault(odoo_key, []).append(e)
+
+            # Match microsoft events tuples with odoo events keys. Update their 'microsoft_id' when match is successful.
+            for ev in odoo_values_ms_events:
+                ms_key = None
+                if model_env._table == 'calendar_event':
+                    ms_key = (ev['odoo_values']['name'], ev['odoo_values']['start'], ev['odoo_values']['stop'])
+                else:
+                    ms_key = (ev['odoo_values']['start'], ev['odoo_values']['stop'])
+                event_matches = odoo_events_by_name_date.get(ms_key, [])
+
+                # Successful match: there is only one odoo_key for the searched ms_key.
+                if len(event_matches) == 1:
+                    event_matches[0].with_context(dont_notify=True).write({
+                        'microsoft_id': ev['odoo_values']['microsoft_id'],
+                        'need_sync_m': False,
+                    })
+                    mapped_events.append(ev['ms_event'].id)
         return self.filter(lambda e: e.id in mapped_events)
 
     def owner_id(self, env):

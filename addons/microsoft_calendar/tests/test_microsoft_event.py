@@ -280,11 +280,14 @@ class TestMicrosoftEvent(TestCommon):
     def test_ignore_not_found_items(self):
 
         # arrange
+        start_date = datetime(2023, 11, 27, 17, 25)
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": False,
             "iCalUId": "UNKNOWN_EVENT",
             "id": "UNKNOWN_EVENT",
+            'start': {'dateTime': (start_date).isoformat(), 'timeZone': 'UTC'},
+            'end': {'dateTime': (start_date + relativedelta(minutes=30)).isoformat(), 'timeZone': 'UTC'},
         }])
 
         # act

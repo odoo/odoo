@@ -54,7 +54,7 @@ class Meeting(models.Model):
 
     @api.model
     def _restart_microsoft_sync(self):
-        self.env['calendar.event'].search(self._get_microsoft_sync_domain()).write({
+        self.env['calendar.event'].with_context(dont_notify=True).search(self._get_microsoft_sync_domain()).write({
             'need_sync_m': True,
         })
 
@@ -249,6 +249,27 @@ class Meeting(models.Model):
         ]
         return self._extend_microsoft_domain(domain)
 
+    @api.model
+    def _microsoft_match_odoo_values(self, microsoft_event):
+        """
+        Return odoo values of microsoft event fields to match them with existing odoo events information.
+        Checking attendee commands is not possible since it calls '_load_odoo_ids_from_db' therefore creating a loop.
+        """
+        # Process start and stop dates with their respective timezones.
+        timeZone_start = pytz.timezone(microsoft_event.start.get('timeZone'))
+        timeZone_stop = pytz.timezone(microsoft_event.end.get('timeZone'))
+        start = parse(microsoft_event.start.get('dateTime')).astimezone(timeZone_start).replace(tzinfo=None)
+        stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
+        if microsoft_event.isAllDay:
+            stop -= relativedelta(days=1)
+        # Create dictionary with odoo values. Add 'microsoft_id' for tracking ID information.
+        match_ms_event_odoo_values = {
+            'name': microsoft_event.subject or _("(No title)"),
+            'microsoft_id': combine_ids(microsoft_event.id, microsoft_event.iCalUId),
+            'start': start,
+            'stop': stop
+        }
+        return match_ms_event_odoo_values
 
     @api.model
     def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values=None, with_ids=False):
