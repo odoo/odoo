@@ -58,12 +58,17 @@ export const contextualUtilsService = {
             return ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
         };
 
+        const parseValidFloat = (inputValue) => {
+            return isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
+        };
+
         env.utils = {
             formatCurrency,
             formatStrCurrency,
             roundCurrency,
             formatProductQty,
             isValidFloat,
+            parseValidFloat,
             floatIsZero,
         };
     },

@@ -13,7 +13,7 @@ patch(ControlButtons.prototype, {
             startingValue: this.pos.config.discount_pc,
             isInputSelected: true,
             getPayload: (num) => {
-                const val = Math.max(0, Math.min(100, parseFloat(num)));
+                const val = Math.max(0, Math.min(100, this.env.utils.parseValidFloat(num)));
                 this.apply_discount(val);
             },
         });
