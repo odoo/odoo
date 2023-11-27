@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools.misc import format_amount
@@ -162,3 +163,38 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         dashboard_data = self.company_data['default_journal_sale'].get_journal_dashboard_datas()
         self.assertEqual(format_amount(self.env, 70, company_currency), dashboard_data['sum_waiting'])
         self.assertEqual(format_amount(self.env, 70, company_currency), dashboard_data['sum_late'])
+
+    def test_gap_in_sequence_warning(self):
+        journal = self.company_data['default_journal_sale']
+        self.assertFalse(journal._query_has_sequence_holes())  # No moves so no gap
+        moves = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': f'1900-01-{i+1:02d}',
+            'date': f'2019-01-{i+1:02d}',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 40.0,
+                'name': 'product test 1',
+                'price_unit': 2.27,
+                'tax_ids': [],
+            })]
+        } for i in range(12)]).sorted('date')
+        gap_date = moves[6].date
+
+        moves.action_post()
+        self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning
+
+        moves[5:7].button_draft()
+        self.assertFalse(journal._query_has_sequence_holes())  # no gap (with draft moves using sequence numbers), no gap warning
+        moves[6].unlink()
+        self.assertTrue(journal._query_has_sequence_holes())  # gap due to missing sequence, gap warning
+
+        moves[5:6].action_post()
+        self.company_data['company'].write({'fiscalyear_lock_date': gap_date + relativedelta(days=1)})
+        self.assertFalse(journal._query_has_sequence_holes())  # gap but prior to lock-date, no gap warning
+
+        moves[10].button_draft()
+        moves[10].button_cancel()
+        self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, no gap warning
