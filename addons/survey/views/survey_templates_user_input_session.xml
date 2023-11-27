@@ -12,7 +12,7 @@
                              if survey.session_question_id and survey.session_question_id.background_image_url
                              else ('background-image: url(' + survey.background_image_url + ');')
                              if survey.background_image_url
-                             else '')"/>
+                             else 'background-image: url(\'/survey/static/src/img/survey_background_sample.svg\')')"/>
             <attribute name="t-att-class" add="'o_survey_background'"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
