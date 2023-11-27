@@ -197,6 +197,7 @@ class AssetsBundle(object):
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
+            _logger.info('Deleting attachments %s (matching %s) because it was replaced with %s', attachments.ids, to_clean_pattern, keep_url)
             self._unlink_attachments(attachments)
             # clear_cache was removed
 
@@ -305,6 +306,8 @@ class AssetsBundle(object):
             'url': url,
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
+
+        _logger.info('Generating a new asset bundle attachment %s (id:%s)', attachment.url, attachment.id)
 
         self._clean_attachments(extension, url)
 
