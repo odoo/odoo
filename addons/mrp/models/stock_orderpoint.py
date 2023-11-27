@@ -124,12 +124,16 @@ class StockWarehouseOrderpoint(models.Model):
         return qty_multiple_to_order
 
     def _set_default_route_id(self):
-        route_id = self.env['stock.rule'].search([
+        route_ids = self.env['stock.rule'].search([
             ('action', '=', 'manufacture')
-        ], limit=1).route_id
-        orderpoint_wh_bom = self.filtered(lambda o: o.product_id.bom_ids)
-        if route_id and orderpoint_wh_bom and (not self.product_id.route_ids or route_id in self.product_id.route_ids):
-            orderpoint_wh_bom.route_id = route_id[0].id
+        ]).route_id
+        for orderpoint in self:
+            if not orderpoint.product_id.bom_ids:
+                continue
+            route_id = orderpoint.rule_ids.route_id & route_ids
+            if not route_id:
+                continue
+            orderpoint.route_id = route_id[0].id
         return super()._set_default_route_id()
 
     def _prepare_procurement_values(self, date=False, group=False):
