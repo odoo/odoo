@@ -93,7 +93,7 @@ export function useBus(bus, eventName, callback) {
 // -----------------------------------------------------------------------------
 // useService
 // -----------------------------------------------------------------------------
-function _protectMethod(component, fn) {
+export function _protectMethod(component, fn) {
     return function (...args) {
         if (status(component) === "destroyed") {
             return Promise.reject(new Error("Component is destroyed"));

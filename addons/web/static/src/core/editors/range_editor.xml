@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RangeEditor">
+        <div class="d-flex align-items-center">
+            <Editor t-props="props" type="props.subType" value="props.value[0]" update="(val) => this.update(0, val)" />
+            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
+            <Editor t-props="props" type="props.subType" value="props.value[1]" update="(val) => this.update(1, val)" />
+        </div>
+    </t>
+
+</templates>

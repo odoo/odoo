@@ -168,6 +168,14 @@ export function formatValue(value) {
     return formatAST(toAST(value));
 }
 
+export function doFormatValue(value) {
+    try {
+        return formatValue(value);
+    } catch {
+        return "-";
+    }
+}
+
 export function normalizeValue(value) {
     return toValue(toAST(value)); // no array in array (see isWithinArray)
 }

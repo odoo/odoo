@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Editor">
+        <t t-if="!valueIsSupported">
+            <div class="o_input d-flex align-items-center" t-att-class="className">
+                <span class="flex-grow-1 text-truncate" t-esc="serializedValue" />
+                <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-title="message" />
+                <i class="fa fa-times" title="Clear" t-on-click="onClear" />
+            </div>
+        </t>
+        <t t-elif="info.component">
+            <div t-att-class="className">
+                <t t-component="info.component" t-props="info.props" />
+            </div>
+        </t>
+    </t>
+
+</templates>
