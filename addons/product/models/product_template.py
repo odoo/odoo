@@ -1132,6 +1132,7 @@ class ProductTemplate(models.Model):
             domain = expression.AND([domain, [('combination_indices', '=', combination_indices_ids)]])
         else:
             domain = expression.AND([domain, [('combination_indices', 'in', ['', False])]])
+            domain = expression.OR([domain, [('combination_indices', 'in', self.product_variant_ids.product_template_attribute_value_ids.filtered(lambda x: x.is_not_available).ids)]])
 
         return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC', limit=1).id
 
@@ -1362,7 +1363,7 @@ class ProductTemplate(models.Model):
         Note: self.ensure_one()
         """
         self.ensure_one()
-        if self.product_variant_count == 1 and not self.has_configurable_attributes:
+        if len(self.attribute_line_ids.attribute_id) == len(self.attribute_line_ids.value_ids.filtered(lambda x: not x.is_not_available)) or self.product_variant_count == 1 and not self.has_configurable_attributes:
             return {
                 'product_id': self.product_variant_id.id,
                 'product_name': self.product_variant_id.display_name,

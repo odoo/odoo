@@ -278,14 +278,18 @@ export class ProductConfiguratorDialog extends Component {
         if (exclusions) {
             for(const ptavId of combination) {
                 for(const excludedPtavId of exclusions[ptavId]) {
-                    ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    if (ptavList.find(ptav => ptav.id === excludedPtavId)) {
+                        ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    }
                 }
             }
         }
         if (parentCombination) {
             for(const ptavId of parentCombination) {
                 for(const excludedPtavId of (parentExclusions[ptavId]||[])) {
-                    ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    if (ptavList.find(ptav => ptav.id === excludedPtavId)) {
+                        ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    }
                 }
             }
         }

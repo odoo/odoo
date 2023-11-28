@@ -61,6 +61,7 @@ class ProductTemplateAttributeValue(models.Model):
     display_type = fields.Selection(related='product_attribute_value_id.display_type')
     color = fields.Integer(string="Color", default=_get_default_color)
     image = fields.Image(related='product_attribute_value_id.image')
+    is_not_available = fields.Boolean(related='product_attribute_value_id.is_not_available')
 
     _sql_constraints = [
         ('attribute_value_unique',
@@ -161,7 +162,7 @@ class ProductTemplateAttributeValue(models.Model):
         return self.filtered(lambda ptav: ptav.ptav_active)
 
     def _without_no_variant_attributes(self):
-        return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant')
+        return self.filtered(lambda ptav: ptav.attribute_id.create_variant != 'no_variant' and not ptav.is_not_available)
 
     def _ids2str(self):
         return ','.join([str(i) for i in sorted(self.ids)])

@@ -50,6 +50,10 @@ class ProductAttributeValue(models.Model):
         max_width=70,
         max_height=70,
     )
+    is_not_available = fields.Boolean(
+        string="Not available",
+        default=False,
+        help="Users can set available and not available attribute.")
 
     _sql_constraints = [
         ('value_company_uniq',
