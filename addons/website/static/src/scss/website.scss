@@ -1751,31 +1751,33 @@ header {
 }
 .navbar-nav {
     .nav-link:not(.o_nav-link_secondary) {
-        @if o-website-value('header-links-style') == 'outline' {
-            // Need to force the padding in this case so that it stays in mobile
-            padding-right: $navbar-nav-link-padding-x;
-            padding-left: $navbar-nav-link-padding-x;
-            border: $border-width solid transparent;
-            @include border-radius($nav-pills-border-radius);
-        } @else if o-website-value('header-links-style') == 'block' {
-            // There is no way to control navbar links vertical padding in BS4
-            // independently from nav ones, just double them here instead
-            padding-top: $nav-link-padding-y * 2;
-            padding-bottom: $nav-link-padding-y * 2;
-            @include border-radius(0);
-        } @else if o-website-value('header-links-style') == 'border-bottom' {
-            // There is no way to control navbar links vertical padding in BS4
-            // independently from nav ones, just double them here instead
-            padding-top: ($nav-link-padding-y * 2);
-            padding-bottom: ($nav-link-padding-y * 2);
-            border-bottom: $nav-link-padding-y solid transparent;
+        @include media-breakpoint-up(lg) {
+            @if o-website-value('header-links-style') == 'outline' {
+                // Need to force the padding in this case so that it stays in mobile
+                padding-right: $navbar-nav-link-padding-x;
+                padding-left: $navbar-nav-link-padding-x;
+                border: $border-width solid transparent;
+                @include border-radius($nav-pills-border-radius);
+            } @else if o-website-value('header-links-style') == 'block' {
+                // There is no way to control navbar links vertical padding in BS4
+                // independently from nav ones, just double them here instead
+                padding-top: $nav-link-padding-y * 2;
+                padding-bottom: $nav-link-padding-y * 2;
+                @include border-radius(0);
+            } @else if o-website-value('header-links-style') == 'border-bottom' {
+                // There is no way to control navbar links vertical padding in BS4
+                // independently from nav ones, just double them here instead
+                padding-top: ($nav-link-padding-y * 2);
+                padding-bottom: ($nav-link-padding-y * 2);
+                border-bottom: $nav-link-padding-y solid transparent;
 
-            // Replace horizontal paddings by margins (do this with an extra
-            // class to override .navbar-expand-* paddings priority).
-            .navbar & {
-                padding-left: 0;
-                padding-right: 0;
-                margin: 0 $navbar-nav-link-padding-x;
+                // Replace horizontal paddings by margins (do this with an extra
+                // class to override .navbar-expand-* paddings priority).
+                .navbar & {
+                    padding-left: 0;
+                    padding-right: 0;
+                    margin: 0 $navbar-nav-link-padding-x;
+                }
             }
         }
     }
