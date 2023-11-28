@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList">
-        <div class="o-mail-AttachmentList overflow-y-auto d-flex flex-column mt-1"
+        <div class="o-mail-AttachmentList d-flex flex-column mt-1"
             t-att-class="{
                 'o-inComposer': env.inComposer,
                 'o-inChatWindow': env.inChatWindow,
@@ -24,11 +24,11 @@
                     t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
                 >
                     <img
-                        class="img img-fluid my-0 mx-auto o-viewable"
+                        class="img img-fluid my-0 o-viewable"
                         t-att-class="{ 'opacity-25': attachment.uploading }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
-                        t-attf-style="max-width: min(100%, {{ imagesWidth }}px); max-height: {{ props.imagesHeight }}px;"
+                        t-attf-style="max-width: min(100%, {{ props.maxWidth ? props.maxWidth : imagesWidth }}px); max-height: {{ props.imagesHeight }}px;"
                         t-on-load="onImageLoaded"
                     />
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">

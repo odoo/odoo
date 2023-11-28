@@ -12,6 +12,8 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { LinkPreview } from "@mail/core/common/link_preview";
+import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 
 import {
     Component,
@@ -52,6 +54,8 @@ export class Chatter extends Component {
         FollowerList,
         SuggestedRecipientsList,
         SearchMessagesPanel,
+        LinkPreview,
+        AttachmentPanel,
     };
     static props = [
         "close?",
@@ -379,7 +383,7 @@ export class Chatter extends Component {
     }
 
     onClickAddAttachments() {
-        if (this.attachments.length === 0) {
+        if (this.attachmentCount === 0) {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
@@ -417,5 +421,20 @@ export class Chatter extends Component {
             return this.recipientsPopover.close();
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
+    }
+
+    get attachmentCount() {
+        const { thread } = this.state;
+        const mediaAttachments =
+            thread?.attachments.filter((attachment) => attachment.isMedia)?.length || 0;
+        const linkPreviews =
+            thread?.messages.reduce(
+                (count, message) => count + (message.linkPreviews?.length > 0 ? 1 : 0),
+                0
+            ) || 0;
+        const fileAttachments =
+            thread?.attachments.filter((attachment) => !attachment.isMedia)?.length || 0;
+
+        return mediaAttachments + linkPreviews + fileAttachments;
     }
 }

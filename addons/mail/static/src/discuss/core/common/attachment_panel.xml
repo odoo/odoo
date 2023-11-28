@@ -11,16 +11,51 @@
                     <t t-else="">File upload is disabled for external users</t>
                 </label>
             </div>
-            <div class="flex-grow-1" t-att-class="{
-                'd-flex justify-content-center align-items-center': props.thread.attachments.length === 0,
-            }">
-                <p t-if="props.thread.attachments.length === 0" class="text-center fst-italic text-500">
-                    <t t-if="props.thread.type === 'channel'">This channel doesn't have any attachments.</t>
-                    <t t-else="">This conversation doesn't have any attachments.</t>
-                </p>
-                <div t-else="" t-foreach="attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
-                    <DateSection date="dateDay" className="'my-1'"/>
-                    <AttachmentList imagesHeight="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+            <div class="d-flex flex-column flex-grow-1">
+                <div class=".o-mail-AttachmentpanelCategory d-flex flex-row justify-content-around" t-on-click="(ev) => this.state.current = ev.target.dataset.tab">
+                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-media text-center w-100 cursor-pointer" t-att-class="this.state.current === 'media' ? 'o-selected' : '' " data-tab="media" data-title="media">
+                        Media
+                    </span>
+                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-link text-center w-100 cursor-pointer" t-att-class="this.state.current === 'links' ? 'o-selected' : '' " data-tab="links" data-title="link">
+                        Links
+                    </span>
+                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-file text-center w-100 cursor-pointer" t-att-class="this.state.current === 'files' ? 'o-selected' : '' " data-tab="files" data-title="file">
+                        Files
+                    </span>
+                </div>
+                <div class="o-mail-attachmentPanel-Media" t-if="state.current === 'media'">
+                    <p t-if="Object.keys(this.mediaAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
+                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any media attachments.</t>
+                        <t t-else="" >This conversation doesn't have any media attachments.</t>
+                    </p>
+                    <div t-foreach="mediaAttachmentsByDate" t-as="dateDay" t-key="dateDay">
+                        <DateSection date="dateDay" className="'my-1'"/>
+                        <AttachmentList imagesHeight="100" maxWidth="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                    </div>
+                </div>
+                <div class="o-mail-attachmentPanel-Link" t-elif="state.current === 'links'">
+                    <p t-if="Object.keys(this.linkAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
+                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any links.</t>
+                        <t t-else="">This conversation doesn't have any links.</t>
+                    </p>
+                    <div t-foreach="linkAttachmentsByDate" t-as="links" t-key="link">
+                        <DateSection date="links" className="'my-1'"/>
+                        <div class="o-mail-linkAttachment d-flex flex-wrap">
+                            <t t-foreach="links_value" t-as="links" t-key="links.id">
+                                <LinkPreview linkPreview="links" deletable="false" asAttachment="true"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="o-mail-attachmentPanel-File" t-elif="state.current === 'files'">
+                    <p t-if="Object.keys(this.filesAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
+                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any file attachments.</t>
+                        <t t-else="">This conversation doesn't have any file attachments.</t>
+                    </p>
+                   <div t-foreach="filesAttachmentsByDate" t-as="dateDay" t-key="dateDay">
+                        <DateSection date="dateDay" className="'my-1'"/>
+                        <AttachmentList imagesHeight="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                    </div>
                 </div>
             </div>
             <span t-ref="load-older"/>

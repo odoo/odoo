@@ -45,6 +45,7 @@ QUnit.test("base non-empty rendering", async () => {
     await contains(".o-mail-AttachmentBox");
     await contains("button", { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
+    await click(".o-mail-Attachment-file");
     await contains(".o-mail-AttachmentList");
 });
 
@@ -73,9 +74,9 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
+    await click(".o-mail-Attachment-file");
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
-
     await click("button[title='Remove']");
     await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
 
@@ -115,6 +116,7 @@ QUnit.test("view attachments", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
+    await click(".o-mail-Attachment-file");
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
@@ -208,6 +210,7 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     });
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
+    await click(".o-mail-Attachment-file");
     await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
     await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });

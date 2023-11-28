@@ -3,8 +3,9 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { LinkPreview } from "@mail/core/common/link_preview";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 
@@ -13,7 +14,7 @@ import { useSequential, useVisible } from "@mail/utils/common/hooks";
  * @property {import("models").Thread} thread
  */
 export class AttachmentPanel extends Component {
-    static components = { ActionPanel, AttachmentList, DateSection };
+    static components = { ActionPanel, AttachmentList, DateSection, LinkPreview };
     static props = ["thread"];
     static template = "mail.AttachmentPanel";
 
@@ -36,25 +37,67 @@ export class AttachmentPanel extends Component {
                 this.threadService.fetchMoreAttachments(this.props.thread);
             }
         });
+        this.state = useState({
+            current: "media",
+        });
     }
 
     /**
      * @return {Object<string, import("models").Attachment[]>}
      */
-    get attachmentsByDate() {
-        const attachmentsByDate = {};
-        for (const attachment of this.props.thread.attachments) {
-            const attachments = attachmentsByDate[attachment.monthYear] ?? [];
+    get mediaAttachmentsByDate() {
+        const mediaAttachmentsByDate = {};
+        const attachments = this.props.thread.attachments.filter(
+            (attachment) => attachment.isMedia
+        );
+        for (const attachment of attachments) {
+            const attachments = mediaAttachmentsByDate[attachment.monthYear] ?? [];
             attachments.push(attachment);
-            attachmentsByDate[attachment.monthYear] = attachments;
+            mediaAttachmentsByDate[attachment.monthYear] = attachments;
         }
-        return attachmentsByDate;
+        return mediaAttachmentsByDate;
+    }
+
+    /**
+     * @return {Object<string, import("models").LinkPreview[]>}
+     */
+    get linkAttachmentsByDate() {
+        const linkAttachmentsByDate = {};
+        const linkPreviews = this.props.thread.messages
+            .map((message) =>
+                message.linkPreviews && message.linkPreviews.length > 0
+                    ? message.linkPreviews[0]
+                    : null
+            )
+            .filter((linkPreview) => linkPreview !== null);
+        for (const attachment of linkPreviews) {
+            const attachments = linkAttachmentsByDate[attachment.monthYear] ?? [];
+            attachments.push(attachment);
+            linkAttachmentsByDate[attachment.monthYear] = attachments;
+        }
+        return linkAttachmentsByDate;
+    }
+
+    /**
+     * @return {Object<string, import("models").Attachment[]>}
+     */
+    get filesAttachmentsByDate() {
+        const fileAttachmentsByDate = {};
+        const attachments = this.props.thread.attachments.filter(
+            (attachment) => !attachment.isMedia
+        );
+        for (const attachment of attachments) {
+            const attachments = fileAttachmentsByDate[attachment.monthYear] ?? [];
+            attachments.push(attachment);
+            fileAttachmentsByDate[attachment.monthYear] = attachments;
+        }
+        return fileAttachmentsByDate;
     }
 
     get hasToggleAllowPublicUpload() {
         return (
             this.props.thread.model !== "mail.box" &&
-            this.props.thread.type !== "chat" &&
+            !["chatter", "chat"].includes(this.props.thread.type) &&
             this.store.self?.user?.isInternalUser
         );
     }

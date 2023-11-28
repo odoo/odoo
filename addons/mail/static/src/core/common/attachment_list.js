@@ -17,7 +17,13 @@ import { url } from "@web/core/utils/urls";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static props = [
+        "attachments",
+        "unlinkAttachment",
+        "imagesHeight",
+        "maxWidth?",
+        "messageSearch?",
+    ];
     static template = "mail.AttachmentList";
 
     setup() {

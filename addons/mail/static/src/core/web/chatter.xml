@@ -29,7 +29,7 @@
                     <button class="btn btn-link text-action" t-att-class="{ 'o-active': state.isSearchOpen }" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
                         <i class="oi oi-search" role="img"/>
                     </button>
-                    <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                    <FileUploader t-if="this.attachmentCount === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                         <t t-set-slot="toggler">
                             <t t-call="mail.Chatter.attachFiles"/>
                         </t>
@@ -97,20 +97,9 @@
                 <t t-if="props.hasActivities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
                 </t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative" t-ref="attachment-box">
-                    <div class="d-flex align-items-center">
-                        <hr class="flex-grow-1"/>
-                        <span class="p-3 fw-bold">
-                            Files
-                        </span>
-                        <hr class="flex-grow-1"/>
-                    </div>
+                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative py-1 px-3" t-ref="attachment-box">
                     <div class="d-flex flex-column">
-                        <AttachmentList
-                            attachments="attachments"
-                            unlinkAttachment.bind="unlinkAttachment"
-                            imagesHeight="100"
-                        />
+                        <AttachmentPanel thread="this.state.thread" />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
@@ -152,7 +141,7 @@
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
         <i class="fa fa-paperclip fa-lg me-1"/>
-        <span t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <span t-if="attachmentCount" t-esc="attachmentCount"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>

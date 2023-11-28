@@ -96,6 +96,10 @@ export const FileModelMixin = T => class extends T {
         );
     }
 
+    get isMedia() {
+        return this.isImage || this.isVideo || this.isVoice;
+    }
+
     /**
      * @returns {Object}
      */

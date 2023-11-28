@@ -70,3 +70,16 @@
         display: block;
     }
 }
+
+.o-mail-Attachement-LinkPreviewImage img {
+    max-height: $o-mail-LinkPreview-height;
+}
+
+.o-mail-ImageLinkPreviewCard {
+    max-height: 5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+}
