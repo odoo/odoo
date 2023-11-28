@@ -28,7 +28,7 @@ class TestGetModelDefinitions(HttpCase):
             all(fname in model_definitions['res.users'].keys() for fname in ['email', 'name', 'partner_id'])
         )
         self.assertTrue(
-            all(fname in model_definitions['res.partner'].keys() for fname in ['active', 'date', 'name'])
+            all(fname in model_definitions['res.partner'].keys() for fname in ['active', 'name', 'user_ids'])
         )
 
     def test_relational_fields_with_missing_model(self):
