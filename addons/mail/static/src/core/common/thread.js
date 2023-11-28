@@ -144,7 +144,12 @@ export class Thread extends Component {
             () => [this.state.mountedAndLoaded]
         );
         onMounted(async () => {
-            await this.threadService.fetchNewMessages(this.props.thread);
+            if (!this.env.chatter || this.env.chatter?.fetchMessages) {
+                if (this.env.chatter) {
+                    this.env.chatter.fetchMessages = false;
+                }
+                await this.threadService.fetchNewMessages(this.props.thread);
+            }
             this.state.mountedAndLoaded = true;
         });
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
@@ -157,7 +162,12 @@ export class Thread extends Component {
             if (nextProps.thread.notEq(this.props.thread)) {
                 this.lastJumpPresent = nextProps.jumpPresent;
             }
-            this.threadService.fetchNewMessages(nextProps.thread);
+            if (!this.env.chatter || this.env.chatter?.fetchMessages) {
+                if (this.env.chatter) {
+                    this.env.chatter.fetchMessages = false;
+                }
+                this.threadService.fetchNewMessages(nextProps.thread);
+            }
         });
     }
 

@@ -140,7 +140,12 @@ export class Chatter extends Component {
 
         onMounted(() => {
             this.changeThread(this.props.threadModel, this.props.threadId, this.props.webRecord);
-            this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+            if (!this.env.chatter || this.env.chatter?.fetchData) {
+                if (this.env.chatter) {
+                    this.env.chatter.fetchData = false;
+                }
+                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+            }
         });
         onWillUpdateProps((nextProps) => {
             if (
@@ -149,8 +154,10 @@ export class Chatter extends Component {
             ) {
                 this.changeThread(nextProps.threadModel, nextProps.threadId, nextProps.webRecord);
             }
-            if (this.env.chatter?.fetchOnWillUpdateProps) {
-                this.env.chatter.fetchOnWillUpdateProps = false;
+            if (!this.env.chatter || this.env.chatter?.fetchData) {
+                if (this.env.chatter) {
+                    this.env.chatter.fetchData = false;
+                }
                 this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
             }
         });
