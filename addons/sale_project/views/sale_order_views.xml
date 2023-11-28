@@ -7,12 +7,6 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <button id="create_invoice_percentage" position="after">
-                <button id="create_project" name="action_create_project" string="Create Project"
-                    type="object" data-hotkey="q"
-                    invisible="not show_create_project_button"
-                    groups="project.group_project_manager"/>
-            </button>
             <xpath expr="//button[@name='action_view_invoice']" position="before">
                 <field name="show_task_button" invisible="1"/>
                 <field name="show_project_button" invisible="1"/>
@@ -34,6 +28,15 @@
                 <field name="project_id" options="{'no_create': True}" invisible="not visible_project" readonly="state not in ['draft', 'sent']"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="model_sale_order_action_create_project" model="ir.actions.server">
+        <field name="name">Create Project</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_project()</field>
     </record>
 
 </odoo>
