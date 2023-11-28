@@ -131,6 +131,8 @@
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/owl_dialog.js', # needed by barcode_scanner
             'web/static/src/legacy/legacy_component.js', # needed by owl_dialog
+            'web/static/src/legacy/xml/base.xml',
+            'web/static/src/legacy/xml/dialog.xml',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
