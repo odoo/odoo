@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import Form
+from odoo.tests.common import Form, tagged
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
+@tagged('stock_report')
 class TestSaleStockReports(TestReportsCommon):
     def test_report_forecast_1_mo_count(self):
         """ Creates and configures a product who could be produce and could be a component.
@@ -121,6 +122,7 @@ class TestSaleStockReports(TestReportsCommon):
         mo_1 = mo_form.save()
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
+        pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         pick_form = Form(pick)
         with pick_form.move_line_ids_without_package.edit(0) as move_line:
             move_line.qty_done = 20
