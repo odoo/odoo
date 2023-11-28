@@ -71,7 +71,6 @@
             'website_sale/static/src/js/payment_form.js',
             'website_sale/static/src/js/sale_variant_mixin.js',
             'website_sale/static/src/js/terms_and_conditions_checkbox.js',
-            'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_offcanvas.js',
