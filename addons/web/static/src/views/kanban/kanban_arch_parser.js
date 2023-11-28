@@ -98,11 +98,6 @@ export class KanbanArchParser {
                     node.setAttribute("widget", "many2many_tags");
                 }
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);
-                if (!node.hasAttribute("force_save")) {
-                    // Force save is true by default on kanban views:
-                    // this allows to write on any field regardless of its modifiers.
-                    fieldInfo.forceSave = true;
-                }
                 const name = fieldInfo.name;
                 if (!(fieldInfo.name in fieldNextIds)) {
                     fieldNextIds[fieldInfo.name] = 0;
