@@ -5,7 +5,7 @@ import { debounce } from "@web/core/utils/timing";
 
 publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     // /shop/address
-    selector: '.o_website_sale .oe_cart',
+    selector: '.o_wsale_address_fill',
     events: {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
