@@ -12,10 +12,9 @@ class StandaloneRelationalModel extends RelationalModel {
     load(params = {}) {
         if (params.values) {
             const data = params.values;
-            if (params.mode) {
-                this.config.mode = params.mode;
-            }
-            this.root = this._createRoot(this.config, data);
+            const config = this._getNextConfig(this.config, params);
+            this.root = this._createRoot(config, data);
+            this.config = config;
             return;
         }
         return super.load(params);
@@ -50,7 +49,7 @@ class _Record extends Component {
         modelServices.orm = this.orm;
         this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
 
-        const loadWithValues = async (values) => {
+        const prepareLoadWithValues = async (values) => {
             values = pick(values, ...Object.keys(modelParams.config.activeFields));
             const proms = [];
             for (const fieldName in values) {
@@ -113,20 +112,26 @@ class _Record extends Component {
                 }
                 await Promise.all(proms);
             }
-            return this.model.load({ values });
+            return values;
         };
-        onWillStart(() => {
+        onWillStart(async () => {
             if (this.props.values) {
-                return loadWithValues(this.props.values);
+                const values = await prepareLoadWithValues(this.props.values);
+                return this.model.load({ values });
             } else {
                 return this.model.load();
             }
         });
-        onWillUpdateProps((nextProps) => {
+        onWillUpdateProps(async (nextProps) => {
+            const params = {};
+            if (nextProps.info.resId !== this.model.root.resId) {
+                params.resId = nextProps.info.resId;
+            }
             if (nextProps.values) {
-                return loadWithValues(nextProps.values);
-            } else if (nextProps.info.resId !== this.model.root.resId) {
-                return this.model.load({ resId: nextProps.info.resId });
+                params.values = await prepareLoadWithValues(nextProps.values);
+            }
+            if (Object.keys(params).length) {
+                return this.model.load(params);
             }
         });
     }
