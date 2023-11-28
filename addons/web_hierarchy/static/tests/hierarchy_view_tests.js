@@ -618,6 +618,7 @@ QUnit.module("Views", (hooks) => {
             { id: 2, name: "Georges", parent_id: 1, child_ids: [3] },
             { id: 3, name: "Josephine", parent_id: 2, child_ids: [4] },
             { id: 4, name: "Louis", parent_id: 3, child_ids: [] },
+            { id: 5, name: "Kelly", parent_id: 2, child_ids: [] },
         ];
         await makeView({
             type: "hierarchy",
@@ -653,12 +654,17 @@ QUnit.module("Views", (hooks) => {
             josephineNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
             "JosephineGeorges"
         );
-        let louisNodeContainer = nodeContainers[3];
+        let louisNodeContainer = nodeContainers[4];
         assert.strictEqual(
             louisNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
             "LouisJosephine"
         );
         assert.containsN(target, ".o_hierarchy_row", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineGeorges", "KellyGeorges", "LouisJosephine"],
+            "Kelly should be displayed"
+        );
 
         await dragAndDrop(
             josephineNodeContainer.querySelector(".o_hierarchy_node"),
@@ -670,7 +676,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
             ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"],
-            "Josephine should have Albert as a manager"
+            "Josephine should have Albert as a manager and Kelly should be hidden"
         );
 
         nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
@@ -691,6 +697,47 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
             ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisAlbert"],
             "Louis should still be draggable after being dragged along with Josephine"
+        );
+    });
+
+    QUnit.test("drag and drop node as a child of a sibling of its parent", async function (assert) {
+        serverData.views["hr.employee,1,hierarchy"] = serverData.views[
+            "hr.employee,1,hierarchy"
+        ].replace(`<hierarchy child_field="child_ids">`, `<hierarchy child_field="child_ids" draggable="1">`);
+        serverData.models["hr.employee"].records = [
+            { id: 1, name: "A", parent_id: false, child_ids: [2, 3] },
+            { id: 2, name: "B", parent_id: 1, child_ids: [4, 5] },
+            { id: 3, name: "C", parent_id: 1, child_ids: [] },
+            { id: 4, name: "D", parent_id: 2, child_ids: [] },
+            { id: 5, name: "E", parent_id: 2, child_ids: [] },
+        ];
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+            viewId: 1,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        let rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(getNodesTextContent(rowsContent), ["A", "BA", "CA", "DB", "EB"]);
+
+        let nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const cNode = nodeContainers[2];
+        const eNode = nodeContainers[4];
+        assert.strictEqual(cNode.querySelector(".o_hierarchy_node_content").textContent, "CA");
+        assert.strictEqual(eNode.querySelector(".o_hierarchy_node_content").textContent, "EB");
+
+        await dragAndDrop(
+            eNode.querySelector(".o_hierarchy_node"),
+            cNode,
+        );
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(
+            getNodesTextContent(rowsContent), ["A", "BA", "CA", "EC"],
+            "B should be folded and C unfolded"
         );
     });
 
