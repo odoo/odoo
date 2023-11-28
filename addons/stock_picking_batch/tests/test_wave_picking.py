@@ -3,9 +3,10 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged('wave_picking')
 class TestBatchPicking(TransactionCase):
 
     @classmethod
@@ -351,9 +352,8 @@ class TestBatchPicking(TransactionCase):
             wizard.attach_pickings()
 
         with self.assertRaises(UserError):
-            companies = self.env['res.company'].search([])
-            self.picking_client_1.company_id = companies[0]
-            self.picking_client_2.company_id = companies[1]
+            self.picking_client_1.company_id = self.env.company
+            self.picking_client_2.company_id = self.env['res.company'].create({'name': 'Company 2'})
             lines = (self.picking_client_1 | self.picking_client_2).move_line_ids
             res_dict = lines.action_open_add_to_wave()
             res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}

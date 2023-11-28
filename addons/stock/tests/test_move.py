@@ -6,10 +6,11 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, new_test_user
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
+@tagged('test_move')
 class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -17,6 +18,14 @@ class StockMove(TransactionCase):
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
         cls.env.user.write({'groups_id': [(4, group_stock_multi_locations.id, 0)]})
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        if not cls.stock_location.child_ids:
+            cls.stock_location.create([{
+                'name': 'Shelf 1',
+                'location_id': cls.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': cls.stock_location.id,
+            }])
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
