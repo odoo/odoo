@@ -199,7 +199,7 @@ QUnit.test("clicking anchor when no scrollable", async (assert) => {
             <div class="active-container">
                 <p>There is no scrollable with only the height of this element</p>
             </div>
-            <div class="inactive-container" style="max-height: 0">
+            <div class="inactive-container" style="max-height: 0; overflow: hidden">
                 <h2>There should be no scrollable if this element has 0 height</h2>
                 <p>
                     Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
@@ -318,9 +318,9 @@ QUnit.test("clicking anchor when multi levels scrollables", async (assert) => {
 });
 
 QUnit.test("Simple scroll to HTML elements", async (assert) => {
-    assert.expect(6);
+    assert.expect(13);
     const scrollableParent = document.createElement("div");
-    scrollableParent.style.overflow = "scroll";
+    scrollableParent.style["overflow-y"] = "scroll";
     scrollableParent.style.height = "150px";
     scrollableParent.style.width = "400px";
     target.append(scrollableParent);
@@ -359,6 +359,38 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
                 placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
                 augue.
             </p>
+            <div id="fake-scrollable">
+                <div id="o-div-3">A div is an HTML element</div>
+            </div>
+            <div id="sub-scrollable">
+                <p>
+                    Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                    ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                    augue.
+                </p>
+                <div id="o-div-4">A div is an HTML element</div>
+            </div>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+                Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed,
+                dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper
+                congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est
+                eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu
+                massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut
+                in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent
+                egestas leo in pede. Praesent blandit odio eu enim.
+            </p>
+            <p>
+                Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa
+                suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc
+                turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus
+                nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis
+                metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing
+                elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor
+                tellus, aliquam faucibus, convallis id, congue eu, quam.
+            </p>
         </div>
     `;
     await mount(MyComponent, scrollableParent, { env });
@@ -386,6 +418,13 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
     // until the element is visible in the scrollable parent
     const div_1 = scrollableParent.querySelector("#o-div-1");
     const div_2 = scrollableParent.querySelector("#o-div-2");
+    const div_3 = scrollableParent.querySelector("#o-div-3");
+    const div_4 = scrollableParent.querySelector("#o-div-4");
+    const fakeScrollable = scrollableParent.querySelector("#fake-scrollable");
+    const subScrollable = scrollableParent.querySelector("#sub-scrollable");
+    subScrollable.style["overflow-y"] = "scroll";
+    subScrollable.style.height = getComputedStyle(subScrollable)["line-height"];
+    subScrollable.style.width = "300px";
     assert.ok(isVisible(div_1) && !isVisible(div_2), "only the first div is visible");
     assert.ok(!border(div_1).top, "the element is not at the top border");
     scrollTo(div_2);
@@ -393,4 +432,20 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
     assert.ok(border(div_2).bottom, "the element must be at the bottom border");
     scrollTo(div_1);
     assert.ok(border(div_1).top, "the element must be at the top border");
+    assert.ok(!isVisible(div_3) && !isVisible(div_4));
+    // Specify a scrollable which can not be scrolled, the effective scrollable
+    // should be its closest actually scrollable parent.
+    scrollTo(div_3, { scrollable: fakeScrollable });
+    assert.ok(isVisible(div_3) && !isVisible(div_4));
+    assert.ok(border(div_3).bottom, "the element must be at the bottom border");
+    // Reset the position
+    scrollTo(div_1);
+    assert.ok(isVisible(div_1) && !isVisible(div_3) && !isVisible(div_4));
+    // Scrolling should be recursive in case of a hierarchy of
+    // scrollables, if `isAnchor` is set to `true`, and it must be scrolled
+    // to the top even if it was positioned below the scroll view.
+    scrollTo(div_4, { isAnchor: true });
+    assert.ok(isVisible(div_4));
+    assert.ok(border(div_4).top, "the element must be at the top border");
+    assert.ok(border(subScrollable).top, "the element must be a the thop border");
 });
