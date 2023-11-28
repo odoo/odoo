@@ -6,11 +6,12 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.modules.module import get_module_resource
 from odoo.tests import tagged
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'test_customize')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
@@ -319,4 +320,13 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour("/", 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
+        self.env["product.pricelist"].create({
+            "name": "EUR Pricelist",
+            "selectable": True,
+            "website_id": self.env.ref("website.default_website").id,
+            "country_group_ids": [(4, self.env.ref('base.europe').id)],
+            "sequence": 3,
+            "currency_id": self.env.ref("base.EUR").id,
+        })
+
         self.start_tour("/", 'shop_editor', login="admin")
