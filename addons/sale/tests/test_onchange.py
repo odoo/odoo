@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 
+@tagged('test_onchange')
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.
     """
 
     def setUp(self):
-        super(TestOnchangeProductId, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         self.fiscal_position_model = self.env['account.fiscal.position']
         self.fiscal_position_tax_model = self.env['account.fiscal.position.tax']
         self.tax_model = self.env['account.tax']

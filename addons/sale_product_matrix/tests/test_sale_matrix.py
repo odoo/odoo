@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.product_matrix.tests import common
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'matrix_ui')
 class TestSaleMatrixUi(common.TestMatrixCommon):
 
     """
@@ -13,6 +14,10 @@ class TestSaleMatrixUi(common.TestMatrixCommon):
     """
 
     def test_sale_matrix_ui(self):
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            return
+
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 

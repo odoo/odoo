@@ -58,7 +58,7 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        SaleOrder = request.env['sale.order']
+        SaleOrder = request.env['sale.order'].sudo()
 
         domain = self._prepare_quotations_domain(partner)
 
@@ -88,7 +88,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'quotations': quotations.sudo(),
+            'quotations': quotations,
             'page_name': 'quote',
             'pager': pager,
             'default_url': '/my/quotes',
@@ -101,7 +101,7 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        SaleOrder = request.env['sale.order']
+        SaleOrder = request.env['sale.order'].sudo()
 
         domain = self._prepare_orders_domain(partner)
 
@@ -131,7 +131,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'orders': orders.sudo(),
+            'orders': orders,
             'page_name': 'order',
             'pager': pager,
             'default_url': '/my/orders',
