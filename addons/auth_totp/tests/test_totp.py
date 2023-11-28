@@ -13,7 +13,7 @@ from odoo.tests import tagged, get_db_name, loaded_demo_data
 from ..controllers.home import Home
 
 
-@tagged('post_install', '-at_install', 'test_totp')
+@tagged('post_install', '-at_install')
 class TestTOTP(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()

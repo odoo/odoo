@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
-from odoo.tests import tagged
 
 EXTRA_REQUEST = 5
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
@@ -32,7 +31,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         return self.registry.test_cr.sql_log_count - sql_count - EXTRA_REQUEST
 
 
-@tagged('website_performance')
 class TestStandardPerformance(UtilPerf):
     @classmethod
     def setUpClass(cls):

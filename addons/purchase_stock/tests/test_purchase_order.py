@@ -10,7 +10,7 @@ from odoo.tests import Form, tagged
 
 
 @freeze_time("2021-01-14 09:12:15")
-@tagged('post_install', '-at_install', 'purchase_stock_order')
+@tagged('post_install', '-at_install')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod

@@ -4,7 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import tagged, HttpCase
 
 
-@tagged('post_install', '-at_install', 'sale_ui')
+@tagged('post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, HttpCase):
 
     def test_01_sale_tour(self):

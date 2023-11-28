@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'website_form_editor')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteFormEditor(HttpCaseWithUserPortal):
 
     @classmethod

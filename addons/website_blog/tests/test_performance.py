@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website.tests.test_performance import UtilPerf
-from odoo.tests import tagged
 import random
 
-@tagged('website_blog_performance')
+
 class TestBlogPerformance(UtilPerf):
     def setUp(self):
         super().setUp()

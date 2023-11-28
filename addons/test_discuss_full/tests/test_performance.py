@@ -9,7 +9,7 @@ from odoo.tests.common import users, tagged, TransactionCase, warmup
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 
-@tagged('post_install', '-at_install', 'discuss_full_perf')
+@tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(TransactionCase):
     def setUp(self):
         super().setUp()

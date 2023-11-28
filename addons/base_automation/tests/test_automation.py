@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 import odoo.tests
 
-@odoo.tests.tagged('post_install', '-at_install', 'base_automation')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestAutomation(TransactionCaseWithUserDemo):
 
     def test_01_on_create(self):

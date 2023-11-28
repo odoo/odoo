@@ -4,11 +4,10 @@
 from datetime import datetime
 
 from odoo import fields
-from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.tests.common import TransactionCase, Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-@tagged("test_onchange_product")
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.

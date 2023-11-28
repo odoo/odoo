@@ -65,7 +65,7 @@ class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProduc
         })
 
 
-@tagged('post_install', '-at_install', 'attribute_value_config')
+@tagged('post_install', '-at_install')
 class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
     def _setup_pricelist(self, currency_ratio=2):
         to_currency = self._setup_currency(currency_ratio)

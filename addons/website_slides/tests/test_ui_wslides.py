@@ -104,7 +104,7 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
         })
 
 
-@tests.common.tagged('post_install', '-at_install', 'website_slides_ui')
+@tests.common.tagged('post_install', '-at_install')
 class TestUi(TestUICommon):
 
     def test_course_member_employee(self):

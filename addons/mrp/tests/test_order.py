@@ -8,10 +8,9 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import tagged
 from odoo.tools.misc import format_date
 
-@tagged('test_order')
+
 class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_manager(self):

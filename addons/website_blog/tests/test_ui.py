@@ -4,7 +4,7 @@
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'blog_ui')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     @classmethod
     def setUpClass(cls):

@@ -5,7 +5,7 @@ from odoo.tests import tagged, get_db_name, loaded_demo_data
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-@tagged('post_install', '-at_install', 'test_apikeys')
+@tagged('post_install', '-at_install')
 class TestAPIKeys(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()

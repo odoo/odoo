@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install', 'test_sale_invoicing')
+@tagged('post_install', '-at_install')
 class TestSaleInvoicing(TestSaleCouponCommon):
 
     def test_invoicing_order_with_promotions(self):

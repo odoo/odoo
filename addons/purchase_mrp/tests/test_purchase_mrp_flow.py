@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo import fields
 
 
-@tagged('post_install', '-at_install', 'purchase_mrp_flow')
+@tagged('post_install', '-at_install')
 class TestPurchaseMrpFlow(TransactionCase):
 
     def setUp(self):

@@ -5,7 +5,7 @@ from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install', 'test_program_rules')
+@tagged('post_install', '-at_install')
 class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
     # Test some basic operation (create, write, unlink) on an immediate coupon program on which we should
     # apply or remove the reward automatically, as there's no program code.

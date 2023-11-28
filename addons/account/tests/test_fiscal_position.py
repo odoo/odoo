@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
-@tagged('test_fiscal_position')
 class TestFiscalPosition(common.TransactionCase):
     """Tests for fiscal positions in auto apply (account.fiscal.position).
     If a partner has a vat number, the fiscal positions with "vat_required=True"

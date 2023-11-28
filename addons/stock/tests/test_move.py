@@ -6,11 +6,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, new_test_user
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
-@tagged('test_move')
 class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):

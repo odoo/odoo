@@ -7,7 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUser
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install', 'booth_exhibitor_tour')
+@tagged('post_install', '-at_install')
 class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_register(self):

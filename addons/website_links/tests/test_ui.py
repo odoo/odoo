@@ -5,7 +5,7 @@ from unittest.mock import patch
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install', 'website_links_ui')
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def setUp(self):

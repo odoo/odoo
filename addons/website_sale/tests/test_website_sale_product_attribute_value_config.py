@@ -7,7 +7,7 @@ from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 
 
-@tagged('post_install', '-at_install', 'attribute_value_config')
+@tagged('post_install', '-at_install')
 class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon, TestWebsiteSaleCommon):
 
     @classmethod

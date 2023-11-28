@@ -2,10 +2,9 @@
 
 import json
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
-@tagged('test_menu')
 class TestMenu(common.TransactionCase):
     def setUp(self):
         super(TestMenu, self).setUp()

@@ -6,7 +6,7 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-@odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install', 'account_tour')
+@odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, odoo.tests.HttpCase):
 
     def test_01_account_tour(self):

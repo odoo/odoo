@@ -2,7 +2,7 @@
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
-@tagged('post_install', '-at_install', 'delivery_giftcard')
+@tagged('post_install', '-at_install')
 class TestWebsiteSaleDelivery(HttpCase):
 
     def setUp(self):

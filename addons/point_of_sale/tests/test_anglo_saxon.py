@@ -62,7 +62,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
         cls.pos_config.write({'payment_method_ids': [(6, 0, cls.cash_payment_method.ids)]})
 
 
-@tagged('post_install', '-at_install', 'pos_anglo_saxon')
+@tagged('post_install', '-at_install')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
     def test_create_account_move_line(self):
