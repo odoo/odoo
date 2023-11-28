@@ -5,7 +5,7 @@ import odoo
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+@odoo.tests.common.tagged('post_install', '-at_install', 'test_snippets')
 class TestSnippets(odoo.tests.HttpCase):
 
     def test_01_newsletter_popup(self):
@@ -16,4 +16,8 @@ class TestSnippets(odoo.tests.HttpCase):
         self.assertIn("hello@world.com", emails)
 
     def test_02_newsletter_block_edition(self):
+        self.env['mailing.list'].create({
+            'name': 'Imported Contacts',
+        })
+        self.env.ref('base.user_admin').email = 'admin@yourcompany.example.com'
         self.start_tour("/?enable_editor=1", "newsletter_block_edition", login='admin')

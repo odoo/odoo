@@ -4,10 +4,11 @@ import lxml.html
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.fields import Command
-from odoo.tests.common import users
+from odoo.tests.common import users, tagged
 from odoo.tools import mute_logger
 
 
+@tagged('test_mailing_test')
 class TestMailingTest(TestMassMailCommon):
 
     @users('user_marketing')
@@ -65,6 +66,7 @@ class TestMailingTest(TestMassMailCommon):
         """
         Check that both test and real emails will format the qweb and inline placeholders correctly in body and subject.
         """
+        self.env['mailing.contact'].search([]).unlink()
         contact_list = self.env['mailing.list'].create({
             'name': 'Testers',
             'contact_ids': [Command.create({
