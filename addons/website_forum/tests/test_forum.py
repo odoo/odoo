@@ -5,11 +5,12 @@ from .common import KARMA, TestForumCommon
 from odoo import http
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
 
 
+@tagged('test_forum')
 class TestForum(TestForumCommon):
 
     def test_crud_rights(self):
@@ -206,7 +207,8 @@ class TestForum(TestForumCommon):
             for post_user_group in groups:
                 self.assertEqual(post_user_group['__count'], 1)
 
-        check_vote_records_count_and_integrity(2)
+        ORIGIN_COUNT = len(self.env['forum.post.vote'].search([]).post_id)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT)
         self.post.create_uid.karma = KARMA['ask']
         self.user_portal.karma = KARMA['dwv']
         initial_vote_count = self.post.vote_count
@@ -239,7 +241,7 @@ class TestForum(TestForumCommon):
         self.post.invalidate_cache()
         self.assertEqual(post_as_portal.user_vote, -1)
 
-        check_vote_records_count_and_integrity(3)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT + 1)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):
