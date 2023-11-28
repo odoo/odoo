@@ -210,24 +210,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:        An invoice line.
         :param taxes_vals:  The tax details for the current invoice line.
         :return:            A python dictionary.
-
         """
         product = line.product_id
         taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
         description = line.name and line.name.replace('\n', ', ')
-
         return {
-            # Simple description about what you are selling.
             'description': description,
-
-            # The name of the item.
-            'name': product.name,
-
-            # Identifier of the product.
+            'name': product.name or description,
             'sellers_item_identification_vals': {'id': product.code},
-
-            # The main tax applied. Only one is allowed.
             'classified_tax_category_vals': tax_category_vals_list,
         }
 
