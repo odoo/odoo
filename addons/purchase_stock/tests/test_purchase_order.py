@@ -10,7 +10,7 @@ from odoo.tests import Form, tagged
 
 
 @freeze_time("2021-01-14 09:12:15")
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'purchase_stock_order')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -391,7 +391,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
 
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'name': super_product.name,
                 'product_id': super_product.id,

@@ -31,7 +31,7 @@ class CustomerPortal(portal.CustomerPortal):
 
     def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key):
         values = self._prepare_portal_layout_values()
-        PurchaseOrder = request.env['purchase.order']
+        PurchaseOrder = request.env['purchase.order'].sudo()
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]

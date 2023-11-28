@@ -6,7 +6,7 @@ from odoo.tests import tagged, Form
 import time
 
 
-@tagged('-at_install', 'post_install')
+@tagged('-at_install', 'post_install', 'fifo_price')
 class TestFifoPrice(ValuationReconciliationTestCommon):
 
     def test_00_test_fifo(self):
@@ -342,7 +342,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         self.assertEqual(super_product.valuation, 'real_time')
 
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'name': super_product.name,
                 'product_id': super_product.id,
