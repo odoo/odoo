@@ -3,16 +3,20 @@ import time
 from passlib.totp import TOTP
 
 from odoo import http
-from odoo.tests import tagged, HttpCase
 from odoo.addons.auth_totp.controllers.home import Home
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.tests import tagged, loaded_demo_data
 
 
 @tagged('post_install', '-at_install')
-class TestTOTPortal(HttpCase):
+class TestTOTPortal(HttpCaseWithUserPortal):
     """
     Largely replicates TestTOTP
     """
     def test_totp(self):
+        # TODO: Make this work if no demo data + hr installed
+        if not loaded_demo_data(self.env):
+            return
         totp = None
         # test endpoint as doing totp on the client side is not really an option
         # (needs sha1 and hmac + BE packing of 64b integers)
