@@ -91,3 +91,6 @@ class TestSnippets(HttpCase):
         website.cookies_bar = True
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_scrollbar', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_animations', login='admin')
+
+    def test_drag_and_drop_on_non_editable(self):
+        self.start_tour('/', 'test_drag_and_drop_on_non_editable', login='admin')

@@ -493,6 +493,9 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <form string="Expense Categories">
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('standard_price_update_warning', '=', False)]}">
+                        <field name="standard_price_update_warning"/>
+                    </div>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name='product_variant_count' invisible='1'/>
