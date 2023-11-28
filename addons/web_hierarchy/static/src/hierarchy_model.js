@@ -939,8 +939,13 @@ export class HierarchyModel extends Model {
                     treeExpanded.root.nodes = [];
                     treeExpanded.nodePerNodeId = { [treeExpanded.root.id]: treeExpanded.root };
                 } else if (treeExpanded) {
-                    const nodeToCollapse = this._searchNodeToCollapse(parentNode);
-                    if (nodeToCollapse && nodeToCollapse.id !== parentNode.id) {
+                    const nodeToCollapse = this._searchNodeToCollapse(
+                        parentNode.nodes.length ? parentNode.nodes[0] : parentNode
+                    );
+                    if (
+                        nodeToCollapse &&
+                        (descendants[node.resId]?.length || !parentNode.nodes.length)
+                    ) {
                         nodeToCollapse.collapseChildNodes();
                     }
                 }
