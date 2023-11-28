@@ -670,11 +670,17 @@ class AccountEdiFormat(models.Model):
         company = invoice_line_form.company_id
         partner = invoice_line_form.partner_id
         message_to_log = []
+        predict_enabled = self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
         if line_elements:
             invoice_line_form.sequence = int(line_elements[0].text)
+
+        # Label.
+        line_elements = element.xpath('.//Descrizione')
+        if line_elements:
+            invoice_line_form.name = " ".join(line_elements[0].text.split())
 
         # Product.
         elements_code = element.xpath('.//CodiceArticolo')
@@ -700,10 +706,19 @@ class AccountEdiFormat(models.Model):
                         invoice_line_form.product_id = product
                         break
 
-        # Label.
-        line_elements = element.xpath('.//Descrizione')
-        if line_elements:
-            invoice_line_form.name = " ".join(line_elements[0].text.split())
+        # If no product is found, try to find a product that may be fitting
+        if predict_enabled and not invoice_line_form.product_id:
+            fitting_product = invoice_line_form._predict_product()
+            if fitting_product:
+                name = invoice_line_form.name
+                invoice_line_form.product_id = fitting_product
+                invoice_line_form.name = name
+
+        if predict_enabled:
+            # Fitting account for the line
+            fitting_account = invoice_line_form._predict_account()
+            if fitting_account:
+                invoice_line_form.account_id = fitting_account
 
         # Quantity.
         line_elements = element.xpath('.//Quantita')
@@ -735,7 +750,7 @@ class AccountEdiFormat(models.Model):
                         percentage = round(tax_amount / price_subtotal * 100)
 
         natura_element = element.xpath('.//Natura')
-        invoice_line_form.tax_ids = []
+        invoice_line_form.tax_ids = [Command.set([])]
         if percentage is not None:
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (
@@ -750,6 +765,12 @@ class AccountEdiFormat(models.Model):
                     _("Tax not found for line with description '%s'", invoice_line_form.name),
                     self.env['account.move']._compose_info_message(element, '.'),
                 ))
+
+        # If no taxes were found, try to find taxes that may be fitting
+        if predict_enabled and not invoice_line_form.tax_ids:
+            fitting_taxes = invoice_line_form._predict_taxes()
+            if fitting_taxes:
+                invoice_line_form.tax_ids = [Command.set(fitting_taxes)]
 
         # Price Unit.
         if not extra_info['simplified']:
