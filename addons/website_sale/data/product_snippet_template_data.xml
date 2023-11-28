@@ -28,8 +28,9 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <div class="o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                                <button type="button" role="button" class="btn btn-primary js_add_cart ms-auto" title="Add to Cart">
+                                <button type="button" role="button" class="btn btn-primary js_add_cart ms-auto" title="Add to Cart" t-att-data-has-attributes="record.has_configurable_attributes">
                                     <i class="fa fa-fw fa-shopping-cart"/>
+                                    <input type="hidden" name="product_id" t-att-value="record.id"/>
                                 </button>
                             </div>
                         </div>
@@ -212,8 +213,9 @@
                         </div>
                         <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
                         <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                            <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart">
+                            <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart" t-att-data-has-attributes="record.has_configurable_attributes">
                                 Add to Cart
+                                <input type="hidden" name="product_id" t-att-value="record.id"/>
                             </button>
                         </div>
                     </div>
@@ -247,8 +249,9 @@
                                 </div>
                                 <div class="card-text text-muted" t-field="record.description_sale"/>
                                 <div class="mt-4">
-                                    <button t-if="record._website_show_quick_add()" type="button" role="button" class="btn btn-primary js_add_cart mt-1" title="Add to Cart">
+                                    <button t-if="record._website_show_quick_add()" type="button" role="button" class="btn btn-primary js_add_cart mt-1" title="Add to Cart" t-att-data-has-attributes="record.has_configurable_attributes">
                                         Add to Cart
+                                        <input type="hidden" name="product_id" t-att-value="record.id"/>
                                     </button>
                                     <a class="btn btn-link me-1 mt-1" t-att-href="record.website_url">
                                         View Product
@@ -295,8 +298,9 @@
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                                     </div>
                                     <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper ms-auto">
-                                        <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
+                                        <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart" t-att-data-has-attributes="record.has_configurable_attributes">
                                             <i class="fa fa-fw fa-shopping-cart"/>
+                                            <input type="hidden" name="product_id" t-att-value="record.id"/>
                                         </button>
                                     </div>
                                 </div>
@@ -335,8 +339,9 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper">
-                                <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
+                                <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart" t-att-data-has-attributes="record.has_configurable_attributes">
                                     Add to Cart
+                                    <input type="hidden" name="product_id" t-att-value="record.id"/>
                                 </button>
                             </div>
                         </div>

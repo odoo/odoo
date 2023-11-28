@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import DynamicSnippetCarousel from "@website/snippets/s_dynamic_snippet_carousel/000";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
+import { WebsiteSale } from '@website_sale/js/website_sale';
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
@@ -109,7 +110,7 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     },
 });
 
-const DynamicSnippetProductsCard = publicWidget.Widget.extend({
+const DynamicSnippetProductsCard = WebsiteSale.extend({
     selector: '.o_carousel_product_card',
     read_events: {
         'click .js_add_cart': '_onClickAddToCart',
@@ -136,17 +137,23 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card');
-        const data = await rpc("/shop/cart/update_json", {
-            product_id: $card.find('input[data-product-id]').data('product-id'),
-            add_qty: 1,
-            display: false,
-        });
-        wSaleUtils.updateCartNavBar(data);
-        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
-        if (this.add2cartRerender) {
-            this.trigger_up('widgets_start_request', {
-                $target: this.$el.closest('.s_dynamic'),
+        const isVariant = ev.currentTarget.closest('[data-show-variants=true]');
+        const hasAttributes = ev.currentTarget.dataset.hasAttributes;
+        if (!isVariant && hasAttributes) {
+            this._handleAdd($card);
+        } else {
+            const data = await rpc("/shop/cart/update_json", {
+                product_id: $card.find('input[data-product-id]').data('product-id'),
+                add_qty: 1,
+                display: false,
             });
+            wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
+            if (this.add2cartRerender) {
+                this.trigger_up('widgets_start_request', {
+                    $target: this.$el.closest('.s_dynamic'),
+                });
+            }
         }
     },
     /**
