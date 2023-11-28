@@ -58,7 +58,7 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        SaleOrder = request.env['sale.order'].sudo()
+        SaleOrder = request.env['sale.order']
 
         domain = self._prepare_quotations_domain(partner)
 
@@ -101,7 +101,7 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        SaleOrder = request.env['sale.order'].sudo()
+        SaleOrder = request.env['sale.order']
 
         domain = self._prepare_orders_domain(partner)
 
