@@ -122,8 +122,8 @@
                     </div>
                     <div class="row" t-if="o.partner_id.ref" name="customer_code">
                         <div class="col-2 offset-6">
-                            <strong style="white-space:nowrap">:
-                                Customer Code
+                            <strong style="white-space:nowrap">
+                                Customer Code:
                             </strong>
                         </div>
                         <div class="col-2">
@@ -135,7 +135,7 @@
                             </strong>
                         </div>
                     </div>
-                    <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
+                    <div class="row" t-if="o.ref" name="reference">
                         <div class="col-2 offset-6">
                             <strong style="white-space:nowrap">Reference:
                             </strong>
@@ -481,19 +481,18 @@
                     </div>
                 </div>
 
-                <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    <div class="row">
-                        <div class="col-2 offset-6 text-nowrap">
-                            <strong>Payment Reference:</strong>
-                        </div>
-                        <div class="col-2 text-nowrap">
-                            <span class="fw-bold" t-field="o.payment_reference"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong>:رقم إشارة الدفعة</strong>
-                        </div>
+                <p name="payment_communication" t-if="0"></p>
+                <div class="row" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
+                    <div class="col-2 offset-6">
+                        <strong>Payment Reference:</strong>
                     </div>
-                </p>
+                    <div class="col-2">
+                        <span class="fw-bold" t-field="o.payment_reference"/>
+                    </div>
+                    <div class="col-2 text-end">
+                        <strong style="white-space:nowrap">:رقم إشارة الدفعة</strong>
+                    </div>
+                </div>
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
@@ -526,23 +525,23 @@
                         </div>
                     </div>
                 </p>
-                <p t-if="o.invoice_incoterm_id" name="incoterm">
-                    <div class="row">
-                        <div class="col-2 offset-6">
-                            <strong>Incoterm:</strong>
-                        </div>
-                        <div class="col-2 text-nowrap">
-                            <span t-out="o.invoice_incoterm_id.code"/>
-                            -
-                            <span t-out="o.invoice_incoterm_id.name"/>
-                            -
-                            <span t-if="o.incoterm_location" t-out="o.incoterm_location"/>
-                        </div>
-                        <div class="col-2 text-end">
-                            <strong>:شرط تجاري</strong>
-                        </div>
+                
+                <p name="incoterm" t-if="0"></p>
+                <div class="row" t-if="o.invoice_incoterm_id" name="incoterm">
+                    <div class="col-2 offset-6">
+                        <strong>Incoterm:</strong>
                     </div>
-                </p>
+                    <div class="col-2 text-nowrap">
+                        <span t-out="o.invoice_incoterm_id.code"/>
+                        -
+                        <span t-out="o.invoice_incoterm_id.name"/>
+                        -
+                        <span t-if="o.incoterm_location" t-out="o.incoterm_location"/>
+                    </div>
+                    <div class="col-2 text-end">
+                        <strong>:شرط تجاري</strong>
+                    </div>
+                </div>
             </div>
         </t>
     </template>
