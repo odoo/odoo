@@ -300,7 +300,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ProgressBarField: field is editable in kanban", async function (assert) {
         assert.expect(7);
 
-        serverData.models.partner.fields.int_field.readonly = true;
         serverData.models.partner.records[0].int_field = 99;
 
         await makeView({
