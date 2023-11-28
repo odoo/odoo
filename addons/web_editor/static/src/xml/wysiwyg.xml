@@ -41,16 +41,18 @@
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-md-3">Type</label>
+                            <label class="col-form-label col-md-3">Style</label>
                             <div class="col-md-9 d-flex align-items-center">
                                 <div t-attf-class="#{this.colorCombinationClass ? ('p-2 ' + this.colorCombinationClass) : ''}">
-                                    <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
-                                        <label role="button" class="m-0 me-2" t-if="colorData.type !== 'custom'">
-                                            <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
-                                            <span t-esc="colorData.label"
-                                                    t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
-                                        </label>
-                                    </t>
+                                    <select name="link_style_color" class="form-select link-style">
+                                        <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                            <t t-if="colorData.type !== 'custom'">
+                                                <option t-att-value="colorData.type" t-attf-class="o_btn_preview dropdown-item">
+                                                    <span t-esc="colorData.label"/>
+                                                </option>
+                                            </t>
+                                        </t>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-form-label col-md-3">Style</label>
+                                <label class="col-form-label col-md-3">Layout</label>
                                 <div class="col-md-9">
                                     <select name="link_style_shape" class="form-select link-style">
                                         <option value="" selected="selected">Default</option>

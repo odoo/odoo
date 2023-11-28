@@ -39,8 +39,8 @@ export class Link extends Component {
     linkComponentWrapperRef = useRef("linkComponentWrapper");
     colorsData = [
         {type: '', label: _t("Link"), btnPreview: 'link'},
-        {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
-        {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
+        {type: 'primary', label: _t("Button Primary"), btnPreview: 'primary'},
+        {type: 'secondary', label: _t("Button Secondary"), btnPreview: 'secondary'},
         {type: 'custom', label: _t("Custom"), btnPreview: 'custom'},
         // Note: by compatibility the dialog should be able to remove old
         // colors that were suggested like the BS status colors or the
