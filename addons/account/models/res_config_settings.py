@@ -49,6 +49,13 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
     )
+    cash_rounding_id = fields.Many2one(
+        comodel_name='account.cash.rounding',
+        string='Default Cash Rounding',
+        related='company_id.account_cash_rounding_id',
+        readonly=False,
+        check_company=True,
+    )
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(

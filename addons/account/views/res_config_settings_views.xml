@@ -138,6 +138,9 @@
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
                                 <div class="mt8">
+                                    <field name="cash_rounding_id" invisible="not group_cash_rounding" placeholder="Default Method"/>
+                                </div>
+                                <div class="mt8">
                                     <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
                                             type="action" string="Cash Roundings" class="btn-link"
                                             invisible="not group_cash_rounding"/>

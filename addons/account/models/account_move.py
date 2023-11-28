@@ -537,6 +537,7 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
+        default=lambda self: self.company_id.account_cash_rounding_id,
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     send_and_print_values = fields.Json(copy=False)

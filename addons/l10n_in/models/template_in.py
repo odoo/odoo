@@ -36,5 +36,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'fiscalyear_last_month': '3',
                 'account_sale_tax_id': 'igst_sale_18',
                 'account_purchase_tax_id': 'igst_purchase_18',
+                'account_cash_rounding_id': self.env.ref('l10n_in.cash_rounding_in_half_up'),
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        self.env.ref('l10n_in.cash_rounding_in_half_up').write({
+            'profit_account_id': self.env.ref('account.%s_p213202'%(self.env.company.id), raise_if_not_found=False),
+            'loss_account_id': self.env.ref('account.%s_p213201'%(self.env.company.id), raise_if_not_found=False)
+        })
+        return super()._post_load_data(template_code, company, template_data)
