@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { clamp } from "@web/core/utils/numbers";
+import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
 import { setRecurringAnimationFrame } from "@web/core/utils/timing";
 import { browser } from "../browser/browser";
 import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
@@ -157,40 +158,7 @@ function getReturnValue(valueOrFn) {
  * @returns {(HTMLElement | null)[]}
  */
 function getScrollParents(el) {
-    return [getScrollParentX(el), getScrollParentY(el)];
-}
-
-/**
- * @param {HTMLElement} el
- * @returns {HTMLElement | null}
- */
-function getScrollParentX(el) {
-    if (!el) {
-        return null;
-    }
-    if (el.scrollWidth > el.clientWidth) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
-            return el;
-        }
-    }
-    return getScrollParentX(el.parentElement);
-}
-/**
- * @param {HTMLElement} el
- * @returns {HTMLElement | null}
- */
-function getScrollParentY(el) {
-    if (!el) {
-        return null;
-    }
-    if (el.scrollHeight > el.clientHeight) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
-            return el;
-        }
-    }
-    return getScrollParentY(el.parentElement);
+    return [closestScrollableX(el), closestScrollableY(el)];
 }
 
 /**
