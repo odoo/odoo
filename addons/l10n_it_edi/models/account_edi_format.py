@@ -479,7 +479,7 @@ class AccountEdiFormat(models.Model):
         else:
             message_to_log.append("%s<br/>%s" % (
                 _("Vendor not found, useful informations from XML file:"),
-                invoice._compose_info_message(tree, './/CedentePrestatore')))
+                invoice._compose_info_message(tree, '//CedentePrestatore')))
 
         # Numbering attributed by the transmitter. <1.1.2>
         elements = tree.xpath('//ProgressivoInvio')
