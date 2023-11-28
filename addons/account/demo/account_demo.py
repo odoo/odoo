@@ -154,6 +154,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_invoice_extract': {
                 'move_type': 'in_invoice',
+                'message_main_attachment_id': 'ir_attachment_in_invoice_1',
             },
             'demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
@@ -166,6 +167,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
                                     'tax_ids': self.env.company.account_purchase_tax_id.ids}),
                 ],
+                'message_main_attachment_id': 'ir_attachment_in_invoice_2',
             },
             'demo_move_auto_reconcile_1': {
                 'move_type': 'out_refund',
