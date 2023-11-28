@@ -6,7 +6,7 @@ from odoo.fields import Datetime
 from odoo.tests import HttpCase, tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'event_sale_ui')
 class TestUi(HttpCase):
 
     def test_event_configurator(self):
