@@ -5,7 +5,7 @@ from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'free_shipping_reward')
 class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     @classmethod
