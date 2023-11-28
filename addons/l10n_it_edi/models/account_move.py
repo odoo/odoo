@@ -744,7 +744,7 @@ class AccountMove(models.Model):
         else:
             message = Markup("<br/>").join((
                 _("Vendor not found, useful informations from XML file:"),
-                self._compose_info_message(tree, './/CedentePrestatore')
+                self._compose_info_message(tree, '//CedentePrestatore')
             ))
             message_to_log.append(message)
 
