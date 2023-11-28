@@ -7,8 +7,10 @@ from unittest.mock import Mock, patch
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 
 
+@tagged('mail_plugin_controller')
 class TestMailPluginController(TestMailPluginControllerCommon):
 
     def test_enrich_and_create_company(self):
@@ -130,6 +132,7 @@ class TestMailPluginController(TestMailPluginControllerCommon):
     def test_get_partner_no_access(self):
         """Test the case where the partner has been enriched by someone else, but we can't access it."""
         partner = self.env["res.partner"].create({"name": "Test", "website": "https://test.example.com"})
+        partner_count = self.env['res.partner'].search_count([])
         self.env["res.partner.iap"].create({
             "partner_id": partner.id,
             "iap_search_domain": "@test.example.com",
@@ -141,6 +144,8 @@ class TestMailPluginController(TestMailPluginControllerCommon):
             lambda _, domain: {"name": "Name", "email": "test@test.example.com"},
         )
         self.assertEqual(result["partner"]["company"]["website"], "https://test.example.com")
+        new_partner_count = self.env['res.partner'].search_count([])
+        self.assertEqual(new_partner_count, partner_count, "Should not have created a new partner")
 
         # now we can't access it
         def _check_access_rule(record, operation, *args, **kwargs):
@@ -156,9 +161,8 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         self.assertEqual(result["partner"]["company"].get("id"), partner.id)
         self.assertEqual(result["partner"]["company"].get("name"), "No Access")
         self.assertFalse(result["partner"]["company"].get("website"))
-
-        partners = self.env["res.partner"].search([("email", "=", partner.email)])
-        self.assertEqual(partners, partner, "Should not have created a new partner")
+        new_partner_count = self.env['res.partner'].search_count([])
+        self.assertEqual(new_partner_count, partner_count, "Should not have created a new partner")
 
     def test_get_partner_no_email_returned_by_iap(self):
         """Test the case where IAP do not return an email address.
