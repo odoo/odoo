@@ -8,6 +8,7 @@ class TestAutomaticEditor(TestConfiguratorCommon):
         # We create a lang because if the new website is displayed in this lang
         # instead of the website's default one, the editor won't automatically
         # start.
+        self.env.ref('base.group_user').implied_ids = [(4, self.env.ref('sale_management.group_sale_order_template').id)]
         self.env['res.lang'].create({
             'name': 'Parseltongue',
             'code': 'pa_GB',
