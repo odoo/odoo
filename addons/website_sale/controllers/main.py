@@ -1499,7 +1499,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return 'ok'
         return request.render("website_sale.checkout", values)
 
-    @route('/shop/cart/update_address', type='http', auth='public', methods=['POST'], website=True)
+    @route('/shop/cart/update_address', type='json', auth='public', website=True)
     def update_cart_address(self, partner_id, mode='billing', **kw):
         partner_id = int(partner_id)
 
