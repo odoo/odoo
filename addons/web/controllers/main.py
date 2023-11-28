@@ -1852,7 +1852,8 @@ class CSVExport(ExportFormat, http.Controller):
 
     def from_data(self, fields, rows):
         fp = io.BytesIO()
-        writer = pycompat.csv_writer(fp, quoting=1)
+        delimiter = request.env['ir.config_parameter'].sudo().get_param('base_import.csv_internal_sep') or ','
+        writer = pycompat.csv_writer(fp, quoting=1, delimiter=delimiter)
 
         writer.writerow(fields)
 
