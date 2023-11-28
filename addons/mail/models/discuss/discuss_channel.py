@@ -206,8 +206,17 @@ class Channel(models.Model):
 
             # find partners to add from channel_member_ids
             membership_ids_cmd = vals.get('channel_member_ids', [])
-            if any(cmd[0] != 0 for cmd in membership_ids_cmd):
-                raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
+            for cmd in membership_ids_cmd:
+                if cmd[0] != 0:
+                    raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
+                for field_name in cmd[2]:
+                    if field_name not in ["partner_id", "guest_id", "is_pinned"]:
+                        raise ValidationError(
+                            _(
+                                "Invalid field “%(field_name)s” when creating a channel with members.",
+                                field_name=field_name,
+                            )
+                        )
             membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
 
             partner_ids_to_add = partner_ids
