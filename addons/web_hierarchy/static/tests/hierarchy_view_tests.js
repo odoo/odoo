@@ -7,7 +7,10 @@ import {
     dragAndDrop,
     getFixture,
     getNodesTextContent,
-    patchWithCleanup
+    mockAnimationFrame,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
@@ -636,6 +639,85 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_hierarchy_node.o_hierarchy_dragged");
         assert.containsNone(target, ".o_hierarchy_node.o_hierarchy_hover");
         assert.containsNone(target, ".o_hierarchy_node.shadow");
+    });
+
+    QUnit.test("drag node to scroll", async function (assert) {
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views[
+            "hr.employee,false,hierarchy"
+        ].replace("<hierarchy>", "<hierarchy draggable='1'>");
+        serverData.models["hr.employee"].records = [
+            { id: 1, name: "A", parent_id: false, child_ids: [2] },
+            { id: 2, name: "B", parent_id: 1, child_ids: [3] },
+            { id: 3, name: "C", parent_id: 2, child_ids: [4] },
+            { id: 4, name: "D", parent_id: 3, child_ids: [5] },
+            { id: 5, name: "E", parent_id: 4, child_ids: [] },
+            { id: 6, name: "F", parent_id: false, child_ids: [] },
+        ];
+        const { advanceFrame } = mockAnimationFrame();
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+
+        // Fully open the view
+        assert.containsN(target, ".o_hierarchy_row", 1);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 4);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 5);
+        const rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(getNodesTextContent(rowsContent), ["A", "F", "BA", "CB", "DC", "ED"]);
+        await nextTick();
+
+        // Limit the height and enable scrolling
+        const content = target.querySelector(".o_content");
+        content.setAttribute("style", "min-height:600px;max-height:600px;overflow-y:auto;");
+        assert.strictEqual(content.scrollTop, 0);
+        assert.strictEqual(content.getBoundingClientRect().height, 600);
+
+        const nodes = [...content.querySelectorAll(".o_hierarchy_node")];
+        const fNode = nodes.find((n) => n.textContent === "F");
+        const dragActions = await drag(fNode);
+        await dragActions.moveTo(".o_hierarchy_row:last-child");
+        assert.strictEqual(content.scrollTop, 0);
+
+        await advanceFrame();
+
+        // default speed of 20px per frame
+        assert.strictEqual(content.scrollTop, 20);
+        assert.containsOnce(target, ".o_hierarchy_node_container.o_hierarchy_dragged");
+
+        // next 100 frames (2000px of scrolling)
+        await advanceFrame(100);
+
+        // should be at the end of the content
+        assert.strictEqual(content.clientHeight + content.scrollTop, content.scrollHeight);
+
+        await dragActions.moveTo(".o_hierarchy_row:first-child");
+        assert.strictEqual(content.clientHeight + content.scrollTop, content.scrollHeight);
+
+        await advanceFrame();
+
+        // default speed of 20px per frame
+        assert.strictEqual(content.clientHeight + content.scrollTop, content.scrollHeight - 20);
+        assert.containsOnce(target, ".o_hierarchy_node_container.o_hierarchy_dragged");
+
+        // next 100 frames (2000px of scrolling)
+        await advanceFrame(100);
+
+        // should be at the top of the content
+        assert.strictEqual(content.scrollTop, 0);
+
+        // cancel drag: press "Escape"
+        triggerHotkey("Escape");
+        await nextTick();
+
+        assert.containsNone(target, ".o_hierarchy_node_container.o_hierarchy_dragged");
     });
 
     QUnit.test("check default icon is correctly used inside button to display child nodes", async function (assert) {
