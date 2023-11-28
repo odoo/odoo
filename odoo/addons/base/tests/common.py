@@ -185,7 +185,7 @@ class HttpCaseWithUserPortal(HttpCase):
 
     def setUp(self):
         super(HttpCaseWithUserPortal, self).setUp()
-        self.user_portal = self.env['res.users'].search([('login', '=', 'portal')])
+        self.user_portal = self.env['res.users'].sudo().search([('login', '=', 'portal')])
         self.partner_portal = self.user_portal.partner_id
 
         if not self.user_portal:

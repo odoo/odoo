@@ -72,6 +72,9 @@ class BaseTestUi(odoo.tests.HttpCase):
 class TestUi(BaseTestUi):
 
     def test_01_main_flow_tour(self):
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            return
         self.main_flow_tour()
 
 @odoo.tests.tagged('post_install', '-at_install')

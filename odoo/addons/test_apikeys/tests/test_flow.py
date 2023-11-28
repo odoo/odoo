@@ -1,10 +1,12 @@
 import json
 
 from odoo import api
-from odoo.tests import tagged, HttpCase, get_db_name
+from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
-@tagged('post_install', '-at_install')
-class TestAPIKeys(HttpCase):
+
+@tagged('post_install', '-at_install', 'test_apikeys')
+class TestAPIKeys(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()
 
@@ -18,6 +20,9 @@ class TestAPIKeys(HttpCase):
             del self.registry['ir.logging'].send_key
 
     def test_addremove(self):
+        # TODO: Make this work if no demo data + hr installed
+        if not loaded_demo_data(self.env):
+            return
         db = get_db_name()
         self.start_tour('/web', 'apikeys_tour_setup', login='demo')
         demo_user = self.env['res.users'].search([('login', '=', 'demo')])
