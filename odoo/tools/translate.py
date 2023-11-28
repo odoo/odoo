@@ -30,7 +30,7 @@ from psycopg2.extras import Json
 import odoo
 from odoo.exceptions import UserError
 from . import config, pycompat
-from .misc import file_open, file_path, get_iso_codes, SKIPPED_ELEMENT_TYPES, OrderedSet
+from .misc import file_open, file_path, get_iso_codes, SKIPPED_ELEMENT_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -747,14 +747,14 @@ class PoFileWriter:
     def write_rows(self, rows):
         # we now group the translations by source. That means one translation per source.
         grouped_rows = {}
-        modules = OrderedSet([])
+        modules = set()
         for module, type, name, res_id, src, trad, comments in rows:
             row = grouped_rows.setdefault(src, {})
-            row.setdefault('modules', OrderedSet()).add(module)
+            row.setdefault('modules', set()).add(module)
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
             row.setdefault('tnrs', []).append((type, name, res_id))
-            row.setdefault('comments', OrderedSet()).update(comments)
+            row.setdefault('comments', set()).update(comments)
             modules.add(module)
 
         for src, row in sorted(grouped_rows.items()):
@@ -763,7 +763,7 @@ class PoFileWriter:
                 row['translation'] = ''
             elif not row.get('translation'):
                 row['translation'] = ''
-            self.add_entry(row['modules'], sorted(row['tnrs']), src, row['translation'], row['comments'])
+            self.add_entry(sorted(row['modules']), sorted(row['tnrs']), src, row['translation'], sorted(row['comments']))
 
         import odoo.release as release
         self.po.header = "Translation of %s.\n" \
