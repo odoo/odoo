@@ -26,8 +26,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'change select[name="country_id"]': '_onChangeCountry',
-        'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
@@ -49,7 +47,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this._super.apply(this, arguments);
 
         this._changeCartQuantity = debounce(this._changeCartQuantity.bind(this), 500);
-        this._changeCountry = debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
         this.filmStripStartX = 0;
@@ -78,8 +75,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
-
-        this.$('select[name="country_id"]').change();
 
         listenSizeChange(() => {
             if (uiUtils.getSize() === SIZES.XL) {
@@ -228,63 +223,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             wSaleUtils.showWarning(data.notification_info.warning);
             // Propagating the change to the express checkout forms
             Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
-        });
-    },
-    /**
-     * @private
-     */
-    _changeCountry: function () {
-        if (!$("#country_id").val()) {
-            return;
-        }
-        return this.rpc("/shop/country_infos/" + $("#country_id").val(), {
-            mode: $("#country_id").attr('mode'),
-        }).then(function (data) {
-            // placeholder phone_code
-            $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
-
-            // populate states and display
-            var selectStates = $("select[name='state_id']");
-            // dont reload state at first loading (done in qweb)
-            if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
-                if (data.states.length || data.state_required) {
-                    selectStates.html('');
-                    data.states.forEach((x) => {
-                        var opt = $('<option>').text(x[1])
-                            .attr('value', x[0])
-                            .attr('data-code', x[2]);
-                        selectStates.append(opt);
-                    });
-                    selectStates.parent('div').show();
-                } else {
-                    selectStates.val('').parent('div').hide();
-                }
-                selectStates.data('init', 0);
-            } else {
-                selectStates.data('init', 0);
-            }
-
-            // manage fields order / visibility
-            if (data.fields) {
-                if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)){
-                    $(".div_zip").before($(".div_city"));
-                } else {
-                    $(".div_zip").after($(".div_city"));
-                }
-                var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
-                all_fields.forEach((field) => {
-                    $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
-                });
-            }
-
-            if ($("label[for='zip']").length) {
-                $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
-                $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
-            }
-            if ($("label[for='zip']").length) {
-                $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
-                $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
-            }
         });
     },
     /**
@@ -620,23 +558,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         }
     },
     /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeCountry: function (ev) {
-        if (!this.$('.checkout_autoformat').length) {
-            return;
-        }
-        return this._changeCountry();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeShippingUseSame: function (ev) {
-        $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
-    },
-    /**
      * Toggles the add to cart button depending on the possibility of the
      * current combination.
      *
@@ -784,70 +705,6 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
-    selector: '.oe_website_sale .oe_cart',
-    events: {
-        'click .js_change_billing': '_onClickChangeBilling',
-        'click .js_change_shipping': '_onClickChangeShipping',
-        'click .js_edit_address': '_onClickEditAddress',
-        'click .js_delete_product': '_onClickDeleteProduct',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickChangeBilling: function (ev) {
-        this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickChangeShipping: function (ev) {
-        this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
-        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
-        $old.find('.btn-addr').toggle();
-        $old.addClass(cardClass);
-        $old.removeClass('bg-primary border border-primary');
-
-        var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
-        $new.find('.btn-addr').toggle();
-        $new.removeClass(cardClass);
-        $new.addClass('bg-primary border border-primary');
-
-        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
-        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
-        $.post($form.attr('action'), $form.serialize()+'&xhr=1');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickEditAddress: function (ev) {
-        // Do not trigger _onClickChangeBilling or _onClickChangeShipping when customer
-        // clicks on the pencil to update the address
-        ev.stopPropagation();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickDeleteProduct: function (ev) {
-        ev.preventDefault();
-        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
-    },
-});
 
 publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     selector: '#o-carousel-product',
@@ -992,7 +849,6 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
-    websiteSaleCart: publicWidget.registry.websiteSaleCart,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };
