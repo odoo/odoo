@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.show_project_button = order.id in show_button_ids and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
-            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and order.order_line.product_template_id.filtered(lambda x: x.service_policy in ['delivered_timesheet', 'delivered_milestones'])
+            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and 'service' in order.order_line.product_template_id.mapped('detailed_type')
 
     def _search_tasks_ids(self, operator, value):
         is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
@@ -171,8 +171,15 @@ class SaleOrder(models.Model):
 
     def action_create_project(self):
         self.ensure_one()
-        if not self.order_line:
-            return {'type': 'ir.actions.act_window_close'}
+        if not self.show_create_project_button:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': _("The project couldn't be created as the Sales Order must be confirmed, is already linked to a project, or doesn't involve any services."),
+                }
+            }
 
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service' and not sol.is_downpayment), self.env['sale.order.line'])
