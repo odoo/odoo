@@ -29,7 +29,6 @@ export class KanbanArchParser {
         const fields = models[modelName];
         const className = xmlDoc.getAttribute("class") || null;
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
-        const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
         const countLimit = xmlDoc.getAttribute("count_limit");
         const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
@@ -165,7 +164,6 @@ export class KanbanArchParser {
             activeActions,
             className,
             creates,
-            defaultGroupBy,
             fieldNodes,
             widgetNodes,
             handleField,

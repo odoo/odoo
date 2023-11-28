@@ -303,6 +303,10 @@ export class View extends Component {
         let subType = archXmlDoc.getAttribute("js_class");
         const bannerRoute = archXmlDoc.getAttribute("banner_route");
         const sample = archXmlDoc.getAttribute("sample");
+        const viewDefaultGroupBy = archXmlDoc.hasAttribute("default_group_by")
+            ? archXmlDoc.getAttribute("default_group_by").split(",")
+            : null;
+
         const className = computeViewClassName(type, archXmlDoc, [
             "o_view_controller",
             ...(props.className || "").split(" "),
@@ -410,6 +414,10 @@ export class View extends Component {
                 }
             }
             this.withSearchProps.display = display;
+        }
+
+        if (viewDefaultGroupBy && viewDefaultGroupBy.length) {
+            this.withSearchProps.viewDefaultGroupBy = viewDefaultGroupBy;
         }
 
         for (const key in this.withSearchProps) {

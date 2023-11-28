@@ -27,6 +27,9 @@ export class WithSearch extends Component {
         groupBy: { type: Array, element: String, optional: true },
         orderBy: { type: Array, element: Object, optional: true },
 
+        // from view arch
+        viewDefaultGroupBy: { type: Array, element: String, optional: true },
+
         // search view description
         searchViewArch: { type: String, optional: true },
         searchViewFields: { type: Object, optional: true },

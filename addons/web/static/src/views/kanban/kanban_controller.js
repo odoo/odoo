@@ -180,7 +180,7 @@ export class KanbanController extends Component {
     }
 
     get modelParams() {
-        const { resModel, archInfo, limit, defaultGroupBy } = this.props;
+        const { resModel, archInfo, limit } = this.props;
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
         addFieldDependencies(activeFields, fields, this.progressBarAggregateFields);
         const modelConfig = this.props.state?.modelState?.config || {
@@ -196,7 +196,6 @@ export class KanbanController extends Component {
             limit: archInfo.limit || limit || 40,
             groupsLimit: Number.MAX_SAFE_INTEGER, // no limit
             countLimit: archInfo.countLimit,
-            defaultGroupBy,
             defaultOrderBy: archInfo.defaultOrder,
             maxGroupByDepth: 1,
             activeIdsLimit: session.active_ids_limit,
