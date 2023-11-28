@@ -99,6 +99,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
         docCarrier.appendChild(span);
     },
+
     /**
      * @private
      * @param {Element} carrierInput
@@ -111,6 +112,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const loadingCircle = priceTag.appendChild(document.createElement('span'));
         loadingCircle.classList.add("fa", "fa-circle-o-notch", "fa-spin");
     },
+
     /**
      * Update the total cost according to the selected shipping method
      *
@@ -120,6 +122,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     _updateShippingCost: function(amount) {
         Component.env.bus.trigger('update_shipping_cost', amount);
     },
+
      /**
      * Get the rate shipment of a carrier
      *
@@ -127,11 +130,12 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @params {Object} carrier: The carrier element
      */
     _getCarrierRateShipment: async function(carrierInput) {
-      const result = await this.rpc('/shop/carrier_rate_shipment', {
+        const result = await this.rpc('/shop/carrier_rate_shipment', {
             'carrier_id': carrierInput.value,
-      });
-      this._handleCarrierUpdateResultBadge(result);
+        });
+        this._handleCarrierUpdateResultBadge(result);
     },
+
     /**
      * @private
      * @param {Object} result
@@ -251,6 +255,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         })
         this._enableButton(result.status);
     },
+
     /**
      * Enable the payment button if the rate_shipment request succeeded.
      *
