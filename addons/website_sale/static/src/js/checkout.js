@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     // /shop/checkout
-    selector: '.o_website_sale .oe_cart',
+    selector: '#shop_checkout',
     events: {
         'click .js_change_billing': '_onClickChangeBilling',
         'click .js_change_shipping': '_onClickChangeShipping',
