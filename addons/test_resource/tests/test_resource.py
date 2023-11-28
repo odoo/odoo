@@ -668,6 +668,14 @@ class TestResMixin(TestResourceCommon):
         )[self.jean.id]
         self.assertEqual(data, {'days': 5, 'hours': 40})
 
+        # Viewing it as Bob
+        data = self.bob._get_work_days_data_batch(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.bob.tz),
+            datetime_tz(2018, 4, 6, 16, 0, 0, tzinfo=self.bob.tz),
+        )[self.bob.id]
+        self.assertEqual(data, {'days': 5, 'hours': 40})
+
+
         # Viewing it as Patel
         # Views from 2018/04/01 20:00:00 to 2018/04/06 12:00:00
         data = self.jean._get_work_days_data_batch(
