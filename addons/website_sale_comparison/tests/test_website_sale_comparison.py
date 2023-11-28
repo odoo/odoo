@@ -21,7 +21,7 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         # YTI TODO: Adapt this tour without demo data
         # I still didn't figure why, but this test freezes on runbot
         # without the demo data
-        if tools.config["without_demo"]:
+        if not odoo.tests.loaded_demo_data(self.env):
             return
 
         Website0 = self.env['website'].with_context(website_id=None)
@@ -111,7 +111,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_product_comparison(self):
         # YTI FIXME: Adapt to work without demo data
-        if tools.config["without_demo"]:
+        if not odoo.tests.loaded_demo_data(self.env):
             return
         self.start_tour("/", 'product_comparison', login='admin')
 

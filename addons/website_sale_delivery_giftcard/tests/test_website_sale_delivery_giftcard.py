@@ -2,11 +2,21 @@
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'delivery_giftcard')
 class TestWebsiteSaleDelivery(HttpCase):
 
     def setUp(self):
         super().setUp()
+
+        self.env.ref('base.user_admin').write({
+            'name': 'Mitchell Admin',
+            'street': '215 Vine St',
+            'phone': '+1 555-555-5555',
+            'city': 'Scranton',
+            'zip': '18503',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_39').id,
+        })
 
         self.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
