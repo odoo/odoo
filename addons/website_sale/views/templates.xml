@@ -1804,31 +1804,33 @@
             <t t-set="additional_title">Shop - Checkout</t>
             <t t-set="redirect" t-valuef="/shop/checkout"/>
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="mb-4">Address</h3>
-                    <h4>Billing</h4>
-                </div>
-            </div>
-            <t t-call="website_sale.row_addresses">
-                <t t-set="order" t-value="order"/>
-                <t t-set="is_invoice" t-value="True"/>
-                <t t-set="addresses" t-value="billings"/>
-                <t t-set="selected_address" t-value="order.partner_invoice_id"/>
-            </t>
-            <t t-if="not only_services" groups="account.group_delivery_invoice_address">
+            <div id="shop_checkout">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4>Shipping</h4>
+                        <h3 class="mb-4">Address</h3>
+                        <h4>Billing</h4>
                     </div>
                 </div>
                 <t t-call="website_sale.row_addresses">
                     <t t-set="order" t-value="order"/>
-                    <t t-set="is_invoice" t-value="False"/>
-                    <t t-set="addresses" t-value="shippings"/>
-                    <t t-set="selected_address" t-value="order.partner_shipping_id"/>
+                    <t t-set="is_invoice" t-value="True"/>
+                    <t t-set="addresses" t-value="billings"/>
+                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
-            </t>
+                <t t-if="not only_services" groups="account.group_delivery_invoice_address">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>Shipping</h4>
+                        </div>
+                    </div>
+                    <t t-call="website_sale.row_addresses">
+                        <t t-set="order" t-value="order"/>
+                        <t t-set="is_invoice" t-value="False"/>
+                        <t t-set="addresses" t-value="shippings"/>
+                        <t t-set="selected_address" t-value="order.partner_shipping_id"/>
+                    </t>
+                </t>
+            </div>
         </t>
     </template>
 
