@@ -11,7 +11,7 @@ TIMESHEET_INVOICE_TYPES = [
     ('billable_fixed', 'Billed at a Fixed price'),
     ('billable_milestones', 'Billed on Milestones'),
     ('billable_manual', 'Billed Manually'),
-    ('non_billable', 'Non Billable Tasks'),
+    ('non_billable', 'Non-Billable'),
     ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
     ('other_revenues', 'Materials'),
