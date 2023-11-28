@@ -11,6 +11,7 @@ const hookParams = {
         rows: [String],
     },
     defaultParams: {
+        edgeScrolling: { speed: 20, threshold: 60 },
         rows: null,
     },
     onComputeParams({ ctx, params }) {

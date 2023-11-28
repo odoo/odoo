@@ -68,10 +68,7 @@ export class HierarchyRenderer extends Component {
     onPatched() {
         const row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child");
         if (row) {
-            const scrollable = this.env.isSmall ? document.querySelector(".o_hierarchy_view") : this.rendererRef.el.parentNode;
-            scrollable.classList.add(".o_hierarchy_auto-scroll");
-            scrollTo(row, { scrollable, isAnchor: true });
-            scrollable.classList.remove(".o_hierarchy_auto-scroll");
+            scrollTo(row, { behavior: "smooth" });
         }
     }
 
