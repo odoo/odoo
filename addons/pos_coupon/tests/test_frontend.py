@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, loaded_demo_data
 
 
 @tagged("post_install", "-at_install")
@@ -264,6 +264,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_coupon_change_pricelist(self):
         """Test coupon program with different pricelists."""
+
+        if not loaded_demo_data(self.env):
+            return
 
         product_1 = self.env["product.product"].create(
             {
