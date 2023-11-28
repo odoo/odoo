@@ -370,7 +370,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
 
 
-@tagged('-at_install', 'post_install', 'batch_picking_2')
+@tagged('-at_install', 'post_install')
 class TestBatchPicking02(TransactionCase):
 
     def setUp(self):

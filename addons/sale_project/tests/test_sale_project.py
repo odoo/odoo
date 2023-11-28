@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import users, tagged
+from odoo.tests.common import users
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-@tagged('test_sale_project')
 class TestSaleProject(TransactionCaseWithUserDemo):
 
     @classmethod

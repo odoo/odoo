@@ -10,7 +10,7 @@ from odoo.tests.common import tagged
 
 
 
-@tagged('post_install', '-at_install', 'event_booth_sale_ui')
+@tagged('post_install', '-at_install')
 class TestWebsiteEventBoothSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
 
     def setUp(self):

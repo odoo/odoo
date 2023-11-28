@@ -5,7 +5,7 @@ import odoo.addons.web.tests.test_js
 import odoo.tests
 
 
-@odoo.tests.tagged("post_install", "-at_install", "pos_test_js")
+@odoo.tests.tagged("post_install", "-at_install")
 class WebSuite(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()

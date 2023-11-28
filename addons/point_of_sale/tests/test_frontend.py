@@ -484,7 +484,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
-@tagged('post_install', '-at_install', 'pos_frontend')
+@tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
         if not loaded_demo_data(self.env):

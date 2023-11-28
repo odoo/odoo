@@ -5,7 +5,7 @@ import odoo
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install', 'test_snippets')
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestSnippets(odoo.tests.HttpCase):
 
     def test_01_newsletter_popup(self):

@@ -7,10 +7,8 @@ from unittest.mock import Mock, patch
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
 
 
-@tagged('mail_plugin_controller')
 class TestMailPluginController(TestMailPluginControllerCommon):
 
     def test_enrich_and_create_company(self):

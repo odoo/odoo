@@ -5,12 +5,11 @@ from .common import KARMA, TestForumCommon
 from odoo import http
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
 
 
-@tagged('test_forum')
 class TestForum(TestForumCommon):
 
     def test_crud_rights(self):

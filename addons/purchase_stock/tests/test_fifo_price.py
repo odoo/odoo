@@ -6,7 +6,7 @@ from odoo.tests import tagged, Form
 import time
 
 
-@tagged('-at_install', 'post_install', 'fifo_price')
+@tagged('-at_install', 'post_install')
 class TestFifoPrice(ValuationReconciliationTestCommon):
 
     def test_00_test_fifo(self):

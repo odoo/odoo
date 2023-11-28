@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'test_frontend')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(AccountTestInvoicingCommon, odoo.tests.HttpCase):
 
     @classmethod

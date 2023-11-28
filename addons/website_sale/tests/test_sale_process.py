@@ -10,7 +10,7 @@ from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.addons.website.tools import MockRequest
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'sale_process')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
 
     def setUp(self):
@@ -114,7 +114,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'sale_checkout_address')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).

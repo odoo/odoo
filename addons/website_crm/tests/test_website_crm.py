@@ -4,7 +4,7 @@
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'website_crm_tour')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteCrm(odoo.tests.HttpCase):
 
     def test_tour(self):

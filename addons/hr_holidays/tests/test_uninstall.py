@@ -6,7 +6,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.tests import tagged, TransactionCase
 
 
-@tagged('-at_install', 'post_install', 'test_unlink_model')
+@tagged('-at_install', 'post_install')
 class TestHrLeaveUninstall(TransactionCase):
     def test_unlink_model(self):
         employee = self.env['hr.employee'].create({

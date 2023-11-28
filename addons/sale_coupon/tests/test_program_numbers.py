@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.tools.float_utils import float_compare
 
 
-@tagged('post_install', '-at_install', 'test_program_numbers')
+@tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
     @classmethod

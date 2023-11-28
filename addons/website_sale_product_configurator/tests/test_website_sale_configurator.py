@@ -6,7 +6,7 @@ from odoo.addons.sale_product_configurator.tests.common import TestProductConfig
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 
-@tagged('post_install', '-at_install', 'website_sale_product_configurator')
+@tagged('post_install', '-at_install')
 class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):

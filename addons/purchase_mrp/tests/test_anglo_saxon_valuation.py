@@ -7,7 +7,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
-@tagged('post_install', '-at_install', 'anglo_saxon_valuation')
+@tagged('post_install', '-at_install')
 class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
     @classmethod

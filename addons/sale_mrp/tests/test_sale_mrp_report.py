@@ -6,7 +6,7 @@ from odoo.tests import common, Form
 from odoo.tools import html2plaintext
 
 
-@common.tagged('post_install', '-at_install', 'sale_mrp_report')
+@common.tagged('post_install', '-at_install')
 class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
     @classmethod

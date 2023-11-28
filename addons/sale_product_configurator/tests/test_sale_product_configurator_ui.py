@@ -5,7 +5,7 @@ import odoo.tests
 from .common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'sale_product_configurator_ui')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
     # TODO: Those tests don't work without sale_management
     def setUp(self):

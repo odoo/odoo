@@ -59,7 +59,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         self.assertFalse(so_attachment.website_id, 'Website should be removed')
 
 
-@odoo.tests.tagged('-at_install', 'post_install', 'html_editor_ui')
+@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']

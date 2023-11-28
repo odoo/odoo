@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
-@tagged('test_onchange')
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.

@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install', '-at_install', 'sale_stock')
+@tagged('post_install', '-at_install')
 class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
     def _get_new_sale_order(self, amount=10.0, product=False):

@@ -12,7 +12,7 @@ from odoo.service import common as auth, model
 from odoo.tools import DotDict
 
 
-@common.tagged('post_install', '-at_install', 'test_xmlrpc')
+@common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
 
     def setUp(self):

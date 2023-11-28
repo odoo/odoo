@@ -7,7 +7,7 @@ from odoo import fields, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
-@tests.tagged('post_install', '-at_install', 'website_event_questions_ui')
+@tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserPortal):
 
     def test_01_tickets_questions(self):

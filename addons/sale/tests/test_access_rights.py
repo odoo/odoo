@@ -125,7 +125,7 @@ class TestAccessRights(TestSaleCommon):
         with self.assertRaises(AccessError):
             self.order.with_user(self.company_data['default_user_employee']).unlink()
 
-@tagged('post_install', '-at_install', 'test_access_controller')
+@tagged('post_install', '-at_install')
 class TestAccessRightsControllers(HttpCaseWithUserPortal):
 
     def test_access_controller(self):

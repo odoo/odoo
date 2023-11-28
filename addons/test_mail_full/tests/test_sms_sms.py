@@ -10,9 +10,8 @@ from odoo import exceptions
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsSms
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
-from odoo.tests import tagged
 
-@tagged('test_sms_sms')
+
 class TestSMSPost(TestMailFullCommon, MockLinkTracker):
 
     def setUp(self):

@@ -6,7 +6,7 @@ import odoo.tests
 from odoo.addons.product_matrix.tests import common
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'matrix_ui')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestSaleMatrixUi(common.TestMatrixCommon):
 
     """

@@ -6,7 +6,7 @@ from odoo.tests import HttpCase, tagged, TransactionCase
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 
 
-@tagged('post_install', '-at_install', 'shop_sale_coupon')
+@tagged('post_install', '-at_install')
 class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
     @classmethod

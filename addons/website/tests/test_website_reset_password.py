@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('post_install', '-at_install', 'reset_password')
+@tagged('post_install', '-at_install')
 class TestWebsiteResetPassword(HttpCase):
 
     def test_01_website_reset_password_tour(self):
