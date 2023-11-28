@@ -14,6 +14,10 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     def setUp(self):
         super().setUp()
+        self.env.ref('base.partner_admin').write({
+            'name': 'Mitchell Admin',
+            'email': 'admin@yourcompany.example.com',
+        })
         self.private_partner = self.env['res.partner'].create({
             'name': 'Private Contact',
             'email': 'private_email@example.com',
