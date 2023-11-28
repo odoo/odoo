@@ -4,10 +4,9 @@
 from odoo import tools
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from datetime import date, timedelta
-
-import odoo.tests
 
 
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
@@ -68,13 +67,19 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         (all_pos_product - discount - cls.tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
-        pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
+        pos_categ_desks = env.ref('point_of_sale.pos_category_desks', raise_if_not_found=False)
+        if not pos_categ_desks:
+            pos_categ_desks = cls.env['pos.category'].create({'name': 'Desk'})
 
         # In DESKS categ: Whiteboard Pen
-        pos_categ_misc = env.ref('point_of_sale.pos_category_miscellaneous')
+        pos_categ_misc = env.ref('point_of_sale.pos_category_miscellaneous', raise_if_not_found=False)
+        if not pos_categ_misc:
+            pos_categ_misc = cls.env['pos.category'].create({'name': 'Misc'})
 
         # In CHAIR categ: Letter Tray
-        pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs')
+        pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs', raise_if_not_found=False)
+        if not pos_categ_chairs:
+            pos_categ_chairs = cls.env['pos.category'].create({'name': 'Chairs'})
 
         # test an extra price on an attribute
         cls.whiteboard_pen = env['product.product'].create({
@@ -479,9 +484,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'pos_frontend')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
+        if not loaded_demo_data(self.env):
+            return
 
         self.main_pos_config.write({
             'iface_tipproduct': True,
@@ -511,6 +518,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
+        if not loaded_demo_data(self.env):
+            return
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="accountman")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
@@ -524,6 +533,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="accountman")
 
     def test_05_ticket_screen(self):
+        if not loaded_demo_data(self.env):
+            return
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")
 

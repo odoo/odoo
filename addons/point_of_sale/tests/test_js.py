@@ -5,7 +5,7 @@ import odoo.addons.web.tests.test_js
 import odoo.tests
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "pos_test_js")
 class WebSuite(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
@@ -17,6 +17,10 @@ class WebSuite(odoo.tests.HttpCase):
 
     def test_pos_js(self):
         # open a session, the /pos/ui controller will redirect to it
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            return
+
         self.main_pos_config.open_session_cb(check_coa=False)
 
         # point_of_sale desktop test suite
