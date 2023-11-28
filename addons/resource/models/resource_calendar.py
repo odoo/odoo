@@ -488,7 +488,7 @@ class ResourceCalendar(models.Model):
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
-            day_days[start.date()] += meta.duration_days * interval_hours / meta.duration_hours
+            day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
 
         return {
             # Round the number of days to the closest 16th of a day.
