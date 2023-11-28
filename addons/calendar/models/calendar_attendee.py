@@ -120,9 +120,9 @@ class Attendee(models.Model):
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
-                attachment_ids = None
+                attachment_ids = mail_template.attachment_ids.ids
                 if ics_file:
-                    attachment_ids = self.env['ir.attachment'].create({
+                    attachment_ids += self.env['ir.attachment'].create({
                         'datas': base64.b64encode(ics_file),
                         'description': 'invitation.ics',
                         'mimetype': 'text/calendar',
