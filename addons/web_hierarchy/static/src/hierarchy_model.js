@@ -540,6 +540,16 @@ export class HierarchyModel extends Model {
     }
 
     /**
+     * @override
+     * Each notify should specify a scroll target (default is to scroll to the
+     * bottom).
+     */
+    notify(payload = { scrollTarget: "bottom" }) {
+        super.notify();
+        this.bus.trigger("hierarchyScrollTarget", payload);
+    }
+
+    /**
      * Fetch parent node of given node
      * @param {HierarchyNode} node node to fetch its parent node
      */
@@ -854,7 +864,7 @@ export class HierarchyModel extends Model {
                 node.removeParentNode();
                 this.root.addNewRootNode(node);
             }
-            this.notify();
+            this.notify({ scrollTarget: "none" });
             await this.mutex.exec(async () => {
                 await this.orm.write(
                     this.resModel,
@@ -911,7 +921,7 @@ export class HierarchyModel extends Model {
             } else if (treeExpanded && node.nodes.length) {
                 treeExpanded.root.collapseChildNodes();
             }
-            this.notify();
+            this.notify({ scrollTarget: nodeId });
         }
     }
 }
