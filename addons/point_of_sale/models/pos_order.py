@@ -904,6 +904,16 @@ class PosOrderLine(models.Model):
         if line and 'tax_ids' not in line[2]:
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
+
+        #If the product is tracked but no lot was specified, we create one
+        #This can happen if `use_create_lot` and `use_existing_lot` are unchecked in the picking types
+        if line[2].get('product_id'):
+            product = self.env['product.product'].browse(line[2]['product_id'])
+            if product.tracking != 'none' and not line[2].get('pack_lot_ids'):
+                quants = self.env['stock.quant']._gather(product, location_id=session.config_id.picking_type_id.default_location_src_id)
+                if quants:
+                    line[2]['pack_lot_ids'] = [(0, 0, {'lot_name': quants[0].lot_id.name})]
+
         # Clean up fields sent by the JS
         line = [
             line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
