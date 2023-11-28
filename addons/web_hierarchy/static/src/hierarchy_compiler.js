@@ -14,7 +14,7 @@ export class HierarchyCompiler extends KanbanCompiler {
         return super.compileField(el, {
             ...(params || {}),
             recordExpr: "__record__",
-            dataPointId: "__comp__.props.node.id",
+            dataPointIdExpr: "__comp__.props.node.id",
             formattedValueExpr: `record['${fieldName}'].value`,
         });
     }
