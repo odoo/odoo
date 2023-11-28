@@ -10,6 +10,7 @@ from odoo.tests import Form, HttpCase, tagged
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
+import base64
 
 
 class TestCalendar(SavepointCaseWithUserDemo):
@@ -275,6 +276,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         Check that mail are sent to the attendees on event creation
         Check that mail are sent to the added attendees on event edit
         Check that mail are NOT sent to the attendees when the event date is past
+        Check that mail have extra attachement added by the user
         """
 
         def _test_one_mail_per_attendee(self, partners):
@@ -284,6 +286,22 @@ class TestCalendar(SavepointCaseWithUserDemo):
                     ('notified_partner_ids', 'in', partner.id),
                     ])
                 self.assertEqual(len(mail), 1)
+
+        def _test_emails_has_attachment(self, partners):
+            # check that every email has an attachment
+            for partner in partners:
+                mail = self.env['mail.message'].sudo().search([
+                    ('notified_partner_ids', 'in', partner.id),
+                ])
+                extra_attachment = mail.attachment_ids.filtered(lambda attachment: attachment.name == "fileText_attachment.txt")
+                self.assertEqual(len(extra_attachment), 1)
+
+        attachment = self.env['ir.attachment'].create({
+            'datas': base64.b64encode(bytes("Event Attachment", 'utf-8')),
+            'name': 'fileText_attachment.txt',
+            'mimetype': 'text/plain'
+        })
+        self.env.ref('calendar.calendar_template_meeting_invitation').attachment_ids = attachment
 
         partners = [
             self.env['res.partner'].create({'name': 'testuser0', 'email': u'bob@example.com'}),
@@ -303,6 +321,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # every partner should have 1 mail sent
         _test_one_mail_per_attendee(self, partners)
+        _test_emails_has_attachment(self, partners)
 
         # adding more partners to the event
         partners.extend([
