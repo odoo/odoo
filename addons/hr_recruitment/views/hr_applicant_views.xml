@@ -226,6 +226,7 @@
                 <field string="Email" name="email_from" filter_domain="[('email_from', 'ilike', self)]"/>
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
