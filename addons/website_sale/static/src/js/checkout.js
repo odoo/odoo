@@ -11,6 +11,14 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         'click .js_edit_address': '_onClickEditAddress',
     },
 
+    /**
+     * @constructor
+     */
+    init() {
+        this._super.apply(this, arguments);
+        this.rpc = this.bindService('rpc');
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -22,6 +30,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     _onClickChangeBilling: function (ev) {
         this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
     },
+
     /**
      * @private
      * @param {Event} ev
@@ -29,6 +38,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     _onClickChangeShipping: function (ev) {
         this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
     },
+
     /**
      * @private
      * @param {Event} ev
@@ -44,10 +54,15 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         $new.removeClass(cardClass);
         $new.addClass('bg-primary border border-primary');
 
-        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
-        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
-        $.post($form.attr('action'), $form.serialize()+'&xhr=1');
+        this.rpc(
+            '/shop/cart/update_address',
+            {
+                mode: $new.attr('mode'),
+                partner_id: $new.attr('partner_id'),
+            }
+        )
     },
+
     /**
      * @private
      * @param {Event} ev
