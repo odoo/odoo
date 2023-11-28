@@ -535,7 +535,7 @@ QUnit.module("Views", (hooks) => {
             ["Albert", "GeorgesAlbert", "JosephineAlbert"],
         );
 
-        const nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        let nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
         const josephineNodeContainer = nodeContainers[2];
         assert.strictEqual(josephineNodeContainer.querySelector(".o_hierarchy_node_content").textContent, "JosephineAlbert");
         await click(josephineNodeContainer, "button[name='hierarchy_search_subsidiaries']");
@@ -551,6 +551,26 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
             ["Albert", "Josephine", "LouisJosephine"],
             "Georges should have Josephine as manager"
+        );
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const louisNodeContainer = nodeContainers[2];
+        assert.strictEqual(
+            louisNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "LouisJosephine"
+        );
+
+        await dragAndDrop(
+            louisNodeContainer.querySelector(".o_hierarchy_node"),
+            ".o_hierarchy_row:first-child"
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 1);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "Josephine", "Louis"],
+            "Louis should still be draggable after being dragged along with Josephine"
         );
     });
 
@@ -586,6 +606,91 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
             ["Albert", "Georges", "JosephineAlbert", "LouisJosephine"],
             "Georges should no longer have a manager"
+        );
+    });
+
+    QUnit.test("drag and drop node unfolded on another row", async function (assert) {
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views[
+            "hr.employee,false,hierarchy"
+        ].replace("<hierarchy>", "<hierarchy draggable='1'>");
+        serverData.models["hr.employee"].records = [
+            { id: 1, name: "Albert", parent_id: false, child_ids: [2] },
+            { id: 2, name: "Georges", parent_id: 1, child_ids: [3] },
+            { id: 3, name: "Josephine", parent_id: 2, child_ids: [4] },
+            { id: 4, name: "Louis", parent_id: 3, child_ids: [] },
+        ];
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 2);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert"]
+        );
+
+        let nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const georgeNodeContainer = nodeContainers[1];
+        assert.strictEqual(
+            georgeNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "GeorgesAlbert"
+        );
+        await click(georgeNodeContainer, "button[name='hierarchy_search_subsidiaries']");
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        let josephineNodeContainer = nodeContainers[2];
+        assert.strictEqual(
+            josephineNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "JosephineGeorges"
+        );
+        await click(josephineNodeContainer, "button[name='hierarchy_search_subsidiaries']");
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        josephineNodeContainer = nodeContainers[2];
+        assert.strictEqual(
+            josephineNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "JosephineGeorges"
+        );
+        let louisNodeContainer = nodeContainers[3];
+        assert.strictEqual(
+            louisNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "LouisJosephine"
+        );
+        assert.containsN(target, ".o_hierarchy_row", 4);
+
+        await dragAndDrop(
+            josephineNodeContainer.querySelector(".o_hierarchy_node"),
+            ":nth-child(2 of .o_hierarchy_row)"
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        assert.containsN(target, ".o_hierarchy_node", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"],
+            "Josephine should have Albert as a manager"
+        );
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        louisNodeContainer = nodeContainers[3];
+        assert.strictEqual(
+            louisNodeContainer.querySelector(".o_hierarchy_node_content").textContent,
+            "LouisJosephine"
+        );
+
+        await dragAndDrop(
+            louisNodeContainer.querySelector(".o_hierarchy_node"),
+            ":nth-child(2 of .o_hierarchy_row)"
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisAlbert"],
+            "Louis should still be draggable after being dragged along with Josephine"
         );
     });
 
