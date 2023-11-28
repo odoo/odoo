@@ -10,8 +10,9 @@ from odoo import exceptions
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.sms.models.sms_sms import SmsSms as SmsSms
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
+from odoo.tests import tagged
 
-
+@tagged('test_sms_sms')
 class TestSMSPost(TestMailFullCommon, MockLinkTracker):
 
     def setUp(self):
@@ -32,7 +33,11 @@ class TestSMSPost(TestMailFullCommon, MockLinkTracker):
             })
 
         # tracking info
-        cls.utm_c = cls.env.ref('utm.utm_campaign_fall_drive')
+        cls.utm_c = cls.env['utm.campaign'].create({
+            'name': 'UTM C',
+            'stage_id': cls.env.ref('utm.default_utm_stage').id,
+            'is_auto_campaign': True,
+        })
         cls.utm_m = cls.env.ref('mass_mailing_sms.utm_medium_sms')
         cls.tracker_values = {
             'campaign_id': cls.utm_c.id,
