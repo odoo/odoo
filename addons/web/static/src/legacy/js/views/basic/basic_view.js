@@ -49,7 +49,7 @@ var BasicView = AbstractView.extend({
         this.rendererParams.viewEditable = this.controllerParams.activeActions.edit;
 
         this.controllerParams.confirmOnDelete = true;
-        this.controllerParams.archiveEnabled = 'active' in this.fields || 'x_active' in this.fields;
+        this.controllerParams.archiveEnabled = ('active' in this.fields || 'x_active' in this.fields) && this.controllerParams.activeActions.edit;
         this.controllerParams.hasButtons =
                 'action_buttons' in params ? params.action_buttons : true;
         this.controllerParams.viewId = viewInfo.view_id;
