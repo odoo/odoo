@@ -225,7 +225,6 @@ export class ListController extends Component {
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onWillSaveMulti: this.onWillSaveMulti.bind(this),
-                onSavedMulti: this.onSavedMulti.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
         };
@@ -647,11 +646,5 @@ export class ListController extends Component {
             return false;
         }
         return true;
-    }
-
-    onSavedMulti(records) {
-        records.forEach((record) => {
-            record.selected = false;
-        });
     }
 }

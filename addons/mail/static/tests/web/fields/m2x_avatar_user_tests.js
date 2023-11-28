@@ -308,9 +308,6 @@ QUnit.test(
                 { text: "Luigi" }
             );
 
-            // Select all
-            await click(".o_list_table > thead .o_list_controller input");
-
             // Unassign me (Luigi)
             await triggerHotkey("alt+shift+u");
             // Multi-edit confirmation dialog

@@ -603,15 +603,12 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("control+k");
         await nextTick();
 
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_command_hotkey")),
-            [
-                "NewALT + C",
-                "ActionsALT + U",
-                "Search...ALT + Q",
-                "Toggle search panelALT + SHIFT + Q"
-            ]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_command_hotkey")), [
+            "NewALT + C",
+            "ActionsALT + U",
+            "Search...ALT + Q",
+            "Toggle search panelALT + SHIFT + Q",
+        ]);
     });
 
     QUnit.test('list with delete="0"', async function (assert) {
@@ -3656,7 +3653,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("selection box is removed after multi record edition", async function (assert) {
+    QUnit.test("selection box is not removed after multi record edition", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -3689,15 +3686,16 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row").querySelector(".o_data_cell"));
         await editInput(target, ".o_data_row [name=foo] input", "legion");
         await click(target, ".modal-dialog button.btn-primary");
-        assert.containsNone(
+        assert.containsOnce(
             target.querySelector(".o_control_panel_actions"),
             ".o_list_selection_box",
-            "list selection box should not be displayed"
+            "list selection box should still be displayed"
         );
-        assert.containsNone(
+        assert.containsN(
             target,
             ".o_data_row .o_list_record_selector input:checked",
-            "no records should be selected"
+            4,
+            "same records should be selected"
         );
     });
 
@@ -11834,6 +11832,8 @@ QUnit.module("Views", (hooks) => {
             ".o_data_cell input.o_field_widget",
             "no field should be editable anymore"
         );
+        // discard selection
+        await click(target, ".o_list_unselect_all");
         assert.containsNone(
             target,
             ".o_list_record_selector input:checked",
@@ -11948,8 +11948,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["write", "web_read"]);
         // select the second record (the first one is still selected)
-        assert.containsNone(target, ".o_list_record_selector input:checked");
-        await click(rows[0], ".o_list_record_selector input");
+        assert.containsOnce(
+            target,
+            ".o_list_record_selector input:checked",
+            "Record should be still selected"
+        );
         await click(rows[1], ".o_list_record_selector input");
 
         // edit foo, first row
