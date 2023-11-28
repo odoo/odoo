@@ -148,6 +148,7 @@ class Base(models.AbstractModel):
                 if 'context' in field_spec:
                     co_records = co_records.with_context(**field_spec['context'])
 
+                #checkout this vvv
                 if 'fields' in field_spec:
                     if field_spec.get('limit') is not None:
                         limit = field_spec['limit']
