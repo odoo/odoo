@@ -145,7 +145,7 @@ registry
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.totalAmountIs(40.25),
-            ProductScreen.do.clickOrderline("Product A", 0.5),
+            ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
     });
