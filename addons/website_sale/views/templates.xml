@@ -1859,16 +1859,9 @@
     <!-- Card view of addresses. Called in `website_sale.checkout`. -->
     <template id="address_kanban" name="Kanban address">
         <t t-set="mode" t-value="is_invoice and 'billing' or 'shipping'"/>
-        <form action="/shop/cart/update_address" method="POST" class="d-none">
-            <input type="hidden"
-                   name="csrf_token"
-                   t-att-value="request.csrf_token()"
-                   t-nocache="The csrf token must always be up to date."/>
-            <input type="hidden" name="partner_id" t-att-value="contact.id"/>
-            <input type="hidden" name="mode" t-att-value="mode"/>
-            <input type="submit"/>
-        </form>
-        <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_shipping'}">
+        <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_shipping'}"
+             t-att-mode="mode"
+             t-att-partner_id="contact.id">
             <div class="card-body d-flex flex-column align-items-start">
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, mode)">
