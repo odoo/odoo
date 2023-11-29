@@ -662,7 +662,7 @@ class IrModuleModule(models.Model):
         # Configurator
         # ------------------------------------------------------------
 
-        configurator_snippets = manifest['configurator_snippets']
+        configurator_snippets = manifest.get('configurator_snippets', {})
 
         # Generate general configurator snippet templates
         create_values = []
@@ -688,7 +688,7 @@ class IrModuleModule(models.Model):
         # New page templates
         # ------------------------------------------------------------
 
-        templates = manifest['new_page_templates']
+        templates = manifest.get('new_page_templates', {})
 
         # Generate general new page snippet templates
         create_values = []
