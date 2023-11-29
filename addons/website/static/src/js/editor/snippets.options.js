@@ -2206,6 +2206,8 @@ options.registry.collapse = options.Class.extend({
         const panelId = setUniqueId($panel, 'myCollapseTab');
         $tab.attr('data-bs-target', '#' + panelId);
         $tab.data('bs-target', '#' + panelId);
+
+        $tab[0].setAttribute("aria-controls", panelId);
     },
 });
 
