@@ -1288,7 +1288,7 @@
                                             <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
                                             <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
                                         </div>
-                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}"/>
+                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" groups="project.group_project_user"/>
                                     </div>
 
                                     <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
@@ -1319,7 +1319,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
+                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}" groups="project.group_project_user">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status" colspan="2">
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>
