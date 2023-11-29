@@ -77,7 +77,7 @@ def setup_pos_combo_items(self):
         }
     )
 
-    desk_accessories_combo = self.env["pos.combo"].create(
+    self.desk_accessories_combo = self.env["pos.combo"].create(
         {
             "name": "Desk Accessories Combo",
             "combo_line_ids": [
@@ -128,7 +128,7 @@ def setup_pos_combo_items(self):
         }
     )
 
-    desks_combo = self.env["pos.combo"].create(
+    self.desks_combo = self.env["pos.combo"].create(
         {
             "name": "Desks Combo",
             "combo_line_ids": [
@@ -188,7 +188,7 @@ def setup_pos_combo_items(self):
         }
     )
 
-    chairs_combo = self.env["pos.combo"].create(
+    self.chairs_combo = self.env["pos.combo"].create(
         {
             "name": "Chairs Combo",
             "combo_line_ids": [
@@ -206,19 +206,17 @@ def setup_pos_combo_items(self):
     )
 
     # Create Office Combo
-    office_combo = self.env["product.product"].create(
+    self.office_combo = self.env["product.product"].create(
         {
             "available_in_pos": True,
             "list_price": 40,
             "name": "Office Combo",
             "type": "combo",
-            "categ_id": self.env.ref("product.product_category_5").id,
+            "categ_id": self.env.ref("product.product_category_1").id,
             "uom_id": self.env.ref("uom.product_uom_unit").id,
             "uom_po_id": self.env.ref("uom.product_uom_unit").id,
             "combo_ids": [
-                (6, 0, [desks_combo.id, chairs_combo.id, desk_accessories_combo.id])
+                (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
         }
     )
-
-    return office_combo

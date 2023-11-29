@@ -55,6 +55,9 @@ export class NumberPopup extends Component {
             this.inputRef.el.focus();
         }
     }
+    get decimalSeparator() {
+        return this.env.services.localization.decimalPoint;
+    }
     getNumpadButtons() {
         const { isPassword, cheap } = this.props;
         return [
@@ -72,7 +75,7 @@ export class NumberPopup extends Component {
             ...(!isPassword ? [{ value: "-" }] : []),
             { value: "Delete", text: "C" },
             { value: "0" },
-            ...(!isPassword ? [{ value: this.env.services.localization.decimalPoint }] : []),
+            ...(!isPassword ? [{ value: this.decimalSeparator }] : []),
             { value: "Backspace", text: "⌫" },
         ];
     }

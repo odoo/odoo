@@ -288,8 +288,6 @@
         <!-- Pos Config -->
         <record model="pos.config" id="pos_config_main_restaurant">
             <field name="iface_printbill">True</field>
-            <field name="iface_start_categ_id" ref="food" />
-            <field name="start_category">True</field>
             <field name="limit_categories">True</field>
             <field name="iface_available_categ_ids"
                 eval="[(6, 0, [ref('drinks'), ref('food')])]" />

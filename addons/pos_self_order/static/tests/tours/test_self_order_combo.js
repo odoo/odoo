@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
     test: true,
     steps: () => [
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Office combo"),
+        ProductPage.clickProduct("Office Combo"),
         ...ProductPage.setupCombo([
             {
                 product: "Desk Organizer",
@@ -19,16 +19,16 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 ],
             },
             {
-                product: "Desk Combination",
+                product: "Combo Product 5",
                 attributes: [],
             },
             {
-                product: "Office Chair Black",
+                product: "Combo Product 8",
                 attributes: [],
             },
         ]),
         Utils.clickBtn("Order"),
-        ...CartPage.checkCombo("Office combo", [
+        ...CartPage.checkCombo("Office Combo", [
             {
                 product: "Desk Organizer",
                 attributes: [
@@ -37,11 +37,11 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 ],
             },
             {
-                product: "Desk Combination",
+                product: "Combo Product 5",
                 attributes: [],
             },
             {
-                product: "Office Chair Black",
+                product: "Combo Product 8",
                 attributes: [],
             },
         ]),
