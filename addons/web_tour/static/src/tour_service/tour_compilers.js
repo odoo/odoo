@@ -20,14 +20,7 @@ import {
  *
  * @typedef {import("./tour_service").TourStep} TourStep
  *
- * @typedef {(stepIndex: number, step: TourStep, options: TourCompilerOptions) => MacroDescriptor[]} TourStepCompiler
- *
- * @typedef TourCompilerOptions
- * @property {Tour} tour
- * @property {number} stepDelay
- * @property {keepWatchBrowser} boolean
- * @property {showPointerDuration} number
- * @property {*} pointer - used for controlling the pointer of the tour
+ * @typedef {(stepIndex: number, step: TourStep) => MacroDescriptor[]} TourStepCompiler
  */
 
 /**
@@ -57,7 +50,7 @@ function findExtraTrigger(selector, shadowDOM) {
     return getFirstVisibleElement($el).get(0);
 }
 
-function findStepTriggers(step) {
+export function findStepTriggers(step) {
     const triggerEl = findTrigger(step.trigger, step.in_modal, step.shadow_dom);
     const altEl = findTrigger(step.alt_trigger, step.in_modal, step.shadow_dom);
     const skipEl = findTrigger(step.skip_trigger, step.in_modal, step.shadow_dom);
@@ -151,7 +144,8 @@ function canContinue(el, step) {
             ? el.ownerDocument.contains(rootNode.host)
             : el.ownerDocument.contains(el);
     const isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    const isBlocked = document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
+    const isBlocked =
+        document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     return (
         isInDoc &&
         isElement &&
@@ -204,229 +198,230 @@ function setupListeners({
     };
 }
 
-/** @type {TourStepCompiler} */
-export function compileStepManual(stepIndex, step, options) {
-    const { tour, pointer, onStepConsummed } = options;
-    let proceedWith = null;
-    let removeListeners = () => {};
-
-    return [
-        {
-            action: () => console.log(step.trigger),
-        },
-        {
-            trigger: () => {
-                removeListeners();
-
-                if (proceedWith) {
-                    return proceedWith;
-                }
-
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
-
-                if (skipEl) {
-                    return skipEl;
-                }
-
-                const stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                if (stepEl && canContinue(stepEl, step)) {
-                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                    const anchorEl = getAnchorEl(stepEl, consumeEvent);
-                    const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
-
-                    const updatePointer = () => {
-                        pointer.setState({
-                            onMouseEnter: () => debouncedToggleOpen(true),
-                            onMouseLeave: () => debouncedToggleOpen(false),
-                        });
-                        pointer.pointTo(anchorEl, step);
-                    };
-
-                    removeListeners = setupListeners({
-                        anchorEl,
-                        consumeEvent,
-                        onMouseEnter: () => pointer.showContent(true),
-                        onMouseLeave: () => pointer.showContent(false),
-                        onScroll: updatePointer,
-                        onConsume: () => {
-                            proceedWith = stepEl;
-                            pointer.hide();
-                        },
-                    });
-
-                    updatePointer();
-                } else {
-                    pointer.hide();
-                }
-            },
-            action: () => {
-                tourState.set(tour.name, "currentIndex", stepIndex + 1);
-                pointer.hide();
-                proceedWith = null;
-                onStepConsummed(tour, step);
-            },
-        },
-    ];
-}
-
 let tourTimeout;
 
-/** @type {TourStepCompiler} */
-export function compileStepAuto(stepIndex, step, options) {
-    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
-    let skipAction = false;
-    return [
-        {
-            action: async () => {
-                // This delay is important for making the current set of tour tests pass.
-                // IMPROVEMENT: Find a way to remove this delay.
-                await new Promise(resolve => requestAnimationFrame(resolve))
+export class TourCompiler {
+    /**
+     * @param {import("./tour_service").Tour} tour
+     * @param {"auto"|"manual"} mode
+     * @param {object} options
+     * @param {TourStep[]} options.filteredSteps
+     * @param {*} options.pointer
+     * @param {number} options.stepDelay
+     * @param {boolean} options.keepWatchBrowser
+     * @param {number} options.showPointerDuration
+     * @param {number} options.checkDelay
+     * @param {(import("./tour_service").Tour) => void} options.onTourEnd
+     */
+    constructor(tour, mode, options) {
+        this.tour = tour;
+        this.mode = mode;
+        this.options = options;
+
+        if (mode === "auto") {
+            this.compileStep = this._compileStepAuto.bind(this);
+        } else {
+            this.compileStep = this._compileStepManual.bind(this);
+        }
+        this.setup();
+    }
+
+    setup() {}
+
+    compile() {
+        return this.compileTourToMacro();
+    }
+
+    compileTourToMacro() {
+        const tour = this.tour;
+        const { checkDelay, filteredSteps, onTourEnd } = this.options;
+        const currentStepIndex = tourState.get(tour.name, "currentIndex");
+
+        const macro = {
+            ...tour,
+            checkDelay,
+        };
+
+        const stepsToMacro = filteredSteps.map((step, index) => {
+            if (index < currentStepIndex) {
+                return [];
+            }
+            return this.compileStep(index, step);
+        });
+
+        macro.steps = stepsToMacro.flat();
+        macro.steps.push({
+            action() {
+                tourState.clear(tour.name);
+                onTourEnd(tour);
+                clearTimeout(tourTimeout);
             },
-        },
-        {
-            action: async () => {
-                skipAction = false;
-                console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
-                if (!keepWatchBrowser) {
-                    clearTimeout(tourTimeout);
-                    tourTimeout = setTimeout(() => {
-                        // The logged text shows the relative position of the failed step.
-                        // Useful for finding the failed step.
-                        console.warn(describeFailedStepDetailed(step, tour));
-                        // console.error notifies the test runner that the tour failed.
-                        console.error(describeFailedStepSimple(step, tour));
-                    }, (step.timeout || 10000) + stepDelay);
-                }
-                await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
+        });
+        return macro;
+    }
+
+    /** @type {TourStepCompiler} */
+    _compileStepAuto(stepIndex, step) {
+        const { pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } =
+            this.options;
+        let skipAction = false;
+        const tour = this.tour;
+        return [
+            {
+                action: async () => {
+                    // This delay is important for making the current set of tour tests pass.
+                    // IMPROVEMENT: Find a way to remove this delay.
+                    await new Promise((resolve) => requestAnimationFrame(resolve));
+                },
             },
-        },
-        {
-            trigger: () => {
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
-
-                let stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                if (skipEl) {
-                    skipAction = true;
-                    stepEl = skipEl;
-                }
-
-                if (!stepEl) {
-                    return false;
-                }
-
-                return canContinue(stepEl, step) && stepEl;
+            {
+                action: async () => {
+                    skipAction = false;
+                    console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
+                    if (!keepWatchBrowser) {
+                        clearTimeout(tourTimeout);
+                        tourTimeout = setTimeout(() => {
+                            // The logged text shows the relative position of the failed step.
+                            // Useful for finding the failed step.
+                            console.warn(describeFailedStepDetailed(step, tour));
+                            // console.error notifies the test runner that the tour failed.
+                            console.error(describeFailedStepSimple(step, tour));
+                        }, (step.timeout || 10000) + stepDelay);
+                    }
+                    await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
+                },
             },
-            action: async (stepEl) => {
-                tourState.set(tour.name, "currentIndex", stepIndex + 1);
+            {
+                trigger: () => {
+                    const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
 
-                if (skipAction) {
-                    return;
-                }
+                    let stepEl = extraTriggerOkay && (triggerEl || altEl);
 
-                const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                // When in auto mode, we are not waiting for an event to be consumed, so the
-                // anchor is just the step element.
-                const $anchorEl = $(stepEl);
+                    if (skipEl) {
+                        skipAction = true;
+                        stepEl = skipEl;
+                    }
 
-                if (showPointerDuration > 0) {
-                    // Useful in watch mode.
-                    pointer.pointTo($anchorEl.get(0), step);
-                    await new Promise((r) => browser.setTimeout(r, showPointerDuration));
-                    pointer.hide();
-                }
+                    if (!stepEl) {
+                        return false;
+                    }
 
-                // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper({
-                    consume_event: consumeEvent,
-                    $anchor: $anchorEl,
-                });
+                    return canContinue(stepEl, step) && stepEl;
+                },
+                action: async (stepEl) => {
+                    tourState.set(tour.name, "currentIndex", stepIndex + 1);
 
-                let result;
-                if (typeof step.run === "function") {
-                    const willUnload = await callWithUnloadCheck(() =>
-                        // `this.$anchor` is expected in many `step.run`.
-                        step.run.call({ $anchor: $anchorEl }, actionHelper)
-                    );
-                    result = willUnload && "will unload";
-                } else if (step.run !== undefined) {
-                    const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                    actionHelper[m[1]](m[2]);
-                } else if (!step.isCheck) {
-                    if (stepIndex === tour.steps.length - 1) {
-                        console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
-                    } else {
+                    if (skipAction) {
+                        return;
+                    }
+
+                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
+                    // When in auto mode, we are not waiting for an event to be consumed, so the
+                    // anchor is just the step element.
+                    const $anchorEl = $(stepEl);
+
+                    if (showPointerDuration > 0) {
+                        // Useful in watch mode.
+                        pointer.pointTo($anchorEl.get(0), step);
+                        await new Promise((r) => browser.setTimeout(r, showPointerDuration));
+                        pointer.hide();
+                    }
+
+                    // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+                    const actionHelper = new RunningTourActionHelper({
+                        consume_event: consumeEvent,
+                        $anchor: $anchorEl,
+                    });
+
+                    let result;
+                    if (typeof step.run === "function") {
+                        const willUnload = await callWithUnloadCheck(() =>
+                            // `this.$anchor` is expected in many `step.run`.
+                            step.run.call({ $anchor: $anchorEl }, actionHelper)
+                        );
+                        result = willUnload && "will unload";
+                    } else if (step.run !== undefined) {
+                        const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
+                        actionHelper[m[1]](m[2]);
+                    } else if (!step.isCheck) {
                         actionHelper.auto();
                     }
-                }
 
-                return result;
-            },
-        },
-        {
-            action: () => {
-                onStepConsummed(tour, step);
-            },
-        },
-    ];
-}
-
-/**
- * @param {import("./tour_service").Tour} tour
- * @param {object} options
- * @param {TourStep[]} options.filteredSteps
- * @param {TourStepCompiler} options.stepCompiler
- * @param {*} options.pointer
- * @param {number} options.stepDelay
- * @param {boolean} options.keepWatchBrowser
- * @param {number} options.showPointerDuration
- * @param {number} options.checkDelay
- * @param {(import("./tour_service").Tour) => void} options.onTourEnd
- */
-export function compileTourToMacro(tour, options) {
-    const {
-        filteredSteps,
-        stepCompiler,
-        pointer,
-        stepDelay,
-        keepWatchBrowser,
-        showPointerDuration,
-        checkDelay,
-        onStepConsummed,
-        onTourEnd,
-    } = options;
-    const currentStepIndex = tourState.get(tour.name, "currentIndex");
-    return {
-        ...tour,
-        checkDelay,
-        steps: filteredSteps
-            .reduce((newSteps, step, i) => {
-                if (i < currentStepIndex) {
-                    // Don't include steps before the current index because they're already done.
-                    return newSteps;
-                } else {
-                    return [
-                        ...newSteps,
-                        ...stepCompiler(i, step, {
-                            tour,
-                            pointer,
-                            stepDelay,
-                            keepWatchBrowser,
-                            showPointerDuration,
-                            onStepConsummed,
-                        }),
-                    ];
-                }
-            }, [])
-            .concat([
-                {
-                    action() {
-                        tourState.clear(tour.name);
-                        onTourEnd(tour);
-                        clearTimeout(tourTimeout);
-                    },
+                    return result;
                 },
-            ]),
-    };
+            },
+            {
+                action: () => {
+                    onStepConsummed(tour, step);
+                },
+            },
+        ];
+    }
+
+    /** @type {TourStepCompiler} */
+    _compileStepManual(stepIndex, step) {
+        const tour = this.tour;
+        const { pointer, onStepConsummed } = this.options;
+        let proceedWith = null;
+        let removeListeners = () => {};
+        return [
+            {
+                action: () => console.log(step.trigger),
+            },
+            {
+                trigger: () => {
+                    removeListeners();
+
+                    if (proceedWith) {
+                        return proceedWith;
+                    }
+
+                    const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
+
+                    if (skipEl) {
+                        return skipEl;
+                    }
+
+                    const stepEl = extraTriggerOkay && (triggerEl || altEl);
+
+                    if (stepEl && canContinue(stepEl, step)) {
+                        const consumeEvent =
+                            step.consumeEvent || getConsumeEventType(stepEl, step.run);
+                        const anchorEl = getAnchorEl(stepEl, consumeEvent);
+                        const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
+
+                        const updatePointer = () => {
+                            pointer.setState({
+                                onMouseEnter: () => debouncedToggleOpen(true),
+                                onMouseLeave: () => debouncedToggleOpen(false),
+                            });
+                            pointer.pointTo(anchorEl, step);
+                        };
+
+                        removeListeners = setupListeners({
+                            anchorEl,
+                            consumeEvent,
+                            onMouseEnter: () => pointer.showContent(true),
+                            onMouseLeave: () => pointer.showContent(false),
+                            onScroll: updatePointer,
+                            onConsume: () => {
+                                proceedWith = stepEl;
+                                pointer.hide();
+                            },
+                        });
+
+                        updatePointer();
+                    } else {
+                        pointer.hide();
+                    }
+                },
+                action: () => {
+                    tourState.set(tour.name, "currentIndex", stepIndex + 1);
+                    pointer.hide();
+                    proceedWith = null;
+                    onStepConsummed(tour, step);
+                },
+            },
+        ];
+    }
 }
