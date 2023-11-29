@@ -1842,13 +1842,17 @@ class Task(models.Model):
 
     def action_convert_to_subtask(self):
         self.ensure_one()
-        if self.project_id:
+        wizard = self.env['project.task.convert.subtask.wizard'].create({
+            'task_ids': self._context.get("active_ids"),
+        })
+        if all(task.project_id for task in wizard.task_ids):
             return {
                 'name': _('Convert to Task/Sub-Task'),
                 'type': 'ir.actions.act_window',
-                'res_model': 'project.task',
-                'res_id': self.id,
-                'views': [(self.env.ref('project.project_task_convert_to_subtask_view_form', False).id, 'form')],
+                'res_model': 'project.task.convert.subtask.wizard',
+                'res_id': wizard.id,
+                'view_mode': 'form',
+                'context': {'dialog_size': 'medium'},
                 'target': 'new',
             }
         return {
@@ -1857,7 +1861,7 @@ class Task(models.Model):
             'params': {
                 'type': 'danger',
                 'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
-            }
+            },
         }
 
     def action_archive(self):

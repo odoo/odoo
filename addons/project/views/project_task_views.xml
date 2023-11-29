@@ -552,27 +552,6 @@
             </field>
         </record>
 
-        <record id="project_task_convert_to_subtask_view_form" model="ir.ui.view">
-            <field name="name">project.task.convert.to.subtask.form</field>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-                <form>
-                    <div class="text-muted o_row mb-3">
-                        To transform a task into a sub-task, select a parent task. Alternatively, leave the parent task field blank to convert a sub-task into a standalone task.
-                    </div>
-                    <group>
-                        <field name="project_id" invisible="1" />
-                        <field name="company_id" invisible="1" />
-                        <field name="parent_id" domain="[('id', '!=', id), '!', ('id', 'child_of', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" />
-                    </group>
-                    <footer>
-                        <button string="Convert Task" class="btn-primary" special="save" data-hotkey="q"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
@@ -1033,7 +1012,7 @@
             <field name="name">Convert to Task/Sub-Task</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="binding_model_id" ref="project.model_project_task"/>
-            <field name="binding_view_types">form</field>
+            <field name="binding_view_types">form,tree</field>
             <field name="state">code</field>
             <field name="code">
                 action = record.action_convert_to_subtask()
