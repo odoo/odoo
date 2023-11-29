@@ -65,7 +65,17 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                 <span class="s_website_form_label_content">Your Name</span>
                                 <span class="s_website_form_mark"> *</span>
                             </label>
-                            <div class="col-sm">
+                            <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="col-sm row">
+                                <div class="col-sm-6">
+                                    <input id="mailing_sub1" type="text" class="form-control s_website_form_input"
+                                           name="first_name" placeholder="First Name" required="1"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control s_website_form_input"
+                                           name="last_name" placeholder="Last Name" required="1"/>
+                                </div>
+                            </div>
+                            <div t-else="" class="col-sm">
                                 <input id="mailing_sub1" type="text" class="form-control s_website_form_input" name="name" required="1"/>
                             </div>
                         </div>
