@@ -5,7 +5,7 @@ odoo.define('pos_sale.tour', function (require) {
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { PosCoupon } = require('pos_coupon.tour.PosCouponTourMethods');
     const { ProductScreen } = require('pos_sale.tour.ProductScreenTourMethods');
-    const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
+    const { ReceiptScreen } = require('pos_sale.tour.ReceiptScreenTourMethods');
     const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     const Tour = require('web_tour.tour');
@@ -104,4 +104,18 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.do.clickNextOrder();
 
     Tour.register('PosRefundDownpayment', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+    ReceiptScreen.do.clickNextOrder();
+
+    Tour.register('PosSettleOrderWithNote', { test: true, url: '/pos/ui' }, getSteps());
+
 });
