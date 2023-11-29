@@ -453,13 +453,17 @@ class MicrosoftSync(models.AbstractModel):
         with microsoft_calendar_token(self.env.user.sudo()) as token:
             if token:
                 self._ensure_attendees_have_email()
-                microsoft_service.answer(
-                    self.ms_organizer_event_id,
-                    answer, params, token=token, timeout=timeout
-                )
-                self.write({
-                    'need_sync_m': False,
-                })
+                # Fetch the event's id (ms_organizer_event_id) using its iCalUId (ms_universal_event_id) since the
+                # former differs for each attendee. This info is required for sending the event answer and Odoo currently
+                # saves the event's id of the last user who synced the event (who might be or not the current user).
+                status, event = microsoft_service._get_single_event(self.ms_universal_event_id, token=token)
+                if status and event and event.get('value') and len(event.get('value')) == 1:
+                    # Send the attendee answer with its own ms_organizer_event_id.
+                    res = microsoft_service.answer(
+                        event.get('value')[0].get('id'),
+                        answer, params, token=token, timeout=timeout
+                    )
+                    self.need_sync_m = not res
 
     def _get_microsoft_records_to_sync(self, full_sync=False):
         """
