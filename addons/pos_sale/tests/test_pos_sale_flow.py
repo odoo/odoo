@@ -330,3 +330,32 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderNotGroupable', login="accountman")
+
+    def test_customer_notes(self):
+        """This test create an order and settle it in the PoS. It also uses multistep delivery
+            and we need to make sure that all the picking are cancelled if the order is fully delivered.
+        """
+
+        #create a sale order with 2 customer notes
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'note': 'Customer note 1',
+            'order_line': [(0, 0, {
+                'product_id': self.whiteboard_pen.id,
+                'name': self.whiteboard_pen.name,
+                'product_uom_qty': 1,
+                'product_uom': self.whiteboard_pen.uom_id.id,
+                'price_unit': self.whiteboard_pen.lst_price,
+            }), (0, 0, {
+                'name': 'Customer note 2',
+                'display_type': 'line_note',
+            }), (0, 0, {
+                'name': 'Customer note 3',
+                'display_type': 'line_note',
+            })],
+        })
+
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithNote', login="accountman")
