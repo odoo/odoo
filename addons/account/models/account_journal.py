@@ -167,6 +167,11 @@ class AccountJournal(models.Model):
         string='Loss Account',
         domain="[('deprecated', '=', False), \
                 ('account_type', '=', 'expense')]")
+    account_cash_rounding_id = fields.Many2one(
+        comodel_name='account.cash.rounding',
+        string='Cash Rounding Method',
+        help='Defines the smallest coinage of the currency that can be used to pay by cash.',
+    )
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
