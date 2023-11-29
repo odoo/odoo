@@ -103,7 +103,7 @@
                             <!-- Organizer -->
                             <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
                                 <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Organizer</h6>
-                                <h4 t-field="event.organizer_id"/>
+                                <h4 class="mt-0" t-field="event.organizer_id"/>
                                 <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
                             </div>
                             <!-- Social -->
@@ -173,9 +173,9 @@
         <div class="modal-dialog modal-lg" role="document">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <div class="modal-content">
+                <div class="modal-content bg-body">
                     <div class="modal-header align-items-center">
-                        <h4 class="modal-title">Attendees</h4>
+                        <h4 class="modal-title my-0">Attendees</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
                     </div>
                     <t t-set="counter" t-value="0"/>
@@ -348,7 +348,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modal_ticket_registration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content bg-body">
             <div class="modal-header">
                 <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Tickets</div>
                 <div t-if="len(event.event_ticket_ids) &gt; 1" class="o_wevent_price_range ms-2"/>

@@ -66,10 +66,10 @@
             </div>
         </div>
         <!-- Off canvas filters on mobile-->
-        <div id="o_wevent_talk_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+        <div id="o_wevent_talk_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible bg-body">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title">Filters</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas" aria-label="Close"/>
             </div>
             <div class="offcanvas-body p-0">
                 <div class="accordion accordion-flush">
@@ -85,7 +85,7 @@
                             </button>
                         </h2>
                         <div class="o_wevent_offcanvas_fav accordion-collapse collapse">
-                            <div class="accordion-body pt-0">
+                            <div class="accordion-body bg-white pt-0">
                                 <ul class="list-group list-group-flush">
                                     <!-- Optional wishlist filter -->
                                     <li t-if="option_track_wishlist" class="list-group-item">                         
@@ -120,7 +120,7 @@
                             </button>
                         </h2>
                         <div t-attf-class="o_wevent_offcanvas_tag_#{tag_category.name} accordion-collapse collapse">
-                            <div class="accordion-body pt-0">
+                            <div class="accordion-body bg-white pt-0">
                                 <ul class="list-group list-group-flush">
                                         <li t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="list-group-item">
                                             <t t-foreach="tag_category.tag_ids" t-as="tag">
@@ -244,7 +244,7 @@
                         <span class="m-0 fw-bold" t-out="tracks_date"
                             t-options="{'widget': 'date', 'format': 'EEEE '}"/>
                         <div class="d-flex align-items-center justify-content-start">
-                            <span class="h3 mb-0 fw-bold" t-out="tracks_date"
+                            <span class="h3 my-0 fw-bold" t-out="tracks_date"
                                 t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
                                 <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
                         </div>
@@ -253,7 +253,7 @@
                         <span class="h1 m-0 fw-bold"
                             t-out="tracks_header_name"/>
                     </div>
-                    <a t-attf-class="my-auto align-self-start text-black {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
+                    <a t-attf-class="my-auto align-self-start text-reset {{ 'collapsed' if tracks_info['default_collapsed'] else '' }}"
                         t-attf-href="#collapse_session_list_{{ tracks_info_index }}"
                         t-attf-aria-controls="collapse_session_list_{{ tracks_info_index }}"
                         t-att-aria-expanded="'false' if tracks_info['default_collapsed'] else 'true'"
@@ -384,7 +384,7 @@
                 </div>
             </header>
             <div class="col-12">
-                <main class="card-body">
+                <main class="card-body text-reset">
                     <!-- Tags> -->
                     <div class="mb-2">
                         <t t-foreach="track.tag_ids" t-as="tag">
@@ -392,7 +392,7 @@
                         </t>
                     </div>
                     <!-- Title -->
-                    <h5 class="card-title mb-0 text-truncate">
+                    <h5 class="card-title my-0 text-truncate">
                         <span t-field="track.name" itemprop="name"/>
                     </h5>
                 </main>

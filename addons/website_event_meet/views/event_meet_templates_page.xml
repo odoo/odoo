@@ -110,7 +110,7 @@
                 </a>
             </div>
             <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-lg-block border-top">
-                <li class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
+                <li class="list-group-item list-group-item-action bg-body text-reset" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
                     <a class="text-decoration-none text-dark"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">

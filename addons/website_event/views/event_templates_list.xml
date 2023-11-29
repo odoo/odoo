@@ -78,10 +78,10 @@
                 </div>
             </div>
             <!-- Off canvas filters on mobile-->
-            <div id="o_wevent_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+            <div id="o_wevent_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible bg-body">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title">Filters</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
                 <div class="offcanvas-body p-0">
                     <div class="accordion accordion-flush">
@@ -97,13 +97,11 @@
                                     </button>
                                 </h2>
                                 <div t-attf-class="o_wevent_offcanvas_cat_#{category.name} accordion-collapse collapse">
-                                    <div class="accordion-body pt-0">
+                                    <div class="accordion-body bg-white pt-0">
                                         <ul class="list-group list-group-flush">
                                             <li t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="list-group-item">
                                                 <t t-foreach="category.tag_ids" t-as="tag">
-                                                    <a t-if="tag.color"
-                                                        t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
-                                                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                                    <a t-if="tag.color" t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))" t-attf-class="d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                                                         <t t-out="tag.name"/>
                                                     </a>
                                                 </t>
@@ -124,12 +122,12 @@
                                 </button>
                             </h2>
                             <div class="o_wevent_offcanvas_date accordion-collapse collapse">
-                                <div class="accordion-body pt-0">
+                                <div class="accordion-body bg-white pt-0">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
                                             <t t-foreach="dates" t-as="date">
                                                 <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
-                                                    <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
+                                                    <a t-att-href="keep('/event', date=date[0])" t-attf-class="d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
                                                         <t t-out="date[1]"/>
                                                         <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill #{searches.get('date') == date[0] and 'bg-light text-primary' or 'bg-primary'} ms-3"/>
                                                     </a>
@@ -233,7 +231,7 @@
     </div>
     <!-- List -->
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size}">
-        <a t-cache="event if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-dark " t-att-data-publish="event.website_published and 'on' or 'off'">
+        <a t-cache="event if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
             <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
                 <div t-attf-class="h-100 #{opt_events_list_columns and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
                     <!-- Header -->
@@ -286,8 +284,8 @@
                             <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
-                            <!-- Start Date & Time -->
-                            <small class="o_not_editable text-muted" itemprop="description" t-out="event.subtitle">
+                            <!-- Description -->
+                            <small class="o_not_editable" itemprop="description" t-out="event.subtitle">
                             </small>
                         </div>
                         <!-- Location -->
@@ -297,7 +295,7 @@
                     <!-- Footer -->
                     <footer t-if="not event.event_registrations_open and opt_events_list_columns and opt_events_list_cards"
                         t-att-class="'small align-self-end w-100 %s %s' % (
-                            opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'py-2 mt-2') or 'py-2',
+                            opt_events_list_cards and 'card-footer bg-body' or (not opt_events_list_columns and 'py-2 mt-2') or 'py-2',
                             opt_events_list_cards and 'border-top' or 'px-2',
                         )">
                         <span t-if="not event.event_registrations_open">

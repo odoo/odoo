@@ -79,7 +79,7 @@
             <div class="d-flex flex-column flex-grow-1">
                 <span class="m-0 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
                 <div class="d-flex align-items-center justify-content-start">
-                    <span class="h3 mb-0 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
+                    <span class="h3 my-0 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
                     <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
                 </div>
             </div>
@@ -117,8 +117,9 @@
                         <t t-if="tracks">
                             <t t-foreach="tracks" t-as="track">
                                 <t t-set="_classes"
-                                    t-value="'text-center %s %s %s' % (
+                                    t-value="'text-center %s %s %s %s' % (
                                         'event_color_%s' % (track.color or 0),
+                                        'text-bg-light bg-opacity-75' if not track.color else 'text-black',
                                         'event_track h-100' if track else '',
                                         'o_location_size_%d' % len(locations),
                                     )"/>
@@ -175,17 +176,17 @@
         <div class="o_we_agenda_card_content d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title">
                 <t t-if="track.website_published or is_event_user">
-                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-black text-bold">
+                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset text-bold">
                         <t t-out="track.name"/>
                     </a>
                 </t>
                 <t t-else="">
-                    <span class="text-muted text-bold">
+                    <span class="text-reset text-bold">
                         <t t-out="track.name"/>
                     </span>
                 </t>
             </div>
-            <div class="text-muted text-center" t-if="track.partner_tag_line">
+            <div class="text-reset text-center" t-if="track.partner_tag_line">
                 <small t-out="track.partner_tag_line"/>
             </div>
             <div class="d-flex justify-content-center flex-wrap">

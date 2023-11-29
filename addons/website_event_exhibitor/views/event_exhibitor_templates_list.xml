@@ -52,10 +52,10 @@
         </div>
     </div>
     <!-- Off canvas filters on mobile-->
-    <div id="o_wevent_exhibitors_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+    <div id="o_wevent_exhibitors_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible bg-body">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Filters</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas" aria-label="Close"/>
         </div>
         <div class="offcanvas-body p-0">
             <form class="o_wevent_event_tags_mobile_form" action="#" method="POST">
@@ -103,7 +103,7 @@
                 </button>
             </h2>
             <div class="o_wevent_offcanvas_country accordion-collapse collapse">
-                <div class="accordion-body pt-0">
+                <div class="accordion-body bg-white pt-0">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <a t-att-href="'/event/%s/exhibitors?%s' % (
@@ -160,17 +160,17 @@
                 <button class="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target=".o_wevent_offcanvas_country"
+                    data-bs-target=".o_wevent_offcanvas_level"
                     aria-expanded="false"
-                    aria-controls="o_wevent_offcanvas_country">
+                    aria-controls="o_wevent_offcanvas_level">
                     By Level
                 </button>
             </h2>
-            <div class="o_wevent_offcanvas_country accordion-collapse collapse">
-                <div class="accordion-body pt-0">
+            <div class="o_wevent_offcanvas_level accordion-collapse collapse">
+                <div class="accordion-body bg-white pt-0">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <a >
+                            <a class="o_dropdown_reset_tags cursor-pointer">
                                 All Levels
                             </a>
                         </li>
@@ -262,7 +262,7 @@
                 </div>
             </header>
             <div class="col-12 h-100 border-top">
-                <main class="card-body">
+                <main class="card-body h-100">
                     <!-- Title -->
                     <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
                         <span t-field="sponsor.name" itemprop="name" class="text-break"/>

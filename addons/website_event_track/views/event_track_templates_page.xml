@@ -77,7 +77,7 @@
         <div class="o_wesession_track_main_description overflow-auto">
             <div class="p-3 border-bottom">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
-                    <span class="h4 mb-0" t-out="track.name"/>
+                    <span class="h4 my-0" t-out="track.name"/>
                     <div>
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
@@ -190,7 +190,7 @@
             <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
                 <ul class="nav nav-tabs o_wesession_track_aside_nav d-flex border-0" role="tablist">
                     <li class="nav-item flex-grow-1">
-                        <a href="#track_list" aria-controls="track_list" class="nav-link active" role="tab" data-bs-toggle="tab">
+                        <a href="#track_list" aria-controls="track_list" class="nav-link active border-0 bg-body text-reset" role="tab" data-bs-toggle="tab">
                             Talks
                         </a>
                     </li>
@@ -203,10 +203,10 @@
                 class="tab-content collapse d-md-block o_wesession_track_aside_tabs">
                 <div class="tab-pane fade show active" id="track_list" role="tabpanel">
                     <ul class="list-group list-group-flush">
-                        <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
+                        <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action bg-body text-reset">
                             <a t-if="is_event_user or track_other.is_published"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
-                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-dark"
+                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-reset"
                                 t-att-href="track_other.website_url">
                                 <t t-call="website_event_track.event_track_aside_other_track"/>
                             </a>
