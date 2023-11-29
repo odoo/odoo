@@ -556,6 +556,7 @@ class AccountEdiFormat(models.Model):
 
         return response_success, message, response_xml
 
+<<<<<<< HEAD
     def _l10n_es_tbai_get_in_invoice_values_batuz(self, invoice):
         """ For the vendor bills for Bizkaia, the structure is different than the regular Ticketbai XML (LROE)"""
         values = {
@@ -583,6 +584,38 @@ class AccountEdiFormat(models.Model):
         return values
 
     def _l10n_es_tbai_prepare_values_bi(self, invoice, invoice_xml, cancel=False):
+||||||| parent of b630d3b5714e (temp)
+    def _l10n_es_tbai_prepare_post_params_bi(self, env, agency, invoice, invoice_xml, cancel=False):
+        """Web service parameters for Bizkaia."""
+=======
+    def _l10n_es_tbai_get_in_invoice_values_batuz(self, invoice):
+        """ For the vendor bills for Bizkaia, the structure is different than the regular Ticketbai XML (LROE)"""
+        values = {
+            **self._l10n_es_tbai_get_subject_values(invoice, False),
+            **self._l10n_es_tbai_get_header_values(invoice),
+             **invoice._get_vendor_bill_tax_values(),
+            'invoice': invoice,
+            'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
+            'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
+            'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
+            'format_float': lambda f: float_repr(f, precision_digits=2),
+        }
+        # Check if intracom
+        mod_303_10 = self.env.ref('l10n_es.mod_303_10')
+        mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+        tax_tags = invoice.invoice_line_ids.tax_ids.invoice_repartition_line_ids.tag_ids
+        intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
+        values['regime_key'] = ['09'] if intracom else ['01']
+        # Credit notes (factura rectificativa)
+        values['is_refund'] = invoice.move_type == 'in_refund'
+        if values['is_refund']:
+            values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason
+            values['credit_note_invoice'] = invoice.reversed_entry_id
+        values['tipofactura'] = 'F1'
+        return values
+
+    def _l10n_es_tbai_prepare_values_bi(self, invoice, invoice_xml, cancel=False):
+>>>>>>> b630d3b5714e (temp)
         sender = invoice.company_id
         lroe_values = {
             'is_emission': not cancel,
