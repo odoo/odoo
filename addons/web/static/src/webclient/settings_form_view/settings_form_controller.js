@@ -55,6 +55,7 @@ export class SettingsFormController extends formView.Controller {
         return {
             ...super.modelParams,
             headerFields,
+            onChangeHeaderFields: () => this._confirmSave(),
         };
     }
 

@@ -277,6 +277,117 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
     });
 
+    QUnit.test("edit header field", async function (assert) {
+        assert.expect(15);
+        serverData.models["res.config.settings"].fields.foo_text = {
+            string: "Foo",
+            type: "char",
+        };
+
+        const records = {
+            1: {
+                foo_text: "First default value",
+            },
+            2: {
+                foo_text: "Second default value",
+            },
+        };
+
+        let lastRecordSaved;
+
+        serverData.models["res.config.settings"].onchanges = {
+            baz(record) {
+                Object.assign(record, records[record.baz]);
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <setting type="header" string="Type">
+                            <field name="baz" title="Make a choice" widget="radio"/>
+                        </setting>
+                        <block title="Title of group Bar">
+                            <setting documentation="/applications/technical/web/settings/this_is_a_test.html">
+                                <field name="foo_text"/>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
+            async mockRPC(route, { args, method, model }, performRpc) {
+                if (method === "web_save") {
+                    lastRecordSaved = args[1];
+                } else if (method === "execute") {
+                    assert.deepEqual(args[0].length, 1);
+                    records[lastRecordSaved.baz].foo_text = lastRecordSaved.foo_text;
+                    return true;
+                }
+            },
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='baz'] input")].map((el) => el.checked),
+            [true, false]
+        );
+        assert.strictEqual(
+            target.querySelector("[name='foo_text'] input").value,
+            "First default value"
+        );
+
+        // edit a header field with no other changes
+        await click(target.querySelectorAll("[name='baz'] input")[1]);
+        assert.containsNone(target, ".modal");
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='baz'] input")].map((el) => el.checked),
+            [false, true]
+        );
+        assert.strictEqual(
+            target.querySelector("[name='foo_text'] input").value,
+            "Second default value"
+        );
+
+        // edit a header field with other changes
+        await editInput(target, "[name='foo_text'] input", "Hello");
+        await click(target.querySelectorAll("[name='baz'] input")[0]);
+        assert.containsOnce(target, ".modal");
+
+        // Stay here
+        await click(target.querySelector(".modal .btn-secondary"));
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='baz'] input")].map((el) => el.checked),
+            [false, true]
+        );
+        assert.strictEqual(target.querySelector("[name='foo_text'] input").value, "Hello");
+
+        await click(target.querySelectorAll("[name='baz'] input")[0]);
+        assert.containsOnce(target, ".modal");
+
+        // Discard
+        await click(target.querySelectorAll(".modal .btn-secondary")[1]);
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='baz'] input")].map((el) => el.checked),
+            [true, false]
+        );
+        assert.strictEqual(
+            target.querySelector("[name='foo_text'] input").value,
+            "First default value"
+        );
+
+        await editInput(target, "[name='foo_text'] input", "Hello again");
+        await click(target.querySelectorAll("[name='baz'] input")[1]);
+        assert.containsOnce(target, ".modal");
+
+        // Save
+        await click(target.querySelector(".modal .btn-primary"));
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='baz'] input")].map((el) => el.checked),
+            [true, false]
+        );
+        assert.strictEqual(target.querySelector("[name='foo_text'] input").value, "Hello again");
+    });
+
     QUnit.test("unhighlight section not matching anymore", async function (assert) {
         await makeView({
             type: "form",
