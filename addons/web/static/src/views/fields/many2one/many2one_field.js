@@ -19,6 +19,12 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
 class CreateConfirmationDialog extends Component {
     static template = "web.Many2OneField.CreateConfirmationDialog";
     static components = { Dialog };
+    static props = {
+        name: String,
+        value: String,
+        create: Function,
+        close: Function,
+    };
 
     get title() {
         return _t("New: %s", this.props.name);

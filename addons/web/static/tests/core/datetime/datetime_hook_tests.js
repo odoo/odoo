@@ -32,6 +32,7 @@ class Root extends Component {
             <t t-component="comp[1].Component" t-props="comp[1].props" />
         </t>
     `;
+    static props = ["*"];
 
     setup() {
         this.mainComponentEntries = mainComponentRegistry.getEntries();

@@ -76,6 +76,7 @@ async function _makeView(params, inDialog = false) {
         class RootDialog extends Component {
             static components = { Dialog, View };
             static template = rootDialogTemplate;
+            static props = ["*"];
             setup() {
                 root = this;
                 useSubEnv(viewEnv);

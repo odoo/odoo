@@ -355,6 +355,7 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends Component {
             static template = xml`<SearchBar/>`;
             static components = { SearchBar };
+            static props = ["*"];
             setup() {
                 onWillUpdateProps(() => {
                     updateCount++;
@@ -414,6 +415,7 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends Component {
             static template = xml`<SearchBar/>`;
             static components = { SearchBar };
+            static props = ["*"];
             setup() {
                 onWillUpdateProps(() => {
                     updateCount++;

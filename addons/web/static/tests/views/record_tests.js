@@ -104,6 +104,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("display a simple field", async function (assert) {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <Record resModel="'partner'" resId="1" fieldNames="['foo']" t-slot-scope="data">
@@ -130,6 +131,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("can be updated with different resId", async function (assert) {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
@@ -161,6 +163,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("predefined fields and values", async function (assert) {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
@@ -199,6 +202,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("provides a way to handle changes in the record", async function (assert) {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
@@ -245,6 +249,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("provides a way to handle before/after saved the record", async function (assert) {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <Record resModel="'partner'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
@@ -294,6 +299,7 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Many2OneField };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
@@ -352,6 +358,7 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Many2OneField };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
@@ -405,6 +412,7 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Many2OneField };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
@@ -454,6 +462,7 @@ QUnit.module("Record Component", (hooks) => {
         };
 
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Many2ManyTagsField };
             static template = xml`
                 <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
@@ -502,6 +511,7 @@ QUnit.module("Record Component", (hooks) => {
         "supports passing dynamic values -- full control to the user of Record",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { Record, Field };
                 static template = xml`
                     <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
@@ -551,6 +561,7 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("can switch records", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { Record, Field };
             static template = xml`
                 <a id="increment" t-on-click="() => state.num++" t-esc="state.num" />
@@ -612,6 +623,14 @@ QUnit.module("Record Component", (hooks) => {
 
     QUnit.test("can switch records with values", async (assert) => {
         class Parent extends Component {
+            static template = xml`
+                <a id="next" t-on-click="next">NEXT</a>
+                <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+                    <Field name="'foo'" record="data.record"/>
+                </Record>
+            `;
+            static components = { Record, Field };
+            static props = ["*"];
             setup() {
                 this.fields = {
                     foo: {
@@ -638,13 +657,6 @@ QUnit.module("Record Component", (hooks) => {
                 };
             }
         }
-        Parent.components = { Record, Field };
-        Parent.template = xml`
-            <a id="next" t-on-click="next">NEXT</a>
-            <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Field name="'foo'" record="data.record"/>
-            </Record>
-        `;
         let _record;
         patchWithCleanup(Record.components._Record.prototype, {
             setup() {
@@ -697,6 +709,7 @@ QUnit.module("Record Component", (hooks) => {
                 </Record>
             </t>
             <div t-else="" class="error" t-esc="state.error.message" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ error: false });
                 onError((error) => {

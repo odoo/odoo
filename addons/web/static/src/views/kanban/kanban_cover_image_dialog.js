@@ -11,6 +11,7 @@ let nextDialogId = 1;
 export class KanbanCoverImageDialog extends Component {
     static template = "web.KanbanCoverImageDialog";
     static components = { Dialog, FileInput };
+    static props = ["*"];
     setup() {
         this.id = `o_cover_image_upload_${nextDialogId++}`;
         this.orm = useService("orm");

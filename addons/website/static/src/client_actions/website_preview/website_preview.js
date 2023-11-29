@@ -29,6 +29,7 @@ import {
 
 class BlockPreview extends Component {
     static template = "website.BlockPreview";
+    static props = {};
 }
 
 export class WebsitePreview extends Component {
@@ -39,6 +40,11 @@ export class WebsitePreview extends Component {
         WebsiteTranslator,
         ResourceEditor,
         ResizablePanel,
+    };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
     };
     setup() {
         this.websiteService = useService('website');

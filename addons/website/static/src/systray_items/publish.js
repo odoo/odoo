@@ -20,6 +20,7 @@ class PublishSystray extends Component {
     static components = {
         Switch,
     };
+    static props = {};
 
     setup() {
         this.website = useService('website');

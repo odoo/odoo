@@ -15,6 +15,15 @@ const commandProviderRegistry = registry.category("command_provider");
 class DiscussCommand extends Component {
     static components = { ImStatus };
     static template = "mail.DiscussCommand";
+    static props = {
+        counter: { type: Number, optional: true },
+        executeCommand: Function,
+        imgUrl: String,
+        name: String,
+        persona: { type: Object, optional: true },
+        searchValue: String,
+        slots: Object,
+    };
 }
 
 // -----------------------------------------------------------------------------

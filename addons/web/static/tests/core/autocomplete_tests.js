@@ -46,6 +46,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -72,6 +73,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="(option) => this.onSelect(option)"
                 />
             `;
+            static props = {};
             setup() {
                 this.state = useState({
                     value: "Hello",
@@ -118,6 +120,7 @@ QUnit.module("Components", (hooks) => {
                     />
                 </div>
             `;
+            static props = {};
             setup() {
                 this.state = useState({
                     value: "Hello",
@@ -157,6 +160,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -176,6 +180,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -194,6 +199,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <AutoComplete value="'Bar'" sources="[{ options: [{ label: 'Bar' }] }]" onSelect="() => {}"/>
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -212,6 +218,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -234,6 +241,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -256,6 +264,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -275,6 +284,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <AutoComplete value="''" sources="sources" onSelect="() => {}"/>
             `;
+            static props = {};
             get sources() {
                 return [
                     {
@@ -329,6 +339,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { AutoComplete };
             static template = xml`<AutoComplete value="''" sources="sources" onSelect="onSelect"/>`;
+            static props = {};
             get sources() {
                 return [{ options: [] }];
             }
@@ -355,6 +366,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { AutoComplete };
             static template = xml`<AutoComplete value="''" sources="sources" onSelect="onSelect"/>`;
+            static props = {};
             get sources() {
                 const options = (val) => {
                     if (val.length > 2) {
@@ -399,6 +411,7 @@ QUnit.module("Components", (hooks) => {
                     onSelect="() => {}"
                 />
             `;
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -416,6 +429,7 @@ QUnit.module("Components", (hooks) => {
                 onSelect.bind="onSelect"
                 />
             `;
+            static props = {};
             setup() {
                 this.state = useState({ value: "Hello" });
             }
@@ -458,6 +472,7 @@ QUnit.module("Components", (hooks) => {
                 onSelect="() => {}"
                 />
             `;
+            static props = {};
             setup() {
                 this.state = useState({ value: "Hello" });
             }

@@ -76,6 +76,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor mode="'xml'" />`;
+            static props = ["*"];
         }
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".ace_editor", "Code editor is rendered");
@@ -97,10 +98,12 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor value="props.value"/>`;
+            static props = ["*"];
         }
         class GrandParent extends Component {
             static components = { Parent };
             static template = xml`<Parent value="state.value"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ value: `<div>Some Text</div>` });
             }
@@ -118,6 +121,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor onChange.bind="onChange" />`;
+            static props = ["*"];
             onChange(value) {
                 assert.step(value);
             }
@@ -132,6 +136,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor value="state.value" onChange.bind="onChange" />`;
+            static props = ["*"];
             state = useState({ value: "initial value" });
             onChange(value) {
                 assert.step(value || "__emptystring__");
@@ -164,6 +169,7 @@ QUnit.module("Web Components", (hooks) => {
                     maxLines="200"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.state = useState({ value: textA });
             }
@@ -217,6 +223,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor mode="state.mode" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ mode: "xml" });
             }
@@ -246,6 +253,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor theme="state.theme" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ theme: "" });
             }

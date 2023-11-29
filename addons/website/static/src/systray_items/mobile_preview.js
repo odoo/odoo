@@ -6,6 +6,7 @@ import { Component, useState } from "@odoo/owl";
 
 class MobilePreviewSystray extends Component {
     static template = "website.MobilePreviewSystray";
+    static props = {};
     setup() {
         this.websiteService = useService('website');
         this.state = useState(this.websiteService.context);

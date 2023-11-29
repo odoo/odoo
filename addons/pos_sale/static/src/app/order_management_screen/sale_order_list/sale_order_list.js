@@ -11,6 +11,11 @@ import { useService } from "@web/core/utils/hooks";
 export class SaleOrderList extends Component {
     static components = { SaleOrderRow };
     static template = "pos_sale.SaleOrderList";
+    static props = {
+        initHighlightedOrder: { type: Object, optional: true },
+        orders: Array,
+        onClickSaleOrder: Function,
+    };
 
     setup() {
         this.ui = useState(useService("ui"));

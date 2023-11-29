@@ -26,6 +26,13 @@ class Many2ManyTagsFieldColorListPopover extends Component {
         CheckBox,
         ColorList,
     };
+    static props = {
+        colors: Array,
+        tag: Object,
+        switchTagColor: Function,
+        onTagVisibilityChange: Function,
+        close: Function,
+    };
 }
 
 export class Many2ManyTagsField extends Component {

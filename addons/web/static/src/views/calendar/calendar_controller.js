@@ -19,6 +19,7 @@ import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { browser } from "@web/core/browser/browser";
+import { standardViewProps } from "@web/views/standard_view_props";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -55,6 +56,15 @@ export class CalendarController extends Component {
         CogMenu,
     };
     static template = "web.CalendarController";
+    static props = {
+        ...standardViewProps,
+        Model: Function,
+        Renderer: Function,
+        archInfo: Object,
+        buttonTemplate: String,
+        session: { type: Object, optional: true },
+        itemCalendarProps: { type: Object, optional: true },
+    };
 
     setup() {
         this.action = useService("action");

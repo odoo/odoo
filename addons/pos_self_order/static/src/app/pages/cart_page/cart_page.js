@@ -10,6 +10,7 @@ import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_w
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
     static components = { PopupTable, OrderWidget };
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

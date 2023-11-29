@@ -39,6 +39,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Notebook>`;
             static components = { Notebook };
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env });
@@ -102,6 +103,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Notebook>`;
             static components = { Notebook };
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env });
@@ -138,6 +140,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Notebook>`;
             static components = { Notebook };
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env });
@@ -177,6 +180,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Notebook>`;
             static components = { Notebook };
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env });
@@ -218,6 +222,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Notebook>`;
             static components = { Notebook };
+            static props = ["*"];
             setup() {
                 this.pages = [
                     {
@@ -265,11 +270,13 @@ QUnit.module("Components", (hooks) => {
 
         class Page extends Component {
             static template = xml`<h3>Coucou</h3>`;
+            static props = ["*"];
         }
 
         class Parent extends Component {
             static template = xml`<Notebook pages="pages"/>`;
             static components = { Notebook };
+            static props = ["*"];
             setup() {
                 this.pages = [
                     {
@@ -315,6 +322,7 @@ QUnit.module("Components", (hooks) => {
                         <div class="page3" />
                     </t>
                 </Notebook>`;
+            static props = ["*"];
             get defaultPageVisible() {
                 return defaultPageVisible;
             }
@@ -356,6 +364,7 @@ QUnit.module("Components", (hooks) => {
                         <div class="page3" />
                     </t>
                 </Notebook>`;
+            static props = ["*"];
         }
 
         const env = await makeTestEnv();
@@ -389,6 +398,7 @@ QUnit.module("Components", (hooks) => {
                         <div class="page3" />
                     </t>
                 </Notebook>`;
+            static props = ["*"];
             get icons() {
                 return {
                     1: "fa-trash",

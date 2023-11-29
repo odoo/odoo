@@ -12,6 +12,11 @@ export class BomOverviewComponent extends Component {
         BomOverviewControlPanel,
         BomOverviewTable,
     };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");

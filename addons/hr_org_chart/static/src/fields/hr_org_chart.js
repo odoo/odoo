@@ -7,9 +7,14 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from './hooks';
 import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class HrOrgChartPopover extends Component {
     static template = "hr_org_chart.hr_orgchart_emp_popover";
+    static props = {
+        employee: Object,
+        close: Function,
+    };
     async setup() {
         super.setup();
 
@@ -33,6 +38,7 @@ class HrOrgChartPopover extends Component {
 
 export class HrOrgChart extends Component {
     static template = "hr_org_chart.hr_org_chart";
+    static props = {...standardFieldProps};
     async setup() {
         super.setup();
 

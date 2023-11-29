@@ -166,6 +166,7 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends Component {
             static components = { SearchBarMenu };
             static template = xml`<div><SearchBarMenu/></div>`;
+            static props = ["*"];
             setup() {
                 useSetupAction({
                     getContext: () => {

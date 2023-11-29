@@ -145,9 +145,11 @@ QUnit.test("opens a menu items", async (assert) => {
 });
 
 QUnit.test("open a menu item when a dialog is displayed", async (assert) => {
-    class CustomDialog extends Component {}
-    CustomDialog.components = { Dialog };
-    CustomDialog.template = xml`<Dialog contentClass="'test'">content</Dialog>`;
+    class CustomDialog extends Component {
+        static template = xml`<Dialog contentClass="'test'">content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
 
     const webclient = await createWebClient({ serverData });
     assert.containsNone(target, ".o_menu_brand");

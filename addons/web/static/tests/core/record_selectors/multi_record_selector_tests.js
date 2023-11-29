@@ -33,6 +33,7 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             static components = { MultiRecordSelector };
             static template = xml`<MultiRecordSelector t-props="recordProps" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ resIds: props.resIds });
             }

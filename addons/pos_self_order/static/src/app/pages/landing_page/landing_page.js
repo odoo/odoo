@@ -8,6 +8,7 @@ import { LanguagePopup } from "@pos_self_order/app/components/language_popup/lan
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

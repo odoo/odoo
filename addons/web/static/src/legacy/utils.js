@@ -9,6 +9,7 @@ export async function attachComponent(parent, element, componentClass, props = {
     class Root extends Component {
         static template = rootTemplate;
         static components = { SubComp: componentClass };
+        static props = ["*"];
         state = useState(props);
     }
 

@@ -15,6 +15,7 @@ import {
 
 export class WebsiteEditorComponent extends Component {
     static template = "website.WebsiteEditorComponent";
+    static props = ["*"];
     /**
      * @override
      */

@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class ListItem extends Component {
     static template = "account.GroupedItemTemplate";
@@ -17,6 +18,7 @@ class ListGroup extends Component {
 class ShowGroupedList extends Component {
     static template = "account.GroupedListTemplate";
     static components = { ListGroup };
+    static props = {...standardFieldProps};
     getValue() {
         const value = this.props.record.data[this.props.name];
         return value

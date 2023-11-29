@@ -4,6 +4,7 @@ import { Component, onWillStart } from "@odoo/owl";
 
 export class PurchaseDashBoard extends Component {
     static template = "purchase.PurchaseDashboard";
+    static props = {};
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");

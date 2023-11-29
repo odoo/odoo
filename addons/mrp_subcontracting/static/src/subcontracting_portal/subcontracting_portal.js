@@ -10,6 +10,7 @@ import { Component, useEffect, useExternalListener } from "@odoo/owl";
 export class SubcontractingPortalWebClient extends Component {
     static components = { ActionContainer, MainComponentsContainer };
     static template = "mrp_subcontracting.SubcontractingPortalWebClient";
+    static props = {};
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
         this.actionService = useService('action');

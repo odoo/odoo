@@ -5,6 +5,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class SyncNotification extends Component {
     static template = "point_of_sale.SyncNotification";
+    static props = {};
 
     setup() {
         this.pos = usePos();

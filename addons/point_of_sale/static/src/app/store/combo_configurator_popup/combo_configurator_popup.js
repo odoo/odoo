@@ -8,6 +8,11 @@ import { floatIsZero } from "@web/core/utils/numbers";
 export class ComboConfiguratorPopup extends Component {
     static template = "point_of_sale.ComboConfiguratorPopup";
     static components = { ProductCard, Dialog };
+    static props = {
+        product: Object,
+        getPayload: Function,
+        close: Function,
+    };
 
     setup() {
         this.pos = usePos();

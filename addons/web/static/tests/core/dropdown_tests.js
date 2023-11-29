@@ -52,6 +52,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("can be rendered", async (assert) => {
         class Parent extends Component {
             static template = xml`<Dropdown/>`;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -67,6 +68,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("DropdownItem can be rendered as <span/>", async (assert) => {
         class Parent extends Component {
             static template = xml`<DropdownItem>coucou</DropdownItem>`;
+            static props = ["*"];
             static components = { DropdownItem };
         }
         env = await makeTestEnv();
@@ -80,6 +82,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("DropdownItem (with href prop) can be rendered as <a/>", async (assert) => {
         class Parent extends Component {
             static template = xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
+            static props = ["*"];
             static components = { DropdownItem };
         }
         env = await makeTestEnv();
@@ -109,6 +112,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <DropdownItem class="'link'" href="'#'"/>
                     <DropdownItem class="'nolink'" />
                 </Dropdown>`;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -129,6 +133,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 <Dropdown class="'one'" togglerClass="'two'" menuClass="'three'">
                     <DropdownItem class="'four'" />
                 </Dropdown>`;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -147,6 +152,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         const beforeOpenProm = makeDeferred();
         class Parent extends Component {
             static template = xml`<Dropdown beforeOpen="beforeOpen"/>`;
+            static props = ["*"];
             static components = { Dropdown };
             constructor() {
                 super(...arguments);
@@ -176,6 +182,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.expect(3);
         class Parent extends Component {
             static template = xml`<Dropdown startOpen="true" beforeOpen="beforeOpen"/>`;
+            static props = ["*"];
             static components = { Dropdown };
             constructor() {
                 super(...arguments);
@@ -199,11 +206,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         });
         class Parent extends Component {
             static template = xml`
-            <div>
-              <div class="outside" t-on-click.stop="clicked">outside</div>
-              <Dropdown/>
-            </div>
-          `;
+                <div>
+                <div class="outside" t-on-click.stop="clicked">outside</div>
+                <Dropdown/>
+                </div>
+            `;
+            static props = ["*"];
             static components = { Dropdown };
             clicked() {
                 assert.verifySteps(
@@ -223,10 +231,11 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("close on item selection", async (assert) => {
         class Parent extends Component {
             static template = xml`
-            <Dropdown>
-                <DropdownItem/>
-            </Dropdown>
-          `;
+                <Dropdown>
+                    <DropdownItem/>
+                </Dropdown>
+            `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -248,6 +257,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 <Dropdown holdOnHover="true">
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -283,6 +293,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 </div>
             `;
             static components = { Dropdown };
+            static props = ["*"];
         }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -307,10 +318,11 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("payload received on item selection", async (assert) => {
         class Parent extends Component {
             static template = xml`
-            <Dropdown>
-                <DropdownItem onSelected="() => onItemSelected(42)"/>
-            </Dropdown>
-          `;
+                <Dropdown>
+                    <DropdownItem onSelected="() => onItemSelected(42)"/>
+                </Dropdown>
+            `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.equal(value, 42);
@@ -331,6 +343,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -350,6 +363,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -369,6 +383,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 </Dropdown>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -390,6 +405,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -416,6 +432,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -449,6 +466,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {
             static template = "recursive.Template";
             static components = { Dropdown, DropdownItem };
+            static props = ["*"];
             setup() {
                 this.name = "foo";
                 this.items = [
@@ -543,6 +561,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                         <div class="outside">OUTSIDE</div>
                     </div>
                 `;
+                static props = ["*"];
                 static components = { Dropdown };
                 constructor() {
                     super(...arguments);
@@ -600,6 +619,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                         <Dropdown class="'bar2'" />
                     </div>
                 `;
+                static props = ["*"];
                 static components = { Dropdown };
             }
             env = await makeTestEnv();
@@ -627,6 +647,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <Dropdown class="'bar2'" />
                     </div>
                 `;
+                static props = ["*"];
                 static components = { Dropdown };
             }
             env = await makeTestEnv();
@@ -657,6 +678,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <div class="outside">OUTSIDE</div>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -705,6 +727,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <Dropdown class="'two'" />
                 </div>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -731,6 +754,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.step(value.toString());
@@ -827,6 +851,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <select><option>foo</option></select>
                 </Dropdown>
             `;
+            static props = ["*"];
         }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -870,6 +895,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </div>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -897,6 +923,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </div>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
 
@@ -934,6 +961,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
             onItemSelected(value) {
                 assert.step(value);
@@ -1042,6 +1070,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         serviceRegistry.add("localization", makeFakeLocalizationService({ direction: "rtl" }));
@@ -1114,6 +1143,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
             setup() {
                 this.state = useState({ foo: false });
@@ -1149,6 +1179,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
         }
         env = await makeTestEnv();
@@ -1176,6 +1207,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <div style="height: 400px; width: 50px;"/> <!-- menu filler -->
                 </Dropdown>
             `;
+            static props = ["*"];
         }
         // The fixture should be shown for this test, as the positioning container is the html node
         target.style.position = "fixed";
@@ -1217,6 +1249,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                         <DropdownItem class="'item'" />
                     </Dropdown>
                 `;
+                static props = ["*"];
                 static components = { Dropdown, DropdownItem };
             }
             env = await makeTestEnv();
@@ -1247,6 +1280,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </Dropdown>
                 </Dropdown>
             `;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -1305,6 +1339,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         class Parent extends Component {
             static template = xml`<Dropdown tooltip="'My tooltip'"></Dropdown>`;
+            static props = ["*"];
             static components = { Dropdown };
         }
 
@@ -1324,6 +1359,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 <Dropdown tooltip="'My tooltip'">
                     <DropdownItem/>
                 </Dropdown>`;
+            static props = ["*"];
             static components = { Dropdown };
         }
 
@@ -1346,6 +1382,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                         <DateTimeInput />
                     </Dropdown>
                 `;
+                static props = ["*"];
                 static components = { DateTimeInput, Dropdown };
             }
 
@@ -1379,6 +1416,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             static template = xml`
                 <Dropdown onOpened.bind="onOpenedCallback" beforeOpen.bind="beforeOpenCallback" />
             `;
+            static props = ["*"];
             static components = { Dropdown, DropdownItem };
             beforeOpenCallback() {
                 assert.step("beforeOpened");
@@ -1400,6 +1438,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("dropdown button can be disabled", async (assert) => {
         class Parent extends Component {
             static template = xml`<Dropdown disabled="true"/>`;
+            static props = ["*"];
             static components = { Dropdown };
         }
         env = await makeTestEnv();
@@ -1423,6 +1462,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                         My checkbox item
                     </CheckboxItem>
                 </Dropdown>`;
+            static props = ["*"];
             static components = { Dropdown, CheckboxItem };
             setup() {
                 this.state = useState({ checked: false });
@@ -1448,15 +1488,17 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("don't close dropdown outside the active element", async (assert) => {
         // This test checks that if a dropdown element opens a dialog with a dropdown inside,
         // opening this dropdown will not close the first dropdown.
-        class CustomDialog extends Component {}
-        CustomDialog.template = xml`
-            <Dialog title="'Welcome'">
-                <Dropdown>
-                    <DropdownItem>Item</DropdownItem>
-                </Dropdown>
-                <div class="outside_dialog">Outside Dialog</div>
-            </Dialog>`;
-        CustomDialog.components = { Dialog, Dropdown, DropdownItem };
+        class CustomDialog extends Component {
+            static template = xml`
+                <Dialog title="'Welcome'">
+                    <Dropdown>
+                        <DropdownItem>Item</DropdownItem>
+                    </Dropdown>
+                    <div class="outside_dialog">Outside Dialog</div>
+                </Dialog>`;
+            static components = { Dialog, Dropdown, DropdownItem };
+            static props = ["*"];
+        }
 
         const mainComponentRegistry = registry.category("main_components");
         clearRegistryWithCleanup(mainComponentRegistry);
@@ -1464,6 +1506,23 @@ QUnit.module("Components", ({ beforeEach }) => {
         serviceRegistry.add("l10n", makeFakeLocalizationService());
 
         class PseudoWebClient extends Component {
+            static template = xml`
+                    <div>
+                        <div>
+                            <t t-foreach="Components" t-as="C" t-key="C[0]">
+                                <t t-component="C[1].Component" t-props="C[1].props"/>
+                            </t>
+                        </div>
+                        <div>
+                            <Dropdown>
+                                <button class="click-me" t-on-click="clicked">Click me</button>
+                            </Dropdown>
+                            <div class="outside_parent">Outside Parent</div>
+                        </div>
+                    </div>
+                `;
+            static components = { Dropdown };
+            static props = ["*"];
             setup() {
                 this.Components = mainComponentRegistry.getEntries();
             }
@@ -1471,22 +1530,6 @@ QUnit.module("Components", ({ beforeEach }) => {
                 env.services.dialog.add(CustomDialog);
             }
         }
-        PseudoWebClient.template = xml`
-                <div>
-                    <div>
-                        <t t-foreach="Components" t-as="C" t-key="C[0]">
-                            <t t-component="C[1].Component" t-props="C[1].props"/>
-                        </t>
-                    </div>
-                    <div>
-                        <Dropdown>
-                            <button class="click-me" t-on-click="clicked">Click me</button>
-                        </Dropdown>
-                        <div class="outside_parent">Outside Parent</div>
-                    </div>
-                </div>
-            `;
-        PseudoWebClient.components = { Dropdown };
 
         env = await makeTestEnv();
         await mount(PseudoWebClient, target, { env });

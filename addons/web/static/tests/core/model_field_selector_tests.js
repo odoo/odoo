@@ -149,6 +149,7 @@ QUnit.module("Components", (hooks) => {
                     update="(path) => this.onUpdate(path)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "";
             }
@@ -388,6 +389,7 @@ QUnit.module("Components", (hooks) => {
                     update="(path) => this.onUpdate(path)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "partner_id.foo";
             }
@@ -515,6 +517,7 @@ QUnit.module("Components", (hooks) => {
                     update="(pathInfo) => this.onUpdate(pathInfo)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "foo";
             }
@@ -632,6 +635,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { ModelFieldSelector };
             static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ path: `` });
             }
@@ -676,6 +680,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { ModelFieldSelector };
             static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ path: `` });
             }
@@ -722,6 +727,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { ModelFieldSelector };
             static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ path: `` });
             }
@@ -774,6 +780,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { ModelFieldSelector };
             static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ path: `foo` });
             }
@@ -808,6 +815,7 @@ QUnit.module("Components", (hooks) => {
                     update="(path, fieldInfo) => this.onUpdate(path)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "foo";
             }
@@ -898,6 +906,7 @@ QUnit.module("Components", (hooks) => {
                     isDebugMode="true"
                 />
             `;
+            static props = ["*"];
         }
         await mountComponent(Parent);
         await openModelFieldSelectorPopover(target);
@@ -925,6 +934,7 @@ QUnit.module("Components", (hooks) => {
                     update="(path, fieldInfo) => this.onUpdate(path)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "baaarrr";
             }
@@ -976,6 +986,7 @@ QUnit.module("Components", (hooks) => {
                     update="(pathInfo) => this.onUpdate(pathInfo)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.path = "foo";
             }

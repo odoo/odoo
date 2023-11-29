@@ -11,6 +11,7 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
+    static props = {};
     setup() {
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");

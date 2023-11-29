@@ -29,6 +29,7 @@ QUnit.test("simple case", async (assert) => {
         static template = xml`
             <div class="overlayed"></div>
         `;
+        static props = ["*"];
     }
 
     const remove = overlay.add(MyComp, {});
@@ -43,6 +44,7 @@ QUnit.test("simple case", async (assert) => {
 QUnit.test("onRemove callback", async (assert) => {
     class MyComp extends Component {
         static template = xml``;
+        static props = ["*"];
     }
 
     const onRemove = () => assert.step("onRemove");
@@ -58,6 +60,7 @@ QUnit.test("multiple overlays", async (assert) => {
         static template = xml`
             <div class="overlayed" t-att-class="props.className"></div>
         `;
+        static props = ["*"];
     }
 
     const remove1 = overlay.add(MyComp, { className: "o1" });
@@ -90,6 +93,7 @@ QUnit.test("sequence", async (assert) => {
         static template = xml`
             <div class="overlayed" t-att-class="props.className"></div>
         `;
+        static props = ["*"];
     }
 
     const remove1 = overlay.add(MyComp, { className: "o1" }, { sequence: 50 });

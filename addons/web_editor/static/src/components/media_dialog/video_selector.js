@@ -9,6 +9,12 @@ import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
 class VideoOption extends Component {
     static template = "web_editor.VideoOption";
+    static props = {
+        description: {type: String, optional: true},
+        label: {type: String, optional: true},
+        onChangeOption: Function,
+        value: {type: Boolean, optional: true},
+    };
 }
 
 class VideoIframe extends Component {
@@ -27,6 +33,14 @@ export class VideoSelector extends Component {
     static components = {
         VideoIframe,
         VideoOption,
+    };
+    static props = {
+        selectMedia: Function,
+        errorMessages: Function,
+        vimeoPreviewIds: {type: Array, optional: true},
+        isForBgVideo: {type: Boolean, optional: true},
+        media: {type: Object, optional: true},
+        "*": true,
     };
     static defaultProps = {
         vimeoPreviewIds: [],

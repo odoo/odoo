@@ -9,6 +9,9 @@ import { Component } from "@odoo/owl";
 export default class ToursDialog extends Component {
     static template = "web_tour.ToursDialog";
     static components = { Dialog };
+    static props = {
+        close: Function,
+    };
     setup() {
         this.title = _t("Tours");
         this.tourService = useService("tour_service");

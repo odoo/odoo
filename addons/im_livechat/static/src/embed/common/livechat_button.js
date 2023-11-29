@@ -32,6 +32,7 @@ const useMovable = makeDraggableHook({
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";
+    static props = {};
     static DEBOUNCE_DELAY = 500;
 
     setup() {

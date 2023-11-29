@@ -15,6 +15,14 @@ export class CalendarRenderer extends Component {
         year: CalendarYearRenderer,
         ActionSwiper,
     };
+    static props = {
+        model: Object,
+        isWeekendVisible: Boolean,
+        createRecord: Function,
+        editRecord: Function,
+        deleteRecord: Function,
+        setDate: Function,
+    };
     get calendarComponent() {
         return this.constructor.components[this.props.model.scale];
     }

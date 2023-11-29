@@ -31,6 +31,7 @@ QUnit.module("Tour service", (hooks) => {
     let tourRegistry;
 
     class Counter extends Component {
+        static props = ["*"];
         static template = xml/*html*/ `
             <div class="counter">
                 <div class="interval">
@@ -134,6 +135,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
@@ -164,6 +166,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Dummy extends Component {
+            static props = ["*"];
             state = useState({ bool: true });
             static template = xml/*html*/ `
                 <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
@@ -171,6 +174,7 @@ QUnit.module("Tour service", (hooks) => {
             `;
         }
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Dummy };
             static template = xml/*html*/ `
                 <t>
@@ -229,6 +233,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
@@ -322,6 +327,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
@@ -398,6 +404,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
@@ -431,6 +438,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
@@ -484,6 +492,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
@@ -521,6 +530,7 @@ QUnit.module("Tour service", (hooks) => {
             .get("OverlayContainer");
 
         class Root extends Component {
+            static props = ["*"];
             static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
@@ -559,11 +569,12 @@ QUnit.module("Tour service", (hooks) => {
             class Root extends Component {
                 static components = { OverlayContainer, Counter };
                 static template = xml/*html*/ `
-                <t>
-                    <Counter />
-                    <OverlayContainer t-props="props.overlayContainerProps" />
-                </t>
-            `;
+                    <t>
+                        <Counter />
+                        <OverlayContainer t-props="props.overlayContainerProps" />
+                    </t>
+                `;
+                static props = ["*"];
             }
 
             await mount(Root, target, { env, props: { overlayContainerProps } });
@@ -595,11 +606,12 @@ QUnit.module("Tour service", (hooks) => {
             class Root extends Component {
                 static components = { OverlayContainer, Counter };
                 static template = xml/*html*/ `
-                <t>
-                    <Counter />
-                    <OverlayContainer t-props="props.overlayContainerProps" />
-                </t>
-            `;
+                    <t>
+                        <Counter />
+                        <OverlayContainer t-props="props.overlayContainerProps" />
+                    </t>
+                `;
+                static props = ["*"];
             }
 
             await mount(Root, target, { env, props: { overlayContainerProps } });
@@ -646,6 +658,7 @@ QUnit.module("Tour service", (hooks) => {
                     <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
+            static props = ["*"];
         }
 
         await mount(Root, target, { env, props: { overlayContainerProps } });

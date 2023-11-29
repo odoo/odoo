@@ -9,6 +9,12 @@ import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numer
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
     static components = { NumericInput, Dialog };
+    static props = {
+        moneyDetails: { type: Object, optional: true },
+        action: Object,
+        getPayload: Function,
+        close: Function,
+    };
 
     setup() {
         super.setup();

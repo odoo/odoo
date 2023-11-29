@@ -49,6 +49,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Simple rendering", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout className="'o_view_sample_data'" display="props.display">
                     <div class="toy_content" />
@@ -69,6 +70,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Simple rendering: with search", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="props.display">
                     <t t-set-slot="layout-actions">
@@ -94,6 +96,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Rendering with default ControlPanel and SearchPanel", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout className="'o_view_sample_data'" display="{
                     controlPanel: {},
@@ -131,6 +134,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Nested layouts", async (assert) => {
         // Component C: bottom (no control panel)
         class ToyC extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout className="'toy_c'" display="display">
                     <div class="toy_c_content" />
@@ -146,10 +150,12 @@ QUnit.module("Views", (hooks) => {
 
         // Component B: center (with custom search panel)
         class SearchPanel extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_toy_search_panel" />`;
         }
 
         class ToyB extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout className="'toy_b'" display="props.display">
                     <t t-set-slot="layout-actions">
@@ -170,6 +176,7 @@ QUnit.module("Views", (hooks) => {
 
         // Component A: top
         class ToyA extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout className="'toy_a'" display="props.display">
                     <t t-set-slot="layout-actions">
@@ -199,6 +206,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Custom control panel", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="props.display">
                     <div class="o_toy_content" />
@@ -207,6 +215,7 @@ QUnit.module("Views", (hooks) => {
         }
 
         class ControlPanel extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_toy_search_panel" />`;
         }
 
@@ -225,6 +234,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Custom search panel", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="props.display">
                     <div class="o_toy_content" />
@@ -233,6 +243,7 @@ QUnit.module("Views", (hooks) => {
         }
 
         class SearchPanel extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_toy_search_panel" />`;
         }
 
@@ -251,6 +262,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Custom banner: no bannerRoute in env", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="props.display">
                     <div class="o_toy_content" />
@@ -259,6 +271,7 @@ QUnit.module("Views", (hooks) => {
         }
 
         class Banner extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_toy_banner" />`;
         }
 
@@ -276,6 +289,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Custom banner: with bannerRoute in env", async (assert) => {
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="props.display">
                     <div class="o_toy_content" />
@@ -284,6 +298,7 @@ QUnit.module("Views", (hooks) => {
         }
 
         class Banner extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_toy_banner" />`;
         }
 
@@ -304,6 +319,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Simple rendering: with dynamically displayed search", async (assert) => {
         let displayLayoutActions = true;
         class ToyComponent extends Component {
+            static props = ["*"];
             static template = xml`
                 <Layout display="display">
                     <t t-set-slot="layout-actions">

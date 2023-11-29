@@ -8,6 +8,9 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
 export class ReprintReceiptButton extends Component {
     static template = "point_of_sale.ReprintReceiptButton";
+    static props = {
+        order: Object,
+    };
 
     setup() {
         this.pos = usePos();

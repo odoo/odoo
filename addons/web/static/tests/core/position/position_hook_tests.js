@@ -51,6 +51,7 @@ function getTestComponent(popperOptions = {}, target = document.createElement("d
 
     class TestComp extends Component {
         static template = xml`<div id="popper" t-ref="popper" />`;
+        static props = ["*"];
         setup() {
             usePosition("popper", () => target, popperOptions);
         }
@@ -563,6 +564,7 @@ QUnit.test("popper as child of another", async (assert) => {
                 <div class="popper" t-ref="popper" />
             </div>
         `;
+        static props = ["*"];
         setup() {
             const ref = useRef("ref");
             usePosition("popper", () => ref.el, { position: "left" });
@@ -575,6 +577,7 @@ QUnit.test("popper as child of another", async (assert) => {
     class Parent extends Component {
         static components = { Child };
         static template = /* xml */ xml`<div id="popper" t-ref="popper"><Child/></div>`;
+        static props = ["*"];
         setup() {
             usePosition("popper", () => target);
         }
@@ -625,6 +628,7 @@ QUnit.test("batch update call", async (assert) => {
 
     class TestComponent extends Component {
         static template = xml`<div class="popper" t-ref="popper">Popper</div>`;
+        static props = ["*"];
         setup() {
             position = usePosition("popper", () => target, {
                 onPositioned: () => {

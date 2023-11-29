@@ -105,6 +105,7 @@ async function makeDomainSelector(params = {}) {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
+        static props = ["*"];
         setup() {
             this.domainSelectorProps = {
                 resModel: "partner",
@@ -552,6 +553,7 @@ QUnit.module("Components", (hooks) => {
                     update="(domain) => this.onUpdate(domain)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.domain = `[("state", "in", ["a", "b", "c"])]`;
             }
@@ -598,6 +600,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
             `;
+            static props = ["*"];
             setup() {
                 this.domain = `[("id", "=", -1)]`;
             }
@@ -612,6 +615,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
             `;
+            static props = ["*"];
             setup() {
                 this.domain = `[("id", "=", 3-1)]`;
             }
@@ -725,6 +729,7 @@ QUnit.module("Components", (hooks) => {
                     update="(domain) => this.onUpdate(domain)"
                 />
             `;
+            static props = ["*"];
             setup() {
                 this.domain = `[("id", "=", 1)]`;
             }
@@ -974,6 +979,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { DomainSelector };
             static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ domain: `[]` });
             }
@@ -1091,6 +1097,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { DomainSelector };
             static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="state.domain"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ domain: `[]` });
             }
@@ -1146,6 +1153,7 @@ QUnit.module("Components", (hooks) => {
                 />
             `;
             static components = { DomainSelector };
+            static props = ["*"];
             setup() {
                 this.domain = expectedDomain;
             }
@@ -1318,6 +1326,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static components = { DomainSelector };
             static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ domain: `[]` });
             }

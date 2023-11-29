@@ -5,11 +5,15 @@ import { useService } from "@web/core/utils/hooks";
 import { loadBundle } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, useState, useRef, onWillStart, onMounted, onWillUnmount } from "@odoo/owl";
 
 class MenuItem extends Component {
     static template = "web.ProfilingQwebView.menuitem";
+    static props = {
+        view: Object,
+    };
 }
 
 function processValue(value) {
@@ -27,6 +31,7 @@ function processValue(value) {
 export class ProfilingQwebView extends Component {
     static template = "web.ProfilingQwebView";
     static components = { MenuItem };
+    static props = { ...standardFieldProps };
 
     setup() {
         super.setup();

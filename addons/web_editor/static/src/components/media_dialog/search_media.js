@@ -11,6 +11,7 @@ export class SearchMedia extends Component {
             <input type="text" class="o_we_search o_input form-control" t-att-placeholder="props.searchPlaceholder.trim()" t-model="state.input" t-ref="autofocus"/>
             <i class="oi oi-search input-group-text position-absolute end-0 top-50 me-n3 px-2 py-1 translate-middle bg-transparent border-0" title="Search" role="img" aria-label="Search"/>
         </div>`;
+    static props = ["searchPlaceholder", "search", "needle"];
     setup() {
         useAutofocus();
         this.debouncedSearch = useDebounced(this.props.search, 1000);

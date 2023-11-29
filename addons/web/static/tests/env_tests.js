@@ -263,6 +263,7 @@ QUnit.test(
 
         class Root extends Component {
             static template = xml`Root`;
+            static props = ["*"];
         }
         const app = await mountComponent(Root, getFixture());
         registerCleanup(() => {
@@ -296,6 +297,7 @@ QUnit.test(
 
         class Root extends Component {
             static template = xml`Root`;
+            static props = ["*"];
         }
 
         const app = await mountComponent(Root, getFixture(), { env });
@@ -312,6 +314,7 @@ QUnit.test("mountComponent: can pass props to the root component", async functio
 
     class Root extends Component {
         static template = xml`<t t-esc="props.text"/>`;
+        static props = ["*"];
     }
 
     await mountComponent(Root, getFixture(), { props: { text: "text from props" } });

@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Setting } from "@web/views/form/setting/setting";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 /**
  * Widget in the settings that displays links to the mobile apps.
@@ -16,6 +17,7 @@ class MobileAppsFunnel extends Component {
     static components = {
         Setting,
     };
+    static props = { ...standardWidgetProps };
     setup() {
         this.iosAppstoreImagePath = isMobileOS()
             ? "/web/static/img/app_store.png"

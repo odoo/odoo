@@ -126,4 +126,7 @@ export class ControlButtonsPopup extends Component {
             <ControlButtons wrapped="false"/>
         </Dialog>
     `;
+    static props = {
+        close: Function,
+    };
 }

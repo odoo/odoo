@@ -12,6 +12,7 @@ QUnit.module("utils", () => {
     QUnit.test("ErrorHandler component", async function (assert) {
         class Boom extends Component {
             static template = xml`<div><t t-esc="this.will.throw"/></div>`;
+            static props = ["*"];
         }
 
         class Parent extends Component {
@@ -27,6 +28,7 @@ QUnit.module("utils", () => {
               </t>
             </div>`;
             static components = { Boom, ErrorHandler };
+            static props = ["*"];
             setup() {
                 this.flag = true;
             }

@@ -58,6 +58,7 @@ QUnit.module("Search", (hooks) => {
         assert.expect(2);
 
         class TestComponent extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_test_component">Test component content</div>`;
         }
 
@@ -77,6 +78,7 @@ QUnit.module("Search", (hooks) => {
         assert.expect(1);
 
         class TestComponent extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_test_component">Test component content</div>`;
         }
 
@@ -94,6 +96,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(4);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_test_component">Test component content</div>`;
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
@@ -125,6 +128,7 @@ QUnit.module("Search", (hooks) => {
         assert.expect(1);
 
         class TestComponent extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_test_component">Test component content</div>`;
         }
 
@@ -148,6 +152,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(1);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_test_component">Test component content</div>`;
             }
 
@@ -183,6 +188,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(1);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_test_component">Test component content</div>`;
             }
 
@@ -209,6 +215,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(1);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_test_component">Test component content</div>`;
             }
 
@@ -239,6 +246,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(3);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static components = { SearchBarMenu };
                 static template = xml`
                     <div class="o_test_component">
@@ -272,6 +280,7 @@ QUnit.module("Search", (hooks) => {
             assert.expect(2);
 
             class TestComponent extends Component {
+                static props = ["*"];
                 static components = { SearchBarMenu };
                 static template = xml`
                     <div class="o_test_component">
@@ -303,6 +312,7 @@ QUnit.module("Search", (hooks) => {
         assert.expect(2);
 
         class TestComponent extends Component {
+            static props = ["*"];
             static template = xml`<div class="o_test_component">Test component content</div>`;
             setup() {
                 onWillStart(() => {
@@ -318,6 +328,7 @@ QUnit.module("Search", (hooks) => {
         const target = getFixture();
 
         class Parent extends Component {
+            static props = ["*"];
             static template = xml`
                 <WithSearch t-props="searchState" t-slot-scope="search">
                     <TestComponent

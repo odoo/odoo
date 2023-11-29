@@ -34,6 +34,12 @@ export class TicketScreen extends Component {
         SearchBar,
         Numpad,
     };
+    static props = {
+        isShown: Boolean,
+        destinationOrder: { type: Object, optional: true },
+        reuseSavedUIState: { type: Boolean, optional: true },
+        ui: { type: Object, optional: true },
+    };
     static defaultProps = {
         destinationOrder: null,
         // When passed as true, it will use the saved _state.ui as default

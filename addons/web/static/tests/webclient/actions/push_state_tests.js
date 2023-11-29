@@ -76,6 +76,7 @@ QUnit.module("ActionManager", (hooks) => {
                 <div class="test_client_action" t-on-click="_actionPushState">
                     ClientAction_<t t-esc="props.params and props.params.description" />
                 </div>`;
+            static props = ["*"];
             _actionPushState() {
                 router.pushState({ arbitrary: "actionPushed" });
             }
@@ -103,6 +104,7 @@ QUnit.module("ActionManager", (hooks) => {
                 <div class="test_client_action" t-on-click="_actionPushState">
                     ClientAction_<t t-esc="props.params and props.params.description" />
                 </div>`;
+            static props = ["*"];
             _actionPushState() {
                 router.pushState({ arbitrary: "actionPushed" });
             }
@@ -131,6 +133,7 @@ QUnit.module("ActionManager", (hooks) => {
                 <div class="test_client_action" t-on-click="_actionPushState">
                     ClientAction_<t t-esc="props.params and props.params.description" />
                 </div>`;
+            static props = ["*"];
             _actionPushState() {
                 router.pushState({ arbitrary: "actionPushed" });
             }

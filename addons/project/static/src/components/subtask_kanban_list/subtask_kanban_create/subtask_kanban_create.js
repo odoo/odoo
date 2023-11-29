@@ -6,6 +6,13 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class SubtaskCreate extends Component {
+    static template = "project.SubtaskCreate";
+    static props = {
+        name: String,
+        isReadonly: { type: Boolean, optional: true },
+        onSubtaskCreateNameChanged: { type: Function },
+        onBlur: { type: Function },
+    };
     setup() {
         this.placeholder = _t("Add Sub-tasks");
         this.state = useState({
@@ -58,11 +65,3 @@ export class SubtaskCreate extends Component {
         }
     }
 }
-
-SubtaskCreate.template = "project.SubtaskCreate";
-SubtaskCreate.props = {
-    name: String,
-    isReadonly: { type: Boolean, optional: true },
-    onSubtaskCreateNameChanged: { type: Function },
-    onBlur: { type: Function },
-};

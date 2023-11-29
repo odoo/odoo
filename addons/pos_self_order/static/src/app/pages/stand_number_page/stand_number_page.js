@@ -8,6 +8,7 @@ import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 export class StandNumberPage extends Component {
     static template = "pos_self_order.StandNumberPage";
     static components = { Numpad };
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();
