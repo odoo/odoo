@@ -125,7 +125,15 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.component_b = self.env['product.product'].create({
             'name': 'Comp B',
             'available_in_pos': True,
-            'standard_price': 10.0,
+            'standard_price': 5.0,
+            'categ_id': category.id,
+            'taxes_id': False,
+        })
+
+        self.component_c = self.env['product.product'].create({
+            'name': 'Comp C',
+            'available_in_pos': True,
+            'standard_price': 5.0,
             'categ_id': category.id,
             'taxes_id': False,
         })
@@ -147,6 +155,9 @@ class TestPosMrp(TestPointOfSaleCommon):
         bom_product_form.type = 'phantom'
         with bom_product_form.bom_line_ids.new() as bom_line:
             bom_line.product_id = self.component_b
+            bom_line.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.component_c
             bom_line.product_qty = 1.0
         self.bom_b = bom_product_form.save()
 
@@ -198,6 +209,7 @@ class TestPosMrp(TestPointOfSaleCommon):
         }
         order = self.env['pos.order'].create_from_ui([order_data])
         order = self.env['pos.order'].browse(order[0]['id'])
+        self.assertEqual(order.lines.total_cost, 15.0)
         accounts = self.kit.product_tmpl_id.get_product_accounts()
         debit_interim_account = accounts['stock_output']
         credit_expense_account = accounts['expense']
