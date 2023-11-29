@@ -232,6 +232,7 @@
                         </group>
                         <group>
                             <field name="date" readonly="not is_editable"/>
+                            <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
                             <field name="accounting_date"
                                    invisible="not accounting_date or state not in ['approved', 'done']"
                                    readonly="not is_editable"/>
@@ -896,6 +897,7 @@
                                     <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="description" optional="hide"/>
+                                    <field name="vendor_id" optional="hide" column_invisible="parent.payment_mode != 'company_account'"/>
                                     <button name="action_get_attachment_view" type="object" icon="fa-paperclip"
                                             aria-label="View Attachments" title="View Attachments" class="float-end pe-0"
                                             readonly="True" invisible="nb_attachment == 0"/>

@@ -168,6 +168,7 @@ class HrExpense(models.Model):
         default='own_account',
         tracking=True,
     )
+    vendor_id = fields.Many2one(comodel_name='res.partner', string="Vendor")
     account_id = fields.Many2one(
         comodel_name='account.account',
         string="Account",
@@ -747,6 +748,7 @@ class HrExpense(models.Model):
             'tax_tag_ids': to_update['tax_tag_ids'],
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
+            'partner_id': self.vendor_id.id,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0
@@ -764,6 +766,7 @@ class HrExpense(models.Model):
                 'tax_base_amount': self.company_currency_id.round(tax_line_data['base_amount'] / rate),
                 'currency_id': self.currency_id.id,
                 'tax_repartition_line_id': tax_line_data['tax_repartition_line_id'],
+                'partner_id': self.vendor_id.id,
             }
             move_lines.append(tax_line)
         base_move_line['balance'] = self.total_amount - total_tax_line_balance
@@ -774,6 +777,7 @@ class HrExpense(models.Model):
             'balance': -self.total_amount,
             'amount_currency': self.currency_id.round(-self.total_amount_currency),
             'currency_id': self.currency_id.id,
+            'partner_id': self.vendor_id.id,
         })
         return {
             **self.sheet_id._prepare_move_vals(),
@@ -783,6 +787,7 @@ class HrExpense(models.Model):
             'amount': self.total_amount_currency,
             'payment_type': 'outbound',
             'partner_type': 'supplier',
+            'partner_id': self.vendor_id.id,
             'payment_method_line_id': payment_method_line.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
