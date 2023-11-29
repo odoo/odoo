@@ -1,3 +1,4 @@
+import logging
 import json
 import time
 from xmlrpc.client import Fault
@@ -11,6 +12,8 @@ from odoo.service import common as auth, model
 from odoo.tests import tagged, get_db_name, loaded_demo_data
 
 from ..controllers.home import Home
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
@@ -46,6 +49,7 @@ class TestTOTP(HttpCaseWithUserDemo):
     def test_totp(self):
         # TODO: Make this work if no demo data + hr installed
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         # 1. Enable 2FA
         self.start_tour('/web', 'totp_tour_setup', login='demo')
@@ -88,6 +92,7 @@ class TestTOTP(HttpCaseWithUserDemo):
     def test_totp_administration(self):
         # TODO: Make this work if no demo data + hr installed
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.start_tour('/web', 'totp_admin_disables', login='admin')
@@ -100,6 +105,7 @@ class TestTOTP(HttpCaseWithUserDemo):
         """
         # TODO: Make this work if no demo data + hr installed
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
         self.start_tour('/web', 'totp_tour_setup', login='demo')
