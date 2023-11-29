@@ -50,14 +50,12 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai':
             return super()._is_compatible_with_journal(journal)
 
-        return journal.country_code == 'ES' and journal.type == 'sale'
+        return journal.country_code == 'ES' and journal.type in ('sale', 'purchase')
 
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
-        if self.code != 'es_tbai' or move.country_code != 'ES' \
-                or not move.l10n_es_tbai_is_required \
-                or move.move_type not in ('out_invoice', 'out_refund'):
+        if self.code != 'es_tbai' or move.country_code != 'ES' or not move.l10n_es_tbai_is_required:
             return super()._get_move_applicability(move)
 
         return {
@@ -103,25 +101,29 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
 
-        # Chain integrity check: chain head must have been REALLY posted (not timeout'ed)
-        # - If called from a cron, then the re-ordering of jobs should prevent this from triggering
-        # - If called manually, then the user will see this error pop up when it triggers
-        chain_head = invoice.company_id._get_l10n_es_tbai_last_posted_invoice()
-        if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
-            raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
+        if invoice.is_purchase_document():
+            inv_xml = False # For Ticketbai Batuz vendor bills, we get the values later as it does not need chaining, ...
 
-        # Generate the XML values.
-        inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
-        if 'error' in inv_dict[invoice]:
-            return inv_dict  # XSD validation failed, return result dict
+        else:
+            # Chain integrity check: chain head must have been REALLY posted (not timeout'ed)
+            # - If called from a cron, then the re-ordering of jobs should prevent this from triggering
+            # - If called manually, then the user will see this error pop up when it triggers
+            chain_head = invoice.company_id._get_l10n_es_tbai_last_posted_invoice()
+            if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
+                raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
-        inv_xml = inv_dict[invoice]['xml_file']
-        invoice._update_l10n_es_tbai_submitted_xml(xml_doc=inv_xml, cancel=False)
+            # Generate the XML values.
+            inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
+            if 'error' in inv_dict[invoice]:
+                return inv_dict  # XSD validation failed, return result dict
 
-        # Assign unique 'chain index' from dedicated sequence
-        if not invoice.l10n_es_tbai_chain_index:
-            invoice.l10n_es_tbai_chain_index = invoice.company_id._get_l10n_es_tbai_next_chain_index()
+            # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
+            inv_xml = inv_dict[invoice]['xml_file']
+            invoice._update_l10n_es_tbai_submitted_xml(xml_doc=inv_xml, cancel=False)
+
+            # Assign unique 'chain index' from dedicated sequence
+            if not invoice.l10n_es_tbai_chain_index:
+                invoice.l10n_es_tbai_chain_index = invoice.company_id._get_l10n_es_tbai_next_chain_index()
 
         # Call the web service and get response
         res = self._l10n_es_tbai_post_to_web_service(invoice, inv_xml)
@@ -161,14 +163,17 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai':
             return super()._cancel_invoice_edi(invoice)
 
-        # Generate the XML values.
-        cancel_dict = self._get_l10n_es_tbai_invoice_xml(invoice, cancel=True)
-        if 'error' in cancel_dict[invoice]:
-            return cancel_dict  # XSD validation failed, return result dict
+        if invoice.is_purchase_document():
+            cancel_xml = False # Batuz specific
+        else:
+            # Generate the XML values.
+            cancel_dict = self._get_l10n_es_tbai_invoice_xml(invoice, cancel=True)
+            if 'error' in cancel_dict[invoice]:
+                return cancel_dict  # XSD validation failed, return result dict
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
-        cancel_xml = cancel_dict[invoice]['xml_file']
-        invoice._update_l10n_es_tbai_submitted_xml(xml_doc=cancel_xml, cancel=True)
+            # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
+            cancel_xml = cancel_dict[invoice]['xml_file']
+            invoice._update_l10n_es_tbai_submitted_xml(xml_doc=cancel_xml, cancel=True)
 
         # Call the web service and get response
         res = self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True)
@@ -206,7 +211,6 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_validate_xml_with_xsd(self, xml_doc, cancel, tax_agency):
         xsd_name = get_key(tax_agency, 'xsd_name')['cancel' if cancel else 'post']
-
         try:
             validate_xml_from_attachment(self.env, xml_doc, xsd_name, prefix='l10n_es_edi_tbai')
         except UserError as e:
@@ -215,8 +219,13 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_get_invoice_content_edi(self, invoice):
         cancel = invoice.edi_state in ('to_cancel', 'cancelled')
-        xml_tree = self._get_l10n_es_tbai_invoice_xml(invoice, cancel)[invoice]['xml_file']
-        return etree.tostring(xml_tree)
+        if invoice.is_purchase_document():
+            lroe_values = self._l10n_es_tbai_prepare_values_bi(invoice, False, cancel=cancel)
+            xml_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values).encode()
+        else:
+            xml_tree = self._get_l10n_es_tbai_invoice_xml(invoice, cancel)[invoice]['xml_file']
+            xml_str = etree.tostring(xml_tree)
+        return xml_str
 
     def _get_l10n_es_tbai_invoice_xml(self, invoice, cancel=False):
         # If previously generated XML was posted and not rejected (success or timeout), reuse it
@@ -547,17 +556,55 @@ class AccountEdiFormat(models.Model):
 
         return response_success, message, response_xml
 
-    def _l10n_es_tbai_prepare_post_params_bi(self, env, agency, invoice, invoice_xml, cancel=False):
-        """Web service parameters for Bizkaia."""
+    def _l10n_es_tbai_get_in_invoice_values_batuz(self, invoice):
+        """ For the vendor bills for Bizkaia, the structure is different than the regular Ticketbai XML (LROE)"""
+        values = {
+            **self._l10n_es_tbai_get_subject_values(invoice, False),
+            **self._l10n_es_tbai_get_header_values(invoice),
+             **invoice._get_vendor_bill_tax_values(),
+            'invoice': invoice,
+            'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
+            'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
+            'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
+            'format_float': lambda f: float_repr(f, precision_digits=2),
+        }
+        # Check if intracom
+        mod_303_10 = self.env.ref('l10n_es.mod_303_10')
+        mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+        tax_tags = invoice.invoice_line_ids.tax_ids.invoice_repartition_line_ids.tag_ids
+        intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
+        values['regime_key'] = ['09'] if intracom else ['01']
+        # Credit notes (factura rectificativa)
+        values['is_refund'] = invoice.move_type == 'in_refund'
+        if values['is_refund']:
+            values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason
+            values['credit_note_invoice'] = invoice.reversed_entry_id
+        values['tipofactura'] = 'F1'
+        return values
+
+    def _l10n_es_tbai_prepare_values_bi(self, invoice, invoice_xml, cancel=False):
         sender = invoice.company_id
         lroe_values = {
             'is_emission': not cancel,
             'sender': sender,
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
-            'tbai_b64_list': [b64encode(etree.tostring(invoice_xml, encoding="UTF-8")).decode()],
             'fiscal_year': str(invoice.date.year),
         }
-        lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
+        if invoice.is_sale_document():
+            lroe_values.update({'tbai_b64_list': [b64encode(etree.tostring(invoice_xml, encoding="UTF-8")).decode()]})
+        else:
+            lroe_values.update(self._l10n_es_tbai_get_in_invoice_values_batuz(invoice))
+        return lroe_values
+
+    def _l10n_es_tbai_prepare_post_params_bi(self, env, agency, invoice, invoice_xml, cancel=False):
+        """Web service parameters for Bizkaia."""
+        lroe_values = self._l10n_es_tbai_prepare_values_bi(invoice, invoice_xml, cancel=cancel)
+        if invoice.is_purchase_document():
+            lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values)
+            invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
+        else:
+            lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
+
         lroe_xml = cleanup_xml_node(lroe_str)
         lroe_str = etree.tostring(lroe_xml, encoding="UTF-8")
         lroe_bytes = gzip.compress(lroe_str)
@@ -574,10 +621,10 @@ class AccountEdiFormat(models.Model):
                 'eus-bizkaia-n3-content-type': 'application/xml',
                 'eus-bizkaia-n3-data': json.dumps({
                     'con': 'LROE',
-                    'apa': '1.1',
+                    'apa': '1.1' if invoice.is_sale_document() else '2',
                     'inte': {
                         'nif': lroe_values['sender_vat'],
-                        'nrs': sender.name,
+                        'nrs': invoice.company_id.name,
                     },
                     'drs': {
                         'mode': '240',
