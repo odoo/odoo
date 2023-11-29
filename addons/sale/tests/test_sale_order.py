@@ -19,6 +19,14 @@ class TestSaleOrder(SaleCommon):
     # Those tests do not rely on accounting common on purpose
     #   If you need the accounting setup, use other classes (TestSaleToInvoice probably)
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner1, cls.partner2 = cls.env['res.partner'].create([
+            {'name': 'Partner 1'},
+            {'name': 'Partner 2'},
+        ])
+
     def test_computes_auto_fill(self):
         free_product, dummy_product = self.env['product.product'].create([{
             'name': 'Free product',
@@ -438,6 +446,24 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(sale_order.amount_total, 15.41, "")
 
+    def test_draft_quotation_followers(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner1.id,
+        })
+
+        sale_order.partner_id = self.partner2
+
+        self.assertNotIn(self.partner2, sale_order.message_partner_ids)
+
+    def test_sent_quotation_followers(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner1.id,
+        })
+        sale_order.action_quotation_sent()
+
+        sale_order.partner_id = self.partner2
+
+        self.assertIn(self.partner2, sale_order.message_partner_ids)
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
