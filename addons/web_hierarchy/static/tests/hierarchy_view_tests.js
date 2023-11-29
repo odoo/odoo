@@ -521,6 +521,67 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("drag and drop record on node of another tree", async function (assert) {
+        serverData.views["hr.employee,1,hierarchy"] = serverData.views[
+            "hr.employee,1,hierarchy"
+        ].replace(`<hierarchy child_field="child_ids">`, `<hierarchy child_field="child_ids" draggable="1">`);
+        serverData.models["hr.employee"].records = [
+            { id: 1, name: "A", parent_id: false, child_ids: [3, 4] },
+            { id: 2, name: "B", parent_id: false, child_ids: [] },
+            { id: 3, name: "C", parent_id: 1, child_ids: [5] },
+            { id: 4, name: "D", parent_id: 1, child_ids: [] },
+            { id: 5, name: "E", parent_id: 3, child_ids: [] },
+        ];
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+            viewId: 1,
+        });
+
+        assert.containsN(target, ".o_hierarchy_row", 1);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        let rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(getNodesTextContent(rowsContent), ["A", "B", "CA", "DA", "EC"]);
+
+        let nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const bNode = nodeContainers[1];
+        const dNode = nodeContainers[3];
+        assert.strictEqual(bNode.querySelector(".o_hierarchy_node_content").textContent, "B");
+        assert.strictEqual(dNode.querySelector(".o_hierarchy_node_content").textContent, "DA");
+
+        await dragAndDrop(
+            dNode.querySelector(".o_hierarchy_node"),
+            bNode,
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(getNodesTextContent(rowsContent), ["A", "B", "DB"]);
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const aNode = nodeContainers[0];
+        assert.strictEqual(aNode.querySelector(".o_hierarchy_node_content").textContent, "A");
+
+        await click(aNode, ".o_hierarchy_node_button.btn-primary");
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const cNode = nodeContainers[2];
+        assert.strictEqual(cNode.querySelector(".o_hierarchy_node_content").textContent, "CA");
+
+        await click(cNode, ".o_hierarchy_node_button.btn-primary");
+
+        rowsContent = target.querySelectorAll(".o_hierarchy_row .o_hierarchy_node_content");
+        assert.deepEqual(
+            getNodesTextContent(rowsContent),
+            ["A", "B", "CA", "EC"],
+            "Nodes that were folded as a result of the drop operation should all still be unfoldable"
+        );
+    });
+
     QUnit.test("drag and drop node unfolded on first row", async function (assert) {
         serverData.views["hr.employee,false,hierarchy"] = serverData.views["hr.employee,false,hierarchy"].replace("<hierarchy>", "<hierarchy draggable='1'>");
         await makeView({
