@@ -266,6 +266,7 @@ QUnit.module("Search", (hooks) => {
                         <SearchBar/>
                     </div>
                 `;
+                static props = ["*"];
                 setup() {
                     assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
                     onWillUpdateProps((nextProps) => {

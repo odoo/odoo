@@ -6,6 +6,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
+    static props = {};
 
     setup() {
         super.setup();

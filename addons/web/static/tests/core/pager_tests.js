@@ -23,6 +23,7 @@ let target;
 class PagerController extends Component {
     static template = xml`<Pager t-props="state" />`;
     static components = { Pager };
+    static props = ["*"];
     setup() {
         this.state = useState({ ...this.props });
     }

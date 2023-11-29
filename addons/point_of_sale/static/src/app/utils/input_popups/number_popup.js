@@ -9,6 +9,18 @@ import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };
+    static props = {
+        title: { type: String, optional: true },
+        startingValue: { type: Number, optional: true },
+        isInputSelected: Boolean,
+        nbrDecimal: { type: Number, optional: true },
+        inputSuffix: { type: String, optional: true },
+        cheap: { type: Boolean, optional: true },
+        isPassword: { type: Boolean, optional: true },
+        getInputBufferReminder: { type: Function, optional: true },
+        getPayload: Function,
+        close: Function,
+    };
     static defaultProps = {
         title: _t("Confirm?"),
         cheap: false,

@@ -32,6 +32,7 @@ class Parent extends Component {
             <FileUploadProgressContainer fileUploads="fileUploadService.uploads" shouldDisplay="props.shouldDisplay" Component="FileUploadProgressTestRecord"/>
         </div>
     `;
+    static props = ["*"];
     setup() {
         this.fileUploadService = useService("file_upload");
         this.FileUploadProgressTestRecord = FileUploadProgressTestRecord;

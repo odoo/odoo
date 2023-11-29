@@ -91,6 +91,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const mountNestedSortableAndAssert = async (setupList, shouldThrow) => {
             class NestedSortable extends Component {
+                static props = ["*"];
                 static template = xml`
                     <div t-ref="root">
                         <ul class="sortable_list">
@@ -162,6 +163,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(34);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -251,6 +253,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("Sorting in groups without nesting", async (assert) => {
         assert.expect(38);
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <section t-foreach="[1,2,3]" t-as="l" t-key="l" t-att-id="l" class="pb-1">
@@ -348,6 +351,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("Sorting with nesting - move right", async (assert) => {
         assert.expect(29);
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -430,6 +434,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(21);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -509,6 +514,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(28);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -594,6 +600,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(28);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -677,6 +684,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("Sorting with nesting - move root up", async (assert) => {
         assert.expect(28);
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -761,6 +769,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(28);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root">
                     <ul class="sortable_list">
@@ -843,6 +852,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const state = reactive({ enableNestedSortable: true });
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -887,6 +897,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             assert.expect(3);
 
             class NestedSortable extends Component {
+                static props = ["*"];
                 static template = xml`
                     <div t-ref="root" class="root">
                         <ul class="list">
@@ -933,6 +944,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("shouldn't drag above max level", async (assert) => {
         assert.expect(6);
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -990,6 +1002,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(7);
         target.style.top = "1px";
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -1049,6 +1062,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(5);
         target.style.top = "1px";
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -1096,6 +1110,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(6);
 
         class NestedSortable extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">

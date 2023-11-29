@@ -52,6 +52,9 @@ class DefaultFooter extends Component {
             </t>
         </span>
         `;
+    static props = {
+        switchNamespace: { type: Function },
+    };
     setup() {
         this.elements = commandSetupRegistry
             .getEntries()

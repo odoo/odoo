@@ -12,6 +12,10 @@ import { groupBy } from "@web/core/utils/arrays";
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderWidget };
+    static props = {
+        isShown: Boolean,
+        disallow: { type: Boolean, optional: true },
+    };
 
     setup() {
         this.pos = usePos();

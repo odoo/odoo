@@ -6,9 +6,14 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Component, onWillRender } from "@odoo/owl";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class QtyAtDatePopover extends Component {
     static template = "sale_stock.QtyAtDatePopover";
+    static props = {
+        record: Object,
+        calcData: Object,
+    };
     setup() {
         this.actionService = useService("action");
     }
@@ -30,6 +35,7 @@ export class QtyAtDatePopover extends Component {
 export class QtyAtDateWidget extends Component {
     static components = { Popover: QtyAtDatePopover };
     static template = "sale_stock.QtyAtDate";
+    static props = {...standardWidgetProps};
     setup() {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.calcData = {};

@@ -7,11 +7,16 @@ import { ReceptionReportTable } from "../reception_report_table/stock_reception_
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ReceptionReportMain extends Component {
+    static template = "stock.ReceptionReportMain";
     static components = {
         ControlPanel,
         ReceptionReportTable,
     };
-    static template = "stock.ReceptionReportMain";
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
 
     setup() {
         this.controlPanelDisplay = {};

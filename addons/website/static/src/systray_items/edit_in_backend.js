@@ -8,6 +8,7 @@ const websiteSystrayRegistry = registry.category('website_systray');
 
 export class EditInBackendSystray extends Component {
     static template = "website.EditInBackendSystray";
+    static props = {};
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');

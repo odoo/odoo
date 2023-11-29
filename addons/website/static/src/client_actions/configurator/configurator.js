@@ -79,9 +79,18 @@ const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 
 class SkipButton extends Component {
     static template = "website.Configurator.SkipButton";
+    static props = {
+        skip: Function,
+    };
 }
 
 class WelcomeScreen extends Component {
+    static template = "website.Configurator.WelcomeScreen";
+    static components = { SkipButton };
+    static props = {
+        skip: Function,
+        navigate: Function,
+    };
     setup() {
         this.state = useStore();
     }
@@ -90,11 +99,6 @@ class WelcomeScreen extends Component {
         this.props.navigate(ROUTES.descriptionScreen);
     }
 }
-
-Object.assign(WelcomeScreen, {
-    components: { SkipButton },
-    template: "website.Configurator.WelcomeScreen",
-});
 
 class IndustrySelectionAutoComplete extends AutoComplete {
     static timeout = 400;
@@ -112,6 +116,12 @@ class IndustrySelectionAutoComplete extends AutoComplete {
 }
 
 class DescriptionScreen extends Component {
+    static template = 'website.Configurator.DescriptionScreen';
+    static components = { SkipButton, AutoComplete: IndustrySelectionAutoComplete };
+    static props = {
+        navigate: Function,
+        skip: Function,
+    };
     setup() {
         this.industrySelection = useRef('industrySelection');
         this.state = useStore();
@@ -214,12 +224,13 @@ class DescriptionScreen extends Component {
     }
 }
 
-Object.assign(DescriptionScreen, {
-    components: { SkipButton, AutoComplete: IndustrySelectionAutoComplete },
-    template: 'website.Configurator.DescriptionScreen',
-});
-
 class PaletteSelectionScreen extends Component {
+    static components = {SkipButton};
+    static template = 'website.Configurator.PaletteSelectionScreen';
+    static props = {
+        navigate: Function,
+        skip: Function,
+    };
     setup() {
         this.state = useStore();
         this.logoInputRef = useRef('logoSelectionInput');
@@ -315,12 +326,9 @@ class PaletteSelectionScreen extends Component {
     }
 }
 
-Object.assign(PaletteSelectionScreen, {
-    components: {SkipButton},
-    template: 'website.Configurator.PaletteSelectionScreen',
-});
-
 class ApplyConfiguratorScreen extends Component {
+    static template = "";
+    static props = ["*"];
     setup() {
         this.websiteService = useService('website');
     }
@@ -393,6 +401,8 @@ class ApplyConfiguratorScreen extends Component {
 }
 
 export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
+    static components = {SkipButton};
+    static template = 'website.Configurator.FeatureSelection';
     setup() {
         super.setup();
 
@@ -422,11 +432,6 @@ export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
         }
     }
 }
-
-Object.assign(FeaturesSelectionScreen, {
-    components: {SkipButton},
-    template: 'website.Configurator.FeatureSelection',
-});
 
 class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     static template = "website.Configurator.ThemeSelectionScreen";
@@ -605,6 +610,19 @@ function useStore() {
 }
 
 export class Configurator extends Component {
+    static components = {
+        WelcomeScreen,
+        DescriptionScreen,
+        PaletteSelectionScreen,
+        FeaturesSelectionScreen,
+        ThemeSelectionScreen,
+    };
+    static template = 'website.Configurator.Configurator';
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');
@@ -766,16 +784,5 @@ export class Configurator extends Component {
         });
     }
 }
-
-Object.assign(Configurator, {
-    components: {
-        WelcomeScreen,
-        DescriptionScreen,
-        PaletteSelectionScreen,
-        FeaturesSelectionScreen,
-        ThemeSelectionScreen,
-    },
-    template: 'website.Configurator.Configurator',
-});
 
 registry.category('actions').add('website_configurator', Configurator);

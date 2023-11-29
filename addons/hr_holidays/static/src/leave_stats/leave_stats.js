@@ -6,11 +6,13 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 
 import { formatDate } from "@web/core/l10n/dates";
 import { Component, useState, onWillStart } from "@odoo/owl";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 const { DateTime } = luxon;
 
 export class LeaveStatsComponent extends Component {
     static template = "hr_holidays.LeaveStatsComponent";
+    static props = { ...standardWidgetProps };
 
     setup() {
         this.orm = useService("orm");

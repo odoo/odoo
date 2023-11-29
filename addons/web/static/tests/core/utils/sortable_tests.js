@@ -23,6 +23,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const mountListAndAssert = async (setupList, shouldThrow) => {
             class List extends Component {
+                static props = ["*"];
                 static template = xml`
                     <div t-ref="root" class="root">
                         <ul class="list">
@@ -85,6 +86,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(22);
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -145,6 +147,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(20);
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
@@ -200,6 +203,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("Sorting in groups with distinct per-axis scrolling", async (assert) => {
         const { advanceFrame } = mockAnimationFrame();
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
                     <div class="spacer_before" style="min-height: 50px;"></div>
@@ -293,6 +297,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
     QUnit.test("draggable area contains overflowing visible elements", async (assert) => {
         const { advanceFrame } = mockAnimationFrame();
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div class="controller" style="max-width: 900px; min-width: 900px;">
                     <div class="content" style="max-width: 600px;">
@@ -364,6 +369,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         const state = reactive({ enableSortable: true });
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -409,6 +415,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             assert.expect(3);
 
             class List extends Component {
+                static props = ["*"];
                 static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -452,6 +459,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(6);
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -499,6 +507,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         let dragElement;
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -539,6 +548,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(2);
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
@@ -574,6 +584,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.expect(2);
 
         class List extends Component {
+            static props = ["*"];
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">

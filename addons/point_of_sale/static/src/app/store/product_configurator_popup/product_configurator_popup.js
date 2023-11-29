@@ -3,6 +3,8 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
 
 export class BaseProductAttribute extends Component {
+    static template = "";
+    static props = ["attribute"];
     setup() {
         this.env.attribute_components.push(this);
         this.attribute = this.props.attribute;
@@ -95,6 +97,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
+    static props = ["attributes", "product", "getPayload", "close"];
 
     setup() {
         useSubEnv({ attribute_components: [] });

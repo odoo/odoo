@@ -19,7 +19,18 @@
         "no-unsafe-negation": ["error"],
         "no-duplicate-imports": ["error"],
         "valid-typeof": ["error"],
-        "no-restricted-syntax": ["error", "PrivateIdentifier"],
+        "no-restricted-syntax": [
+            "error",
+            "PrivateIdentifier",
+            {
+                "selector": "ClassDeclaration[superClass.name='Component']:not(:has(ClassBody.body > PropertyDefinition[key.name='props'][static='true']))",
+                "message": "Component should declare static props"
+            },
+            {
+                "selector": "ClassDeclaration[superClass.name='Component']:not(:has(ClassBody.body > PropertyDefinition[key.name='template'][static='true']))",
+                "message": "Component should declare static template"
+            }
+        ],
         "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all" }]
     },
     "globals": {

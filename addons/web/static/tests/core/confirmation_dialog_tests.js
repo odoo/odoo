@@ -208,6 +208,7 @@ QUnit.module("Components", (hooks) => {
 
         class MyComp extends Component {
             static template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
+            static props = ["*"];
         }
 
         await mount(MyComp, target, { env });

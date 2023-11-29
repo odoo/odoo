@@ -76,6 +76,7 @@ QUnit.test("a component can be the  UI active element: simple usage", async (ass
             </div>
             </div>
         `;
+        static props = ["*"];
         setup() {
             useActiveElement("delegatedRef");
             this.hasRef = true;
@@ -108,6 +109,7 @@ QUnit.test("UI active element: trap focus", async (assert) => {
                 </div>
             </div>
         `;
+        static props = ["*"];
         setup() {
             useActiveElement("delegatedRef");
         }
@@ -154,6 +156,7 @@ QUnit.test("UI active element: trap focus - default focus with autofocus", async
                 </div>
             </div>
         `;
+        static props = ["*"];
         setup() {
             useActiveElement("delegatedRef");
             useAutofocus();
@@ -209,6 +212,7 @@ QUnit.test("do not become UI active element if no element to focus", async (asse
                 </div>
             </div>
         `;
+        static props = ["*"];
         setup() {
             useActiveElement("delegatedRef");
         }
@@ -221,24 +225,25 @@ QUnit.test("do not become UI active element if no element to focus", async (asse
 
 QUnit.test("UI active element: trap focus - first or last tabable changes", async (assert) => {
     class MyComponent extends Component {
+        static template = xml`
+            <div>
+                <h1>My Component</h1>
+                <input type="text" name="outer"/>
+                <div id="idActiveElement" t-ref="delegatedRef">
+                    <div>
+                        <input type="text" name="a" t-if="show.a"/>
+                        <input type="text" name="b"/>
+                        <input type="text" name="c" t-if="show.c"/>
+                    </div>
+                </div>
+            </div>
+        `;
+        static props = ["*"];
         setup() {
             this.show = useState({ a: true, c: false });
             useActiveElement("delegatedRef");
         }
     }
-    MyComponent.template = xml`
-        <div>
-            <h1>My Component</h1>
-            <input type="text" name="outer"/>
-            <div id="idActiveElement" t-ref="delegatedRef">
-                <div>
-                    <input type="text" name="a" t-if="show.a"/>
-                    <input type="text" name="b"/>
-                    <input type="text" name="c" t-if="show.c"/>
-                </div>
-            </div>
-        </div>
-    `;
 
     const env = await makeTestEnv({ ...baseConfig });
     const comp = await mount(MyComponent, target, { env });
@@ -270,23 +275,24 @@ QUnit.test(
     "UI active element: trap focus is not bypassed using invisible elements",
     async (assert) => {
         class MyComponent extends Component {
+            static template = xml`
+                <div>
+                    <h1>My Component</h1>
+                    <input type="text" placeholder="outerUIActiveElement"/>
+                    <div t-ref="delegatedRef">
+                        <input type="text" placeholder="withFocus"/>
+                        <input class="d-none" type="text" placeholder="withFocusNotDisplayed"/>
+                        <div class="d-none">
+                            <input type="text" placeholder="withFocusNotDisplayedToo"/>
+                        </div>
+                    </div>
+                </div>
+            `;
+            static props = ["*"];
             setup() {
                 useActiveElement("delegatedRef");
             }
         }
-        MyComponent.template = xml`
-        <div>
-            <h1>My Component</h1>
-            <input type="text" placeholder="outerUIActiveElement"/>
-            <div t-ref="delegatedRef">
-                <input type="text" placeholder="withFocus"/>
-                <input class="d-none" type="text" placeholder="withFocusNotDisplayed"/>
-                <div class="d-none">
-                    <input type="text" placeholder="withFocusNotDisplayedToo"/>
-                </div>
-            </div>
-        </div>
-    `;
 
         const env = await makeTestEnv({ ...baseConfig });
         await mount(MyComponent, target, { env });

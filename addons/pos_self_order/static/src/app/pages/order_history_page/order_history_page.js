@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 export class OrdersHistoryPage extends Component {
     static template = "pos_self_order.OrdersHistoryPage";
+    static props = {};
 
     async setup() {
         this.selfOrder = useSelfOrder();

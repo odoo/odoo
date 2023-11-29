@@ -30,6 +30,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
 
     QUnit.test("render only its target if no props is given", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { ActionSwiper };
             static template = xml`
                 <div class="d-flex">
@@ -76,6 +77,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
     QUnit.test("render with the height of its content", async (assert) => {
         assert.expect(2);
         class Parent extends Component {
+            static props = ["*"];
             static components = { ActionSwiper };
             static template = xml`
                 <div class="o-container d-flex" style="width: 200px; height: 200px; overflow: auto">
@@ -112,6 +114,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(5);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static props = ["*"];
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
@@ -212,6 +215,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(7);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static props = ["*"];
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
@@ -348,6 +352,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(7);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static props = ["*"];
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
@@ -486,6 +491,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(9);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static props = ["*"];
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
@@ -695,6 +701,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             assert.expect(8);
             const { execRegisteredTimeouts } = mockTimeout();
             class Parent extends Component {
+                static props = ["*"];
                 static components = { ActionSwiper };
                 static template = xml`
                     <div class="d-flex">
@@ -869,6 +876,19 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
         assert.expect(3);
         const { execRegisteredTimeouts } = mockTimeout();
         class Parent extends Component {
+            static props = ["*"];
+            static components = { ActionSwiper };
+            static template = xml`
+                <div class="d-flex">
+                    <ActionSwiper onRightSwipe = "{
+                        action: onRightSwipe,
+                        icon: 'fa-circle',
+                        bgColor: 'bg-warning',
+                    }" swipeInvalid = "swipeInvalid">
+                        <div class="target-component" style="width: 200px; height: 80px">Test</div>
+                    </ActionSwiper>
+                </div>
+            `;
             onRightSwipe() {
                 assert.step("onRightSwipe");
             }
@@ -877,18 +897,6 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
                 return true;
             }
         }
-        Parent.components = { ActionSwiper };
-        Parent.template = xml`
-            <div class="d-flex">
-                <ActionSwiper onRightSwipe = "{
-                    action: onRightSwipe,
-                    icon: 'fa-circle',
-                    bgColor: 'bg-warning',
-                }" swipeInvalid = "swipeInvalid">
-                    <div class="target-component" style="width: 200px; height: 80px">Test</div>
-                </ActionSwiper>
-            </div>
-        `;
         await mount(Parent, target, { env });
         const swiper = target.querySelector(".o_actionswiper");
         const targetContainer = target.querySelector(".o_actionswiper_target_container");

@@ -12,6 +12,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
     static components = { ProductCard, OrderWidget };
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

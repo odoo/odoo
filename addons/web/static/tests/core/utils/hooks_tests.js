@@ -33,6 +33,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useAutofocus: simple usecase", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`
                     <span>
                         <input type="text" t-ref="autofocus" />
@@ -61,6 +62,7 @@ QUnit.module("utils", () => {
             "useAutofocus: simple usecase when input type is number",
             async function (assert) {
                 class MyComponent extends Component {
+                    static props = ["*"];
                     static template = xml`
                         <span>
                             <input type="number" t-ref="autofocus" />
@@ -87,6 +89,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`
                     <span>
                         <input t-if="showInput" type="text" t-ref="autofocus" />
@@ -128,6 +131,7 @@ QUnit.module("utils", () => {
                             <input type="text" t-ref="autofocus" />
                         </span>
                     `;
+                    static props = ["*"];
                     setup() {
                         this.inputRef = useAutofocus();
                         onMounted(() => {
@@ -158,6 +162,7 @@ QUnit.module("utils", () => {
             "useAutofocus works when screen has touch and you provide mobile param",
             async function (assert) {
                 class MyComponent extends Component {
+                    static props = ["*"];
                     static template = xml`
                         <span>
                             <input type="text" t-ref="autofocus" />
@@ -194,6 +199,7 @@ QUnit.module("utils", () => {
                         <input type="text" t-ref="autofocus" />
                     </span>
                 `;
+                static props = ["*"];
                 setup() {
                     this.inputRef = useAutofocus();
                 }
@@ -219,6 +225,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("supports different ref names", async (assert) => {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`
                     <span>
                         <input type="text" t-ref="first" />
@@ -253,6 +260,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("can select an entire text", async (assert) => {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`
                     <span>
                         <input type="text" value="abcdefghij" t-ref="autofocus" />
@@ -279,6 +287,7 @@ QUnit.module("utils", () => {
             "useAutofocus: autofocus outside of active element doesn't work (CommandPalette)",
             async function (assert) {
                 class MyComponent extends Component {
+                    static props = ["*"];
                     static template = xml`
                         <div>
                             <input type="text" t-ref="autofocus" />
@@ -321,6 +330,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useBus hook: simple usecase", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     useBus(this.env.bus, "test-event", this.myCallback);
@@ -347,6 +357,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useService: unavailable service", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     useService("toy_service");
@@ -364,6 +375,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useService: service that returns null", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     this.toyService = useService("toy_service");
@@ -388,6 +400,7 @@ QUnit.module("utils", () => {
             let nbCalls = 0;
             let def = makeDeferred();
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     this.objectService = useService("object_service");
@@ -463,6 +476,7 @@ QUnit.module("utils", () => {
             let nbCalls = 0;
             let def = makeDeferred();
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     this.objectService = useService("object_service");
@@ -538,6 +552,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useSpellCheck: ref is on the textarea", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
                 setup() {
                     useSpellCheck();
@@ -566,6 +581,7 @@ QUnit.module("utils", () => {
 
         QUnit.test("useSpellCheck: use a different refName", async function (assert) {
             class MyComponent extends Component {
+                static props = ["*"];
                 static template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
                 setup() {
                     useSpellCheck({ refName: "myreference" });
@@ -596,6 +612,7 @@ QUnit.module("utils", () => {
             "useSpellCheck: ref is on the root element and two editable elements",
             async function (assert) {
                 class MyComponent extends Component {
+                    static props = ["*"];
                     static template = xml`
                         <div t-ref="spellcheck">
                             <textarea class="textArea"/>
@@ -659,6 +676,7 @@ QUnit.module("utils", () => {
             "useSpellCheck: ref is on the root element and one element has disabled the spellcheck",
             async function (assert) {
                 class MyComponent extends Component {
+                    static props = ["*"];
                     static template = xml`
                         <div t-ref="spellcheck">
                             <textarea class="textArea"/>
@@ -718,12 +736,14 @@ QUnit.module("utils", () => {
             let childRef;
             let parentRef;
             class Child extends Component {
+                static props = ["*"];
                 static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
                 setup() {
                     childRef = useForwardRefToParent("someRef");
                 }
             }
             class Parent extends Component {
+                static props = ["*"];
                 static template = xml`<div><Child someRef="someRef"/></div>`;
                 static components = { Child };
                 setup() {
@@ -742,12 +762,14 @@ QUnit.module("utils", () => {
 
         QUnit.test("useForwardRefToParent in a conditional child", async function (assert) {
             class Child extends Component {
+                static props = ["*"];
                 static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
                 setup() {
                     useForwardRefToParent("someRef");
                 }
             }
             class Parent extends Component {
+                static props = ["*"];
                 static template = xml`<div><Child t-if="state.hasChild" someRef="someRef"/></div>`;
                 static components = { Child };
                 setup() {

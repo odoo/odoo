@@ -6,6 +6,9 @@ import { cookie } from "@web/core/browser/cookie";
 
 export class LanguagePopup extends Component {
     static template = "pos_self_order.LanguagePopup";
+    static props = {
+        close: Function,
+    };
 
     setup() {
         this.selfOrder = useSelfOrder();

@@ -16,6 +16,7 @@ export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'
 
 class RemoveButton extends Component {
     static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-index-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
+    static props = ["model?", "remove"];
     setup() {
         this.removeTitle = _t("This file is attached to the current record.");
         if (this.props.model === 'ir.ui.view') {
@@ -50,15 +51,18 @@ export class AttachmentError extends Component {
                 </button>
             </t>
         </Dialog>`;
+    static props = ["views", "close"];
     setup() {
         this.title = _t("Alert");
     }
 }
 
 export class Attachment extends Component {
+    static template = "";
     static components = {
         RemoveButton,
     };
+    static props = ["*"];
     setup() {
         this.dialogs = useService('dialog');
     }
@@ -86,6 +90,27 @@ export class FileSelectorControlPanel extends Component {
     static template = "web_editor.FileSelectorControlPanel";
     static components = {
         SearchMedia,
+    };
+    static props = {
+        uploadUrl: Function,
+        validateUrl: Function,
+        uploadFiles: Function,
+        changeSearchService: Function,
+        changeShowOptimized: Function,
+        search: Function,
+        accept: {type: String, optional: true},
+        addText: {type: String, optional: true},
+        multiSelect: {type: true, optional: true},
+        needle: {type: String, optional: true},
+        searchPlaceholder: {type: String, optional: true},
+        searchService: {type: String, optional: true},
+        showOptimized: {type: Boolean, optional: true},
+        showOptimizedOption: {type: String, optional: true},
+        uploadText: {type: String, optional: true},
+        urlPlaceholder: {type: String, optional: true},
+        urlWarningTitle: {type: String, optional: true},
+        useMediaLibrary: {type: Boolean, optional: true},
+        useUnsplash: {type: Boolean, optional: true},
     };
     setup() {
         this.state = useState({
@@ -140,6 +165,7 @@ export class FileSelector extends Component {
     static components = {
         FileSelectorControlPanel,
     };
+    static props = ["*"];
 
     setup() {
         this.notificationService = useService("notification");

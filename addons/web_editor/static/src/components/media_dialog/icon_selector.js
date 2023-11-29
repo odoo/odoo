@@ -23,6 +23,7 @@ export class IconSelector extends Component {
     static components = {
         SearchMedia,
     };
+    static props = ["*"];
 
     setup() {
         this.state = useState({

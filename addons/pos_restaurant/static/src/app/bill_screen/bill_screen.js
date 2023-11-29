@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 export class BillScreen extends Component {
     static template = "pos_restaurant.BillScreen";
     static components = { OrderReceipt, Dialog };
+    static props = {};
     setup() {
         this.pos = usePos();
         this.printer = useState(useService("printer"));

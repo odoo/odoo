@@ -142,6 +142,9 @@ patch(TicketScreen.prototype, {
 
 export class TipCell extends Component {
     static template = "pos_restaurant.TipCell";
+    static props = {
+        order: Object,
+    };
 
     setup() {
         this.state = useState({ isEditing: false });

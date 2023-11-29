@@ -36,6 +36,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
         let executeInHandler;
         class MyComponent extends Component {
             static template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
+            static props = ["*"];
             setup() {
                 const rootRef = useRef("root");
                 useViewButtons({}, rootRef, {
@@ -106,6 +107,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
                     </Dropdown>
                 </div>
             `;
+            static props = ["*"];
             setup() {
                 const rootRef = useRef("root");
                 useViewButtons({}, rootRef);

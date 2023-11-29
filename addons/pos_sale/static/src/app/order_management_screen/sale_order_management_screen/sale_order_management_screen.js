@@ -28,6 +28,9 @@ export class SaleOrderManagementScreen extends Component {
     static storeOnOrder = false;
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "pos_sale.SaleOrderManagementScreen";
+    static props = {
+        isShown: Boolean,
+    };
 
     setup() {
         super.setup();

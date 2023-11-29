@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 // This component is only use in Kiosk mode
 export class PaymentPage extends Component {
     static template = "pos_self_order.PaymentPage";
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

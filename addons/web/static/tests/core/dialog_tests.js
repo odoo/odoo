@@ -47,6 +47,7 @@ QUnit.module("Components", (hooks) => {
                     Hello!
                 </Dialog>
             `;
+            static props = ["*"];
         }
 
         const env = await makeDialogTestEnv();
@@ -80,6 +81,7 @@ QUnit.module("Components", (hooks) => {
                     Hello!
                 </Dialog>
             `;
+            static props = ["*"];
         }
 
         const env = await makeDialogTestEnv();
@@ -113,6 +115,7 @@ QUnit.module("Components", (hooks) => {
                     </Dialog>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dialog };
         }
         const env = await makeDialogTestEnv();
@@ -140,6 +143,7 @@ QUnit.module("Components", (hooks) => {
                     Hello!
                 </Dialog>
             `;
+            static props = ["*"];
             static components = { Dialog };
         }
         parent = await mount(Parent, target, { env });
@@ -155,6 +159,7 @@ QUnit.module("Components", (hooks) => {
             const env = await makeDialogTestEnv();
             class Child extends Component {
                 static template = xml`<div>Hello</div>`;
+                static props = ["*"];
 
                 setup() {
                     this.env.dialogData.close = () => assert.step("close");
@@ -167,6 +172,7 @@ QUnit.module("Components", (hooks) => {
                         <Child/>
                     </Dialog>
                 `;
+                static props = ["*"];
                 static components = { Child, Dialog };
             }
             parent = await mount(Parent, target, { env });
@@ -190,6 +196,7 @@ QUnit.module("Components", (hooks) => {
                         Hello!
                     </Dialog>
                 `;
+                static props = ["*"];
                 static components = { Dialog };
             }
 
@@ -215,6 +222,7 @@ QUnit.module("Components", (hooks) => {
                     </t>
                 </Dialog>
             `;
+            static props = ["*"];
         }
         class Parent extends Component {
             static template = xml`
@@ -222,6 +230,7 @@ QUnit.module("Components", (hooks) => {
                       <SimpleButtonsDialog/>
                   </div>
               `;
+            static props = ["*"];
             static components = { SimpleButtonsDialog };
             setup() {
                 super.setup();
@@ -242,6 +251,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>
             `;
+            static props = ["*"];
             _onClick() {
                 assert.step("subcomponent-clicked");
                 this.props.onClicked();
@@ -254,6 +264,7 @@ QUnit.module("Components", (hooks) => {
                     <SubComponent text="'Wow(l) Effect'" onClicked="_onSubcomponentClicked"/>
                 </Dialog>
             `;
+            static props = ["*"];
             _onSubcomponentClicked() {
                 assert.step("message received by parent");
             }
@@ -274,6 +285,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <Dialog header="false" footer="false">content</Dialog>
             `;
+            static props = ["*"];
         }
         const env = await makeDialogTestEnv();
         parent = await mount(Parent, target, { env });
@@ -294,6 +306,7 @@ QUnit.module("Components", (hooks) => {
                     <Dialog contentClass="'sm'" size="'sm'">content</Dialog>
                 </div>
             `;
+            static props = ["*"];
             static components = { Dialog };
         }
         const env = await makeDialogTestEnv();
@@ -323,6 +336,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <Dialog fullscreen="true">content</Dialog>
             `;
+            static props = ["*"];
             static components = { Dialog };
         }
         const env = await makeDialogTestEnv();
@@ -335,6 +349,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(4);
         class Parent extends Component {
             static template = xml`<Dialog>content</Dialog>`;
+            static props = ["*"];
             static components = { Dialog };
             setup() {
                 this.ui = useService("ui");
@@ -368,6 +383,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("dialog can be moved", async (assert) => {
         class Parent extends Component {
             static template = xml`<Dialog>content</Dialog>`;
+            static props = ["*"];
             static components = { Dialog };
         }
 
@@ -391,6 +407,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("dialog's position is reset on resize", async (assert) => {
         class Parent extends Component {
             static template = xml`<Dialog>content</Dialog>`;
+            static props = ["*"];
             static components = { Dialog };
         }
 

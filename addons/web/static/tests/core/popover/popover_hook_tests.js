@@ -28,6 +28,7 @@ class PseudoWebClient extends Component {
             </div>
         </div>
     `;
+    static props = ["*"];
     setup() {
         this.Components = mainComponents.getEntries();
     }
@@ -51,10 +52,12 @@ QUnit.module("Popover hook", {
 QUnit.test("close popover when component is unmounted", async (assert) => {
     class Comp extends Component {
         static template = xml`<div t-att-id="props.id">in popover</div>`;
+        static props = ["*"];
     }
 
     class CompWithPopover extends Component {
         static template = xml`<div />`;
+        static props = ["*"];
         setup() {
             this.popover = usePopover(Comp);
         }
@@ -95,6 +98,7 @@ QUnit.test("popover opened from another", async (assert) => {
                 <button class="pop-open" t-on-click="(ev) => this.popover.open(ev.target, {})">open popover</button>
             </div>
         `;
+        static props = ["*"];
         setup() {
             this.popover = usePopover(Comp, {
                 popoverClass: `popover-${++Comp.id}`,

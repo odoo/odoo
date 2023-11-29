@@ -19,6 +19,7 @@ QUnit.module("Public Component Service", (hooks) => {
     QUnit.test("render Public Component", async (assert) => {
         class MyPublicComp extends Component {
             static template = xml`<div class="my_public_comp" t-esc="value" />`;
+            static props = ["*"];
             setup() {
                 const type = typeof this.props.info;
                 this.value = type === "object" ? JSON.stringify(this.props.info) : this.props.info;
@@ -34,6 +35,7 @@ QUnit.module("Public Component Service", (hooks) => {
                     <owl-component name="my_public_comp" props='{"info": 3}'/>
                     <owl-component name="my_public_comp" props='{"info": {"test": "plop"}}'/>
                 </div>`;
+            static props = ["*"];
         }
         const env = await makeTestEnv({});
         await mount(MyComponent, target, { env });

@@ -22,6 +22,7 @@ import { Component, useRef, useSubEnv } from "@odoo/owl";
 export class ReportAction extends Component {
     static components = { Layout };
     static template = "web.ReportAction";
+    static props = ["*"];
     setup() {
         useSubEnv({
             config: {

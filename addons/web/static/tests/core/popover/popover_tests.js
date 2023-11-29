@@ -16,6 +16,7 @@ let popoverTarget;
 
 class Content extends Component {
     static template = xml`<div>Popover Content</div>`;
+    static props = ["*"];
 }
 
 QUnit.module("Popover", {

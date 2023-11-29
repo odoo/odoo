@@ -6,8 +6,13 @@ import { FileUploadProgressBar } from "./file_upload_progress_bar";
 import { Component } from "@odoo/owl";
 
 export class FileUploadProgressRecord extends Component {
+    static template = "";
     static components = {
         FileUploadProgressBar,
+    };
+    static props = {
+        fileUpload: Object,
+        selector: { type: String, optional: true },
     };
     getProgressTexts() {
         const fileUpload = this.props.fileUpload;

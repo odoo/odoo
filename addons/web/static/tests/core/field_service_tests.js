@@ -282,6 +282,7 @@ QUnit.test("async method loadFields is protected", async (assert) => {
         static template = xml`
             <div class="o_child_component" />
         `;
+        static props = ["*"];
         setup() {
             this.fieldService = useService("field");
             callFieldService = async () => {
@@ -299,6 +300,7 @@ QUnit.test("async method loadFields is protected", async (assert) => {
                 <Child />
             </t>
         `;
+        static props = ["*"];
         setup() {
             this.state = useState({ displayChild: true });
         }

@@ -202,6 +202,7 @@ QUnit.module("utils", () => {
                 const { advanceTime } = mockTimeout();
                 class C extends Component {
                     static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+                    static props = ["*"];
                     setup() {
                         this.debounced = useDebounced(() => assert.step("debounced"), 1000);
                     }
@@ -231,6 +232,7 @@ QUnit.module("utils", () => {
                     const { advanceTime } = mockTimeout();
                     class C extends Component {
                         static template = xml`<button class="c" t-on-click="() => this.debounced('hello')">C</button>`;
+                        static props = ["*"];
                         setup() {
                             this.debounced = useDebounced(
                                 (p) => assert.step(`debounced: ${p}`),
@@ -266,6 +268,7 @@ QUnit.module("utils", () => {
                     const { advanceTime } = mockTimeout();
                     class C extends Component {
                         static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+                        static props = ["*"];
                         setup() {
                             this.debounced = useDebounced(() => assert.step("debounced"), 1000, {
                                 execBeforeUnmount: true,
@@ -293,6 +296,7 @@ QUnit.module("utils", () => {
                 const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
                 class C extends Component {
                     static template = xml`<button class="c" t-on-click="throttled">C</button>`;
+                    static props = ["*"];
                     setup() {
                         this.throttled = useThrottleForAnimation(
                             () => assert.step("throttled"),

@@ -31,6 +31,7 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends Component {
             static components = { ControlPanel };
             static template = xml`<ControlPanel />`;
+            static props = ["*"];
             setup() {
                 usePager(() => ({
                     offset: 0,
@@ -63,6 +64,7 @@ QUnit.module("Search", (hooks) => {
         class TestComponent extends Component {
             static components = { ControlPanel };
             static template = xml`<ControlPanel />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ offset: 0, limit: 10 });
                 usePager(() => ({

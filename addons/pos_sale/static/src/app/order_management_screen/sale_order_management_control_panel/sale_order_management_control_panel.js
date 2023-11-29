@@ -21,6 +21,11 @@ const SEARCH_FIELDS = ["name", "partner_id.complete_name", "date_order"];
  */
 export class SaleOrderManagementControlPanel extends Component {
     static template = "pos_sale.SaleOrderManagementControlPanel";
+    static props = {
+        onSearch: Function,
+        onPrevPage: Function,
+        onNextPage: Function,
+    };
 
     setup() {
         this.pos = usePos();

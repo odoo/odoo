@@ -7,6 +7,7 @@ import { Component, useState } from "@odoo/owl";
 export class PaymentTransactionPopup extends Component {
     static template = "pos_mercury.PaymentTransactionPopup";
     static components = { Dialog };
+    static props = ["title?", "transaction", "close"];
     static defaultProps = {
         title: _t("Online Payment"),
     };

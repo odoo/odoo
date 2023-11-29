@@ -8,6 +8,14 @@ import { useService } from "@web/core/utils/hooks";
 export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton };
+    static props = {
+        // FIXME: null????
+        partner: { type: [Object, { value: null }] },
+        actionName: Object,
+        actionType: String,
+        isActionButtonHighlighted: { type: Boolean, optional: true },
+        onClickMore: Function,
+    };
     static defaultProps = {
         isActionButtonHighlighted: false,
     };

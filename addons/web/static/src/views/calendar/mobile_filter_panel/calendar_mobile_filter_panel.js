@@ -6,6 +6,11 @@ import { getColor } from "../colors";
 export class CalendarMobileFilterPanel extends Component {
     static components = {};
     static template = "web.CalendarMobileFilterPanel";
+    static props = {
+        model: Object,
+        sideBarShown: Boolean,
+        toggleSideBar: Function,
+    };
     get caretDirection() {
         return this.props.sideBarShown ? "down" : "left";
     }

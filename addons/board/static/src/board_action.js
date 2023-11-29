@@ -10,6 +10,11 @@ import { Component, onWillStart } from "@odoo/owl";
 export class BoardAction extends Component {
     static template = "board.BoardAction";
     static components = { View };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
     static cache = {};
     setup() {
         this.actionService = useService("action");

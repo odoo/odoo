@@ -14,6 +14,11 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         ...TimeOffCalendarFilterPanel.components,
         TimeOffCardMobile,
     };
+    static props = {
+        ...CalendarFilterPanel.props,
+        // FIXME: null????
+        employee_id: [Number, { value: null }],
+    };
     static subTemplates = {
         filter: "hr_holidays.CalendarFilterPanel.filter",
     };

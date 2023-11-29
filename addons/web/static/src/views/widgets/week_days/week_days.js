@@ -12,6 +12,10 @@ const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 export class WeekDays extends Component {
     static template = "web.WeekDays";
     static components = { CheckBox };
+    static props = {
+        record: Object,
+        readonly: Boolean,
+    };
 
     get weekdays() {
         return [

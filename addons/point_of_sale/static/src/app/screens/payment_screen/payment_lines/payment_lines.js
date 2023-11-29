@@ -9,6 +9,16 @@ import { parseFloat } from "@web/views/fields/parsers";
 
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
+    static props = {
+        paymentlines: Array,
+        deleteLine: Function,
+        selectLine: Function,
+        sendForceDone: Function,
+        sendPaymentCancel: Function,
+        sendPaymentRequest: Function,
+        sendPaymentReverse: Function,
+        updateSelectedPaymentline: Function,
+    };
 
     setup() {
         this.ui = useState(useService("ui"));

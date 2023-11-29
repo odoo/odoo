@@ -19,6 +19,9 @@ export class CalendarFilterPanel extends Component {
     static subTemplates = {
         filter: "web.CalendarFilterPanel.filter",
     };
+    static props = {
+        model: Object,
+    };
 
     setup() {
         this.state = useState({

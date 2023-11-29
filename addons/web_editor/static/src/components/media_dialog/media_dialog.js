@@ -44,6 +44,7 @@ export class MediaDialog extends Component {
         Dialog,
         Notebook,
     };
+    static props = ["*"];
 
     setup() {
         this.size = 'xl';

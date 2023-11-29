@@ -16,6 +16,7 @@ export class OrderSummary extends Component {
         Orderline,
         OrderWidget,
     };
+    static props = {};
 
     setup() {
         super.setup();

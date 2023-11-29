@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
+    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

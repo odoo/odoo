@@ -25,6 +25,7 @@ async function mountComponent(Picker, props) {
             <t t-component="props.Picker" t-props="props.props"/>
             <div class="outsideDiv">Outside div</div>
         `;
+        static props = ["*"];
     }
 
     const env = await makeTestEnv();

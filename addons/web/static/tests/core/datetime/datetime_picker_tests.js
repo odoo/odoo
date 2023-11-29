@@ -1268,6 +1268,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {
             static template = xml`<DateTimePicker value="state.current"/>`;
             static components = { DateTimePicker };
+            static props = ["*"];
             setup() {
                 this.state = useState({
                     current: DateTime.now(),

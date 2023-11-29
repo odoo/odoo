@@ -28,6 +28,7 @@ class PseudoWebClient extends Component {
             </div>
         </div>
     `;
+    static props = ["*"];
     setup() {
         this.Components = mainComponents.getEntries();
     }
@@ -53,6 +54,7 @@ QUnit.module("Popover service", {
 QUnit.test("simple use", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     assert.containsNone(fixture, ".o_popover");
@@ -73,6 +75,7 @@ QUnit.test("simple use", async (assert) => {
 QUnit.test("close on click away", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     popovers.add(popoverTarget, Comp);
@@ -90,6 +93,7 @@ QUnit.test("close on click away", async (assert) => {
 QUnit.test("close on 'Escape' keydown", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     popovers.add(popoverTarget, Comp);
@@ -107,6 +111,7 @@ QUnit.test("close on 'Escape' keydown", async (assert) => {
 QUnit.test("do not close on click away", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     const remove = popovers.add(popoverTarget, Comp, {}, { closeOnClickAway: false });
@@ -130,6 +135,7 @@ QUnit.test("do not close on click away", async (assert) => {
 QUnit.test("close callback", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     function onClose() {
@@ -147,6 +153,7 @@ QUnit.test("close callback", async (assert) => {
 QUnit.test("sub component triggers close", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp" t-on-click="() => this.props.close()">in popover</div>`;
+        static props = ["*"];
     }
 
     popovers.add(popoverTarget, Comp);
@@ -164,6 +171,7 @@ QUnit.test("sub component triggers close", async (assert) => {
 QUnit.test("close popover if target is removed", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     popovers.add(popoverTarget, Comp);
@@ -186,6 +194,7 @@ QUnit.test("close and do not crash if target parent does not exist", async (asse
 
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     function onClose() {
@@ -201,6 +210,7 @@ QUnit.test("close and do not crash if target parent does not exist", async (asse
 QUnit.test("keep popover if target sibling is removed", async (assert) => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
     }
 
     popovers.add(popoverTarget, Comp);

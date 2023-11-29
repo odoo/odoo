@@ -14,13 +14,15 @@ QUnit.test("Display notification for media device permission on barcode scanning
         return Promise.reject(new DOMException("", "NotAllowedError"));
     };
 
-    class BarcodeScan extends Component {}
-    BarcodeScan.components = { BarcodeScanner };
-    BarcodeScan.template = xml`
-        <div>
-            <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
-        </div>
-    `;
+    class BarcodeScan extends Component {
+        static template = xml`
+            <div>
+                <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+            </div>
+        `;
+        static components = { BarcodeScanner };
+        static props = ["*"];
+    }
 
     const target = getFixture();
     const { env } = await createWebClient({});

@@ -11,10 +11,10 @@ export class SettingsBlock extends Component {
         HighlightText,
     };
     static props = {
-        title: { type: String, optional: 1 },
-        tip: { type: String, optional: 1 },
-        slots: Object,
-        class: { type: String, optional: 1 },
+        title: { type: String, optional: true },
+        tip: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        class: { type: String, optional: true },
     };
     setup() {
         this.state = useState({

@@ -121,6 +121,11 @@ debugRegistry.category("view").add("editSearchView", editSearchView);
 class GetMetadataDialog extends Component {
     static template = "web.DebugMenu.GetMetadataDialog";
     static components = { Dialog };
+    static props = {
+        resModel: String,
+        resId: Number,
+        close: Function,
+    };
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");

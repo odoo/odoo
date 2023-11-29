@@ -968,6 +968,7 @@ QUnit.module("Views", (hooks) => {
         const myField = {
             component: class MyField extends Component {
                 static template = xml`<span/>`;
+                static props = ["*"];
                 setup() {
                     if (this.props.record.resId === 1) {
                         assert.deepEqual(this.props.attrs, {
@@ -1011,6 +1012,7 @@ QUnit.module("Views", (hooks) => {
         const myField = {
             component: class MyField extends Component {
                 static template = xml`<span/>`;
+                static props = ["*"];
             },
             extractProps: ({ attrs }) => {
                 assert.step(
@@ -9327,6 +9329,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         class MyComponent extends Component {
             static template = xml`<div t-att-class="props.class" t-esc="value"/>`;
+            static props = ["*"];
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
@@ -9363,6 +9366,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("kanban card: record value should be update", async (assert) => {
         class MyComponent extends Component {
             static template = xml`<div><button t-on-click="onClick">CLick</button></div>`;
+            static props = ["*"];
             onClick() {
                 this.props.record.update({ foo: "yolo" });
             }
@@ -11830,6 +11834,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("kanban widget can extract props from attrs", async (assert) => {
         class TestWidget extends Component {
             static template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
+            static props = ["*"];
         }
         const testWidget = {
             component: TestWidget,
@@ -13057,6 +13062,7 @@ QUnit.module("Views", (hooks) => {
         const customField = {
             component: class CustomField extends Component {
                 static template = xml`<span t-esc="props.record.data.int_field"/>`;
+                static props = ["*"];
             },
             fieldDependencies: [{ name: "int_field", type: "integer" }],
         };
@@ -13088,6 +13094,7 @@ QUnit.module("Views", (hooks) => {
             const customField = {
                 component: class CustomField extends Component {
                     static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+                    static props = ["*"];
                 },
                 fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
             };
@@ -13686,6 +13693,7 @@ QUnit.module("Views", (hooks) => {
         let def;
         class MyField extends Component {
             static template = xml`<span t-esc="renderCount"/>`;
+            static props = ["*"];
             setup() {
                 onWillRender(() => {
                     renderCount++;

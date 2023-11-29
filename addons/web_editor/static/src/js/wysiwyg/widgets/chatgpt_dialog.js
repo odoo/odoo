@@ -10,6 +10,7 @@ import { _t } from "@web/core/l10n/translation";
  * General component for common logic between different dialogs.
  */
 export class ChatGPTDialog extends Component {
+    static template = "";
     static components = { Dialog };
     static props = {
         close: Function,

@@ -8,6 +8,12 @@ import { useService } from "@web/core/utils/hooks";
 
 export class OrderlineNoteButton extends Component {
     static template = "point_of_sale.OrderlineNoteButton";
+    static props = {
+        icon: { type: String, optional: true },
+        label: { type: Object, optional: true },
+        getter: { type: Function, optional: true },
+        setter: { type: Function, optional: true },
+    };
     static defaultProps = {
         icon: "fa fa-sticky-note",
         label: _t("Customer Note"),

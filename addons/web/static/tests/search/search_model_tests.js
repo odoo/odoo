@@ -7,6 +7,7 @@ import { Component, xml } from "@odoo/owl";
 
 class TestComponent extends Component {
     static template = xml`<div class="o_test_component"/>`;
+    static props = ["*"];
 }
 
 async function makeSearchModel(params) {

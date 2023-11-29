@@ -27,6 +27,7 @@ const serviceRegistry = registry.category("services");
 
 class FooterComponent extends Component {
     static template = xml`<span>My footer</span>`;
+    static props = ["*"];
 }
 
 class TestComponent extends Component {
@@ -36,6 +37,7 @@ class TestComponent extends Component {
         <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
       </div>
     `;
+    static props = ["*"];
     get OverlayContainer() {
         return registry.category("main_components").get("OverlayContainer");
     }
@@ -322,6 +324,7 @@ QUnit.test("command with a Custom Component", async (assert) => {
                 <span t-esc="props.name"/>
             </div>
         `;
+        static props = ["*"];
     }
 
     await mount(TestComponent, target, { env });

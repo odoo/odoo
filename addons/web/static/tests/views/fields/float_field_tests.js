@@ -551,6 +551,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("float field can be updated by another field/widget", async function (assert) {
         class MyWidget extends Component {
             static template = xml`<button t-on-click="onClick">do it</button>`;
+            static props = ["*"];
             onClick() {
                 const val = this.props.record.data.float_field;
                 this.props.record.update({ float_field: val + 1 });

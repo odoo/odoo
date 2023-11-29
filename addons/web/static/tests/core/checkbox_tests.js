@@ -43,6 +43,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
             static components = { CheckBox };
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -57,6 +58,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<CheckBox onChange="onChange"/>`;
             static components = { CheckBox };
+            static props = {};
             onChange(checked) {
                 value = checked;
             }
@@ -76,6 +78,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<CheckBox onChange="onChange" disabled="true"/>`;
             static components = { CheckBox };
+            static props = {};
         }
 
         await mount(Parent, target, { env });
@@ -88,6 +91,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
             static components = { CheckBox };
+            static props = {};
             setup() {
                 this.state = useState({ value: false });
             }
@@ -110,6 +114,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<CheckBox onChange.bind="onChange" value="state.value"/>`;
             static components = { CheckBox };
+            static props = {};
             setup() {
                 this.state = useState({ value: false });
             }

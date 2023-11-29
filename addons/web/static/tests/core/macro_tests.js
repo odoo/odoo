@@ -30,6 +30,7 @@ QUnit.module(
                     <span class="value"><t t-esc="state.value"/></span>
                     <input />
                 </div>`;
+            static props = ["*"];
             setup() {
                 this.state = useState({ value: 0 });
             }

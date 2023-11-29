@@ -13,6 +13,7 @@ QUnit.test("useTransition hook", async (assert) => {
     });
     class Parent extends Component {
         static template = xml`<div t-if="transition.shouldMount" t-att-class="transition.className"/>`;
+        static props = ["*"];
         setup() {
             this.transition = useTransition({
                 name: "test",
@@ -51,6 +52,7 @@ QUnit.test("Transition HOC", async (assert) => {
             </Transition>
         `;
         static components = { Transition };
+        static props = ["*"];
         setup() {
             this.state = useState({ show: true });
         }

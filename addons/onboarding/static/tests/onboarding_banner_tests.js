@@ -38,13 +38,14 @@ QUnit.module("Onboarding banner", (hooks) => {
         };
 
         class ToyController extends Component {
+            static template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
+            static components = { Banner: OnboardingBanner };
+            static props = ["*"];
             setup() {
                 this.class = "toy";
                 this.template = xml`${this.props.arch.outerHTML}`;
             }
         }
-        ToyController.template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
-        ToyController.components = { Banner: OnboardingBanner };
 
         const toyView = {
             type: "toy",

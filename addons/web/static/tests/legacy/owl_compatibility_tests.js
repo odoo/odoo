@@ -21,6 +21,7 @@
 
             class CustomComponent extends Component {
                 static template = xml`<div id="component" t-esc="props.text"/>`;
+                static props = ["*"];
                 setup() {
                     assert.step("setup");
                     onWillStart(() => assert.step("onWillStart"));

@@ -161,10 +161,12 @@ QUnit.test(
         class CustomDialog extends Component {
             static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
             static components = { RPCErrorDialog };
+            static props = ["*"];
         }
         class NormalDialog extends Component {
             static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
             static components = { RPCErrorDialog };
+            static props = ["*"];
         }
         const error = new RPCError();
         error.code = 701;
@@ -283,6 +285,7 @@ QUnit.test("originalError is the root cause of the error chain", async (assert) 
 
     class ErrHandler extends Component {
         static template = xml`<t t-component="props.comp"/>`;
+        static props = ["*"];
         setup() {
             onError(async (err) => {
                 await unhandledRejectionCb(
@@ -298,6 +301,7 @@ QUnit.test("originalError is the root cause of the error chain", async (assert) 
     }
     class ThrowInSetup extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             throw error;
         }
@@ -309,6 +313,7 @@ QUnit.test("originalError is the root cause of the error chain", async (assert) 
 
     class ThrowInWillStart extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             onWillStart(() => {
                 throw error;

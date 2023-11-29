@@ -1630,6 +1630,7 @@ QUnit.module("Fields", (hooks) => {
                     <Field name="'partner_id'" record="scope.record" canOpen="false" />
                 </Record>
             `;
+            static props = ["*"];
             setup() {
                 this.fields = {
                     partner_id: {

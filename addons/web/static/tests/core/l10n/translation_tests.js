@@ -18,7 +18,10 @@ const { DateTime, Settings } = luxon;
 
 const terms = { Hello: "Bonjour" };
 const serviceRegistry = registry.category("services");
-class TestComponent extends Component {}
+class TestComponent extends Component {
+    static template = "";
+    static props = ["*"];
+}
 
 function patchFetch() {
     patchWithCleanup(browser, {

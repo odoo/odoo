@@ -6,6 +6,7 @@ import { Component } from "@odoo/owl";
 
 export class ContractWarningTooltip extends Component {
     static template = "hr_contract.ContractWarningTooltip";
+    static props = {};
     get tooltipInfo() {
         return JSON.stringify({
             "text" : _t("Calendar Mismatch: The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors."),

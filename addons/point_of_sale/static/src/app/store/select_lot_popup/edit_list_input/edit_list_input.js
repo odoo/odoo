@@ -2,15 +2,15 @@
 
 import { Component } from "@odoo/owl";
 
-/**
- * props {
- *     createNewItem: callback,
- *     removeItem: callback,
- *     item: object,
- * }
- */
 export class EditListInput extends Component {
     static template = "point_of_sale.EditListInput";
+    static props = {
+        item: Object,
+        deletable: Boolean,
+        createNewItem: Function,
+        onInputChange: Function,
+        removeItem: Function,
+    };
 
     onKeyup(event) {
         if (event.key === "Enter" && event.target.value.trim() !== "") {

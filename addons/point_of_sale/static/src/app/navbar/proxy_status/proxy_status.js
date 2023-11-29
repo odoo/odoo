@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 // Previously ProxyStatusWidget
 export class ProxyStatus extends Component {
     static template = "point_of_sale.ProxyStatus";
+    static props = {};
 
     setup() {
         this.pos = usePos();

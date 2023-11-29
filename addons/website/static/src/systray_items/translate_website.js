@@ -6,6 +6,7 @@ import { Component, useState } from "@odoo/owl";
 
 class TranslateWebsiteSystray extends Component {
     static template = "website.TranslateWebsiteSystray";
+    static props = {};
     setup() {
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);

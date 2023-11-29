@@ -8,6 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 class WebsiteDashboard extends Component {
     static template = "website.WebsiteDashboardMain";
     static components = { Layout };
+    static props = ["*"];
     setup() {
         super.setup();
         this.keepLast = new KeepLast();

@@ -10,6 +10,9 @@ import { router } from "@web/core/browser/router";
 export class ViewHierarchy extends Component {
     static components = { Layout, HierarchyNavbar };
     static template = "website.view_hierarchy";
+    static props = {
+        action: Function,
+    };
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");

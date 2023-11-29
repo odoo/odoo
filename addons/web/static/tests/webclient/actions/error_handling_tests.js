@@ -23,6 +23,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(11);
         class Boom extends Component {
             static template = xml`<div><t t-esc="a.b.c"/></div>`;
+            static props = ["*"];
         }
         actionRegistry.add("Boom", Boom);
         const mockRPC = (route, args) => {
@@ -65,6 +66,7 @@ QUnit.module("ActionManager", (hooks) => {
                     <t t-if="boom" t-esc="a.b.c"/>
                     <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
                 </div>`;
+            static props = ["*"];
             setup() {
                 this.boom = false;
             }

@@ -37,6 +37,7 @@ QUnit.module("Web Components", (hooks) => {
 
     function getDefaultComponent() {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -100,6 +101,7 @@ QUnit.module("Web Components", (hooks) => {
         "Selecting a choice calls onSelect and the displayed value is updated",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -180,6 +182,7 @@ QUnit.module("Web Components", (hooks) => {
         "Value with no corresponding choices displays as if no choice was selected",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                 <SelectMenu
@@ -206,6 +209,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Changing value props properly updates the selected choice", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -241,6 +245,7 @@ QUnit.module("Web Components", (hooks) => {
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -277,6 +282,7 @@ QUnit.module("Web Components", (hooks) => {
         'When the "required" props is set to true, the clear button is not shown',
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -317,6 +323,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Items are sorted based on their label by default", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -345,6 +352,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("autoSort props set to false", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`<SelectMenu choices="choices" autoSort="false"/>`;
             setup() {
@@ -369,6 +377,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom toggler using default slot", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu choices="choices">
@@ -396,6 +405,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom choice template using a slot", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu choices="choices">
@@ -423,6 +433,7 @@ QUnit.module("Web Components", (hooks) => {
         "Custom template for the bottom area of the dropdown using a slot",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -472,6 +483,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Custom slot for the bottom area sends the current search value", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu choices="choices">
@@ -509,6 +521,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Groups properly added in the select", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`<SelectMenu groups="groups"/>`;
             setup() {
@@ -538,6 +551,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Items are properly sorted but still in their respective group", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -587,6 +601,7 @@ QUnit.module("Web Components", (hooks) => {
             };
 
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -632,6 +647,7 @@ QUnit.module("Web Components", (hooks) => {
         "When multiSelect is enable, value is an array of values, mutliple choices should display as selected and tags should be displayed",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -724,6 +740,7 @@ QUnit.module("Web Components", (hooks) => {
         "When multiSelect is enable, allow deselecting elements by clicking the selected choices inside the dropdown or by clicking the tags",
         async (assert) => {
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -791,6 +808,7 @@ QUnit.module("Web Components", (hooks) => {
         assert.expect(6);
 
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -851,6 +869,7 @@ QUnit.module("Web Components", (hooks) => {
             assert.expect(2);
 
             class Parent extends Component {
+                static props = ["*"];
                 static components = { SelectMenu };
                 static template = xml`
                     <SelectMenu
@@ -884,6 +903,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Props onInput is executed when the search changes", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu
@@ -947,6 +967,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Choices are updated and filtered when props change", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { SelectMenu };
             static template = xml`
                 <SelectMenu

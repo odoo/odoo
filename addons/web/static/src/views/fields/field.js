@@ -17,6 +17,7 @@ const fieldRegistry = registry.category("fields");
 
 class DefaultField extends Component {
     static template = xml``;
+    static props = ["*"];
 }
 
 export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {

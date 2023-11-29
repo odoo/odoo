@@ -407,6 +407,7 @@ QUnit.module("ActionManager", (hooks) => {
             const slowWillStartDef = makeDeferred();
             class ClientAction extends Component {
                 static template = xml`<div class="client_action">ClientAction</div>`;
+                static props = ["*"];
                 setup() {
                     onWillStart(() => slowWillStartDef);
                 }
@@ -614,6 +615,7 @@ QUnit.module("ActionManager", (hooks) => {
                     <SearchBar />
                 </div>`;
             static components = { ControlPanel, SearchBar };
+            static props = ["*"];
             setup() {
                 this.id = id++;
                 assert.step(JSON.stringify(this.props.state || "no state"));

@@ -7,9 +7,14 @@ import { Component, onMounted, useRef, useState } from "@odoo/owl";
 export class DatePickerPopup extends Component {
     static template = "point_of_sale.DatePickerPopup";
     static components = { Dialog };
+    static props = {
+        title: { type: String, optional: true },
+        confirmText: { type: String, optional: true },
+        getPayload: Function,
+        close: Function,
+    };
     static defaultProps = {
         confirmText: _t("Confirm"),
-        cancelText: _t("Discard"),
         title: _t("DatePicker"),
     };
 

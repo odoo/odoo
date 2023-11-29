@@ -78,6 +78,7 @@ export async function makeWithSearch(params) {
             <MainComponentsContainer />
         `;
         static components = { Component: params.Component, WithSearch, MainComponentsContainer };
+        static props = ["*"];
         setup() {
             this.withSearchProps = props;
         }

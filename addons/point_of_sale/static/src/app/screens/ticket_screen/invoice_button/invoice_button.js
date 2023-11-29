@@ -9,6 +9,10 @@ import { PartnerList } from "../../partner_list/partner_list";
 
 export class InvoiceButton extends Component {
     static template = "point_of_sale.InvoiceButton";
+    static props = {
+        order: Object,
+        onInvoiceOrder: Function,
+    };
 
     setup() {
         this.pos = usePos();

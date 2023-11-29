@@ -18,6 +18,7 @@ commandSetupRegistry.add("default", {
 
 export class HotkeyCommandItem extends Component {
     static template = "web.HotkeyCommandItem";
+    static props = ["hotkey", "hotkeyOptions?", "name?", "searchValue?", "executeCommand", "slots"];
     setup() {
         useHotkey(this.props.hotkey, this.props.executeCommand);
     }

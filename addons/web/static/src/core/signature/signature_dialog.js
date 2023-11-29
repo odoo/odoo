@@ -9,6 +9,12 @@ import { Component, useState } from "@odoo/owl";
 export class SignatureDialog extends Component {
     static template = "web.SignatureDialog";
     static components = { Dialog, NameAndSignature };
+    static props = {
+        defaultName: { type: String, optional: true },
+        nameAndSignatureProps: Object,
+        uploadSignature: Function,
+        close: Function,
+    };
     static defaultProps = {
         defaultName: "",
     };

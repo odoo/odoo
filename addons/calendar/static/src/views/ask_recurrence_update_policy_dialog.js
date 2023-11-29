@@ -9,6 +9,10 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
     static components = {
         Dialog,
     };
+    static props = {
+        confirm: Function,
+        close: Function,
+    };
 
     setup() {
         this.possibleValues = {

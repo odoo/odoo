@@ -15,6 +15,7 @@ export class WebsiteSwitcherSystray extends Component {
         Dropdown,
         DropdownItem,
     };
+    static props = {};
     setup() {
         this.websiteService = useService('website');
         this.notificationService = useService("notification");

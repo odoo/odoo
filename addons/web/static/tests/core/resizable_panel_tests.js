@@ -34,6 +34,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
                     <p>Paragraph</p>
                 </ResizablePanel>
             `;
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env });
@@ -64,6 +65,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
                     </ResizablePanel>
                 </div>
             `;
+            static props = ["*"];
         }
         await mount(Parent, target, { env });
         const parentEl = target.querySelector(".parent-el");
@@ -89,6 +91,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
                     </ResizablePanel>
                 </div>
             `;
+            static props = ["*"];
         }
         await mount(Parent, target, { env });
         const resizablePanelEl = target.querySelector(".o_resizable_panel");
@@ -118,6 +121,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
                     </ResizablePanel>
                 </div>
             `;
+            static props = ["*"];
         }
         await mount(Parent, target, { env });
         const resizablePanelEl = target.querySelector(".o_resizable_panel");
@@ -146,6 +150,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
                     </ResizablePanel>
                 </div>
             `;
+            static props = ["*"];
         }
         const state = reactive({ minWidth: 20 });
         await mount(Parent, target, { env, props: { state } });

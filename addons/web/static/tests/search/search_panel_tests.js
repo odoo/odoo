@@ -113,6 +113,7 @@ function makeTestComponent({ onWillStart, onWillUpdateProps } = {}) {
                 <SearchPanel t-if="env.searchModel.display.searchPanel" />
                 <SearchBarMenu />
             </div>`;
+        static props = ["*"];
         setup() {
             onWillStartOWL(async () => {
                 if (onWillStart) {

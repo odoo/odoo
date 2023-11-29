@@ -30,6 +30,11 @@ registry.category("actions").add("display_notification", displayNotificationActi
 
 class InvalidAction extends Component {
     static template = xml`<div class="o_invalid_action"></div>`;
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
     setup() {
         this.notification = useService("notification");
         onMounted(this.onMounted);

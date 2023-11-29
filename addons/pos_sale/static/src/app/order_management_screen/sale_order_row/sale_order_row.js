@@ -13,6 +13,11 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
  */
 export class SaleOrderRow extends Component {
     static template = "pos_sale.SaleOrderRow";
+    static props = {
+        order: Object,
+        highlightedOrder: { type: Object, optional: true },
+        onClickSaleOrder: Function,
+    };
 
     setup() {
         this.pos = usePos();

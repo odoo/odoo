@@ -38,6 +38,7 @@ class PseudoWebClient extends Component {
             </div>
         </div>
     `;
+    static props = ["*"];
     setup() {
         this.Components = mainComponentRegistry.getEntries();
     }
@@ -60,6 +61,7 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
+        static props = ["*"];
     }
     await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog");
@@ -77,6 +79,7 @@ QUnit.test("Simple rendering and close a single dialog", async (assert) => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
+        static props = ["*"];
     }
 
     await mount(PseudoWebClient, target, { env });
@@ -102,6 +105,7 @@ QUnit.test("rendering with two dialogs", async (assert) => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static props = ["*"];
     }
 
     await mount(PseudoWebClient, target, { env });
@@ -127,6 +131,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static props = ["*"];
     }
     await mount(PseudoWebClient, target, { env });
 
@@ -152,6 +157,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 QUnit.test("a popover with an autofocus child can become the UI active element", async (assert) => {
     class TestPopover extends Component {
         static template = xml`<input type="text" t-ref="autofocus" />`;
+        static props = ["*"];
         setup() {
             useAutofocus();
         }
@@ -161,6 +167,7 @@ QUnit.test("a popover with an autofocus child can become the UI active element",
         static template = xml`<Dialog title="props.title">
             <button class="btn test" t-on-click="showPopover">show</button>
         </Dialog>`;
+        static props = ["*"];
         setup() {
             this.popover = usePopover(TestPopover);
         }
@@ -202,6 +209,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static props = ["*"];
     }
     await mount(PseudoWebClient, target, { env });
 
@@ -247,6 +255,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     class FailingDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Error'">content</Dialog>`;
+        static props = ["*"];
         setup() {
             throw new Error("Some Error");
         }

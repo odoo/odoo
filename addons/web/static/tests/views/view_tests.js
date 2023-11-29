@@ -74,6 +74,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
             static components = { Banner: OnboardingBanner };
             setup() {
@@ -1252,6 +1253,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             class ToyView2 extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_toy_view_2"/>`;
                 static type = "toy";
             }
@@ -1280,6 +1282,7 @@ QUnit.module("Views", (hooks) => {
         "rendering with given arch attribute 'js_class' and given jsClass",
         async function (assert) {
             class ToyView2 extends Component {
+                static props = ["*"];
                 static template = xml`<div class="o_toy_view_2"/>`;
                 static type = "toy";
             }
@@ -1384,6 +1387,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(4);
 
             class ToyController extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
@@ -1418,6 +1422,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.info.noContentHelp, "<div>Help</div>");
@@ -1438,6 +1443,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.useSampleModel, false);
@@ -1454,6 +1460,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
@@ -1475,6 +1482,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
@@ -1497,6 +1505,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.useSampleModel, false);
@@ -1519,6 +1528,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.useSampleModel, true);
@@ -1535,6 +1545,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.strictEqual(this.props.specificProp, "specificProp");
@@ -1553,6 +1564,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(4);
 
             class ToyController extends Component {
+                static props = ["*"];
                 static template = xml`<div/>`;
                 setup() {
                     const { context, domain, groupBy, orderBy } = this.props;
@@ -1608,6 +1620,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("callback recorders are moved from props to subenv", async (assert) => {
         assert.expect(5);
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 assert.ok(this.env.__getGlobalState__ instanceof CallbackRecorder); // put in env by View
@@ -1638,6 +1651,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
 
         class ToyController extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 onWillStart(() => {
@@ -1653,6 +1667,7 @@ QUnit.module("Views", (hooks) => {
         const env = await makeTestEnv({ serverData });
 
         class Parent extends Component {
+            static props = ["*"];
             static template = xml`<View t-props="state"/>`;
             static components = { View };
             setup() {

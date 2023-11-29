@@ -18,6 +18,10 @@ import { utils } from "@web/core/ui/ui_service";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
+    static props = {
+        tooltip: Array,
+        close: Function,
+    };
 }
 
 export class KanbanHeader extends Component {

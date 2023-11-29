@@ -23,10 +23,12 @@ QUnit.module("Components", (hooks) => {
 
         class MainComponentA extends Component {
             static template = xml`<span>MainComponentA</span>`;
+            static props = ["*"];
         }
 
         class MainComponentB extends Component {
             static template = xml`<span>MainComponentB</span>`;
+            static props = ["*"];
         }
 
         mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
@@ -46,6 +48,7 @@ QUnit.module("Components", (hooks) => {
         let compA;
         class MainComponentA extends Component {
             static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentA</span>`;
+            static props = ["*"];
             setup() {
                 compA = this;
                 this.state = useState({ shouldThrow: false });
@@ -57,6 +60,7 @@ QUnit.module("Components", (hooks) => {
 
         class MainComponentB extends Component {
             static template = xml`<span>MainComponentB</span>`;
+            static props = ["*"];
         }
 
         mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
@@ -97,11 +101,13 @@ QUnit.module("Components", (hooks) => {
 
         class MainComponentA extends Component {
             static template = xml`<span>MainComponentA</span>`;
+            static props = ["*"];
         }
 
         let compB;
         class MainComponentB extends Component {
             static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentB</span>`;
+            static props = ["*"];
             setup() {
                 compB = this;
                 this.state = useState({ shouldThrow: false });
@@ -148,6 +154,7 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".myMainComponent");
         class MyMainComponent extends Component {
             static template = xml`<div class="myMainComponent" />`;
+            static props = ["*"];
         }
         mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
         await nextTick();

@@ -36,6 +36,7 @@ export class ProductScreen extends Component {
         ProductCard,
     };
     static numpadActionName = _t("Payment");
+    static props = {};
 
     setup() {
         super.setup();

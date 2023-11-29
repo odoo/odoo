@@ -12,6 +12,7 @@ const localStorageNoDialogKey = 'website_translator_nodialog';
 export class AttributeTranslateDialog extends Component {
     static components = { WebsiteDialog };
     static template = "website.AttributeTranslateDialog";
+    static props = ["node", "close"];
     setup() {
         this.title = _t("Translate Attribute");
 
@@ -62,6 +63,10 @@ export class SelectTranslateDialog extends Component {
             t-on-keyup="onInputKeyup"/>
     </WebsiteDialog>
     `;
+    static props = {
+        node: String,
+        close: Function,
+    };
     setup() {
         this.title = _t("Translate Selection Option");
         this.inputEl = useRef('input');
@@ -81,6 +86,9 @@ export class SelectTranslateDialog extends Component {
 export class TranslatorInfoDialog extends Component {
     static components = { WebsiteDialog };
     static template = "website.TranslatorInfoDialog";
+    static props = {
+        close: Function,
+    };
     setup() {
         this.strongOkButton = _t("Ok, never show me this again");
         this.okButton = _t("Ok");

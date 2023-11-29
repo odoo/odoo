@@ -26,6 +26,7 @@ const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
 class MySystrayItem extends Component {
+    static props = ["*"];
     static template = xml`<li class="my-item">my item</li>`;
 }
 let baseConfig;
@@ -194,15 +195,19 @@ QUnit.test("navbar can display systray items", async (assert) => {
 
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
     class MyItem1 extends Component {
+        static props = ["*"];
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
     class MyItem2 extends Component {
+        static props = ["*"];
         static template = xml`<li class="my-item-2">my item 2</li>`;
     }
     class MyItem3 extends Component {
+        static props = ["*"];
         static template = xml`<li class="my-item-3">my item 3</li>`;
     }
     class MyItem4 extends Component {
+        static props = ["*"];
         static template = xml`<li class="my-item-4">my item 4</li>`;
     }
 
@@ -220,6 +225,7 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
 
 QUnit.test("navbar updates after adding a systray item", async (assert) => {
     class MyItem1 extends Component {
+        static props = ["*"];
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
 
@@ -233,6 +239,7 @@ QUnit.test("navbar updates after adding a systray item", async (assert) => {
             onRendered(() => {
                 if (!systrayRegistry.contains("addon.myitem2")) {
                     class MyItem2 extends Component {
+                        static props = ["*"];
                         static template = xml`<li class="my-item-2">my item 2</li>`;
                     }
                     systrayRegistry.add("addon.myitem2", { Component: MyItem2 });

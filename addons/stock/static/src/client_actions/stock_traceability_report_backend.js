@@ -33,6 +33,12 @@ function extractPrintData(lines) {
 export class TraceabilityReport extends Component {
     static template = "stock.TraceabilityReport";
     static components = { Layout };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+        state: {type: Object, optional: true},
+    };
 
     setup() {
         this.actionService = useService("action");

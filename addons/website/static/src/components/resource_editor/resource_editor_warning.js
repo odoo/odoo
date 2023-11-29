@@ -11,6 +11,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class ResourceEditorWarningOverlay extends Component {
     static template = "website.ResourceEditorWarningOverlay";
+    static props = {};
 
     /**
      * Initializes the component by setting up the necessary services and state.

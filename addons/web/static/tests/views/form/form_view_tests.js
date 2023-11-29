@@ -3901,6 +3901,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
 
         class MyField extends Component {
+            static props = ["*"];
             static template = xml`<div>ok</div>`;
             setup() {
                 assert.strictEqual(this.props.horizontal, true);
@@ -10599,6 +10600,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets", async function (assert) {
         class MyComponent extends Component {
+            static props = ["*"];
             static template = xml`<div t-esc="value"/>`;
             get value() {
                 return JSON.stringify(this.props.record.data);
@@ -10629,6 +10631,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("widget with class attribute", async function (assert) {
         class MyComponent extends Component {
+            static props = ["*"];
             static template = xml`<span>Hello</span>`;
         }
         const myComponent = {
@@ -10651,6 +10654,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("widget with readonly attribute", async function (assert) {
         class MyComponent extends Component {
+            static props = ["*"];
             static template = xml`<span t-esc="value"/>`;
             get value() {
                 return this.props.readonly ? "readonly" : "not readonly";
@@ -10701,6 +10705,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets: onchange update", async function (assert) {
         class MyWidget extends Component {
+            static props = ["*"];
             static template = xml`<t t-esc="state.dataToDisplay" />`;
             setup() {
                 this.state = useState({
@@ -12872,6 +12877,7 @@ QUnit.module("Views", (hooks) => {
 
         const customField = {
             component: class CustomField extends Component {
+                static props = ["*"];
                 static template = xml`<span t-esc="props.record.data.int_field"/>`;
             },
             fieldDependencies: [{ name: "int_field", type: "integer" }],
@@ -12900,6 +12906,7 @@ QUnit.module("Views", (hooks) => {
 
             const customField = {
                 component: class CustomField extends Component {
+                    static props = ["*"];
                     static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
                 },
                 fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
@@ -12930,6 +12937,7 @@ QUnit.module("Views", (hooks) => {
         assert.expectErrors();
 
         class MyComponent extends Component {
+            static props = ["*"];
             static template = xml`<div/>`;
             setup() {
                 throw new Error("test");
@@ -13662,6 +13670,7 @@ QUnit.module("Views", (hooks) => {
             assert.expectErrors();
 
             class TestClientAction extends Component {
+                static props = ["*"];
                 static template = xml`<div></div>`;
                 setup() {
                     throw new Error("Something went wrong");
@@ -13670,6 +13679,7 @@ QUnit.module("Views", (hooks) => {
             registry.category("actions").add("TestClientAction", TestClientAction);
 
             class MyWidget extends Component {
+                static props = ["*"];
                 static template = xml`
                     <div class="test_widget">
                         <button t-on-click="onClick">MyButton</button>
@@ -13751,6 +13761,7 @@ QUnit.module("Views", (hooks) => {
             assert.expectErrors();
 
             class TestClientAction extends Component {
+                static props = ["*"];
                 static template = xml`<div></div>`;
                 setup() {
                     throw new Error("Something went wrong");
@@ -13759,6 +13770,7 @@ QUnit.module("Views", (hooks) => {
             registry.category("actions").add("TestClientAction", TestClientAction);
 
             class MyWidget extends Component {
+                static props = ["*"];
                 static template = xml`
                     <div class="test_widget">
                         <button t-on-click="onClick">MyButton</button>
@@ -13960,6 +13972,7 @@ QUnit.module("Views", (hooks) => {
             p() {},
         };
         class TestWidget extends Component {
+            static props = ["*"];
             static template = xml`<div><button t-on-click="onClick">Click</button></div>`;
 
             onClick() {
@@ -14355,6 +14368,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("field with special data", async function (assert) {
         class MyWidget extends Component {
+            static props = ["*"];
             static template = xml`<div>MyWidget</div>`;
             setup() {
                 this.specialData = useSpecialData((orm, props) => {

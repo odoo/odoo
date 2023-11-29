@@ -40,6 +40,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {
             static template = xml`<AccordionItem description="'Test'" class="'text-primary'" selected="false"><h5>In accordion</h5></AccordionItem>`;
             static components = { AccordionItem };
+            static props = ["*"];
         }
         env = await makeTestEnv();
         await mount(Parent, target, { env });
@@ -71,6 +72,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 </Dropdown>
             `;
             static components = { Dropdown, DropdownItem, AccordionItem };
+            static props = ["*"];
         }
         env = await makeTestEnv();
         await mount(Parent, target, { env });

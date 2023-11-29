@@ -270,6 +270,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         class ErrorClientAction extends Component {
             static template = xml`<div/>`;
+            static props = ["*"];
             setup() {
                 throw new Error("my error");
             }
@@ -278,6 +279,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         class ClientActionTargetNew extends Component {
             static template = xml`<div class="my_action_new" />`;
+            static props = ["*"];
         }
         registry.category("actions").add("clientActionNew", ClientActionTargetNew);
 
@@ -286,6 +288,7 @@ QUnit.module("ActionManager", (hooks) => {
                 <div class="my_action" t-on-click="onClick">
                     My Action
                 </div>`;
+            static props = ["*"];
             setup() {
                 this.action = useService("action");
             }

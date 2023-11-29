@@ -6,7 +6,7 @@ import json
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
-from odoo.tools import ormcache, ustr
+from odoo.tools import ormcache, ustr, config
 from odoo.tools.misc import str2bool
 
 
@@ -119,6 +119,7 @@ class Http(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
+            'test_mode': bool(config['test_enable'] or config['test_file']),
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
@@ -182,6 +183,7 @@ class Http(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
+            'test_mode': bool(config['test_enable'] or config['test_file']),
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug

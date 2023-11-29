@@ -10,6 +10,7 @@ const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 class KanbanExamplesNotebookTemplate extends Component {
     static template = "web.KanbanExamplesNotebookTemplate";
+    static props = ["*"];
     static defaultProps = {
         columns: [],
         foldedColumns: [],
@@ -36,6 +37,7 @@ class KanbanExamplesNotebookTemplate extends Component {
 export class KanbanColumnExamplesDialog extends Component {
     static template = "web.KanbanColumnExamplesDialog";
     static components = { Dialog, Notebook };
+    static props = ["*"];
     static title = _t("Kanban Examples");
     setup() {
         this.navList = useRef("navList");

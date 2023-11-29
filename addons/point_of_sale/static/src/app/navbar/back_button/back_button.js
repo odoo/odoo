@@ -7,6 +7,7 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 
 export class BackButton extends Component {
     static template = "point_of_sale.BackButton";
+    static props = {};
 
     setup() {
         this.pos = usePos();

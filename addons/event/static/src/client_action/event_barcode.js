@@ -11,6 +11,11 @@ import { EventRegistrationSummaryDialog } from "./event_registration_summary_dia
 export class EventScanView extends Component {
     static template = "event.EventScanView";
     static components = { BarcodeScanner };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
 
     setup() {
         this.actionService = useService("action");

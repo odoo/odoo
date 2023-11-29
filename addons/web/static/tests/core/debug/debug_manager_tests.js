@@ -42,6 +42,7 @@ import { Component, xml } from "@odoo/owl";
 export class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
     static components = { DebugMenu };
+    static props = ["*"];
     setup() {
         useOwnDebugContext({ categories: ["default", "custom"] });
     }
@@ -468,6 +469,7 @@ QUnit.module("DebugMenu", (hooks) => {
 
         class ToyController extends Component {
             static template = xml`<div class="o-toy-view"/>`;
+            static props = ["*"];
             setup() {
                 useSetupView();
             }

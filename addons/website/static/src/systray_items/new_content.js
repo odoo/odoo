@@ -46,6 +46,12 @@ class NewContentElement extends Component {
 class InstallModuleDialog extends Component {
     static components = { WebsiteDialog };
     static template = "website.InstallModuleDialog";
+    static props = {
+        title: String,
+        installationText: String,
+        installModule: Function,
+        close: Function,
+    };
 
     setup() {
         this.installButton = _t("Install");
@@ -60,6 +66,7 @@ class InstallModuleDialog extends Component {
 export class NewContentModal extends Component {
     static template = "website.NewContentModal";
     static components = { NewContentElement };
+    static props = {};
 
     setup() {
         this.orm = useService('orm');
@@ -276,6 +283,7 @@ export class NewContentModal extends Component {
 class NewContentSystray extends Component {
     static template = "website.NewContentSystray";
     static components = { NewContentModal };
+    static props = {};
 
     setup() {
         this.website = useService('website');

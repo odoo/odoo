@@ -7,6 +7,12 @@ import { Dialog } from "@web/core/dialog/dialog";
 export class SelectionPopup extends Component {
     static template = "point_of_sale.SelectionPopup";
     static components = { Dialog };
+    static props = {
+        title: { type: String, optional: true },
+        list: { type: Array, optional: true },
+        getPayload: Function,
+        close: Function,
+    };
     static defaultProps = {
         title: _t("Select"),
         list: [],
@@ -17,10 +23,7 @@ export class SelectionPopup extends Component {
      * Array is the payload of this popup.
      *
      * @param {Object} props
-     * @param {String} [props.confirmText='Confirm']
-     * @param {String} [props.cancelText='Cancel']
      * @param {String} [props.title='Select']
-     * @param {String} [props.body='']
      * @param {Array<Selection>} [props.list=[]]
      *      Selection {
      *          id: integer,

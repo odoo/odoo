@@ -15,6 +15,7 @@ import { NameAndSignature } from "@web/core/signature/name_and_signature";
 class SignatureForm extends Component {
     static template = "portal.SignatureForm"
     static components = { NameAndSignature }
+    static props = ["*"];
 
     setup() {
         this.rootRef = useRef("root");

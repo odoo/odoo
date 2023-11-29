@@ -13,6 +13,15 @@ export class CalendarYearRenderer extends Component {
         Popover: CalendarYearPopover,
     };
     static template = "web.CalendarYearRenderer";
+    static props = {
+        model: Object,
+        displayName: { type: String, optional: true },
+        isWeekendVisible: { type: Boolean, optional: true },
+        createRecord: Function,
+        editRecord: Function,
+        deleteRecord: Function,
+        setDate: { type: Function, optional: true },
+    };
 
     setup() {
         this.months = luxon.Info.months();

@@ -17890,6 +17890,7 @@ QUnit.module("Views", (hooks) => {
         const customField = {
             component: class CustomField extends Component {
                 static template = xml`<span t-esc="props.record.data.int_field"/>`;
+                static props = ["*"];
             },
             fieldDependencies: [{ name: "int_field", type: "integer" }],
         };
@@ -17915,6 +17916,7 @@ QUnit.module("Views", (hooks) => {
             const customField = {
                 component: class CustomField extends Component {
                     static template = xml`<span t-esc="props.record.data.m2o[0]"/>`;
+                    static props = ["*"];
                 },
                 fieldDependencies: [{ name: "m2o", type: "many2one", relation: "bar" }],
             };
@@ -18384,6 +18386,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("view widgets are rendered in list view", async function (assert) {
         class TestWidget extends Component {
             static template = xml`<div class="test_widget" t-esc="props.record.data.bar"/>`;
+            static props = ["*"];
         }
         const testWidget = {
             component: TestWidget,

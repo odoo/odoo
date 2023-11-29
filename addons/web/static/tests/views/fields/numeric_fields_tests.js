@@ -337,6 +337,7 @@ QUnit.module("Fields", (hooks) => {
                         <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
                     </main>
                 `;
+                static props = ["*"];
                 setup() {
                     useNumpadDecimal();
                     this.state = useState({ showOtherInput: false });
