@@ -2,13 +2,14 @@
 
 import { visitXML } from "@web/core/utils/xml";
 import { archParseBoolean } from "@web/views/utils";
+import { makeSortedColumn } from "./pivot_utils";
 
 export class PivotArchParser {
     parse(arch) {
         const archInfo = {
             activeMeasures: [], // store the defined active measures
             colGroupBys: [], // store the defined group_by used on cols
-            defaultOrder: null,
+            sortedColumn: null,
             fieldAttrs: {},
             rowGroupBys: [], // store the defined group_by used on rows
             widgets: {}, // wigdets defined in the arch
@@ -23,7 +24,11 @@ export class PivotArchParser {
                         );
                     }
                     if (node.hasAttribute("default_order")) {
-                        archInfo.defaultOrder = node.getAttribute("default_order");
+                        const defaultOrder = node.getAttribute("default_order").split(" ");
+                        archInfo.sortedColumn = makeSortedColumn({
+                            measure: defaultOrder[0],
+                            order: defaultOrder[1] ? defaultOrder[1] : "asc",
+                        });
                     }
                     if (node.hasAttribute("string")) {
                         archInfo.title = node.getAttribute("string");

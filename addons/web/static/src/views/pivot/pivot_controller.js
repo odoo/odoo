@@ -37,10 +37,15 @@ export class PivotController extends Component {
      * @returns {Object}
      */
     getContext() {
-        return {
+        const context = {
             pivot_measures: this.model.metaData.activeMeasures,
             pivot_column_groupby: this.model.metaData.fullColGroupBys,
             pivot_row_groupby: this.model.metaData.fullRowGroupBys,
         };
+        const sortedColumn = this.model.metaData.sortedColumn;
+        if (sortedColumn) {
+            context.pivot_sorted_column = sortedColumn;
+        }
+        return context;
     }
 }

@@ -5,6 +5,7 @@ import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
+import { parseServerWeekHeader } from "@web/views/pivot/pivot_utils";
 const { toNumber, formatValue } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
@@ -257,18 +258,4 @@ function getGroupStartingDay(field, groupBy, readGroup) {
     }
     const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
     return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
-}
-
-/**
- * Parses a pivot week header value.
- * @param {string} value
- * @example
- * parseServerWeekHeader("W1 2020") // { week: 1, year: 2020 }
- */
-function parseServerWeekHeader(value) {
-    // Value is always formatted as "W1 2020", no matter the language.
-    // Parsing this formatted value is the only way to ensure we get the same
-    // locale aware week number as the one used in the server.
-    const [week, year] = value.split(" ");
-    return { week: Number(week.slice(1)), year: Number(year) };
 }

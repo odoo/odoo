@@ -40,7 +40,7 @@ export const pivotView = {
             modelParams.metaData = {
                 activeMeasures: archInfo.activeMeasures,
                 colGroupBys: archInfo.colGroupBys,
-                defaultOrder: archInfo.defaultOrder,
+                sortedColumn: archInfo.sortedColumn,
                 disableLinking: Boolean(archInfo.disableLinking),
                 fields: fields,
                 fieldAttrs: archInfo.fieldAttrs,

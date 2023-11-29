@@ -7,6 +7,7 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { VERSION, makeSortedColumn, parseServerWeekHeader } from "./pivot_utils";
 
 /**
  * @param {number} value
@@ -367,15 +368,7 @@ export class PivotModel extends Model {
             return this.race.add(_loadData(...args));
         };
 
-        let sortedColumn = params.metaData.sortedColumn || null;
-        if (!sortedColumn && params.metaData.defaultOrder) {
-            const defaultOrder = params.metaData.defaultOrder.split(" ");
-            sortedColumn = {
-                groupId: [[], []],
-                measure: defaultOrder[0],
-                order: defaultOrder[1] ? defaultOrder[1] : "asc",
-            };
-        }
+        const sortedColumn = params.metaData.sortedColumn || null;
 
         this.searchParams = {
             context: {},
@@ -703,8 +696,14 @@ export class PivotModel extends Model {
     async load(searchParams) {
         this.searchParams = searchParams;
         const processedMeasures = processMeasure(searchParams.context.pivot_measures);
-        const activeMeasures = processedMeasures || this.metaData.activeMeasures;
-        const metaData = this._buildMetaData({ activeMeasures });
+        const params = {
+            activeMeasures: processedMeasures || this.metaData.activeMeasures,
+        };
+        const sortedColumn = searchParams.context.pivot_sorted_column;
+        if (sortedColumn?.version === VERSION) {
+            params.sortedColumn = sortedColumn;
+        }
+        const metaData = this._buildMetaData(params);
         if (!this.reload) {
             metaData.rowGroupBys =
                 searchParams.context.pivot_row_groupby ||
@@ -744,6 +743,11 @@ export class PivotModel extends Model {
      * @param {number[]} sortedColumn.groupId
      */
     sortRows(sortedColumn) {
+        const colGroupId = sortedColumn.groupId[1];
+        sortedColumn = makeSortedColumn({
+            ...sortedColumn,
+            colGroupBys: this.metaData.fullColGroupBys.slice(0, colGroupId.length),
+        });
         if (this.race.getCurrentProm()) {
             return; // we are currently reloaded the table
         }
@@ -1010,7 +1014,7 @@ export class PivotModel extends Model {
     _getGroupValues(group, groupBys) {
         return groupBys.map((gb) => {
             const groupBy = this._normalize(gb);
-            return this._sanitizeValue(group[groupBy]);
+            return this._getGroupValue(group, groupBy);
         });
     }
     /**
@@ -1533,6 +1537,22 @@ export class PivotModel extends Model {
         });
 
         if (metaData.sortedColumn) {
+            const { colGroupBys, groupId, measure } = metaData.sortedColumn;
+            if (!metaData.activeMeasures.includes(measure)) {
+                return;
+            }
+            let tree = data.colGroupTree;
+            const colGroupValues = groupId[1];
+            const fullColGroupBys = metaData.fullColGroupBys;
+            for (let index = 0; index < colGroupValues.length; index++) {
+                if (colGroupBys[index] !== fullColGroupBys[index]) {
+                    return;
+                }
+                tree = tree.directSubTrees.get(colGroupValues[index]);
+                if (!tree) {
+                    return;
+                }
+            }
             this._sortRows(metaData.sortedColumn, config);
         }
     }
@@ -1605,10 +1625,22 @@ export class PivotModel extends Model {
      * a label if any)
      *
      * @protected
-     * @param {any} value
+     * @param {Object} group
+     * @param {string} groupBy
      * @returns {any}
      */
-    _sanitizeValue(value) {
+    _getGroupValue(group, groupBy) {
+        const [fieldName, interval] = groupBy.split(":");
+        const field = this.metaData.fields[fieldName];
+        const value = group[groupBy];
+        if (["date", "datetime"].includes(field.type)) {
+            if (interval === "week") {
+                const { week, year } = parseServerWeekHeader(value);
+                return JSON.stringify([week, year]);
+            }
+            const { from, to } = group.__range[groupBy];
+            return JSON.stringify([from, to]);
+        }
         if (value instanceof Array) {
             return value[0];
         }

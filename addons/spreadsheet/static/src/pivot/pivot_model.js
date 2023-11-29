@@ -472,7 +472,7 @@ export class SpreadsheetPivotModel extends PivotModel {
                     group
                 );
             }
-            return this._sanitizeValue(group[groupBy]);
+            return this._getGroupValue(group, groupBy);
         });
     }
 
