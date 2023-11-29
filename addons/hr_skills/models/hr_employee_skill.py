@@ -9,7 +9,6 @@ from collections import defaultdict
 class EmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
     _description = "Skill level for an employee"
-    _rec_name = 'skill_id'
     _order = "skill_type_id, skill_level_id"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
@@ -52,6 +51,11 @@ class EmployeeSkill(models.Model):
             else:
                 skill_levels = record.skill_type_id.skill_level_ids
                 record.skill_level_id = skill_levels.filtered('default_level') or skill_levels[0] if skill_levels else False
+
+    @api.depends('skill_id', 'skill_level_id')
+    def _compute_display_name(self):
+        for employee_skill in self:
+            employee_skill.display_name = f"{employee_skill.skill_id.name}: {employee_skill.skill_level_id.name}"
 
     def _create_logs(self):
         today = fields.Date.context_today(self)

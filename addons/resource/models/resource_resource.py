@@ -34,6 +34,11 @@ class ResourceResource(models.Model):
         ('material', 'Material')], string='Type',
         default='user', required=True)
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
+    avatar_128 = fields.Image(compute='_compute_avatar_128')
+    share = fields.Boolean(related='user_id.share')
+    email = fields.Char(related='user_id.email')
+    phone = fields.Char(related='user_id.phone')
+
     time_efficiency = fields.Float(
         'Efficiency Factor', default=100, required=True,
         help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
@@ -48,6 +53,11 @@ class ResourceResource(models.Model):
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
     ]
+
+    @api.depends('user_id')
+    def _compute_avatar_128(self):
+        for resource in self:
+            resource.avatar_128 = resource.user_id.avatar_128
 
     @api.model_create_multi
     def create(self, vals_list):

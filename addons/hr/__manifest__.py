@@ -14,8 +14,7 @@
     'depends': [
         'base_setup',
         'phone_validation',
-        'mail',
-        'resource',
+        'resource_mail',
         'web',
     ],
     'data': [

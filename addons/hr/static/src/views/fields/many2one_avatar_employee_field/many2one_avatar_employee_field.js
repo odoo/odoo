@@ -9,6 +9,7 @@ import {
 } from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
 import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
 
+
 export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
     Many2OneAvatarUserField
 ) {}

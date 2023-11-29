@@ -23,17 +23,25 @@ const WithUserChatter = (T) =>
             this.avatarCard = usePopover(AvatarCardPopover);
         }
 
+        get displayAvatarCard() {
+            return !this.env.isSmall && this.relation === "res.users";
+        }
+
+        getAvatarCardProps() {
+            return {
+                id: this.props.record.data[this.props.name][0] ?? false,
+            };
+        }
+
         onClickAvatar(ev) {
             const id = this.props.record.data[this.props.name][0] ?? false;
             if (id !== false) {
-                if (this.env.isSmall || this.relation !== "res.users") {
+                if (!this.displayAvatarCard) {
                     return;
                 }
                 const target = ev.currentTarget;
                 if (!this.avatarCard.isOpen) {
-                    this.avatarCard.open(target, {
-                        id: this.props.record.data[this.props.name][0],
-                    });
+                    this.avatarCard.open(target, this.getAvatarCardProps());
                 }
             }
         }
