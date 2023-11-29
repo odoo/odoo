@@ -172,7 +172,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
             SplitBillScreen.orderlineHas("Combo Product 4", "1", "0"),
             SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
 
-            ...SplitBillScreen.subtotalIs("54.13"),
+            ...SplitBillScreen.subtotalIs("53.80"),
             ...SplitBillScreen.clickPay(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -198,6 +198,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
                 "22.00",
                 "Office Combo"
             ),
-            ...ProductScreen.totalAmountIs("45.86"),
+            ...ProductScreen.totalAmountIs("45.53"),
         ].flat(),
 });

@@ -7,6 +7,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
+from odoo.addons.point_of_sale.tests.common import archive_products
 
 import odoo.tests
 
@@ -89,19 +90,19 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'sequence': 10,
         })
 
-        # Archive all existing product to avoid noise during the tours
-        all_pos_product = env['product.product'].search([('available_in_pos', '=', True)])
+        archive_products(env)
+
         cls.tip = env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - cls.tip)._write({'active': False})
 
-        # In DESKS categ: Desk Pad
-        pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
-
-        # In DESKS categ: Whiteboard Pen
-        pos_categ_misc = env.ref('point_of_sale.pos_category_miscellaneous')
-
-        # In CHAIR categ: Letter Tray
-        pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs')
+        pos_desk_misc_test = env['pos.category'].create({
+            'name': 'Misc test',
+        })
+        pos_cat_chair_test = env['pos.category'].create({
+            'name': 'Chair test',
+        })
+        pos_cat_desk_test = env['pos.category'].create({
+            'name': 'Desk test',
+        })
 
         # test an extra price on an attribute
         cls.whiteboard_pen = env['product.product'].create({
@@ -111,7 +112,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_ids': [(4, pos_categ_misc.id)],
+            'pos_categ_ids': [(4, pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -145,14 +146,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_categ_desks.id)],
+            'pos_categ_ids': [(4, pos_cat_desk_test.id)],
         })
         cls.letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_categ_chairs.id)],
+            'pos_categ_ids': [(4, pos_cat_chair_test.id)],
         })
         cls.desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',
@@ -498,6 +499,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
         })
 
+        # Set customers
+        cls.partner_test_1 = cls.env['res.partner'].create({'name': 'Partner Test 1'})
+        cls.partner_test_2 = cls.env['res.partner'].create({'name': 'Partner Test 2'})
+        cls.partner_test_3 = cls.env['res.partner'].create({'name': 'Partner Test 3'})
+
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
         env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
@@ -740,8 +746,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'only_round_cash_method': True
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUpCashAndBank', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUpCashAndBank', login="pos_user")
 
         invoiced_orders = self.env['pos.order'].search([('state', '=', 'invoiced')])
         self.assertEqual(len(invoiced_orders), 2, 'There should be 2 invoiced orders.')
@@ -860,8 +866,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
 
     def test_07_pos_combo(self):
-        combo_product = setup_pos_combo_items(self)
-        combo_product.write({'lst_price': 50})
+        setup_pos_combo_items(self)
+        self.office_combo.write({'lst_price': 50})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceTaxIncludedTour', login="pos_user")
         order = self.env['pos.order'].search([])
@@ -970,8 +976,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'barcode': '3760171283370',
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
 
     def test_refund_order_with_fp_tax_included(self):
         #create a tax of 15% tax included
@@ -1013,8 +1019,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'tax_regime_selection': True,
             })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
 
     def test_lot_refund(self):
 
@@ -1026,8 +1032,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotRefundTour', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotRefundTour', login="pos_user")
 
     def test_receipt_tracking_method(self):
         self.product_a = self.env['product.product'].create({
@@ -1037,8 +1043,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
             'available_in_pos': True,
         })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="pos_user")
 
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
@@ -1081,8 +1087,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         }])
         self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
