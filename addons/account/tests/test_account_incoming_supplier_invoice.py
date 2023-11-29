@@ -56,27 +56,41 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
     @contextmanager
     def with_success_decoder(self, omit=None):
+        decoded_files = set()
+
         def get_edi_decoder(_record, file_data, new=False):
-            return lambda *args, **kwargs: not omit or file_data['attachment'].name not in omit
+
+            def decoder(*args, **kwargs):
+                return not omit or file_data['attachment'].name not in omit
+
+            if decoder():
+                decoded_files.add(file_data['filename'])
+            return decoder
 
         with patch.object(type(self.env['account.move']), '_get_edi_decoder', get_edi_decoder):
-            yield
+            yield decoded_files
 
     @contextmanager
     def with_simulated_embedded_xml(self, pdf):
         super_decode_edi_pdf = type(self.env['ir.attachment'])._decode_edi_pdf
+        xml_filename = f"{pdf.name}_xml"
 
         def decode_edi_pdf(record, filename, content):
             results = super_decode_edi_pdf(record, filename, content)
             if filename == pdf.name:
-                results += pdf._decode_edi_xml(f"{pdf.name}_xml", '<test></test>')
+                embedded_files = self.env['ir.attachment']._decode_edi_xml(xml_filename, '<test></test>')
+                for file_data in embedded_files:
+                    file_data['sort_weight'] += 1
+                    file_data['originator_pdf'] = pdf
+                results += embedded_files
             return results
 
         with patch.object(type(self.env['ir.attachment']), '_decode_edi_pdf', decode_edi_pdf):
-            yield
+            yield xml_filename
 
     def _assert_extend_with_attachments(self, expected_values, new=False):
         attachments = self.env['ir.attachment'].browse([x.id for x in expected_values])
+        nb_moves_before = self.env['account.move'].search_count([('company_id', '=', self.env.company.id)])
         results = self.env['account.move']\
             .with_context(default_move_type='out_invoice', default_journal_id=self.company_data['default_journal_sale'].id)\
             ._extend_with_attachments(attachments, new=new)
@@ -91,6 +105,9 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
             current_values[attachment.name] = invoice_number
 
         self.assertEqual(current_values, {k.name: v for k, v in expected_values.items()})
+
+        nb_moves_after = self.env['account.move'].search_count([('company_id', '=', self.env.company.id)])
+        self.assertEqual(nb_moves_before + invoice_number, nb_moves_after)
 
     def test_supplier_invoice_mailed_from_supplier(self):
         message_parsed = {
@@ -182,17 +199,42 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         gif2 = self._create_dummy_gif_attachment()
         xml1 = self._create_dummy_xml_attachment()
         xml2 = self._create_dummy_xml_attachment()
-        with self.with_success_decoder():
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, new=False)
+            self.assertEqual(decoded_files, {pdf1.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
+            self.assertEqual(decoded_files, {pdf1.name, pdf2.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 1, gif1: 1, gif2: 1}, new=False)
+            self.assertEqual(decoded_files, {pdf1.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 2, gif1: 3, gif2: 4}, new=True)
+            self.assertEqual(decoded_files, {pdf1.name, pdf2.name, gif1.name, gif2.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=False)
+            self.assertEqual(decoded_files, {xml1.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True)
+            self.assertEqual(decoded_files, {xml1.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({xml1: 1, xml2: 1}, new=False)
+            self.assertEqual(decoded_files, {xml1.name})
+        with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({xml1: 1, xml2: 2}, new=True)
-        with self.with_success_decoder(omit={pdf1.name}):
+            self.assertEqual(decoded_files, {xml1.name, xml2.name})
+        with self.with_success_decoder(omit={pdf1.name}) as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
-        with self.with_success_decoder(), self.with_simulated_embedded_xml(pdf1):
+            self.assertEqual(decoded_files, {pdf2.name})
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, new=False)
+            self.assertEqual(decoded_files, {xml_filename})
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
+            self.assertEqual(decoded_files, {xml_filename, pdf2.name})
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=False)
+            self.assertEqual(decoded_files, {xml1.name})
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True)
+            self.assertEqual(decoded_files, {xml1.name})
