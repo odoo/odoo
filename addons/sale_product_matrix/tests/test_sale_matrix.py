@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 import odoo.tests
 
 from odoo.addons.product_matrix.tests import common
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -16,6 +20,7 @@ class TestSaleMatrixUi(common.TestMatrixCommon):
     def test_sale_matrix_ui(self):
         # TODO: Adapt to work without demo data
         if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
         # Set the template as configurable by matrix.

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 import odoo.tests
 
 from odoo import api
@@ -8,6 +10,8 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseW
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.addons.website.tools import MockRequest
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -108,6 +112,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
 
     def test_05_google_analytics_tracking(self):
         if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour("/shop", 'google_analytics_view_item')

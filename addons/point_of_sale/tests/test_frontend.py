@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import tools
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from datetime import date, timedelta
+
+_logger = logging.getLogger(__name__)
 
 
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
@@ -488,6 +492,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
         self.main_pos_config.write({
@@ -519,6 +524,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_02_pos_with_invoiced(self):
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="accountman")
@@ -534,6 +540,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_05_ticket_screen(self):
         if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")
