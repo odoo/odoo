@@ -90,7 +90,7 @@ export class Thread extends Component {
                     this.threadService.fetchMoreMessages(this.props.thread);
                 }
             },
-            { init: null }
+            { init: null, ready: false }
         );
         this.loadNewerState = useVisible(
             "load-newer",
@@ -99,7 +99,7 @@ export class Thread extends Component {
                     this.threadService.fetchMoreMessages(this.props.thread, "newer");
                 }
             },
-            { init: null }
+            { init: null, ready: false }
         );
         this.presentThresholdState = useVisible(
             "present-treshold",
@@ -241,9 +241,7 @@ export class Thread extends Component {
             saveScroll();
         };
         const applyScroll = () => {
-            if (this.state.mountedAndLoaded) {
-                loadedAndPatched = true;
-            } else {
+            if (!this.state.mountedAndLoaded) {
                 return;
             }
             // Use toRaw() to prevent scroll check from triggering renders.
@@ -278,6 +276,11 @@ export class Thread extends Component {
             newestPersistentMessage = thread.newestPersistentMessage;
             oldestPersistentMessage = thread.oldestPersistentMessage;
             loadNewer = thread.loadNewer;
+            if (!loadedAndPatched) {
+                loadedAndPatched = true;
+                this.loadOlderState.ready = true;
+                this.loadNewerState.ready = true;
+            }
         };
         onWillPatch(() => {
             if (!loadedAndPatched) {
