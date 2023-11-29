@@ -315,6 +315,7 @@ class AccountReportLine(models.Model):
     account_codes_formula = fields.Char(string="Account Codes Formula Shortcut", help="Internal field to shorten expression_ids creation for the account_codes engine", inverse='_inverse_account_codes_formula', store=False)
     aggregation_formula = fields.Char(string="Aggregation Formula Shortcut", help="Internal field to shorten expression_ids creation for the aggregation engine", inverse='_inverse_aggregation_formula', store=False)
     external_formula = fields.Char(string="External Formula Shortcut", help="Internal field to shorten expression_ids creation for the external engine", inverse='_inverse_external_formula', store=False)
+    horizontal_split_side = fields.Selection(string="Horizontal Split Side", selection=[('left', "Left"), ('right', "Right")], compute='_compute_horizontal_split_side', readonly=False, store=True, recursive=True)
 
     _sql_constraints = [
         ('code_uniq', 'unique (report_id, code)', "A report line with the same code already exists."),
@@ -334,6 +335,12 @@ class AccountReportLine(models.Model):
         for report_line in self:
             if report_line.parent_id:
                 report_line.report_id = report_line.parent_id.report_id
+
+    @api.depends('parent_id.horizontal_split_side')
+    def _compute_horizontal_split_side(self):
+        for report_line in self:
+            if report_line.parent_id:
+                report_line.horizontal_split_side = report_line.parent_id.horizontal_split_side
 
     @api.constrains('parent_id')
     def _validate_groupby_no_child(self):
