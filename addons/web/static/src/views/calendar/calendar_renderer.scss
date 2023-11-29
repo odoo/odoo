@@ -597,6 +597,23 @@
                 background-color: $color-subtle;
             }
 
+            &.o_event_hatched:not(.o_event_dot):not(.fc-day-grid-event), &.o_event_hatched.fc-day-grid-event .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
+                background: repeating-linear-gradient(
+                    45deg,
+                    RGBA(to-rgb($color), .3),
+                    RGBA(to-rgb($color), .3) 10px,
+                    RGBA(to-rgb($color), .6) 10px,
+                    RGBA(to-rgb($color), .6) 20px
+                ) !important;
+            }
+
+            &.o_event_striked:not(.o_event_dot) {
+                background: linear-gradient(
+                    transparent 0 45%,
+                    $color 45% 55%,
+                    transparent 55% 100%);
+            }
+
             &.fc-event:not(.o_event_dot):not(.fc-dragging) {
                 color: color-contrast($color-subtle);
                 border-color: tint-color($color, 50%);
