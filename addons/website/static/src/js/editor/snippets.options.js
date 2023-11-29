@@ -3443,10 +3443,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
-        if (this.isAnimatedText) {
-            this.$overlay[0].querySelectorAll(".o_handle")
-                .forEach(handle => handle.classList.add("pe-none"));
-        }
+        this.$overlay[0].querySelector(".o_handles").classList.toggle("pe-none", this.isAnimatedText);
     },
     /**
      * @override
@@ -3729,8 +3726,7 @@ options.registry.TextHighlight = options.Class.extend({
         this.leftPanelEl = this.$overlay.data("$optionsSection")[0];
         // Reduce overlay opacity for more highlight visibility on small text.
         this.$overlay[0].style.opacity = "0.25";
-        this.$overlay[0].querySelectorAll(".o_handle")
-            .forEach(handle => handle.classList.add("pe-none"));
+        this.$overlay[0].querySelector(".o_handles").classList.add("pe-none");
     },
     /**
      * Move "Text Effect" options to the editor's toolbar.
