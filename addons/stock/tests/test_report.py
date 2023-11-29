@@ -1080,9 +1080,7 @@ class TestReports(TestReportsCommon):
             move.product_uom_qty = 150
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
-        self.assertEqual(receipt1.move_ids.forecast_availability, -50.0)
-        self.assertEqual(delivery1.move_ids.forecast_availability, 150)
-        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date1)
+        self.assertEqual(delivery1.move_ids.forecast_availability, -50.0)
 
         # Creation of an identical receipt which should lead to a positive forecast availability
         scheduled_date2 = datetime.now() + timedelta(days=3)
@@ -1092,7 +1090,7 @@ class TestReports(TestReportsCommon):
         receipt_form.scheduled_date = scheduled_date2
         with receipt_form.move_ids_without_package.new() as move:
             move.product_id = self.product
-            move.product_uom_qty = 150
+            move.product_uom_qty = 50
         receipt2 = receipt_form.save()
         receipt2.action_confirm()
 
@@ -1104,8 +1102,6 @@ class TestReports(TestReportsCommon):
         receipt2.move_ids.quantity = receipt2.move_ids.product_uom_qty
         receipt2.move_ids.picked = True
         receipt2.button_validate()
-        self.assertEqual(receipt1.move_ids.forecast_availability, 100.0)
-
         # Check forecast_information of delivery1, because the receipt2 as been validate the forecast_expected_date == receipt1.scheduled_date
         delivery1.move_ids._compute_forecast_information()
         self.assertEqual(delivery1.move_ids.forecast_availability, 200)
@@ -1117,9 +1113,10 @@ class TestReports(TestReportsCommon):
         delivery2 = delivery2_form.save()
         delivery2.action_confirm()
         delivery2.move_ids.quantity = delivery1.move_ids.quantity
-        # To avoid stealing the 150 unit in stock
+        # Unreserve to avoid stealing the 50 unit in stock
         delivery2.do_unreserve()
-        self.assertEqual(delivery2.move_ids.forecast_availability, 100)
+        # Still needs 200 qty to fulfill delivery2's need
+        self.assertEqual(delivery2.move_ids.forecast_availability, -200)
 
         # Check for both deliveries and receipts if the highlight (is_matched) corresponds to the correct picking
         for picking in [delivery1, delivery2, receipt1, receipt2]:
