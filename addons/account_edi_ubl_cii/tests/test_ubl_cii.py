@@ -5,6 +5,7 @@ from lxml import etree
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tools import file_open
 
 
 @tagged('post_install', '-at_install')
@@ -66,3 +67,56 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         )
 
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def test_import_tax_prediction(self):
+        """ We are going to create 2 tax and import the e-invoice twice.
+
+        On the first attempt, as there isn't any data to leverage, the classic 'search' will be called and we expect
+        the first tax created to be the selected one as the retrieval order is `sequence, id`.
+
+        We will set the second tax on the bill and post it which make it the most probable one.
+
+        On the second attempt, we expect that second tax to be retrieved.
+        """
+        if not hasattr(self.env["account.move.line"], '_predict_specific_tax'):
+            self.skipTest("The predictive bill module isn't install and thus prediction with edi can't be tested.")
+        # create 2 new taxes for the test seperatly to ensure the first gets the smaller id
+        new_tax_1 = self.env["account.tax"].create({
+            'name': 'tax with lower id could be retrieved first',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 16.0,
+        })
+        new_tax_2 = self.env["account.tax"].create({
+            'name': 'tax with higher id could be retrieved second',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 16.0,
+        })
+
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        # Import the document for the first time
+        bill = self.env['account.journal']\
+                .with_context(default_journal_id=self.company_data["default_journal_purchase"].id)\
+                ._create_document_from_attachment(xml_attachment.id)
+
+        # Ensure the first tax is retrieved as there isn't any prediction that could be leverage
+        self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_1)
+
+        # Set the second tax on the line to make it the most probable one
+        bill.invoice_line_ids.tax_ids = new_tax_2
+        bill.action_post()
+
+        # Import the bill again and ensure the prediction did his work
+        bill = self.env['account.journal']\
+                .with_context(default_journal_id=self.company_data["default_journal_purchase"].id)\
+                ._create_document_from_attachment(xml_attachment.id)
+        self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
