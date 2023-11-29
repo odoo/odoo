@@ -209,3 +209,21 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+
+    def test_availability_user_infos_employee(self):
+        """ Ensure that all the user infos needed to display the avatar popover card
+            are available on the model hr.employee.
+        """
+        user = self.env['res.users'].create([{
+            'name': 'Test user',
+            'login': 'test',
+            'email': 'test@odoo.perso',
+            'phone': '+32488990011',
+        }])
+        employee = self.env['hr.employee'].create([{
+            'name': 'Test employee',
+            'user_id': user.id,
+        }])
+        user_fields = ['email', 'phone', 'im_status']
+        for field in user_fields:
+            self.assertEqual(employee[field], user[field])

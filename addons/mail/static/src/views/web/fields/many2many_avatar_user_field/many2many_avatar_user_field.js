@@ -30,11 +30,21 @@ const WithUserChatter = (T) =>
             this.avatarCard = usePopover(AvatarCardPopover);
         }
 
+        displayAvatarCard(record) {
+            return !this.env.isSmall && this.relation === "res.users";
+        }
+
+        getAvatarCardProps(record) {
+            return {
+                id: record.resId,
+            };
+        }
+
         getTagProps(record) {
             return {
                 ...super.getTagProps(...arguments),
                 onImageClicked: (ev) => {
-                    if (this.env.isSmall || this.relation !== "res.users") {
+                    if (!this.displayAvatarCard(record)) {
                         return;
                     }
                     const target = ev.currentTarget;
@@ -42,9 +52,7 @@ const WithUserChatter = (T) =>
                         !this.avatarCard.isOpen ||
                         (this.lastOpenedId && record.resId !== this.lastOpenedId)
                     ) {
-                        this.avatarCard.open(target, {
-                            id: record.resId,
-                        });
+                        this.avatarCard.open(target, this.getAvatarCardProps(record));
                         this.lastOpenedId = record.resId;
                     }
                 },
