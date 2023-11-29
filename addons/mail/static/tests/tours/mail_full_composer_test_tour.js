@@ -3,6 +3,7 @@
 import { createFile, inputFiles } from "web.test_utils_file";
 
 import { registry } from "@web/core/registry";
+import { contains } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -13,6 +14,13 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
     test: true,
     steps: [
+        {
+            content: "Wait for the chatter to be fully loaded",
+            trigger: ".o-mail-Chatter",
+            async run() {
+                await contains(".o-mail-Message", { count: 1 });
+            },
+        },
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",
