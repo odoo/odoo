@@ -1249,50 +1249,50 @@ class Task(models.Model):
         ('subsequent', 'This and following tasks'),
         ('all', 'All tasks'),
     ], default='this', store=False)
-    recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message')
+    recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message', groups="project.group_project_user")
 
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False)
+    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_unit = fields.Selection([
         ('day', 'Days'),
         ('week', 'Weeks'),
         ('month', 'Months'),
         ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', readonly=False)
+    ], default='week', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'End Date'),
         ('after', 'Number of Repetitions'),
-    ], default="forever", string="Until", compute='_compute_repeat', readonly=False)
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False)
-    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False)
+    ], default="forever", string="Until", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_on_month = fields.Selection([
         ('date', 'Date of the Month'),
         ('day', 'Day of the Month'),
-    ], default='date', compute='_compute_repeat', readonly=False)
+    ], default='date', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_on_year = fields.Selection([
         ('date', 'Date of the Year'),
         ('day', 'Day of the Year'),
-    ], default='date', compute='_compute_repeat', readonly=False)
+    ], default='date', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
-    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False)
-    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False)
-    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False)
-    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False)
-    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False)
-    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False)
-    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False)
+    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
+    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
     repeat_day = fields.Selection([
         (str(i), str(i)) for i in range(1, 32)
-    ], compute='_compute_repeat', readonly=False)
+    ], compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_week = fields.Selection([
         ('first', 'First'),
         ('second', 'Second'),
         ('third', 'Third'),
         ('last', 'Last'),
-    ], default='first', compute='_compute_repeat', readonly=False)
+    ], default='first', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_weekday = fields.Selection([
         ('mon', 'Monday'),
         ('tue', 'Tuesday'),
@@ -1301,7 +1301,7 @@ class Task(models.Model):
         ('fri', 'Friday'),
         ('sat', 'Saturday'),
         ('sun', 'Sunday'),
-    ], string='Day Of The Week', compute='_compute_repeat', readonly=False)
+    ], string='Day Of The Week', compute='_compute_repeat', readonly=False, groups="project.group_project_user")
     repeat_month = fields.Selection([
         ('january', 'January'),
         ('february', 'February'),
@@ -1315,12 +1315,12 @@ class Task(models.Model):
         ('october', 'October'),
         ('november', 'November'),
         ('december', 'December'),
-    ], compute='_compute_repeat', readonly=False)
+    ], compute='_compute_repeat', readonly=False, groups="project.group_project_user")
 
-    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
+    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
+    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility', groups="project.group_project_user")
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
