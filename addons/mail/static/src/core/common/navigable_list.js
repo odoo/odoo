@@ -28,9 +28,8 @@ export class NavigableList extends Component {
     setup() {
         this.rootRef = useRef("root");
         this.state = useState({
-            activeOption: null,
+            activeIndex: null,
             open: false,
-            options: [],
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -58,33 +57,22 @@ export class NavigableList extends Component {
     }
 
     get show() {
-        return Boolean(this.state.open && (this.props.isLoading || this.state.options.length));
+        return Boolean(this.state.open && (this.props.isLoading || this.props.options.length));
     }
 
     open() {
-        this.load();
         this.state.open = true;
+        this.state.activeIndex = null;
         this.navigate("first");
     }
 
     close() {
         this.state.open = false;
-        this.state.activeOption = null;
+        this.state.activeIndex = null;
     }
 
-    load() {
-        this.state.options = [];
-        this.state.options = this.props.options.map((option, index) => ({
-            ...option,
-            id: index,
-        }));
-    }
-
-    isActiveOption(option) {
-        return this.state.activeOption?.id === option.id;
-    }
-
-    selectOption(ev, option, params = {}) {
+    selectOption(ev, index, params = {}) {
+        const option = this.props.options[index];
         if (option.unselectable) {
             this.close();
             return;
@@ -96,14 +84,14 @@ export class NavigableList extends Component {
     }
 
     navigate(direction) {
-        const activeOptionId = this.state.activeOption ? this.state.activeOption.id : -1;
+        const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
         let targetId = undefined;
         switch (direction) {
             case "first":
                 targetId = 0;
                 break;
             case "last":
-                targetId = this.state.options.length - 1;
+                targetId = this.props.options.length - 1;
                 break;
             case "previous":
                 targetId = activeOptionId - 1;
@@ -114,7 +102,7 @@ export class NavigableList extends Component {
                 break;
             case "next":
                 targetId = activeOptionId + 1;
-                if (targetId > this.state.options.length - 1) {
+                if (targetId > this.props.options.length - 1) {
                     this.navigate("first");
                     return;
                 }
@@ -122,7 +110,7 @@ export class NavigableList extends Component {
             default:
                 return;
         }
-        this.state.activeOption = this.state.options.find((o) => o.id === targetId);
+        this.state.activeIndex = targetId;
     }
 
     onKeydown(ev) {
@@ -132,11 +120,11 @@ export class NavigableList extends Component {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                if (!this.show || !this.state.activeOption) {
+                if (!this.show || this.state.activeIndex === null) {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.select");
-                this.selectOption(ev, this.state.activeOption);
+                this.selectOption(ev, this.state.activeIndex);
                 break;
             case "escape":
                 markEventHandled(ev, "NavigableList.close");
@@ -157,7 +145,7 @@ export class NavigableList extends Component {
         ev.preventDefault();
     }
 
-    onOptionMouseEnter(option) {
-        this.state.activeOption = option;
+    onOptionMouseEnter(index) {
+        this.state.activeIndex = index;
     }
 }
