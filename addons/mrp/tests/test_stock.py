@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 
@@ -440,3 +441,62 @@ class TestKitPicking(common.TestMrpCommon):
             {'product_id': product.id, 'quantity': 1, 'state': 'done'},
             {'product_id': compo.id, 'quantity': 1, 'state': 'done'},
         ])
+
+    def test_move_line_aggregated_product_quantities_with_kit(self):
+        """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
+        who returns data used to print delivery slips, using kits.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        kit, kit_component_1, kit_component_2, not_kit_1, not_kit_2 = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'uom_id': uom_unit.id,
+        } for name in ['Kit', 'Kit Component 1', 'Kit Component 2', 'Not Kit 1', 'Not Kit 2']])
+
+        bom_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.product_tmpl_id.uom_id.id,
+            'product_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': kit_component_1.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_id': kit_component_2.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = bom_kit.product_id
+            move.product_uom_qty = 4
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = not_kit_1
+            move.product_uom_qty = 4
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = not_kit_2
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == kit_component_1).quantity = 3
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == kit_component_2).quantity = 3
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_1).quantity = 4
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_2).quantity = 2
+        backorder_wizard_dict = delivery.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+
+        aggregate_not_kit_values = delivery.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_not_kit_values.keys()), 2)
+        self.assertTrue(all('Not' in val for val in aggregate_not_kit_values), 'Only non kit products should be included')
+
+        aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
+        self.assertEqual(len(aggregate_kit_values.keys()), 2)
+        self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')
