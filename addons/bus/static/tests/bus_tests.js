@@ -358,6 +358,7 @@ QUnit.test("Can reconnect after late close event", async (assert) => {
 
 QUnit.test("Fallback on simple worker when shared worker failed to initialize", async (assert) => {
     addBusServicesToRegistry();
+    patchWebsocketWorkerWithCleanup();
     const originalSharedWorker = browser.SharedWorker;
     const originalWorker = browser.Worker;
     patchWithCleanup(browser, {
