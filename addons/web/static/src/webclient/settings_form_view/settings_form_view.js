@@ -15,6 +15,21 @@ class SettingRecord extends formView.Model.Record {
         let dirty = true;
         if (intersection(changedFields, this.model._headerFields).length === changedFields.length) {
             dirty = this.dirty;
+            if (this.dirty) {
+                this.model._onChangeHeaderFields().then(async (isDiscard) => {
+                    if (isDiscard) {
+                        await super._update(...arguments);
+                        this.dirty = false;
+                    } else {
+                        // We need to apply and then undo the changes
+                        // to force the field component to be render
+                        // and restore the previous value (like RadioField))
+                        const undoChanges = this._applyChanges(changes);
+                        undoChanges();
+                    }
+                });
+                return;
+            }
         }
         const prom = super._update(...arguments);
         this.dirty = dirty;
@@ -26,6 +41,7 @@ class SettingModel extends formView.Model {
     setup(params) {
         super.setup(...arguments);
         this._headerFields = params.headerFields;
+        this._onChangeHeaderFields = params.onChangeHeaderFields;
     }
     _getNextConfig() {
         const nextConfig = super._getNextConfig(...arguments);
