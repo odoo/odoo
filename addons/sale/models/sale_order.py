@@ -793,6 +793,14 @@ class SaleOrder(models.Model):
                     "You can not delete a sent quotation or a confirmed sales order."
                     " You must first cancel it."))
 
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('partner_id'):
+            self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
+                partner_ids=[vals['partner_id']],
+            )
+        return res
+
     #=== ACTION METHODS ===#
 
     def action_open_discount_wizard(self):
