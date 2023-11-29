@@ -35,7 +35,8 @@ class AccountEdiFormat(models.Model):
 
     def _is_compatible_with_journal(self, journal):
         if self.code == "in_ewaybill_1_03":
-            return journal.type in ("sale", "purchase")
+            # In the Invoice we have a button to send Ewaybill so not required to send it automatically.
+            return False
         return super()._is_compatible_with_journal(journal)
 
     def _is_enabled_by_default_on_journal(self, journal):

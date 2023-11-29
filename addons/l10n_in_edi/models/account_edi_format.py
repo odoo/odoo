@@ -27,7 +27,8 @@ class AccountEdiFormat(models.Model):
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()
         if self.code == "in_einvoice_1_03":
-            return journal.company_id.country_id.code == 'IN'
+            # only applicable for taxpayers turnover higher than Rs.5 crore so default on journal is False
+            return False
         return super()._is_enabled_by_default_on_journal(journal)
 
     def _get_l10n_in_base_tags(self):
