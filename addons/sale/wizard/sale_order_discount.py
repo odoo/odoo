@@ -30,9 +30,9 @@ class SaleOrderDiscount(models.TransientModel):
     @api.constrains('discount_type', 'discount_percentage')
     def _check_discount_amount(self):
         for wizard in self:
-            if wizard.discount_type in ('sol_discount', 'so_discount') and (
-                wizard.discount_percentage <= 0.0
-                or wizard.discount_percentage > 1.0
+            if (
+                wizard.discount_type in ('sol_discount', 'so_discount')
+                and wizard.discount_percentage > 1.0
             ):
                 raise ValidationError(_("Invalid discount amount"))
 
