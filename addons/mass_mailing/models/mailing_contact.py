@@ -29,7 +29,9 @@ class MassMailingContact(models.Model):
                     (0, 0, {'list_id': list_id}) for list_id in list_ids]
         return res
 
-    name = fields.Char()
+    name = fields.Char('Name', compute='_compute_name', readonly=False, store=True, tracking=True)
+    first_name = fields.Char('First Name')
+    last_name = fields.Char('Last Name')
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char('Email')
@@ -47,6 +49,17 @@ class MassMailingContact(models.Model):
              'This field should not be used in a view without a unique and active mailing list context.')
 
     @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        """ Hide first and last name field if the split name feature is not enabled. """
+        res = super().fields_get(allfields, attributes)
+        if not self._is_name_split_activated():
+            if 'first_name' in res:
+                res['first_name']['searchable'] = False
+            if 'last_name' in res:
+                res['last_name']['searchable'] = False
+        return res
+
+    @api.model
     def _search_opt_out(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
         if operator != '=':
@@ -60,6 +73,12 @@ class MassMailingContact(models.Model):
             contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+
+    @api.depends('first_name', 'last_name')
+    def _compute_name(self):
+        for record in self:
+            if record.first_name or record.last_name:
+                record.name = ' '.join(name_part for name_part in (record.first_name, record.last_name) if name_part)
 
     @api.depends('subscription_ids')
     @api.depends_context('default_list_ids')
@@ -163,3 +182,9 @@ class MassMailingContact(models.Model):
             'label': _('Import Template for Mailing List Contacts'),
             'template': '/mass_mailing/static/xls/mailing_contact.xls'
         }]
+
+    @api.model
+    def _is_name_split_activated(self):
+        """ Return whether the contact names are populated as first and last name or as a single field (name). """
+        view = self.env.ref("mass_mailing.mailing_contact_view_tree_split_name", raise_if_not_found=False)
+        return view and view.sudo().active
