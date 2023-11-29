@@ -247,3 +247,23 @@ export function convertBrToLineBreak(str) {
 export function cleanTerm(term) {
     return unaccent((typeof term === "string" ? term : "").toLowerCase());
 }
+
+/**
+ * Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
+ *
+ * @param {string} text
+ */
+export function parseEmail(text) {
+    if (text) {
+        var result = text.match(/"?(.*?)"? <(.*@.*)>/);
+        if (result) {
+            const name = (result[1] || "").trim().replace(/(^"|"$)/g, "");
+            return [name, (result[2] || "").trim()];
+        }
+        result = text.match(/(.*@.*)/);
+        if (result) {
+            return [String(result[1] || "").trim(), String(result[1] || "").trim()];
+        }
+        return [text, false];
+    }
+}

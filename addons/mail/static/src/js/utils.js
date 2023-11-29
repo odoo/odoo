@@ -172,22 +172,6 @@ function inline(node, transform_children) {
     return node.outerHTML;
 }
 
-// Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
-function parseEmail(text) {
-    if (text) {
-        var result = text.match(/"?(.*?)"? <(.*@.*)>/);
-        if (result) {
-            name = (result[1] || "").trim().replace(/(^"|"$)/g, '')
-            return [name, (result[2] || "").trim()];
-        }
-        result = text.match(/(.*@.*)/);
-        if (result) {
-            return [String(result[1] || "").trim(), String(result[1] || "").trim()];
-        }
-        return [text, false];
-    }
-}
-
 /**
  * Returns an escaped conversion of a content.
  *
@@ -221,6 +205,5 @@ export {
     inline,
     linkify,
     parseAndTransform,
-    parseEmail,
     stripHTML,
 };
