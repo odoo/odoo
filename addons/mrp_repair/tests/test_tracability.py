@@ -143,6 +143,75 @@ class TestRepairTraceability(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
 
+    def test_mo_with_used_sn_component_02(self):
+        """
+        Suppose a tracked-by-usn component has been remvoed in a repair order. Then, using to produce a product,
+        but this product has been unbuild. The user should be able to use the component in a new MO
+        """
+        finished, component = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+        }, {
+            'name': 'SN Componentt',
+            'type': 'product',
+            'tracking': 'serial',
+        }])
+
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'USN01',
+            'company_id': self.env.company.id,
+        })
+
+        # create a repair order
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_1
+        with ro_form.move_ids.new() as ro_line:
+            ro_line.repair_line_type = 'remove'
+            ro_line.product_id = component
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.move_ids[0].lot_ids = sn_lot
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.assertEqual(component.qty_available, 1)
+
+        # create a manufacturing order
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        with mo_form.move_raw_ids.new() as raw_line:
+            raw_line.product_id = component
+            raw_line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+        # unbuild the mo
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+        # create another mo and use the same SN
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        with mo_form.move_raw_ids.new() as raw_line:
+            raw_line.product_id = component
+            raw_line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
     def test_mo_with_unscrapped_tracked_component(self):
         """
         Tracked-by-sn component
