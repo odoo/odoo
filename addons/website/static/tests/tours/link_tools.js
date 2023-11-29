@@ -78,10 +78,9 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Link tools, should be open, change the url",
         trigger: '#o_link_dialog_url_input',
-        run: 'text odoo.be'
+        run: 'text_blur odoo.be'
     },
 
-    clickOnImgStep,
     ...wTourUtils.clickOnSave(),
     // 3. Edit a link after saving the page.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -226,7 +225,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change URL back into a http one",
         trigger: "#o_link_dialog_url_input",
-        run: "text callmemaybe.com",
+        run: "text_blur callmemaybe.com",
     },
     {
         content: "Check that link was updated and link content is synced with URL",
@@ -251,15 +250,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: "iframe .s_text_image p a",
-        async run(actions) {
-            // Wait for the popover to finish its opening animation and turn the
-            // observer back on.
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            // This does not trigger a historyStep...
+        run(actions) {
             actions.text("callmemaybe.com/shops");
-            // ... but this does.
-            this.$anchor[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
-        }
+            // Make sure to trigger an history step.
+            // Trick the editor into keyboardType === 'PHYSICAL' and delete the
+            // last character "s" and end with "callmemaybe.com/shop"
+            const link = this.$anchor[0];
+            link.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }));
+            // Trigger editor's '_onInput' handler.
+            link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
+        },
     },
     {
         content: "Check that links's href was updated",
