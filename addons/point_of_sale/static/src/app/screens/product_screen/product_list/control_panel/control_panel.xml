@@ -34,19 +34,6 @@
                         </div>
                     </div>
                 </t>
-                <t t-if="props.subcategories.length > 0 and displayCategImages">
-                    <div class="categories">
-                        <div class="category-list-scroller">
-                            <div class="category-list">
-                                <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                    <CategoryButton
-                                        switchCategory.bind="props.switchCategory"
-                                        category="category" />
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                </t>
                 <t t-if="this.pos.posHasValidProduct()">
                     <div class="search-bar-container sb-product">
                         <span t-if="state.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
@@ -62,6 +49,19 @@
                     </div>
                 </t>
             </div>
+            <t t-if="props.subcategories.length > 0 and displayCategImages">
+                <div class="categories">
+                    <div class="category-list-scroller">
+                        <div class="category-list">
+                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                <CategoryButton
+                                    switchCategory.bind="props.switchCategory"
+                                    category="category" />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </div>
     </t>
 
