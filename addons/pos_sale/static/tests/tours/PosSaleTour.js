@@ -2,10 +2,12 @@
 
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as ReceiptScreenPos from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as ReceiptScreenSale from "@pos_sale/../tests/helpers/ReceiptScreenTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
+const ReceiptScreen = { ...ReceiptScreenPos, ...ReceiptScreenSale };
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
@@ -147,5 +149,24 @@ registry
             ProductScreen.totalAmountIs(40.25),
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
+        ].flat(),
+    });
+
+registry
+    .category("web_tour.tours")
+    .add('PosSettleOrderWithNote', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
+            ReceiptScreen.clickNextOrder(),
+
         ].flat(),
     });
