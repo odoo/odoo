@@ -2,7 +2,7 @@
 
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
-import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import { ReceiptScreen } from "@pos_sale/../tests/helpers/ReceiptScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
@@ -121,3 +121,17 @@ ProductScreen.do.clickOrderline("Product A", 0.5);
 ProductScreen.check.checkOrderlinesNumber(4);
 
 registry.category("web_tour.tours").add('PosSettleOrderNotGroupable', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+ReceiptScreen.do.clickNextOrder();
+
+registry.category("web_tour.tours").add('PosSettleOrderWithNote', { test: true, url: '/pos/ui', steps: getSteps() });
