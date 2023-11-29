@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
-import { parseEmail } from "@mail/js/utils";
+import { parseEmail } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
