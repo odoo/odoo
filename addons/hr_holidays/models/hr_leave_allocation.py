@@ -321,27 +321,33 @@ class HolidaysAllocation(models.Model):
         )
         accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
-            allocation.number_of_days = allocation.number_of_days_display
-            if allocation.type_request_unit == 'hour':
-                allocation.number_of_days = allocation.number_of_hours_display / \
-                    (allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
-                    or HOURS_PER_DAY)
+            allocation_unit = allocation._get_request_unit()
+            if allocation_unit != 'hour':
+                allocation.number_of_days = allocation.number_of_days_display
+            else:
+                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
+                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
+                    or HOURS_PER_DAY
+                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
             if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
+    def _get_request_unit(self):
+        self.ensure_one()
+        if self.allocation_type == "accrual" and self.accrual_plan_id:
+            return self.accrual_plan_id.sudo().added_value_type
+        elif self.allocation_type == "regular":
+            return self.holiday_status_id.request_unit
+        else:
+            return "day"
+
     @api.depends("allocation_type", "holiday_status_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
-            if allocation.allocation_type == "accrual" and allocation.accrual_plan_id:
-                allocation.type_request_unit = allocation.accrual_plan_id.sudo().added_value_type
-            elif allocation.allocation_type == "regular":
-                allocation.type_request_unit = allocation.holiday_status_id.request_unit
-            else:
-                allocation.type_request_unit = "day"
+            allocation.type_request_unit = allocation._get_request_unit()
 
     def _get_carryover_date(self, date_from):
         self.ensure_one()
