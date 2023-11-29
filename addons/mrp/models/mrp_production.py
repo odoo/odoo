@@ -2195,6 +2195,7 @@ class MrpProduction(models.Model):
                     removed = self.env['stock.move.line'].search_count([
                         ('lot_id', '=', move_line.lot_id.id),
                         ('state', '=', 'done'),
+                        ('location_id.usage', '=', 'internal'),
                         ('location_dest_id.scrap_location', '=', True)
                     ])
                     unremoved = self.env['stock.move.line'].search_count([
