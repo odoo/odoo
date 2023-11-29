@@ -1,10 +1,11 @@
-import websocket
 import json
 import logging
 import time
 import urllib3
+import websocket
 
 from threading import Thread
+
 from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
 
