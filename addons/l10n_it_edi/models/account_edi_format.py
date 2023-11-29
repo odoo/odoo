@@ -4,6 +4,7 @@
 from odoo import Command, api, models, fields, _, _lt
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.base.models.ir_qweb_fields import Markup
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.osv.expression import OR, AND
 
@@ -477,9 +478,11 @@ class AccountEdiFormat(models.Model):
         if partner:
             invoice.partner_id = partner
         else:
-            message_to_log.append("%s<br/>%s" % (
+            message = Markup("<br/>").join((
                 _("Vendor not found, useful informations from XML file:"),
-                invoice._compose_info_message(tree, '//CedentePrestatore')))
+                invoice._compose_info_message(tree, '//CedentePrestatore')
+            ))
+            message_to_log.append(message)
 
         # Numbering attributed by the transmitter. <1.1.2>
         elements = tree.xpath('//ProgressivoInvio')
@@ -505,10 +508,11 @@ class AccountEdiFormat(models.Model):
             if document_date:
                 invoice.invoice_date = document_date
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message = Markup("<br/>").join((
                     _("Document date invalid in XML file:"),
                     invoice._compose_info_message(elements[0], '.')
                 ))
+                message_to_log.append(message)
 
         #  Dati Bollo. <2.1.1.6>
         elements = tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
@@ -528,15 +532,17 @@ class AccountEdiFormat(models.Model):
             elements = tree.xpath('.//DatiGenerali/' + document_type)
             if elements:
                 for element in elements:
-                    message_to_log.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
+                    message = Markup("<br/>").join((document_type, _("from XML file:"),
                     invoice._compose_info_message(element, '.')))
+                    message_to_log.append(message)
 
         #  Dati DDT. <2.1.8>
         elements = tree.xpath('.//DatiGenerali/DatiDDT')
         if elements:
-            message_to_log.append("%s<br/>%s" % (
+            message = Markup("<br/>").join((
                 _("Transport informations from XML file:"),
                 invoice._compose_info_message(tree, './/DatiGenerali/DatiDDT')))
+            message_to_log.append(message)
 
         # Due date. <2.4.2.5>
         elements = tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
@@ -547,10 +553,11 @@ class AccountEdiFormat(models.Model):
                 if due_date:
                     invoice.invoice_date_due = fields.Date.to_string(due_date)
                 else:
-                    message_to_log.append("%s<br/>%s" % (
+                    message = Markup("<br/>").join((
                         _("Payment due date invalid in XML file:"),
                         invoice._compose_info_message(elements[0], '.')
                     ))
+                    message_to_log.append(message)
 
         # Information related to the purchase order <2.1.2>
         po_refs = []
@@ -585,9 +592,9 @@ class AccountEdiFormat(models.Model):
                 if bank:
                     invoice.partner_bank_id = bank
                 else:
-                    message_to_log.append("%s<br/>%s" % (
+                    message = Markup("<br/>").join((
                         _("Bank account not found, useful informations from XML file:"),
-                        invoice._compose_multi_info_message(
+                        invoice._compose_info_message(
                             tree, ['.//DatiPagamento//Beneficiario',
                                 './/DatiPagamento//IstitutoFinanziario',
                                 './/DatiPagamento//IBAN',
@@ -595,12 +602,14 @@ class AccountEdiFormat(models.Model):
                                 './/DatiPagamento//CAB',
                                 './/DatiPagamento//BIC',
                                 './/DatiPagamento//ModalitaPagamento'])))
+                    message_to_log.append(message)
         else:
             elements = tree.xpath('.//DatiPagamento/DettaglioPagamento')
             if elements:
-                message_to_log.append("%s<br/>%s" % (
+                message = Markup("<br/>").join((
                     _("Bank account not found, useful informations from XML file:"),
                     invoice._compose_info_message(tree, './/DatiPagamento')))
+                message_to_log.append(message)
 
         # Invoice lines. <2.2.1>
         if not extra_info['simplified']:
@@ -760,10 +769,11 @@ class AccountEdiFormat(models.Model):
             if tax:
                 invoice_line_form.tax_ids += tax
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message = Markup("<br/>").join((
                     _("Tax not found for line with description '%s'", invoice_line_form.name),
                     self.env['account.move']._compose_info_message(element, '.'),
                 ))
+                message_to_log.append(message)
 
         # If no taxes were found, try to find taxes that may be fitting
         if predict_enabled and not invoice_line_form.tax_ids:

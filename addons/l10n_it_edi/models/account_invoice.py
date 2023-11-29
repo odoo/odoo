@@ -10,6 +10,7 @@ from datetime import datetime
 from markupsafe import escape
 
 from odoo import api, fields, models, _
+from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br_enclose
 from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 
@@ -320,18 +321,18 @@ class AccountMove(models.Model):
         posted = super()._post(soft=soft)
         return posted
 
+    def _l10n_it_edi_format_errors(self, header, errors):
+        return Markup('{}<ul class="mb-0">{}</ul>').format(
+            nl2br_enclose(header, 'span') if header else '',
+            Markup().join(nl2br_enclose(' '.join(error.split()), 'li') for error in errors)
+        )
+
     def _compose_info_message(self, tree, element_tags):
-        output_str = ""
-        elements = tree.xpath(element_tags)
-        for element in elements:
-            output_str += "<ul>"
-            for line in element.iter():
-                if line.text:
-                    text = " ".join(line.text.split())
-                    if text:
-                        output_str += "<li>%s: %s</li>" % (line.tag, text)
-            output_str += "</ul>"
-        return output_str
+        result = ""
+        for tag in element_tags if isinstance(element_tags, list) else [element_tags]:
+            for el in tree.xpath(tag):
+                result += self._l10n_it_edi_format_errors("", [f'{subel.tag}: {subel.text}' for subel in el.iter()])
+        return result
 
     def _compose_multi_info_message(self, tree, element_tags):
         output_str = "<ul>"
