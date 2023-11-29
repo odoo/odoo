@@ -472,12 +472,12 @@ class AutomaticEntryWizard(models.TransientModel):
             return None
 
         transfer_format = Markup(
-            _("{amount} ({debit_credit}) from %s were transferred to <strong>{account_target_name}</strong> by {link}")
+            _("{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were transferred to <strong>{account_target_name}</strong> by {link}")
         )
 
         return Markup("<ul>%s</ul>") % Markup().join([
             Markup("<li>%s</li>") % \
-                self._format_strings(transfer_format, transfer_move, balance) % (Markup("<strong>%s</strong>") % account.display_name)
+                self._format_strings(transfer_format, transfer_move, balance, account.display_name)
             for account, balance in balances_per_account.items()
             if account != self.destination_account_id
         ])
@@ -485,7 +485,7 @@ class AutomaticEntryWizard(models.TransientModel):
     def _format_move_link(self, move):
         return move._get_html_link()
 
-    def _format_strings(self, string, move, amount=None):
+    def _format_strings(self, string, move, amount=None, account_source_name=''):
         return string.format(
             label=move.name or _('Adjusting Entry'),
             percent=float_repr(self.percentage, 2),
@@ -496,5 +496,6 @@ class AutomaticEntryWizard(models.TransientModel):
             link=self._format_move_link(move),
             date=format_date(self.env, move.date),
             new_date=self.date and format_date(self.env, self.date) or _('[Not set]'),
+            account_source_name=account_source_name,
             account_target_name=self.destination_account_id.display_name,
         )
