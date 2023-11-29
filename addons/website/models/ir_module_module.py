@@ -442,7 +442,9 @@ class IrModuleModule(models.Model):
         ], order='name')
 
         for theme in themes:
-            theme._generate_primary_snippet_templates()
+            # Only generate templates for installed themes.
+            if theme.state != 'uninstalled':
+                theme._generate_primary_snippet_templates()
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
             for image in images:
