@@ -1514,6 +1514,14 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super()._track_subtype(init_values)
 
+    def _message_get_suggested_recipients(self):
+        recipients = super()._message_get_suggested_recipients()
+        for order in self.filtered('partner_id'):
+            order._message_add_suggested_recipient(
+                recipients, partner=order.partner_id, reason=_("Customer")
+            )
+        return recipients
+
     # PAYMENT #
 
     def _force_lines_to_invoice_policy_order(self):
