@@ -7,10 +7,21 @@ from odoo.exceptions import AccessError, UserError
 
 class TestCommonTimesheet(TransactionCase):
 
+<<<<<<< HEAD
     @classmethod
     def setUpClass(cls):
         super(TestCommonTimesheet, cls).setUpClass()
 
+||||||| parent of efb63b5c164d (temp)
+    def setUp(self):
+        super(TestCommonTimesheet, self).setUp()
+
+=======
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.user.tz = "Europe/Brussels"
+>>>>>>> efb63b5c164d (temp)
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.
         # but there is an ir.rule about it, crashing during its evaluation

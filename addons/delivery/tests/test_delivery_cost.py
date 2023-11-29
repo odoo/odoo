@@ -8,7 +8,10 @@ from odoo.tools import float_compare
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
-        super(TestDeliveryCost, self).setUp()
+        super().setUp()
+        self.env.company.write({
+            'country_id': self.env.ref('base.us').id,
+        })
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']

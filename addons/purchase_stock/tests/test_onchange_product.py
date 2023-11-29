@@ -7,11 +7,13 @@ from odoo import fields
 from odoo.tests.common import TransactionCase, Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.
     """
 
+<<<<<<< HEAD
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,6 +27,34 @@ class TestOnchangeProductId(TransactionCase):
         cls.product_model = cls.env['product.product']
         cls.product_uom_model = cls.env['uom.uom']
         cls.supplierinfo_model = cls.env["product.supplierinfo"]
+||||||| parent of efb63b5c164d (temp)
+    def setUp(self):
+        super(TestOnchangeProductId, self).setUp()
+        self.fiscal_position_model = self.env['account.fiscal.position']
+        self.fiscal_position_tax_model = self.env['account.fiscal.position.tax']
+        self.tax_model = self.env['account.tax']
+        self.po_model = self.env['purchase.order']
+        self.po_line_model = self.env['purchase.order.line']
+        self.res_partner_model = self.env['res.partner']
+        self.product_tmpl_model = self.env['product.template']
+        self.product_model = self.env['product.product']
+        self.product_uom_model = self.env['uom.uom']
+        self.supplierinfo_model = self.env["product.supplierinfo"]
+=======
+    def setUp(self):
+        super(TestOnchangeProductId, self).setUp()
+        self.env.company.country_id = self.env.ref('base.us')
+        self.fiscal_position_model = self.env['account.fiscal.position']
+        self.fiscal_position_tax_model = self.env['account.fiscal.position.tax']
+        self.tax_model = self.env['account.tax']
+        self.po_model = self.env['purchase.order']
+        self.po_line_model = self.env['purchase.order.line']
+        self.res_partner_model = self.env['res.partner']
+        self.product_tmpl_model = self.env['product.template']
+        self.product_model = self.env['product.product']
+        self.product_uom_model = self.env['uom.uom']
+        self.supplierinfo_model = self.env["product.supplierinfo"]
+>>>>>>> efb63b5c164d (temp)
 
     def test_onchange_product_id(self):
 

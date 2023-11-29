@@ -135,6 +135,7 @@ class TestFiscalPosition(common.TransactionCase):
 
 
     def test_20_fp_one_tax_2m(self):
+        self.env.company.country_id = self.env.ref('base.us')
 
         self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
         self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0})

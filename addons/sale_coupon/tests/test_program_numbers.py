@@ -10,44 +10,51 @@ from odoo.tools.float_utils import float_compare
 @tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
-    def setUp(self):
-        super(TestSaleCouponProgramNumbers, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.largeCabinet = self.env['product.product'].create({
+        cls.largeCabinet = cls.env['product.product'].create({
             'name': 'Large Cabinet',
             'list_price': 320.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.conferenceChair = self.env['product.product'].create({
+        cls.conferenceChair = cls.env['product.product'].create({
             'name': 'Conference Chair',
             'list_price': 16.5,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.pedalBin = self.env['product.product'].create({
+        cls.pedalBin = cls.env['product.product'].create({
             'name': 'Pedal Bin',
             'list_price': 47.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.drawerBlack = self.env['product.product'].create({
+        cls.drawerBlack = cls.env['product.product'].create({
             'name': 'Drawer Black',
             'list_price': 25.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.largeMeetingTable = self.env['product.product'].create({
+        cls.largeMeetingTable = cls.env['product.product'].create({
             'name': 'Large Meeting Table',
             'list_price': 40000.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
 
-        self.steve = self.env['res.partner'].create({
+        cls.steve = cls.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'email': 'steve.bucknor@example.com',
+            'property_product_pricelist': cls.pricelist.id,
         })
-        self.empty_order = self.env['sale.order'].create({
-            'partner_id': self.steve.id
+        cls.empty_order = cls.env['sale.order'].create({
+            'partner_id': cls.steve.id,
         })
 
-        self.p1 = self.env['coupon.program'].create({
+        cls.p1 = cls.env['coupon.program'].create({
             'name': 'Code for 10% on orders',
             'promo_code_usage': 'code_needed',
             'promo_code': 'test_10pc',
@@ -55,24 +62,24 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_percentage': 10.0,
             'program_type': 'promotion_program',
         })
-        self.p2 = self.env['coupon.program'].create({
+        cls.p2 = cls.env['coupon.program'].create({
             'name': 'Buy 3 cabinets, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.largeCabinet.id,
+            'reward_product_id': cls.largeCabinet.id,
             'rule_min_quantity': 3,
             'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
-        self.p3 = self.env['coupon.program'].create({
+        cls.p3 = cls.env['coupon.program'].create({
             'name': 'Buy 1 drawer black, get a free Large Meeting Table',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.largeMeetingTable.id,
+            'reward_product_id': cls.largeMeetingTable.id,
             'rule_products_domain': '[["name","ilike","drawer black"]]',
         })
-        self.discount_coupon_program = self.env['coupon.program'].create({
+        cls.discount_coupon_program = cls.env['coupon.program'].create({
             'name': '$100 coupon',
             'program_type': 'coupon_program',
             'reward_type': 'discount',
