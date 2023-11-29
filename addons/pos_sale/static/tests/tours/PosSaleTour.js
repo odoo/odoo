@@ -2,7 +2,7 @@
 
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import { ReceiptScreen } from "@pos_sale/../tests/helpers/ReceiptScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
@@ -10,14 +10,14 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("web_tour.tours")
-    .add('PosSettleOrder', { 
-        test: true, 
-        url: '/pos/ui', 
+    .add('PosSettleOrder', {
+        test: true,
+        url: '/pos/ui',
         steps: () => {
             // signal to start generating steps
             // when finished, steps can be taken from getSteps
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.selectFirstOrder();
@@ -33,23 +33,23 @@ registry
             return getSteps();
         }
     });
-    
+
 registry
     .category("web_tour.tours")
-    .add('PosSettleOrderIncompatiblePartner', { 
-        test: true, 
-        url: '/pos/ui', 
+    .add('PosSettleOrderIncompatiblePartner', {
+        test: true,
+        url: '/pos/ui',
         steps: () => {
-            
+
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.do.clickQuotationButton();
             // The second item in the list is the first sale.order.
             ProductScreen.do.selectNthOrder(2);
             ProductScreen.check.selectedOrderlineHas('product1', 1);
             ProductScreen.check.totalAmountIs("10.00");
-            
+
             ProductScreen.do.clickQuotationButton();
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
@@ -57,19 +57,19 @@ registry
             ProductScreen.do.selectNthOrder(1);
             ProductScreen.check.selectedOrderlineHas('product2', 1);
             ProductScreen.check.totalAmountIs("11.00");
-            return getSteps(); 
-        } 
+            return getSteps();
+        }
     });
 
 registry
     .category("web_tour.tours")
-    .add('PosSettleOrder2', { 
-        test: true, 
-        url: '/pos/ui', 
+    .add('PosSettleOrder2', {
+        test: true,
+        url: '/pos/ui',
         steps: () => {
-                
+
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.selectFirstOrder();
@@ -83,18 +83,18 @@ registry
             PaymentScreen.check.remainingIs('0.0');
             PaymentScreen.do.clickValidate();
             ReceiptScreen.check.isShown();
-            return getSteps(); 
-        } 
+            return getSteps();
+        }
     });
 
 registry
     .category("web_tour.tours")
-    .add('PosRefundDownpayment', { 
-        test: true, 
-        url: '/pos/ui', 
+    .add('PosRefundDownpayment', {
+        test: true,
+        url: '/pos/ui',
         steps: () => {
             startSteps();
-            
+
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.downPaymentFirstOrder();
             ProductScreen.do.clickPayButton();
@@ -112,16 +112,16 @@ registry
             PaymentScreen.do.clickPaymentMethod('Cash');
             PaymentScreen.do.clickValidate();
             ReceiptScreen.do.clickNextOrder();
-            
-            return getSteps(); 
-        } 
+
+            return getSteps();
+        }
     });
 
 registry
     .category("web_tour.tours")
-    .add('PosSettleOrderRealTime', { 
-        test: true, 
-        url: '/pos/ui', 
+    .add('PosSettleOrderRealTime', {
+        test: true,
+        url: '/pos/ui',
         steps: () => {
 
             startSteps();
@@ -135,7 +135,7 @@ registry
             PaymentScreen.do.clickValidate();
             ReceiptScreen.check.isShown();
 
-            return getSteps(); 
+            return getSteps();
         }
     });
 
@@ -176,6 +176,28 @@ registry
             ProductScreen.check.totalAmountIs(40.25);
             ProductScreen.do.clickOrderline("Product A", 0.5);
             ProductScreen.check.checkOrderlinesNumber(4);
+
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add('PosSettleOrderWithNote', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickQuotationButton();
+            ProductScreen.do.selectFirstOrder();
+            ProductScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+            ProductScreen.do.clickPayButton();
+            PaymentScreen.do.clickPaymentMethod('Bank');
+            PaymentScreen.do.clickValidate();
+            ReceiptScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
+            ReceiptScreen.do.clickNextOrder();
 
             return getSteps();
         }
