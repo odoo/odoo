@@ -2216,112 +2216,25 @@ Please change the quantity done or the rounding precision of your unit of measur
         return seen
 
     def _get_forecast_availability_outgoing(self, warehouse):
-        """ Get forcasted information (sum_qty_expected, max_date_expected) of self for in_locations_ids as the in locations.
-        It differ from _get_report_lines because it computes only the necessary information and return a
-        dict by move, which is making faster to use and compute.
-        :param qty: ids list/tuple of locations to consider as interne
-        :return: a defaultdict of moves in self, values are tuple(sum_qty_expected, max_date_expected)
+        """ Get forcasted information (sum_qty_expected, max_date_expected) of self for the warehouse's locations.
+        :param warehouse: warehouse to search under
+        :return: a defaultdict of outgoing moves from warehouse for product_id in self, values are tuple (sum_qty_expected, max_date_expected)
         :rtype: defaultdict
         """
-
-        def _reconcile_out_with_ins(result, out, ins, demand, product_rounding, only_matching_move_dest=True):
-            index_to_remove = []
-            for index, in_ in enumerate(ins):
-                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
-                    index_to_remove.append(index)
-                    continue
-                if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
-                    continue
-                taken_from_in = min(demand, in_['qty'])
-                demand -= taken_from_in
-
-                if out.id in ids_in_self:
-                    result[out] = (result[out][0] + taken_from_in, max(d for d in (in_['move_date'], result[out][1]) if d))
-
-                in_['qty'] -= taken_from_in
-                if in_['qty'] <= 0:
-                    index_to_remove.append(index)
-                if float_is_zero(demand, precision_rounding=product_rounding):
-                    break
-            for index in reversed(index_to_remove):
-                # TODO: avoid this O(n²), maybe we shouldn't "clean" the in list
-                del ins[index]
-            return demand
-
-        ids_in_self = set(self.ids)
-        product_ids = self.product_id
         wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
 
-        # Prefetch data to avoid future request
-        in_domain, out_domain = self.env['stock.forecasted_product_product']._move_confirmed_domain(
-            None, product_ids.ids, wh_location_query
-        )
-        outs = self.env['stock.move'].search_fetch(
-            out_domain,
-            ['product_id', 'product_uom', 'product_qty', 'state'],
-            order='reservation_date, priority desc, date, id',
-        )
-        reserved_outs = self.env['stock.move'].search_fetch(
-            out_domain + [('state', 'in', ('partially_available', 'assigned'))],
-            ['product_id', 'product_uom'],
-            order='priority desc, date, id')
-        ins = self.env['stock.move'].search_fetch(
-            in_domain,
-            ['product_id', 'product_qty', 'date', 'move_dest_ids'],
-            order='priority desc, date, id',
-        )
-
-        currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
-
-        outs_per_product = outs.grouped('product_id')
-        reserved_outs_per_product = reserved_outs.grouped('product_id')
-        ins_per_product = defaultdict(list)
-        for in_ in ins:
-            ins_per_product[in_.product_id.id].append({
-                'qty': in_.product_qty,
-                'move_date': in_.date,
-                'move_dests': in_._rollup_move_dests()
-            })
-
+        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, warehouse.lot_stock_id, read=False)
         result = defaultdict(lambda: (0.0, False))
-        for product in product_ids:
-            product_rounding = product.uom_id.rounding
-            for out in reserved_outs_per_product.get(product, []):
-                # Reconcile with reserved stock.
-                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
-                currents[product.id] -= reserved
-                if out.id in ids_in_self:
-                    result[out] = (result[out][0] + reserved, False)
-
-            unreconciled_outs = []
-            for out in outs_per_product.get(product, []):
-                # Reconcile with the current stock.
-                reserved = 0.0
-                if out.state in ('partially_available', 'assigned'):
-                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
-                demand = out.product_qty - reserved
-
-                if float_is_zero(demand, precision_rounding=product_rounding):
-                    continue
-                current = currents[product.id]
-                taken_from_stock = min(demand, current)
-                if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
-                    currents[product.id] -= taken_from_stock
-                    demand -= taken_from_stock
-                    if out.id in ids_in_self:
-                        result[out] = (result[out][0] + taken_from_stock, False)
-
-                # Reconcile with the ins.
-                # The while loop will finish because it will pop from ins_per_product or decrease the demand until zero
-                if not float_is_zero(demand, precision_rounding=product_rounding):
-                    demand = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
-                if not float_is_zero(demand, precision_rounding=product_rounding):
-                    unreconciled_outs.append((demand, out))
-
-            for demand, out in unreconciled_outs:
-                remaining = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
-                if not float_is_zero(remaining, precision_rounding=out.product_id.uom_id.rounding) and out not in result:
-                    result[out] = (-remaining, False)
+        for line in forecast_lines:
+            move_out = line.get('move_out')
+            if not move_out or not line['quantity']:
+                continue
+            move_in = line.get('move_in')
+            qty_expected = line['quantity'] + result[move_out][0] if line['replenishment_filled'] else -line['quantity']
+            date_expected = False
+            if move_in:
+                date_expected = max(move_in.date, result[move_out][1]) if result[move_out][1] else move_in.date
+            result[move_out] = (qty_expected, date_expected)
 
         return result
 
