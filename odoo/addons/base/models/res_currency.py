@@ -366,10 +366,12 @@ class CurrencyRate(models.Model):
         return vals
 
     def write(self, vals):
+        self.env['res.currency'].invalidate_model(['rate'])
         return super().write(self._sanitize_vals(vals))
 
     @api.model_create_multi
     def create(self, vals_list):
+        self.env['res.currency'].invalidate_model(['rate'])
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):

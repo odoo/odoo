@@ -27,12 +27,12 @@ class TestResCurrency(TransactionCase):
         currencyA, currencyB = self.env['res.currency'].create([{
             'name': 'AAA',
             'symbol': 'AAA',
-            'rate_ids': [Command.create({'name': '2010-10-10', 'rate': 1})]
+            'rate_ids': [Command.create({'name': '2009-09-09', 'rate': 1})]
         }, {
             'name': 'BBB',
             'symbol': 'BBB',
             'rate_ids': [
-                Command.create({'name': '2010-10-10', 'rate': 1}),
+                Command.create({'name': '2009-09-09', 'rate': 1}),
                 Command.create({'name': '2011-11-11', 'rate': 2}),
             ],
         }])
@@ -43,6 +43,40 @@ class TestResCurrency(TransactionCase):
             company=self.env.company,
             date='2010-10-10',
         ), 100)
+
+        # update the (cached) rate of the to_currency used in the previous query
+        self.env['res.currency.rate'].search([
+            ('currency_id', '=', currencyB.id),
+            ('name', '=', '2009-09-09')]
+        ).rate = 3
+
+        # repeat _convert call
+        # the cached conversion rate is invalid due to the rate change -> query
+        with self.assertQueryCount(1):
+            self.assertEqual(currencyA._convert(
+                from_amount=100,
+                to_currency=currencyB,
+                company=self.env.company,
+                date='2010-10-10',
+            ), 300)
+
+        # create a new rate of the to_currency for the date used in the previous query
+        self.env['res.currency.rate'].create({
+            'name': '2010-10-10',
+            'rate': 4,
+            'currency_id': currencyB.id,
+            'company_id': self.env.company.id,
+        })
+
+        # repeat _convert call
+        # the cached conversion rate is invalid due to the new rate of the to_currency -> query
+        with self.assertQueryCount(1):
+            self.assertEqual(currencyA._convert(
+                from_amount=100,
+                to_currency=currencyB,
+                company=self.env.company,
+                date='2010-10-10',
+            ), 400)
 
         # only one query is done when changing the convert params
         with self.assertQueryCount(1):
@@ -60,7 +94,7 @@ class TestResCurrency(TransactionCase):
                 to_currency=currencyB,
                 company=self.env.company,
                 date='2010-10-10',
-            ), 100)
+            ), 400)
             self.assertEqual(currencyA._convert(
                 from_amount=100,
                 to_currency=currencyB,
