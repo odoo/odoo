@@ -436,6 +436,34 @@ QUnit.test("pending mentions are kept when toggling composer", async (assert) =>
     assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)");
 });
 
+QUnit.test('composer suggestion should match with input selection', async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "Luigi",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await insertText(".o-mail-Composer-input", "#");
+    await contains(".o-mail-Composer-suggestion", { text: "#Mario Party" });
+    await click(".o-mail-Composer-suggestion");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
+    $(".o-mail-Composer-input")[0].setSelectionRange(3, 3);
+    await contains(".o-mail-Composer-suggestion", { text: "#Mario Party" });
+    const textarea = $(".o-mail-Composer-input")[0];
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
+});
+
 QUnit.test(
     'do not post message on channel with "SHIFT-Enter" keyboard shortcut',
     async (assert) => {

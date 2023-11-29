@@ -12,13 +12,13 @@
                 </div>
                 <t t-else="">
                     <div
-                        t-foreach="state.options" t-as="option" t-key="option.id"
+                        t-foreach="props.options" t-as="option" t-key="option_index"
                         class="o-mail-NavigableList-item"
                         t-att-class="option.classList"
-                        t-on-mouseenter="() => this.onOptionMouseEnter(option)"
-                        t-on-click="(ev) => this.selectOption(ev, option)"
+                        t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
+                        t-on-click="(ev) => this.selectOption(ev, option_index)"
                     >
-                        <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': isActiveOption(option) }">
+                        <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': state.activeIndex === option_index }">
                             <t t-if="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
                             <t t-else="" t-esc="option.label"/>
                         </a>
