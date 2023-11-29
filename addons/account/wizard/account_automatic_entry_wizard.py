@@ -477,7 +477,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
         return Markup("<ul>%s</ul>") % Markup().join([
             Markup("<li>%s</li>") % \
-                self._format_strings(transfer_format, transfer_move, balance) % (Markup("<strong>%s</strong>") % account.display_name)
+                self._format_strings(transfer_format % (Markup("<strong>%s</strong>") % account.display_name), transfer_move, balance)
             for account, balance in balances_per_account.items()
             if account != self.destination_account_id
         ])
