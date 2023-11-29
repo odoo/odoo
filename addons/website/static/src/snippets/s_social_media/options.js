@@ -84,6 +84,29 @@ options.registry.SocialMedia = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async renderListItems(previewMode, widgetValue, params) {
+        const ariaLabelsOfSocialNetworks = {
+            "facebook": _t("Facebook"),
+            "twitter": _t("Twitter"),
+            "linkedin": _t("LinkedIn"),
+            "youtube": _t("YouTube"),
+            "instagram": _t("Instagram"),
+            "github": _t("GitHub"),
+            "tiktok": _t("TikTok"),
+        };
+        const setAriaLabelOfSocialNetwork = (el, name, url) => {
+            let ariaLabel = ariaLabelsOfSocialNetworks[name];
+            if (!ariaLabel) {
+                try {
+                    // Return the domain of the given url.
+                    ariaLabel = new URL(url).hostname.split('.').slice(-2)[0];
+                } catch {
+                    // Fallback if the url is not valid.
+                    ariaLabel = _t("Other social network");
+                }
+            }
+            el.setAttribute("aria-label", ariaLabel);
+        };
+
         const anchorEls = this.$target[0].querySelectorAll(':scope > a');
         let entries = JSON.parse(widgetValue);
         const anchorsToRemoveEls = [];
@@ -139,6 +162,7 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl.href = `/website/social/${encodeURIComponent(entry.media)}`;
                         anchorEl.classList.add(`s_social_media_${entry.media}`);
                     }
+                    setAriaLabelOfSocialNetwork(anchorEl, entry.media, entry.display_name);
                 }
             } else {
                 if (anchorEl) {
@@ -153,9 +177,10 @@ options.registry.SocialMedia = options.Class.extend({
                 // Handle URL change for custom links.
                 const href = anchorEl.getAttribute('href');
                 if (href !== entry.display_name) {
+                    let socialMedia = null;
                     if (this._isValidURL(entry.display_name)) {
                         // Propose an icon only for valid URLs (no mailto).
-                        const socialMedia = this._findRelevantSocialMedia(entry.display_name);
+                        socialMedia = this._findRelevantSocialMedia(entry.display_name);
                         if (socialMedia) {
                             const iEl = anchorEl.querySelector(ICON_SELECTOR);
                             this._removeSocialMediaClasses(anchorEl);
@@ -166,6 +191,7 @@ options.registry.SocialMedia = options.Class.extend({
                         }
                     }
                     anchorEl.setAttribute('href', entry.display_name);
+                    setAriaLabelOfSocialNetwork(anchorEl, socialMedia, entry.display_name);
                 }
             }
             // Place the link at the correct position
