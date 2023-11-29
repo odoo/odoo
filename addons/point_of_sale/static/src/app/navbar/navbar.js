@@ -76,7 +76,7 @@ export class Navbar extends Component {
     }
 
     _shouldLoadOrders() {
-        return this.pos.config.trusted_config_ids.length > 0;
+        return this.pos.config.raw.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {

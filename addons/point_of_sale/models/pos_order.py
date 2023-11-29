@@ -6,6 +6,7 @@ from markupsafe import Markup
 from functools import partial, lru_cache
 from itertools import groupby
 from collections import defaultdict
+import json
 
 import psycopg2
 import pytz
@@ -38,27 +39,33 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
         return {
-            'user_id':      ui_order['user_id'] or False,
-            'session_id':   ui_order['pos_session_id'],
+            **self._update_order_fields(ui_order),
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
-            'pos_reference': ui_order['name'],
-            'sequence_number': ui_order['sequence_number'],
-            'partner_id':   ui_order['partner_id'] or False,
-            'date_order':   ui_order['date_order'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
             'pricelist_id': ui_order.get('pricelist_id'),
             'amount_paid':  ui_order['amount_paid'],
             'amount_total':  ui_order['amount_total'],
             'amount_tax':  ui_order['amount_tax'],
             'amount_return':  ui_order['amount_return'],
-            'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
             'shipping_date': ui_order['shipping_date'] if "shipping_date" in ui_order else False,
             'is_tipped': ui_order.get('is_tipped', False),
             'tip_amount': ui_order.get('tip_amount', 0),
             'access_token': ui_order.get('access_token', ''),
-            'ticket_code': ui_order.get('ticket_code', ''),
             'last_order_preparation_change': ui_order.get('last_order_preparation_change', '{}'),
+        }
+
+    def _update_order_fields(self, ui_order):
+        return {
+            'user_id':      ui_order['user_id'] or False,
+            'session_id':   ui_order['pos_session_id'],
+            'pos_reference': ui_order['name'],
+            'sequence_number': ui_order['sequence_number'],
+            'partner_id':   ui_order['partner_id'] or False,
+            'date_order':   ui_order['date_order'].replace('T', ' ')[:19],
+            'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
+            'access_token': ui_order.get('access_token', ''),
+            'ticket_code': ui_order.get('ticket_code', ''),
         }
 
     @api.model
@@ -144,16 +151,72 @@ class PosOrder(models.Model):
         if not existing_order:
             pos_order = self.create(self._order_fields(order))
         else:
-            pos_order = existing_order
-            pos_order.lines.unlink()
-            order['user_id'] = pos_order.user_id.id
-            pos_order.write(self._order_fields(order))
+            pos_order = existing_order._update_order(order)
 
         pos_order._link_combo_items(order)
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
         return pos_order._process_saved_order(draft)
+
+    def update_order_from_ui(self, order):
+        self._update_order(order)
+        return self.export_for_ui()
+
+    def _update_order(self, order):
+        self.ensure_one()
+        order['user_id'] = self.user_id.id
+        started_orderlines_uuid_and_qty = order['starting_orderlines_uuid']
+        lines_uuid_and_qty = {l[2]['uuid']: l[2]['qty'] for l in order['lines']}
+
+        updated_uuid_and_qty = {l[0]: lines_uuid_and_qty[l[0]] - l[1] if l[0] in lines_uuid_and_qty else 0 for l in started_orderlines_uuid_and_qty}
+
+        # Update the order lines
+        started_orderlines_uuid = {l[0] for l in started_orderlines_uuid_and_qty}
+        current_orderlines_uuid = {line.uuid for line in self.lines if line.uuid}
+        new_orderlines_uuid = {line[2]['uuid'] for line in order['lines'] if line[2]['uuid']}
+
+        cancelled_orderlines_uuid = started_orderlines_uuid - new_orderlines_uuid
+        added_orderlines_uuid = new_orderlines_uuid - current_orderlines_uuid
+        common_orderlines_uuid = new_orderlines_uuid & current_orderlines_uuid
+
+        # Remove the orderlines that were removed on the client side
+        for l in self.lines:
+            if l.uuid in cancelled_orderlines_uuid and updated_uuid_and_qty[l.uuid] <= 0:
+                l.unlink()
+            elif l.uuid in updated_uuid_and_qty:
+                l.qty = l.qty - updated_uuid_and_qty[l.uuid]
+        # Update the existing orderlines
+        for line in self.lines.filtered(lambda line: line.uuid in common_orderlines_uuid):
+            for new_line in order['lines']:
+                if line.uuid == new_line[2]['uuid']:
+                    line.write(self.env['pos.order.line']._order_line_fields(new_line, order['pos_session_id'])[2])
+                    break
+        # Add the new orderlines
+        for line in order['lines']:
+            if line[2]['uuid'] in added_orderlines_uuid:
+                line[2]['order_id'] = self.id
+                line[2]['qty'] = updated_uuid_and_qty[line[2]['uuid']] if line[2]['uuid'] in updated_uuid_and_qty else line[2]['qty']
+                self.lines.create(self.env['pos.order.line']._order_line_fields(line, order['pos_session_id'])[2])
+
+        order['date_order'] = order['date_order'].replace('T', ' ')[:19]
+
+        date_order = datetime.strptime(order['date_order'], "%Y-%m-%d %H:%M:%S")
+
+        if date_order < self.date_order:
+            self.date_order = date_order
+
+        # Update the main order fields
+        self.fiscal_position_id = order['fiscal_position_id'] if order['fiscal_position_id'] else self.fiscal_position_id
+        self.pricelist_id = order['pricelist_id'] if order.get('pricelist_id') else self.pricelist_id
+        self._compute_amounts()
+        self.to_invoice |= order['to_invoice']
+        self.shipping_date |= order['shipping_date'] if "shipping_date" in order else False
+        self.is_tipped |= order.get('is_tipped', False)
+        self.tip_amount = order.get('tip_amount', 0) if self.tip_amount == 0 else self.tip_amount
+
+        self.write(self._update_order_fields(order))
+        return self
 
     def _link_combo_items(self, order_vals):
         self.ensure_one()
@@ -437,12 +500,15 @@ class PosOrder(models.Model):
         for order in self:
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
-            currency = order.currency_id
-            order.amount_paid = sum(payment.amount for payment in order.payment_ids)
-            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
-            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
-            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
-            order.amount_total = order.amount_tax + amount_untaxed
+            order._compute_amounts()
+
+    def _compute_amounts(self):
+        currency = self.currency_id
+        self.amount_paid = sum(payment.amount for payment in self.payment_ids)
+        self.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in self.payment_ids)
+        self.amount_tax = currency.round(sum(self._amount_line_tax(line, self.fiscal_position_id) for line in self.lines))
+        amount_untaxed = currency.round(sum(line.price_subtotal for line in self.lines))
+        self.amount_total = self.amount_tax + amount_untaxed
 
     def _compute_batch_amount_all(self):
         """
@@ -1205,6 +1271,48 @@ class PosOrder(models.Model):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
 
+    def update_last_order_changes(self, last_order_preparation_change=None):
+        if last_order_preparation_change:
+            self.last_order_preparation_change = last_order_preparation_change
+            return
+        changes = json.loads(self.last_order_preparation_change)
+        for line in self.lines:
+            if not line.skip_change:
+                # This is a strange way of doing things but it is imposed by what was done in the frontend.
+                # as this method is a copy of the method updateLastOrderChanges in the frontend.
+                note = line._get_note()
+                line_key = f'{line.uuid} - {note}'
+
+                if line_key in changes:
+                    changes[line_key]['quantity'] = line.qty
+                else:
+                    changes[line_key] = {
+                        'attribute_value_ids': line.attribute_value_ids.ids,
+                        'line_uuid': line.uuid,
+                        'product_id': line.product_id.id,
+                        'name': line.full_product_name,
+                        'note': note,
+                        'quantity': line.qty,
+                    }
+
+        # Checks whether an orderline has been deleted from the order since it
+        # was last sent to the preparation tools. If so we delete it to the changes.
+        for line_key in list(changes):
+            if not self._get_ordered_line(line_key):
+                del changes[line_key]
+
+        self.last_order_preparation_change = json.dumps(changes)
+
+    def _get_ordered_line(self, line_key):
+        changes = json.loads(self.last_order_preparation_change)
+        if line_key not in changes:
+            return True
+        for line in self.lines:
+            note = line._get_note()
+            if line.uuid == changes[line_key]['line_uuid'] and note == changes[line_key]['note']:
+                return True
+        return False
+
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
     _description = "Point of Sale Order Lines"
@@ -1575,6 +1683,9 @@ class PosOrderLineLot(models.Model):
 
     def export_for_ui(self):
         return self.mapped(self._export_for_ui) if self else []
+
+    def _get_note(self):
+        return ''
 
 class AccountCashRounding(models.Model):
     _inherit = 'account.cash.rounding'

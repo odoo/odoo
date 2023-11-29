@@ -25,7 +25,6 @@ export class PartnerEditor extends Component {
 
     setup() {
         this.pos = usePos();
-        this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
@@ -108,7 +107,7 @@ export class PartnerEditor extends Component {
             });
         }
         processedChanges.id = this.props.partner.id || false;
-        await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        await this.pos.data.call("res.partner", "create_from_ui", [processedChanges]);
         await this.pos.load_new_partners();
         this.props.close();
     }

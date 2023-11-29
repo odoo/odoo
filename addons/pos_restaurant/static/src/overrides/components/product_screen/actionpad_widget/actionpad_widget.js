@@ -23,7 +23,7 @@ patch(ActionpadWidget.prototype, {
         if (!this.clicked) {
             this.clicked = true;
             try {
-                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                await this.pos.sendOrderInPreparation(this.currentOrder);
             } finally {
                 this.clicked = false;
             }
