@@ -196,6 +196,11 @@ class Meeting(models.Model):
                 e.microsoft_id = False
 
         deactivated_events = self.browse(deactivated_events_ids)
+        # Update attendee status before 'values' variable is overridden in super.
+        attendee_ids = values.get('attendee_ids')
+        if attendee_ids and values.get('partner_ids'):
+            (self - deactivated_events)._update_attendee_status(attendee_ids)
+
         res = super(Meeting, (self - deactivated_events).with_context(dont_notify=notify_context)).write(values)
 
         # Deactivate events that were recreated after changing organizer.
@@ -227,6 +232,20 @@ class Meeting(models.Model):
                 if len(command) == 3 and isinstance(command[2], dict):
                     partner_ids.append(command[2].get('partner_id'))
         return sender_user, partner_ids
+
+    def _update_attendee_status(self, attendee_ids):
+        """ Merge current status from 'attendees_ids' with new attendees values for avoiding their info loss in write().
+        Create a dict getting the state of each attendee received from 'attendee_ids' variable and then update their state.
+        :param attendee_ids: List of attendee commands carrying a dict with 'partner_id' and 'state' keys in its third position.
+        """
+        state_by_partner = {}
+        for cmd in attendee_ids:
+            if len(cmd) == 3 and isinstance(cmd[2], dict) and all(key in cmd[2] for key in ['partner_id', 'state']):
+                state_by_partner[cmd[2]['partner_id']] = cmd[2]['state']
+        for attendee in self.attendee_ids:
+            state_update = state_by_partner.get(attendee.partner_id.id)
+            if state_update:
+                attendee.state = state_update
 
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
@@ -354,7 +373,13 @@ class Meeting(models.Model):
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
         attendees_by_emails = {a.email: a for a in existing_attendees}
         for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
-            state = ATTENDEE_CONVERTER_M2O.get(attendee_info.get('status').get('response'), 'needsAction')
+            # Responses from external invitations are stored in the 'responseStatus' field.
+            # This field only carries the current user's event status because Microsoft hides other user's status.
+            if self.env.user.email == email and microsoft_event.responseStatus:
+                attendee_microsoft_status = microsoft_event.responseStatus.get('response', 'none')
+            else:
+                attendee_microsoft_status = attendee_info.get('status').get('response')
+            state = ATTENDEE_CONVERTER_M2O.get(attendee_microsoft_status, 'needsAction')
 
             if email in attendees_by_emails:
                 # Update existing attendees
@@ -602,7 +627,7 @@ class Meeting(models.Model):
           2) the organizer is NOT an Odoo user: any attendee should remove the Odoo event.
         """
         user = self.env.user
-        records = self.filtered(lambda e: not e.user_id or e.user_id == user)
+        records = self.filtered(lambda e: not e.user_id or e.user_id == user or user.partner_id in e.partner_ids)
         super(Meeting, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()
