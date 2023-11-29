@@ -8,6 +8,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 
+from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
@@ -664,6 +665,7 @@ class TestUpdateEvents(TestCommon):
     # Update from Outlook to Odoo
     # -------------------------------------------------------------------------------
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_simple_event_from_outlook_organizer_calendar(self, mock_get_events):
         """
@@ -688,6 +690,7 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(self.simple_event.name, new_name)
         self.assertEqual(self.simple_event.follow_recurrence, False)
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_simple_event_from_outlook_attendee_calendar(self, mock_get_events):
         """
@@ -712,6 +715,7 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(self.simple_event.name, new_name)
         self.assertEqual(self.simple_event.follow_recurrence, False)
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_name_of_one_event_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
         """
@@ -739,6 +743,7 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(updated_event.name, new_name)
         self.assertEqual(updated_event.follow_recurrence, False)
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_start_of_one_event_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
         """
@@ -766,6 +771,7 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(updated_event.start, new_date)
         self.assertEqual(updated_event.follow_recurrence, False)
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_start_of_one_event_of_recurrence_from_outlook_organizer_calendar_with_overlap(
         self, mock_get_events
@@ -795,6 +801,7 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(updated_event.start, new_date)
         self.assertEqual(updated_event.follow_recurrence, False)
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_name_of_one_event_and_future_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
         """
@@ -1065,6 +1072,7 @@ class TestUpdateEvents(TestCommon):
                 "follow_recurrence": True,
             })
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_name_of_all_events_of_recurrence_from_outlook_organizer_calendar(self, mock_get_events):
         """
@@ -1384,3 +1392,29 @@ class TestUpdateEvents(TestCommon):
         self.attendee_user.with_user(self.attendee_user).restart_microsoft_synchronization()
         self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
         self.assertTrue(all(ev.need_sync_m for ev in self.recurrent_events))
+
+    @patch.object(MicrosoftSync, '_write_from_microsoft')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_old_event_synced_with_outlook(self, mock_get_events, mock_write_from_microsoft):
+        """
+        There are old events in Odoo which share the same state with Microsoft and get updated (without changes) in Odoo
+        due to a few seconds of update time difference, triggering lots of unwanted spam for attendees on Microsoft side.
+        Don't update old events in Odoo if update time difference between Microsoft and Odoo is not significant.
+        """
+        # Set sync lower bound days range (with 'lower_bound_range' = 7 days).
+        # Set event end time in two weeks past the current day for simulating an old event.
+        self.env['ir.config_parameter'].sudo().set_param('microsoft_calendar.sync.lower_bound_range', 7)
+        self.simple_event.write({
+            'start': datetime.now() - timedelta(days=14),
+            'stop': datetime.now() - timedelta(days=14) + timedelta(hours=2),
+        })
+        # Mock the modification time in Microsoft with 10 minutes ahead Odoo event 'write_date'.
+        # Synchronize Microsoft Calendar and ensure that the skipped event was not updated in Odoo.
+        mock_get_events.return_value = (
+            MicrosoftEvent([dict(
+                self.simple_event_from_outlook_organizer,
+                lastModifiedDateTime=(self.simple_event.write_date + timedelta(minutes=10)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            )]), None
+        )
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        mock_write_from_microsoft.assert_not_called()
