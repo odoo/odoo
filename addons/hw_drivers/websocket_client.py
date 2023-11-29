@@ -61,7 +61,7 @@ class WebsocketClient(Thread):
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
         ws.send(
-            '{"event_name":"subscribe","data":{"channels":["' + self.iot_channel + '"],"last":0}}'
+            json.dumps({'event_name': 'subscribe', 'data': {'channels':[self.iot_channel], 'last': 0}})
         )
 
     def __init__(self, url):
