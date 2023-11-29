@@ -534,7 +534,8 @@ class HrEmployeePrivate(models.Model):
         # by the employee or fallback to the company calendar
         return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
             datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
-            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
+            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC),
+            self.company_id,
         )
 
     def _get_age(self, target_date=None):
