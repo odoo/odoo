@@ -3,20 +3,29 @@
     flex-grow: 1;
     flex-basis: fit-content;
 
-    .o_calendar_renderer {
-        @for $size from 1 through length($o-colors) {
-            .o_calendar_widget {
-                .hr_mandatory_day_#{$size - 1}:not(.fc-disabled-day) {
-                    .fc-daygrid-day-number {
-                        --o-cw-color: #{nth($o-colors, $size)};
-                        font-weight: 600;
-                    }
-                }
+    .o_calendar_renderer .o_calendar_widget {
+        .hr_mandatory_day {
+            .fc-daygrid-day-number {
+                font-weight: 600;
+            }
+
+            &:not(.fc-disabled-day):not(:hover):not(.fc-day-today) .fc-daygrid-day-number {
+                color: var(--mandatory-day-color) !important;
             }
         }
 
         .fc-bg-event {
-            border-radius: 25px;
+            border-radius: $border-radius-pill;
+        }
+
+        @for $size from 1 through length($o-colors) {
+            .hr_mandatory_day_#{$size - 1} {
+                --mandatory-day-color: #{nth($o-colors, $size)};
+            }
+
+            .fc-dayGridMonth-view .fc-day.fc-day-today.hr_mandatory_day_#{$size - 1} {
+                --o-cw-bg: var(--mandatory-day-color);
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ export function useMandatoryDays(props) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
         const mandatoryDay = props.model.mandatoryDays[date];
         if (mandatoryDay) {
-            return [`hr_mandatory_day_${mandatoryDay}`];
+            return [`hr_mandatory_day hr_mandatory_day_${mandatoryDay}`];
         }
         return [];
     };
