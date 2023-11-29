@@ -59,7 +59,16 @@ class DoExt extends Do {
         ];
     }
 }
-class CheckExt extends Check {}
+class CheckExt extends Check {
+    checkCustomerNotes(note) {
+        return [
+            {
+                content: `check customer notes`,
+                trigger: `.orderline-note:contains(${note})`,
+            }
+        ];
+    }
+}
 
 class ExecuteExt extends Execute {}
 
