@@ -18,4 +18,10 @@
             <field name="implied_ids" eval="[(4, ref('mail.group_mail_template_editor'))]"/>
         </record>
     </data>
+
+    <!-- Config groups -->
+    <record id="group_split_contact_name" model="res.groups">
+        <field name="name">Split Contact Name</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 </odoo>
