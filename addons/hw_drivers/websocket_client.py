@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+import urllib.parse
 import urllib3
 import websocket
 
@@ -66,12 +67,13 @@ class WebsocketClient(Thread):
         )
 
     def __init__(self, url):
-        if url:
-            self.url = url.replace("http", "ws")
-            Thread.__init__(self)
+        url_parsed = urllib.parse.urlsplit(url)
+        scheme = url_parsed.scheme.replace("http", "ws", 1)
+        self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
+        Thread.__init__(self)
 
     def run(self):
-        self.ws = websocket.WebSocketApp(self.url + "/websocket",
+        self.ws = websocket.WebSocketApp(self.url,
             on_open=self.on_open, on_message=on_message,
             on_error=on_error)
         while 1: # A loop is necessary because reconnection must occur in all cases, even if the server closes the connection properly
