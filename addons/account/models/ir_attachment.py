@@ -46,7 +46,6 @@ class IrAttachment(models.Model):
                 'attachment': self,
                 'filename': filename,
                 'content': content,
-                'attachment': self,
                 'xml_tree': xml_tree,
                 'sort_weight': 10,
                 'type': 'xml',
@@ -69,7 +68,11 @@ class IrAttachment(models.Model):
         to_process = []
         try:
             for xml_name, xml_content in pdf_reader.getAttachments():
-                to_process.extend(self.env['ir.attachment']._decode_edi_xml(xml_name, xml_content))
+                embedded_files = self.env['ir.attachment']._decode_edi_xml(xml_name, xml_content)
+                for file_data in embedded_files:
+                    file_data['sort_weight'] += 1
+                    file_data['originator_pdf'] = self
+                to_process.extend(embedded_files)
         except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
 
