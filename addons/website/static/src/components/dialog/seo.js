@@ -22,6 +22,7 @@ const seoContext = reactive({
 
 class MetaImage extends Component {
     static template = "website.MetaImage";
+    static props = ["active", "src", "custom", "selectImage"];
 }
 
 class ImageSelector extends Component {
@@ -200,6 +201,7 @@ class MetaKeywords extends Component {
     static components = {
         Keyword,
     };
+    static props = {};
 
     setup() {
         this.website = useService('website');
@@ -373,6 +375,9 @@ export class OptimizeSEODialog extends Component {
         TitleDescription,
         ImageSelector,
         MetaKeywords,
+    };
+    static props = {
+        close: Function,
     };
 
     setup() {

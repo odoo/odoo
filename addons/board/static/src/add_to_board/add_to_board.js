@@ -25,6 +25,7 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class AddToBoard extends Component {
     static template = "board.AddToBoard";
     static components = { Dropdown };
+    static props = {};
 
     setup() {
         this.notification = useService("notification");

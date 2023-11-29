@@ -2,7 +2,6 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_list_input/edit_list_input";
 
@@ -38,9 +37,15 @@ import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_li
 export class EditListPopup extends Component {
     static components = { EditListInput, Dialog };
     static template = "point_of_sale.EditListPopup";
+    static props = {
+        array: { type: Array, optional: true },
+        isSingleItem: { type: Boolean, optional: true },
+        title: String,
+        name: String,
+        getPayload: Function,
+        close: Function,
+    };
     static defaultProps = {
-        confirmText: _t("Add"),
-        cancelText: _t("Discard"),
         array: [],
         isSingleItem: false,
     };

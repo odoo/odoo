@@ -12,6 +12,9 @@ import { Dialog } from "@web/core/dialog/dialog";
 export class CashOpeningPopup extends Component {
     static template = "point_of_sale.CashOpeningPopup";
     static components = { Input, Dialog };
+    static props = {
+        close: Function,
+    };
     static defaultProps = { cancelKey: false };
 
     setup() {

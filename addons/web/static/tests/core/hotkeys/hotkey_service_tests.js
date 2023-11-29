@@ -141,6 +141,7 @@ QUnit.test("[accesskey] attrs replaced by [data-hotkey]", async (assert) => {
 QUnit.test("[accesskey] attrs replaced by [data-hotkey], part 2", async (assert) => {
     class UIOwnershipTakerComponent extends Component {
         static template = xml`<p class="owner" t-ref="bouh"><button/></p>`;
+        static props = ["*"];
         setup() {
             useActiveElement("bouh");
         }
@@ -153,6 +154,7 @@ QUnit.test("[accesskey] attrs replaced by [data-hotkey], part 2", async (assert)
                 <div t-on-click="() => { this.step('click'); }" accesskey="a">foo</div>
             </main>
         `;
+        static props = ["*"];
         setup() {
             this.state = useState({ foo: true });
             this.step = assert.step.bind(assert);
@@ -216,6 +218,7 @@ QUnit.test("data-hotkey", async (assert) => {
             <button t-on-click="onClick" data-hotkey="b" />
             </div>
         `;
+        static props = ["*"];
         onClick() {
             assert.step("click");
         }
@@ -247,6 +250,7 @@ QUnit.test("invisible data-hotkeys are not enabled. ", async (assert) => {
                 <button t-on-click="onClick" data-hotkey="b" class="myButton"/>
             </div>
         `;
+        static props = ["*"];
         onClick() {
             assert.step("click");
         }
@@ -272,6 +276,7 @@ QUnit.test("hook", async (assert) => {
     const key = "q";
     class TestComponent extends Component {
         static template = xml`<div/>`;
+        static props = ["*"];
         setup() {
             useHotkey(key, () => assert.step(key));
         }
@@ -345,6 +350,7 @@ QUnit.test("the overlay of hotkeys is correctly displayed", async (assert) => {
             <button t-on-click="onClick" data-hotkey="c"/>
             </div>
         `;
+        static props = ["*"];
         onClick(ev) {
             assert.step(`click ${ev.target.dataset.hotkey}`);
         }
@@ -391,6 +397,7 @@ QUnit.test("the overlay of hotkeys is correctly displayed on MacOs", async (asse
                 <button t-on-click="onClick" data-hotkey="c"/>
             </div>
         `;
+        static props = ["*"];
         onClick(ev) {
             assert.step(`click ${ev.target.dataset.hotkey}`);
         }
@@ -427,6 +434,7 @@ QUnit.test("overlays can be toggled multiple times in a row", async (assert) => 
 
     class MyComponent extends Component {
         static template = xml`<button data-hotkey="a"/>`;
+        static props = ["*"];
     }
 
     await mount(MyComponent, target, { env });
@@ -503,6 +511,7 @@ QUnit.test("[data-hotkey] alt is required", async (assert) => {
     const key = "a";
     class TestComponent extends Component {
         static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}"/></div>`;
+        static props = ["*"];
         onClick() {
             assert.step(key);
         }
@@ -557,6 +566,7 @@ QUnit.test("[data-hotkey] never allow repeat", async (assert) => {
     const key = "a";
     class TestComponent extends Component {
         static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}"/></div>`;
+        static props = ["*"];
         onClick() {
             assert.step(key);
         }
@@ -609,6 +619,7 @@ QUnit.test("component can register many hotkeys", async (assert) => {
 
     class MyComponent extends Component {
         static template = xml`<div><button t-on-click="onClick" data-hotkey="c"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("a", () => assert.step("callback:a"));
             useHotkey("b", () => assert.step("callback:b"));
@@ -637,6 +648,7 @@ QUnit.test("many components can register same hotkeys (call order matters)", asy
                     <button t-on-click="onClick" data-hotkey="z"/>
                 </div>
             `;
+            static props = ["*"];
             setup() {
                 useHotkey("a", () => assert.step(`${name}:a`));
                 useHotkey("b", () => assert.step(`${name}:b`));
@@ -693,6 +705,7 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
     assert.expect(7);
     class MyComponent1 extends Component {
         static template = xml`<div><button data-hotkey="b" t-on-click="onClick"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("a", () => assert.step("MyComponent1 subscription"));
         }
@@ -703,6 +716,7 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
 
     class MyComponent2 extends Component {
         static template = xml`<div t-ref="active"><button data-hotkey="b" t-on-click="onClick"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("a", () => assert.step("MyComponent2 subscription"));
             useActiveElement("active");
@@ -751,6 +765,7 @@ QUnit.test("replace the overlayModifier for non-MacOs", async (assert) => {
                 <button t-on-click="onClick" data-hotkey="b"/>
             </div>
         `;
+        static props = ["*"];
         onClick() {
             assert.step("click");
         }
@@ -789,6 +804,7 @@ QUnit.test("replace the overlayModifier for MacOs", async (assert) => {
             <button t-on-click="onClick" data-hotkey="b"/>
             </div>
         `;
+        static props = ["*"];
         onClick() {
             assert.step("click");
         }
@@ -811,6 +827,7 @@ QUnit.test("protects editable elements", async (assert) => {
     assert.expect(4);
     class Comp extends Component {
         static template = xml`<div><input class="foo"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("arrowleft", () => assert.step("called"));
         }
@@ -836,6 +853,7 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
     assert.expect(5);
     class Comp extends Component {
         static template = xml`<div><input class="foo"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("arrowleft", () => assert.step("called"), { bypassEditableProtection: true });
         }
@@ -860,6 +878,7 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
 QUnit.test("protects editable elements: an editable can allow hotkeys", async (assert) => {
     class Comp extends Component {
         static template = xml`<div><input class="foo" data-allow-hotkeys="true"/><input class="bar"/></div>`;
+        static props = ["*"];
         setup() {
             useHotkey("arrowleft", () => assert.step("called"));
         }
@@ -944,6 +963,7 @@ QUnit.test("within iframes", async (assert) => {
 QUnit.test("callback: received context", async (assert) => {
     class A extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             useHotkey("a", (context) => {
                 assert.deepEqual(context, {
@@ -956,6 +976,7 @@ QUnit.test("callback: received context", async (assert) => {
 
     class B extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             useHotkey(
                 "b",
@@ -983,6 +1004,7 @@ QUnit.test("operating area can be restricted", async (assert) => {
             <div class="one" tabindex="0"/>
             <div class="two" tabindex="0" t-ref="area"/>
         `;
+        static props = ["*"];
         setup() {
             const areaRef = useRef("area");
             useHotkey(
@@ -1013,6 +1035,7 @@ QUnit.test("operating area can be restricted", async (assert) => {
 QUnit.test("operating area and UI active element", async (assert) => {
     class UIOwnershipTakerComponent extends Component {
         static template = xml`<p class="owner" t-ref="bouh"><button/></p>`;
+        static props = ["*"];
         setup() {
             useActiveElement("bouh");
         }
@@ -1026,6 +1049,7 @@ QUnit.test("operating area and UI active element", async (assert) => {
                 <div class="two" tabindex="0" t-ref="area"/>
             </main>
         `;
+        static props = ["*"];
         setup() {
             this.state = useState({ foo: false });
             const areaRef = useRef("area");
@@ -1079,6 +1103,7 @@ QUnit.test("validating option", async (assert) => {
     let isAvailable = false;
     class A extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             useHotkey(
                 "space",
@@ -1110,6 +1135,7 @@ QUnit.test("operation area with validating option", async (assert) => {
             <div class="one" tabindex="0"/>
             <div class="two" tabindex="0" t-ref="area"/>
         `;
+        static props = ["*"];
         setup() {
             const areaRef = useRef("area");
             useHotkey(
@@ -1153,6 +1179,7 @@ QUnit.test("operation area with validating option", async (assert) => {
 QUnit.test("mixing hotkeys with and without operation area", async (assert) => {
     class A extends Component {
         static template = xml`<div class="root" tabindex="0" t-ref="area"/>`;
+        static props = ["*"];
         setup() {
             const areaRef = useRef("area");
             useHotkey("space", () => assert.step("withoutArea"));
@@ -1170,6 +1197,7 @@ QUnit.test("mixing hotkeys with and without operation area", async (assert) => {
 QUnit.test("native browser space key ' ' is correctly translated to 'space' ", async (assert) => {
     class A extends Component {
         static template = xml``;
+        static props = ["*"];
         setup() {
             useHotkey("space", () => assert.step("space"));
         }
@@ -1191,6 +1219,7 @@ QUnit.test("useHotkey can display an overlay over a DOM element ", async (assert
 
     class A extends Component {
         static template = xml`<div><button class="target">Should be overlayed</button></div>`;
+        static props = ["*"];
         setup() {
             useHotkey(
                 "alt+a",

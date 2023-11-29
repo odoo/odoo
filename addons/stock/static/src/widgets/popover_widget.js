@@ -2,6 +2,7 @@
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Component } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 /**
  * Extend this to add functionality to Popover (custom methods etc.)
@@ -9,6 +10,7 @@ import { Component } from "@odoo/owl";
  */
 export class PopoverComponent extends Component {
     static template = "stock.popoverContent";
+    static props = ["record", "*"];
 }
 
 /**
@@ -27,6 +29,7 @@ export class PopoverComponent extends Component {
 export class PopoverWidgetField extends Component {
     static template = "stock.popoverButton";
     static components = { Popover: PopoverComponent };
+    static props = {...standardFieldProps};
     setup(){
         let fieldValue = this.props.record.data[this.props.name];
         this.jsonValue = JSON.parse(fieldValue || "{}");

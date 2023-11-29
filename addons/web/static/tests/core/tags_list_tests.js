@@ -23,6 +23,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Can be rendered with different tags", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { TagsList };
             static template = xml`<TagsList tags="tags" />`;
             setup() {
@@ -66,6 +67,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags can be displayed with an image", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { TagsList };
             static template = xml`<TagsList tags="tags" />`;
             setup() {
@@ -98,6 +100,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags can be displayed with an icon", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { TagsList };
             static template = xml`<TagsList tags="tags" />`;
             setup() {
@@ -124,6 +127,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Limiting the visible tags displays a counter", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { TagsList };
             static template = xml`<TagsList tags="tags" itemsVisible="3" />`;
             setup() {
@@ -178,6 +182,7 @@ QUnit.module("Web Components", (hooks) => {
 
     QUnit.test("Tags with img have a backdrop only if they can be deleted", async (assert) => {
         class Parent extends Component {
+            static props = ["*"];
             static components = { TagsList };
             static template = xml`<TagsList tags="tags" />`;
             setup() {

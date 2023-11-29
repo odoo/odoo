@@ -174,6 +174,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(3);
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
+            static props = ["*"];
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
         const mockRPC = async function (route, { method }) {

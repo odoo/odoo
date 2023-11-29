@@ -16,6 +16,11 @@ import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } fr
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
     static template = "web.DeleteExportListDialog";
+    static props = {
+        text: String,
+        close: Function,
+        delete: Function,
+    };
     async onDelete() {
         await this.props.delete();
         this.props.close();

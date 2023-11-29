@@ -132,6 +132,7 @@ export function getActionManagerServerData() {
             <div class="test_client_action">
                 ClientAction_<t t-esc="props.action.params?.description"/>
             </div>`;
+        static props = ["*"];
     }
     actionRegistry.add("__test__client__action__", TestClientAction);
 

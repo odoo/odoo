@@ -40,6 +40,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {
             static template = xml`<Dialog>content</Dialog>`;
             static components = { Dialog };
+            static props = ["*"];
         }
 
         await mount(Parent, target, { env: await makeDialogTestEnv() });

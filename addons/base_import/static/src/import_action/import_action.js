@@ -21,6 +21,11 @@ export class ImportAction extends Component {
         ImportDataSidepanel,
         Layout,
     };
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
 
     setup() {
         this.notification = useService("notification");

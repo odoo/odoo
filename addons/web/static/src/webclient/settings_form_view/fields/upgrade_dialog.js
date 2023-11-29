@@ -8,6 +8,9 @@ import { Component } from "@odoo/owl";
 export class UpgradeDialog extends Component {
     static template = "web.UpgradeDialog";
     static components = { Dialog };
+    static props = {
+        close: Function,
+    };
     setup() {
         this.orm = useService("orm");
     }

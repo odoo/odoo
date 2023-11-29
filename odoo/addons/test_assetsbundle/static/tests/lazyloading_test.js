@@ -15,6 +15,7 @@ QUnit.module("utils", () => {
                 <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="childProps"/>
             `;
             static components = { LazyComponent };
+            static props = ["*"];
             get childProps() {
                 return {
                     onCreated: () => assert.step("Lazy test component created"),

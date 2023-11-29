@@ -21,6 +21,7 @@ const { getDeepRange, getInSelection, EMAIL_REGEX, PHONE_REGEX } = OdooEditorLib
  * Allows to customize link content and style.
  */
 export class Link extends Component {
+    static template = "";
     static props = {
         editable: true,
         link: true,

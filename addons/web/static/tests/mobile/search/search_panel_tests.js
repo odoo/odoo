@@ -54,6 +54,7 @@ QUnit.module("Search", (hooks) => {
         class Parent extends Component {
             static components = { SearchPanel };
             static template = xml`<SearchPanel/>`;
+            static props = ["*"];
         }
         await makeWithSearch({
             serverData,

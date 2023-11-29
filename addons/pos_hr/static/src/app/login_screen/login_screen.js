@@ -7,6 +7,7 @@ import { Component } from "@odoo/owl";
 
 export class LoginScreen extends Component {
     static template = "pos_hr.LoginScreen";
+    static props = {};
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();

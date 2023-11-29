@@ -7,6 +7,7 @@ import { Component, useState, useEffect } from "@odoo/owl";
 
 class EditWebsiteSystray extends Component {
     static template = "website.EditWebsiteSystray";
+    static props = {};
     setup() {
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);

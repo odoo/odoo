@@ -26,6 +26,7 @@ QUnit.module("ViewComponents", (hooks) => {
         class Parent extends Component {
             static components = { ViewScaleSelector };
             static template = xml`<ViewScaleSelector t-props="compProps" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({
                     scale: "week",
@@ -105,6 +106,7 @@ QUnit.module("ViewComponents", (hooks) => {
         class Parent extends Component {
             static components = { ViewScaleSelector };
             static template = xml`<ViewScaleSelector t-props="compProps" />`;
+            static props = ["*"];
             setup() {
                 this.state = useState({
                     scale: "day",
@@ -140,6 +142,7 @@ QUnit.module("ViewComponents", (hooks) => {
             class Parent extends Component {
                 static components = { ViewScaleSelector };
                 static template = xml`<ViewScaleSelector t-props="compProps"/>`;
+                static props = ["*"];
                 setup() {
                     this.state = useState({
                         scale: "day",

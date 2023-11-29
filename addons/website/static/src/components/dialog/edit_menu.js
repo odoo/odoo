@@ -106,6 +106,7 @@ export class EditMenuDialog extends Component {
         MenuRow,
         WebsiteDialog,
     };
+    static props = ["rootID?", "close", "save?"];
 
     setup() {
         this.orm = useService('orm');

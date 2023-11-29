@@ -14,6 +14,11 @@ class QRModalComponent extends Component {
             <img class="border border-dark rounded" t-att-src="url"/>
         </t>
     </div>`;
+    static props = {
+        action: Object,
+        actionId: { type: Number, optional: true },
+        className: { type: String, optional: true },
+    };
     setup() {
         this.url = sprintf(
             "/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1",

@@ -4670,6 +4670,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         const def = makeDeferred();
         class DeferredWidget extends Component {
             static template = xml``;
+            static props = ["*"];
             setup() {
                 onWillStart(() => def);
             }

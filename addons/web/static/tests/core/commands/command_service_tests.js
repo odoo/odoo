@@ -47,6 +47,7 @@ class TestComponent extends Component {
         <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
       </div>
     `;
+    static props = ["*"];
     get OverlayContainer() {
         return registry.category("main_components").get("OverlayContainer");
     }
@@ -143,6 +144,7 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
 
     class OtherComponent extends Component {
         static template = xml`<div t-ref="active"></div>`;
+        static props = ["*"];
         setup() {
             useActiveElement("active");
             useCommand("I'm taking the throne", () => {});
@@ -233,6 +235,7 @@ QUnit.test("global command with hotkey", async (assert) => {
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="active"><button/></div>`;
+        static props = ["*"];
         setup() {
             useActiveElement("active");
         }
@@ -417,6 +420,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
                 <TestComponent />
             </div>
         `;
+        static props = ["*"];
         onClick() {
             assert.step("Hodor");
         }
@@ -476,6 +480,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
                 <TestComponent />
             </div>
         `;
+        static props = ["*"];
         onClickB() {
             assert.step("B");
         }
@@ -1044,18 +1049,19 @@ QUnit.test("data-command-category", async (assert) => {
     class MyComponent extends Component {
         static components = { TestComponent };
         static template = xml`
-        <div>
-        <div>
-            <button title="Aria Stark" data-hotkey="a" />
-            <button title="Bran Stark" data-hotkey="b" />
-        </div>
-        <div data-command-category="custom">
-            <button title="Robert Baratheon" data-hotkey="r" />
-            <button title="Joffrey Baratheon" data-hotkey="j" />
-        </div>
-        <TestComponent />
-        </div>
-    `;
+            <div>
+            <div>
+                <button title="Aria Stark" data-hotkey="a" />
+                <button title="Bran Stark" data-hotkey="b" />
+            </div>
+            <div data-command-category="custom">
+                <button title="Robert Baratheon" data-hotkey="r" />
+                <button title="Joffrey Baratheon" data-hotkey="j" />
+            </div>
+            <TestComponent />
+            </div>
+        `;
+        static props = ["*"];
     }
     await mount(MyComponent, target, { env });
 
@@ -1090,7 +1096,8 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
                 <button title="Click" data-hotkey="f" />
                 <TestComponent />
             </div>
-    `;
+        `;
+        static props = ["*"];
     }
 
     await mount(MyComponent, target, { env });
@@ -1133,6 +1140,7 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
             <TestComponent />
             </div>
         `;
+        static props = ["*"];
     }
 
     await mount(MyComponent, target, { env });
@@ -1176,6 +1184,7 @@ QUnit.test(
                 <TestComponent />
                 </div>
             `;
+            static props = ["*"];
         }
 
         await mount(MyComponent, target, { env });
@@ -1210,6 +1219,7 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
             <TestComponent />
             </div>
         `;
+        static props = ["*"];
     }
 
     await mount(MyComponent, target, { env });

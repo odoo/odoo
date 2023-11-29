@@ -8,6 +8,10 @@ import { Component, onWillStart } from "@odoo/owl";
 class InsufficientCreditDialog extends Component {
     static components = { Dialog };
     static template = "iap.InsufficientCreditDialog";
+    static props = {
+        errorData: Object,
+        close: Function,
+    };
     setup() {
         this.orm = useService("orm");
         onWillStart(this.onWillStart);

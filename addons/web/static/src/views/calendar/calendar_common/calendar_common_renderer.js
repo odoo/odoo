@@ -50,6 +50,15 @@ export class CalendarCommonRenderer extends Component {
     static template = "web.CalendarCommonRenderer";
     static eventTemplate = "web.CalendarCommonRenderer.event";
     static headerTemplate = "web.CalendarCommonRendererHeader";
+    static props = {
+        model: Object,
+        displayName: { type: String, optional: true },
+        isWeekendVisible: { type: Boolean, optional: true },
+        createRecord: Function,
+        editRecord: Function,
+        deleteRecord: Function,
+        setDate: { type: Function, optional: true },
+    };
 
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);

@@ -13,6 +13,9 @@ import { CodeEditor } from "@web/core/code_editor/code_editor";
 export class EditHeadBodyDialog extends Component {
     static template = "website.EditHeadBodyDialog";
     static components = { CodeEditor, Dialog };
+    static props = {
+        close: Function,
+    };
 
     setup() {
         this.orm = useService("orm");

@@ -10,6 +10,17 @@ import { Component, onWillStart } from "@odoo/owl";
 export class TranslationDialog extends Component {
     static template = "web.TranslationDialog";
     static components = { Dialog };
+    static props = {
+        fieldName: String,
+        resId: Number,
+        resModel: String,
+        userLanguageValue: { type: String, optional: true },
+        isComingFromTranslationAlert: { type: Boolean, optional: true },
+        onSave: Function,
+        close: Function,
+        isText: { type: Boolean, optional: true },
+        showSource: { type: Boolean, optional: true },
+    };
     setup() {
         super.setup();
         this.title = _t("Translate: %s", this.props.fieldName);

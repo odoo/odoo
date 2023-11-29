@@ -30,6 +30,7 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
                 <button class="reset" t-on-click="resetBuffer">reset</button>
             </div>
         `;
+        static props = {};
         setup() {
             this.state = useState({ buffer: "" });
             this.numberBuffer = useService("number_buffer");

@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class PttAdBanner extends Component {
     static template = "discuss.pttAdBanner";
+    static props = {};
     static LOCAL_STORAGE_KEY = "ptt_ad_banner_discarded";
 
     setup() {

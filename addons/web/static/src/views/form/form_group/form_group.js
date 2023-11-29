@@ -3,6 +3,7 @@ import { Component } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 
 class Group extends Component {
+    static template = "";
     static props = ["class?", "slots?", "maxCols?", "style?"];
     static defaultProps = {
         maxCols: 2,

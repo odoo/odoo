@@ -30,6 +30,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                             <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                         </ul>
                     </div>`;
+                static props = ["*"];
                 setup() {
                     setupList();
                 }
@@ -85,6 +86,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
                 </div>`;
+            static props = ["*"];
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -140,6 +142,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
                 </div>`;
+            static props = ["*"];
             setup() {
                 this.state = useState(state);
                 useDraggable({
@@ -186,6 +189,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         </li>
                     </ul>
                 </div>`;
+            static props = ["*"];
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -238,6 +242,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         </li>
                     </ul>
                 </div>`;
+            static props = ["*"];
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -301,6 +306,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
                 </div>`;
+            static props = ["*"];
             setup() {
                 useDraggable({
                     ref: useRef("root"),
@@ -362,11 +368,12 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
             class List extends Component {
                 static template = xml`
-                <div t-ref="root" class="root">
-                    <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
-                    </ul>
-                </div>`;
+                    <div t-ref="root" class="root">
+                        <ul class="list">
+                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        </ul>
+                    </div>`;
+                static props = ["*"];
                 setup() {
                     useDraggable({
                         ref: useRef("root"),

@@ -2,9 +2,15 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 class ButtonWithNotification extends Component {
     static template = "purchase.ButtonWithNotification";
+    static props = {
+        ...standardWidgetProps,
+        method: String,
+        title: String,
+    };
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");

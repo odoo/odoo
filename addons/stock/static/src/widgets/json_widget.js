@@ -4,8 +4,11 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Component, onWillStart } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class JsonPopOver extends Component {
+    static template = "";
+    static props = {...standardFieldProps};
     get jsonValue() {
         return JSON.parse(this.props.record.data[this.props.name]);
     }

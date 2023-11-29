@@ -12,6 +12,12 @@ import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } fr
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeDialog extends Component {
+    static template = "web.BarcodeDialog";
+    static components = {
+        Dialog,
+        CropOverlay,
+    };
+    static props = ["facingMode", "close", "onResult", "onError"];
     /**
      * @override
      */
@@ -167,14 +173,6 @@ export class BarcodeDialog extends Component {
         return newObject;
     }
 }
-
-Object.assign(BarcodeDialog, {
-    components: {
-        Dialog,
-        CropOverlay,
-    },
-    template: "web.BarcodeDialog",
-});
 
 /**
  * Check for BarcodeScanner support

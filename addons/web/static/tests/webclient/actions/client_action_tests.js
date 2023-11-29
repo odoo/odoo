@@ -107,6 +107,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(4);
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
+            static props = ["*"];
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -163,6 +164,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(4);
         class ClientAction extends Component {
             static template = xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;
+            static props = ["*"];
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
                 const { breadcrumbs } = this.env.config;
@@ -194,6 +196,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(1);
         class ClientAction extends Component {
             static template = xml`<div class="my_owl_action"></div>`;
+            static props = ["*"];
             setup() {
                 assert.strictEqual(this.props.division, "bell");
             }

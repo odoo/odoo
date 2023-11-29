@@ -8,6 +8,10 @@ import { Component } from "@odoo/owl";
 class ScssErrorDialog extends Component {
     static template = "web.ScssErrorDialog";
     static components = { Dialog };
+    static props = {
+        message: String,
+        close: Function,
+    };
     static title = _t("Style error");
 }
 

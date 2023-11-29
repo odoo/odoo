@@ -49,6 +49,7 @@ QUnit.test("can render a main component", async (assert) => {
     assert.expect(1);
     class MyComponent extends Component {
         static template = xml`<span class="chocolate">MyComponent</span>`;
+        static props = ["*"];
     }
     clearRegistryWithCleanup(mainComponentRegistry);
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
@@ -77,6 +78,7 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
 
     class MyComponent extends Component {
         static template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
+        static props = ["*"];
         /** @param {MouseEvent} ev */
         onclick(ev) {
             assert.step(ev.ctrlKey ? "ctrl-click" : "click");

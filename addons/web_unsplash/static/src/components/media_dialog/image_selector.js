@@ -13,6 +13,10 @@ import { useState, Component } from "@odoo/owl";
 
 class UnsplashCredentials extends Component {
     static template = "web_unsplash.UnsplashCredentials";
+    static props = {
+        submitCredentials: Function,
+        hasCredentialsError: Boolean,
+    };
     setup() {
         this.state = useState({
             key: '',
@@ -37,6 +41,13 @@ export class UnsplashError extends Component {
     static template = "web_unsplash.UnsplashError";
     static components = {
         UnsplashCredentials,
+    };
+    static props = {
+        title: String,
+        subtitle: String,
+        showCredentials: Boolean,
+        submitCredentials: {type: Function, optional: true},
+        hasCredentialsError: {type: Boolean, optional: true},
     };
 }
 

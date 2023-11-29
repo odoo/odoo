@@ -8,6 +8,7 @@ import { Component, onWillStart } from "@odoo/owl";
 
 export class LoyaltyActionHelper extends Component {
     static template = "loyalty.LoyaltyActionHelper";
+    static props = ["noContentHelp"];
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");

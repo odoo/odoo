@@ -7,6 +7,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/core/tags_list/tags_list";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component } from "@odoo/owl";
 
@@ -14,6 +15,12 @@ class PropertyTagsColorListPopover extends Component {
     static template = "web.PropertyTagsColorListPopover";
     static components = {
         ColorList,
+    };
+    static props = {
+        colors: Array,
+        tag: Object,
+        switchTagColor: Function,
+        close: Function,
     };
 }
 
@@ -311,6 +318,7 @@ export class PropertyTags extends Component {
 export class PropertyTagsField extends Component {
     static template = "web.PropertyTagsField";
     static components = { PropertyTags };
+    static props = { ...standardFieldProps };
 
     get propertyTagsProps() {
         return {

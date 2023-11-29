@@ -30,6 +30,7 @@ QUnit.test("Ignore empty hrefs", async (assert) => {
                     </a>
                 </button>
             </div>`;
+        static props = ["*"];
     }
 
     await mount(MyComponent, target, { env });
@@ -100,6 +101,7 @@ QUnit.test("Simple rendering with a scroll", async (assert) => {
                 <div id="scrollToHere">sroll here!</div>
             </div>
         `;
+        static props = ["*"];
     }
     await mount(MyComponent, scrollableParent, { env });
 
@@ -164,6 +166,7 @@ QUnit.test("Rendering with multiple anchors and scrolls", async (assert) => {
                 <a href="#anchor2" class="link2">TO ANCHOR 2</a>
             </div>
         `;
+        static props = ["*"];
     }
     await mount(MyComponent, scrollableParent, { env });
     assert.strictEqual(scrollableParent.scrollTop, 0);
@@ -212,6 +215,7 @@ QUnit.test("clicking anchor when no scrollable", async (assert) => {
                 </div>
             </div>
         `;
+        static props = ["*"];
     }
     await mount(MyComponent, scrollableParent, { env });
     assert.strictEqual(scrollableParent.scrollTop, 0);
@@ -288,6 +292,7 @@ QUnit.test("clicking anchor when multi levels scrollables", async (assert) => {
                     </p>
             </div>
         `;
+        static props = ["*"];
     }
     await mount(MyComponent, scrollableParent, { env });
 
@@ -394,6 +399,7 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
                 </p>
             </div>
         `;
+        static props = ["*"];
     }
     await mount(MyComponent, scrollableParent, { env });
     assert.strictEqual(scrollableParent.scrollTop, 0);
