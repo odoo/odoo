@@ -127,9 +127,12 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
  * @param {string} refName
  * @param {function} cb
  */
-export function useVisible(refName, cb, { init = false } = {}) {
+export function useVisible(refName, cb, { init = false, ready = true } = {}) {
     const ref = useRef(refName);
-    const state = { isVisible: init };
+    const state = useState({
+        isVisible: init,
+        ready,
+    });
     function setValue(value) {
         state.isVisible = value;
         cb();
@@ -138,8 +141,8 @@ export function useVisible(refName, cb, { init = false } = {}) {
         setValue(entries.at(-1).isIntersecting);
     });
     useEffect(
-        (el) => {
-            if (el) {
+        (el, ready) => {
+            if (el && ready) {
                 observer.observe(el);
                 return () => {
                     setValue(false);
@@ -147,7 +150,7 @@ export function useVisible(refName, cb, { init = false } = {}) {
                 };
             }
         },
-        () => [ref.el]
+        () => [ref.el, state.ready]
     );
     return state;
 }
