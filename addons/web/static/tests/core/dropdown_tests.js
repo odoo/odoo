@@ -11,7 +11,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { registerCleanup } from "../helpers/cleanup";
-import { makeTestEnv } from "../helpers/mock_env";
+import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import {
     click,
@@ -28,6 +28,8 @@ import {
 import { makeParent } from "./tooltip/tooltip_service_tests";
 import { getPickerCell } from "./datetime/datetime_test_helpers";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import { Dialog } from "@web/core/dialog/dialog";
+import { dialogService } from "@web/core/dialog/dialog_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -1384,5 +1386,66 @@ QUnit.module("Components", ({ beforeEach }) => {
             target.querySelector(".dropdown-item").outerHTML,
             `<span class="dropdown-item selected" role="menuitemcheckbox" tabindex="0" aria-checked="true"> My checkbox item </span>`
         );
+    });
+
+    QUnit.test("don't close dropdown outside the active element", async (assert) => {
+        // This test checks that if a dropdown element opens a dialog with a dropdown inside,
+        // opening this dropdown will not close the first dropdown.
+        class CustomDialog extends Component {}
+        CustomDialog.template = xml`
+            <Dialog title="'Welcome'">
+                <Dropdown>
+                    <DropdownItem>Item</DropdownItem>
+                </Dropdown>
+                <div class="outside_dialog">Outside Dialog</div>
+            </Dialog>`;
+        CustomDialog.components = { Dialog, Dropdown, DropdownItem };
+
+        const mainComponentRegistry = registry.category("main_components");
+        clearRegistryWithCleanup(mainComponentRegistry);
+        serviceRegistry.add("dialog", dialogService);
+        serviceRegistry.add("l10n", makeFakeLocalizationService());
+
+        class PseudoWebClient extends Component {
+            setup() {
+                this.Components = mainComponentRegistry.getEntries();
+            }
+            clicked() {
+                env.services.dialog.add(CustomDialog);
+            }
+        }
+        PseudoWebClient.template = xml`
+                <div>
+                    <div>
+                        <t t-foreach="Components" t-as="C" t-key="C[0]">
+                            <t t-component="C[1].Component" t-props="C[1].props"/>
+                        </t>
+                    </div>
+                    <div>
+                        <Dropdown>
+                            <button class="click-me" t-on-click="clicked">Click me</button>
+                        </Dropdown>
+                        <div class="outside_parent">Outside Parent</div>
+                    </div>
+                </div>
+            `;
+        PseudoWebClient.components = { Dropdown };
+
+        env = await makeTestEnv();
+        await mount(PseudoWebClient, target, { env });
+        await click(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        await click(target, "button.click-me");
+        assert.containsOnce(target, ".modal-dialog");
+        await click(target, ".modal-dialog button.dropdown-toggle");
+        assert.containsN(target, ".dropdown-menu", 2);
+        await click(target, ".outside_dialog");
+        assert.containsOnce(target, ".modal-dialog");
+        assert.containsN(target, ".dropdown-menu", 1);
+        await click(target, ".modal-dialog .btn-primary");
+        assert.containsNone(target, ".modal-dialog");
+        assert.containsN(target, ".dropdown-menu", 1);
+        await click(target, ".outside_parent");
+        assert.containsNone(target, ".dropdown-menu");
     });
 });
