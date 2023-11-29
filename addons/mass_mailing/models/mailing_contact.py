@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -29,7 +31,14 @@ class MassMailingContact(models.Model):
                     (0, 0, {'list_id': list_id}) for list_id in list_ids]
         return res
 
-    name = fields.Char()
+    name = fields.Char('Name', compute='_compute_name', readonly=False, store=True, tracking=True)
+    name_is_split = fields.Boolean(
+        'Name Is Split',
+        compute='_compute_name_is_split',
+        default=lambda self: self._get_name_is_split(),
+        help='Technical field indicating whether the name is split into first and last name or not.')
+    first_name = fields.Char('First Name')
+    last_name = fields.Char('Last Name')
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char('Email')
@@ -47,6 +56,15 @@ class MassMailingContact(models.Model):
              'This field should not be used in a view without a unique and active mailing list context.')
 
     @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        """ Hide first and last name field if the split name feature is not enabled. """
+        res = super().fields_get(allfields, attributes)
+        if not self._get_name_is_split():
+            res.get('first_name', {})['searchable'] = False
+            res.get('last_name', {})['searchable'] = False
+        return res
+
+    @api.model
     def _search_opt_out(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
         if operator != '=':
@@ -60,6 +78,17 @@ class MassMailingContact(models.Model):
             contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+
+    @api.depends('first_name', 'last_name')
+    def _compute_name(self):
+        for record in self:
+            if record.first_name or record.last_name:
+                record.name = ' '.join(name_part for name_part in (record.first_name, record.last_name) if name_part)
+
+    def _compute_name_is_split(self):
+        name_is_split = self._get_name_is_split()
+        for record in self:
+            record.name_is_split = name_is_split
 
     @api.depends('subscription_ids')
     @api.depends_context('default_list_ids')
@@ -159,8 +188,27 @@ class MassMailingContact(models.Model):
         return action
 
     @api.model
+    def action_view_mailing_contacts(self):
+        """ Show all mailing contacts.
+
+        The method adds a system parameter in the context (name_is_split) to configure the views
+        and eval the context.
+        """
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action['context'] = {
+            **literal_eval(action.get('context', '{}')),
+            'name_is_split': self._get_name_is_split(),
+        }
+        return action
+
+    @api.model
     def get_import_templates(self):
         return [{
             'label': _('Import Template for Mailing List Contacts'),
             'template': '/mass_mailing/static/xls/mailing_contact.xls'
         }]
+
+    @api.model
+    def _get_name_is_split(self):
+        return literal_eval(
+            self.env['ir.config_parameter'].sudo().get_param('mass_mailing.split_contact_name', 'False'))

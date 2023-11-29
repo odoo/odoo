@@ -769,9 +769,10 @@ class MassMailing(models.Model):
     def action_view_mailing_contacts(self):
         """Show the mailing contacts who are in a mailing list selected for this mailing."""
         self.ensure_one()
-        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['mailing.contact'].action_view_mailing_contacts()
         if self.contact_list_ids:
             action['context'] = {
+                'name_is_split': action['context']['name_is_split'],
                 'default_mailing_list_ids': self.contact_list_ids[0].ids,
                 'default_subscription_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
             }

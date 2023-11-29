@@ -171,9 +171,9 @@ class MassMailingList(models.Model):
         return action
 
     def action_view_contacts(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_view_mass_mailing_contacts")
+        action = self.env['mailing.contact'].action_view_mailing_contacts()
         action['domain'] = [('list_ids', 'in', self.ids)]
-        action['context'] = {'default_list_ids': self.ids}
+        action['context'] = {'name_is_split': action['context']['name_is_split'], 'default_list_ids': self.ids}
         return action
 
     def action_view_contacts_email(self):
@@ -188,21 +188,36 @@ class MassMailingList(models.Model):
         return action
 
     def action_view_contacts_opt_out(self):
-        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['mailing.contact'].action_view_mailing_contacts()
         action['domain'] = [('list_ids', 'in', self.id)]
-        action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_opt_out': 1}
+        action['context'] = {
+            'name_is_split': action['context']['name_is_split'],
+            'default_list_ids': self.ids,
+            'create': False,
+            'search_default_filter_opt_out': 1,
+        }
         return action
 
     def action_view_contacts_blacklisted(self):
-        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['mailing.contact'].action_view_mailing_contacts()
         action['domain'] = [('list_ids', 'in', self.id)]
-        action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_blacklisted': 1}
+        action['context'] = {
+            'name_is_split': action['context']['name_is_split'],
+            'default_list_ids': self.ids,
+            'create': False,
+            'search_default_filter_blacklisted': 1,
+        }
         return action
 
     def action_view_contacts_bouncing(self):
-        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['mailing.contact'].action_view_mailing_contacts()
         action['domain'] = [('list_ids', 'in', self.id)]
-        action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_bounce': 1}
+        action['context'] = {
+            'name_is_split': action['context']['name_is_split'],
+            'default_list_ids': self.ids,
+            'create': False,
+            'search_default_filter_bounce': 1,
+        }
         return action
 
     def action_merge(self, src_lists, archive):

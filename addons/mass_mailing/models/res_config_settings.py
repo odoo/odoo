@@ -26,6 +26,10 @@ class ResConfigSettings(models.TransientModel):
         string='24H Stat Mailing Reports',
         config_parameter='mass_mailing.mass_mailing_reports',
         help='Check how well your mailing is doing a day after it has been sent.')
+    mass_mailing_split_contact_name = fields.Boolean(
+        string='Split First and Last Name',
+        config_parameter='mass_mailing.split_contact_name',
+        help='Separate Mailing Contact Names into two fields')
 
     @api.onchange('mass_mailing_outgoing_mail_server')
     def _onchange_mass_mailing_outgoing_mail_server(self):
