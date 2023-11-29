@@ -2450,7 +2450,7 @@
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-end text-xl-end border-0 p-0">
                 <span>
-                    <t t-set="force_coupon" t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
+                    <t t-set="force_coupon" t-value="website_sale_order.pricelist_id.code"/>
                     <div t-if="not force_coupon" class="coupon_form">
                         <t t-call="website_sale.coupon_form"/>
                     </div>
