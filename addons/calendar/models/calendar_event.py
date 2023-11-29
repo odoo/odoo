@@ -590,7 +590,7 @@ class Meeting(models.Model):
         # that has just been removed, as it might have changed their next event notification
         if not self.env.context.get('dont_notify') and update_alarms:
             self._setup_alarms()
-        attendee_update_events = self.filtered(lambda ev: ev.user_id != self.env.user)
+        attendee_update_events = self.filtered(lambda ev: ev.user_id and ev.user_id != self.env.user)
         if update_time and attendee_update_events:
             # Another user update the event time fields. It should not be auto accepted for the organizer.
             # This prevent weird behavior when a user modified future events time fields and
