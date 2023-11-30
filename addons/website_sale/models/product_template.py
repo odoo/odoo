@@ -1,21 +1,23 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 
 from odoo import api, fields, models
-from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.addons.website.models import ir_http
+from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
-from odoo.osv import expression
+
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.models import ir_http
 
 _logger = logging.getLogger(__name__)
+
 
 class ProductTemplate(models.Model):
     _inherit = [
         'rating.mixin',
-        "product.template",
-        "website.seo.metadata",
+        'product.template',
+        'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
     ]
@@ -27,14 +29,14 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _default_website_sequence(self):
-        ''' We want new product to be the last (highest seq).
+        """ We want new product to be the last (highest seq).
         Every product should ideally have an unique sequence.
         Default sequence (10000) should only be used for DB first product.
         As we don't resequence the whole tree (as `sequence` does), this field
         might have negative value.
-        '''
-        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
-        max_sequence = self._cr.fetchone()[0]
+        """
+        self.env.cr.execute('SELECT MAX(website_sequence) FROM %s' % self._table)
+        max_sequence = self.env.cr.fetchone()[0]
         if max_sequence is None:
             return 10000
         return max_sequence + 5
@@ -62,7 +64,8 @@ class ProductTemplate(models.Model):
         relation='product_alternative_rel',
         column1='src_id', column2='dest_id',
         check_company=True,
-        help="Suggest alternatives to your customer (upsell strategy). Those products show up on the product page.",
+        help="Suggest alternatives to your customer (upsell strategy)."
+            " Those products show up on the product page.",
     )
     accessory_product_ids = fields.Many2many(
         string="Accessory Products",
@@ -70,7 +73,8 @@ class ProductTemplate(models.Model):
         relation='product_accessory_rel',
         column1='src_id', column2='dest_id',
         check_company=True,
-        help="Accessories show up when the customer reviews the cart before payment (cross-sell strategy).",
+        help="Accessories show up when the customer reviews the cart before payment"
+            " (cross-sell strategy).",
     )
 
     website_size_x = fields.Integer(string="Size X", default=1)
@@ -78,17 +82,17 @@ class ProductTemplate(models.Model):
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name='product.ribbon')
     website_sequence = fields.Integer(
         string="Website Sequence",
+        help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
         copy=False,
         index=True,
-        help="Determine the display order in the Website E-commerce",
     )
     public_categ_ids = fields.Many2many(
         string="Website Product Category",
+        help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit"
+             " Click on the page and enable 'Categories' to view all eCommerce categories.",
         comodel_name='product.public.category',
         relation='product_public_category_product_template_rel',
-        help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit "
-             "Click on the page and enable 'Categories' to view all eCommerce categories.",
     )
 
     product_template_image_ids = fields.One2many(
@@ -100,27 +104,32 @@ class ProductTemplate(models.Model):
 
     base_unit_count = fields.Float(
         string="Base Unit Count",
+        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.",
         compute='_compute_base_unit_count',
         inverse='_set_base_unit_count',
         store=True,
         required=True,
         default=0,
-        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
+    )
     base_unit_id = fields.Many2one(
         string="Custom Unit of Measure",
+        help="Define a custom unit to display in the price per unit of measure field.",
         comodel_name='website.base.unit',
         compute='_compute_base_unit_id',
         inverse='_set_base_unit_id',
         store=True,
-        help="Define a custom unit to display in the price per unit of measure field.")
+    )
     base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(
         compute='_compute_base_unit_name',
-        help="Displays the custom unit for the products if defined or the selected unit of measure otherwise.")
+        help="Displays the custom unit for the products if defined or the selected unit of measure"
+            " otherwise.",
+    )
 
     compare_list_price = fields.Monetary(
         string="Compare to Price",
-        help="The amount will be displayed strikethroughed on the eCommerce product page")
+        help="The amount will be displayed strikethroughed on the eCommerce product page",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -647,7 +656,7 @@ class ProductTemplate(models.Model):
             values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
             self.env.cr.execute_values(query, values_args)
         else:
-            super(ProductTemplate, self)._init_column(column_name)
+            super()._init_column(column_name)
 
     def set_sequence_top(self):
         min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
