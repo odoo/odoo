@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, HttpCase
+import logging
+
+from odoo.tests import tagged, HttpCase, loaded_demo_data
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -15,7 +19,17 @@ class WebSuite(HttpCase):
 
     def test_pos_js(self):
         # open a session, the /pos/ui controller will redirect to it
+<<<<<<< HEAD
         self.main_pos_config.open_ui()
+||||||| parent of 598015810be9 (temp)
+        self.main_pos_config.open_session_cb()
+=======
+        # TODO: Adapt to work without demo data
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
+        self.main_pos_config.open_session_cb()
+>>>>>>> 598015810be9 (temp)
         self.main_pos_config.current_session_id.set_cashbox_pos(0, None)
 
         # point_of_sale desktop test suite

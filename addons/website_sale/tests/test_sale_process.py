@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 import odoo.tests
 
 from odoo import api, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -37,6 +41,8 @@ class TestUi(HttpCaseWithUserDemo):
         self.product_product_11_product_template = self.env['product.template'].create({
             'name': 'Conference Chair',
             'list_price': 16.50,
+            'website_published': True,
+            'sale_ok': True,
             'accessory_product_ids': [(4, product_product_7.id)],
         })
         self.env['product.template.attribute.line'].create({
@@ -49,6 +55,9 @@ class TestUi(HttpCaseWithUserDemo):
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
+        # Crappy hack: But otherwise the "Proceed To Checkout" modal button won't be displayed
+        if 'optional_product_ids' in self.env['product.template']:
+            self.product_product_11_product_template.optional_product_ids = [(6, 0, self.product_product_1_product_template.ids)]
 
         self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
@@ -91,6 +100,7 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
+<<<<<<< HEAD
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
@@ -98,6 +108,10 @@ class TestUi(HttpCaseWithUserDemo):
             'state': 'enabled',
             'is_published': True,
         })
+||||||| parent of 598015810be9 (temp)
+=======
+        self.env.company.country_id = self.env.ref('base.us')
+>>>>>>> 598015810be9 (temp)
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
@@ -127,6 +141,9 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/", 'website_sale_tour_2', login="admin")
 
     def test_05_google_analytics_tracking(self):
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour("/shop", 'google_analytics_view_item')
         self.start_tour("/shop", 'google_analytics_add_to_cart')
@@ -140,6 +157,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
     def setUp(self):
         super(TestWebsiteSaleCheckoutAddress, self).setUp()
+        self.partner_demo.company_id = self.env.ref('base.main_company')
         self.website = self.env.ref('website.default_website')
         self.country_id = self.env.ref('base.be').id
         self.WebsiteSaleController = WebsiteSale()
@@ -329,6 +347,11 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         ''' Same as test_03 but with portal user '''
         self._setUp_multicompany_env()
         so = self._create_so(self.portal_partner.id)
+
+        self.env['sale.order'].create({
+            'partner_id': self.partner_portal.id,
+            'state': 'sent',
+        })
 
         env = api.Environment(self.env.cr, self.portal_user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id

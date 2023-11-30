@@ -183,8 +183,16 @@ class TestTaskDependencies(TestProjectCommon):
                          "Copy should not alter the relation if the other task is in a different project")
 
     def test_duplicate_project_with_subtask_dependencies(self):
+<<<<<<< HEAD
         self.project_goats.allow_task_dependencies = True
         self.project_goats.allow_subtasks = True
+||||||| parent of 598015810be9 (temp)
+=======
+        self.project_goats.write({
+            'allow_subtasks': True,
+            'allow_task_dependencies': True,
+        })
+>>>>>>> 598015810be9 (temp)
         parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Parent Task',
             'project_id': self.project_goats.id,

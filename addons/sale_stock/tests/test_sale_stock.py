@@ -798,7 +798,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         picking = sale_order.picking_ids
         initial_product = sale_order.order_line.product_id
-
+        picking.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(picking)
         with picking_form.move_line_ids_without_package.edit(0) as move:
             move.qty_done = 5
@@ -887,13 +887,14 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         pick = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
         delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
-
+        pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(pick)
         with picking_form.move_line_ids_without_package.edit(0) as move:
             move.qty_done = 10
         pick = picking_form.save()
         pick.button_validate()
 
+        delivery.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
         picking_form = Form(delivery)
         with picking_form.move_line_ids_without_package.edit(0) as move:
             move.qty_done = 10
@@ -1136,7 +1137,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'factor_inv': 0.9144,
             'uom_type': 'bigger',
         })
-        product = self.env.ref('product.product_product_11').copy({
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
             'uom_id': self.env.ref('uom.product_uom_meter').id,
             'uom_po_id': yards_uom.id,
         })

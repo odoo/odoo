@@ -16,6 +16,7 @@ class TestSnippets(odoo.tests.HttpCase):
         self.assertIn("hello@world.com", emails)
 
     def test_02_newsletter_block_edition(self):
+<<<<<<< HEAD
         admin_email = self.env.ref('base.user_admin').email
         # Get contacts with this email
         mass_mailing_contacts = self.env['mailing.contact'].search([('email', '=', admin_email)])
@@ -26,3 +27,12 @@ class TestSnippets(odoo.tests.HttpCase):
             'contact_ids': [odoo.Command.unlink(id) for id in mass_mailing_contacts.ids]
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_edition', login='admin')
+||||||| parent of 598015810be9 (temp)
+        self.start_tour("/?enable_editor=1", "newsletter_block_edition", login='admin')
+=======
+        self.env['mailing.list'].create({
+            'name': 'Imported Contacts',
+        })
+        self.env.ref('base.user_admin').email = 'admin@yourcompany.example.com'
+        self.start_tour("/?enable_editor=1", "newsletter_block_edition", login='admin')
+>>>>>>> 598015810be9 (temp)

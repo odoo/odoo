@@ -1,9 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD:addons/test_sale_product_configurators/tests/test_sale_product_matrix.py
 from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product_matrix.tests.common import TestMatrixCommon
+||||||| parent of 598015810be9 (temp):addons/sale_product_matrix/tests/test_sale_matrix.py
+import odoo.tests
+from odoo.addons.product_matrix.tests import common
+=======
+import logging
+
+import odoo.tests
+
+from odoo.addons.product_matrix.tests import common
+>>>>>>> 598015810be9 (temp):addons/sale_product_matrix/tests/test_sale_matrix.py
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
@@ -31,6 +44,11 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.currency.action_unarchive()
 
     def test_sale_matrix_ui(self):
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
+
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 

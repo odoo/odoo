@@ -9,6 +9,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 class TestSafeEval(BaseCase):
@@ -75,7 +76,7 @@ SAMPLES = [
 
 
 @tagged('res_partner')
-class TestBase(TransactionCase):
+class TestBase(TransactionCaseWithUserDemo):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
         partner = self.env['res.partner'].find_or_create(test_string)
@@ -627,7 +628,7 @@ class TestBase(TransactionCase):
         with self.assertRaises(RedirectWarning):
             test_partner.with_user(self.env.ref('base.user_admin')).toggle_active()
         with self.assertRaises(ValidationError):
-            test_partner.with_user(self.env.ref('base.user_demo')).toggle_active()
+            test_partner.with_user(self.user_demo).toggle_active()
 
         # Can archive the user but the partner stays active
         test_user.toggle_active()

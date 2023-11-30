@@ -25,6 +25,7 @@ class AccountBankStatement(models.Model):
         """
         rand = populate.Random('account_bank_statement+Populate')
 
+<<<<<<< HEAD
         read_group_res = self.env['account.bank.statement.line'].read_group(
             [('statement_id', '=', False)],
             ['ids:array_agg(id)'],
@@ -51,6 +52,39 @@ class AccountBankStatement(models.Model):
                 })
 
         return self.env['account.bank.statement'].create(bank_statement_vals_list)
+||||||| parent of 598015810be9 (temp)
+    def _populate_factories(self):
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
+        journal_ids = self.env['account.journal'].search([
+            ('company_id', 'in', company_ids.ids),
+            ('type', 'in', ('cash', 'bank')),
+        ]).ids
+        return [
+            ('journal_id', populate.iterate(journal_ids)),
+            ('name', populate.constant('statement_{counter}')),
+            ('date', populate.randdatetime(relative_before=relativedelta(years=-4))),
+        ]
+=======
+    def _populate_factories(self):
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
+        if not company_ids:
+            return []
+        journal_ids = self.env['account.journal'].search([
+            ('company_id', 'in', company_ids.ids),
+            ('type', 'in', ('cash', 'bank')),
+        ]).ids
+        return [
+            ('journal_id', populate.iterate(journal_ids)),
+            ('name', populate.constant('statement_{counter}')),
+            ('date', populate.randdatetime(relative_before=relativedelta(years=-4))),
+        ]
+>>>>>>> 598015810be9 (temp)
 
 
 class AccountBankStatementLine(models.Model):
@@ -123,10 +157,41 @@ class AccountBankStatementLine(models.Model):
             currency = random.choice(self.env['res.currency'].search([('active', '=', True)]).ids)
             return currency if currency != (journal.currency_id or journal.company_id.currency_id).id else False
 
+<<<<<<< HEAD
         company_ids = self.env['res.company'].search([
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+||||||| parent of 598015810be9 (temp)
+        # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
+        self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])
+        return [
+            ('statement_id', populate.randomize(self.env.registry.populated_models['account.bank.statement'])),
+            ('partner_id', populate.compute(get_partner)),
+            ('payment_ref', populate.constant('statement_{values[statement_id]}_{counter}')),
+            ('date', populate.compute(get_date)),
+            ('amount', populate.compute(get_amount)),
+            ('currency_id', populate.compute(get_currency)),
+        ]
+=======
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
+        if not company_ids:
+            return []
+
+        # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
+        self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])
+        return [
+            ('statement_id', populate.randomize(self.env.registry.populated_models['account.bank.statement'])),
+            ('partner_id', populate.compute(get_partner)),
+            ('payment_ref', populate.constant('statement_{values[statement_id]}_{counter}')),
+            ('date', populate.compute(get_date)),
+            ('amount', populate.compute(get_amount)),
+            ('currency_id', populate.compute(get_currency)),
+        ]
+>>>>>>> 598015810be9 (temp)
 
         journal_ids = self.env['account.journal'].search([
             ('company_id', 'in', company_ids.ids),

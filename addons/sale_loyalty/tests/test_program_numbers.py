@@ -8,7 +8,166 @@ from odoo.tools.float_utils import float_compare
 
 
 @tagged('post_install', '-at_install')
+<<<<<<< HEAD:addons/sale_loyalty/tests/test_program_numbers.py
 class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
+||||||| parent of 598015810be9 (temp):addons/sale_coupon/tests/test_program_numbers.py
+class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
+
+    def setUp(self):
+        super(TestSaleCouponProgramNumbers, self).setUp()
+
+        self.largeCabinet = self.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'list_price': 320.0,
+            'taxes_id': False,
+        })
+        self.conferenceChair = self.env['product.product'].create({
+            'name': 'Conference Chair',
+            'list_price': 16.5,
+            'taxes_id': False,
+        })
+        self.pedalBin = self.env['product.product'].create({
+            'name': 'Pedal Bin',
+            'list_price': 47.0,
+            'taxes_id': False,
+        })
+        self.drawerBlack = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 25.0,
+            'taxes_id': False,
+        })
+        self.largeMeetingTable = self.env['product.product'].create({
+            'name': 'Large Meeting Table',
+            'list_price': 40000.0,
+            'taxes_id': False,
+        })
+
+        self.steve = self.env['res.partner'].create({
+            'name': 'Steve Bucknor',
+            'email': 'steve.bucknor@example.com',
+        })
+        self.empty_order = self.env['sale.order'].create({
+            'partner_id': self.steve.id
+        })
+
+        self.p1 = self.env['coupon.program'].create({
+            'name': 'Code for 10% on orders',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test_10pc',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+        })
+        self.p2 = self.env['coupon.program'].create({
+            'name': 'Buy 3 cabinets, get one for free',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': self.largeCabinet.id,
+            'rule_min_quantity': 3,
+            'rule_products_domain': '[["name","ilike","large cabinet"]]',
+        })
+        self.p3 = self.env['coupon.program'].create({
+            'name': 'Buy 1 drawer black, get a free Large Meeting Table',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': self.largeMeetingTable.id,
+            'rule_products_domain': '[["name","ilike","drawer black"]]',
+        })
+        self.discount_coupon_program = self.env['coupon.program'].create({
+            'name': '$100 coupon',
+            'program_type': 'coupon_program',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 100,
+            'active': True,
+            'discount_apply_on': 'on_order',
+            'rule_minimum_amount': 100.00,
+        })
+=======
+class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.largeCabinet = cls.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'list_price': 320.0,
+            'taxes_id': False,
+            'company_id': cls.env.company.id,
+        })
+        cls.conferenceChair = cls.env['product.product'].create({
+            'name': 'Conference Chair',
+            'list_price': 16.5,
+            'taxes_id': False,
+            'company_id': cls.env.company.id,
+        })
+        cls.pedalBin = cls.env['product.product'].create({
+            'name': 'Pedal Bin',
+            'list_price': 47.0,
+            'taxes_id': False,
+            'company_id': cls.env.company.id,
+        })
+        cls.drawerBlack = cls.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 25.0,
+            'taxes_id': False,
+            'company_id': cls.env.company.id,
+        })
+        cls.largeMeetingTable = cls.env['product.product'].create({
+            'name': 'Large Meeting Table',
+            'list_price': 40000.0,
+            'taxes_id': False,
+            'company_id': cls.env.company.id,
+        })
+
+        cls.steve = cls.env['res.partner'].create({
+            'name': 'Steve Bucknor',
+            'email': 'steve.bucknor@example.com',
+            'property_product_pricelist': cls.pricelist.id,
+        })
+        cls.empty_order = cls.env['sale.order'].create({
+            'partner_id': cls.steve.id,
+        })
+
+        cls.p1 = cls.env['coupon.program'].create({
+            'name': 'Code for 10% on orders',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test_10pc',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+        })
+        cls.p2 = cls.env['coupon.program'].create({
+            'name': 'Buy 3 cabinets, get one for free',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': cls.largeCabinet.id,
+            'rule_min_quantity': 3,
+            'rule_products_domain': '[["name","ilike","large cabinet"]]',
+        })
+        cls.p3 = cls.env['coupon.program'].create({
+            'name': 'Buy 1 drawer black, get a free Large Meeting Table',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': cls.largeMeetingTable.id,
+            'rule_products_domain': '[["name","ilike","drawer black"]]',
+        })
+        cls.discount_coupon_program = cls.env['coupon.program'].create({
+            'name': '$100 coupon',
+            'program_type': 'coupon_program',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 100,
+            'active': True,
+            'discount_apply_on': 'on_order',
+            'rule_minimum_amount': 100.00,
+        })
+>>>>>>> 598015810be9 (temp):addons/sale_coupon/tests/test_program_numbers.py
 
     def test_program_numbers_free_and_paid_product_qty(self):
         # These tests will focus on numbers (free product qty, SO total, reduction total..)

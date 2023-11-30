@@ -45,7 +45,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.bom_a = bom_product_form.save()
 
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.kit.id,
                 'name': self.kit.name,
@@ -124,7 +124,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
@@ -156,6 +156,104 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         # 1 item to deliver for product b.
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
 
+<<<<<<< HEAD
+||||||| parent of 598015810be9 (temp)
+    def test_settle_order_with_promotions(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_coupon"), ("state", "=", "installed")]):
+            self.skipTest("pos_coupon module is required for this test")
+        if not self.env["ir.module.module"].search([("name", "=", "sale_coupon"), ("state", "=", "installed")]):
+            self.skipTest("sale_coupon module is required for this test")
+
+        self.promotion_program = self.env['coupon.program'].create({
+            'name': '50% on current order',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 50,
+            'discount_apply_on': 'on_order',
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 200.0,
+            'taxes_id': False,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': self.product.lst_price,
+            })],
+        })
+
+        #validate the sale order
+        sale_order.recompute_coupon_lines()
+        sale_order.action_confirm()
+
+        #add the promo program to the pos config
+        self.main_pos_config.write({
+            'use_coupon_programs': True,
+            'promo_program_ids': [(6, 0, [self.promotion_program.id])],
+        })
+        self.main_pos_config.open_session_cb()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithPromotions', login="accountman")
+
+=======
+    def test_settle_order_with_promotions(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_coupon"), ("state", "=", "installed")]):
+            self.skipTest("pos_coupon module is required for this test")
+        if not self.env["ir.module.module"].search([("name", "=", "sale_coupon"), ("state", "=", "installed")]):
+            self.skipTest("sale_coupon module is required for this test")
+
+        self.promotion_program = self.env['coupon.program'].create({
+            'name': '50% on current order',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 50,
+            'discount_apply_on': 'on_order',
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 200.0,
+            'taxes_id': False,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': self.product.lst_price,
+            })],
+        })
+
+        #validate the sale order
+        sale_order.recompute_coupon_lines()
+        sale_order.action_confirm()
+
+        #add the promo program to the pos config
+        self.main_pos_config.write({
+            'use_coupon_programs': True,
+            'promo_program_ids': [(6, 0, [self.promotion_program.id])],
+        })
+        self.main_pos_config.open_session_cb()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithPromotions', login="accountman")
+
+>>>>>>> 598015810be9 (temp)
     def test_settle_order_unreserve_order_lines(self):
         #create a product category that use the closest location for the removal strategy
         self.removal_strategy = self.env['product.removal'].search([('method', '=', 'closest')], limit=1)
@@ -199,7 +297,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         quants.action_apply_inventory()
 
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
                 'name': self.product.name,
@@ -232,7 +330,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
     def test_downpayment_refund(self):
         #create a sale order
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'name': self.product_a.name,
@@ -274,7 +372,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,

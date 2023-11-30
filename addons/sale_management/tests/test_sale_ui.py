@@ -1,11 +1,31 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
+||||||| parent of 598015810be9 (temp)
+import odoo.tests
+=======
+>>>>>>> 598015810be9 (temp)
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo.tests import HttpCase, tagged
+||||||| parent of 598015810be9 (temp)
+=======
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import tagged, HttpCase
+>>>>>>> 598015810be9 (temp)
 
+<<<<<<< HEAD
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCase):
+||||||| parent of 598015810be9 (temp)
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUi(odoo.tests.HttpCase):
+=======
+
+@tagged('post_install', '-at_install')
+class TestUi(AccountTestInvoicingCommon, HttpCase):
+>>>>>>> 598015810be9 (temp)
 
     def test_01_sale_tour(self):
         self.start_tour("/web", 'sale_tour', login="admin", step_delay=100)

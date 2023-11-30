@@ -12,6 +12,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestWebsiteEventSaleCommon, cls).setUpClass()
+<<<<<<< HEAD
 
         cls.currency_test = cls.env['res.currency'].create({
             'name': 'eventX',
@@ -26,6 +27,11 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             'name': '2022-01-01',
             'rate': 10,
         })
+||||||| parent of 598015810be9 (temp)
+
+=======
+        cls.env.company.country_id = cls.env.ref('base.us')
+>>>>>>> 598015810be9 (temp)
         cls.zero_tax = cls.env['account.tax'].sudo().create({
             'name': 'Tax 0',
             'amount': 0,

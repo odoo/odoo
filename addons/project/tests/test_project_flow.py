@@ -38,6 +38,33 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.with_user(self.user_projectmanager)
+<<<<<<< HEAD
+||||||| parent of 598015810be9 (temp)
+        root_task = self.task_1
+        sub_task = Task.create({
+            'name': 'Sub Task',
+            'parent_id': root_task.id,
+            'project_id': self.project_pigs.id,
+        })
+        Task.create({
+            'name': 'Sub Sub Task',
+            'parent_id': sub_task.id,
+            'project_id': self.project_pigs.id,
+        })
+=======
+        pigs.allow_subtasks = True
+        root_task = self.task_1
+        sub_task = Task.create({
+            'name': 'Sub Task',
+            'parent_id': root_task.id,
+            'project_id': self.project_pigs.id,
+        })
+        Task.create({
+            'name': 'Sub Sub Task',
+            'parent_id': sub_task.id,
+            'project_id': self.project_pigs.id,
+        })
+>>>>>>> 598015810be9 (temp)
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 

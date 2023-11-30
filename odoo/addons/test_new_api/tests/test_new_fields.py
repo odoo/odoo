@@ -2367,9 +2367,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_85_binary_guess_zip(self):
         from odoo.addons.base.tests.test_mimetypes import ZIP
         # Regular ZIP files can be uploaded by non-admin users
-        self.env['test_new_api.binary_svg'].with_user(
-            self.env.ref('base.user_demo'),
-        ).create({
+        self.env['test_new_api.binary_svg'].with_user(self.user_demo).create({
             'name': 'Test without attachment',
             'image_wo_attachment': base64.b64decode(ZIP),
         })
@@ -2377,9 +2375,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_86_text_base64_guess_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
         with self.assertRaises(UserError) as e:
-            self.env['test_new_api.binary_svg'].with_user(
-                self.env.ref('base.user_demo'),
-            ).create({
+            self.env['test_new_api.binary_svg'].with_user(self.user_demo).create({
                 'name': 'Test without attachment',
                 'image_wo_attachment': SVG.decode("utf-8"),
             })
@@ -2752,7 +2748,7 @@ class TestFields(TransactionCaseWithUserDemo):
         })
 
         # unlink the line, and check the recomputation of move.quantity
-        user = self.env.ref('base.user_demo')
+        user = self.user_demo
         line.with_user(user).unlink()
         self.assertEqual(move.quantity, 0)
 

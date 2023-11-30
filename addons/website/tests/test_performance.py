@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 import copy
+||||||| parent of 598015810be9 (temp)
+from odoo.tests.common import HttpCase
+=======
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
+>>>>>>> 598015810be9 (temp)
 
 from contextlib import nullcontext
 
@@ -19,6 +25,7 @@ be added:
     cr.close()
 """
 
+<<<<<<< HEAD
 
 class UtilPerf(HttpCase):
     def _get_url_hot_query(self, url, cache=True, table_count=False):
@@ -43,6 +50,14 @@ class UtilPerf(HttpCase):
             is ``True``
         :rtype: int|tuple(int, dict)
         """
+||||||| parent of 598015810be9 (temp)
+
+class UtilPerf(HttpCase):
+    def _get_url_hot_query(self, url, cache=True):
+=======
+class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
+    def _get_url_hot_query(self, url, cache=True):
+>>>>>>> 598015810be9 (temp)
         url += ('?' not in url and '?' or '')
         if cache:
             url += '&debug='
@@ -86,7 +101,16 @@ class UtilPerf(HttpCase):
 
 
 class TestStandardPerformance(UtilPerf):
+<<<<<<< HEAD
     @mute_logger('odoo.http')
+||||||| parent of 598015810be9 (temp)
+=======
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.users'].browse(2).image_1920 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+
+>>>>>>> 598015810be9 (temp)
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
         # not published user, get the not found image placeholder

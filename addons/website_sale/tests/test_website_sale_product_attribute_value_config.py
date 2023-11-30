@@ -18,6 +18,13 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         # Use the testing environment.
         cls.computer = cls.computer.with_env(cls.env)
 
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env['website'].get_current_website().company_id = cls.env.company
+        cls.computer.company_id = cls.env.company
+        cls.computer = cls.computer.with_company(cls.env.company).with_user(cls.env.user)
+
     def test_get_combination_info(self):
         # Setup pricelist: make sure the pricelist has a 10% discount
         pricelist = self.env['product.pricelist'].create({
@@ -79,8 +86,27 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         self.assertEqual(combination_info['has_discounted_price'], True)
 
     def test_get_combination_info_with_fpos(self):
+<<<<<<< HEAD
         # Setup product.
         product = self.env['product.template'].create({
+||||||| parent of 598015810be9 (temp)
+        self.env.user.partner_id.country_id = False
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
+
+        test_product = self.env['product.template'].create({
+=======
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
+
+        test_product = self.env['product.template'].create({
+>>>>>>> 598015810be9 (temp)
             'name': 'Test Product',
             'list_price': 2000,
             'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
@@ -171,7 +197,10 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
-        self.env.user.partner_id.country_id = False
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
@@ -223,7 +252,10 @@ class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProduc
 
     def test_cart_update_with_fpos_no_variant_product(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
-        self.env.user.partner_id.country_id = False
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})

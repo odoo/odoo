@@ -205,10 +205,17 @@ class AccountMove(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+<<<<<<< HEAD
         currencies = self.env['res.currency'].search([
             ('active', '=', True),
         ])
 
+||||||| parent of 598015810be9 (temp)
+
+=======
+        if not company_ids:
+            return []
+>>>>>>> 598015810be9 (temp)
         return [
             ('move_type', populate.randomize(
                 ['entry', 'in_invoice', 'out_invoice', 'in_refund', 'out_refund', 'in_receipt', 'out_receipt'],

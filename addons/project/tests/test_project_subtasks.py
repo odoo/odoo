@@ -211,6 +211,7 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(self.task_1.child_ids.stage_id.name, "New", "The stage of the child task should be the default one of the display project id, once set.")
 
     def test_copy_project_with_subtasks(self):
+        self.project_goats.allow_subtasks = True
         self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Parent Task',
             'project_id': self.project_goats.id,
