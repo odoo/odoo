@@ -495,7 +495,8 @@ export const editorCommands = {
                 cli.tagName == 'LI' &&
                 !li.has(cli) &&
                 !cli.classList.contains('oe-nested') &&
-                cli.isContentEditable
+                cli.isContentEditable &&
+                !cli.classList.contains('nav-item')
             ) {
                 li.add(cli);
             }
@@ -522,10 +523,14 @@ export const editorCommands = {
             if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node) && closestElement(node).isContentEditable) {
                 node.remove();
             } else {
+                // Ensure nav-item lists are excluded from toggling
+                const isNavItemList = node => node.nodeName === 'LI' && node.classList.contains('nav-item');
                 let block = closestBlock(node);
-                if (!['OL', 'UL'].includes(block.tagName) && block.isContentEditable) {
-                    block = block.closest('li') || block;
-                    const ublock = block.closest('ol, ul');
+                block = isNavItemList(block) ? node : block;
+                if (!['OL', 'UL'].includes(block.tagName) && (block.isContentEditable || block.nodeType === Node.TEXT_NODE)) {
+                    const closestLi = closestElement(block, 'li');
+                    block = closestLi && !isNavItemList(closestLi) ? closestLi : block;
+                    const ublock = block.nodeName === 'LI' && block.closest('ol, ul');
                     ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
                 }
             }
