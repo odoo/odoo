@@ -19,12 +19,9 @@
     <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="title">
-                <li t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
+                <li t-if="page_name == 'production' or production" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
                     <a t-if="breadcrumbs_url" t-attf-href="/my/productions{{ keep_query() }}">Productions</a>
                     <t t-else="" t-esc="title"></t>
-                </li>
-                <li t-attf-class="breadcrumb-item">
-                    <a t-if="breadcrumbs_url"><t t-esc="title"/></a>
                 </li>
             </t>
         </xpath>
