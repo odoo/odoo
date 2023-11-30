@@ -39,12 +39,8 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
         restoreCursor();
     } else {
         const list = insertListAfter(this, mode, [this]);
-        for (const attribute of this.attributes) {
-            if (attribute.name === 'class' && attribute.value && list.className) {
-                list.className = `${list.className} ${attribute.value}`;
-            } else {
-                list.setAttribute(attribute.name, attribute.value);
-            }
+        if (this.hasAttribute('dir')) {
+            list.setAttribute('dir', this.getAttribute('dir'));
         }
         restoreCursor(new Map([[this, list.firstElementChild]]));
     }
