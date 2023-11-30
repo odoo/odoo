@@ -899,11 +899,15 @@ class AccountMove(models.Model):
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
+        predict_enabled = self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
         if line_elements:
             move_line.sequence = int(line_elements[0].text)
+
+        # Name.
+        move_line.name = " ".join(get_text(element, './/Descrizione').split())
 
         # Product.
         if elements_code := element.xpath('.//CodiceArticolo'):
@@ -927,8 +931,21 @@ class AccountMove(models.Model):
                         move_line.product_id = product
                         break
 
-        # Name and Quantity.
-        move_line.name = " ".join(get_text(element, './/Descrizione').split())
+        # If no product is found, try to find a product that may be fitting
+        if predict_enabled and not move_line.product_id:
+            fitting_product = move_line._predict_product()
+            if fitting_product:
+                name = move_line.name
+                move_line.product_id = fitting_product
+                move_line.name = name
+
+        if predict_enabled:
+            # Fitting account for the line
+            fitting_account = move_line._predict_account()
+            if fitting_account:
+                move_line.account_id = fitting_account
+
+        # Quantity.
         move_line.quantity = float(get_text(element, './/Quantita') or '1')
 
         # Taxes
@@ -955,6 +972,12 @@ class AccountMove(models.Model):
                     self._compose_info_message(element, '.')
                 ))
                 message_to_log.append(message)
+
+        # If no taxes were found, try to find taxes that may be fitting
+        if predict_enabled and not move_line.tax_ids:
+            fitting_taxes = move_line._predict_taxes()
+            if fitting_taxes:
+                move_line.tax_ids = [Command.set(fitting_taxes)]
 
         # Discounts
         if elements := element.xpath('.//ScontoMaggiorazione'):
