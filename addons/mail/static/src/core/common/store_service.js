@@ -46,8 +46,6 @@ export class Store extends BaseStore {
     Settings;
     /** @type {typeof import("@mail/core/common/thread_model").Thread} */
     Thread;
-    /** @type {typeof import("@mail/core/common/thread_seen_info_model").ThreadSeenInfo} */
-    ThreadSeenInfo;
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
