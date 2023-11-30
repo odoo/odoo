@@ -163,7 +163,7 @@ from werkzeug.exceptions import (HTTPException, BadRequest, Forbidden,
                                  NotFound, InternalServerError)
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
-    ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
+    ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1, x_port=1)
 except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 

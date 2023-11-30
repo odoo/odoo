@@ -25,15 +25,21 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
-        client_ip = '127.0.0.16'
-        reverseproxy_ip = gethostbyname(HOST)
-        host = 'mycompany.odoo.com'
+        PORT = config['http_port']
 
+        client_ip = '127.0.0.16'
+        client_url = urlsplit(f'https://mycompany.odoo.com:{PORT+1}')
+
+        reverseproxy_ip = gethostbyname(HOST)
+        reverseproxy_url = urlsplit(self.base_url())
+
+        # netloc is hostname + port
         headers = {
-            'Host': '',
+            'Host': reverseproxy_url.netloc,
             'X-Forwarded-For': client_ip,
-            'X-Forwarded-Host': host,
-            'X-Forwarded-Proto': 'https'
+            'X-Forwarded-Host': client_url.netloc,
+            'X-Forwarded-Port': str(client_url.port),
+            'X-Forwarded-Proto': client_url.scheme,
         }
 
         # Don't trust client-sent forwarded headers
@@ -41,14 +47,26 @@ class TestHttpMisc(TestHttpBase):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.json()['REMOTE_ADDR'], reverseproxy_ip)
-            self.assertEqual(res.json()['HTTP_HOST'], '')
+            self.assertEqual(res.json()['SERVER_NAME'], reverseproxy_url.hostname)
+            self.assertEqual(res.json()['SERVER_PORT'], str(reverseproxy_url.port))
+            self.assertEqual(res.json()['HTTP_HOST'], reverseproxy_url.netloc)
+
+            res = self.db_url_open('/test_http/greeting-user')
+            self.assertEqual(res.status_code, 303, "should be redirected to /web/login")
+            self.assertEqual(urlsplit(res.headers['Location'])[:2], reverseproxy_url[:2])
 
         # Trust proxy-sent forwarded headers
         with patch.object(config, 'options', {**config.options, 'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
-            self.assertEqual(res.json()['HTTP_HOST'], host)
+            self.assertEqual(res.json()['SERVER_NAME'], client_url.hostname)
+            self.assertEqual(res.json()['SERVER_PORT'], str(client_url.port))
+            self.assertEqual(res.json()['HTTP_HOST'], client_url.netloc)
+
+            res = self.db_url_open('/test_http/greeting-user', headers=headers)
+            self.assertEqual(res.status_code, 303, "should be redirected to /web/login")
+            self.assertEqual(urlsplit(res.headers['Location'])[:2], client_url[:2])
 
     def test_misc2_local_redirect(self):
         def local_redirect(path):
