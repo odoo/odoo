@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Chrome">
-        <div class="pos dvh-100 d-flex flex-column">
+        <div class="pos dvh-100 d-flex flex-column" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
             <Navbar />
             <div class="pos-content flex-grow-1 overflow-auto bg-200">
                 <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->
