@@ -208,7 +208,7 @@ class Event(models.Model):
 
         When synchronizing questions:
 
-          * lines that no answer are removed;
+          * lines with no registered answers are removed;
           * type lines are added;
         """
         if self._origin.question_ids:
@@ -229,21 +229,11 @@ class Event(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.question_ids:
-                command += [
-                    (0, 0, {
-                        'answer_ids': [(0, 0, {
-                            'name': answer.name,
-                            'sequence': answer.sequence
-                        }) for answer in question.answer_ids],
-                        'is_mandatory_answer': question.is_mandatory_answer,
-                        'once_per_order': question.once_per_order,
-                        'question_type': question.question_type,
-                        'sequence': question.sequence,
-                        'title': question.title,
-                    }) for question in event.event_type_id.question_ids
-                ]
             event.question_ids = command
+
+            # copy questions so changes in the event don't affect the event type
+            for question in event.event_type_id.question_ids:
+                event.question_ids += question.copy({'event_type_id': False})
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS

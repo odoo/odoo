@@ -14,7 +14,13 @@ class TestEventData(TestEventQuestionCommon):
 
     @users('user_eventmanager')
     def test_event_type_configuration_from_type(self):
+        """ Enure configuration & translations are copied from Event Type on Event creation """
+        self.env['res.lang'].sudo()._activate_lang('nl_NL')
+
         event_type = self.event_type_questions.with_user(self.env.user)
+        event_type_question_nl = self.event_question_1.with_context(lang='nl_NL')
+        event_type_question_nl.title = "Vraag1"
+        event_type_question_nl.answer_ids[0].name = "V1-Antwoord1"
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -41,6 +47,18 @@ class TestEventData(TestEventQuestionCommon):
         self.assertEqual(
             set(event.general_question_ids[0].mapped('answer_ids.name')),
             set(['Q2-Answer1', 'Q2-Answer2']))
+        # verify translations
+        event_question_nl = event.specific_question_ids.filtered_domain([
+            ('title', '=', self.event_question_1.title),
+        ]).with_context(lang='nl_NL')
+        self.assertNotEqual(event_question_nl.title, self.event_question_1.title,
+            "Translated title should differ from untranslated title.")
+        self.assertEqual(event_question_nl.title, event_type_question_nl.title,
+            "Translated title should be copied.")
+        self.assertEqual(
+            set(event_question_nl.answer_ids.mapped('name')),
+            set(event_type_question_nl.answer_ids.mapped('name')),
+            "Translated answer names should be copied.")
 
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({
