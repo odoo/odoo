@@ -2,13 +2,6 @@
 
 import { Record } from "@mail/core/common/record";
 
-/**
- * @class ChannelMember
- * @typedef Data
- * @property {number} id
- * @property {import("models").Persona} persona
- * @property {import("models").Thread} thread
- */
 export class ChannelMember extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").ChannelMember>} */
@@ -27,6 +20,8 @@ export class ChannelMember extends Record {
     persona = Record.one("Persona", { inverse: "channelMembers" });
     rtcSession = Record.one("RtcSession");
     thread = Record.one("Thread", { inverse: "channelMembers" });
+    fetched_message_id = Record.one("Message");
+    seen_message_id = Record.one("Message");
 
     /**
      * @returns {string}

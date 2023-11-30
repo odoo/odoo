@@ -243,7 +243,6 @@ export class Thread extends Record {
     });
     /** @type {string} */
     defaultDisplayMode;
-    seenInfos = Record.many("ThreadSeenInfo");
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
@@ -444,15 +443,15 @@ export class Thread extends Record {
     }
 
     get lastSelfMessageSeenByEveryone() {
-        const otherSeenInfos = [...this.seenInfos].filter((seenInfo) =>
-            seenInfo.partner.notEq(this._store.self)
+        const otherMembers = this.channelMembers.filter((member) =>
+            member.persona.notEq(this._store.self)
         );
-        if (otherSeenInfos.length === 0) {
+        if (otherMembers.length === 0) {
             return false;
         }
-        const otherLastSeenMessageIds = otherSeenInfos
-            .filter((seenInfo) => seenInfo.lastSeenMessage)
-            .map((seenInfo) => seenInfo.lastSeenMessage.id);
+        const otherLastSeenMessageIds = otherMembers
+            .filter((member) => member.seen_message_id)
+            .map((member) => member.seen_message_id.id);
         if (otherLastSeenMessageIds.length === 0) {
             return false;
         }

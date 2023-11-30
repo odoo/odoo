@@ -19,6 +19,7 @@ patch(MockServer.prototype, {
             const data = {
                 id: partner.id,
                 is_public: partner.is_public,
+                type: "partner",
             };
             if (partner.user_livechat_username) {
                 data["user_livechat_username"] = partner.user_livechat_username;

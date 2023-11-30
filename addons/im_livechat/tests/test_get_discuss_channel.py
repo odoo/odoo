@@ -22,6 +22,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
     def test_channel_get_livechat_visitor_info(self):
+        self.maxDiff = None
         belgium = self.env.ref('base.be')
         test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'password': self.password, 'country_id': belgium.id})
 
@@ -81,6 +82,8 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                     'type': "partner",
                     'user_livechat_username': 'Michel Operator',
                 },
+                'fetched_message_id': False,
+                'seen_message_id': False,
             },
             {
                 'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
@@ -98,6 +101,8 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                     'name': 'Roger',
                     'type': "partner",
                 },
+                'fetched_message_id': False,
+                'seen_message_id': False,
             },
         ]]])
 
@@ -131,6 +136,8 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                     'type': "partner",
                     'user_livechat_username': 'Michel Operator',
                 },
+                'fetched_message_id': False,
+                'seen_message_id': False,
             },
         ]]])
 

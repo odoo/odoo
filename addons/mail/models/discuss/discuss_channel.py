@@ -819,12 +819,6 @@ class Channel(models.Model):
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
                 info['channelMembers'] = [('ADD', list(members_by_channel[channel]._discuss_channel_member_format().values()))]
-                info['seenInfos'] = sorted([{
-                    'id': cp.id,
-                    'partner': {'id': cp.partner_id.id, 'type': "partner"},
-                    'lastFetchedMessage': {'id': cp.fetched_message_id.id} if cp.fetched_message_id else False,
-                    'lastSeenMessage': {'id': cp.seen_message_id.id} if cp.seen_message_id else False,
-                } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner']['id'])
             # add RTC sessions info
             info.update({
                 'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))],
