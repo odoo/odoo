@@ -574,6 +574,16 @@ export class HierarchyModel extends Model {
     }
 
     /**
+     * Reload the current view with all currently loaded records
+     */
+    async reload() {
+        nodeId = forestId = treeId = 0;
+        const data = await this.keepLast.add(this._loadData(this.config, true));
+        this.root = this._createRoot(this.config, data);
+        this.notify({ scrollTarget: "none" });
+    }
+
+    /**
      * @override
      * Each notify should specify a scroll target (default is to scroll to the
      * bottom).
@@ -732,12 +742,17 @@ export class HierarchyModel extends Model {
      * Load data for hierarchy view
      *
      * @param {Object} config model config
+     * @param {boolean} reload all currently loaded resIds instead of using
+     *        the config domain
      * @returns {Object[]} main data for hierarchy view
      */
-    async _loadData(config) {
+    async _loadData(config, reload = false) {
         let onlyRoots = false;
         let domain = config.domain;
-        if (this.isSearchDefaultOrEmpty()) {
+        const resIds = this.resIds;
+        if (reload && resIds.length > 0) {
+            domain = [["id", "in", resIds]];
+        } else if (this.isSearchDefaultOrEmpty()) {
             // If the current SearchModel query is the default one
             // configured for the action or there is no search query, an
             // additional constraint is added to only display "root"

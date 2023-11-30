@@ -1272,4 +1272,68 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(josephineNode, ".o_children_text");
         }
     );
+
+    QUnit.test(
+        "Reload the view with the same unfolded records when clicking with a view button",
+        async function (assert) {
+            const hierarchyView = await makeView({
+                type: "hierarchy",
+                resModel: "hr.employee",
+                serverData,
+                arch: `
+                    <hierarchy child_field="child_ids">
+                        <templates>
+                            <t t-name="hierarchy-box">
+                                <div class="o_hierarchy_node_header">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_hierarchy_node_body">
+                                    <field name="parent_id"/>
+                                </div>
+                                <button type="object" name="prefix_underscore">prefix</button>
+                            </t>
+                        </templates>
+                    </hierarchy>
+                `,
+            });
+            patchWithCleanup(hierarchyView.env.services.action, {
+                doActionButton({ resId, resModel, onClose }) {
+                    const record = serverData.models[resModel].records[resId - 1];
+                    record.name = "_" + record.name;
+                    onClose();
+                },
+            });
+            await click(target, ".o_hierarchy_node_button.btn-primary");
+            assert.containsN(target, ".o_hierarchy_row", 3);
+            assert.containsN(target, ".o_hierarchy_node", 4);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                [
+                    "Albertprefix",
+                    "GeorgesAlbertprefix",
+                    "JosephineAlbertprefix",
+                    "LouisJosephineprefix",
+                ]
+            );
+            const nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+            const georgesNode = nodeContainers[1];
+            assert.strictEqual(
+                georgesNode.querySelector(".o_hierarchy_node_content").textContent,
+                "GeorgesAlbertprefix"
+            );
+            await click(georgesNode, "button[name='prefix_underscore']");
+            assert.containsN(target, ".o_hierarchy_row", 3);
+            assert.containsN(target, ".o_hierarchy_node", 4);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                [
+                    "Albertprefix",
+                    "_GeorgesAlbertprefix",
+                    "JosephineAlbertprefix",
+                    "LouisJosephineprefix",
+                ],
+                "The view should have reloaded the same data (with Louis)"
+            );
+        }
+    );
 });
