@@ -28,12 +28,26 @@ class TestSnippets(HttpCase):
             's_map',  # avoid call to maps.google.com
         ]
         snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
+        if 'mail.group' in self.env and not self.env['mail.group'].search_count([]):
+            self.env['mail.group'].create({
+                'name': 'My Mail Group',
+                'alias_name': 'my_mail_group',
+            })
+
         self.start_tour("/?enable_editor=1&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
         self.start_tour("/?enable_editor=1", "snippet_countdown", login='admin')
 
     def test_05_social_media(self):
+        self.env.ref('website.default_website').write({
+            'social_facebook': "https://www.facebook.com/Odoo",
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+        })
         IrAttachment = self.env['ir.attachment']
         base = "http://%s:%s" % (HOST, config['http_port'])
         IrAttachment.create({
