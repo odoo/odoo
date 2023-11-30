@@ -18,21 +18,20 @@ export class MessageSeenIndicator extends Component {
     }
 
     get hasEveryoneSeen() {
-        const otherDidNotSee = this.props.thread.seenInfos.filter((seenInfo) => {
+        const otherDidNotSee = this.props.thread.channelMembers.filter((member) => {
             return (
-                seenInfo.partner.notEq(this.props.message.author) &&
-                (!seenInfo.lastSeenMessage || seenInfo.lastSeenMessage.id < this.props.message.id)
+                member.persona.notEq(this.props.message.author) &&
+                (!member.seen_message_id || member.seen_message_id.id < this.props.message.id)
             );
         });
         return otherDidNotSee.length === 0;
     }
 
     get hasEveryoneReceived() {
-        return !this.props.thread.seenInfos.some((seenInfo) => {
+        return !this.props.thread.channelMembers.some((member) => {
             return (
-                seenInfo.partner.notEq(this.props.message.author) &&
-                (!seenInfo.lastFetchedMessage ||
-                    seenInfo.lastFetchedMessage.id < this.props.message.id)
+                member.persona.notEq(this.props.message.author) &&
+                (!member.fetched_message_id || member.fetched_message_id.id < this.props.message.id)
             );
         });
     }
@@ -45,19 +44,19 @@ export class MessageSeenIndicator extends Component {
     }
 
     get hasSomeoneSeen() {
-        const otherSeen = this.props.thread.seenInfos.filter(
-            (seenInfo) =>
-                seenInfo.partner.notEq(this.props.message.author) &&
-                seenInfo.lastSeenMessage?.id >= this.props.message.id
+        const otherSeen = this.props.thread.channelMembers.filter(
+            (member) =>
+                member.persona.notEq(this.props.message.author) &&
+                member.seen_message_id?.id >= this.props.message.id
         );
         return otherSeen.length > 0;
     }
 
     get hasSomeoneFetched() {
-        const otherFetched = this.props.thread.seenInfos.filter(
-            (seenInfo) =>
-                seenInfo.partner.notEq(this.props.message.author) &&
-                seenInfo.lastFetchedMessage?.id >= this.props.message.id
+        const otherFetched = this.props.thread.channelMembers.filter(
+            (member) =>
+                member.persona.notEq(this.props.message.author) &&
+                member.fetched_message_id?.id >= this.props.message.id
         );
         return otherFetched.length > 0;
     }

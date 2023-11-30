@@ -185,15 +185,19 @@ class TestChannelInternals(MailCommon):
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
 
         chat._channel_seen(msg_2.id)
+        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
+        self_member = next(filter(lambda d: d['persona']['id'] == self.user_admin.partner_id.id, chat._channel_info()[0]['channelMembers'][0][1]))
         self.assertEqual(
-            chat._channel_info()[0]['seenInfos'][0]['lastSeenMessage']['id'],
+            self_member['seen_message_id']['id'],
             msg_2.id,
             "Last message id should have been updated"
         )
 
         chat._channel_seen(msg_1.id)
+        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
+        self_member = next(filter(lambda d: d['persona']['id'] == self.user_admin.partner_id.id, chat._channel_info()[0]['channelMembers'][0][1]))
         self.assertEqual(
-            chat._channel_info()[0]['seenInfos'][0]['lastSeenMessage']['id'],
+            self_member['seen_message_id']['id'],
             msg_2.id,
             "Last message id should stay the same after mark channel as seen with an older message"
         )

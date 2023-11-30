@@ -681,16 +681,6 @@ patch(MockServer.prototype, {
                 ];
             }
             if (channel.channel_type !== "channel") {
-                res["seenInfos"] = members
-                    .filter((member) => member.partner_id)
-                    .map((member) => {
-                        return {
-                            id: member.partner_id,
-                            partner: { id: member.partner_id, type: "partner" },
-                            lastSeenMessage: { id: member.seen_message_id },
-                            lastFetchedMessage: { id: member.fetched_message_id },
-                        };
-                    });
                 res["channelMembers"] = [
                     [
                         "ADD",

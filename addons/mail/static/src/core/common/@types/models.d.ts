@@ -17,7 +17,6 @@ declare module "models" {
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
-    import { ThreadSeenInfo as ThreadSeenInfoClass } from "@mail/core/common/thread_seen_info_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
     // define interfaces for jsdoc, including with patches
@@ -39,7 +38,6 @@ declare module "models" {
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
-    export interface ThreadSeenInfo extends ThreadSeenInfoClass {}
     export interface Volume extends VolumeClass {}
 
     // required to propagate types in relational fields
@@ -62,7 +60,6 @@ declare module "models" {
         "Settings": Settings,
         "Store": Store,
         "Thread": Thread,
-        "ThreadSeenInfo": ThreadSeenInfo,
         "Volume": Volume,
     }
 }

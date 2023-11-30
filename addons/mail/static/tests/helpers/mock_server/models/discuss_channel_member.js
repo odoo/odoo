@@ -46,7 +46,6 @@ patch(MockServer.prototype, {
             let persona;
             if (member.partner_id) {
                 persona = this._mockDiscussChannelMember_GetPartnerData([member.id]);
-                persona.type = "partner";
             }
             if (member.guest_id) {
                 const [guest] = this.getRecords("mail.guest", [["id", "=", member.guest_id]]);
@@ -61,6 +60,10 @@ patch(MockServer.prototype, {
                 thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,
+                seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
+                fetched_message_id: member.fetched_message_id
+                    ? { id: member.fetched_message_id }
+                    : false,
             };
             dataList.push(data);
         }

@@ -134,11 +134,9 @@ export class DiscussCoreCommon {
                 const { channel_id, last_message_id, partner_id } = payload;
                 const channel = this.store.Thread.get({ model: "discuss.channel", id: channel_id });
                 if (channel) {
-                    const seenInfo = channel.seenInfos.find(
-                        (seenInfo) => seenInfo.partner.id === partner_id
-                    );
-                    if (seenInfo) {
-                        seenInfo.lastFetchedMessage = { id: last_message_id };
+                    const member = channel.channelMembers.find((m) => m.persona.id === partner_id);
+                    if (member) {
+                        member.fetched_message_id = { id: last_message_id };
                     }
                 }
             });
@@ -157,11 +155,11 @@ export class DiscussCoreCommon {
                 ) {
                     this.threadService.updateSeen(channel, last_message_id);
                 }
-                const seenInfo = channel.seenInfos.find(
-                    (seenInfo) => seenInfo.partner.id === partner_id
+                const member = channel.channelMembers.find(
+                    (m) => m.persona.id === partner_id && m.persona.type === "partner"
                 );
-                if (seenInfo) {
-                    seenInfo.lastSeenMessage = { id: last_message_id };
+                if (member) {
+                    member.seen_message_id = { id: last_message_id };
                 }
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {

@@ -173,7 +173,7 @@ class ChannelMember(models.Model):
 
     def _discuss_channel_member_format(self, fields=None):
         if not fields:
-            fields = {'id': True, 'channel': {}, 'persona': {}}
+            fields = {'id': True, 'channel': {}, 'persona': {}, 'fetched_message_id': True, 'seen_message_id': True}
         members_formatted_data = {}
         for member in self:
             data = {}
@@ -185,7 +185,6 @@ class ChannelMember(models.Model):
                 if member.partner_id:
                     # sudo: res.partner - reading _get_partner_data related to a member is considered acceptable
                     persona = member.sudo()._get_partner_data(fields=fields.get('persona', {}).get('partner'))
-                    persona['type'] = "partner"
                 if member.guest_id:
                     # sudo: mail.guest - reading _guest_format related to a member is considered acceptable
                     persona = member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)
@@ -194,6 +193,10 @@ class ChannelMember(models.Model):
                 data['custom_notifications'] = member.custom_notifications
             if 'mute_until_dt' in fields:
                 data['mute_until_dt'] = member.mute_until_dt
+            if 'fetched_message_id' in fields:
+                data['fetched_message_id'] = {'id': member.fetched_message_id.id} if member.fetched_message_id else False
+            if 'seen_message_id' in fields:
+                data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
             members_formatted_data[member] = data
         return members_formatted_data
 
