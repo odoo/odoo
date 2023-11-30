@@ -915,6 +915,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
+@tagged('post_install', '-at_install', 'change_valuation')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -1017,8 +1018,13 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-
+        self.product1.product_tmpl_id.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+            'property_valuation': 'real_time',
+        })
         self.assertEqual(self.product1.value_svl, -100)
         self.assertEqual(self.product1.quantity_svl, -10)
         # An accounting entry should only be created for the replenish now that the category is perpetual.
