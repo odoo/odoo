@@ -708,12 +708,14 @@ class HolidaysAllocation(models.Model):
         } for employee in employees]
 
     def action_validate(self):
-        self.write({
-            'state': 'validate',
-            'approver_id': self.env.user.employee_id.id
-        })
-        self._action_validate_create_childs()
-        self.activity_update()
+        to_validate = self.filtered(lambda alloc: alloc.state != 'validate')
+        if to_validate:
+            to_validate.write({
+                'state': 'validate',
+                'approver_id': self.env.user.employee_id.id
+            })
+            to_validate._action_validate_create_childs()
+            to_validate.activity_update()
         return True
 
     def _action_validate_create_childs(self):
