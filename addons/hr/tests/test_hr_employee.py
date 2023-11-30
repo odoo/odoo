@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import Form, users
 from odoo.addons.hr.tests.common import TestHrCommon
 
 
@@ -209,3 +209,36 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+
+    @users('admin')
+    def test_change_user_on_employee(self):
+        test_other_user = self.env['res.users'].create({
+            'name': 'Test Other User',
+            'login': 'test_other_user',
+        })
+        test_other_user.partner_id.company_id = self.env.company
+        test_company = self.env['res.company'].create({
+            'name' : 'Test User Company',
+        })
+        self.env.user.write({'company_ids': test_company.ids, 'company_id': test_company.id})
+        test_user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        test_user.partner_id.company_id = test_company
+        bank_account = self.env['res.partner.bank'].create({
+            'acc_number' : '1234567',
+            'partner_id' : test_user.partner_id.id,
+        })
+        test_employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee',
+            'user_id': test_user.id,
+            'company_id': test_company.id,
+            'bank_account_id': bank_account.id,
+        })
+        # change user -> bank account change company
+        with Form(test_employee) as employee_form:
+            employee_form.user_id = test_other_user
+        # change user back -> check that there is no company error
+        with Form(test_employee) as employee_form:
+            employee_form.user_id = test_user
