@@ -52,7 +52,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
-        this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
+        this.oeRecordCoverSelector = "#wrapwrap .o_record_cover_container[data-res-model]";
+        this.oeCoverSelector = `#wrapwrap .s_cover[data-res-model], ${this.oeRecordCoverSelector}`;
         if (options.savableSelector) {
             this.savableSelector = options.savableSelector;
         } else {
@@ -353,7 +354,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             .not('input, [data-oe-readonly], ' +
                  '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
             .filter((_, el) => {
-                return !$(el).closest('.o_not_editable').length;
+                // The whole record cover is considered editable by the editor,
+                // which makes it possible to add content (text, images,...)
+                // from the text tools. To fix this issue, we need to reduce the
+                // editable area to its editable fields only, but first, we need
+                // to remove the cover along with its descendants from the
+                // initial editable zones.
+                return !$(el).closest('.o_not_editable').length && !el.closest(this.oeRecordCoverSelector);
             });
 
         // TODO migrate in master. This stable fix restores the possibility to
@@ -371,7 +378,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // oe_structure editable. This avoids having a selection range span
         // over all further inactive tabs when using Chrome.
         // grep: .s_tabs
-        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'))
+            .add(document.querySelectorAll(`${this.oeRecordCoverSelector} [data-oe-field]:not([data-oe-field="arch"])`));
 
         return $editableSavableZones.add($extraEditableZones).toArray();
     },
