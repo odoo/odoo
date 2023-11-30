@@ -27,7 +27,7 @@
                     <div t-if="state.detailIsShown &amp;&amp; state.editModeProps.partner.id" class="button more-info">
                         <a t-att-href="partnerLink" class="btn btn-lg btn-outline-secondary" target="_blank"> More info</a>
                     </div>
-                    <div class="search-bar-container sb-partner d-flex align-items-center w-100 w-md-70 w-lg-50 h-100 h-100" t-if="!state.detailIsShown">
+                    <div class="search-bar-container sb-partner d-flex align-items-center w-100 w-lg-50 h-100 h-100" t-if="!state.detailIsShown">
                         <div class="input-group h-100">
                             <div class="pos-search-bar form-control d-flex align-items-center bg-view">
                                 <i class="oi oi-search me-2" t-on-click="_onPressEnterKey"/>

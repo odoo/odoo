@@ -4,8 +4,8 @@
     <t t-name="point_of_sale.TicketScreen">
         <div class="ticket-screen screen h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
             <div class="screen-full-width d-flex w-100 h-100">
-                <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-md-100 bg-300 overflow-y-auto">
-                    <div class="controls d-flex align-items-center justify-content-between mt-1 mt-md-0 p-2 bg-400">
+                <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-300 overflow-y-auto">
+                    <div class="controls d-flex align-items-center justify-content-between mt-1 mt-lg-0 p-2 bg-400">
                         <t t-if="!ui.isSmall">
                             <div class="buttons d-flex gap-2">
                                 <button t-if="!ui.isSmall" class="discard btn btn-lg btn-light" t-on-click="() => this.closeTicketScreen()">
@@ -123,7 +123,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="leftpane d-flex flex-column flex-grow-1 w-100 h-100 h-md-100 bg-200" t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'right'">
+                <div class="leftpane d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200" t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'right'">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
