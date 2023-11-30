@@ -16,4 +16,8 @@ class TestSnippets(odoo.tests.HttpCase):
         self.assertIn("hello@world.com", emails)
 
     def test_02_newsletter_block_edition(self):
+        self.env['mailing.list'].create({
+            'name': 'Imported Contacts',
+        })
+        self.env.ref('base.user_admin').email = 'admin@yourcompany.example.com'
         self.start_tour("/?enable_editor=1", "newsletter_block_edition", login='admin')
