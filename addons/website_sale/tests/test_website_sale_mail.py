@@ -29,5 +29,12 @@ class TestWebsiteSaleMail(HttpCase):
         # as we check some link content, avoid mobile doing its link management
         self.env['ir.config_parameter'].sudo().set_param('mail_mobile.disable_redirect_firebase_dynamic_link', True)
 
+        main_website = self.env.ref('website.default_website')
+        other_websites = self.env['website'].search([]) - main_website
+
+        # We change the domain of the website to test that the email that
+        # will be sent uses the correct domain for its links.
+        main_website.domain = "my-test-domain.com"
+        other_websites.domain = "https://domain-not-used.fr"
         with patch.object(MailMail, 'unlink', lambda self: None):
             self.start_tour("/", 'shop_mail', login="admin")
