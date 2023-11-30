@@ -610,8 +610,11 @@ QUnit.test("basic rendering of message", async () => {
     openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-Message-content", { text: "body" });
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     await contains(
-        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128']`
+        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128?unique=${encodeURIComponent(
+            partner.write_date
+        )}']`
     );
     await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author.cursor-pointer", {
         text: "Demo",
