@@ -6445,6 +6445,25 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("button box is not rendered in form views in dialogs", async function (assert) {
+        await makeViewInDialog({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <div name="button_box" class="oe_button_box">
+                        <button type="object" class="oe_stat_button" icon="fa-check-square">
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                </form>`,
+            resId: 2,
+        });
+        assert.containsOnce(target, ".o_dialog");
+        assert.containsNone(target, ".oe_stat_button");
+    });
+
     QUnit.test("properly apply onchange on one2many fields", async function (assert) {
         serverData.models.partner.records[0].p = [4];
         serverData.models.partner.onchanges = {
@@ -9923,61 +9942,6 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.verifySteps(["web_save", "execute_action"]);
     });
-
-    QUnit.test(
-        "buttons are disabled until action is resolved (in dialogs)",
-        async function (assert) {
-            const def = makeDeferred();
-            const actionService = {
-                start() {
-                    return {
-                        doActionButton(args) {
-                            return def;
-                        },
-                    };
-                },
-            };
-            registry.category("services").add("action", actionService, { force: true });
-
-            serverData.views = {
-                "partner,false,form": `
-                    <form>
-                        <sheet>
-                            <div name="button_box" class="oe_button_box">
-                                <button class="oe_stat_button" name="some_action" type="action">
-                                    <field name="bar"/>
-                                </button>
-                            </div>
-                            <group>
-                                <field name="foo"/>
-                            </group>
-                        </sheet>
-                    </form>`,
-            };
-            await makeViewInDialog({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `<form><field name="trululu"/></form>`,
-                resId: 1,
-                mockRPC(route, args) {
-                    if (args.method === "get_formview_id") {
-                        return Promise.resolve(false);
-                    }
-                },
-            });
-
-            await click(target.querySelector(".o_external_button"));
-            assert.notOk(target.querySelector(".modal .o-form-buttonbox button").disabled);
-
-            await click(target.querySelector(".modal .o-form-buttonbox button"));
-            assert.ok(target.querySelector(".modal .o-form-buttonbox button").disabled);
-
-            def.resolve();
-            await nextTick();
-            assert.notOk(target.querySelector(".modal .o-form-buttonbox button").disabled);
-        }
-    );
 
     QUnit.test("multiple clicks on save should reload only once", async function (assert) {
         const def = makeDeferred();

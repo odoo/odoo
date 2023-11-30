@@ -240,11 +240,6 @@ QUnit.module("Form Compiler", (hooks) => {
                      t-ref="compiled_view_root">
                     <div class="o_form_sheet_bg">
                         <div class="o_form_sheet position-relative">
-                            <ButtonBox t-if="( !__comp__.evaluateBooleanExpr(&quot;'display_name' == 'plop'&quot;,__comp__.props.record.evalContextWithVirtualIds) ) and __comp__.env.inDialog">
-                                <t t-set-slot="slot_0" isVisible="true">
-                                    <div>Hello</div>
-                                </t>
-                            </ButtonBox>
                         </div>
                     </div>
                 </div>
