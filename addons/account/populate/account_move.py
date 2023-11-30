@@ -198,7 +198,8 @@ class AccountMove(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
-
+        if not company_ids:
+            return []
         return [
             ('move_type', populate.randomize(
                 ['entry', 'in_invoice', 'out_invoice', 'in_refund', 'out_refund', 'in_receipt', 'out_receipt'],
