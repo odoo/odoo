@@ -84,7 +84,8 @@ class Meeting(models.Model):
             partner_included = partner_ids and len(partner_ids) > 0 and sender_user.partner_id.id in partner_ids
             self._check_organizer_validation(sender_user, partner_included)
             # Group new events values by user for later batch creation.
-            vals_by_user[sender_user].append(vals)
+            # Check Internal/External user state to avoid events creation as a portal (no access)
+            vals_by_user[(not sender_user.share and sender_user) or self.env.user].append(vals)
             # Events from a recurrency have their `need_sync_m` attribute set to False.
             if vals.get('recurrence_id') or vals.get('recurrency'):
                 vals['need_sync_m'] = False

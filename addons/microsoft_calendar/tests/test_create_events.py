@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import Command
+from odoo import fields
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -323,3 +324,36 @@ class TestCreateEvents(TestCommon):
         mock_insert.assert_called_once()
         self.assertEqual(event.user_id, self.attendee_user, "Event organizer must be user B (self.attendee_user) after event creation by user A (self.organizer_user).")
         self.assertTrue(self.attendee_user.partner_id.id in event.partner_ids.ids, "User B (self.attendee_user) should be listed as attendee after event creation.")
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_create_simple_event_from_outlook_portal_organizer_calendar(self, mock_get_events):
+        """
+        An event has been created in Outlook with a portal user email and synced in the Odoo organizer calendar.
+        """
+        # arrange
+        # Create a portal users
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal User (Test)',
+            'login': 'portal_user@portal_user.com',
+            'email': 'portal_user@portal_user.com',
+            'password': 'portal_user',
+            'groups_id': [Command.link(self.env.ref('base.group_portal').id)]
+        })
+        # And add token validity with one hour of time window for properly checking the sync status.
+        portal_user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
+
+        ms_event_id = '987'
+
+        mock_get_events.return_value = (MicrosoftEvent([dict(
+            self.simple_event_from_outlook_organizer,
+            id=ms_event_id,
+            organizer={'emailAddress': {'address': portal_user.email, 'name': portal_user.name}}
+        )]), None)
+
+        # act
+        # User attendee for sync, attendee is an internal user
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        event = self.env['calendar.event'].search([("microsoft_id", "like", ms_event_id)])
+        self.assertEqual(portal_user.login, event[0]["user_id"]["email"])

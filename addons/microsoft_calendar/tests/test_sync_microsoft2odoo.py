@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# This file is outdated and will be removed in the master branch.
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService, MicrosoftEvent
 from odoo.exceptions import ValidationError
