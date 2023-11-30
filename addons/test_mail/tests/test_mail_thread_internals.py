@@ -199,6 +199,23 @@ class TestChatterTweaks(MailCommon, TestRecipients):
         self.env['res.partner'].create({'name': 'Actual Partner'})
         self.assertTrue(record.name)
 
+    def test_chatter_message_as_marked_up_value(self):
+        attachments = [self.env['mail.thread']._Attachment('test_image.jpeg', 'test', {'encoding': None, 'cid': 'ii_lps7a8sm0'})]
+        attachment_ids = []
+        test_record = self.env['mail.test.nothread'].create({
+            'customer_id': self.partner_1.id,
+            'name': 'Not A Thread',
+        })
+        message_values = {
+            'model': test_record._name,
+            'res_id': test_record.id,
+            'body': Markup('<div dir="ltr"><div><img src="cid:ii_lps7a8sm0" alt="test_image.jpeg" width="542" height="253" data-filename="test_image.jpeg"/><br/></div></div>&#13;\n')
+        }
+        test = self.env['mail.thread']._process_attachments_for_post(attachments, attachment_ids, message_values)
+        self.assertTrue(isinstance(test['body'], Markup))
+        message_values['body'] = '<div dir="ltr"><div><img src="cid:ii_lps7a8sm0" alt="test_image.jpeg" width="542" height="253" data-filename="test_image.jpeg"/><br/></div></div>&#13;\n'
+        test_1 = self.env['mail.thread']._process_attachments_for_post(attachments, attachment_ids, message_values)
+        self.assertFalse(isinstance(test_1['body'], Markup))
 
 @tagged('mail_thread')
 class TestDiscuss(MailCommon, TestRecipients):
