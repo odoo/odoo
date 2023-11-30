@@ -14,7 +14,7 @@ from os.path import join as opj
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, UserError
-from odoo.modules.module import MANIFEST_NAMES
+from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
@@ -79,7 +79,7 @@ class IrModule(models.Model):
             terp['icon'] = opj('/', module_icon, icon_path)
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
-            values['latest_version'] = terp['version']
+            values['latest_version'] = adapt_version(terp['version'])
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
