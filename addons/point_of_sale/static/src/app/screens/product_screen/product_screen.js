@@ -222,7 +222,7 @@ export class ProductScreen extends Component {
             }
             return;
         }
-        if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
+        if (selectedLine && this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
