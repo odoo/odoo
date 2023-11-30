@@ -110,6 +110,26 @@ class Employee(models.Model):
     def _get_incoming_contracts(self, date_from, date_to):
         return self._get_contracts(date_from, date_to, states=['draft'], kanban_state=['done'])
 
+    def _get_calendar(self, date_from=None):
+        res = super()._get_calendar()
+        if not date_from:
+            return res
+        contracts = self.env['hr.contract'].sudo().search([
+            '|',
+                ('state', 'in', ['open', 'close']),
+                '&',
+                    ('state', '=', 'draft'),
+                    ('kanban_state', '=', 'done'),
+            ('employee_id', '=', self.id),
+            ('date_start', '<=', date_from),
+            '|',
+                ('date_end', '=', False),
+                ('date_end', '>=', date_from)
+        ])
+        if not contracts:
+            return res
+        return contracts[0].resource_calendar_id.sudo(False)
+
     @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):
         """
