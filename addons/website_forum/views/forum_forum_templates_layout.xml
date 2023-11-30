@@ -23,9 +23,9 @@
     <nav id="o_wforum_nav" t-attf-class="navbar d-flex align-items-baseline gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } px-0" aria-label="breadcrumb">
         <t t-if="_page_name == 'single_question'">
             <div class="flex-grow-1">
-                <div class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
+                <div t-if="has_back_button_url" class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
-                        <a class="btn btn-lg btn-link px-0 pb-2" t-attf-href="/forum/#{ slug(forum) }">
+                        <a class="btn btn-lg btn-link px-0 pb-2 o_back_button">
                             <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="forum.name"/>
                         </a>
                     </div>
