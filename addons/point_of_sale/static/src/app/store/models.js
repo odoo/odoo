@@ -461,10 +461,20 @@ export class Orderline extends PosModel {
         var order_line_price = orderline
             .get_product()
             .get_price(orderline.order.pricelist, this.get_quantity());
-        order_line_price = round_di(
-            orderline.compute_fixed_price(order_line_price),
-            this.pos.currency.decimal_places
-        );
+        // If an order line already has the same product with a manually changed price, then update the order_line_price with
+        // the manually changed price. so it will increase the quantity if the order line already has the same product.
+        if (this.price_type === 'manual' && this.get_product().id === orderline.get_product().id){
+            order_line_price = round_di(
+                orderline.compute_fixed_price(price),
+                this.pos.currency.decimal_places
+            );
+        }
+        else{
+            order_line_price = round_di(
+                orderline.compute_fixed_price(order_line_price),
+                this.pos.currency.decimal_places
+            );
+        }
         // only orderlines of the same product can be merged
         return (
             !this.skipChange &&
@@ -540,6 +550,12 @@ export class Orderline extends PosModel {
             this.pos.data.models["decimal.precision"].find((dp) => dp.name === "Product Price")
                 .digits
         );
+        if (this.price_type === 'manual'){
+            var product = this.get_product().taxes_id;
+            var taxtotal = 0;
+            product.forEach(function (tax) {taxtotal += tax.amount});
+            this.price = this.price / (1 + taxtotal/100);
+        }
     }
     get_unit_price() {
         var digits = this.pos.data.models["decimal.precision"].find(

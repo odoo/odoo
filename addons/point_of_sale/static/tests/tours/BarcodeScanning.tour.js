@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
             ProductScreen.scan_ean13_barcode("2305000000004"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "0.00"),
             ProductScreen.scan_ean13_barcode("2305000123451"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "123.45"),
+            ProductScreen.selectedOrderlineHas("Magnetic Board", 2),
 
             // Test "Weighted product" EAN-13 `21.....{NNDDD}` barcode pattern
             ProductScreen.scan_ean13_barcode("2100005000000"),
