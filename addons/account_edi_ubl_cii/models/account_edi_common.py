@@ -162,17 +162,6 @@ class AccountEdiCommon(models.AbstractModel):
             if customer.zip[:2] in ('51', '52'):
                 return create_dict(tax_category_code='M')  # Ceuta & Mellila
 
-        # see: https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_value_added_tax_norwegian_mva
-        if customer.country_id.code == 'NO':
-            if tax.amount == 25:
-                return create_dict(tax_category_code='S', tax_exemption_reason=_('Output VAT, regular rate'))
-            if tax.amount == 15:
-                return create_dict(tax_category_code='S', tax_exemption_reason=_('Output VAT, reduced rate, middle'))
-            if tax.amount == 11.11:
-                return create_dict(tax_category_code='S', tax_exemption_reason=_('Output VAT, reduced rate, raw fish'))
-            if tax.amount == 12:
-                return create_dict(tax_category_code='S', tax_exemption_reason=_('Output VAT, reduced rate, low'))
-
         if supplier.country_id == customer.country_id:
             if not tax or tax.amount == 0:
                 # in theory, you should indicate the precise law article
