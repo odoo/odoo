@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.osv import expression
 
 
 class WebsiteSnippetFilter(models.Model):
     _inherit = 'website.snippet.filter'
 
-    product_cross_selling = fields.Boolean(string="About cross selling products", default=False,
-        help="True only for product filters that require a product_id because they relate to cross selling")
+    product_cross_selling = fields.Boolean(
+        string="About cross selling products",
+        help="True only for product filters that require a product_id because they relate to"
+            " cross selling",
+    )
 
     @api.model
     def _get_website_currency(self):
@@ -22,31 +25,31 @@ class WebsiteSnippetFilter(models.Model):
         if model._name == 'product.product':
             data = [{
                 'image_512': b'/product/static/img/product_chair.jpg',
-                'display_name': _('Chair'),
-                'description_sale': _('Sit comfortably'),
+                'display_name': _("Chair"),
+                'description_sale': _("Sit comfortably"),
             }, {
                 'image_512': b'/product/static/img/product_lamp.png',
-                'display_name': _('Lamp'),
-                'description_sale': _('Lightbulb sold separately'),
+                'display_name': _("Lamp"),
+                'description_sale': _("Lightbulb sold separately"),
             }, {
                 'image_512': b'/product/static/img/product_product_20-image.png',
-                'display_name': _('Whiteboard'),
-                'description_sale': _('With three feet'),
+                'display_name': _("Whiteboard"),
+                'description_sale': _("With three feet"),
             }, {
                 'image_512': b'/product/static/img/product_product_27-image.jpg',
-                'display_name': _('Drawer'),
-                'description_sale': _('On wheels'),
+                'display_name': _("Drawer"),
+                'description_sale': _("On wheels"),
             }, {
                 'image_512': b'/product/static/img/product_product_7-image.png',
-                'display_name': _('Box'),
-                'description_sale': _('Reinforced for heavy loads'),
+                'display_name': _("Box"),
+                'description_sale': _("Reinforced for heavy loads"),
             }, {
                 'image_512': b'/product/static/img/product_product_9-image.jpg',
-                'display_name': _('Bin'),
-                'description_sale': _('Pedal-based opening system'),
+                'display_name': _("Bin"),
+                'description_sale': _("Pedal-based opening system"),
             }]
             merged = []
-            for index in range(0, max(len(samples), len(data))):
+            for index in range(max(len(samples), len(data))):
                 merged.append({**samples[index % len(samples)], **data[index % len(data)]})
                 # merge definitions
             samples = merged
@@ -77,7 +80,7 @@ class WebsiteSnippetFilter(models.Model):
             search_domain or [],
         ])
         products = handler(website, limit, domain, context)
-        return dynamic_filter._filter_records_to_values(products, False)
+        return dynamic_filter._filter_records_to_values(products, is_sample=False)
 
     def _get_products_latest_sold(self, website, limit, domain, context):
         products = []
@@ -93,7 +96,9 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', products_ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False).search(domain)
+                products = self.env['product.product'].with_context(
+                    display_default_code=False,
+                ).search(domain)
                 products = products.sorted(key=lambda p: products_ids.index(p.id))[:limit]
         return products
 
@@ -102,16 +107,22 @@ class WebsiteSnippetFilter(models.Model):
         visitor = self.env['website.visitor']._get_visitor_from_request()
         if visitor:
             excluded_products = website.sale_get_order().order_line.product_id.ids
-            tracked_products = self.env['website.track'].sudo()._read_group(
-                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
-                ['product_id'], limit=limit, order='visit_datetime:max DESC')
+            tracked_products = self.env['website.track'].sudo()._read_group([
+                ('visitor_id', '=', visitor.id),
+                ('product_id', '!=', False),
+                ('product_id.website_published', '=', True),
+                ('product_id', 'not in', excluded_products),
+            ], ['product_id'], limit=limit, order='visit_datetime:max DESC')
             products_ids = [product.id for [product] in tracked_products]
             if products_ids:
                 domain = expression.AND([
                     domain,
                     [('id', 'in', products_ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False, add2cart_rerender=True).search(domain, limit=limit)
+                products = self.env['product.product'].with_context(
+                    display_default_code=False,
+                    add2cart_rerender=True,
+                ).search(domain, limit=limit)
         return products
 
     def _get_products_recently_sold_with(self, website, limit, domain, context):
@@ -137,7 +148,9 @@ class WebsiteSnippetFilter(models.Model):
                         domain,
                         [('id', 'in', products_ids)],
                     ])
-                    products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+                    products = self.env['product.product'].with_context(
+                        display_default_code=False,
+                    ).search(domain, limit=limit)
         return products
 
     def _get_products_accessories(self, website, limit, domain, context):
@@ -156,7 +169,9 @@ class WebsiteSnippetFilter(models.Model):
                         domain,
                         [('id', 'in', products_ids)],
                     ])
-                    products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+                    products = self.env['product.product'].with_context(
+                        display_default_code=False,
+                    ).search(domain, limit=limit)
         return products
 
     def _get_products_alternative_products(self, website, limit, domain, context):
@@ -177,5 +192,7 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', products.ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False).search(domain, limit=limit)
+                products = self.env['product.product'].with_context(
+                    display_default_code=False,
+                ).search(domain, limit=limit)
         return products
