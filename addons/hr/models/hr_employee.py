@@ -411,11 +411,11 @@ class HrEmployeePrivate(models.Model):
         if 'work_contact_id' in vals:
             account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
             if account_ids:
-                bank_accounts = self.env['res.partner.bank'].browse(account_ids)
+                bank_accounts = self.env['res.partner.bank'].sudo().browse(account_ids)
                 for bank_account in bank_accounts:
                     if vals['work_contact_id'] != bank_account.partner_id.id:
                         if bank_account.allow_out_payment:
-                            bank_account.sudo().allow_out_payment = False
+                            bank_account.allow_out_payment = False
                         if vals['work_contact_id']:
                             bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
