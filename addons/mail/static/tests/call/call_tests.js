@@ -7,6 +7,7 @@ import {
     startServer,
     mockGetMedia,
 } from "@mail/../tests/helpers/test_utils";
+import { click as clickContains, contains } from "@web/../tests/utils";
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { Command } from "../helpers/command";
@@ -240,4 +241,31 @@ QUnit.test("can share user camera", async (assert) => {
     assert.containsOnce($, ".o-mail-CallParticipantCard video");
     await click(".o-mail-CallActionList button[title='Stop camera']");
     assert.containsNone($, ".o-mail-CallParticipantCard video");
+});
+
+QUnit.test("join/leave sounds are only played on main tab", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true });
+    patchWithCleanup(tab1.env.services["mail.sound_effects"], {
+        play(name) {
+            assert.step(`tab1 - play - ${name}`);
+        },
+    });
+    patchWithCleanup(tab2.env.services["mail.sound_effects"], {
+        play(name) {
+            assert.step(`tab2 - play - ${name}`);
+        },
+    });
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
+    await clickContains("[title='Start a Call']", { target: tab1.target });
+    await contains(".o-mail-Call", { target: tab1.target });
+    await contains(".o-mail-Call", { target: tab2.target });
+    assert.verifySteps(["tab1 - play - channel-join"]);
+    await clickContains("[title='Disconnect']:not([disabled])", { target: tab1.target });
+    await contains(".o-mail-Call", { target: tab1.target, count: 0 });
+    await contains(".o-mail-Call", { target: tab2.target, count: 0 });
+    assert.verifySteps(["tab1 - play - channel-leave"]);
 });
