@@ -5,11 +5,12 @@ import odoo.tests
 from .common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'kzh')
-class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
-
+@odoo.tests.tagged('post_install', '-at_install')
+class SaleProductConfiguratorTestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
+    # TODO: Those tests don't work without sale_management
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         self.custom_pricelist = self.env['product.pricelist'].create({
             'name': 'Custom pricelist (TEST)',
             'item_ids': [(0, 0, {
@@ -25,6 +26,10 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
     def test_01_product_configurator(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
+        self.product_product_custo_desk.taxes_id = tax
+        self.product_product_conf_chair_floor_protect.taxes_id = tax
+        self.product_product_conf_chair.taxes_id = tax
         self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
 
     def test_02_product_configurator_advanced(self):
