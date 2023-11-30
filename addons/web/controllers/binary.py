@@ -70,7 +70,7 @@ class Binary(http.Controller):
                        filename=None, filename_field='name', mimetype=None, unique=False,
                        download=False, access_token=None, nocache=False):
         with replace_exceptions(UserError, by=request.not_found()):
-            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token)
+            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token, field=field)
             stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
         send_file_kwargs = {'as_attachment': download}
         if unique:
@@ -166,7 +166,7 @@ class Binary(http.Controller):
                       download=False, width=0, height=0, crop=False, access_token=None,
                       nocache=False):
         try:
-            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token)
+            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token, field=field)
             stream = request.env['ir.binary']._get_image_stream_from(
                 record, field, filename=filename, filename_field=filename_field,
                 mimetype=mimetype, width=int(width), height=int(height), crop=crop,

@@ -22,4 +22,30 @@ patch(MockServer.prototype, {
             odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
         };
     },
+    /**
+     * Simulates `_guest_format` on `mail_guest`.
+     *
+     * @private
+     * @returns {Number[]} ids
+     * @returns {Map}
+     */
+    _mockMailGuestGuestFormat(ids) {
+        const guests = this.getRecords("mail.guest", [["id", "in", ids]], {
+            active_test: false,
+        });
+        return new Map(
+            guests.map((guest) => {
+                return [
+                    guest.id,
+                    {
+                        id: guest.id,
+                        im_status: guest.im_status,
+                        name: guest.name,
+                        type: "guest",
+                        write_date: guest.write_date,
+                    },
+                ];
+            })
+        );
+    },
 });

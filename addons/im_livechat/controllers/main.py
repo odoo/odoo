@@ -114,38 +114,6 @@ class LivechatController(http.Controller):
             'rule': rule,
         }
 
-    @http.route('/im_livechat/operator/<int:operator_id>/avatar',
-        type='http', auth="public", cors="*")
-    def livechat_operator_get_avatar(self, operator_id, unique=False):
-        """ Custom route allowing to retrieve an operator's avatar.
-
-        This is done to bypass more complicated rules, notably 'website_published' when the website
-        module is installed.
-
-        Here, we assume that if you are a member of at least one im_livechat.channel, then it's ok
-        to make your avatar publicly available.
-
-        We also make the chatbot operator avatars publicly available. """
-
-        is_livechat_member = False
-        operator = request.env['res.partner'].sudo().browse(operator_id)
-        if operator.exists():
-            is_livechat_member = bool(request.env['im_livechat.channel'].sudo().search_count([
-                ('user_ids', 'in', operator.user_ids.ids)
-            ]))
-
-        if not is_livechat_member:
-            # we don't put chatbot operators as livechat members (because we don't have a user_id for them)
-            is_livechat_member = bool(request.env['chatbot.script'].sudo().search_count([
-                ('operator_partner_id', 'in', operator.ids)
-            ]))
-
-        return request.env['ir.binary']._get_image_stream_from(
-            operator if is_livechat_member else request.env['res.partner'],
-            field_name='avatar_128',
-            placeholder='mail/static/src/img/smiley/avatar.jpg',
-        ).get_response(immutable=True if unique else False)
-
     def _get_guest_name(self):
         return _("Visitor")
 

@@ -1002,7 +1002,7 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
 
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
-        `img[data-src$='/web/image/res.partner/${partnerId}/avatar_128?unique=${encodeURIComponent(
+        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${partnerId}&model=res.partner&unique=${encodeURIComponent(
             partner.write_date
         )}']`
     );

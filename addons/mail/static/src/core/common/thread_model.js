@@ -5,6 +5,7 @@ import { AND, Record } from "@mail/core/common/record";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
+import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 
 /**
  * @typedef SuggestedRecipient
@@ -358,8 +359,8 @@ export class Thread extends Record {
         return undefined;
     }
 
-    get imgUrl() {
-        return this.module_icon ?? "/mail/static/src/img/smiley/avatar.jpg";
+    get avatarUrl() {
+        return this.module_icon ?? DEFAULT_AVATAR;
     }
 
     get allowDescription() {

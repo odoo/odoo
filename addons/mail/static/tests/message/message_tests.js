@@ -612,7 +612,7 @@ QUnit.test("basic rendering of message", async () => {
     await contains(".o-mail-Message .o-mail-Message-content", { text: "body" });
     const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     await contains(
-        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128?unique=${encodeURIComponent(
+        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/web/image?field=avatar_128&id=${partnerId}&model=res.partner&unique=${encodeURIComponent(
             partner.write_date
         )}']`
     );
