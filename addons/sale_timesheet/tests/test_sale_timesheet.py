@@ -855,6 +855,42 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 product_form.detailed_type = 'consu'
                 self.assertEqual(product_form.uom_id.id, uom_kg.id)
 
+    def test_allocated_hours_copy(self):
+        """ This test ensures that the generated project's allocated_hours field is copied from the project template when it is set."""
+        project_template = self.env['project.project'].create({
+            'name': 'Template',
+            'allocated_hours': 65,
+        })
+        product = self.env['product.product'].create({
+            'name': "Service with template",
+            'standard_price': 10,
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': self.uom_hour.id,
+            'uom_po_id': self.uom_hour.id,
+            'default_code': 'c1',
+            'service_tracking': 'task_in_project',
+            'project_id': False,  # will create a project,
+            'project_template_id': project_template.id,
+        })
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'product_uom': product.uom_id.id,
+            'price_unit': product.list_price,
+        })
+        project = sale_order_line._timesheet_create_project()
+        self.assertTrue(
+            project.allocated_hours == project_template.allocated_hours != sale_order_line.product_uom_qty,
+            "The project's allocated hours should have been copied from its template, rather than the sale order line",
+        )
+
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
         """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
