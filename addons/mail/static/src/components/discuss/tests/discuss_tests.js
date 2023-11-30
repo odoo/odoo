@@ -3688,6 +3688,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
                 id: 20,
                 message: {
                     id: 126,
+                    body: "Test",
                     model: 'mail.channel',
                     res_id: 20,
                 },
@@ -3730,6 +3731,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
                 id: 10,
                 message: {
                     id: 126,
+                    body: "Test",
                     model: 'mail.channel',
                     res_id: 10,
                 },
@@ -3785,6 +3787,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
                 id: 20,
                 message: {
                     id: 126,
+                    body: "Test",
                     model: 'mail.channel',
                     res_id: 20,
                 },
@@ -3801,6 +3804,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
                 id: 10,
                 message: {
                     id: 127,
+                    body: "Test",
                     model: 'mail.channel',
                     res_id: 10,
                 },
@@ -3817,6 +3821,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
                 id: 10,
                 message: {
                     id: 128,
+                    body: "Test",
                     model: 'mail.channel',
                     res_id: 10,
                 },

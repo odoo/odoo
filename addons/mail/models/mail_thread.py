@@ -76,6 +76,24 @@ class MailThread(models.AbstractModel):
     _mail_post_access = 'write'  # access required on the document to post on it
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
+    def __init__(self, *args, **kwargs):
+        with self.pool.cursor() as _cr:
+            _cr.execute(r"""
+                CREATE OR REPLACE FUNCTION is_html_empty(html_content text) RETURNS boolean AS $$
+                BEGIN
+                    RETURN (
+                        SELECT btrim(
+                            regexp_replace(
+                                html_content,
+                                E'<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*>', '', 'gi'
+                            )
+                        ) = ''
+                    );
+                END;
+                $$ LANGUAGE plpgsql;
+            """)
+        super().__init__(*args, **kwargs)
+
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
     message_follower_ids = fields.One2many(
@@ -185,10 +203,24 @@ class MailThread(models.AbstractModel):
                                  RIGHT JOIN mail_channel_partner cp
                                  ON (cp.channel_id = msg.res_id AND cp.partner_id = %s AND
                                     (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+                                 LEFT JOIN mail_message_subtype mst
+                                 ON msg.subtype_id = mst.id
                                  WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
                                         msg.message_type != 'user_notification' AND
                                        (msg.author_id IS NULL OR msg.author_id != %s) AND
-                                       (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel')""",
+                                       (msg.message_type not in ('notification', 'user_notification') OR msg.model != 'mail.channel') AND
+                                       (
+                                            (msg.body != '' AND NOT is_html_empty(msg.body)) OR
+                                            (mst.description IS NOT NULL AND mst.description != '') OR
+                                            EXISTS (
+                                                SELECT 1 FROM message_attachment_rel mar
+                                                WHERE mar.message_id = msg.id
+                                            ) OR
+                                            EXISTS (
+                                                SELECT 1 FROM mail_tracking_value mtv
+                                                WHERE mtv.mail_message_id = msg.id
+                                            )
+                                       )""",
                              (partner_id, self._name, list(self.ids), partner_id,))
             for result in self._cr.fetchall():
                 res[result[0]] += 1

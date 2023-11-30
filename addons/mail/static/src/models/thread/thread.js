@@ -1608,7 +1608,7 @@ function factory(dependencies) {
             const {
                 length: l,
                 [l - 1]: lastMessage,
-            } = this.orderedMessages;
+            } = this.orderedNonEmptyMessages;
             if (lastMessage) {
                 return link(lastMessage);
             }
@@ -1710,9 +1710,9 @@ function factory(dependencies) {
                 baseCounter = 0;
                 countFromId = this.lastSeenByCurrentPartnerMessageId;
             }
-            // Include all the messages that are known locally but the server
+            // Include all the non-empty messages that are known locally but the server
             // didn't take into account.
-            return this.orderedMessages.reduce((total, message) => {
+            return this.orderedNonEmptyMessages.reduce((total, message) => {
                 if (message.id <= countFromId) {
                     return total;
                 }
@@ -1749,7 +1749,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
-            return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction));
+            return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction && !message.isEmpty));
         }
 
         /**
@@ -1798,6 +1798,14 @@ function factory(dependencies) {
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedNonEmptyMessages() {
+            return replace(this.orderedMessages.filter(message => !message.isEmpty));
         }
 
         /**
@@ -2500,6 +2508,12 @@ function factory(dependencies) {
          */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
+        }),
+        /**
+         * All non empty messages ordered like they are displayed.
+         */
+        orderedNonEmptyMessages: many2many('mail.message', {
+            compute: '_computeOrderedNonEmptyMessages'
         }),
         /**
          * All messages ordered like they are displayed. This field does not

@@ -50,12 +50,14 @@ QUnit.test('marked as read thread notifications are ordered by last message date
         {
             date: "2019-01-01 00:00:00",
             id: 42,
+            body: "<p>Message 2019</p>",
             model: 'mail.channel',
             res_id: 100,
         },
         {
             date: "2020-01-01 00:00:00",
             id: 43,
+            body: "<p>Message 2020</p>",
             model: 'mail.channel',
             res_id: 200,
         }
