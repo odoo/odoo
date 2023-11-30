@@ -28,12 +28,14 @@ class TestHttpMisc(TestHttpBase):
         client_ip = '127.0.0.16'
         reverseproxy_ip = gethostbyname(HOST)
         host = 'mycompany.odoo.com'
+        port = odoo.tools.config['http_port'] + 1
 
         headers = {
             'Host': '',
             'X-Forwarded-For': client_ip,
             'X-Forwarded-Host': host,
-            'X-Forwarded-Proto': 'https'
+            'X-Forwarded-Proto': 'https',
+            'X-Forwarded-Port': str(port),
         }
 
         # Don't trust client-sent forwarded headers
@@ -43,12 +45,26 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.json()['REMOTE_ADDR'], reverseproxy_ip)
             self.assertEqual(res.json()['HTTP_HOST'], '')
 
+            root_url = self.base_url()
+            res = self.db_url_open('/test_http/greeting-user')
+            self.assertEqual(res.status_code, 303)
+            self.assertTrue(res.headers['Location'].startswith(root_url),
+                f"{res.headers['Location']!r} doesn't start with {root_url!r}")
+            self.assertEqual(self.env['ir.config_parameter'].get_param('base.web.url'), root_url)
+
         # Trust proxy-sent forwarded headers
         with patch.object(config, 'options', {**config.options, 'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
             self.assertEqual(res.json()['HTTP_HOST'], host)
+            
+            root_url = f'https://{host}:{port}/web/login'
+            res = self.db_url_open('/test_http/greeting-user')
+            self.assertEqual(res.status_code, 303)
+            self.assertTrue(res.headers['Location'].startswith(root_url),
+                f"{res.headers['Location']!r} doesn't start with {root_url!r}")
+            self.assertEqual(self.env['ir.config_parameter'].get_param('base.web.url'), root_url)
 
     def test_misc2_local_redirect(self):
         def local_redirect(path):
