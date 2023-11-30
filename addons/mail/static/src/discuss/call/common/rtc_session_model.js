@@ -66,6 +66,10 @@ export class RtcSession extends Record {
         return persona.type === "guest" ? persona.id : undefined;
     }
 
+    get isSelfSession() {
+        return this.channelMember?.persona.eq(this._store.self);
+    }
+
     /**
      * @returns {string}
      */
