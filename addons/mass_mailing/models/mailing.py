@@ -275,6 +275,7 @@ class MassMailing(models.Model):
             FROM mailing_trace AS stats
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
+            AND stats.trace_status != 'cancel'
             GROUP BY stats.mass_mailing_id
         """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
