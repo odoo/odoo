@@ -26,10 +26,24 @@
     <nav id="o_wforum_nav" t-attf-class="navbar d-flex gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } px-0" aria-label="breadcrumb">
         <t t-if="_page_name == 'single_question'">
             <div class="flex-grow-1">
+<<<<<<< HEAD
                 <div class="o_wforum_breadcrumb_root_single row g-0">
+||||||| parent of 840c18b21397 (temp)
+                <div class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
+=======
+                <div t-if="has_back_button_url" class="o_wforum_breadcrumb_root_single row align-items-baseline g-0">
+>>>>>>> 840c18b21397 (temp)
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
+<<<<<<< HEAD
                         <a class="btn btn-link px-0 pb-2 fs-5" t-attf-href="/forum/#{ _forum_slug }">
                             <i class="d-inline-block fa fa-angle-left me-1 small"/><t t-out="_forum_name"/>
+||||||| parent of 840c18b21397 (temp)
+                        <a class="btn btn-lg btn-link px-0 pb-2" t-attf-href="/forum/#{ slug(forum) }">
+                            <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="forum.name"/>
+=======
+                        <a class="btn btn-lg btn-link px-0 pb-2 o_back_button">
+                            <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="forum.name"/>
+>>>>>>> 840c18b21397 (temp)
                         </a>
                     </div>
                     <div class="d-lg-none col-2 text-end">
