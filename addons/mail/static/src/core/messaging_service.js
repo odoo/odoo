@@ -676,18 +676,25 @@ export class Messaging {
             return;
         }
         const oldCount = Object.keys(channel.rtcSessions).length;
+        let onlySelfSessions = true;
         switch (command) {
             case "insert-and-unlink":
                 for (const sessionData of sessionsData) {
+                    const session = this.store.rtcSessions[sessionData.id];
+                    onlySelfSessions = onlySelfSessions && session.isSelfSession;
                     this.rtc.deleteSession(sessionData.id);
                 }
                 break;
             case "insert":
                 for (const sessionData of sessionsData) {
                     const session = this.rtc.insertSession(sessionData);
+                    onlySelfSessions = onlySelfSessions && session.isSelfSession;
                     channel.rtcSessions[session.id] = session;
                 }
                 break;
+        }
+        if (!this.env.services["multi_tab"].isOnMainTab() || onlySelfSessions) {
+            return;
         }
         if (Object.keys(channel.rtcSessions).length > oldCount) {
             this.soundEffectsService.play("channel-join");

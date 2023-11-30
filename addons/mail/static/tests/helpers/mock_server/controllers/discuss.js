@@ -152,7 +152,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailRtcChannelLeaveCall(args.channel_id);
         }
         if (route === "/mail/rtc/session/update_and_broadcast") {
-            return;
+            return this._mockRouteMailRtcSessionUpdateAndBroadcast(args.session_id, args.values);
         }
         if (route === "/mail/starred/messages") {
             const { after, before, limit } = args;
@@ -496,6 +496,23 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             ]);
         }
         this.pyEnv["bus.bus"]._sendmany(notifications);
+    },
+    /**
+     * Simulates the `/mail/rtc/session/update_and_broadcast` route.
+     *
+     * @param {number} session_id
+     * @param {object} values
+     */
+    async _mockRouteMailRtcSessionUpdateAndBroadcast(session_id, values) {
+        const [session] = this.pyEnv["discuss.channel.rtc.session"].searchRead([
+            ["id", "=", session_id],
+        ]);
+        const [currentChannelMember] = this.pyEnv["discuss.channel.member"].searchRead([
+            ["id", "=", session.channel_member_id[0]],
+        ]);
+        if (session && currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
+            this._mockDiscussChannelRtcSession__updateAndBroadcast(session.id, values);
+        }
     },
     /**
      * Simulates the `/mail/thread/data` route.
