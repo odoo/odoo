@@ -150,7 +150,8 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     _search: function () {
         var search = $.deparam(window.location.search.substring(1));
-        search['search_in'] = this.$('.dropdown-item.active').attr('href').replace('#', '');
+        const item = this.$('.dropdown-item.active').attr('href');
+        search['search_in'] = item && item.replace('#', '') || '';
         search['search'] = this.$('input[name="search"]').val();
         window.location.search = $.param(search);
     },
