@@ -220,7 +220,7 @@ QUnit.test("Close from the bus", async () => {
 QUnit.test("Smiley face avatar for livechat item linked to a guest", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    const channelId = pyEnv["discuss.channel"].create({
+    pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -231,9 +231,12 @@ QUnit.test("Smiley face avatar for livechat item linked to a guest", async () =>
     });
     const { openDiscuss } = await start();
     openDiscuss();
+    const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
-            `/discuss/channel/${channelId}/guest/${guestId}/avatar_128`
+            `/web/image?field=avatar_128&id=${guestId}&model=mail.guest&unique=${encodeURIComponent(
+                guest.write_date
+            )}`
         )}']`
     );
 });
@@ -251,9 +254,12 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     await contains(
         `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
-            `/discuss/channel/${channelId}/partner/${partnerId}/avatar_128`
+            `/web/image?field=avatar_128&id=${partnerId}&model=res.partner&unique=${encodeURIComponent(
+                partner.write_date
+            )}`
         )}']`
     );
 });

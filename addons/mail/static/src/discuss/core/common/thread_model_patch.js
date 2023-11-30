@@ -58,7 +58,7 @@ patch(Thread.prototype, {
             },
         ];
     },
-    get imgUrl() {
+    get avatarUrl() {
         if (this.type === "channel" || this.type === "group") {
             return url(
                 `/discuss/channel/${this.id}/avatar_128`,
@@ -66,11 +66,8 @@ patch(Thread.prototype, {
             );
         }
         if (this.type === "chat") {
-            return url(
-                `/web/image/res.partner/${this.chatPartner.id}/avatar_128`,
-                assignDefined({}, { unique: this.chatPartner.write_date })
-            );
+            return this.chatPartner.avatarUrl;
         }
-        return super.imgUrl;
+        return super.avatarUrl;
     },
 });

@@ -36,6 +36,7 @@ patch(MockServer.prototype, {
                       }
                     : false;
             }
+            data["write_date"] = partner.write_date;
             return data;
         }
         return super._mockDiscussChannelMember_GetPartnerData(ids);

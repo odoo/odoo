@@ -90,8 +90,8 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(
-        `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/discuss/channel/${channelId}/partner/${
+        `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/web/image?field=avatar_128&id=${
             pyEnv.currentPartnerId
-        }/avatar_128?unique=${encodeURIComponent(partner.write_date)}`}']`
+        }&model=res.partner&unique=${encodeURIComponent(partner.write_date)}`}`
     );
 });
