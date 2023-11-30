@@ -263,6 +263,13 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()
+        # we can skip all the allocated hours calculation if allocated hours is already set on the template project
+        if self.product_id.project_template_id.allocated_hours:
+            project.write({
+                'allocated_hours': self.product_id.project_template_id.allocated_hours,
+                'allow_timesheets': True,
+            })
+            return project
         project_uom = self.company_id.project_time_mode_id
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_hour = self.env.ref('uom.product_uom_hour')
