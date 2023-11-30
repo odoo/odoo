@@ -29,7 +29,8 @@ class TestMailingStatistics(TestMassMailCommon):
     @users('user_marketing')
     @mute_logger('odoo.addons.mass_mailing.models.mailing', 'odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_mailing_statistics(self):
-        target_records = self._create_mailing_test_records(model='mailing.test.blacklist', count=10)
+        target_records = self._create_mailing_test_records(model='mailing.test.blacklist', count=11)
+        target_records[10]['email_from'] = False  # void email should lead to a 'cancel' trace_status
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
         mailing.write({'mailing_domain': [('id', 'in', target_records.ids)], 'user_id': self.user_marketing_2.id})
         mailing.action_put_in_queue()
@@ -45,7 +46,9 @@ class TestMailingStatistics(TestMassMailCommon):
         self.gateway_mail_click(mailing, target_records[3], 'https://www.odoo.be')
 
         # check mailing statistics
+        self.assertEqual(mailing.canceled, 1)
         self.assertEqual(mailing.clicked, 3)
+        self.assertEqual(mailing.clicks_ratio, 30)
         self.assertEqual(mailing.delivered, 10)
         self.assertEqual(mailing.opened, 4)
         self.assertEqual(mailing.opened_ratio, 40)
