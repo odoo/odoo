@@ -22,6 +22,14 @@ from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
+#----------------------------------------------------------
+# Constants used also in hw_drivers/tools/helpers.py
+#----------------------------------------------------------
+ODOO_DB_UUID = "odoo-db-uuid"
+ODOO_ENTERPRISE_CODE = "odoo-enterprise-code"
+ODOO_REMOTE_SERVER = "odoo-remote-server"
+TOKEN_KEY = "token"
+IOT_CONF_FILE = "/home/pi/iot.conf"
 
 #----------------------------------------------------------
 # Controllers
@@ -104,8 +112,8 @@ class IoTboxHomepage(Home):
     @http.route()
     def index(self):
         wifi = Path.home() / 'wifi_network.txt'
-        remote_server = Path.home() / 'odoo-remote-server.conf'
-        if (wifi.exists() == False or remote_server.exists() == False) and helpers.access_point():
+        remote_server = helpers.read_json(IOT_CONF_FILE,ODOO_REMOTE_SERVER)
+        if (wifi.exists() == False or remote_server == None) and helpers.access_point():
             return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069/steps'>"
         else:
             return homepage_template.render(self.get_homepage_data())
@@ -170,21 +178,25 @@ class IoTboxHomepage(Home):
         return list_credential_template.render({
             'title': "Odoo's IoT Box - List credential",
             'breadcrumb': 'List credential',
-            'db_uuid': helpers.read_file_first_line('odoo-db-uuid.conf'),
-            'enterprise_code': helpers.read_file_first_line('odoo-enterprise-code.conf'),
+            'db_uuid': helpers.read_json(IOT_CONF_FILE, ODOO_DB_UUID),
+            'enterprise_code': helpers.read_json(IOT_CONF_FILE, ODOO_ENTERPRISE_CODE),
         })
 
     @http.route('/save_credential', type='http', auth='none', cors='*', csrf=False)
     def save_credential(self, db_uuid, enterprise_code):
         helpers.write_file('odoo-db-uuid.conf', db_uuid)
         helpers.write_file('odoo-enterprise-code.conf', enterprise_code)
+        
+        helpers.insert_json(IOT_CONF_FILE,db_uuid,ODOO_DB_UUID)
+        helpers.insert_json(IOT_CONF_FILE,enterprise_code,ODOO_ENTERPRISE_CODE)
+        
         helpers.odoo_restart(0)
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
 
     @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
     def clear_credential(self):
-        helpers.unlink_file('odoo-db-uuid.conf')
-        helpers.unlink_file('odoo-enterprise-code.conf')
+        helpers.remove_json(IOT_CONF_FILE,ODOO_DB_UUID)
+        helpers.remove_json(IOT_CONF_FILE,ODOO_ENTERPRISE_CODE)
         helpers.odoo_restart(0)
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
 
@@ -229,7 +241,7 @@ class IoTboxHomepage(Home):
 
     @http.route('/server_clear', type='http', auth='none', cors='*', csrf=False)
     def clear_server_configuration(self):
-        helpers.unlink_file('odoo-remote-server.conf')
+        helpers.remove_json(IOT_CONF_FILE,ODOO_REMOTE_SERVER)
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
 
     @http.route('/handlers_clear', type='http', auth='none', cors='*', csrf=False)

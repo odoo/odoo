@@ -25,6 +25,15 @@ from odoo import _, http, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
 
+#----------------------------------------------------------
+# Same constants used in hw_posbox_homepage/controllers/main.py
+#----------------------------------------------------------
+ODOO_DB_UUID = "odoo-db-uuid"
+ODOO_ENTERPRISE_CODE = "odoo-enterprise-code"
+ODOO_REMOTE_SERVER = "odoo-remote-server"
+TOKEN_KEY = "token"
+IOT_CONF_FILE = "/home/pi/iot.conf"
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -193,6 +202,15 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     write_file('token', token)
     write_file('odoo-db-uuid.conf', db_uuid or '')
     write_file('odoo-enterprise-code.conf', enterprise_code or '')
+    
+    data = {
+    ODOO_REMOTE_SERVER: url,
+    TOKEN_KEY: token,
+    ODOO_DB_UUID: db_uuid or '',
+    ODOO_ENTERPRISE_CODE: enterprise_code or '',
+    }
+    filename = IOT_CONF_FILE
+    write_json(filename, data) 
 
 def generate_password():
     """
@@ -266,10 +284,10 @@ def get_odoo_server_url():
         ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
         if not ap:
             return False
-    return read_file_first_line('odoo-remote-server.conf')
+    return read_json(IOT_CONF_FILE,ODOO_REMOTE_SERVER)
 
 def get_token():
-    return read_file_first_line('token')
+    return read_json(IOT_CONF_FILE, TOKEN_KEY)
 
 def get_version():
     if platform.system() == 'Linux':
@@ -291,8 +309,8 @@ def load_certificate():
     """
     Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
     """
-    db_uuid = read_file_first_line('odoo-db-uuid.conf')
-    enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+    db_uuid = read_json(IOT_CONF_FILE, ODOO_DB_UUID)
+    enterprise_code = read_json(IOT_CONF_FILE, ODOO_ENTERPRISE_CODE)
     if not (db_uuid and enterprise_code):
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
@@ -420,6 +438,60 @@ def write_file(filename, text, mode='w'):
         path = path_file(filename)
         with open(path, mode) as f:
             f.write(text)
+            
+def write_json(filename, data):
+    with writable():
+        path = path_file(filename)
+        with open(path, 'w') as jsonfile:
+            json.dump(data, jsonfile, indent=4)   
+
+def remove_json(filename, key=None):
+    file_path = Path(filename)
+    
+    if file_path.exists():
+        with open(filename, 'r') as jsonfile:
+            data = json.load(jsonfile)
+
+        if key in data:
+            del data[key]
+            write_json(filename, data)
+        else:
+            _logger.error('Key %s not found in JSON data.', filename)
+
+def insert_json(filename, value, key=None):
+    file_path = Path(filename)
+    
+    if file_path.exists():
+        with open(filename, 'r') as json_file:
+            data = json.load(json_file)
+
+        data[key] = value
+        write_json(filename, data)
+
+def read_json(filename, key=None):
+    file_path = Path(filename)
+    _logger.info('Reading %s, key %s', filename,key)
+    if file_path.exists():
+        try:
+            with file_path.open('r') as jsonfile:
+                data = json.load(jsonfile)
+            
+            if key is not None:
+                if key in data:
+                    _logger.info('Returning %s', data[key])
+                    return data[key]
+                else:
+                    _logger.error('Key %s not found in JSON data.', key)
+                    return None
+            else:
+                _logger.info('Returning %s', data)
+                return data
+        
+        except json.JSONDecodeError as e:
+            _logger.error('Error decoding JSON in %s: %s', filename, e)
+            return None 
+    else:
+        _logger.error('file_path.exists() returned false for file_path %s', file_path)
 
 def download_from_url(download_url, path_to_filename):
     """
