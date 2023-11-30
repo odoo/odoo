@@ -6,7 +6,10 @@ from datetime import datetime, timedelta
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.fields import Date
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestProgramRules(TestSaleCouponCommon):
     # Test all the validity rules to allow a customer to have a reward.
     # The check based on the products is already done in the basic operations test
