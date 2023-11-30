@@ -38,6 +38,7 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
     def test_project_process_project_manager_duplicate(self):
         Task = self.env['project.task'].with_context({'tracking_disable': True})
         pigs = self.project_pigs.with_user(self.user_projectmanager)
+        pigs.allow_subtasks = True
         root_task = self.task_1
         sub_task = Task.create({
             'name': 'Sub Task',
