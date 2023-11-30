@@ -6,7 +6,7 @@ import odoo
 from odoo.tools import mute_logger, date_utils
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import STATIC_CACHE_LONG
-from odoo import Command
+from odoo import Command, fields
 
 
 @odoo.tests.tagged("-at_install", "post_install")
@@ -367,21 +367,21 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res.headers["Cache-Control"], "no-cache")
 
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128?unique={partner.write_date.isoformat()}"
+            url=f"/web/image?field=avatar_128&id={partner.id}&model=res.partner&unique={fields.Datetime.to_string(partner.write_date)}"
         )
         self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
 
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128"
+            url=f"/web/image?field=avatar_128&id={partner.id}&model=res.partner"
         )
         self.assertEqual(res.headers["Cache-Control"], "no-cache")
 
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128?unique={self.guest.write_date.isoformat()}"
+            url=f"/web/image?field=avatar_128&id={self.guest.id}&model=mail.guest&unique={fields.Datetime.to_string(partner.write_date)}"
         )
         self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
 
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128"
+            url=f"/web/image?field=avatar_128&id={self.guest.id}&model=mail.guest"
         )
         self.assertEqual(res.headers["Cache-Control"], "no-cache")

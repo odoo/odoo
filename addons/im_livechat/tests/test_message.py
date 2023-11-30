@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import users, tagged, HttpCase
 
 
@@ -63,7 +63,8 @@ class TestImLivechatMessage(HttpCase):
                 'user': {
                     'id': self.users[1].id,
                     'isInternalUser': self.users[1]._is_internal(),
-                }
+                },
+                'write_date': fields.Datetime.to_string(self.users[1].write_date),
             },
             'body': message.body,
             'date': message.date,

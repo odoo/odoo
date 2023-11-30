@@ -49,12 +49,7 @@ patch(MockServer.prototype, {
             }
             if (member.guest_id) {
                 const [guest] = this.getRecords("mail.guest", [["id", "=", member.guest_id]]);
-                persona = {
-                    id: guest.id,
-                    im_status: guest.im_status,
-                    name: guest.name,
-                    type: "guest",
-                };
+                persona = this._mockMailGuestGuestFormat([guest.id]).get(guest.id);
             }
             const data = {
                 thread: { id: member.channel_id, model: "discuss.channel" },

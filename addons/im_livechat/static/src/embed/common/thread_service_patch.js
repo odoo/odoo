@@ -3,7 +3,6 @@
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
-import { url } from "@web/core/utils/urls";
 
 threadService.dependencies.push("im_livechat.livechat", "im_livechat.chatbot");
 
@@ -50,14 +49,5 @@ patch(ThreadService.prototype, {
         if (this.chatbotService.active) {
             this.chatbotService.start();
         }
-    },
-
-    avatarUrl(persona, thread) {
-        if (thread.type === "livechat" && persona.eq(thread.operator)) {
-            return url(`/im_livechat/operator/${persona.id}/avatar`, {
-                unique: persona.write_date,
-            });
-        }
-        return super.avatarUrl(...arguments);
     },
 });

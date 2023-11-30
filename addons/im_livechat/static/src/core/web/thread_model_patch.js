@@ -46,11 +46,11 @@ patch(Thread.prototype, {
         return this.getMemberName(this.correspondent);
     },
 
-    get imgUrl() {
-        if (this.type !== "livechat") {
-            return super.imgUrl;
+    get avatarUrl() {
+        if (this.type === "livechat") {
+            return this.correspondent.avatarUrl;
         }
-        return this._store.env.services["mail.thread"].avatarUrl(this.correspondent, this);
+        return super.avatarUrl;
     },
 
     /**

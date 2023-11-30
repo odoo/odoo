@@ -1,14 +1,12 @@
 /* @odoo-module */
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
-import { url } from "@web/core/utils/urls";
 import { escape } from "@web/core/utils/strings";
 
 const FETCH_LIMIT = 30;
@@ -834,56 +832,6 @@ export class ThreadService {
             end: 0,
             direction: "none",
         });
-    }
-
-    /**
-     * @param {import("models").Persona} persona
-     * @param {import("models").Thread} [thread]
-     */
-    avatarUrl(persona, thread) {
-        if (!persona) {
-            return DEFAULT_AVATAR;
-        }
-        const urlParams = {};
-        if (persona.write_date) {
-            urlParams.unique = persona.write_date;
-        }
-        if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
-            this.personaService.fetchIsCompany(persona);
-        }
-        if (thread?.model === "discuss.channel") {
-            if (persona.type === "partner") {
-                return url(
-                    `/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`,
-                    urlParams
-                );
-            }
-            if (persona.type === "guest") {
-                return url(
-                    `/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`,
-                    urlParams
-                );
-            }
-        }
-        if (persona.type === "partner" && persona?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.id,
-                model: "res.partner",
-                ...urlParams,
-            });
-            return avatar;
-        }
-        if (persona.user?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.user.id,
-                model: "res.users",
-                ...urlParams,
-            });
-            return avatar;
-        }
-        return DEFAULT_AVATAR;
     }
 
     /**

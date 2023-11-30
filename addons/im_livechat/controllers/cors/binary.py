@@ -3,7 +3,7 @@
 
 from odoo.http import route
 from odoo.addons.mail.controllers.discuss.binary import BinaryController
-from odoo.addons.im_livechat.tools.misc import force_guest_env
+from odoo.addons.im_livechat.tools.misc import downgrade_to_public_user, force_guest_env
 
 
 class LivechatBinaryController(BinaryController):
@@ -32,24 +32,11 @@ class LivechatBinaryController(BinaryController):
         force_guest_env(guest_token)
         return self.fetch_image(channel_id, attachment_id, width, height, **kwargs)
 
-    @route(
-        "/im_livechat/cors/channel/<int:channel_id>/partner/<int:partner_id>/avatar_128",
-        methods=["GET"],
-        type="http",
-        auth="public",
-        cors="*",
-    )
-    def livechat_channel_partner_avatar_128(self, guest_token, channel_id, partner_id, unique=False):
-        force_guest_env(guest_token)
-        return self.discuss_channel_partner_avatar_128(channel_id, partner_id, unique=unique)
-
-    @route(
-        "/im_livechat/cors/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128",
-        methods=["GET"],
-        type="http",
-        auth="public",
-        cors="*",
-    )
-    def livechat_channel_guest_avatar_128(self, guest_token, channel_id, guest_id, unique=False):
-        force_guest_env(guest_token)
-        return self.discuss_channel_guest_avatar_128(channel_id, guest_id, unique=unique)
+    @route(["/im_livechat/cors/web/image"], type='http', auth="public", cors="*")
+    # pylint: disable=redefined-builtin,invalid-name
+    def livechat_content_image(self, model, id, field, unique=False, guest_token=None):
+        if guest_token:
+            force_guest_env(guest_token)
+        else:
+            downgrade_to_public_user()
+        return self.content_image(model=model, id=id, field=field, unique=unique)

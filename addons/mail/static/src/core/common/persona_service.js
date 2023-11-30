@@ -36,44 +36,6 @@ export class PersonaService {
         });
     }
 
-    async fetchIsCompany(persona) {
-        if (persona.type !== "partner") {
-            // non-partner persona are always considered as not a company
-            persona.is_company = false;
-            return;
-        }
-        this._sQueue.todo.add(persona.id);
-        await new Promise(setTimeout); // group synchronous request to fetch is_company
-        await this.sequential(async () => {
-            const ongoing = new Set();
-            if (this._sQueue.todo.size === 0) {
-                return;
-            }
-            // load 'todo' into 'ongoing'
-            this._sQueue.todo.forEach((id) => ongoing.add(id));
-            this._sQueue.todo.clear();
-            // fetch is_company
-            const partnerData = await this.orm.silent.read(
-                "res.partner",
-                [...ongoing],
-                ["is_company"],
-                {
-                    context: { active_test: false },
-                }
-            );
-            for (const { id, is_company } of partnerData) {
-                this.store.Persona.insert({ id, is_company, type: "partner" });
-                ongoing.delete(id);
-                this._sQueue.todo.delete(id);
-            }
-            for (const id of ongoing) {
-                // no is_company found => assumes persona is not a company
-                this.store.Persona.insert({ id, is_company: false, type: "partner" });
-                this._sQueue.todo.delete(id);
-            }
-        });
-    }
-
     /**
      * List of known partner ids with a direct chat, ordered
      * by most recent interest (1st item being the most recent)

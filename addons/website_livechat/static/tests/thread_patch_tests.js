@@ -36,10 +36,13 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce($, "img.o-website_livechat-VisitorBanner-avatar");
+    const guest = pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0];
     assert.containsOnce(
         $,
         `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
-            `/discuss/channel/${channelId}/guest/${guestId}/avatar_128`
+            `/web/image?field=avatar_128&id=${guestId}&model=mail.guest&unique=${encodeURIComponent(
+                guest.write_date
+            )}`
         )}']`
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");

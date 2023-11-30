@@ -974,7 +974,7 @@ QUnit.test("chat should show unread counter on receiving new messages", async ()
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {
-            author_id: partnerId,
+            author: pyEnv.mockServer._mockResPartnerMailPartnerFormat([partnerId]).get(partnerId),
             body: "new message",
             id: 126,
             model: "discuss.channel",
