@@ -119,7 +119,8 @@ class ReportBomStructure(models.AbstractModel):
             vendor_lead_time = route_info['supplier'].delay
             manufacture_lead_time = route_info['bom'].produce_delay
             subcontract_delay = resupply_delay if resupply_delay else 0
-            subcontract_delay += max(vendor_lead_time, manufacture_lead_time + max_component_delay)
+            subcontract_delay += max(vendor_lead_time, manufacture_lead_time) + max_component_delay
+            route_info['manufacture_delay'] = route_info['lead_time'] + max(vendor_lead_time, manufacture_lead_time)
             route_info['lead_time'] += max(vendor_lead_time, manufacture_lead_time + route_info['bom'].days_to_prepare_mo)
             return ('estimated', subcontract_delay)
         return (resupply_state, resupply_delay)
