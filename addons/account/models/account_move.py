@@ -2798,6 +2798,7 @@ class AccountMove(models.Model):
         query = self.env['account.move.line']._where_calc(domain)
         from_clause, where_clause, params = query.get_sql()
         self._cr.execute(f"""
+<<<<<<< HEAD
             SELECT COUNT(foo.id), foo.account_id, foo.taxes
               FROM (
                          SELECT account_move_line__account_id.id AS account_id,
@@ -2815,6 +2816,62 @@ class AccountMove(models.Model):
              LIMIT 1
         """, params)
         return self._cr.fetchone() or (0, False, False)
+||||||| parent of a9e927e8c39b (temp)
+            SELECT
+               COUNT(foo.id), foo.account_id, foo.taxes
+            FROM
+               (
+               SELECT
+                   account.id AS account_id,
+                   account.code,
+                   aml.id,
+                   ARRAY_AGG(tax_rel.account_tax_id) AS taxes
+               FROM account_account account
+                LEFT JOIN account_move_line aml
+                  ON (account.id = aml.account_id
+                   AND aml.partner_id = %s
+                   AND aml.date >= now() - interval '2 years')
+                LEFT JOIN account_move_line_account_tax_rel tax_rel ON (aml.id = tax_rel.account_move_line_id)
+               WHERE
+                   account.company_id = %s
+                   AND account.deprecated = FALSE
+                      {where_internal_group}
+               GROUP BY account.id, account.code, aml.id
+               ) AS foo
+            GROUP BY foo.account_id, foo.code, foo.taxes
+            ORDER BY COUNT(foo.id) DESC, foo.code
+            LIMIT 1
+        """, [partner_id, company_id])
+        return self._cr.fetchone()
+=======
+            SELECT
+               COUNT(foo.id), foo.account_id, foo.taxes
+            FROM
+               (
+               SELECT
+                   account.id AS account_id,
+                   account.code,
+                   aml.id,
+                   ARRAY_AGG(tax_rel.account_tax_id) AS taxes
+               FROM account_account account
+                LEFT JOIN account_move_line aml
+                  ON (account.id = aml.account_id
+                   AND aml.partner_id = %s
+                   AND aml.date >= now() - interval '2 years')
+                LEFT JOIN account_move_line_account_tax_rel tax_rel ON (aml.id = tax_rel.account_move_line_id)
+               WHERE
+                   account.company_id = %s
+                   AND account.deprecated = FALSE
+                   AND aml.display_type = 'product'
+                      {where_internal_group}
+               GROUP BY account.id, account.code, aml.id
+               ) AS foo
+            GROUP BY foo.account_id, foo.code, foo.taxes
+            ORDER BY COUNT(foo.id) DESC, foo.code
+            LIMIT 1
+        """, [partner_id, company_id])
+        return self._cr.fetchone() or (None, None, None)
+>>>>>>> a9e927e8c39b (temp)
 
     def _get_quick_edit_suggestions(self):
         """
