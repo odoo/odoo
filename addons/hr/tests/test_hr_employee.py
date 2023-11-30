@@ -242,3 +242,44 @@ class TestHrEmployee(TestHrCommon):
         # change user back -> check that there is no company error
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
+
+    def test_employee_merge_partner(self):
+        """
+            Check if the employee's partner is updated or not.
+            Flow
+            ----
+               -  Create a user.
+               -  Create an employee without a user.
+               -  Verify the user of the employee.
+               -  User assigned to employee
+               -  Merger partner
+               -  Ensure that the partner and user are involved.
+
+        """
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'email': 'test.brown23@example.com',
+            'login': 'test_11',
+            'password': 'test_1123'
+        })
+
+        employee = self.env['hr.employee'].create({
+            'name': "test employee",
+            'work_email': 'test_emp_@example.com',
+        })
+        self.assertFalse(employee.user_partner_id)
+
+        employeeForm = Form(self.env['hr.employee'].browse(employee.id))
+        employeeForm.user_id = user
+
+        ctx = {
+            'active_ids': [employee.id],
+            'default_dst_partner_id': user.partner_id.id,
+            'default_state': 'selection',
+            'default_partner_ids': [employee.work_contact_id.id, user.partner_id.id],
+        }
+        wizard = Form(self.env['base.partner.merge.automatic.wizard'].with_context(ctx)).save()
+        wizard.action_merge()
+        employeeForm.save()
+        self.assertEqual(employee.user_partner_id, user.partner_id)
+        self.assertEqual(employee.work_contact_id, user.partner_id)
