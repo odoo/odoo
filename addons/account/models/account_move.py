@@ -2747,6 +2747,7 @@ class AccountMove(models.Model):
                WHERE
                    account.company_id = %s
                    AND account.deprecated = FALSE
+                   AND aml.display_type = 'product'
                       {where_internal_group}
                GROUP BY account.id, account.code, aml.id
                ) AS foo
@@ -2754,7 +2755,7 @@ class AccountMove(models.Model):
             ORDER BY COUNT(foo.id) DESC, foo.code
             LIMIT 1
         """, [partner_id, company_id])
-        return self._cr.fetchone()
+        return self._cr.fetchone() or (None, None, None)
 
     def _get_quick_edit_suggestions(self):
         """
