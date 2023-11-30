@@ -21,7 +21,7 @@
                 <div>Served by <t t-esc="props.data.cashier" /></div>
             </div>
             <div class="fw-bolder" t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
-                Order: <t t-esc="props.data.trackingNumber" />
+                <span class="fs-2" t-esc="props.data.trackingNumber" />
             </div>
         </div>
         <br /><br />
