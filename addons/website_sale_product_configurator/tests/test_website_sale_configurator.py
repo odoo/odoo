@@ -3,11 +3,11 @@
 
 from odoo.tests import tagged
 from odoo.addons.sale_product_configurator.tests.common import TestProductConfiguratorCommon
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal):
+class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
