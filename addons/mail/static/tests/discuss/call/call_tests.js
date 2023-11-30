@@ -9,9 +9,9 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-
 import { browser } from "@web/core/browser/browser";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click as clickContains, contains } from "@web/../tests/utils";
 
 QUnit.module("call");
 
@@ -209,4 +209,31 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     await click("button:contains(Start a meeting)");
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
     assert.containsOnce($, ".o-discuss-Call");
+});
+
+QUnit.test("join/leave sounds are only played on main tab", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true });
+    patchWithCleanup(tab1.env.services["mail.sound_effects"], {
+        play(name) {
+            assert.step(`tab1 - play - ${name}`);
+        },
+    });
+    patchWithCleanup(tab2.env.services["mail.sound_effects"], {
+        play(name) {
+            assert.step(`tab2 - play - ${name}`);
+        },
+    });
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
+    await clickContains("[title='Start a Call']", { target: tab1.target });
+    await contains(".o-discuss-Call", { target: tab1.target });
+    await contains(".o-discuss-Call", { target: tab2.target });
+    assert.verifySteps(["tab1 - play - channel-join"]);
+    await clickContains("[title='Disconnect']:not([disabled])", { target: tab1.target });
+    await contains(".o-discuss-Call", { target: tab1.target, count: 0 });
+    await contains(".o-discuss-Call", { target: tab2.target, count: 0 });
+    assert.verifySteps(["tab1 - play - channel-leave"]);
 });
