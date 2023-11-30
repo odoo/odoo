@@ -4,14 +4,21 @@ from odoo import _, api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = 'sale.order.line'
 
-    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '=', order_id)]", ondelete='cascade', copy=False, index=True)
-    option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
-
-    name_short = fields.Char(compute="_compute_name_short")
-
-    shop_warning = fields.Char('Warning')
+    linked_line_id = fields.Many2one(
+        string="Linked Order Line",
+        comodel_name='sale.order.line',
+        ondelete='cascade',
+        domain="[('order_id', '=', order_id)]",
+        copy=False,
+        index=True,
+    )
+    option_line_ids = fields.One2many(
+        string="Options Linked", comodel_name='sale.order.line', inverse_name='linked_line_id',
+    )
+    name_short = fields.Char(compute='_compute_name_short')
+    shop_warning = fields.Char(string="Warning")
 
     #=== COMPUTE METHODS ===#
 

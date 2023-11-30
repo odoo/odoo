@@ -1,13 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+
 from odoo.addons.website.models import ir_http
 
 
 class ProductPricelist(models.Model):
-    _inherit = "product.pricelist"
+    _inherit = 'product.pricelist'
+
+    #=== DEFAULT METHODS ===#
 
     def _default_website(self):
         """ Find the first company's website, if there is one. """
@@ -19,16 +21,35 @@ class ProductPricelist(models.Model):
         domain = [('company_id', '=', company_id)]
         return self.env['website'].search(domain, limit=1)
 
+    #=== FIELDS ===#
+
     website_id = fields.Many2one(
-        comodel_name='website',
         string="Website",
+        comodel_name='website',
         ondelete='restrict',
         default=_default_website,
         domain="[('company_id', '=?', company_id)]",
         tracking=20,
     )
-    code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
+    code = fields.Char(string="E-commerce Promotional Code", groups='base.group_user')
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
+
+    #=== CONSTRAINT METHODS ===#
+
+    @api.constrains('company_id', 'website_id')
+    def _check_websites_in_company(self):
+        """ Prevent misconfiguration multi-website/multi-companies.
+
+        If the record has a company, the website should be from that company.
+        """
+        for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
+            if record.website_id.company_id != record.company_id:
+                raise ValidationError(_(
+                    "Only the company's websites are allowed."
+                    "\nLeave the Company field empty or select a website from that company."
+                ))
+
+    #=== CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -46,14 +67,16 @@ class ProductPricelist(models.Model):
         return pricelists
 
     def write(self, data):
-        res = super(ProductPricelist, self).write(data)
+        res = super().write(data)
         self and self.env.registry.clear_cache()
         return res
 
     def unlink(self):
-        res = super(ProductPricelist, self).unlink()
+        res = super().unlink()
         self and self.env.registry.clear_cache()
         return res
+
+    #=== BUSINESS METHODS ===#
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
         domain = super()._get_partner_pricelist_multi_search_domain_hook(company_id)
@@ -103,12 +126,3 @@ class ProductPricelist(models.Model):
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
         ]
-
-    @api.constrains('company_id', 'website_id')
-    def _check_websites_in_company(self):
-        '''Prevent misconfiguration multi-website/multi-companies.
-           If the record has a company, the website should be from that company.
-        '''
-        for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
-            if record.website_id.company_id != record.company_id:
-                raise ValidationError(_("""Only the company's websites are allowed.\nLeave the Company field empty or select a website from that company."""))

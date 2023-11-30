@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
 
 
 class ProductPublicCategory(models.Model):
-    _name = "product.public.category"
+    _name = 'product.public.category'
     _inherit = [
         'website.seo.metadata',
         'website.multi.mixin',
@@ -15,27 +14,55 @@ class ProductPublicCategory(models.Model):
     ]
     _description = "Website Product Category"
     _parent_store = True
-    _order = "sequence, name, id"
+    _order = 'sequence, name, id'
 
     def _default_sequence(self):
-        cat = self.search([], limit=1, order="sequence DESC")
+        cat = self.search([], limit=1, order='sequence DESC')
         if cat:
             return cat.sequence + 5
         return 10000
 
     name = fields.Char(required=True, translate=True)
-    parent_id = fields.Many2one('product.public.category', string='Parent Category', index=True, ondelete="cascade")
-    parent_path = fields.Char(index=True)
-    child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
-    parents_and_self = fields.Many2many('product.public.category', compute='_compute_parents_and_self')
-    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", index=True, default=_default_sequence)
-    website_description = fields.Html('Category Description', sanitize_overridable=True, sanitize_attributes=False, translate=html_translate, sanitize_form=False)
-    product_tmpl_ids = fields.Many2many('product.template', relation='product_public_category_product_template_rel')
+    sequence = fields.Integer(default=_default_sequence, index=True)
 
-    @api.constrains('parent_id')
-    def check_parent_id(self):
-        if not self._check_recursion():
-            raise ValueError(_('Error! You cannot create recursive categories.'))
+    parent_id = fields.Many2one(
+        string="Parent Category",
+        comodel_name='product.public.category',
+        ondelete='cascade',
+        index=True,
+    )
+    child_id = fields.One2many(
+        string="Children Categories",
+        comodel_name='product.public.category',
+        inverse_name='parent_id',
+    )
+    parent_path = fields.Char(index=True)
+    parents_and_self = fields.Many2many(
+        comodel_name='product.public.category',
+        compute='_compute_parents_and_self',
+    )
+
+    product_tmpl_ids = fields.Many2many(
+        comodel_name='product.template',
+        relation='product_public_category_product_template_rel',
+    )
+
+    website_description = fields.Html(
+        string="Category Description",
+        sanitize_attributes=False,
+        sanitize_form=False,
+        sanitize_overridable=True,
+        translate=html_translate,
+    )
+
+    #=== COMPUTE METHODS ===#
+
+    def _compute_parents_and_self(self):
+        for category in self:
+            if category.parent_path:
+                category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
+            else:
+                category.parents_and_self = category
 
     @api.depends('parents_and_self')
     def _compute_display_name(self):
@@ -44,12 +71,14 @@ class ProductPublicCategory(models.Model):
                 lambda cat: cat.name or _("New")
             ))
 
-    def _compute_parents_and_self(self):
-        for category in self:
-            if category.parent_path:
-                category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
-            else:
-                category.parents_and_self = category
+    #=== CONSTRAINT METHODS ===#
+
+    @api.constrains('parent_id')
+    def check_parent_id(self):
+        if not self._check_recursion():
+            raise ValueError(_("Error! You cannot create recursive categories."))
+
+    #=== BUSINESS METHODS ===#
 
     @api.model
     def _search_get_detail(self, website, order, options):

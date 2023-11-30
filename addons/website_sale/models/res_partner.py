@@ -8,7 +8,11 @@ from odoo.addons.website.models import ir_http
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    last_website_so_id = fields.Many2one('sale.order', compute='_compute_last_website_so_id', string='Last Online Sales Order')
+    last_website_so_id = fields.Many2one(
+        string="Last Online Sales Order",
+        comodel_name='sale.order',
+        compute='_compute_last_website_so_id',
+    )
 
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
@@ -59,7 +63,7 @@ class ResPartner(models.Model):
             if mode == 'billing':
                 # All addresses are editable as billing
                 return True
-            elif mode == 'shipping' and self.type == 'delivery':
+            if mode == 'shipping' and self.type == 'delivery':
                 # Only delivery addresses are editable as delivery
                 return True
 
