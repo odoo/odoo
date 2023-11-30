@@ -59,27 +59,27 @@ class TestWarehouseMrp(common.TestMrpCommon):
         return p
 
     def test_manufacturing_route(self):
-        warehouse_1_stock_manager = self.warehouse_1.with_user(self.user_stock_manager)
+        warehouse_1_stock_manager = self.warehouse.with_user(self.user_stock_manager)
         manu_rule = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
-            ('warehouse_id', '=', self.warehouse_1.id)])
-        self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)
+            ('warehouse_id', '=', self.warehouse.id)])
+        self.assertEqual(self.warehouse.manufacture_pull_id, manu_rule)
         manu_route = manu_rule.route_id
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
         warehouse_1_stock_manager.write({
             'manufacture_to_resupply': False
         })
-        self.assertFalse(self.warehouse_1.manufacture_pull_id.active)
-        self.assertFalse(self.warehouse_1.manu_type_id.active)
+        self.assertFalse(self.warehouse.manufacture_pull_id.active)
+        self.assertFalse(self.warehouse.manu_type_id.active)
         self.assertNotIn(manu_route, warehouse_1_stock_manager._get_all_routes())
         warehouse_1_stock_manager.write({
             'manufacture_to_resupply': True
         })
         manu_rule = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
-            ('warehouse_id', '=', self.warehouse_1.id)])
-        self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)
-        self.assertTrue(self.warehouse_1.manu_type_id.active)
+            ('warehouse_id', '=', self.warehouse.id)])
+        self.assertEqual(self.warehouse.manufacture_pull_id, manu_rule)
+        self.assertTrue(self.warehouse.manu_type_id.active)
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
 
     def test_multi_warehouse_resupply(self):
@@ -345,7 +345,7 @@ class TestKitPicking(common.TestMrpCommon):
         """
         picking = self.env['stock.picking'].create({
             'location_id': self.test_supplier.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -358,7 +358,7 @@ class TestKitPicking(common.TestMrpCommon):
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id':  self.test_supplier.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
         })
         picking.button_validate()
 
@@ -374,7 +374,7 @@ class TestKitPicking(common.TestMrpCommon):
         """
         picking = self.env['stock.picking'].create({
             'location_id': self.test_supplier.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
@@ -386,7 +386,7 @@ class TestKitPicking(common.TestMrpCommon):
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'location_id':  self.test_supplier.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
         })
         picking.action_confirm()
 

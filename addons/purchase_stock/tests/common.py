@@ -2,8 +2,7 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.addons.stock.tests.common2 import TestStockCommon
-from odoo import tools
+from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class PurchaseTestCommon(TestStockCommon):
@@ -11,13 +10,13 @@ class PurchaseTestCommon(TestStockCommon):
     def _create_make_procurement(self, product, product_qty, date_planned=False):
         ProcurementGroup = self.env['procurement.group']
         order_values = {
-            'warehouse_id': self.warehouse_1,
+            'warehouse_id': self.warehouse,
             'action': 'pull_push',
             'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'group_id': self.env['procurement.group'],
         }
         return ProcurementGroup.run([self.env['procurement.group'].Procurement(
-            product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
+            product, product_qty, self.uom_unit, self.warehouse.lot_stock_id,
             product.name, '/', self.env.company, order_values)
         ])
 
@@ -26,8 +25,8 @@ class PurchaseTestCommon(TestStockCommon):
         super(PurchaseTestCommon, cls).setUpClass()
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
-        cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
-        cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id
+        cls.route_buy = cls.warehouse.buy_pull_id.route_id.id
+        cls.route_mto = cls.warehouse.mto_pull_id.route_id.id
 
         # Update product_1 with type, route and Delivery Lead Time
         cls.product_1.write({

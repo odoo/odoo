@@ -115,8 +115,8 @@ class TestMultistepManufacturing(TestMrpCommon):
         # Add routes for manufacturing and make to order to the raw material product
         with Form(self.product_raw) as p1:
             p1.route_ids.clear()
-            p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
+            p1.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+            p1.route_ids.add(self.warehouse.mto_pull_id.route_id)
 
         # New BoM for raw material product, it will generate another Production order i.e. child Production order
         bom_product_form = Form(self.env['mrp.bom'])

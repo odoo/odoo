@@ -27,6 +27,11 @@ class TestInventory(TransactionCase):
             'tracking': 'serial',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.sn1 = cls.env['stock.lot'].create({
+            'name': 'sn2',
+            'product_id': cls.product2.id,
+            'company_id': cls.env.company.id,
+        })
 
     def test_inventory_1(self):
         """ Check that making an inventory adjustment to remove all products from stock is working
@@ -63,14 +68,10 @@ class TestInventory(TransactionCase):
 
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
-            'lot_id': lot1.id,
+            'lot_id': self.sn1.id,
             'inventory_quantity': 1
         })
 
@@ -80,28 +81,18 @@ class TestInventory(TransactionCase):
         inventory_quant.action_apply_inventory()
 
         # check
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1), 1.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1)), 1.0)
-        self.assertEqual(lot1.product_qty, 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=self.sn1), 1.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=self.sn1)), 1.0)
+        self.assertEqual(self.sn1.product_qty, 1.0)
 
     def test_inventory_3(self):
         """ Check that it's not possible to have multiple products with the same serial number through an
         inventory adjustment
         """
-        inventory_quant = self.env['stock.quant'].search([
-            ('location_id', '=', self.stock_location.id),
-            ('product_id', '=', self.product2.id)
-        ])
-        self.assertEqual(len(inventory_quant), 0)
-
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
-            'lot_id': lot1.id,
+            'lot_id': self.sn1.id,
             'inventory_quantity': 2
         })
 
@@ -119,16 +110,10 @@ class TestInventory(TransactionCase):
             ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product2.id)
         ]
-        inventory_quants = self.env['stock.quant'].search(quant_domain)
-        self.assertEqual(len(inventory_quants), 0)
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
         self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
-            'lot_id': lot1.id,
+            'lot_id': self.sn1.id,
             'inventory_quantity': 1
         })
 
@@ -153,10 +138,10 @@ class TestInventory(TransactionCase):
         stock_confirmation_wizard.action_confirm()
 
         # check
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 11.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=self.sn1, strict=True), 11.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 11.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True).filtered(lambda q: q.lot_id)), 1.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=self.sn1, strict=True).filtered(lambda q: q.lot_id)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, strict=True)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 2.0)
 

@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common import TestStockCommon
 
 from odoo.tests import Form
 
@@ -15,29 +15,29 @@ class TestSaleMrpLeadTime(TestStockCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('stock.route_warehouse0_mto').active = True
-        # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
-        with Form(cls.product_1) as p1:
+        # Update the productA with type, route, Manufacturing Lead Time and Customer Lead Time
+        with Form(cls.productA) as p1:
             # `type` is invisible in the view,
             # and it's a compute field based on `detailed_type` which is the field visible in the view
             p1.detailed_type = 'product'
             p1.sale_delay = 5.0
             p1.route_ids.clear()
-            p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(cls.warehouse_1.mto_pull_id.route_id)
+            p1.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
+            p1.route_ids.add(cls.warehouse.mto_pull_id.route_id)
 
-        # Update the product_2 with type
-        with Form(cls.product_2) as p2:
+        # Update the productB with type
+        with Form(cls.productB) as p2:
             # `type` is invisible in the view,
             # and it's a compute field based on `detailed_type` which is the field visible in the view
             p2.detailed_type = 'consu'
 
-        # Create Bill of materials for product_1
+        # Create Bill of materials for productA
         with Form(cls.env['mrp.bom']) as bom:
-            bom.product_tmpl_id = cls.product_1.product_tmpl_id
+            bom.product_tmpl_id = cls.productA.product_tmpl_id
             bom.product_qty = 2
             bom.produce_delay = 5.0
             with bom.bom_line_ids.new() as line:
-                line.product_id = cls.product_2
+                line.product_id = cls.productB
                 line.product_qty = 4
 
     def test_00_product_company_level_delays(self):
@@ -51,22 +51,22 @@ class TestSaleMrpLeadTime(TestStockCommon):
         company.write({'manufacturing_lead': 3.0,
                        'security_lead': 3.0})
 
-        # Create sale order of product_1
+        # Create sale order of productA
         order_form = Form(self.env['sale.order'])
         order_form.partner_id = self.partner_1
         with order_form.order_line.new() as line:
-            line.product_id = self.product_1
+            line.product_id = self.productA
             line.product_uom_qty = 10
         order = order_form.save()
         # Confirm sale order
         order.action_confirm()
 
         # Check manufacturing order created or not
-        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id), ('move_dest_ids', 'in', order.picking_ids[0].move_ids.ids)])
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.productA.id), ('move_dest_ids', 'in', order.picking_ids[0].move_ids.ids)])
         self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
 
         # Check schedule date of picking
-        deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay)
+        deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(days=self.productA.sale_delay)
         out_date = deadline_picking - timedelta(days=company.security_lead)
         self.assertAlmostEqual(
             order.picking_ids[0].scheduled_date, out_date,
@@ -103,12 +103,12 @@ class TestSaleMrpLeadTime(TestStockCommon):
         for pull_rule in self.warehouse_1.delivery_route_id.rule_ids:
             pull_rule.write({'delay': 2})
 
-        # Create sale order of product_1
+        # Create sale order of productA
         order_form = Form(self.env['sale.order'])
         order_form.partner_id = self.partner_1
         order_form.warehouse_id = self.warehouse_1
         with order_form.order_line.new() as line:
-            line.product_id = self.product_1
+            line.product_id = self.productA
             line.product_uom_qty = 6
         order = order_form.save()
         # Confirm sale order
@@ -118,16 +118,16 @@ class TestSaleMrpLeadTime(TestStockCommon):
         self.env['procurement.group'].run_scheduler()
 
         # Check manufacturing order created or not
-        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)]) 
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.productA.id)])
         self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
 
         # Check the picking crated or not
         self.assertTrue(order.picking_ids, "Pickings should be created.")
 
         # Check schedule date of ship type picking
-        out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.out_type_id)
+        out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.out_type_id)
         out_min_date = fields.Datetime.from_string(out.scheduled_date)
-        out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=out.move_ids[0].rule_id.delay)
+        out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.productA.sale_delay) - timedelta(days=out.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
             out_min_date, out_date,
             delta=timedelta(seconds=10),
@@ -135,7 +135,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date of pack type picking
-        pack = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pack_type_id)
+        pack = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.pack_type_id)
         pack_min_date = fields.Datetime.from_string(pack.scheduled_date)
         pack_date = out_date - timedelta(days=pack.move_ids[0].rule_id.delay)
         self.assertAlmostEqual(
@@ -145,7 +145,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date of pick type picking
-        pick = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pick_type_id)
+        pick = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.pick_type_id)
         pick_min_date = fields.Datetime.from_string(pick.scheduled_date)
         self.assertAlmostEqual(
             pick_min_date, pack_date,
@@ -154,7 +154,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline date of manufacturing order
-        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=self.warehouse_1.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
+        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=self.warehouse.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_start), mo_date_start,
             delta=timedelta(seconds=1),

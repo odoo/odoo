@@ -16,7 +16,6 @@ class TestProcurement(TestMrpCommon):
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
         # Update route
-        self.warehouse = self.env.ref('stock.warehouse0')
         self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
@@ -113,7 +112,6 @@ class TestProcurement(TestMrpCommon):
             bom_line_id.product_id.categ_id = child_categ_id
 
         # set the MTO route to the parent category (all)
-        self.warehouse = self.env.ref('stock.warehouse0')
         mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.active = True
         mto_route.product_categ_selectable = True
@@ -163,7 +161,6 @@ class TestProcurement(TestMrpCommon):
         mo_form.bom_id = bom
         mo_form.product_qty = 5
         mo_form.product_uom_id = finished_product.uom_id
-        mo_form.location_src_id = warehouse.lot_stock_id
         mo = mo_form.save()
         mo.action_confirm()
         pickings = self.env['stock.picking'].search([('product_id', '=', component.id)])
@@ -299,7 +296,6 @@ class TestProcurement(TestMrpCommon):
         """Ensure that a procurement request using a product with an empty BoM
         will create an empty MO in draft state that can be completed afterwards.
         """
-        self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         product = self.env['product.product'].create({
@@ -353,8 +349,8 @@ class TestProcurement(TestMrpCommon):
         5. When 1st MO is completed => auto-assign to picking
         6. Additionally check that a MO that has component in stock auto-reserves when MO is confirmed (since default setting = 'at_confirm')"""
 
-        self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
 
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
@@ -455,7 +451,6 @@ class TestProcurement(TestMrpCommon):
             })],
         })
         pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
-        pick_output.action_assign()
 
         mo = self.env['mrp.production'].search([
             ('product_id', '=', product_1.id),
@@ -508,12 +503,11 @@ class TestProcurement(TestMrpCommon):
 
         # make sure next MO auto-reserves components now that they are in stock since
         # default reservation_method = 'at_confirm'
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_1
-        mo_form.bom_id = bom1
-        mo_form.product_qty = 5
-        mo_form.product_uom_id = product_1.uom_id
-        mo_assign_at_confirm = mo_form.save()
+        mo_assign_at_confirm = self.env['mrp.production'].create({
+            'product_id': product_1.id,
+            'bom_id': bom1.id,
+            'product_qty': 5
+        })
         mo_assign_at_confirm.action_confirm()
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
@@ -595,7 +589,6 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
 
     def test_rr_with_dependance_between_bom(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
         route_mto = self.warehouse.mto_pull_id.route_id
         route_mto.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
@@ -682,19 +675,19 @@ class TestProcurement(TestMrpCommon):
         """
         # Required for `picking_type_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
-        warehouse = self.env.ref('stock.warehouse0')
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
 
-        stock_location01 = warehouse.lot_stock_id
+        stock_location01 = self.warehouse.lot_stock_id
         stock_location02 = stock_location01.copy()
 
-        manu_operation01 = warehouse.manu_type_id
+        manu_operation01 = self.warehouse.manu_type_id
         manu_operation02 = manu_operation01.copy()
         with Form(manu_operation02) as form:
             form.name = 'Manufacturing 02'
             form.sequence_code = 'MO2'
             form.default_location_dest_id = stock_location02
 
-        manu_rule01 = warehouse.manufacture_pull_id
+        manu_rule01 = self.warehouse.manufacture_pull_id
         manu_route = manu_rule01.route_id
         manu_rule02 = manu_rule01.copy()
         with Form(manu_rule02) as form:
@@ -730,13 +723,13 @@ class TestProcurement(TestMrpCommon):
         bom02 = bom02_form.save()
 
         self.env['stock.warehouse.orderpoint'].create([{
-            'warehouse_id': warehouse.id,
+            'warehouse_id': self.warehouse.id,
             'location_id': stock_location01.id,
             'product_id': finished.id,
             'product_min_qty': 1,
             'product_max_qty': 1,
         }, {
-            'warehouse_id': warehouse.id,
+            'warehouse_id': self.warehouse.id,
             'location_id': stock_location02.id,
             'product_id': finished.id,
             'product_min_qty': 2,
@@ -755,26 +748,20 @@ class TestProcurement(TestMrpCommon):
         """ After Confirming MO, updating component qty should run procurement
             to update orig move qty
         """
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
         # 2 steps Manufacture
-        warehouse.write({'manufacture_steps': 'pbm'})
+        self.warehouse.write({'manufacture_steps': 'pbm'})
         mo, *_ = self.generate_mo(qty_final=2, qty_base_1=1, qty_base_2=2)
         self.assertEqual(mo.state, 'confirmed', 'MO should be confirmed at this point')
         self.assertEqual(mo.product_qty, 2, 'MO qty to produce should be 2')
-        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [4, 2], 'Comp2 qty should be 4 and comp1 should be 2')
-        self.assertEqual(mo.picking_ids.move_ids.mapped('product_uom_qty'), [4, 2], 'Comp moves should have same qty as MO')
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [2, 4], 'Comp2 qty should be 4 and comp1 should be 2')
+        self.assertEqual(mo.picking_ids.move_ids.mapped('product_uom_qty'), [2, 4], 'Comp moves should have same qty as MO')
         # decrease comp2 qty, should reflect in picking
-        mo.move_raw_ids[0].product_uom_qty = 2
-        self.assertEqual(mo.picking_ids.move_ids[0].product_uom_qty, 2, 'Comp2 move should have same qty as MO')
+        mo.move_raw_ids[1].product_uom_qty = 2
+        self.assertEqual(mo.picking_ids.move_ids[1].product_uom_qty, 2, 'Comp2 move should have same qty as MO')
 
-        # add a third component, should reflect in picking
-        comp3 = self.env['product.product'].create({
-            'name': 'Comp3',
-            'type': 'product'
-        })
         mo.write({
             'move_raw_ids': [(0, 0, {
-                'product_id': comp3.id,
+                'product_id': self.product_3.id,
                 'product_uom_qty': 3
             })]
         })
@@ -798,9 +785,8 @@ class TestProcurement(TestMrpCommon):
         """ After Confirming two MOs merge then and change their component qtys,
             Procurements should run and any new moves should be merged with old ones
         """
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
         # 2 steps Manufacture
-        warehouse.write({'manufacture_steps': 'pbm'})
+        self.warehouse.write({'manufacture_steps': 'pbm'})
 
         super_product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -887,8 +873,7 @@ class TestProcurement(TestMrpCommon):
         the PBM picking. Also, it should be possible to define the to-consume
         qty of the new line even if the MO is locked
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.manufacture_steps = 'pbm'
+        self.warehouse.manufacture_steps = 'pbm'
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_4

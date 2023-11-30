@@ -1,13 +1,23 @@
-# -*- coding: utf-8 -*-
-
 import re
+
 from odoo.tests import common
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestStockCommon(common.TransactionCase):
+    def _create_move(self, product, src_location, dst_location, **values):
+        move_values = {
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'location_id': src_location.id,
+            'location_dest_id': dst_location.id,
+            **values}
+        return self.MoveObj.with_user(self.user_stock_manager).create(move_values)
+
     @classmethod
     def setUpClass(cls):
-        super(TestStockCommon, cls).setUpClass()
+        super().setUpClass()
 
         cls.ProductObj = cls.env['product.product']
         cls.UomObj = cls.env['uom.uom']
@@ -41,6 +51,7 @@ class TestStockCommon(common.TransactionCase):
         output_location = cls.env.ref('stock.stock_location_output')
         output_location.active = True
         cls.output_location = output_location.id
+        cls.warehouse = cls.env.ref('stock.warehouse0')
         cls.customer_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_customers')
         cls.categ_unit = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_kgm')
@@ -78,7 +89,6 @@ class TestStockCommon(common.TransactionCase):
         # Check Unit
         cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit), ('uom_type', '=', 'reference')], limit=1)
         cls.uom_unit.write({
-            'name': 'Test-Unit',
             'rounding': 1.0})
         cls.uom_dozen = cls.UomObj.create({
             'name': 'Test-DozenA',
@@ -111,6 +121,30 @@ class TestStockCommon(common.TransactionCase):
             (4, cls.env.ref('base.group_multi_company').id),
             (4, cls.env.ref('stock.group_production_lot').id),
         ]})
+
+        # Users
+        cls.user_stock_user = mail_new_test_user(
+            cls.env,
+            name='Pauline Poivraisselle',
+            login='pauline',
+            email='p.p@example.com',
+            notification_type='inbox',
+            groups='stock.group_stock_user',
+        )
+        cls.user_stock_manager = mail_new_test_user(
+            cls.env,
+            name='Julie Tablier',
+            login='julie',
+            email='j.j@example.com',
+            notification_type='inbox',
+            groups='stock.group_stock_manager',
+        )
+
+        # Partner
+        cls.partner_1 = cls.PartnerObj.create({
+            'name': 'Julia Agrolait',
+            'email': 'julia@agrolait.example.com',
+        })
 
     def url_extract_rec_id_and_model(self, url):
         rec_id = re.findall(r'[?&]id=([^&]+).*', url)
