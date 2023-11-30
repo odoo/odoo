@@ -32,7 +32,7 @@ class EventQuestion(models.Model):
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
         if any(question.event_type_id and question.event_id for question in self):
-            raise UserError(_('Question cannot belong to both the event category and itself.'))
+            raise UserError(_("Question cannot be linked to both an Event and an Event Type."))
 
     def write(self, vals):
         """ We add a check to prevent changing the question_type of a question that already has answers.
