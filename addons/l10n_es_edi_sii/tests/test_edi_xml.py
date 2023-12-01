@@ -783,7 +783,7 @@ class TestEdiXmls(TestEsEdiCommon):
                     'Contraparte': {'NombreRazon': 'partner_b', 'NIF': 'F35999705'},
                     'DescripcionOperacion': 'manual',
                     'ClaveRegimenEspecialOTrascendencia': '01',
-                    'ImporteTotal': 121.0,
+                    'ImporteTotal': 100.0,
                     'FechaRegContable': '02-01-2019',
                     'DesgloseFactura': {
                         'InversionSujetoPasivo': {
