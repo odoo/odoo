@@ -17,8 +17,6 @@ class SaleOrder(models.Model):
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True, export_string_translation=False)
-    project_id = fields.Many2one('project.project', 'Project',
-        help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", export_string_translation=False)
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user', export_string_translation=False)
     milestone_count = fields.Integer(compute='_compute_milestone_count', export_string_translation=False)
@@ -118,18 +116,11 @@ class SaleOrder(models.Model):
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
-            projects |= order.project_id
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
             order.project_ids = projects
             order.project_count = len(projects)
-
-    @api.onchange('project_id')
-    def _onchange_project_id(self):
-        """ Set the SO analytic account to the selected project's analytic account """
-        if self.project_id.analytic_account_id:
-            self.analytic_account_id = self.project_id.analytic_account_id
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
@@ -161,7 +152,6 @@ class SaleOrder(models.Model):
                     for sol in order.order_line
                 )
             ):
-                order_project_id = order.project_id
                 service_sols = order.order_line.filtered(
                     lambda sol:
                         sol.is_service
@@ -173,7 +163,7 @@ class SaleOrder(models.Model):
                     lambda p:
                         p.project_template_id
                         and (
-                            (p.service_tracking == 'task_in_project' and not order_project_id)
+                            p.service_tracking == 'task_in_project'
                             or p.service_tracking != 'no'
                         )
                         and p.default_code
@@ -204,7 +194,7 @@ class SaleOrder(models.Model):
             action['res_id'] = self.tasks_ids.id
         # set default project
         default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
-        default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
+        default_project_id = default_line.project_id.id or self.project_ids[:1].id
 
         action['context'] = {
             'default_sale_order_id': self.id,
@@ -316,9 +306,11 @@ class SaleOrder(models.Model):
         return created_records
 
     def write(self, values):
+        res = super().write(values)
         if 'state' in values and values['state'] == 'cancel':
-            self.project_id.sudo().sale_line_id = False
-        return super(SaleOrder, self).write(values)
+            # Remove sale line field reference from all projects
+            self.env['project.project'].sudo().search([('sale_line_id.order_id', '=', self.id)]).sale_line_id = False
+        return res
 
     def _prepare_analytic_account_data(self, prefix=None):
         result = super(SaleOrder, self)._prepare_analytic_account_data(prefix=prefix)
