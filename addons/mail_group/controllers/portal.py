@@ -141,7 +141,7 @@ class PortalMailGroup(http.Controller):
         })
 
     @http.route('/groups/<model("mail.group"):group>/<model("mail.group.message"):message>',
-                type='http', auth='public', sitemap=True, website=True)
+                type='http', auth='public', sitemap=False, website=True)
     def group_view_message(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         if group != message.mail_group_id:
             raise werkzeug.exceptions.NotFound()
