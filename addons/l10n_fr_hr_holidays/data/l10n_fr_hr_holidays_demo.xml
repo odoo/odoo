@@ -16,8 +16,26 @@
         />
     </record>
 
+    <record id="partner_demo_company_fr" model="res.partner">
+        <field name="name">FR Company</field>
+        <field name="vat">FR91746948785</field>
+        <field name="street">Rue Abbé Huet</field>
+        <field name="city">Rennes</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="zip">35043</field>
+        <field name="phone">+33 6 12 34 56 78</field>
+        <field name="email">info@company.frexample.com</field>
+        <field name="website">www.frexample.com</field>
+        <field name="l10n_fr_reference_leave_type" ref="l10n_fr_holiday_status_cl"/>
+    </record>
+
+    <record id="demo_company_fr" model="res.company">
+        <field name="name">FR Company - Holidays</field>
+        <field name="partner_id" ref="partner_demo_company_fr"/>
+    </record>
+
     <record id="l10n_fr_part_time_employee" model="hr.employee">
-        <field name="company_id" ref="l10n_fr.demo_company_fr"/>
+        <field name="company_id" ref="demo_company_fr"/>
         <field name="active" eval="1"/>
         <field name="name">Mitchell Admin</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -27,7 +45,7 @@
 
     <record id="l10n_fr_holiday_status_cl" model="hr.leave.type">
         <field name="name">Paid Time Off</field>
-        <field name="company_id" ref="l10n_fr.demo_company_fr"/>
+        <field name="company_id" ref="demo_company_fr"/>
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">no</field>
         <field name="leave_validation_type">both</field>
@@ -36,9 +54,6 @@
         <field name="icon_id" ref="hr_holidays.icon_14"/>
         <field name="color">2</field>
         <field name="has_valid_allocation">True</field>
-    </record>
-    <record id="l10n_fr.demo_company_fr" model="res.company">
-        <field name="l10n_fr_reference_leave_type" ref="l10n_fr_holiday_status_cl"/>
     </record>
 
     <record id="l10n_fr_hr_holidays_allocation" model="hr.leave.allocation">

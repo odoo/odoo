@@ -7,8 +7,7 @@
     'category': 'Human Resources/Time Off',
     'countries': ['fr'],
     'summary': 'Management of leaves for part-time workers in France',
-    'depends': ['hr_holidays', 'l10n_fr'],
-    'auto_install': True,
+    'depends': ['hr_holidays'],
     'license': 'LGPL-3',
     'data': [
         'views/res_config_settings_views.xml',
