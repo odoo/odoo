@@ -2408,7 +2408,7 @@ class TestStockFlow(TestStockCommon):
         in_stock_picking = in_stock_move.picking_id
         in_stock_picking.button_validate()
 
-        self.assertEqual(out_move.move_line_ids.quantity, 1.0, 'The out move should be reserved')
+        self.assertEqual(out_move.move_line_ids.quantity_product_uom, 1.0, 'The out move should be reserved')
 
     def test_assign_done_sml_and_validate_it(self):
         """
