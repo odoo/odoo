@@ -7337,6 +7337,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("display a tooltip on a field", async function (assert) {
+        serverData.models.foo.fields.foo.help = "foo tooltip";
         patchWithCleanup(odoo, {
             debug: false,
         });
@@ -7355,9 +7356,14 @@ QUnit.module("Views", (hooks) => {
         await mouseEnter(target.querySelector("th[data-name=foo]"));
         await nextTick(); // GES: see next nextTick comment
         assert.strictEqual(
+            target.querySelectorAll(".o-tooltip .o-tooltip--help").length,
+            1,
+            "should have rendered a help tooltip only"
+        );
+        assert.strictEqual(
             target.querySelectorAll(".o-tooltip .o-tooltip--technical").length,
             0,
-            "should not have rendered a tooltip"
+            "should not have rendered a technical tooltip"
         );
 
         patchWithCleanup(odoo, {
@@ -7372,7 +7378,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelectorAll(".o-tooltip .o-tooltip--technical").length,
             1,
-            "should have rendered a tooltip"
+            "should have rendered a technical tooltip"
         );
 
         assert.containsOnce(

@@ -1947,6 +1947,15 @@ export class ListRenderer extends Component {
         return Boolean(odoo.debug);
     }
 
+    get hasTooltip() {
+        return Boolean(odoo.debug) || this.tooltipHelp;
+    }
+
+    get tooltipHelp() {
+        const field = this.fields[this.column.name];
+        return field.help || "";
+    }
+
     makeTooltip(column) {
         return getTooltipInfo({
             viewMode: "list",
