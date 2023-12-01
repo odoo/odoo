@@ -12,7 +12,7 @@
                 <field name="sale_ok" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="cost_currency_id" column_invisible="True"/>
-                <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                <field name="is_favorite" widget="boolean_favorite" optional="show" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
                 <field name="product_tag_ids" widget="many2many_tags" optional="show"/>
@@ -106,7 +106,7 @@
                                             <field name="name"/>
                                         </strong>
                                     </div>
-                                    <field name="priority" widget="priority"/>
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                 </div>
                                 <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                                 <div t-if="record.product_variant_count.value &gt; 1" groups="product.group_product_variant">
