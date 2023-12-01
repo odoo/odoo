@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Mention a partner",
-            trigger: ".o-mail-Composer-suggestion:contains(Marc Demo)",
+            trigger: ".o-mail-Composer-suggestion:contains(Not A Demo User)",
         },
         {
             content: "Add one file in composer",
@@ -79,17 +79,17 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 const bodyContent = document.querySelector(
                     '.o_field_html[name="body"]'
                 ).textContent;
-                if (!bodyContent.includes("blahblah @Marc Demo")) {
+                if (!bodyContent.includes("blahblah @Not A Demo User")) {
                     console.error(
-                        `Full composer should contain text from small composer ("blahblah @Marc Demo") in body input (actual: ${bodyContent})`
+                        `Full composer should contain text from small composer ("blahblah @Not A Demo User") in body input (actual: ${bodyContent})`
                     );
                 }
                 const mentionLink = document.querySelector(
                     '.o_field_html[name="body"] a'
                 ).textContent;
-                if (!mentionLink.includes("@Marc Demo")) {
+                if (!mentionLink.includes("@Not A Demo User")) {
                     console.error(
-                        `Full composer should contain mention link from small composer ("@Marc Demo") in body input)`
+                        `Full composer should contain mention link from small composer ("@Not A Demo User") in body input)`
                     );
                 }
             },
@@ -110,7 +110,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check message is shown",
-            trigger: '.o-mail-Message-body:contains("blahblah @Marc Demo")',
+            trigger: '.o-mail-Message-body:contains("blahblah @Not A Demo User")',
         },
         {
             content: "Check message contains the attachment",
