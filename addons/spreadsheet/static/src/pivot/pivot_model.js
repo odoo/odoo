@@ -128,6 +128,26 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  */
 export class SpreadsheetPivotModel extends PivotModel {
     /**
+     * Mapping `[groupBy][dateValueInReadGroup]: normalizedDateValue`.
+     *
+     * The mapping is useful because it's not always possible to transform on the fly a string date that was obtained
+     * from a read_group into a normalized date value (because the read_group dates strings are localized).
+     *
+     * @example
+     * {
+     *   "create_date:day": {
+     *       "12 Nov 2023": "11/12/2023",
+     *       "30 Dec 2024": "12/30/2024",
+     *   },
+     *   "date_deadline:month": {
+     *       "March 2020":   "03/2020",
+     *       "January 2022": "01/2022",
+     *   }
+     * }
+     */
+    _readGroupDateValuesMapping = {};
+
+    /**
      * @param {Object} params
      * @param {PivotMetaData} params.metaData
      * @param {PivotSearchParams} params.searchParams
@@ -345,7 +365,10 @@ export class SpreadsheetPivotModel extends PivotModel {
         if (groupFieldString.startsWith("#")) {
             const { field } = this.parseGroupField(groupFieldString);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
-            return this._isCol(field) ? cols[cols.length - 1] : rows[rows.length - 1];
+            const fieldValue = this._isCol(field) ? cols.at(-1) : rows.at(-1);
+            return this._isDateField(field)
+                ? this._getNormalizedDateValueFromReadGroupDate(groupFieldString, fieldValue)
+                : fieldValue;
         }
         const groupValueString = domain[domain.length - 1];
         return groupValueString;
@@ -460,19 +483,56 @@ export class SpreadsheetPivotModel extends PivotModel {
 
     /**
      * @override
+     * Override _prepareData to build the mapping "readGroupDates" <-> "normalizedDates"
      */
-    _getGroupValues(group, groupBys) {
-        return groupBys.map((groupBy) => {
+    _prepareData(rootGroup, groupSubdivisions, config) {
+        super._prepareData(rootGroup, groupSubdivisions, config);
+        for (const groupSubdivision of groupSubdivisions) {
+            for (const subGroup of groupSubdivision.subGroups) {
+                this._buildReadGroupDateMapping(subGroup, groupSubdivision.rowGroupBy);
+                this._buildReadGroupDateMapping(subGroup, groupSubdivision.colGroupBy);
+            }
+        }
+    }
+
+    _buildReadGroupDateMapping(group, groupBys) {
+        for (const groupBy of groupBys) {
             const { field, aggregateOperator } = this.parseGroupField(groupBy);
             if (this._isDateField(field)) {
-                return pivotTimeAdapter(aggregateOperator).normalizeServerValue(
+                const normalized = pivotTimeAdapter(aggregateOperator).normalizeServerValue(
                     groupBy,
                     field,
                     group
                 );
+
+                if (!this._readGroupDateValuesMapping[groupBy]) {
+                    this._readGroupDateValuesMapping[groupBy] = {};
+                }
+                this._readGroupDateValuesMapping[groupBy][group[groupBy]] = normalized.toString();
             }
-            return this._sanitizeValue(group[groupBy]);
-        });
+        }
+    }
+
+    _getNormalizedDateValueFromReadGroupDate(groupBy, date) {
+        if (date === false) {
+            return date;
+        }
+        if (groupBy.startsWith("#")) {
+            groupBy = groupBy.slice(1);
+        }
+        return this._readGroupDateValuesMapping[groupBy][date];
+    }
+
+    _getReadGroupDateValueFromNormalizedDate(groupBy, normalizedDate) {
+        if (normalizedDate === false) {
+            return normalizedDate;
+        }
+        if (groupBy.startsWith("#")) {
+            groupBy = groupBy.slice(1);
+        }
+        const normalizedDateString = normalizedDate.toString();
+        const values = this._readGroupDateValuesMapping[groupBy];
+        return Object.keys(values).find((key) => values[key] === normalizedDateString);
     }
 
     /**
@@ -550,6 +610,11 @@ export class SpreadsheetPivotModel extends PivotModel {
             } else {
                 value = toNormalizedPivotValue(field, groupValue, aggregateOperator);
             }
+
+            if (this._isDateField(field) && !isPositional) {
+                value = this._getReadGroupDateValueFromNormalizedDate(groupFieldString, value);
+            }
+
             if (this._isCol(field)) {
                 cols.push(value);
             } else if (this._isRow(field)) {
@@ -571,11 +636,9 @@ export class SpreadsheetPivotModel extends PivotModel {
         const indent = group.labels.length;
         const rowGroupBys = this.metaData.fullRowGroupBys;
 
-        rows.push({
-            fields: rowGroupBys.slice(0, indent),
-            values: group.values.map((val) => val.toString()),
-            indent,
-        });
+        const fields = rowGroupBys.slice(0, indent);
+        const values = this._getNormalizedReadGroupValues(fields, group.values);
+        rows.push({ fields, values, indent });
 
         const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
         subTreeKeys.forEach((subTreeKey) => {
@@ -583,6 +646,18 @@ export class SpreadsheetPivotModel extends PivotModel {
             rows = rows.concat(this._getSpreadsheetRows(subTree));
         });
         return rows;
+    }
+
+    _getNormalizedReadGroupValues(groupBys, values) {
+        return values.map((value, i) => {
+            const groupBy = groupBys[i];
+            const { field } = this.parseGroupField(groupBy);
+            value = value.toString();
+            if (this._isDateField(field)) {
+                return this._getNormalizedDateValueFromReadGroupDate(groupBy, value);
+            }
+            return value;
+        });
     }
 
     /**
@@ -597,24 +672,22 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         const headers = new Array(height).fill(0).map(() => []);
 
-        function generateTreeHeaders(tree, fields) {
+        const generateTreeHeaders = (tree, fields) => {
             const group = tree.root;
             const rowIndex = group.values.length;
             if (rowIndex !== 0) {
                 const row = headers[rowIndex - 1];
                 const leafCount = leafCounts[JSON.stringify(tree.root.values)];
-                const cell = {
-                    fields: colGroupBys.slice(0, rowIndex),
-                    values: group.values.map((val) => val.toString()),
-                    width: leafCount * measureCount,
-                };
-                row.push(cell);
+
+                const fields = colGroupBys.slice(0, rowIndex);
+                const values = this._getNormalizedReadGroupValues(fields, group.values);
+                row.push({ fields, values, width: leafCount * measureCount });
             }
 
             [...tree.directSubTrees.values()].forEach((subTree) => {
                 generateTreeHeaders(subTree, fields);
             });
-        }
+        };
 
         generateTreeHeaders(this.data.colGroupTree, this.metaData.fields);
         const hasColGroupBys = this.metaData.colGroupBys.length;
