@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -137,7 +138,7 @@ function makeActionManager(env) {
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
     });
-    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+    rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
             actionCache = {};
@@ -1224,12 +1225,15 @@ function makeActionManager(env) {
                 }
                 args = args.concat(additionalArgs);
             }
-            const callProm = env.services.rpc(`/web/dataset/call_button/${params.resModel}/${params.name}`, {
-                args,
-                kwargs: { context },
-                method: params.name,
-                model: params.resModel,
-            });
+            const callProm = env.services.rpc(
+                `/web/dataset/call_button/${params.resModel}/${params.name}`,
+                {
+                    args,
+                    kwargs: { context },
+                    method: params.name,
+                    model: params.resModel,
+                }
+            );
             action = await keepLast.add(callProm);
             action =
                 action && typeof action === "object"

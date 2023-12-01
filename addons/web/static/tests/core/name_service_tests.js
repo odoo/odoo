@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
 import { ERROR_INACCESSIBLE_OR_MISSING, nameService } from "@web/core/name_service";
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const serviceRegistry = registry.category("services");
 
@@ -33,9 +35,13 @@ QUnit.test("single loadDisplayNames", async (assert) => {
 QUnit.test("loadDisplayNames is done in silent mode", async (assert) => {
     assert.expect(2);
     const env = await makeTestEnv({ serverData });
-    env.bus.addEventListener("RPC:REQUEST", (ev) => {
+    const onRPCRequest = (ev) => {
         const silent = ev.detail.settings.silent;
         assert.step("RPC:REQUEST" + (silent ? " (silent)" : ""));
+    };
+    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
+    registerCleanup(() => {
+        rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
     });
     await env.services.name.loadDisplayNames("dev", [1]);
     assert.verifySteps(["RPC:REQUEST (silent)"]);

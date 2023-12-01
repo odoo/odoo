@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { ormService } from "@web/core/orm_service";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { currencies } from "@web/core/currency";
 import { currencyService } from "@web/webclient/currency_service";
@@ -51,13 +52,13 @@ QUnit.test(
 
         const env = await makeTestEnv();
         assert.verifySteps([]);
-        env.bus.trigger("RPC:RESPONSE", {
+        rpcBus.trigger("RPC:RESPONSE", {
             data: { params: { model: "res.currency", method: "write" } },
             settings: {},
             result: {},
         });
         assert.verifySteps(["/web/session/get_session_info"]);
-        env.bus.trigger("RPC:RESPONSE", {
+        rpcBus.trigger("RPC:RESPONSE", {
             data: { params: { model: "res.currency", method: "write" } },
             settings: {},
             error: {},

@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import {
     ConnectionAbortedError,
     ConnectionLostError,
+    rpcBus,
     rpcService,
 } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
@@ -172,17 +173,23 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
     });
     const rpcIdsRequest = [];
     const rpcIdsResponse = [];
-    env.bus.addEventListener("RPC:REQUEST", (ev) => {
+    const onRPCRequest = (ev) => {
         rpcIdsRequest.push(ev.detail.data.id);
         const silent = ev.detail.settings.silent;
         assert.step("RPC:REQUEST" + (silent ? "(silent)" : ""));
-    });
-    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+    };
+    const onRPCResponse = (ev) => {
         rpcIdsResponse.push(ev.detail.data.id);
         const silent = ev.detail.settings.silent ? "(silent)" : "";
         const success = "result" in ev.detail ? "(ok)" : "";
         const fail = "error" in ev.detail ? "(ko)" : "";
         assert.step("RPC:RESPONSE" + silent + success + fail);
+    };
+    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
+    rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
+    registerCleanup(() => {
+        rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
+        rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
     });
     await env.services.rpc("/test/");
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
@@ -208,16 +215,22 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     const rpcIdsRequest = [];
     const rpcIdsResponse = [];
-    env.bus.addEventListener("RPC:REQUEST", (ev) => {
+    const onRPCRequest = (ev) => {
         rpcIdsRequest.push(ev);
         assert.step("RPC:REQUEST");
-    });
-    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+    };
+    const onRPCResponse = (ev) => {
         rpcIdsResponse.push(ev);
         const silent = ev.detail.settings.silent ? "(silent)" : "";
         const success = "result" in ev.detail ? "(ok)" : "";
         const fail = "error" in ev.detail ? "(ko)" : "";
         assert.step("RPC:RESPONSE" + silent + success + fail);
+    };
+    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
+    rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
+    registerCleanup(() => {
+        rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
+        rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
     });
     try {
         await env.services.rpc("/test/");
@@ -233,11 +246,13 @@ QUnit.test("check connection aborted", async (assert) => {
     const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
     const env = await makeTestEnv({ serviceRegistry });
-    env.bus.addEventListener("RPC:REQUEST", () => {
-        assert.step("RPC:REQUEST");
-    });
-    env.bus.addEventListener("RPC:RESPONSE", () => {
-        assert.step("RPC:RESPONSE");
+    const onRPCRequest = () => assert.step("RPC:REQUEST");
+    const onRPCResponse = (ev) => assert.step("RPC:RESPONSE");
+    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
+    rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
+    registerCleanup(() => {
+        rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
+        rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
     });
 
     const connection = env.services.rpc();

@@ -11,7 +11,7 @@ import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { userService } from "@web/core/user_service";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
-import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
+import { ConnectionAbortedError, rpcBus } from "../../src/core/network/rpc_service";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 
@@ -71,12 +71,12 @@ export function makeFakeRPCService(mockRPC) {
                     method: "call",
                     params: params,
                 };
-                env.bus.trigger("RPC:REQUEST", { data, url: route, settings });
+                rpcBus.trigger("RPC:REQUEST", { data, url: route, settings });
                 const rpcProm = new Promise((resolve, reject) => {
                     rejectFn = reject;
                     rpcService(...arguments)
                         .then((result) => {
-                            env.bus.trigger("RPC:RESPONSE", { data, settings, result });
+                            rpcBus.trigger("RPC:RESPONSE", { data, settings, result });
                             resolve(result);
                         })
                         .catch(reject);

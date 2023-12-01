@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 
@@ -52,7 +53,7 @@ export const viewService = {
         }
 
         env.bus.addEventListener("CLEAR-CACHES", clearCache);
-        env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model)) {
                 if (UPDATE_METHODS.includes(method)) {
