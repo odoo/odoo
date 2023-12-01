@@ -129,7 +129,7 @@ export function parseAccountingDate(dateRange) {
 }
 
 const ODOO_FIN_ARGS = `
-    account_codes (string) ${_t("The prefix of the accounts.")}
+    account_codes (string) ${_t("The prefix of the accounts splitted by comma.")}
     date_range (string, date) ${_t(
         `The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
     )}

@@ -253,6 +253,26 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             ],
         )
 
+    def test_invalid_prefix_code(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": ["gr8name"],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [
+                {"credit": 0.0, "debit": 0.0},
+            ],
+        )
+
     def test_do_not_count_future_years(self):
         self.env["account.move"].create(
             {
