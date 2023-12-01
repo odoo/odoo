@@ -1553,7 +1553,15 @@ export class Rtc {
             return;
         }
         const oldCount = channel.rtcSessions.length;
+        const hadSelfSession = Boolean(this.state.selfSession?.in(channel.rtcSessions));
         channel.rtcSessions = sessionsData;
+        if (
+            !hadSelfSession ||
+            hadSelfSession !== Boolean(this.state.selfSession?.in(channel.rtcSessions)) ||
+            !this.store.env.services["multi_tab"].isOnMainTab()
+        ) {
+            return;
+        }
         if (channel.rtcSessions.length > oldCount) {
             this.soundEffectsService.play("channel-join");
         } else if (channel.rtcSessions.length < oldCount) {
