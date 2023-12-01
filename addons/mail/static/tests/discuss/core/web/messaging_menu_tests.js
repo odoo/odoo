@@ -138,10 +138,12 @@ QUnit.test("channel preview ignores messages from the past", async () => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Message", { text: "last message" });
+    await contains(".o-mail-Message-content", { text: "last message" });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-MessageInReply-content", { text: "first message" });
-    await contains(".o-mail-Message", { text: "last message", count: 0 });
+    await contains(".o-mail-Message", { count: 16 });
+    await contains(".o-mail-Message-content", { text: "first message" });
+    await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
     pyEnv.withUser(pyEnv.currentUserId, () =>

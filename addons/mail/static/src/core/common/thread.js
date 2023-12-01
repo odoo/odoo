@@ -141,15 +141,24 @@ export class Thread extends Component {
             },
             () => [this.state.mountedAndLoaded]
         );
-        onMounted(async () => {
+        onMounted(() => {
             if (!this.env.chatter || this.env.chatter?.fetchMessages) {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                await this.threadService.fetchNewMessages(this.props.thread);
+                this.threadService.fetchNewMessages(this.props.thread);
             }
-            this.state.mountedAndLoaded = true;
         });
+        useEffect(
+            (isLoaded) => {
+                this.state.mountedAndLoaded = isLoaded;
+                if (!isLoaded) {
+                    this.loadOlderState.ready = false;
+                    this.loadNewerState.ready = false;
+                }
+            },
+            () => [this.props.thread.isLoaded]
+        );
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
             if (detail.model === model && detail.id === id) {
@@ -239,7 +248,8 @@ export class Thread extends Component {
             saveScroll();
         };
         const applyScroll = () => {
-            if (!this.state.mountedAndLoaded) {
+            if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
+                loadedAndPatched = false;
                 return;
             }
             // Use toRaw() to prevent scroll check from triggering renders.
