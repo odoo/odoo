@@ -16,6 +16,22 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData, target;
 
+async function enableFilters(hierarchy, filterNames = []) {
+    const filtersSet = new Set(filterNames);
+    const searchItems = hierarchy.env.searchModel.getSearchItems((si) => {
+        return !si.isActive && filtersSet.has(si.name);
+    });
+    for (const searchItem of searchItems) {
+        hierarchy.env.searchModel.toggleSearchItem(searchItem.id);
+    }
+    await nextTick();
+}
+
+async function clearFilters(hierarchy) {
+    hierarchy.env.searchModel.clearQuery();
+    await nextTick();
+}
+
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
         serverData = {
@@ -253,13 +269,85 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_hierarchy_parent_node_container").textContent, "Albert");
     });
 
+    QUnit.test(
+        "Add a custom domain leaf on default state of the view with a globalDomain and search default filters",
+        async function (assert) {
+            serverData.models["hr.employee"].records = [
+                { id: 1, name: "A", parent_id: false, child_ids: [] },
+                { id: 2, name: "B", parent_id: false, child_ids: [3, 4] },
+                { id: 3, name: "C", parent_id: false, child_ids: [] },
+                { id: 4, name: "D", parent_id: 2, child_ids: [5, 6] },
+                { id: 5, name: "E", parent_id: 4, child_ids: [] },
+                { id: 6, name: "F", parent_id: 4, child_ids: [] },
+            ];
+            const hierarchyView = await makeView({
+                type: "hierarchy",
+                resModel: "hr.employee",
+                serverData,
+                arch: serverData.views["hr.employee,false,hierarchy"],
+                searchViewArch: `
+                    <search>
+                        <filter name="exclude_third" domain="[['id', '!=', 3]]"/>
+                        <filter name="find_fifth" domain="[['id', '=', 5]]"/>
+                    </search>
+                `,
+                context: { search_default_exclude_third: true },
+                domain: [["id", "not in", [1, 6]]],
+            });
+            assert.containsN(target, ".o_hierarchy_row", 2);
+            assert.containsN(target, ".o_hierarchy_node", 2);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                ["B", "DB"],
+                `A (and F) should be hidden by the globalDomain, C is hidden because of the search_default and
+                E (and F) are hidden because the custom domain leaf [['parent_id', '=', false]] is applied
+                since the view is in its "default state", D is shown because the query has only one result (B) so
+                its direct children are also fetched`
+            );
+            await clearFilters(hierarchyView);
+            assert.containsN(target, ".o_hierarchy_row", 1);
+            assert.containsN(target, ".o_hierarchy_node", 2);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                ["B", "C"],
+                `C is now visible because the search_default was removed. E (and F) are still hidden because
+                the custom domain leaf [['parent_id', '=', false]] is also applied when the search query is
+                empty, D is hidden because the query now has more than one "root" record (B and C)`
+            );
+            await enableFilters(hierarchyView, ["find_fifth"]);
+            assert.containsN(target, ".o_hierarchy_row", 2);
+            assert.containsN(target, ".o_hierarchy_node", 3);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                ["DB", "ED", "FD"],
+                `E is shown because it matches the query and the custom domain leaf [['parent_id', '=', false]]
+                is not applied since the view is not in its "default state", nor is the query empty. D and F are
+                shown since E was the only record matching the query, so its parent and siblings are fetched`
+            );
+            await clearFilters(hierarchyView);
+            await enableFilters(hierarchyView, ["exclude_third"]);
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+                ["B", "DB"],
+                `Manually going back to the "default state" of the view should give the same result as the
+                first load.`
+            );
+        }
+    );
+
     QUnit.test("search record in hierarchy view", async function (assert) {
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             serverData,
-            domain: [["id", "=", 4]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['id', '=', 4]]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
 
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
@@ -271,13 +359,19 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("search record in hierarchy view with child field name defined in the arch", async function (assert) {
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             viewId: 1,
             serverData,
-            domain: [["id", "=", 4]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['id', '=', 4]]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
 
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
@@ -289,12 +383,18 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("fetch parent record", async function (assert) {
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             serverData,
-            domain: [["id", "=", 4]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['id', '=', 4]]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
 
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
@@ -334,12 +434,19 @@ QUnit.module("Views", (hooks) => {
         serverData.models["hr.employee"].records.push(
             { id: 5, name: "Lisa", parent_id: 2, child_ids: []},
         );
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             serverData,
-            domain: [["name", "ilike", "l"]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['name', 'ilike', 'l']]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
+
         assert.containsOnce(target, ".o_hierarchy_row");
         assert.containsN(target, ".o_hierarchy_node_container", 3);
         assert.deepEqual(
@@ -369,12 +476,19 @@ QUnit.module("Views", (hooks) => {
         serverData.models["hr.employee"].records.push(
             { id: 5, name: "Lisa", parent_id: 2, child_ids: []},
         );
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             serverData,
-            domain: [["id", "in", [1, 2, 3, 4, 5]]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['id', 'in', [1, 2, 3, 4, 5]]]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
+
         assert.containsOnce(target, ".o_hierarchy_row");
         assert.containsN(target, ".o_hierarchy_node_container", 5);
         assert.containsN(target, ".o_hierarchy_node_container button .fa-chevron-up", 4);
@@ -395,12 +509,19 @@ QUnit.module("Views", (hooks) => {
             { id: 5, name: "Lisa", parent_id: 2, child_ids: []},
         );
         serverData.models["hr.employee"].records.find((rec) => rec.id === 2).child_ids.push(5);
-        await makeView({
+        const hierarchyView = await makeView({
             type: "hierarchy",
             resModel: "hr.employee",
             serverData,
-            domain: [["id", "in", [1, 2, 3, 4, 5]]], // simulate a search
+            arch: serverData.views["hr.employee,false,hierarchy"],
+            searchViewArch: `
+                <search>
+                    <filter name="test_filter" domain="[['id', 'in', [1, 2, 3, 4, 5]]]"/>
+                </search>
+            `,
         });
+        await enableFilters(hierarchyView, ["test_filter"]);
+
         assert.containsOnce(target, ".o_hierarchy_row");
         assert.containsN(target, ".o_hierarchy_node_container", 5);
         assert.containsN(target, ".o_hierarchy_node_container button .fa-chevron-up", 4);

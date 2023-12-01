@@ -19,7 +19,9 @@ patch(MockServer.prototype, {
         let records = this.mockSearchRead(modelName, [domain, fields], kwargs);
         let focusedRecordId = false;
         let fetchChildIdsForAllRecords = false;
-        if (records.length === 1) {
+        if (!records.length) {
+            return [];
+        } else if (records.length === 1) {
             const record = records[0];
             let domain = [[parentFieldName, "=", record.id], ["id", "!=", record.id]];
             if (record[parentFieldName]) {
@@ -33,15 +35,6 @@ patch(MockServer.prototype, {
                 ];
             }
             records.push(...this.mockSearchRead(modelName, [domain, fields], kwargs));
-        } else if (!records.length) {
-            records = this.mockSearchRead(
-                modelName,
-                [
-                    [[parentFieldName, "=", false]],
-                    fields,
-                ],
-                kwargs,
-            );
         } else {
             fetchChildIdsForAllRecords = true
         }
