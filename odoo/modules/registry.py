@@ -21,7 +21,6 @@ import psycopg2
 
 import odoo
 from odoo.modules.db import FunctionStatus
-from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
@@ -53,6 +52,13 @@ _CACHES_BY_KEY = {
     'templates': ('templates', 'templates.cached_values'),
     'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),
 }
+
+def _unaccent(x):
+    if isinstance(x, SQL):
+        return SQL("unaccent(%s)", x)
+    if isinstance(x, psycopg2.sql.Composable):
+        return psycopg2.sql.SQL('unaccent({})').format(x)
+    return f'unaccent({x})'
 
 class Registry(Mapping):
     """ Model registry for a particular database.
@@ -182,6 +188,8 @@ class Registry(Mapping):
         with closing(self.cursor()) as cr:
             self.has_unaccent = odoo.modules.db.has_unaccent(cr)
             self.has_trigram = odoo.modules.db.has_trigram(cr)
+
+        self.unaccent = _unaccent if self.has_unaccent else lambda x: x
 
     @classmethod
     @locked
@@ -630,7 +638,7 @@ class Registry(Mapping):
                     # trigram indexes are mainly used for (=)ilike search and
                     # unaccent is added only in these cases when searching
                     if self.has_unaccent == FunctionStatus.INDEXABLE:
-                        column_expression = get_unaccent_wrapper(cr)(column_expression)
+                        column_expression = self.unaccent(column_expression)
                     else:
                         warnings.warn(
                             "PostgreSQL function 'unaccent' is present but not immutable, "
