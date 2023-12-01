@@ -25,7 +25,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '112',
                 'cash_account_code_prefix': '111',
                 'transfer_account_code_prefix': '113',
-                'account_default_pos_receivable_account_id': 'chart132',
+                'account_default_pos_receivable_account_id': 'chart131',
                 'income_currency_exchange_account_id': 'chart515',
                 'expense_currency_exchange_account_id': 'chart635',
                 'account_journal_early_pay_discount_loss_account_id': 'chart9993',
