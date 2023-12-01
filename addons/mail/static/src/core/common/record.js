@@ -487,16 +487,20 @@ class RecordList extends Array {
                             if (r2 && r2.notEq(r3)) {
                                 r2.__uses__.delete(receiver);
                             }
-                            const { inverse, onDelete } = target.fieldDefinition;
-                            onDelete?.call(receiver.owner, r2);
+                            Record.ADD_QUEUE(receiver.owner._fields[receiver.name], "onDelete", r2);
+                            const { inverse } = target.fieldDefinition;
                             if (inverse) {
                                 r2._fields[inverse].value.delete(receiver);
                             }
                             receiver.data[index] = r3?.localId;
                             if (r3) {
                                 r3.__uses__.add(receiver);
-                                const { inverse, onAdd } = target.fieldDefinition;
-                                onAdd?.call(receiver.owner, r3);
+                                Record.ADD_QUEUE(
+                                    receiver.owner._fields[receiver.name],
+                                    "onAdd",
+                                    r3
+                                );
+                                const { inverse } = target.fieldDefinition;
                                 if (inverse) {
                                     r3._fields[inverse].value.add(receiver);
                                 }
@@ -580,8 +584,8 @@ class RecordList extends Array {
                     this.data.push(r3.localId);
                     r3.__uses__.add(this);
                 });
-                const { inverse, onAdd } = this.fieldDefinition;
-                onAdd?.call(this.owner, r);
+                Record.ADD_QUEUE(this.owner._fields[this.name], "onAdd", r);
+                const { inverse } = this.fieldDefinition;
                 if (inverse) {
                     r._fields[inverse].value.add(this.owner);
                 }
@@ -605,9 +609,9 @@ class RecordList extends Array {
         return Record.MAKE_UPDATE(() => {
             const r2 = this.store.get(this.data.shift());
             r2?.__uses__.delete(this);
-            const { inverse, onDelete } = this.fieldDefinition;
             if (r2) {
-                onDelete?.call(this.owner, r2);
+                Record.ADD_QUEUE(this.owner._fields[this.name], "onDelete", r2);
+                const { inverse } = this.fieldDefinition;
                 if (inverse) {
                     r2._fields[inverse].value.delete(this.owner);
                 }
@@ -623,8 +627,8 @@ class RecordList extends Array {
                     this.data.unshift(r3.localId);
                     r3.__uses__.add(this);
                 });
-                const { inverse, onAdd } = this.fieldDefinition;
-                onAdd?.call(this.owner, r);
+                Record.ADD_QUEUE(this.owner._fields[this.name], "onAdd", r);
+                const { inverse } = this.fieldDefinition;
                 if (inverse) {
                     r._fields[inverse].value.add(this.owner);
                 }
@@ -649,16 +653,16 @@ class RecordList extends Array {
             this.data = list;
             for (const r of oldRecords) {
                 r.__uses__.delete(this);
-                const { inverse, onDelete } = this.fieldDefinition;
-                onDelete?.call(this.owner, r);
+                Record.ADD_QUEUE(this.owner._fields[this.name], "onDelete", r);
+                const { inverse } = this.fieldDefinition;
                 if (inverse) {
                     r._fields[inverse].value.delete(this.owner);
                 }
             }
             for (const r of newRecords) {
                 r.__uses__.add(this);
-                const { inverse, onAdd } = this.fieldDefinition;
-                onAdd?.call(this.owner, r);
+                Record.ADD_QUEUE(this.owner._fields[this.name], "onAdd", r);
+                const { inverse } = this.fieldDefinition;
                 if (inverse) {
                     r._fields[inverse].value.add(this.owner);
                 }
@@ -908,10 +912,16 @@ export class Record {
     static FS_QUEUE = []; // field-sorts
     /** @type {RecordField[]} */
     static FS2_QUEUE = []; // field-sorts (dummy _sort, i.e. observing of sort, see RecordField._sort)
+    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    static FA_QUEUE = []; // field-onadds
+    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    static FD_QUEUE = []; // field-ondeletes
     /** @type {RecordField[]} */
     static FO_QUEUE = []; // field-onchanges
     /** @type {Function[]} */
     static RO_QUEUE = []; // record-onchanges
+    /** @type {Record[]} */
+    static RD_QUEUE = []; // record-deletes
     static UPDATE = 0;
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
@@ -927,21 +937,30 @@ export class Record {
                 selfRaw.FC2_QUEUE.length > 0 ||
                 selfRaw.FS_QUEUE.length > 0 ||
                 selfRaw.FS2_QUEUE.length > 0 ||
+                selfRaw.FA_QUEUE.length > 0 ||
+                selfRaw.FD_QUEUE.length > 0 ||
                 selfRaw.FO_QUEUE.length > 0 ||
-                selfRaw.RO_QUEUE.length > 0
+                selfRaw.RO_QUEUE.length > 0 ||
+                selfRaw.RD_QUEUE.length > 0
             ) {
                 const FC_QUEUE = [...selfRaw.FC_QUEUE];
                 const FC2_QUEUE = [...selfRaw.FC2_QUEUE];
                 const FS_QUEUE = [...selfRaw.FS_QUEUE];
                 const FS2_QUEUE = [...selfRaw.FS2_QUEUE];
+                const FA_QUEUE = [...selfRaw.FA_QUEUE];
+                const FD_QUEUE = [...selfRaw.FD_QUEUE];
                 const FO_QUEUE = [...selfRaw.FO_QUEUE];
                 const RO_QUEUE = [...selfRaw.RO_QUEUE];
+                const RD_QUEUE = [...selfRaw.RD_QUEUE];
                 selfRaw.FC_QUEUE = [];
                 selfRaw.FC2_QUEUE = [];
                 selfRaw.FS_QUEUE = [];
                 selfRaw.FS2_QUEUE = [];
+                selfRaw.FA_QUEUE = [];
+                selfRaw.FD_QUEUE = [];
                 selfRaw.FO_QUEUE = [];
                 selfRaw.RO_QUEUE = [];
+                selfRaw.RD_QUEUE = [];
                 while (FC_QUEUE.length > 0) {
                     const field = FC_QUEUE.pop();
                     field.requestCompute({ force: true });
@@ -958,6 +977,16 @@ export class Record {
                     const field = FS2_QUEUE.pop();
                     field._sort();
                 }
+                while (FA_QUEUE.length > 0) {
+                    const { field, records } = FA_QUEUE.pop();
+                    const { onAdd } = field.value.fieldDefinition;
+                    records.forEach((record) => onAdd?.call(field.value.owner, record));
+                }
+                while (FD_QUEUE.length > 0) {
+                    const { field, records } = FD_QUEUE.pop();
+                    const { onDelete } = field.value.fieldDefinition;
+                    records.forEach((record) => onDelete?.call(field.value.owner, record));
+                }
                 while (FO_QUEUE.length > 0) {
                     const field = FO_QUEUE.pop();
                     field.onChange();
@@ -966,41 +995,107 @@ export class Record {
                     const cb = RO_QUEUE.pop();
                     cb();
                 }
+                while (RD_QUEUE.length > 0) {
+                    const record = RD_QUEUE.pop();
+                    // effectively delete the record
+                    for (const name in record._fields) {
+                        record[name] = undefined;
+                    }
+                    for (const [localId, names] of record.__uses__.data.entries()) {
+                        for (const [name2, count] of names.entries()) {
+                            const r2 = record._store.get(localId);
+                            if (!r2) {
+                                // record already deleted, clean inverses
+                                record.__uses__.data.delete(localId);
+                                continue;
+                            }
+                            const l2 = r2._fields[name2].value;
+                            if (RecordList.isMany(l2)) {
+                                for (let c = 0; c < count; c++) {
+                                    r2[name2].delete(record);
+                                }
+                            } else {
+                                r2[name2] = undefined;
+                            }
+                        }
+                    }
+                    delete record.Model.records[record.localId];
+                }
             }
             selfRaw.UPDATE--;
         }
         return res;
     }
     /**
-     * @param {RecordField} field
-     * @param {"compute"|"sort"|"onChange"|"_compute"|"_sort"} type
+     * @param {RecordField|Record} fieldOrRecord
+     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onChange"|"_compute"|"_sort"} type
+     * @param {Record} [record] when field with onAdd/onDelete, the record being added or deleted
      */
-    static ADD_QUEUE(field, type) {
+    static ADD_QUEUE(fieldOrRecord, type, record) {
         const selfRaw = toRaw(this);
-        const rawField = toRaw(field);
-        if (type === "compute") {
-            if (!selfRaw.FC_QUEUE.some((f) => toRaw(f) === rawField)) {
-                selfRaw.FC_QUEUE.push(field);
+        if (Record.isRecord(fieldOrRecord)) {
+            /** @type {Record} */
+            const record = fieldOrRecord;
+            const rawRecord = toRaw(record);
+            if (type === "delete") {
+                if (!selfRaw.RD_QUEUE.some((r) => toRaw(r) === rawRecord)) {
+                    selfRaw.RD_QUEUE.push(rawRecord);
+                }
             }
-        }
-        if (type === "sort") {
-            if (!selfRaw.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
-                selfRaw.FS_QUEUE.push(field);
+        } else {
+            /** @type {RecordField} */
+            const field = fieldOrRecord;
+            const rawField = toRaw(field);
+            if (type === "compute") {
+                if (!selfRaw.FC_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    selfRaw.FC_QUEUE.push(field);
+                }
             }
-        }
-        if (type === "onChange") {
-            if (!selfRaw.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
-                selfRaw.FO_QUEUE.push(field);
+            if (type === "sort") {
+                if (!selfRaw.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    selfRaw.FS_QUEUE.push(field);
+                }
             }
-        }
-        if (type === "_compute") {
-            if (!selfRaw.FC2_QUEUE.some((f) => toRaw(f) === rawField)) {
-                selfRaw.FC2_QUEUE.push(field);
+            if (type === "onAdd") {
+                if (!rawField.value?.fieldDefinition.onAdd) {
+                    return;
+                }
+                const item = selfRaw.FA_QUEUE.find((item) => toRaw(item.field) === rawField);
+                if (!item) {
+                    selfRaw.FA_QUEUE.push({ field, records: [record] });
+                } else {
+                    if (!item.records.some((r) => r.eq(record))) {
+                        item.records.push(record);
+                    }
+                }
             }
-        }
-        if (type === "_sort") {
-            if (!selfRaw.FS2_QUEUE.some((f) => toRaw(f) === rawField)) {
-                selfRaw.FS2_QUEUE.push(field);
+            if (type === "onDelete") {
+                if (!rawField.value?.fieldDefinition.onDelete) {
+                    return;
+                }
+                const item = selfRaw.FD_QUEUE.find((item) => toRaw(item.field) === rawField);
+                if (!item) {
+                    selfRaw.FD_QUEUE.push({ field, records: [record] });
+                } else {
+                    if (!item.records.some((r) => r.eq(record))) {
+                        item.records.push(record);
+                    }
+                }
+            }
+            if (type === "onChange") {
+                if (!selfRaw.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    selfRaw.FO_QUEUE.push(field);
+                }
+            }
+            if (type === "_compute") {
+                if (!selfRaw.FC2_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    selfRaw.FC2_QUEUE.push(field);
+                }
+            }
+            if (type === "_sort") {
+                if (!selfRaw.FS2_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    selfRaw.FS2_QUEUE.push(field);
+                }
             }
         }
     }
@@ -1392,31 +1487,7 @@ export class Record {
     }
 
     delete() {
-        return Record.MAKE_UPDATE(() => {
-            const r1 = this;
-            for (const name in r1._fields) {
-                r1[name] = undefined;
-            }
-            for (const [localId, names] of r1.__uses__.data.entries()) {
-                for (const [name2, count] of names.entries()) {
-                    const r2 = this._store.get(localId);
-                    if (!r2) {
-                        // record already deleted, clean inverses
-                        r1.__uses__.data.delete(localId);
-                        continue;
-                    }
-                    const l2 = r2._fields[name2].value;
-                    if (RecordList.isMany(l2)) {
-                        for (let c = 0; c < count; c++) {
-                            r2[name2].delete(r1);
-                        }
-                    } else {
-                        r2[name2] = undefined;
-                    }
-                }
-            }
-            delete this.Model.records[r1.localId];
-        });
+        return Record.MAKE_UPDATE(() => Record.ADD_QUEUE(this, "delete"));
     }
 
     /** @param {Record} record */

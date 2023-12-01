@@ -257,3 +257,24 @@ QUnit.test("Unshift preserves order", async (assert) => {
         [7, 6, 5, 4, 3, 2, 1]
     );
 });
+
+QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            inverse: "thread",
+            onAdd: (member) => assert.step(`Thread.onAdd::${member.name}.${member.type}`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        type;
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    thread.members.add({ name: "John", type: "admin" });
+    assert.verifySteps(["Thread.onAdd::John.admin"]);
+});
