@@ -44,12 +44,12 @@ publicWidget.registry.PaymentButton = publicWidget.Widget.extend({
      * @return {boolean} Whether the payment button can be enabled.
      */
     _isReady() {
-        const paymentForm = document.querySelector('.o_payment_form');
+        const paymentForm = this.paymentButton.closest('.o_payment_form');
         if (!paymentForm) {  // Neither the checkout form nor the manage form are present.
             return true; // Ignore the check.
         }
 
-        const checkedRadios = document.querySelectorAll('input[name="o_payment_radio"]:checked');
+        const checkedRadios = paymentForm.querySelectorAll('input[name="o_payment_radio"]:checked');
         return checkedRadios.length === 1;
     },
 
