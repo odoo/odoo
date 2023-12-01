@@ -1353,8 +1353,10 @@
     const cellReference = new RegExp(/\$?([A-Z]{1,3})\$?([0-9]{1,7})/, "i");
     // Same as above, but matches the exact string (nothing before or after)
     const singleCellReference = new RegExp(/^\$?([A-Z]{1,3})\$?([0-9]{1,7})$/, "i");
-    /** Reference of a column header (eg. A, AB) */
-    const colHeader = new RegExp(/^([A-Z]{1,3})+$/, "i");
+    /** Reference of a column header (eg. A, AB, $A) */
+    const colHeader = new RegExp(/^\$?([A-Z]{1,3})+$/, "i");
+    /** Reference of a row header (eg. 1, $1) */
+    const rowHeader = new RegExp(/^\$?([0-9]{1,7})+$/, "i");
     /** Reference of a column (eg. A, $CA, Sheet1!B) */
     const colReference = new RegExp(/^\s*('.+'!|[^']+!)?\$?([A-Z]{1,3})$/, "i");
     /** Reference of a row (eg. 1, 59, Sheet1!9) */
@@ -1383,6 +1385,9 @@
     }
     function isColHeader(str) {
         return colHeader.test(str);
+    }
+    function isRowHeader(str) {
+        return rowHeader.test(str);
     }
     /**
      * Return true if the given xc is the reference of a single cell,
@@ -2084,18 +2089,10 @@
             if (isFullCol) {
                 parts[0].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
                 parts[1].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                if (zone.left === zone.right) {
-                    parts[0].colFixed = parts[0].colFixed || parts[1].colFixed;
-                    parts[1].colFixed = parts[0].colFixed || parts[1].colFixed;
-                }
             }
             if (isFullRow) {
                 parts[0].colFixed = parts[0].colFixed || parts[1].colFixed;
                 parts[1].colFixed = parts[0].colFixed || parts[1].colFixed;
-                if (zone.top === zone.bottom) {
-                    parts[0].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                    parts[1].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                }
             }
             return parts;
         }
@@ -18567,7 +18564,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             SPACE: goTo(State.RightRef),
             NUMBER: goTo(State.Found),
             REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value) || isRowHeader(token.value)),
         },
         [State.RightColumnRef]: {
             SPACE: goTo(State.RightColumnRef),
@@ -18578,6 +18575,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             SPACE: goTo(State.RightRowRef),
             NUMBER: goTo(State.Found),
             REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isRowHeader(token.value)),
         },
         [State.Found]: {},
     };
@@ -19087,6 +19085,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
             case "colrow":
                 indexOfNumber = xc.search(/[0-9]/);
+                if (indexOfNumber === -1 || indexOfNumber === 0) {
+                    // no row number (eg. A) or no column (eg. 1)
+                    return "$" + xc;
+                }
                 xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
                 return "$" + xc;
             case "none":
@@ -21540,6 +21542,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 draggerShadowThickness: 0,
                 delta: 0,
                 base: 0,
+                position: "before",
             });
         }
         _computeHandleDisplay(ev) {
@@ -21665,11 +21668,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         this.state.draggerLinePosition = dimensions.start;
                         this.state.draggerShadowPosition = dimensions.start;
                         this.state.base = elementIndex;
+                        this.state.position = "before";
                     }
                     else if (this._getSelectedZoneEnd() < elementIndex) {
                         this.state.draggerLinePosition = dimensions.end;
                         this.state.draggerShadowPosition = dimensions.end - this.state.draggerShadowThickness;
-                        this.state.base = elementIndex + 1;
+                        this.state.base = elementIndex;
+                        this.state.position = "after";
                     }
                     else {
                         this.state.draggerLinePosition = startDimensions.start;
@@ -21847,6 +21852,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 dimension: "COL",
                 base: this.state.base,
                 elements,
+                position: this.state.position,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 this.env.raiseError(MergeErrorMessage);
@@ -22016,6 +22022,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 dimension: "ROW",
                 base: this.state.base,
                 elements,
+                position: this.state.position,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 this.env.raiseError(MergeErrorMessage);
@@ -29937,7 +29944,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const elements = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
-                    if (cmd.base < 0 || cmd.base > elements) {
+                    if (cmd.base < 0 || cmd.base >= elements) {
                         return 85 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (cmd.quantity <= 0) {
@@ -34970,7 +34977,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 sheetId: cmd.sheetId,
                 base: cmd.base,
                 quantity: thickness,
-                position: "before",
+                position: cmd.position,
             });
             const isCol = cmd.dimension === "COL";
             const start = cmd.elements[0];
@@ -34987,12 +34994,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 },
             ];
             const state = new ClipboardCellsState(target, "CUT", this.getters, this.dispatch, this.selection);
+            const base = isBasedBefore ? cmd.base : cmd.base + 1;
             const pasteTarget = [
                 {
-                    left: isCol ? cmd.base : 0,
-                    right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
-                    top: !isCol ? cmd.base : 0,
-                    bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
+                    left: isCol ? base : 0,
+                    right: isCol ? base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? base : 0,
+                    bottom: !isCol ? base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
                 },
             ];
             state.paste(pasteTarget, { selectTarget: true });
@@ -35028,6 +35036,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 doesElementsHaveCommonMerges(id, end, end + 1) ||
                 doesElementsHaveCommonMerges(id, cmd.base - 1, cmd.base)) {
                 return 2 /* CommandResult.WillRemoveExistingMerge */;
+            }
+            const headers = [cmd.base, ...cmd.elements];
+            const maxHeaderValue = isCol ? this.getters.getNumberCols(id) : this.getters.getNumberRows(id);
+            if (headers.some((h) => h < 0 || h >= maxHeaderValue)) {
+                return 85 /* CommandResult.InvalidHeaderIndex */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -43045,8 +43058,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
 
     __info__.version = '16.0.25';
-    __info__.date = '2023-11-24T13:23:15.055Z';
-    __info__.hash = 'bc1bc2f';
+    __info__.date = '2023-11-30T08:34:35.200Z';
+    __info__.hash = 'eef4e1d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
