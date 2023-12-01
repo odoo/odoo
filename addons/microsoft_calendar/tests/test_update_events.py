@@ -697,7 +697,7 @@ class TestUpdateEvents(TestCommon):
         new_name = "update simple event"
         mock_get_events.return_value = (
             MicrosoftEvent([dict(
-                dict(self.simple_event_from_outlook_organizer, id=789),  # same iCalUId but different id
+                dict(self.simple_event_from_outlook_organizer, id='789'),  # same iCalUId but different id
                 subject=new_name,
                 type="exception",
                 lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)

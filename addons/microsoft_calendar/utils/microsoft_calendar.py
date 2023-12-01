@@ -45,6 +45,14 @@ class MicrosoftCalendarService():
         self.microsoft_service = microsoft_service
 
     @requires_auth_token
+    def _get_single_event(self, iCalUId, token, timeout=TIMEOUT):
+        """ Fetch a single event from Graph API filtered by its iCalUId. """
+        url = "/v1.0/me/events?$filter=iCalUId eq '%s'" % iCalUId
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        status, event, _dummy = self.microsoft_service._do_request(url, {}, headers, method='GET', timeout=timeout)
+        return status not in RESOURCE_NOT_FOUND_STATUSES, event
+
+    @requires_auth_token
     def _get_events_from_paginated_url(self, url, token=None, params=None, timeout=TIMEOUT):
         """
         Get a list of events from a paginated URL.
