@@ -60,11 +60,17 @@ class StockPickingBatch(models.Model):
     # To remove in master
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
 
     @api.depends()
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
+
+    @api.depends('picking_type_id')
+    def _compute_show_lots_text(self):
+        for batch in self:
+            batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
