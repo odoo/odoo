@@ -252,19 +252,22 @@
     </template>
 
     <template id="pricelist_list" name="Pricelists Dropdown">
+        <t t-set="website_sale_pricelists" t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)" />
+        <t t-set="hasPricelistDropdown" t-value="hasPricelistDropdown or (website_sale_pricelists and len(website_sale_pricelists)&gt;1)"/>
+        <t t-set="pricelist" t-value="website.pricelist_id"/>
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
-            <t t-set="curr_pl" t-value="website.pricelist_id" />
-
-            <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
-                <t t-esc="curr_pl and curr_pl.name or ' - '" />
-            </a>
-            <div class="dropdown-menu" role="menu">
-                <t t-foreach="website_sale_pricelists" t-as="pl">
-                    <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id" class="dropdown-item">
-                        <span class="switcher_pricelist small" t-att-data-pl_id="pl.id" t-esc="pl.name" />
-                    </a>
-                </t>
-            </div>
+            <t t-cache="pricelist,website_sale_pricelists,navClass">
+                <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
+                    <t t-esc="pricelist and pricelist.name or ' - '" />
+                </a>
+                <div class="dropdown-menu" role="menu">
+                    <t t-foreach="website_sale_pricelists" t-as="pl">
+                        <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id" class="dropdown-item">
+                            <span class="switcher_pricelist small" t-att-data-pl_id="pl.id" t-esc="pl.name"/>
+                        </a>
+                    </t>
+                </div>
+            </t>
         </div>
     </template>
 
@@ -338,7 +341,7 @@
                                     <t t-set="_form_classes" t-valuef="d-lg-inline {{'d-inline' if not category else 'd-none'}}"/>
                                 </t>
 
-                                <t t-call="website_sale.pricelist_list" t-cache="pricelist">
+                                <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes" t-valuef="d-none d-lg-inline"/>
                                 </t>
 
@@ -1023,8 +1026,6 @@
                                     <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
                                 </t>
-                                <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-                                <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
                                 <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes" t-valuef="d-lg-inline ms-2"/>
                                 </t>
