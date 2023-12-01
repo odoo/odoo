@@ -1003,10 +1003,7 @@
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
-    <t t-cache="pricelist,product,fiscal_position">
-        <!-- TODO drop _get_first_possible_combination here -->
-        <t t-set="combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
+        <t t-set="combination_info" t-value="product._get_combination_info()"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
         <t t-call="website.layout">
@@ -1088,6 +1085,7 @@
                                         <t t-call="website_sale.variants">
                                             <t t-set="ul_class" t-valuef="flex-column" />
                                             <t t-set="parent_combination" t-value="None" />
+                                            <t t-set="combination" t-value="combination_info['combination']"/>
                                         </t>
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
@@ -1160,7 +1158,6 @@
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
             </div>
         </t>
-    </t>
     </template>
 
     <template id="product_tags" name="Product Tags" active="True">
@@ -1376,10 +1373,10 @@
                 <input type="hidden" class="product_template_id" t-att-value="product.id"/>
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
+                    <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True)"/>
                     <div class="mb-4">
                         <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="form-check mb-1">
-                            <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty)"/>
-                            <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty)"/>
+                            <t t-set="combination_info" t-value="variant_id._get_combination_info_variant()"/>
                             <input type="radio"
                                    name="product_id"
                                    class="form-check-input product_id js_product_change"

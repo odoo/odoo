@@ -625,7 +625,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'main_object': product,
             'product': product,
-            'add_qty': 1,
             'view_track': view_track,
         }
 

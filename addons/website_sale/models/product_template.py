@@ -423,6 +423,7 @@ class ProductTemplate(models.Model):
         product_or_template = product_or_template.with_context(**price_context)
 
         combination_info = {
+            'combination': combination,
             'product_id': product.id,
             'product_template_id': self.id,
             'display_name': display_name,
