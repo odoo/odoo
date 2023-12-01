@@ -48,9 +48,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     ],
     'demo': [
         'demo/demo_company.xml',
-        'demo/res_partner_demo.xml',
         'demo/product_demo.xml',
-        'demo/account_invoice_demo.xml',
     ],
     'post_init_hook': 'post_init',
     'license': 'LGPL-3',
