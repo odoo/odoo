@@ -4,6 +4,30 @@ import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
+    mockCreate(model) {
+        if (model !== "discuss.channel.rtc.session") {
+            return super.mockCreate(...arguments);
+        }
+        const sessionIds = super.mockCreate(...arguments);
+        const channelInfo =
+            this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormatByChannel(sessionIds);
+        const notifications = [];
+        for (const [channelId, sessionData] of Object.entries(channelInfo)) {
+            const [channel] = this.pyEnv["discuss.channel"].searchRead([
+                ["id", "=", Number(channelId)],
+            ]);
+            notifications.push([
+                channel,
+                "discuss.channel/rtc_sessions_update",
+                {
+                    id: channel.id,
+                    rtcSessions: [["ADD", sessionData]],
+                },
+            ]);
+        }
+        this.pyEnv["bus.bus"]._sendmany(notifications);
+        return sessionIds;
+    },
     /**
      * Simulates `_mail_rtc_session_format` on `discuss.channel.rtc.session`.
      *
@@ -53,5 +77,22 @@ patch(MockServer.prototype, {
             );
         }
         return data;
+    },
+    /**
+     * Simulates `_update_and_broadcast` on `discuss.channel.rtc.session`.
+     *
+     * @param {object} values
+     */
+    _mockDiscussChannelRtcSession__updateAndBroadcast(id, values) {
+        this.pyEnv["discuss.channel.rtc.session"].write([id], values);
+        const sessionData = this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(id);
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([
+            ["id", "=", sessionData.channelMember.thread.id],
+        ]);
+        this.pyEnv["bus.bus"]._sendone(
+            channel,
+            "discuss.channel.rtc.session/update_and_broadcast",
+            { data: sessionData, channelId: channel.id }
+        );
     },
 });
