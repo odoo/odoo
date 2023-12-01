@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
+import re
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
@@ -291,6 +292,13 @@ class MrpWorkorder(models.Model):
         if not self._check_m2m_recursion('blocked_by_workorder_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self:
+            name = re.findall("[^\x00-\x7F\xF1-\xF4]", record.name)
+            if name:
+                raise ValidationError(_("Invalid Barcode Format, following characters are not supported: %s") % name)
+
     def name_get(self):
         res = []
         for wo in self:
@@ -492,6 +500,7 @@ class MrpWorkorder(models.Model):
         # make sure the links between them are correct.
         if self.env.context.get('skip_confirm'):
             return res
+
         to_confirm = res.filtered(lambda wo: wo.production_id.state in ("confirmed", "progress", "to_close"))
         to_confirm = to_confirm.production_id.workorder_ids
         to_confirm._action_confirm()
