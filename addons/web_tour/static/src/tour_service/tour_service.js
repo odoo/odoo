@@ -59,6 +59,7 @@ export const tourService = {
     start: async (_env, { orm, effect, ui }) => {
         await whenReady();
         await odoo.ready("web.legacy_tranlations_loaded");
+        const toursEnabled = "tour_disable" in session && !session.tour_disable;
         const consumedTours = new Set(session.web_tours);
 
         /** @type {{ [k: string]: Tour }} */
@@ -82,7 +83,7 @@ export const tourService = {
             wait_for.then(() => {
                 if (
                     !tour.test &&
-                    !session.tour_disable &&
+                    toursEnabled &&
                     !consumedTours.has(name) &&
                     !tourState.getActiveTourNames().includes(name)
                 ) {
@@ -96,7 +97,11 @@ export const tourService = {
         tourRegistry.addEventListener("UPDATE", ({ detail: { key, value } }) => {
             if (tourRegistry.contains(key)) {
                 register(key, value);
-                if (tourState.getActiveTourNames().includes(key)) {
+                if (
+                    tourState.getActiveTourNames().includes(key) &&
+                    // Don't resume onboarding tours when tours are disabled
+                    (toursEnabled || tourState.get(key, "mode") === "auto")
+                ) {
                     resumeTour(key);
                 }
             } else {
