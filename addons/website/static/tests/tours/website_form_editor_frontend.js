@@ -208,3 +208,13 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
         trigger: '#wrap:has(h1:contains("Thank You!"))',
     },
 ]});
+registry.category("web_tour.tours").add('website_form_contactus_check_changed_email', {
+    test: true,
+    url: '/contactus',
+    steps: () => [
+        {
+            content: "Check that the recipient email is updated",
+            trigger: 'form:has(input[name="email_to"][value="after.change@mail.com"])',
+            isCheck: true,
+        },
+]});
