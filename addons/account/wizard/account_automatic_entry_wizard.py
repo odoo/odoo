@@ -207,10 +207,16 @@ class AutomaticEntryWizard(models.TransientModel):
                     'amount_currency': (account_balance > 0 and -1 or 1) * abs(account_amount_currency),
                 })
 
+        # Get the lowest child company based on accounts used to avoid access error
+        accounts = self.env['account.account'].browse([line['account_id'] for line in line_vals])
+        companies = accounts.company_id | self.env.company
+        lowest_child_company = max(companies, key=lambda company: len(company.parent_ids))
+
         return [{
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
             'move_type': 'entry',
             'journal_id': self.journal_id.id,
+            'company_id': lowest_child_company.id,
             'date': fields.Date.to_string(self.date),
             'ref': self.destination_account_id.display_name and _("Transfer entry to %s", self.destination_account_id.display_name or ''),
             'line_ids': [(0, 0, line) for line in line_vals],
