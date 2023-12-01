@@ -1101,4 +1101,54 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([]);
     });
+
+    QUnit.test(
+        "can properly evaluate invisible elements in a hierarchy card",
+        async function (assert) {
+            await makeView({
+                type: "hierarchy",
+                resModel: "hr.employee",
+                serverData,
+                arch: `
+                    <hierarchy child_field="child_ids">
+                        <field name="child_ids" invisible="1"/>
+                        <templates>
+                            <t t-name="hierarchy-box">
+                                <div class="o_hierarchy_node_header">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_hierarchy_node_body">
+                                    <field name="parent_id"/>
+                                </div>
+                                <div invisible="not child_ids" class="o_children_text">
+                                    <p>withChildren</p>
+                                </div>
+                            </t>
+                        </templates>
+                    </hierarchy>
+                `,
+            });
+            assert.containsN(target, ".o_hierarchy_row", 2);
+            assert.containsN(target, ".o_hierarchy_node", 3);
+            const nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+            const albertNode = nodeContainers[0];
+            const georgesNode = nodeContainers[1];
+            const josephineNode = nodeContainers[2];
+            assert.strictEqual(
+                albertNode.querySelector(".o_hierarchy_node_content").textContent,
+                "AlbertwithChildren"
+            );
+            assert.strictEqual(
+                georgesNode.querySelector(".o_hierarchy_node_content").textContent,
+                "GeorgesAlbert"
+            );
+            assert.strictEqual(
+                josephineNode.querySelector(".o_hierarchy_node_content").textContent,
+                "JosephineAlbertwithChildren"
+            );
+            assert.containsOnce(albertNode, ".o_children_text");
+            assert.containsNone(georgesNode, ".o_children_text");
+            assert.containsOnce(josephineNode, ".o_children_text");
+        }
+    );
 });

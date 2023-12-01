@@ -25,4 +25,21 @@ export class HierarchyCompiler extends KanbanCompiler {
             recordExpr: "__record__",
         });
     }
+
+    /**
+     * Allow access to the record during compilation, to properly evaluate
+     * invisible on any hierarchy card nodes declared in the view.
+     *
+     * @override
+     */
+    compileNode(node, params = {}, evalInvisible = true) {
+        return super.compileNode(
+            node,
+            {
+                ...params,
+                recordExpr: "__record__",
+            },
+            evalInvisible
+        );
+    }
 }
