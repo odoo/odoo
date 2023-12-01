@@ -1152,9 +1152,9 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 12)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'quantity': 1000}] +
-            [{'quantity': 50}] * 5 +
-            [{'quantity': 5}] * 6
+            [{'quantity_product_uom': 1000}] +
+            [{'quantity_product_uom': 50}] * 5 +
+            [{'quantity_product_uom': 5}] * 6
         )
 
     def test_least_package_removal_strategy_not_possible(self):
@@ -1183,7 +1183,7 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 2)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'quantity': 10}] + [{'quantity': 3}]
+            [{'quantity_product_uom': 10}] + [{'quantity_product_uom': 3}]
         )
         # Make sure it selects the smallest possible package as best leaf.
         self.assertEqual(
@@ -1217,9 +1217,9 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 8)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'quantity': 2}] +
-            [{'quantity': 10}] * 5 +
-            [{'quantity': 5}] * 2
+            [{'quantity_product_uom': 2}] +
+            [{'quantity_product_uom': 10}] * 5 +
+            [{'quantity_product_uom': 5}] * 2
         )
 
     def test_clean_quant_after_package_move(self):

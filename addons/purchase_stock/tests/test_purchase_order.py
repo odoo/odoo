@@ -412,7 +412,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order.state, 'purchase')
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
-        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity, 7)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 7)
 
 
         purchase_order.order_line.product_qty = 4
@@ -421,7 +421,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         purchase_order.button_confirm()
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
-        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity, 4)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 4)
 
     def test_message_qty_already_received(self):
         self.env.user.write({'company_id': self.company_data['company'].id})
