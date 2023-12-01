@@ -13,15 +13,15 @@ class Base(models.AbstractModel):
         records = self.search(domain)
         focus_record = self.env[self._name]
         fetch_child_ids_for_all_records = False
-        if len(records) == 1:
+        if not records:
+            return []
+        elif len(records) == 1:
             domain = [(parent_field, '=', records.id), ('id', '!=', records.id)]
             if records[parent_field]:
                 focus_record = records
                 records += focus_record[parent_field]
                 domain = [('id', 'not in', records.ids), (parent_field, 'in', records.ids)]
             records += self.search(domain)
-        elif not records:
-            records = self.search([(parent_field, '=', False)])
         else:
             fetch_child_ids_for_all_records = True
         children_ids_per_record_id = {}
