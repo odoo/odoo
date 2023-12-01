@@ -452,6 +452,11 @@ class ProductTemplate(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.standard_price < 0:
+            raise UserError(_("Cost should be positive"))
+
     @api.onchange('type')
     def _onchange_type(self):
         # Do nothing but needed for inheritance
