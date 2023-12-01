@@ -1266,7 +1266,7 @@ class AccountMove(models.Model):
                 invoice.show_discount_details = False
                 invoice.show_payment_term_details = False
 
-    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
     def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.display_name
