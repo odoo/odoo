@@ -34,7 +34,7 @@ export function getEvaluatedGrid(model, zoneXc, sheetId = model.getters.getActiv
         grid.push([]);
         for (const col of range(left, right + 1)) {
             const cell = model.getters.getEvaluatedCell({ sheetId, col, row });
-            grid[row][col] = cell.value;
+            grid[row - top][col - left] = cell.value;
         }
     }
     return grid;

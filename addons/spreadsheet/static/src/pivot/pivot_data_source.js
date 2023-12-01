@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
-import { SpreadsheetPivotModel } from "./pivot_model";
+import { SpreadsheetPivotModel } from "./spreadsheet_pivot_model";
 import { Domain } from "@web/core/domain";
 
 export class PivotDataSource extends OdooViewsDataSource {
@@ -11,8 +11,8 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @override
      * @param {Object} services Services (see DataSource)
      * @param {Object} params
-     * @param {import("./pivot_model").PivotMetaData} params.metaData
-     * @param {import("./pivot_model").PivotSearchParams} params.searchParams
+     * @param {import("./spreadsheet_pivot_model").PivotMetaData} params.metaData
+     * @param {import("./spreadsheet_pivot_model").PivotSearchParams} params.searchParams
      */
     constructor(services, params) {
         super(services, params);

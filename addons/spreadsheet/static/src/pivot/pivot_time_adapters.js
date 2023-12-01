@@ -1,10 +1,8 @@
 /** @odoo-module */
 
 import { helpers, constants } from "@odoo/o-spreadsheet";
-import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { session } from "@web/session";
 const { toNumber, formatValue } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
@@ -66,7 +64,6 @@ export function pivotTimeAdapter(groupAggregate) {
  * The reason is ODOO.PIVOT functions are currently generated without being aware of the spreadsheet locale.
  *
  * @typedef {Object} PivotTimeAdapter
- * @property {(groupBy: string, field: string, readGroupResult: object) => string} normalizeServerValue
  * @property {(value: string) => string} normalizeFunctionValue
  * @property {(normalizedValue: string, step: number) => string} increment
  * @property {(normalizedValue: string, locale: Object) => string} format
@@ -81,11 +78,6 @@ export function pivotTimeAdapter(groupAggregate) {
  * - "mm/dd/yyyy" (spreadsheet format)
  **/
 const dayAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        const serverDayValue = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(serverDayValue);
-        return date.toFormat("MM/dd/yyyy");
-    },
     normalizeFunctionValue(value) {
         const date = toNumber(value, DEFAULT_LOCALE);
         return formatValue(date, { locale: DEFAULT_LOCALE, format: "mm/dd/yyyy" });
@@ -105,11 +97,6 @@ const dayAdapter = {
  * Normalized value: "2/2023" for week 2 of 2023
  */
 const weekAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        const weekValue = readGroupResult[groupBy];
-        const { week, year } = parseServerWeekHeader(weekValue);
-        return `${week}/${year}`;
-    },
     normalizeFunctionValue(value) {
         const [week, year] = value.split("/");
         return `${Number(week)}/${Number(year)}`;
@@ -134,11 +121,6 @@ const weekAdapter = {
  * e.g. "01/2020" for January 2020
  */
 const monthAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        const firstOfTheMonth = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(firstOfTheMonth);
-        return date.toFormat("MM/yyyy");
-    },
     normalizeFunctionValue(value) {
         const date = toNumber(value, DEFAULT_LOCALE);
         return formatValue(date, { DEFAULT_LOCALE, format: "mm/yyyy" });
@@ -160,11 +142,6 @@ const monthAdapter = {
  * e.g. "1/2020" for Q1 2020
  */
 const quarterAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        const firstOfTheQuarter = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(firstOfTheQuarter);
-        return `${date.quarter}/${date.year}`;
-    },
     normalizeFunctionValue(value) {
         const [quarter, year] = value.split("/");
         return `${quarter}/${year}`;
@@ -184,9 +161,6 @@ const quarterAdapter = {
  * @type {PivotTimeAdapter}
  */
 const yearAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        return Number(readGroupResult[groupBy]);
-    },
     normalizeFunctionValue(value) {
         return toNumber(value, DEFAULT_LOCALE);
     },
@@ -238,37 +212,3 @@ const TIME_ADAPTERS = {
     quarter: falseHandlerDecorator(quarterAdapter),
     year: falseHandlerDecorator(yearAdapter),
 };
-
-/**
- * When grouping by a time field, return
- * the group starting day (local to the timezone)
- * @param {object} field
- * @param {string} groupBy
- * @param {object} readGroup
- * @returns {string | undefined}
- */
-function getGroupStartingDay(field, groupBy, readGroup) {
-    if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
-        return undefined;
-    }
-    const sqlValue = readGroup["__range"][groupBy].from;
-    if (field.type === "date") {
-        return sqlValue;
-    }
-    const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
-    return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
-}
-
-/**
- * Parses a pivot week header value.
- * @param {string} value
- * @example
- * parseServerWeekHeader("W1 2020") // { week: 1, year: 2020 }
- */
-function parseServerWeekHeader(value) {
-    // Value is always formatted as "W1 2020", no matter the language.
-    // Parsing this formatted value is the only way to ensure we get the same
-    // locale aware week number as the one used in the server.
-    const [week, year] = value.split(" ");
-    return { week: Number(week.slice(1)), year: Number(year) };
-}

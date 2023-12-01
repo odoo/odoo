@@ -7,9 +7,10 @@ import {
     getCellValue,
     getEvaluatedCell,
     getBorders,
+    getEvaluatedGrid,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
-import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
+import { getBasicPivotArch, getBasicData } from "@spreadsheet/../tests/utils/data";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
@@ -874,6 +875,131 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 </pivot>`,
             });
             assert.strictEqual(getCellContent(model, "A2"), "");
+        }
+    );
+
+    QUnit.test(
+        "pivot sorted by a column with a date is still sorted after changing user language",
+        async (assert) => {
+            const data = getBasicData();
+            for (const partner of data.partner.records) {
+                partner.date = "2016-04-14";
+            }
+            const { model } = await createSpreadsheetWithPivot({
+                serverData: {
+                    models: data,
+                    views: {
+                        "partner,false,pivot": /* xml */ `
+                        <pivot>
+                            <field name="date" interval="month" type="col"/>
+                            <field name="id" type="row"/>
+                            <field name="probability" type="measure"/>
+                        </pivot>`,
+                        "partner,false,search": `<search/>`,
+                    },
+                },
+                sortedColumn: {
+                    measure: "probability",
+                    order: "asc",
+                    groupId: [[], ["04/2016"]],
+                },
+            });
+
+            model.dispatch("CREATE_SHEET", { sheetId: "sh2" });
+            setCellContent(model, "A1", "=ODOO.PIVOT.TABLE(1)", "sh2");
+
+            const sortedPartnersIds = data.partner.records
+                .sort((a, b) => a.probability - b.probability)
+                .map((p) => p.id);
+            assert.deepEqual(getEvaluatedGrid(model, "A3:A6", "sh2").flat(), sortedPartnersIds);
+
+            // mockServer uses luxon locale to format the dates in mockReadGroup
+            luxon.Settings.defaultLocale = "fr";
+            model.dispatch("REFRESH_PIVOT", { id: "1" });
+            await waitForDataSourcesLoaded(model);
+
+            assert.deepEqual(getEvaluatedGrid(model, "A3:A6", "sh2").flat(), sortedPartnersIds);
+        }
+    );
+
+    // Note: before we didn't normalize dates in sortedColumn, so the commands INSERT_PIVOT and the
+    // pivot definition contained localized dates. It's not really possible to migrate them, because
+    // we don't know on which locale the were created. And the conversion localized date (month name
+    // in plain letters in any language) to normalized date isn't realistically feasible.
+    QUnit.test(
+        "old pivot definition with non-normalized sortedColumn still work with same user language",
+        async (assert) => {
+            const data = getBasicData();
+            for (const partner of data.partner.records) {
+                partner.date = "2016-12-15";
+            }
+            const { model } = await createSpreadsheetWithPivot({
+                serverData: {
+                    models: data,
+                    views: {
+                        "partner,false,pivot": /* xml */ `
+                        <pivot>
+                            <field name="date" interval="month" type="col"/>
+                            <field name="id" type="row"/>
+                            <field name="probability" type="measure"/>
+                        </pivot>`,
+                        "partner,false,search": `<search/>`,
+                    },
+                },
+                sortedColumn: {
+                    measure: "probability",
+                    order: "asc",
+                    groupId: [[], ["December 2016"]],
+                },
+            });
+
+            model.dispatch("CREATE_SHEET", { sheetId: "sh2" });
+            setCellContent(model, "A1", "=ODOO.PIVOT.TABLE(1)", "sh2");
+
+            const sortedPartnersIds = data.partner.records
+                .sort((a, b) => a.probability - b.probability)
+                .map((p) => p.id);
+            assert.deepEqual(getEvaluatedGrid(model, "A3:A6", "sh2").flat(), sortedPartnersIds);
+        }
+    );
+
+    QUnit.test(
+        "old pivot definition with non-normalized sortedColumn don't crash with different user language",
+        async (assert) => {
+            // mockServer uses luxon locale to format the dates in mockReadGroup
+            luxon.Settings.defaultLocale = "fr";
+            const data = getBasicData();
+            for (const partner of data.partner.records) {
+                partner.date = "2016-12-15";
+            }
+
+            const { model } = await createSpreadsheetWithPivot({
+                serverData: {
+                    models: getBasicData(),
+                    views: {
+                        "partner,false,pivot": /* xml */ `
+                        <pivot>
+                            <field name="date" interval="month" type="col"/>
+                            <field name="date" interval="day" type="col"/>
+                            <field name="id" type="row"/>
+                            <field name="probability" type="measure"/>
+                        </pivot>`,
+                        "partner,false,search": `<search/>`,
+                    },
+                },
+                sortedColumn: {
+                    measure: "probability",
+                    order: "asc",
+                    groupId: [[], ["December 2016"]],
+                },
+            });
+
+            const partnerIds = data.partner.records.map((p) => p.id);
+            assert.deepEqual(
+                getEvaluatedGrid(model, "A4:A7").flat(),
+                partnerIds,
+                "The partners are not sorted, but the pivot didn't crash"
+            );
         }
     );
 });

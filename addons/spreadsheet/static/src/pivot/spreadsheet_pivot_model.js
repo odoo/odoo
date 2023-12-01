@@ -9,6 +9,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
+import { isDateField, parseGroupField } from "@spreadsheet/assets_backend/pivot/pivot_utils";
 
 const { toString, toNumber, toBoolean } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -32,37 +33,6 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
  * @property {Object} domain
  * @property {Object} context
  */
-
-/**
- * Parses the positional char (#), the field and operator string of pivot group.
- * e.g. "create_date:month"
- * @param {Record<string, Field>} allFields
- * @param {string} groupFieldString
- * @returns {{field: Field, aggregateOperator: string, isPositional: boolean}}
- */
-function parseGroupField(allFields, groupFieldString) {
-    let fieldName = groupFieldString;
-    let aggregateOperator = undefined;
-    const index = groupFieldString.indexOf(":");
-    if (index !== -1) {
-        fieldName = groupFieldString.slice(0, index);
-        aggregateOperator = groupFieldString.slice(index + 1);
-    }
-    const isPositional = fieldName.startsWith("#");
-    fieldName = isPositional ? fieldName.substring(1) : fieldName;
-    const field = allFields[fieldName];
-    if (field === undefined) {
-        throw new Error(sprintf(_t("Field %s does not exist"), fieldName));
-    }
-    if (["date", "datetime"].includes(field.type)) {
-        aggregateOperator = aggregateOperator || "month";
-    }
-    return {
-        isPositional,
-        field,
-        aggregateOperator,
-    };
-}
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
 export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
@@ -250,7 +220,7 @@ export class SpreadsheetPivotModel extends PivotModel {
     isGroupedOnlyByOneDate(dimension) {
         const groupBys =
             dimension === "COLUMN" ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys;
-        return groupBys.length === 1 && this._isDateField(this.parseGroupField(groupBys[0]).field);
+        return groupBys.length === 1 && isDateField(this.parseGroupField(groupBys[0]).field);
     }
     /**
      * @param {string} dimension COLUMN | ROW
@@ -313,7 +283,7 @@ export class SpreadsheetPivotModel extends PivotModel {
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
-        if (this._isDateField(field)) {
+        if (isDateField(field)) {
             // TODO include this parsing to the pivot time adapters and extend it to other time periods
             if (value && aggregateOperator === "day") {
                 return toNumber(value, DEFAULT_LOCALE);
@@ -345,7 +315,10 @@ export class SpreadsheetPivotModel extends PivotModel {
         if (groupFieldString.startsWith("#")) {
             const { field } = this.parseGroupField(groupFieldString);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
-            return this._isCol(field) ? cols[cols.length - 1] : rows[rows.length - 1];
+            const fieldValue = this._isCol(field) ? cols.at(-1) : rows.at(-1);
+            return isDateField(field)
+                ? this._getNormalizedDateValueFromReadGroupDate(groupFieldString, fieldValue)
+                : fieldValue;
         }
         const groupValueString = domain[domain.length - 1];
         return groupValueString;
@@ -406,6 +379,8 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @override
      */
     async _loadData(config) {
+        const sortedColumn = config.metaData.sortedColumn;
+        config.metaData.sortedColumn = undefined;
         /** @type {(groupFieldString: string) => ReturnType<parseGroupField>} */
         this.parseGroupField = parseGroupField.bind(null, this.metaData.fields);
         /*
@@ -445,6 +420,13 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         registerLabels(this.data.colGroupTree, this.metaData.fullColGroupBys);
         registerLabels(this.data.rowGroupTree, this.metaData.fullRowGroupBys);
+
+        if (sortedColumn) {
+            const localizedSortedColumn = this._localizeSortedColumn(sortedColumn);
+            if (localizedSortedColumn) {
+                this._sortRows(localizedSortedColumn, config);
+            }
+        }
     }
 
     /**
@@ -456,23 +438,6 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     _isDateField(field) {
         return ["date", "datetime"].includes(field.type);
-    }
-
-    /**
-     * @override
-     */
-    _getGroupValues(group, groupBys) {
-        return groupBys.map((groupBy) => {
-            const { field, aggregateOperator } = this.parseGroupField(groupBy);
-            if (this._isDateField(field)) {
-                return pivotTimeAdapter(aggregateOperator).normalizeServerValue(
-                    groupBy,
-                    field,
-                    group
-                );
-            }
-            return this._sanitizeValue(group[groupBy]);
-        });
     }
 
     /**
@@ -550,6 +515,11 @@ export class SpreadsheetPivotModel extends PivotModel {
             } else {
                 value = toNormalizedPivotValue(field, groupValue, aggregateOperator);
             }
+
+            if (isDateField(field) && !isPositional) {
+                value = this._getReadGroupDateValueFromNormalizedDate(groupFieldString, value);
+            }
+
             if (this._isCol(field)) {
                 cols.push(value);
             } else if (this._isRow(field)) {
@@ -571,11 +541,9 @@ export class SpreadsheetPivotModel extends PivotModel {
         const indent = group.labels.length;
         const rowGroupBys = this.metaData.fullRowGroupBys;
 
-        rows.push({
-            fields: rowGroupBys.slice(0, indent),
-            values: group.values.map((val) => val.toString()),
-            indent,
-        });
+        const fields = rowGroupBys.slice(0, indent);
+        const values = this._getNormalizedReadGroupValues(fields, group.values);
+        rows.push({ fields, values, indent });
 
         const subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
         subTreeKeys.forEach((subTreeKey) => {
@@ -583,6 +551,18 @@ export class SpreadsheetPivotModel extends PivotModel {
             rows = rows.concat(this._getSpreadsheetRows(subTree));
         });
         return rows;
+    }
+
+    _getNormalizedReadGroupValues(groupBys, values) {
+        return values.map((value, i) => {
+            const groupBy = groupBys[i];
+            const { field } = this.parseGroupField(groupBy);
+            value = value.toString();
+            if (isDateField(field)) {
+                return this._getNormalizedDateValueFromReadGroupDate(groupBy, value);
+            }
+            return value;
+        });
     }
 
     /**
@@ -597,24 +577,22 @@ export class SpreadsheetPivotModel extends PivotModel {
 
         const headers = new Array(height).fill(0).map(() => []);
 
-        function generateTreeHeaders(tree, fields) {
+        const generateTreeHeaders = (tree, fields) => {
             const group = tree.root;
             const rowIndex = group.values.length;
             if (rowIndex !== 0) {
                 const row = headers[rowIndex - 1];
                 const leafCount = leafCounts[JSON.stringify(tree.root.values)];
-                const cell = {
-                    fields: colGroupBys.slice(0, rowIndex),
-                    values: group.values.map((val) => val.toString()),
-                    width: leafCount * measureCount,
-                };
-                row.push(cell);
+
+                const fields = colGroupBys.slice(0, rowIndex);
+                const values = this._getNormalizedReadGroupValues(fields, group.values);
+                row.push({ fields, values, width: leafCount * measureCount });
             }
 
             [...tree.directSubTrees.values()].forEach((subTree) => {
                 generateTreeHeaders(subTree, fields);
             });
-        }
+        };
 
         generateTreeHeaders(this.data.colGroupTree, this.metaData.fields);
         const hasColGroupBys = this.metaData.colGroupBys.length;
