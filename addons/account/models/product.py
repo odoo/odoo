@@ -64,7 +64,7 @@ class ProductTemplate(models.Model):
     @api.depends('taxes_id', 'list_price')
     def _compute_tax_string(self):
         for record in self:
-            record.tax_string = record._construct_tax_string(record.list_price)
+            record.tax_string = record._construct_tax_string(record.list_price) if record.id else ''
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
@@ -190,4 +190,4 @@ class ProductProduct(models.Model):
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
     def _compute_tax_string(self):
         for record in self:
-            record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
+            record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price) if record.id else ''
