@@ -49,7 +49,7 @@
                         <label for="name" string="Product Name"/>
                         <h1>
                             <div class="d-flex">
-                                <field name="priority" widget="priority" class="me-3"/>
+                                <field name="is_favorite" widget="boolean_favorite" class="me-3" nolabel="1"/>
                                 <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
                             </div>
                         </h1>
@@ -173,7 +173,7 @@
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
                 <separator/>
-                <filter string="Favorites" name="favorites" domain="[('priority','=','1')]"/>
+                <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
                 <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -340,7 +340,7 @@
                 <header>
                     <button string="Print Labels" type="object" name="action_open_label_layout"/>
                 </header>
-                    <field name="priority" widget="priority" nolabel="1" readonly="1"/>
+                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
@@ -403,7 +403,7 @@
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </xpath>
-                <xpath expr="//field[@name='priority']" position="attributes">
+                <xpath expr="//field[@name='is_favorite']" position="attributes">
                     <attribute name="readonly">1</attribute>
                 </xpath>
                 <field name="list_price" position="attributes">
@@ -458,7 +458,7 @@
                                                 <field name="name"/>
                                             </strong>
                                         </div>
-                                        <field name="priority" widget="priority"/>
+                                        <field name="is_favorite" widget="boolean_favorite" readonly="1" nolabel="1"/>
                                     </div>
                                     <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                                     <div class="o_kanban_tags_section">
@@ -556,7 +556,7 @@ action = {
                                 <div class="o_kanban_record_top flex-column m-0"
                                      t-attf-id="product-{{record.id.raw_value}}">
                                     <div class="d-flex">
-                                        <field style="margin-top: 2px;" class="me-1" name="priority" widget="priority"/>
+                                        <field style="margin-top: 2px;" class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                         <h4 class="text-reset">
                                             <strong class="o_kanban_record_title"><field name="name"/></strong>
                                         </h4>
@@ -597,7 +597,7 @@ action = {
                        groups="product.group_product_variant"/>
                 <field name="product_tmpl_id" string="Product Template"/>
                 <!-- Filter -->
-                <filter string="Favorites" name="favorites" domain="[('priority', '=', '1')]"/>
+                <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type', '=', 'service')]"/>
                 <filter string="Products"
