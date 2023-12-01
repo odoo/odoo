@@ -26,7 +26,7 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
-import { openViewItem } from "@web/webclient/debug_items";
+import { openViewItem } from "@web/webclient/debug/debug_items";
 import {
     editSearchView,
     editView,
