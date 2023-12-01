@@ -164,7 +164,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
         rtl = 'rtl/' if rtl and extension in ['css', 'min.css'] else ''
-        url = f'/web/assets/%-%/{rtl}{bundle}.{extension}'
+        url = f'/web/assets/%-_______/{rtl}{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 

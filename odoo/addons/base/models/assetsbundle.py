@@ -167,7 +167,7 @@ class AssetsBundle(object):
             self._checksum_cache[asset_type] = hashlib.sha512(unique_descriptor.encode()).hexdigest()[:64]
         return self._checksum_cache[asset_type]
 
-    def get_asset_url(self, attachment_id='%', unique='%', extra='', name='%', sep=".", extension='%'):
+    def get_asset_url(self, attachment_id='%', unique='_______', extra='', name='%', sep=".", extension='%'):
         extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
         return f"/web/assets/{attachment_id}-{unique}/{extra}{name}{sep}{extension}"
 
@@ -236,7 +236,7 @@ class AssetsBundle(object):
                                 => web/assets/%-self.get_version(type)/name.extension.
         """
         is_css = extension in ['css', 'min.css', 'css.map']
-        unique = "%" if ignore_version else self.get_version('css' if is_css else 'js')
+        unique = "_______" if ignore_version else self.get_version('css' if is_css else 'js')
         extra = '%s' % ('rtl/' if is_css and self.rtl else '')
         url_pattern = self.get_asset_url(
             unique=unique,
@@ -294,6 +294,8 @@ class AssetsBundle(object):
                 attachment_id = attachment.id
                 if self.env.context.get('commit_assetsbundle') is True:
                     self.env.cr.commit()
+                self.clean_attachments(extension)
+
 
         return self.env['ir.attachment'].sudo().browse(attachment_id)
 
