@@ -150,7 +150,7 @@ class AssetsBundle(object):
             self._checksum_cache[asset_type] = hashlib.sha512(unique_descriptor.encode()).hexdigest()[:64]
         return self._checksum_cache[asset_type]
 
-    def get_asset_url(self, unique='%', extension='%', ignore_params=False):
+    def get_asset_url(self, unique=ANY_UNIQUE, extension='%', ignore_params=False):
         direction = '.rtl' if self.is_css(extension) and self.rtl else ''
         bundle_name = f"{self.name}{direction}.{extension}"
         return self.env['ir.asset']._get_asset_bundle_url(bundle_name, unique, self.assets_params, ignore_params)
@@ -264,6 +264,7 @@ class AssetsBundle(object):
                 }
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
                 attachment_id = attachment.id
+                self.clean_attachments(extension)
 
         return self.env['ir.attachment'].sudo().browse(attachment_id)
 
