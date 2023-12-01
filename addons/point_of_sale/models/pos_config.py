@@ -817,7 +817,7 @@ class PosConfig(models.Model):
                  FROM {tables}
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE {where_clause}
-             ORDER BY product_product__product_tmpl_id.priority DESC,
+             ORDER BY product_product__product_tmpl_id.is_favorite DESC,
                       product_product__product_tmpl_id.detailed_type DESC,
                       COALESCE(pm.date, product_product.write_date) DESC
                 LIMIT %s
