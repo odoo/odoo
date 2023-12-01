@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { currencies } from "@web/core/currency";
 import { UPDATE_METHODS } from "@web/core/orm_service";
@@ -17,7 +18,7 @@ export const currencyService = {
             }
             Object.assign(currencies, result?.currencies);
         }
-        env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { data, error } = ev.detail;
             const { model, method } = data.params;
             if (!error && model === "res.currency" && UPDATE_METHODS.includes(method)) {

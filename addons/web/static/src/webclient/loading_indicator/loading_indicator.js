@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
@@ -32,8 +33,8 @@ export class LoadingIndicator extends Component {
         this.shouldUnblock = false;
         this.startShowTimer = null;
         this.blockUITimer = null;
-        useBus(this.env.bus, "RPC:REQUEST", this.requestCall);
-        useBus(this.env.bus, "RPC:RESPONSE", this.responseCall);
+        useBus(rpcBus, "RPC:REQUEST", this.requestCall);
+        useBus(rpcBus, "RPC:RESPONSE", this.responseCall);
     }
 
     requestCall({ detail }) {

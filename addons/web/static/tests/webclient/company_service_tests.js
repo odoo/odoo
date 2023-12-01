@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { ormService } from "@web/core/orm_service";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
@@ -50,13 +51,13 @@ QUnit.test(
         });
         const env = await makeTestEnv();
         assert.verifySteps([]);
-        env.bus.trigger("RPC:RESPONSE", {
+        rpcBus.trigger("RPC:RESPONSE", {
             data: { params: { model: "res.company", method: "write" } },
             settings: {},
             result: {},
         });
         assert.verifySteps(["reload_context"]);
-        env.bus.trigger("RPC:RESPONSE", {
+        rpcBus.trigger("RPC:RESPONSE", {
             data: { params: { model: "res.company", method: "write" } },
             settings: {},
             error: {},
