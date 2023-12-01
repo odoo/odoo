@@ -627,3 +627,39 @@ class TestSaleProject(TestSaleProjectCommon):
             sol_form.qty_delivered = 1
             self.assertEqual(sol_form.qty_delivered_method, 'manual')
             self.assertEqual(sol_form.qty_delivered, 1, 'quantity delivered is editable')
+
+    def test_generated_project_stages(self):
+        """ This test checks that when a project is created on SO confirmation, the following stages are automatically
+            generated for the new project (assuming there is no project template set on the product):
+            - To Do
+            - In Progress
+            - Done
+            - Cancelled
+        """
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner.id,
+        })
+        product = self.env['product.product'].create({
+            'name': "Service with template",
+            'standard_price': 10,
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': self.uom_hour.id,
+            'uom_po_id': self.uom_hour.id,
+            'default_code': 'c1',
+            'service_tracking': 'task_in_project',
+            'project_id': False,  # will create a project,
+            'project_template_id': False, # no project template
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'product_uom': product.uom_id.id,
+            'price_unit': product.list_price,
+        })
+        names = ['To Do', 'In Progress', 'Done', 'Cancelled']
+        project = sale_order_line._timesheet_create_project()
+        self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
