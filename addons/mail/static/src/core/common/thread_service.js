@@ -535,6 +535,7 @@ export class ThreadService {
     }
 
     async joinChannel(id, name) {
+        await this.env.services["mail.messaging"].isReady;
         await this.orm.call("discuss.channel", "add_members", [[id]], {
             partner_ids: [this.store.user.id],
         });
