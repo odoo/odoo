@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 from odoo.http import Request
 from odoo.tests import tagged
@@ -43,7 +43,7 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+        self.assertEqual(urlsplit(res.headers.get('Location', '')).path, '/web/database/selector')
 
     def test_echohttp6_json_over_http(self):
         payload = json.dumps({'commander': 'Thor'})

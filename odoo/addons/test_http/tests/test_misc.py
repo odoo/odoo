@@ -4,7 +4,7 @@ import json
 from io import StringIO
 from socket import gethostbyname
 from unittest.mock import patch
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 import odoo
 from odoo.http import root, content_disposition
@@ -191,13 +191,13 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+        self.assertEqual(urlsplit(res.headers.get('Location', '')).path, '/web/database/selector')
 
     def test_ensure_db1_grant_db(self):
         res = self.multidb_url_open('/test_http/ensure_db?db=db0', timeout=10000)
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertEqual(urlsplit(res.headers.get('Location', '')).path, '/test_http/ensure_db')
         self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'db0')
 
         # follow the redirection
@@ -224,7 +224,7 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db?db=db1')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertEqual(urlsplit(res.headers.get('Location', '')).path, '/test_http/ensure_db')
 
         new_session = odoo.http.root.session_store.get(res.cookies['session_id'])
         self.assertNotEqual(session.sid, new_session.sid)
