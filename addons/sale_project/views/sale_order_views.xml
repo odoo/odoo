@@ -23,10 +23,6 @@
                     <field name="tasks_count" widget="statinfo" string="Tasks"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='analytic_account_id']" position="after">
-                <field name="visible_project" invisible="1"/>
-                <field name="project_id" options="{'no_create': True}" invisible="not visible_project" readonly="state not in ['draft', 'sent']"/>
-            </xpath>
         </field>
     </record>
 

@@ -171,15 +171,10 @@ class TestSoLineMilestones(TestSaleCommon):
         the project for the milestone should be the one set on the SO,
         and no ValidationError or NotNullViolation should be raised.
         """
-        project = self.env['project.project'].create({
-            'name': 'Test Project For Milestones',
-            'partner_id': self.partner_a.id
-        })
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'project_id': project.id,  # the user set a project on the SO
         })
         self.env['sale.order.line'].create({
             'product_id': self.product_delivery_milestones3.id,
