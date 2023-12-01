@@ -3,8 +3,6 @@
 
     <template id="index_topbar" inherit_id="website_event.index_topbar">
         <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]" position="inside">
-            <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-            <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
             <t t-call="website_sale.pricelist_list">
                 <t t-set="_classes" t-valuef="d-none d-lg-inline me-2 my-1"/>
             </t>
