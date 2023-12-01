@@ -458,7 +458,7 @@ class SaleOrderLine(models.Model):
             # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
             # products sold by weight, where the delivered quantity rarely matches exactly the
             # quantity ordered.
-            if line.order_id.state == 'done'\
+            if line.order_id.state in ('sale', 'done')\
                     and line.invoice_status == 'no'\
                     and line.product_id.type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
