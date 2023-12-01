@@ -15,7 +15,7 @@ import base64
 import odoo
 from odoo import api, http
 from odoo.addons import __path__ as ADDONS_PATH
-from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError
+from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules.module import get_manifest
@@ -147,7 +147,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
         direction = '.rtl' if rtl else ''
         bundle_name = f"{bundle}{direction}.{extension}"
-        url = self.env['ir.asset']._get_asset_bundle_url(bundle_name, '%', {})
+        url = self.env['ir.asset']._get_asset_bundle_url(bundle_name, ANY_UNIQUE, {})
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
