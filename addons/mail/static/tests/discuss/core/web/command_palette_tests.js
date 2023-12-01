@@ -36,8 +36,24 @@ QUnit.test("open the chatWindow of a user from the command palette", async () =>
 
 QUnit.test("open the chatWindow of a channel from the command palette", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "general" });
-    pyEnv["discuss.channel"].create({ name: "project" });
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({
+                partner_id: pyEnv.currentPartnerId,
+                last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
+            }),
+        ],
+    });
+    pyEnv["discuss.channel"].create({
+        name: "project",
+        channel_member_ids: [
+            Command.create({
+                partner_id: pyEnv.currentPartnerId,
+                last_interest_dt: "2021-01-02 10:00:00", // same last interest to sort by id
+            }),
+        ],
+    });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "#");
