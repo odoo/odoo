@@ -23,7 +23,7 @@ class WebsiteSaleVariantController(Controller):
         )
 
         # Pop data only computed to ease server-side computations.
-        for key in ('product_taxes', 'taxes', 'currency', 'date'):
+        for key in ('product_taxes', 'taxes', 'currency', 'date', 'combination'):
             combination_info.pop(key)
 
         if request.website.product_page_image_width != 'none' and not request.env.context.get('website_sale_no_images', False):
