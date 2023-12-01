@@ -2622,7 +2622,7 @@ class TestStockUOM(TestStockCommon):
             ('lot_id', '=', quant_LtDA.lot_id.id),
             ('package_id', '=', quant_LtDA.package_id.id),
             ('owner_id', '=', quant_LtDA.owner_id.id),
-            ('quantity', '!=', 0)
+            ('quantity_product_uom', '!=', 0)
         ])
         reserved_on_move_lines_LtDA = sum(move_lines_LtDA.mapped('quantity_product_uom'))
 
@@ -2632,7 +2632,7 @@ class TestStockUOM(TestStockCommon):
             ('lot_id', '=', quant_GtDA.lot_id.id),
             ('package_id', '=', quant_GtDA.package_id.id),
             ('owner_id', '=', quant_GtDA.owner_id.id),
-            ('quantity', '!=', 0)
+            ('quantity_product_uom', '!=', 0)
         ])
         reserved_on_move_lines_GtDA = sum(move_lines_GtDA.mapped('quantity_product_uom'))
 
