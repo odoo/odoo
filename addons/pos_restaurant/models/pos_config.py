@@ -19,7 +19,8 @@ class PosConfig(models.Model):
 
     def get_tables_order_count_and_printing_changes(self):
         self.ensure_one()
-        tables = self.env['restaurant.table'].search([('floor_id.pos_config_ids', '=', self.id)])
+        floors = self.env['restaurant.floor'].search([('pos_config_ids', '=', self.id)])
+        tables = self.env['restaurant.table'].search([('floor_id', 'in', floors.ids)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order']._read_group(domain, ['table_id'], ['__count'])
