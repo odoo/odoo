@@ -68,6 +68,11 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             },
         ])
 
+        # Create a 2nd company
+        self.test_company_2 = self.env['res.company'].create({
+            'name': 'My Test Company 2',
+        })
+
     def _get_timesheets_by_employee(self, leave_task):
         timesheets_by_read_dict = self.env['account.analytic.line']._read_group([('task_id', '=', leave_task.id)], ['employee_id'], ['__count'])
         return {
@@ -121,19 +126,38 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'date_to': leave_end_datetime,
         })
 
-        # 5 Timesheets should have been created for full_time_employee
+        # Create a global time-off in the same company (not specific a to calendar)
+        # this should be added to calendar's leaves
+        self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Global leave',
+            'calendar_id': False,
+            'date_from': (leave_start_datetime + timedelta(weeks=1)).replace(hour=0, minute=0, second=0),
+            'date_to': (leave_start_datetime + timedelta(weeks=1, days=1)).replace(hour=23, minute=59, second=59),
+        })
+
+        # Create a global time-off in another company which should not be
+        # taken into account when creating/unarchiving employee
+        self.env['resource.calendar.leaves'].with_company(self.test_company_2).create({
+            'name': 'Global leave in another company',
+            'calendar_id': False,
+            # Monday in two weeks
+            'date_from': (leave_start_datetime + timedelta(weeks=2)).replace(hour=0, minute=0, second=0),
+            'date_to': (leave_start_datetime + timedelta(weeks=2)).replace(hour=23, minute=59, second=59),
+        })
+
+        # 7 Timesheets should have been created for full_time_employee
         timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
-        self.assertEqual(len(timesheets_full_time_employee), 5)
+        self.assertEqual(len(timesheets_full_time_employee), 7)
 
         # All timesheets should have been deleted for full_time_employee when he is archived
         self.full_time_employee.active = False
         timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
         self.assertEqual(len(timesheets_full_time_employee), 0)
 
-        # 5 Timesheets should have been created for full_time_employee when he is unarchived
+        # 7 Timesheets should have been created for full_time_employee when he is unarchived
         self.full_time_employee.active = True
         timesheets_full_time_employee = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
-        self.assertEqual(len(timesheets_full_time_employee), 5)
+        self.assertEqual(len(timesheets_full_time_employee), 7)
 
     # This tests that no timesheet are created for days when the employee is not supposed to work
     def test_no_timesheet_on_off_days(self):
