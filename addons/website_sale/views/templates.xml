@@ -889,7 +889,7 @@
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values or tags" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2">
+                    <a t-if="attrib_values or tags" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1 mb-2">
                         <small class="mx-auto"><b>Clear Filters</b></small>
                         <i class="oi oi-close"/>
                     </a>
