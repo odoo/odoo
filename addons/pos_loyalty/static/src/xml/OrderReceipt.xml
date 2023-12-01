@@ -11,7 +11,7 @@
                             <div>--------------------------------</div>
                             <br/>
                             <div t-esc='_loyaltyStat.program.name' class="pos-receipt-title" />
-                            <div t-esc='receipt.partner.name' />
+                            
                             <br />
                         </span>
                         <t t-if='_loyaltyStat.points.won'>
@@ -28,6 +28,8 @@
                         <br />
                     </div>
                 </t>
+                <br/>
+                <div>Customer <span t-esc='receipt.partner.name' class='pos-receipt-right-align'/></div>
             </t>
             <t t-if="receipt.new_coupon_info and receipt.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards">
