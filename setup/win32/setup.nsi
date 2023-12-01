@@ -301,6 +301,15 @@ SectionEnd
 Section $(TITLE_IOT) IOT
     SectionIn 3
     DetailPrint "Configuring TITLE_IOT"
+
+    # Set a folder with specific IoT related files
+    SetOutPath "$INSTDIR\iot"
+    File "conf\iot\CheckHTTPSCertificateUpdate.bat"
+
+    # Create scheduled actions (handled in Windows Task Scheduler)
+    nsExec::Exec 'schtasks /create /sc daily /tn Odoo\CheckHTTPSCertificateUpdate /tr "$INSTDIR\iot\CheckHTTPSCertificateUpdate.bat" /st 02:00'
+
+    # Configuration odoo config for IoT
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "server_wide_modules" "web,hw_posbox_homepage,hw_drivers"
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "max_cron_threads" "0"
@@ -393,6 +402,7 @@ Section "Uninstall"
     ExecWait '"$0" /S'
     ExecWait '"$INSTDIR\Ghostscript\uninstgs.exe" /S'
 
+    nsExec::Exec "schtasks /delete /tn Odoo\CheckHTTPSCertificateUpdate /f"
     nsExec::Exec "net stop ${SERVICENAME}"
     nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
@@ -402,6 +412,7 @@ Section "Uninstall"
     Rmdir /r "$INSTDIR\thirdparty"
     Rmdir /r "$INSTDIR\python"
     Rmdir /r "$INSTDIR\nssm"
+    Rmdir /r "$INSTDIR\iot"
     FindFirst $0 $1 "$INSTDIR\nginx*"
     Rmdir /R "$INSTDIR\$1"
     FindClose $0
