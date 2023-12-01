@@ -275,8 +275,13 @@ class TestMailComposerUI(MailCommon, HttpCase):
         self.user_employee.write({
             'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
         })
-        self.start_tour(
-            f"/web#id={self.user_employee.partner_id.id}&model=res.partner",
-            "mail/static/tests/tours/mail_composer_test_tour.js",
-            login=self.user_employee.login
-        )
+        user = self.env["res.users"].create({"name": "Not A Demo User", "login": "nadu"})
+        with self.mock_mail_app():
+            self.start_tour(
+                f"/web#id={self.user_employee.partner_id.id}&model=res.partner",
+                "mail/static/tests/tours/mail_composer_test_tour.js",
+                login=self.user_employee.login
+            )
+        message = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
+        self.assertEqual(len(message), 1)
+        self.assertIn(user.partner_id, message.partner_ids)
