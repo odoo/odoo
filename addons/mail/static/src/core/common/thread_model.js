@@ -83,8 +83,6 @@ export class Thread extends Record {
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
     activeRtcSession = Record.one("RtcSession");
-    /** @type {object|undefined} */
-    channel;
     channelMembers = Record.many("ChannelMember", {
         onDelete: (r) => r.delete(),
         /** @this {import("models").Thread} */
