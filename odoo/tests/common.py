@@ -461,19 +461,18 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             actual_queries.append(query.code if isinstance(query, SQL) else query)
             return Cursor_execute(self, query, params, log_exceptions)
 
-        def get_unaccent_wrapper(cr):
-            return lambda x: x
-
         if flush:
             self.env.flush_all()
             self.env.cr.flush()
 
-        with patch('odoo.sql_db.Cursor.execute', execute):
-            with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
-                yield actual_queries
-                if flush:
-                    self.env.flush_all()
-                    self.env.cr.flush()
+        with (
+            patch('odoo.sql_db.Cursor.execute', execute),
+            patch.object(self.env.registry, 'unaccent', lambda x: x),
+        ):
+            yield actual_queries
+            if flush:
+                self.env.flush_all()
+                self.env.cr.flush()
 
         if not self.warm:
             return

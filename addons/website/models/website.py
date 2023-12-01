@@ -24,7 +24,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_manifest
-from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
+from odoo.osv.expression import AND, OR, FALSE_DOMAIN
 from odoo.tools.translate import _, xml_translate
 from odoo.tools import escape_psql, pycompat
 
@@ -1785,7 +1785,7 @@ class Website(models.Model):
             domain = search_detail['base_domain'].copy()
             fields = set(fields).intersection(model._fields)
 
-            unaccent = get_unaccent_wrapper(self.env.cr)
+            unaccent = self.env.registry.unaccent
 
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
