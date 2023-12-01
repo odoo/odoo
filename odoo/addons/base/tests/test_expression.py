@@ -745,11 +745,11 @@ class TestExpression(SavepointCaseWithUserDemo):
         ])
         self.assertEqual(nicostratus.parent_path, f'{helen.id}/{nicostratus.id}/')
 
-        with patch('odoo.osv.expression.get_unaccent_wrapper') as w:
+        with patch.object(self.env.registry, 'unaccent') as w:
             w().side_effect = lambda x: x
             rs = Model.search([('parent_path', '=like', f'{helen.id}/%')], order='id asc')
             self.assertEqual(rs, helen | hermione | nicostratus)
-            # the result of `get_unaccent_wrapper()` is the wrapper and that's
+            # the result of `unaccent()` is the wrapper and that's
             # what should not be called
             w().assert_not_called()
 

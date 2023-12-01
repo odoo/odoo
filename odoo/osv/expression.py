@@ -117,8 +117,7 @@ import logging
 import reprlib
 import traceback
 from datetime import date, datetime, time
-
-import psycopg2.sql
+import warnings
 
 import odoo.modules
 from odoo.models import BaseModel, check_property_field_value_name
@@ -745,17 +744,12 @@ def check_leaf(element, internal=False):
 # SQL utils
 # --------------------------------------------------
 
-def _unaccent_wrapper(x):
-    if isinstance(x, SQL):
-        return SQL("unaccent(%s)", x)
-    if isinstance(x, psycopg2.sql.Composable):
-        return psycopg2.sql.SQL('unaccent({})').format(x)
-    return 'unaccent({})'.format(x)
-
 def get_unaccent_wrapper(cr):
-    if odoo.registry(cr.dbname).has_unaccent:
-        return _unaccent_wrapper
-    return lambda x: x
+    warnings.warn(
+        "Since 18.0, deprecated method, use env.registry.unaccent instead",
+        DeprecationWarning, 2,
+    )
+    return odoo.registry(cr.dbname).unaccent
 
 
 class expression(object):
@@ -779,7 +773,7 @@ class expression(object):
             :attr result: the result of the parsing, as a pair (query, params)
             :attr query: Query object holding the final result
         """
-        self._unaccent_wrapper = get_unaccent_wrapper(model._cr)
+        self._unaccent = model.pool.unaccent
         self._has_trigram = model.pool.has_trigram
         self.root_model = model
         self.root_alias = alias or model._table
@@ -1049,7 +1043,7 @@ class expression(object):
                 else:
                     if operator in ('ilike', 'not ilike'):
                         right = f'%{pycompat.to_text(right)}%'
-                        unaccent = self._unaccent_wrapper
+                        unaccent = self._unaccent
                     else:
                         unaccent = lambda x: x
 
@@ -1416,12 +1410,12 @@ class expression(object):
                             _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
                             sql_exprs.append(SQL(
                                 "%s %s %s AND",
-                                self._unaccent_wrapper(_left),
+                                self._unaccent(_left),
                                 _sql_operator,
-                                self._unaccent_wrapper(SQL("%s", _right))
+                                self._unaccent(SQL("%s", _right))
                             ))
 
-                    unaccent = self._unaccent_wrapper if operator.endswith('ilike') else lambda x: x
+                    unaccent = self._unaccent if operator.endswith('ilike') else lambda x: x
                     sql_left = model._field_to_sql(alias, field.name, self.query)
 
                     if need_wildcard:
@@ -1576,8 +1570,8 @@ class expression(object):
         if operator.endswith('like'):
             sql_left = SQL("%s::text", sql_field)
         if operator.endswith('ilike'):
-            sql_left = self._unaccent_wrapper(sql_left)
-            sql_right = self._unaccent_wrapper(sql_right)
+            sql_left = self._unaccent(sql_left)
+            sql_right = self._unaccent(sql_right)
 
         if need_wildcard and not right:
             return SQL("%s IS NULL", sql_field) if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE")
