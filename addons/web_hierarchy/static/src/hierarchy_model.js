@@ -480,7 +480,7 @@ export class HierarchyModel extends Model {
         this.activeFields = params.activeFields;
         this.notification = notification;
         this.config = {
-            domain: this.defaultDomain,
+            domain: [],
             isRoot: true,
         };
     }
@@ -513,21 +513,36 @@ export class HierarchyModel extends Model {
     }
 
     /**
+     * Get default domain to use, when no domain is given in the config
+     *
+     * @returns {import("@web/src/core/domain").DomainListRepr} default domain
+     */
+    get defaultDomain() {
+        return [[this.parentFieldName, "=", false]];
+    }
+
+    /**
+     * Get the global domain of the view (which is the domain defined on the
+     * view without applying filters).
+     *
+     * @returns {import("@web/src/core/domain").DomainListRepr} global domain
+     */
+    get globalDomain() {
+        if (!this.env.searchModel?.globalDomain.length) {
+            return [];
+        }
+        return new Domain(this.env.searchModel.globalDomain).toList(
+            this.env.searchModel.domainEvalContext
+        );
+    }
+
+    /**
      * Get active fields name
      *
      * @returns {String[]} active fields name
      */
     get activeFieldNames() {
         return Object.keys(this.activeFields);
-    }
-
-    /**
-     * Get default domain to use, when no domain is given in the config
-     *
-     * @returns {import("@web/src/core/domain").DomainListRepr} default domain
-     */
-    get defaultDomain() {
-        return [[this.parentFieldName, '=', false]];
     }
 
     /**
@@ -670,16 +685,47 @@ export class HierarchyModel extends Model {
         config.context = "context" in params ? params.context : config.context;
         if ("domain" in params) {
             config.domain = params.domain;
-            if (!params.domain.length) {
-                if (config.context.hierarchy_res_id) {
-                    config.domain = [["id", "=", config.context.hierarchy_res_id]];
-                    delete config.context.hierarchy_res_id; // just needed for the first load.
-                } else {
-                    config.domain = this.defaultDomain;
+            if (this.isSearchDefaultOrEmpty() && config.context.hierarchy_res_id) {
+                config.domain = [["id", "=", config.context.hierarchy_res_id]];
+                const globalDomain = this.globalDomain;
+                if (globalDomain.length) {
+                    config.domain = Domain.and([config.domain, globalDomain]);
                 }
+                // Just needed for the first load.
+                delete config.context.hierarchy_res_id;
             }
         }
         return config;
+    }
+
+    /**
+     * Evaluate if the current search query is the default one.
+     *
+     * @returns {boolean}
+     */
+    isSearchDefaultOrEmpty() {
+        if (!this.env.searchModel) {
+            return true;
+        }
+        const isDisabledOptionalSearchMenuType = (type) => {
+            return (
+                ["filter", "groupBy", "favorite"].includes(type) &&
+                !this.env.searchModel.searchMenuTypes.has(type)
+            );
+        };
+        const activeSearchItems = this.env.searchModel.getSearchItems(
+            (item) => item.isActive && !isDisabledOptionalSearchMenuType(item.type)
+        );
+        if (!activeSearchItems.length) {
+            return true;
+        }
+        const defaultSearchItems = this.env.searchModel.getSearchItems(
+            (item) =>
+                item.isDefault &&
+                item.type !== "favorite" &&
+                !isDisabledOptionalSearchMenuType(item.type)
+        );
+        return JSON.stringify(defaultSearchItems) === JSON.stringify(activeSearchItems);
     }
 
     /**
@@ -689,14 +735,31 @@ export class HierarchyModel extends Model {
      * @returns {Object[]} main data for hierarchy view
      */
     async _loadData(config) {
-        const result = await this.orm.call(
-            this.resModel,
-            "hierarchy_read",
-            [config.domain, this.fieldsToFetch, this.parentFieldName, this.childFieldName],
-            {
-                context: config.context,
-            },
-        );
+        let onlyRoots = false;
+        let domain = config.domain;
+        if (this.isSearchDefaultOrEmpty()) {
+            // If the current SearchModel query is the default one
+            // configured for the action or there is no search query, an
+            // additional constraint is added to only display "root"
+            // records (without a parent).
+            onlyRoots = true;
+            domain = !domain.length
+                ? this.defaultDomain
+                : Domain.and([this.defaultDomain, domain]).toList({});
+        }
+        const hierarchyRead = async () => {
+            return await this.orm.call(
+                this.resModel,
+                "hierarchy_read",
+                [domain, this.fieldsToFetch, this.parentFieldName, this.childFieldName],
+                { context: config.context }
+            );
+        };
+        let result = await hierarchyRead();
+        if (!result.length && onlyRoots) {
+            domain = config.domain;
+            result = await hierarchyRead();
+        }
         const resultStringified = JSON.stringify(result);
         const recordsPerParentId = {};
         const recordPerId = {};
