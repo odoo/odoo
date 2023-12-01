@@ -22,6 +22,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { Component, useState, xml } from "@odoo/owl";
+import { session } from "@web/session";
 
 let target, mock;
 
@@ -145,6 +146,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(800);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await click(target, "button.inc");
@@ -181,6 +183,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100);
         assert.containsOnce(document.body, ".o_tour_pointer");
 
@@ -240,6 +243,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100); // awaits the macro engine
 
         // Even if this seems weird, it should show the initial pointer.
@@ -331,6 +335,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100); // awaits the macro engine
         assert.containsOnce(document.body, ".o_tour_pointer");
         assert.equal(document.body.querySelector(".o_tour_pointer").textContent, stepContent);
@@ -405,6 +410,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await editInput(target, ".interval input", "5");
@@ -437,6 +443,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         env.services.tour_service.bus.addEventListener("STEP-CONSUMMED", ({ detail }) => {
             assert.step(`Tour ${detail.tour.name}, step ${detail.step.trigger}`);
         });
@@ -480,6 +487,8 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        env.services.tour_service.startTour("tour2", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await editInput(target, ".interval input", "5");
@@ -515,6 +524,7 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(target, ".o_tour_pointer");
         triggerEvent(target, "button.inc", "mouseenter");
@@ -532,6 +542,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test(
         "registering non-test tour after service is started auto-starts the tour",
         async function (assert) {
+            patchWithCleanup(session, { tour_disable: false });
             const env = await makeTestEnv({});
 
             const { Component: TourPointerContainer, props: tourPointerProps } = registry
@@ -567,6 +578,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test(
         "registering test tour after service is started doesn't auto-start the tour",
         async function (assert) {
+            patchWithCleanup(session, { tour_disable: false });
             const env = await makeTestEnv({});
 
             const { Component: TourPointerContainer, props: tourPointerProps } = registry
