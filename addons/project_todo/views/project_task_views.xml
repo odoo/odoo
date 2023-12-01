@@ -26,6 +26,7 @@
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
+                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                         <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </t>
@@ -49,6 +50,9 @@
                                 </div>
                                 <div class="o_kanban_record_body o_todo_kanban_card_body" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <div t-if="record.displayed_image_id.value">
+                                        <field name="displayed_image_id" widget="attachment_image"/>
+                                    </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left"/>
