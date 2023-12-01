@@ -273,7 +273,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         p2_bo_mls = production.procurement_group_id.mrp_production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
         self.assertEqual(len(p2_bo_mls), 1)
         self.assertEqual(p2_bo_mls.lot_id, lot1)
-        self.assertEqual(p2_bo_mls.quantity, 2)
+        self.assertEqual(p2_bo_mls.quantity_product_uom, 2)
 
     def test_uom_backorder(self):
         """

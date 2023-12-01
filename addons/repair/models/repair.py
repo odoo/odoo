@@ -254,7 +254,7 @@ class Repair(models.Model):
         for repair in self:
             repair.unreserve_visible = (
                 repair.state not in ('draft', 'done', 'cancel') and
-                any(repair.move_ids.move_line_ids.mapped('quantity'))
+                any(repair.move_ids.move_line_ids.mapped('quantity_product_uom'))
             )
             repair.reserve_visible = (
                 repair.state in ('confirmed', 'under_repair') and

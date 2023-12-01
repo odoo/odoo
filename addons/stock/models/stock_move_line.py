@@ -290,7 +290,7 @@ class StockMoveLine(models.Model):
                 ON
                     stock_move_line (id, company_id, product_id, lot_id, location_id, owner_id, package_id)
                 WHERE
-                    (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity > 0 AND not picked""")
+                    (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND not picked""")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -484,9 +484,9 @@ class StockMoveLine(models.Model):
         quants_by_product = self.env['stock.quant']._get_quants_by_products_locations(self.product_id, self.location_id)
         for ml in self:
             # Unlinking a move line should unreserve.
-            if not float_is_zero(ml.quantity, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
+            if not float_is_zero(ml.quantity_product_uom, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 quants = quants_by_product[ml.product_id.id]
-                quants._update_reserved_quantity(ml.product_id, ml.location_id, -ml.quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                quants._update_reserved_quantity(ml.product_id, ml.location_id, -ml.quantity_product_uom, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
         res = super().unlink()
         if moves:
@@ -705,7 +705,7 @@ class StockMoveLine(models.Model):
             ('location_id', '=', location_id.id),
             ('owner_id', '=', owner_id.id if owner_id else False),
             ('package_id', '=', package_id.id if package_id else False),
-            ('quantity', '>', 0.0),
+            ('quantity_product_uom', '>', 0.0),
             ('picked', '=', False),
             ('id', 'not in', tuple(ml_ids_to_ignore)),
         ]
