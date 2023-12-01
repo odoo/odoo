@@ -947,5 +947,26 @@ odoo.define('website.tour.form_editor', function (require) {
         }
     ]);
 
+    tour.register('website_form_contactus_change_random_option', {
+        test: true,
+        url: '/contactus',
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
+
+    tour.register('website_form_contactus_check_changed_email', {
+        test: true,
+        url: '/contactus',
+    }, [{
+            content: "Check that the recipient email is updated",
+            trigger: 'form:has(input[name="email_to"][value="after.change@mail.com"])',
+            run: () => null, // it's a check.
+        },
+    ]);
+
     return {};
 });
