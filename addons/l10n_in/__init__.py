@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-
+from . import demo
 
 def init_settings(env):
     # Activate cash rounding by default for all companies as soon as the module is installed.
