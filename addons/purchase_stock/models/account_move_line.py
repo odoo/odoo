@@ -203,20 +203,20 @@ class AccountMoveLine(models.Model):
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()
-            aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.date, round=False)
+            aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.move_id.invoice_date, round=False)
             aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
 
             unit_valuation_difference = aml_price_unit - layer_price_unit
 
             # Generate the AML values for the already out quantities
-            unit_valuation_difference_curr = self.company_id.currency_id._convert(unit_valuation_difference, self.currency_id, self.company_id, self.date, round=False)
+            unit_valuation_difference_curr = self.company_id.currency_id._convert(unit_valuation_difference, self.currency_id, self.company_id, self.move_id.invoice_date, round=False)
             unit_valuation_difference_curr = product_uom._compute_price(unit_valuation_difference_curr, self.product_uom_id)
             out_qty_to_invoice = product_uom._compute_quantity(out_qty_to_invoice, self.product_uom_id)
             if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
                 aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
 
             # Generate the SVL values for the on hand quantities (and impact the parent layer)
-            po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.date, round=False)
+            po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.move_id.invoice_date, round=False)
             price_difference_curr = po_pu_curr - aml_gross_price_unit
             if not float_is_zero(unit_valuation_difference * qty_to_correct, precision_rounding=self.company_id.currency_id.rounding):
                 svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
