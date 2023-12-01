@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
@@ -101,7 +102,7 @@ export const companyService = {
         user.updateContext({ allowed_company_ids: activeCompanyIds });
 
         // reload the page if changes are being done to `res.company`
-        env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { data, error } = ev.detail;
             const { model, method } = data.params;
             if (!error && model === "res.company" && UPDATE_METHODS.includes(method)) {
