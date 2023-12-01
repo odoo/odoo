@@ -191,6 +191,7 @@ export class ThreadService {
     async fetchMessages(thread, { after, before } = {}) {
         thread.status = "loading";
         if (thread.type === "chatter" && !thread.id) {
+            thread.isLoaded = true;
             return [];
         }
         try {
@@ -296,10 +297,12 @@ export class ThreadService {
      */
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
+            thread.isLoaded = false;
             const { messages } = await this.rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
+            thread.isLoaded = true;
             thread.messages = this.store.Message.insert(messages.reverse(), { html: true });
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;

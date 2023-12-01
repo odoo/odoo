@@ -213,6 +213,7 @@ export class LivechatService {
         const thread = this.store.Thread.insert({
             ...threadData,
             id: threadData.id ?? this.TEMPORARY_ID,
+            isLoaded: !threadData.id,
             model: "discuss.channel",
             type: "livechat",
         });

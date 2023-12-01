@@ -33,7 +33,15 @@ export class Thread extends Record {
         /** @type {import("models").Thread} */
         const thread = super.new(data);
         thread.composer = {};
-        Record.onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        Record.onChange(thread, "isLoaded", () => {
+            if (thread.isLoaded) {
+                thread.isLoadedDeferred.resolve();
+            } else {
+                const def = thread.isLoadedDeferred;
+                thread.isLoadedDeferred = new Deferred();
+                thread.isLoadedDeferred.then(() => def.resolve());
+            }
+        });
         Record.onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
         Record.onChange(thread, "is_pinned", () => {
             if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
