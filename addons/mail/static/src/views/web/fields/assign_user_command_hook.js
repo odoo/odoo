@@ -60,13 +60,16 @@ export function useAssignUserCommand() {
                 domain = Domain.and([domain, [["id", "not in", selectedUserIds]]]).toList();
             }
         }
-        const searchResult = await orm.call(component.relation, "name_search", [], {
+        component._pendingRpc?.abort(false);
+        component._pendingRpc = orm.call(component.relation, "name_search", [], {
             name: value,
             args: domain,
             operator: "ilike",
             limit: 80,
             context,
         });
+        const searchResult = await component._pendingRpc;
+        component._pendingRpc = null;
         return searchResult.map((record) => ({
             name: record[1],
             action: add.bind(null, record),
