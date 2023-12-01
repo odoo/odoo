@@ -717,5 +717,17 @@ odoo.define('website.tour.form_editor', function (require) {
         }
     ]);
 
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_change_random_option', {
+        test: true,
+        url: '/contactus',
+        edition: true,
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
+
     return {};
 });
