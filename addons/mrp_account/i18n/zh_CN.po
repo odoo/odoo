@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Chloe Wang, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +92,7 @@ msgstr "Acme Corp."
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_ids
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_ids
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr "分析账户"
 
 #. module: mrp_account
 #. odoo-python
@@ -105,7 +106,7 @@ msgstr "分析科目"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_distribution
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "解析分布"
+msgstr "分析分布"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution_search
@@ -127,7 +128,7 @@ msgstr "分析行"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "分析计划的适用性"
+msgstr "分析方案的适用性"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_precision
@@ -180,7 +181,7 @@ msgstr "从物料清单（BOM）计算价格"
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "使用物料清单的产品和操作计算价格，仅限已生产产品。"
+msgstr "使用物料清单的产品和作业计算价格，仅限已制造产品。"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -216,7 +217,7 @@ msgstr "MO 概览报告"
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
-msgstr "生产订单"
+msgstr "制造订单"
 
 #. module: mrp_account
 #. odoo-python
@@ -224,12 +225,12 @@ msgstr "生产订单"
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Manufacturing Orders"
-msgstr "生产订单"
+msgstr "制造订单"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 msgid "Manufacturing Orders Count"
-msgstr "生产订单计数"
+msgstr "制造订单计数"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
@@ -259,7 +260,7 @@ msgstr "生产"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid "Production Account"
-msgstr "生产账户"
+msgstr "生产科目"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -293,7 +294,7 @@ msgid ""
 "                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
 msgstr ""
 "该账户将用作制造订单的组件和最终产品的估值对应账户。\n"
-"                如果有任何工作中心/员工成本，生产完成后，该值将保留在账户中。"
+"                如果有任何工作中心/员工成本，制造完成后，该值将保留在账户中。"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip

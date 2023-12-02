@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -535,7 +536,7 @@ msgstr "每批最多生产线数"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "每批最大转账数"
+msgstr "每批最大调拨数"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -616,7 +617,7 @@ msgstr "作业类型"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Operations"
-msgstr "操作"
+msgstr "作业"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -837,7 +838,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"以下传输不能添加到批量传输 %s。请检查它们的状态和操作类型。\n"
+"以下传输不能添加到批量传输 %s。请检查它们的状态和作业类型。\n"
 "\n"
 "不兼容：%s"
 
@@ -849,7 +850,7 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"批量调拨的目标是将可能出现的操作进行分组。\n"
+"批量调拨的目标是将可能出现的作业进行分组。\n"
 "            (需要)一起做，以提高其效率。\n"
 "            分配工作（一个人=一批人），也可能是有用的。\n"
 "            帮助业务的时间管理（下午1点要完成的任务）。"
@@ -862,7 +863,7 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"波传输的目标是将来自不同传输的操作分组在一起，以提高它们的效率。分配工作(一个人=一批)或帮助操作的时间管理(任务在下午1点完成)也可能很有用。"
+"波传输的目标是将来自不同传输的作业分组在一起，以提高它们的效率。分配工作(一个人=一批)或帮助作业的时间管理(任务在下午1点完成)也可能很有用。"
 
 #. module: stock_picking_batch
 #. odoo-python

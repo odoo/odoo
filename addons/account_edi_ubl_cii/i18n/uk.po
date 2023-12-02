@@ -229,11 +229,13 @@ msgstr "0216 - OVTcode"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0221
 msgid "0221 - The registered number of the qualified invoice issuer (Japan)"
 msgstr ""
+"0221 - Реєстраційний номер кваліфікованого емітента рахунків-фактур (Японія)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0230
 msgid "0230 - National e-Invoicing Framework (Malaysia)"
 msgstr ""
+"0230 - Національний Framework електронного виставлення рахунків (Malaysia)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -515,17 +517,17 @@ msgstr "Прикріплення"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_bis3
 msgid "BIS Billing 3.0"
-msgstr ""
+msgstr "BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
 msgid "BIS Billing 3.0 A-NZ"
-msgstr ""
+msgstr "BIS Billing 3.0 A-NZ"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
 msgid "BIS Billing 3.0 SG"
-msgstr ""
+msgstr "BIS Billing 3.0 SG"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -549,6 +551,8 @@ msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
+"Код, який використовується для ідентифікації кінцевої точки для BIS Billing 3.0 та її похідних.\n"
+"             Список доступний за посиланням https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
@@ -615,7 +619,7 @@ msgstr "E-FFF (BE)"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_tree
 msgid "EDI Format"
-msgstr ""
+msgstr "Формат EDI"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -631,6 +635,12 @@ msgstr "Кожен рядок рахунка-фактури має мати ли
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -651,7 +661,7 @@ msgstr "Увімкнути Ubl Cii Xml"
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr ""
+msgstr "Під час створення документа EDI виникли помилки (формат: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -871,6 +881,8 @@ msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
 "allowed. You might need to set a negative quantity instead."
 msgstr ""
+"Рахунок-фактура містить рядки з від’ємною ціною за одиницю, що неприпустимо."
+" Натомість вам може знадобитися встановити від’ємну кількість."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -919,6 +931,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
+"Унікальний ідентифікатор, який використовується BIS Billing 3.0 та його "
+"похідними, також відомий як 'Endpoint ID'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Chloe Wang, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"分录（%s）导致账目不平衡。\n"
+"凭证（%s）不平衡。\n"
 "借记总额为%s，贷记总额为%s。\n"
 "您可以在日记账“%s”中预设默认账户，以便系统自动平衡各分录项。"
 
@@ -1996,7 +1997,7 @@ msgstr "财政状况的科目映射"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr "科目前缀"
+msgstr "账户前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -2063,7 +2064,7 @@ msgstr "操作"
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
 msgid "Action Needed"
-msgstr "所需操作"
+msgstr "待处理"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -2636,7 +2637,7 @@ msgstr "分析"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr "分析账户"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -2646,13 +2647,13 @@ msgstr "分析会计"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "分析科目"
+msgstr "分析账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "解析分布"
+msgstr "分析分布"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
@@ -2693,12 +2694,12 @@ msgstr "分析行"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "分析计划的适用性"
+msgstr "分析方案的适用性"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "分析计划"
+msgstr "分析方案"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -3249,13 +3250,13 @@ msgstr "受之前税费影响的基数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
 msgid "Base Amount"
-msgstr "基数金额"
+msgstr "基本金额"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "已收基税科目"
+msgstr "基本税接收科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -3393,7 +3394,7 @@ msgstr "如果为零则留空"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
-msgstr "分组消息"
+msgstr "阻止消息"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3713,12 +3714,12 @@ msgstr "现金折扣减税"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "现金折扣销记收益科目"
+msgstr "现金折扣冲销收益科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "现金折扣销记损失科目"
+msgstr "现金折扣冲销损失科目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -4119,7 +4120,7 @@ msgstr "公司财务国家代码"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr "公司Storno会计应用程序"
+msgstr "公司负数会计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -5378,7 +5379,7 @@ msgstr "定义银行对账单登记方式"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
 msgid "Defines if the field account prefix should be displayed"
-msgstr "定义是否显示字段科目前缀"
+msgstr "定义是否显示字段账户前缀"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -5617,7 +5618,7 @@ msgstr "用币种显示的折扣金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
 msgid "Display Account Prefix"
-msgstr "显示科目前缀"
+msgstr "显示账户前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -6192,17 +6193,17 @@ msgstr "记项名称"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "环保署脏"
+msgstr "Epd Dirty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
 msgid "Epd Key"
-msgstr "EPD键"
+msgstr "Epd Key"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_needed
 msgid "Epd Needed"
-msgstr "需要EPD"
+msgstr "Epd Needed"
 
 #. module: account
 #. odoo-javascript
@@ -6447,12 +6448,12 @@ msgstr "多增值税筛选器"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr "财务科目"
+msgstr "财务账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefix"
-msgstr "财务科目前缀"
+msgstr "财务账户前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -6536,7 +6537,7 @@ msgstr "会计所在国家/地区代码"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Fiscal Information"
-msgstr "会计信息"
+msgstr "财务信息"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9490,7 +9491,7 @@ msgstr "无银行交易"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
-msgstr "无跟进"
+msgstr "无催款"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
@@ -11009,7 +11010,7 @@ msgstr "转账科目前缀"
 msgid ""
 "Prefix that defines which accounts from the financial accounting this "
 "applicability should apply on."
-msgstr "用于定义适用于财务会计中特定科目的前缀。"
+msgstr "用于定义适用于财务会计中特定账户的前缀。"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -11412,7 +11413,7 @@ msgstr "参考号."
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, python-format
 msgid "Reference"
-msgstr "参考号"
+msgstr "参考"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
@@ -12135,7 +12136,7 @@ msgid ""
 "Select a product category which will use analytic account specified in "
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
-msgstr "选择使用分析默认值中指定的分析科目的产品类别（例如，如果选择该产品，则创建新的客户发票或销售订单，并自动用作分析科目）"
+msgstr "选择使用分析默认值中指定的分析账户的产品类别（例如，如果选择该产品，则创建新的客户发票或销售订单，并自动用作分析账户）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -12143,7 +12144,7 @@ msgid ""
 "Select a product for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
-msgstr "选择使用分析分配的产品（例如，如果选择该产品，则创建新的客户发票或销售订单，并自动用作分析科目）"
+msgstr "选择使用分析分配的产品（例如，如果选择该产品，则创建新的客户发票或销售订单，并自动用作分析账户）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12828,12 +12829,12 @@ msgstr "步骤已完成！"
 #. module: account
 #: model:account.account,name:account.1_stock_out
 msgid "Stock Interim (Delivered)"
-msgstr "临时库存（已交付）"
+msgstr "库存中间科目（交货）"
 
 #. module: account
 #: model:account.account,name:account.1_stock_in
 msgid "Stock Interim (Received)"
-msgstr "临时库存（已收）"
+msgstr "库存中间科目（收货）"
 
 #. module: account
 #: model:account.account,name:account.1_stock_valuation
@@ -13355,7 +13356,7 @@ msgstr "作为网页的条款和条件"
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
-msgstr "条款和条件格式"
+msgstr "条款与细则格式"
 
 #. module: account
 #. odoo-python
@@ -13370,7 +13371,7 @@ msgstr "条款和条件：%s"
 #: model:ir.model.fields,field_description:account.field_account_payment__narration
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Terms and Conditions"
-msgstr "期限和条件"
+msgstr "条款与细则"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
@@ -13864,7 +13865,7 @@ msgstr "未指定要上传发票的日记账。"
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr "该日记账项目未连结至正确财务科目"
+msgstr "该日记账项目未连结至正确财务账户"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -14484,7 +14485,7 @@ msgstr ""
 msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
-msgstr "该解析分布适用于具有相同指定前缀的所有财务科目。"
+msgstr "该解析分布适用于具有相同指定前缀的所有财务账户。"
 
 #. module: account
 #. odoo-python
@@ -15247,7 +15248,7 @@ msgstr "更新条款"
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Update Terms & Conditions"
-msgstr "更新条款和条件"
+msgstr "更新条款与细则"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

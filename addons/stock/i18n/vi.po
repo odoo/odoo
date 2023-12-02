@@ -1876,7 +1876,7 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
-"Cân nhắc dự báo sản phẩm trong nhiều ngày tới trong tương lai khi bổ sung sản phẩm, đặt thành 0 cho chiến lược just-in-time.\n"
+"Cân nhắc dự báo sản phẩm trong nhiều ngày sắp tới khi bổ sung sản phẩm, đặt thành 0 cho chiến lược tức thời.\n"
 "Giá trị phụ thuộc vào loại tuyến cung ứng (Mua hoặc Sản xuất)"
 
 #. module: stock
@@ -2188,7 +2188,7 @@ msgstr "Ngày tạo, thường là ngày đặt hàng"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
-msgstr "Cross-Dock"
+msgstr "Cross-dock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
@@ -3268,7 +3268,7 @@ msgstr "Font biểu tượng, ví dụ: fa-tasks"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "Bắt buộc tiến hành chiến lược loại bỏ"
+msgstr "Bắt buộc tiến hành chiến lược xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
@@ -7282,20 +7282,20 @@ msgstr "Phần còn lại của phiếu lấy hàng đã được xử lý một
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
 msgid "Removal"
-msgstr "Loại bỏ"
+msgstr "Xuất kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location__removal_strategy_id
 msgid "Removal Strategy"
-msgstr "Chiến lược loại bỏ"
+msgstr "Chiến lược xuất kho"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr "Chiến lược loại bỏ %s không được triển khai."
+msgstr "Chiến lược xuất kho %s không được triển khai."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
@@ -8074,7 +8074,7 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Thiết lập chiến lược loại bỏ cụ thể được sử dụng cho danh mục sản phẩm này bất kể vị trí nguồn.\n"
+"Thiết lập chiến lược xuất kho cụ thể được sử dụng cho danh mục sản phẩm này bất kể vị trí nguồn.\n"
 "\n"
 "FIFO: sản phẩm/lô hàng nhập kho trước sẽ được xuất kho trước.\n"
 "LIFO: sản phẩm/lô được nhập kho sau cùng sẽ được xuất kho trước.\n"
@@ -8165,9 +8165,9 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
-"Kết nối hãng vận chuyển cho phép tính toán chi phí giao hàng, in phiếu giao "
-"hàng và yêu cầu hãng vận chuyển lấy hàng từ kho hàng của bạn để giao cho "
-"khách hàng. Chọn kết nối hãng vận chuyển từ phương thức giao hàng."
+"Kết nối vận chuyển cho phép tính toán chi phí giao hàng, in phiếu giao hàng "
+"và yêu cầu đơn vị vận chuyển lấy hàng từ kho hàng của bạn để giao cho khách "
+"hàng. Chọn kết nối vận chuyển từ phương thức giao hàng."
 
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
@@ -9508,7 +9508,7 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
-"Theo dõi các ngày sau đây theo số lô và số sê-ri: tốt nhất trước ngày, loại bỏ, hết hạn, cảnh báo.\n"
+"Theo dõi các ngày sau đây theo số lô và số sê-ri: tốt nhất trước ngày, xuất kho, hết hạn, cảnh báo.\n"
 "Những ngày này được đặt tự động khi tạo số lô và số sê-ri dựa trên các giá trị sản phẩm (tính theo ngày)."
 
 #. module: stock
@@ -9518,8 +9518,8 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
-"Theo dõi các ngày sau đây theo số lô và số sê-ri: tốt nhất trước ngày, loại "
-"bỏ, hết hạn, cảnh báo. Những ngày này được đặt tự động khi tạo số lô và số "
+"Theo dõi các ngày sau đây theo số lô và số sê-ri: tốt nhất trước ngày, xuất "
+"kho, hết hạn, cảnh báo. Những ngày này được đặt tự động khi tạo số lô và số "
 "sê-ri dựa trên các giá trị sản phẩm (tính theo ngày)."
 
 #. module: stock
@@ -10825,6 +10825,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Bạn có (các) sản phẩm trong kho đã bật tính năng theo dõi số lô/sê-ri.\n"
+"Hãy tắt tính năng theo dõi trên tất cả sản phẩm trước khi tắt cài đặt này."
 
 #. module: stock
 #. odoo-python

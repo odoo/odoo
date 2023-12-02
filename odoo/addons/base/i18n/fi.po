@@ -2718,6 +2718,42 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "\n"
 msgstr ""
+"\n"
+"Automaattiset DIMONA-ilmoitukset\n"
+"=============================\n"
+"\n"
+"Edellytykset:\n"
+"--------------\n"
+"\n"
+"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen varmenteen, jonka toimittaa Global\n"
+"  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Luo SSL-sertifikaatistasi varmenteetiedostot (.pfx-tiedosto), joita tarvitaan luomaan\n"
+"  teknisen käyttäjän (.cer-tiedosto) ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
+"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Ennen kuin voit käyttää sosiaaliturvan REST-verkkopalvelua, sinun on luotava tili\n"
+"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Koko menettely on\n"
+"  on saatavilla osoitteessa https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Käyttäjätilien hallinta: Seuraa menettelyä https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Luo tekninen käyttäjä: Asiakkaan on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnassa\n"
+"    verkkopalvelussa. Seuraa tätä menettelyä: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Aktivoi verkkopalvelukanava: Kun tekninen käyttäjä on luotu, asiakkaasi on\n"
+"    aktivoitava verkkopalvelukanava käyttöoikeuksien hallinnassa. Seuraavassa oppaassa selitetään\n"
+"    vaiheet kanavan aktivoimiseksi: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\", jonka avulla voitte\n"
+"    koodata palkka-asetuksissa .pem-tiedoston ja mahdollisen salasanan kanssa.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -2725,6 +2761,8 @@ msgid ""
 "\n"
 "Automatic accounting for MRP\n"
 msgstr ""
+"\n"
+"Automaattinen kirjanpito valmistusta varten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -2732,6 +2770,8 @@ msgid ""
 "\n"
 "Automatically create a sponsor when renting a booth.\n"
 msgstr ""
+"\n"
+"Luo automaattisesti sponsori, kun vuokraat näytteilleasettajan tilan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_images
@@ -2743,6 +2783,11 @@ msgid ""
 "This module integrates with the Google Custom Search API to set images on products based on the\n"
 "barcode.\n"
 msgstr ""
+"\n"
+"Tuotekuvien automaattinen asettaminen viivakoodin perusteella\n"
+"=====================================================\n"
+"\n"
+"Tämä moduuli integroituu Googlen mukautetun haun API:n kanssa asettaakseen tuotteille kuvia, jotka perustuvat viivakoodiin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -2750,6 +2795,8 @@ msgid ""
 "\n"
 "Avoid auto-enabling the documents feature on fsm projects.\n"
 msgstr ""
+"\n"
+"Vältä asiakirjojen automaattista aktivointia fsm-projekteissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2764,6 +2811,15 @@ msgid ""
 "    - Withholding tax structure\n"
 "    - Regional State listings\n"
 msgstr ""
+"\n"
+"Etiopian lokalisoinnin perusmoduuli\n"
+"======================================\n"
+"\n"
+"Tämä on uusin Etiopian Odoo-lokalisointi ja se koostuu seuraavista osista:\n"
+"    - Tilikartta\n"
+"    - Alv-verorakenne\n"
+"    - Lähdeveron rakenne\n"
+"    - Alueelliset osavaltioluettelot\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -2771,6 +2827,8 @@ msgid ""
 "\n"
 "Base module for Bolivian reports\n"
 msgstr ""
+"\n"
+"Bolivian raporttien perusmoduuli\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_reports
@@ -2778,6 +2836,8 @@ msgid ""
 "\n"
 "Base module for Bulgarian reports\n"
 msgstr ""
+"\n"
+"Bulgarialaisia raporttien perusmoduuli\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz_reports
@@ -2785,6 +2845,8 @@ msgid ""
 "\n"
 "Base module for Mozambican reports\n"
 msgstr ""
+"\n"
+"Mosambikin raporttien perusmoduuli\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_saft
@@ -2794,6 +2856,10 @@ msgid ""
 "===============================\n"
 "This is meant to be used with localization specific modules.\n"
 msgstr ""
+"\n"
+"SAF-T-raportoinnin perusmoduuli\n"
+"===============================\n"
+"Tämä on tarkoitettu käytettäväksi lokalisointikohtaisten moduulien kanssa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -2842,6 +2908,49 @@ msgid ""
 "----------------------------------------------\n"
 "Same as the l10n_br_avatax module with the extension to the sales order module.\n"
 msgstr ""
+"\n"
+"Brasilian lokalisoinnin perusmoduuli\n"
+"==========================================\n"
+"\n"
+"Tämä moduuli koostuu seuraavista osista:\n"
+"\n"
+"- Yleinen brasilialainen tilikartta\n"
+"- Brasilian verot, kuten:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- Asiakirjatyypit kuten NFC-e, NFS-e jne.\n"
+"- Henkilöllisyystodistukset kuten CNPJ ja CPF\n"
+"\n"
+"Kenttä tax_discount on lisätty myös account.tax.template- ja account.tax.template-malliin\n"
+"account.tax-objekteihin, jotta joidenkin Brasilian arvonlisäverojen laskeminen olisi mahdollista\n"
+"kuten ICMS. Ohjattua tilikartan luontiohjelmaa on laajennettu seuraavasti\n"
+"näiden uusien tietojen asianmukaista siirtämistä.\n"
+"\n"
+"Tämän moduulin lisäksi Brasilian lokalisoinnit on myös\n"
+"laajennettu ja täydennetty useilla lisämoduuleilla.\n"
+"\n"
+"Brasilia - kirjanpidon raportit (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"Lisää yksinkertaisen veroraportin, jonka avulla voidaan tarkistaa veron määrä veroryhmittäin\n"
+"tiettynä ajanjaksona. Lisäksi lisätään tuloslaskelma ja BS mukautettu varten\n"
+"Brasilian markkinoille.\n"
+"\n"
+"Avatax Brasilia (l10n_br_avatax)\n"
+"------------------------------\n"
+"Lisää Brasilian verolaskenta Avataxin kautta ja kaikki tarvittavat kentät, joita tarvitaan, jotta\n"
+"odoon konfigurointiin, jotta se voi käyttää Avataxia oikein ja lähettää tarvittavat veroilmoitukset\n"
+"tiedot oikeiden verojen hakemista varten.\n"
+"\n"
+"Avatax Brasiliassa toimiville SO:ille (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"Sama kuin l10n_br_avatax-moduuli laajennettuna myyntitilausmoduuliin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2855,6 +2964,14 @@ msgid ""
 "The total amount deposited will then appear as a single transaction on your bank statement.\n"
 "When you reconcile, simply select the corresponding batch payment to reconcile all the payments in the batch.\n"
 msgstr ""
+"\n"
+"Erämaksut\n"
+"=======================================\n"
+"Erämaksut mahdollistavat maksujen ryhmittelyn.\n"
+"\n"
+"Niitä käytetään erityisesti, mutta ei ainoastaan, useiden sekkien ryhmittelyyn ennen niiden tallettamista pankkiin yhtenä eränä.\n"
+"Tällöin talletettu kokonaissumma näkyy pankkitiliotteessasi yhtenä tapahtumana.\n"
+"Kun teet täsmäytyksen, valitse vain vastaava erämaksu, jotta kaikki erän maksut voidaan täsmäyttää.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -2906,6 +3023,52 @@ msgid ""
 "  - At the end of the procedure, you should have received a \"ONSS Expeditor Number\", you may\n"
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 msgstr ""
+"\n"
+"Belgian palkanlaskentasäännöt.\n"
+"======================\n"
+"\n"
+"    * Työntekijän tiedot\n"
+"    * Työntekijöiden sopimukset\n"
+"    * Passipohjainen sopimus\n"
+"    * Korvaukset/vähennykset\n"
+"    * Mahdollistaa perus-/brutto-/nettopalkan määrittelyn\n"
+"    * Työntekijän palkkatodistus\n"
+"    * Kuukausittainen palkkarekisteri\n"
+"    * Integroitu lomien hallintaan\n"
+"    * Palkka Maj, ONSS, lähdevero, lapsilisä, ...\n"
+"\n"
+"Automaattinen DmfA allekirjoitus\n"
+"========================\n"
+"\n"
+"Edellytykset:\n"
+"--------------\n"
+"\n"
+"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen varmenteen, jonka toimittaa Global\n"
+"  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Luo SSL-sertifikaatistasi varmenteetiedostot (.pfx-tiedosto), joita tarvitaan luomaan\n"
+"  teknisen käyttäjän (.cer-tiedosto) ja etätunnistautumiseen ONSS-tiedostoon (.pem). UNIX-järjestelmässä\n"
+"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts -nocerts\n"
+"\n"
+"- Ennen kuin voit käyttää sosiaaliturvan REST-verkkopalvelua, sinun on luotava tili\n"
+"  itsellesi tai asiakkaallesi ja määrittää tietoturva. (Koko menettely on\n"
+"  saatavilla osoitteessa https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Luo tekninen käyttäjä + Aktivoi SFTP-kanava: Asiakkaasi on nyt luotava tekninen käyttäjä käyttöoikeuksien hallinnassa\n"
+"    verkkopalvelussa. Seuraa tätä menettelyä: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Konfiguroi SFTP-asiakasohjelma: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Menettelyn päätteeksi sinun pitäisi saada \"ONSS Expeditor Number\"\n"
+"    koodata palkka-asetuksissa .pem-tiedoston ja mahdollisen salasanan kanssa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -2929,6 +3092,24 @@ msgid ""
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 msgstr ""
+"\n"
+"Belgian rekisteröity kassa\n"
+"================================\n"
+"\n"
+"Tämä moduuli tekee Point Of Sale -moduulista sertifioidun belgialaisen kassakoneen.\n"
+"\n"
+"Lisätietoja:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Oikeudellinen\n"
+"-----\n"
+"**Pos_blackbox_be-lähteiden käyttö on sertifioitu vain odoo.com SaaS-alustalla\n"
+"version 17.0 osalta** Ota yhteyttä Odoo SA:han ennen pos_blackbox_be-moduulin asentamista.\n"
+"\n"
+"Pos_blackbox_be-moduulista voidaan tarjota peitelty ja sertifioitu versio osoitteessa\n"
+"pyyntöjä varten paikan päällä tapahtuville asennuksille.\n"
+"Odoo SA ei ole sertifioinut ja tukenut muokattua versiota.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -2936,6 +3117,8 @@ msgid ""
 "\n"
 "Bill timesheets logged on helpdesk tickets.\n"
 msgstr ""
+"\n"
+"Laskuta helpdesk-tukipyyntöihin kirjatut työtunnit.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2946,6 +3129,11 @@ msgid ""
 "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
 "\n"
 msgstr ""
+"\n"
+"Bolivian kirjanpitokaavio ja verotuksen lokalisointi.\n"
+"\n"
+"Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -2953,6 +3141,8 @@ msgid ""
 "\n"
 "Bridge between HR and Livechat."
 msgstr ""
+"\n"
+"Yhdysmoduuli HR:n ja Livechatin välillä."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -2960,6 +3150,8 @@ msgid ""
 "\n"
 "Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"Yhdysmoduuli HR:n ja ylläpidon välillä."
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_sale
@@ -2967,6 +3159,8 @@ msgid ""
 "\n"
 "Bridge between Helpdesk and Industry FSM Sale\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli Helpdeskin ja teollisuuden FSM-myynnin välille\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_rating
@@ -2975,6 +3169,9 @@ msgid ""
 "Bridge module adding rating capabilities on portal. It includes notably\n"
 "inclusion of rating directly within the customer portal discuss widget.\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli, joka lisää luokitusominaisuuksia portaaliin. Sisältää erityisesti\n"
+"luokituksen sisällyttäminen suoraan asiakasportaalin keskusteluvideoon.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_emv
@@ -2982,6 +3179,8 @@ msgid ""
 "\n"
 "Bridge module addings support for EMV Merchant-Presented QR-code generation for Payment System.\n"
 msgstr ""
+"\n"
+"Yhdysmoduulin lisäykset tukevat EMV Merchant-Presented QR-koodin luomista maksujärjestelmää varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_quality
@@ -2989,6 +3188,8 @@ msgid ""
 "\n"
 "Bridge module between MRP subcontracting and Quality\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli valmistuksen alihankinnan ja laadun välillä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_repair
@@ -2996,6 +3197,8 @@ msgid ""
 "\n"
 "Bridge module between MRP subcontracting and Repair\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli valmistuksen alihankinnan ja korjauksen välillä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_sms
@@ -3003,6 +3206,8 @@ msgid ""
 "\n"
 "Bridge module between belgian accounting and SMS\n"
 msgstr ""
+"\n"
+"Belgian kirjanpidon ja tekstiviestien välinen yhdysmoduuli\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
@@ -3010,6 +3215,8 @@ msgid ""
 "\n"
 "Bridge module between purchase and intrastat.\n"
 msgstr ""
+"\n"
+"YHhdysmoduuli oston ja intrastatin välillä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -3017,6 +3224,8 @@ msgid ""
 "\n"
 "Bridge module between sale and intrastat.\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli myynnin ja intrastatin välillä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_account
@@ -3027,6 +3236,11 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli kirjanpito- ja asiakirjasovellusten välillä. Mahdollistaa\n"
+"laskujen luomisen Asiakirjat-moduulista, ja se lisää\n"
+"painikkeen kirjanpidon raportteihin, jonka avulla raportti voidaan tallentaa kirjanpidon\n"
+"Asiakirjat-sovellukseen halutussa muodossa (halutuissa muodoissa).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -3038,6 +3252,12 @@ msgid ""
 "Display a preview of the last chatter attachment in the form view for large\n"
 "screen devices.\n"
 msgstr ""
+"\n"
+"Sähköpostin ja yrityksen yhdysmoduuli\n"
+"=====================================\n"
+"\n"
+"Näytä viimeisimmän chatter-liitteen esikatselu lomakkeen näkymässä suurten\n"
+"näytön laitteille.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise
@@ -3045,6 +3265,8 @@ msgid ""
 "\n"
 "Bridge module for project and enterprise\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli projektin ja enterprise-toimintojen välille\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise_hr
@@ -3052,6 +3274,8 @@ msgid ""
 "\n"
 "Bridge module for project_enterprise and hr\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli Odoon maksullisen enterprise-version ja HR:n välille\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise_hr_contract
@@ -3059,6 +3283,8 @@ msgid ""
 "\n"
 "Bridge module for project_enterprise and hr_contract\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli Odoon maksullisen enterprise-projektimoduulin ja HR:n sopimusmoduulin välille\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
@@ -3068,6 +3294,10 @@ msgid ""
 "- exported goods (COMEX)\n"
 "- extended address fields\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli toimitusoppaan laajentamiseen (Complemento XML Carta de Porte)\n"
+"- viedyt tavarat (COMEX)\n"
+"- laajennetut osoitekentät\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -3079,6 +3309,12 @@ msgid ""
 "This module allows to automatically log timesheets when employees are\n"
 "on leaves. Project and task can be configured company-wide.\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli lehtien integroimiseksi työtuntilistoihin\n"
+"================================================\n"
+"\n"
+"Tämän moduulin avulla voidaan automaattisesti kirjata työaikalistoja, kun työntekijät ovat\n"
+"lomalla. Projekti ja tehtävä voidaan määrittää koko yrityksen laajuisesti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_product_configurator
@@ -3086,6 +3322,8 @@ msgid ""
 "\n"
 "Bridge module to make the website e-commerce compatible with the product configurator\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli, joka tekee verkkosivuston verkkokaupasta yhteensopivan tuotekonfiguraattorin kanssa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -3094,6 +3332,9 @@ msgid ""
 "Bridge to add contract calendar on automation rules\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Yhdysmoduuli sopimuskalenterin lisääminen automaatiosääntöihin\n"
+"===================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_cash_basis
@@ -3102,6 +3343,9 @@ msgid ""
 "Cash Basis for Accounting Reports\n"
 "=================================\n"
 msgstr ""
+"\n"
+"Kassaperusteinen kirjanpito\n"
+"=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -3112,6 +3356,11 @@ msgid ""
 "\n"
 "This module adds certification to resume for employees.\n"
 msgstr ""
+"\n"
+"Sertifiointi ja HR-taidot\n"
+"===============================\n"
+"\n"
+"Tämä moduuli lisää sertifioinnin työntekijöiden ansioluetteloon.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg
@@ -3119,6 +3368,8 @@ msgid ""
 "\n"
 "Chart accounting and taxes for Bulgaria\n"
 msgstr ""
+"\n"
+"Bulgarian kirjanpidon ja verojen kaavio\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -3195,6 +3446,16 @@ msgid ""
 "author is Allegro IT (visit for more information https://www.allegro.lv)\n"
 "co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 msgstr ""
+"\n"
+"Tilikarttamalli Latvian kirjanpitoa varten.\n"
+"Tämä moduuli sisältää myös:\n"
+"* Veroryhmät,\n"
+"* Yleisimmät latvialaiset verot,\n"
+"* Verotukselliset kannat,\n"
+"* Latvian pankkiluettelo.\n"
+"\n"
+"kirjoittaja on Allegro IT (lisätietoja osoitteessa https://www.allegro.lv)\n"
+"toinen kirjoittaja on Chick.Farm (lisätietoja osoitteesta https://www.myacc.cloud)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -3210,6 +3471,16 @@ msgid ""
 "* Fiscal positions.\n"
 "* Account Tags.\n"
 msgstr ""
+"\n"
+"Tilikarttamalli Liettuan kirjanpitoa varten.\n"
+"\n"
+"Tämä moduuli sisältää myös:\n"
+"\n"
+"* Luettelo käytettävissä olevista pankeista Liettuassa.\n"
+"* Veroryhmät.\n"
+"* Yleisimmät Liettuan verot.\n"
+"* Verotusasemat.\n"
+"* Tilin tunnisteet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3220,6 +3491,11 @@ msgid ""
 "\n"
 "Thai accounting chart and localization.\n"
 msgstr ""
+"\n"
+"Thaimaan tilikartta.\n"
+"===============================\n"
+"\n"
+"Thaimaan tilikartta ja lokalisointi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
@@ -3227,6 +3503,8 @@ msgid ""
 "\n"
 "Chart of accounts and taxes for Slovenia.\n"
 msgstr ""
+"\n"
+"Slovenian tilikartta ja verot.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -3244,6 +3522,18 @@ msgid ""
 "Everything is in English with Spanish translation. Further translations are welcome,\n"
 "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
 msgstr ""
+"\n"
+"Costa Rican tilikartta.\n"
+"=================================\n"
+"\n"
+"Sisältää:\n"
+"---------\n"
+"    * account.account.template\n"
+"    * account.tax.template\n"
+"    * account.chart.template\n"
+"\n"
+"Kaikki on englanniksi ja espanjankielinen käännös. Lisäkäännökset ovat tervetulleita,\n"
+"osoitteessa http://translations.launchpad.net/openerp-costa-rica.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -3252,6 +3542,9 @@ msgid ""
 "Chilean accounting chart and tax localization.\n"
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
 msgstr ""
+"\n"
+"Chilen kirjanpitokaavio ja verojen lokalisointi.\n"
+"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -3262,6 +3555,11 @@ msgid ""
 "\n"
 "In your project plan, you can compare your timesheets and your forecast to better schedule your resources.\n"
 msgstr ""
+"\n"
+"Vertaile työaikatauluja ja ennusteita projekteistasi.\n"
+"==================================================\n"
+"\n"
+"Projektisuunnitelmassasi voit verrata työaikatauluja ja ennustetta, jotta voit ajoittaa resurssisi paremmin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast
@@ -3273,6 +3571,12 @@ msgid ""
 "Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
+"\n"
+"Vertaile työaikatauluja ja suunnitelmia\n"
+"================================\n"
+"\n"
+"Suunnittele paremmin tulevia aikataulujasi ottamalla huomioon vanhoihin suunnitelmiin tehokkaasti käytetty aika\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3280,6 +3584,8 @@ msgid ""
 "\n"
 "Computes the sales tax automatically using TaxCloud and the customer's address in United States.\n"
 msgstr ""
+"\n"
+"Laskee myyntiveron automaattisesti käyttäen TaxCloudia ja asiakkaan osoitetta Yhdysvalloissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -3288,6 +3594,9 @@ msgid ""
 "Configure IoT devices to be used in certain \n"
 "steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"IoT-laitteiden määrittäminen käytettäväksi tietyissä\n"
+"toimenpiteisiin, kuvien ottamiseen, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -3295,6 +3604,8 @@ msgid ""
 "\n"
 "Contains advanced features for CRM such as new views\n"
 msgstr ""
+"\n"
+"Sisältää CRM:n lisäominaisuuksia, kuten uusia näkymiä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account_enterprise
@@ -3302,6 +3613,8 @@ msgid ""
 "\n"
 "Contains the enterprise views for Stock account\n"
 msgstr ""
+"\n"
+"Sisältää varastotilin yritysnäkymät\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_enterprise
@@ -3309,6 +3622,8 @@ msgid ""
 "\n"
 "Contains the enterprise views for Stock management\n"
 msgstr ""
+"\n"
+"Sisältää varastonhallinnan yritysnäkymät\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_presence
@@ -3324,6 +3639,16 @@ msgid ""
 "\n"
 "Allows to contact directly the employee in case of unjustified absence.\n"
 msgstr ""
+"\n"
+"Valvo työntekijöiden läsnäoloa\n"
+"==========================\n"
+"\n"
+"Perustuu:\n"
+"    * IP-osoite\n"
+"    * Käyttäjän istunto\n"
+"    * Lähetetyt sähköpostit\n"
+"\n"
+"Mahdollistaa yhteydenoton suoraan työntekijään, jos työntekijä on perusteettomasti poissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_helpdesk
@@ -3332,6 +3657,9 @@ msgid ""
 "Convert business inquiries that have ended up in the Helpdesk pipeline by mistake,\n"
 "or generate a ticket from a business inquiry\n"
 msgstr ""
+"\n"
+"Muunna yrityskyselyt, jotka ovat vahingossa päätyneet Helpdesk-putkeen,\n"
+"tai luo tukipyyntö liiketoimintatiedustelusta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_attendance
@@ -3339,6 +3667,8 @@ msgid ""
 "\n"
 "Convert employee's extra hours to leave allocations.\n"
 msgstr ""
+"\n"
+"Muunna työntekijän lisätunnit lomamäärärahoiksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -3346,6 +3676,8 @@ msgid ""
 "\n"
 "Convert helpdesk tickets to field service tasks.\n"
 msgstr ""
+"\n"
+"Muunna helpdesk-tukipyynnöt kenttähuollon tehtäviksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_unspsc
@@ -3354,6 +3686,9 @@ msgid ""
 "Countries like Colombia, Peru, Mexico, Denmark need to be able to use the\n"
 "UNSPSC code for their products and uoms.\n"
 msgstr ""
+"\n"
+"Kolumbian, Perun, Meksikon ja Tanskan kaltaisten maiden on pystyttävä käyttämään\n"
+"UNSPSC-koodia tuotteilleen ja mittayksiköilleen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_account
@@ -3361,6 +3696,8 @@ msgid ""
 "\n"
 "Create Credit Notes from Helpdesk tickets\n"
 msgstr ""
+"\n"
+"Luo hyvityksiä Helpdesk-tukipyyntöjen perusteella\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3399,6 +3736,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Raporttien luominen kenttähuoltoa varten\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_sale
@@ -3406,6 +3747,8 @@ msgid ""
 "\n"
 "Create Sales order with timesheets and products from tasks\n"
 msgstr ""
+"\n"
+"Luo myyntitilaus, jossa on työaikatauluja ja tuotteita tehtävistä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -3420,6 +3763,15 @@ msgid ""
 "answers of question and according to that survey is done. Partners are also\n"
 "sent mails with personal token for the invitation of the survey.\n"
 msgstr ""
+"\n"
+"Luo kauniita kyselyitä ja visualisoi vastaukset\n"
+"==============================================\n"
+"\n"
+"Riippuu eri käyttäjien vastauksista tai arvioista joihinkin kysymyksiin. \n"
+"Kyselyssä voi olla useita sivuja. Kukin sivu voi sisältää useita kysymyksiä ja\n"
+"kullakin kysymyksellä voi olla useita vastauksia. Eri käyttäjät voivat antaa erilaisia\n"
+"vastauksia kysymykseen, ja sen mukaan kysely tehdään. Yhteistyökumppanit ovat myös\n"
+"lähetetään sähköpostia, jossa on henkilökohtainen tunniste kyselyyn kutsumista varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_booth
@@ -3427,6 +3779,8 @@ msgid ""
 "\n"
 "Create booths for your favorite event.\n"
 msgstr ""
+"\n"
+"Luo näytteilleasettajien esittelytiloja suosikkitapahtumaasi varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_loyalty
@@ -3436,6 +3790,10 @@ msgid ""
 "\n"
 "Coupon & promotion programs can be edited in the Catalog menu of the Website app.\n"
 msgstr ""
+"\n"
+"Luo kuponkeja, kampanjakoodeja, lahjakortteja ja kanta-asiakasohjelmia myynnin lisäämiseksi (ilmaiset tuotteet, alennukset jne.). Ostajat voivat käyttää niitä verkkokaupan kassalla.\n"
+"\n"
+"Kuponki- ja kampanjaohjelmia voi muokata verkkosivustosovelluksen Luettelo-valikossa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -3443,6 +3801,8 @@ msgid ""
 "\n"
 "Create customizable quality worksheet for workorder.\n"
 msgstr ""
+"\n"
+"Luo muokattavissa oleva laatutaulukko työmääräystä varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_worksheet
@@ -3452,6 +3812,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Luo muokattavissa oleva laskentataulukko\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control_worksheet
@@ -3459,6 +3823,8 @@ msgid ""
 "\n"
 "Create customizable worksheet for Quality Control.\n"
 msgstr ""
+"\n"
+"Luo räätälöitävissä oleva työarkki laadunvalvontaa varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance_worksheet
@@ -3468,6 +3834,10 @@ msgid ""
 "=======================================================\n"
 "\n"
 msgstr ""
+"\n"
+"Luo muokattavia työarkkimalleja ylläpitoa varten\n"
+"=======================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_sale
@@ -3509,6 +3879,13 @@ msgid ""
 "https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
 "https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 msgstr ""
+"\n"
+"Kroatian tilikartan päivitys (RRIF ver.2021)\n"
+"\n"
+"Lähteet:\n"
+"https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_kuna
@@ -3583,6 +3960,16 @@ msgid ""
 "\n"
 "- Základní fiskální pozice pro českou legislativu\n"
 msgstr ""
+"\n"
+"Tšekin kirjanpitokaavio ja lokalisointi.  Tilikartan kanssa verojen ja verotuksen peruskantojen kanssa.\n"
+"\n"
+"Tento modul definuje:\n"
+"\n"
+"- Českou účetní osnovu za rok 2020\n"
+"\n"
+"- Základní sazby pro DPH z prodeje a nákupu\n"
+"\n"
+"- Základní fiskální pozice pro českou legislativu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -3590,6 +3977,8 @@ msgid ""
 "\n"
 "Design gorgeous mails\n"
 msgstr ""
+"\n"
+"Suunnittele upeita sähköposteja\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -3600,6 +3989,11 @@ msgid ""
 "\n"
 "German accounting chart and localization.\n"
 msgstr ""
+"\n"
+"Tämä moduuli sisältää einen deutschen Kontenrahmen basierend auf dem SKR03.\n"
+"==============================================================================\n"
+"\n"
+"Saksankielinen tilikartta ja lokalisointi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -3607,6 +4001,8 @@ msgid ""
 "\n"
 "Disallowed Expenses Data for Belgium\n"
 msgstr ""
+"\n"
+"Belgiaa koskevat tiedot hylätyistä menoista\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_account_disallowed_expenses_fleet
@@ -3614,6 +4010,8 @@ msgid ""
 "\n"
 "Disallowed Expenses Fleet Data for Belgium\n"
 msgstr ""
+"\n"
+"Hyväksymättömät menot Belgian laivastoa koskevat tiedot\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_report
@@ -3621,6 +4019,8 @@ msgid ""
 "\n"
 "Display the worksheet template when planning an Intervention from a ticket\n"
 msgstr ""
+"\n"
+"Näytä laskentataulukkomalli, kun suunnittelet toimenpidettä tukipyynnöstä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth
@@ -3628,6 +4028,8 @@ msgid ""
 "\n"
 "Display your booths on your website for the users to register.\n"
 msgstr ""
+"\n"
+"Näytä osastosi verkkosivustollasi, jotta käyttäjät voivat rekisteröityä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_stock_ddt
@@ -3650,6 +4052,23 @@ msgid ""
 "delivery, the system will automatically calculate the linked DDTs for every\n"
 "invoice line to export in the FatturaPA XML.\n"
 msgstr ""
+"\n"
+"Kuljetusasiakirja (DDT)\n"
+"\n"
+"Aina kun tavaroita siirretään A:n ja B:n välillä, DDT:n tarkoituksena on\n"
+"oikeutuksena esimerkiksi silloin, kun poliisi pysäyttää sinut.\n"
+"\n"
+"Kun haluat tulostaa italialaisen yrityksen lähtevän poiminnan,\n"
+"se tulostaa sinulle sen sijaan DDT:n.  Se on kuin toimitus\n"
+"mutta se sisältää myös tuotteen arvon,\n"
+"kuljetussyy, rahdinkuljettaja, ... jotka tekevät siitä DDT:n.\n"
+"\n"
+"Käytämme myös erillistä järjestystä DDT:tä varten, koska numeron ei pitäisi olla..\n"
+"ei saa olla aukkoja, ja sitä on sovellettava vasta tavaran lähetyshetkellä.\n"
+"\n"
+"Kun laskut liittyvät myyntitilaukseensa ja myyntitilaukseen, jossa on mukana myös\n"
+"toimitukseen, järjestelmä laskee automaattisesti linkitetyt DDT-numerot jokaiselle\n"
+"laskuriville FatturaPA XML:ään vietäväksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_hr_payroll
@@ -3666,6 +4085,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Alankomaiden palkanlaskentasäännöt.\n"
+"=========================\n"
+"\n"
+"    * Työntekijän tiedot\n"
+"    * Työntekijäsopimukset\n"
+"    * Passipohjainen sopimus\n"
+"    * Korvaukset/vähennykset\n"
+"    * Mahdollistaa perus-/brutto-/nettopalkan määrittelyn\n"
+"    * Työntekijän palkkatodistus\n"
+"    * Integroitu lomien hallintaan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -3693,6 +4123,28 @@ msgid ""
 "the replaced invoice and the new one and you can reset an invoice\n"
 "you have not already sent to the government to reuse its number.\n"
 msgstr ""
+"\n"
+"E-Faktur Menu(Indonesia)\n"
+"Formaatti: 010.000-16.00000001\n"
+"* 2 (dua) digit pertama adalah Kode Transaksi\n"
+"* 1 (satu) digit berikutnya adalah Kode Status\n"
+"* 3 (tiga) numeroa berikutnya adalah Kode Cabang\n"
+"* 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"Voidaan viedä asiakaslaskuja e-Fakturina,\n"
+"sinun on asetettava sinulle osoitetut numerosarjat\n"
+"kirjanpito > Asiakkaat > e-Faktur..\n"
+"\n"
+"Kun vahvistat laskun, jossa kumppanilla on tunnus PKP\n"
+"kenttä valittuna, kyseiselle laskulle määritetään veronumero.\n"
+"Sen jälkeen voit suodattaa vielä vietävät laskut kohdassa\n"
+"laskujen luettelosta ja ladata laskut valitsemalla Toiminto > Lataa e-Faktur\n"
+"csv-tiedoston ja ladata sen hallituksen sivustolle.\n"
+"\n"
+"Voit korvata jo lähetetyn laskun toisella osoittamalla\n"
+"korvatun laskun ja uuden laskun ja voit nollata laskun\n"
+"jota et ole vielä lähettänyt hallitukselle, jotta voit käyttää sen numeron uudelleen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -3700,6 +4152,8 @@ msgid ""
 "\n"
 "E-invoice implementation\n"
 msgstr ""
+"\n"
+"Sähköisen laskutuksen käyttöönotto\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_edi
@@ -3707,6 +4161,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Romania\n"
 msgstr ""
+"\n"
+"Sähköisen laskutuksen käyttöönotto Romaniassa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_oioubl
@@ -3714,6 +4170,8 @@ msgid ""
 "\n"
 "E-invoice implementation for the Denmark\n"
 msgstr ""
+"\n"
+"Sähköisen laskutuksen käyttöönotto Tanskassa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_edi
@@ -3721,6 +4179,8 @@ msgid ""
 "\n"
 "E-invoice implementation for the Kingdom of Saudi Arabia\n"
 msgstr ""
+"\n"
+"Sähköisen laskutuksen käyttöönotto Saudi-Arabian kuningaskunnassa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -3731,6 +4191,11 @@ msgid ""
 "\n"
 "This module add completed courses to resume for employees.\n"
 msgstr ""
+"\n"
+"Verkko-oppiminen ja HR-taidot\n"
+"============================\n"
+"\n"
+"Tämä moduuli lisää suoritetut kurssit työntekijöiden ansioluetteloon.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi
@@ -3748,6 +4213,18 @@ msgid ""
 " In order to see the barcode on the invoice, you need the pdf417gen library.\n"
 "\n"
 msgstr ""
+"\n"
+"EDI Chilen lokalisointi\n"
+"========================\n"
+"Tämän koodin avulla voidaan luoda DTE-asiakirja chileläistä laskutusta varten.\n"
+"- DTE (sähköinen verollinen asiakirja) XML-muodossa\n"
+"- Suora viestintä SII:n (Servicio de Impuestos Internos) kanssa laskujen ja muiden myyntiin liittyvien veroasiakirjojen lähettämiseksi.\n"
+"- Yhteydenpito asiakkaiden kanssa myynnin DTE-asiakirjojen lähettämiseksi.\n"
+"- Yhteydenpito toimittajien (myyjien) kanssa DTE-lomakkeiden vastaanottamiseksi heiltä.\n"
+"- Suora yhteydenpito SII:n kanssa, jossa ilmoitetaan myyjän laskujen tai muiden DTE:iden hyväksymisestä tai hylkäämisestä.\n"
+"\n"
+" Laskun viivakoodin näyttämiseksi tarvitset pdf417gen-kirjaston.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -3761,6 +4238,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"EDI Ecuadorin lokalisointi\n"
+"===========================\n"
+"Lisää sähköisiä asiakirjoja XML:llä, RIDE:llä, sähköisellä allekirjoituksella ja suoralla yhteydellä veroviranomaiseen SRI:hen,\n"
+"\n"
+"Tuettuja asiakirjoja ovat laskut, hyvityslaskut, veloituslaskut, oston selvitykset ja ennakonpidätykset\n"
+"\n"
+"Sisältää automaatiot, joilla voidaan helposti ennakoida kuhunkin ostolaskuun sovellettava lähdevero\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3772,6 +4257,12 @@ msgid ""
 "\n"
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 msgstr ""
+"\n"
+"EDI Meksikon lokalisointi\n"
+"========================\n"
+"Salli käyttäjän luoda EDI-asiakirja Meksikon laskutusta varten.\n"
+"\n"
+"Tämä moduuli mahdollistaa EDI-asiakirjojen luomisen ja yhteydenpidon meksikolaisten sertifiointitoimittajien (PAC) kanssa niiden allekirjoittamiseksi/peruuttamiseksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi
@@ -3790,6 +4281,19 @@ msgid ""
 "\n"
 "We support sending and cancelling of customer invoices.\n"
 msgstr ""
+"\n"
+"EDI Peru Lokalisointi\n"
+"======================\n"
+"Salli käyttäjän luoda EDI-asiakirja Perun laskutusta varten.\n"
+"\n"
+"Oletusarvoisesti järjestelmä käyttää IAP-välityspalvelinta.  Tästä on se etu, että\n"
+"voit käyttää järjestelmää heti, kun valitset Digiflow'n OSE:ksi\n"
+"sUNAT-portaalissa.\n"
+"\n"
+"Voit myös lähettää sen suoraan Digiflow'lle, jos olet ostanut tilin heiltä\n"
+"ja jopa SUNATille hätätilanteessa.\n"
+"\n"
+"Tuemme asiakaslaskujen lähettämistä ja peruuttamista.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -3832,6 +4336,22 @@ msgid ""
 "Council Implementing Regulation (EU) 2019/2026\n"
 "\n"
 msgstr ""
+"\n"
+"EU:n yhden luukun järjestelmä (OSS) arvonlisävero\n"
+"==========================\n"
+"\n"
+"Heinäkuun 1. päivästä 2021 alkaen EU:n yritysten, jotka myyvät EU:n sisällä yli 10 000 euron arvosta tavaroita toisessa EU:n jäsenvaltiossa sijaitseville ostajille, on rekisteröidyttävä ja maksettava arvonlisävero ostajan jäsenvaltiossa.\n"
+"Tämän uuden EU:n laajuisen kynnysarvon alapuolella voit edelleen soveltaa rajat ylittävään myyntiin kotimaan arvonlisäverosääntöjä. Tämän EU-direktiivin soveltamisen yksinkertaistamiseksi yhden luukun järjestelmässä (One Stop Shop, OSS) yritykset voivat tehdä ainutlaatuisen veroilmoituksen.\n"
+"\n"
+"Tämä moduuli mahdollistaa sen auttamalla vaadittujen EU:n veropositioiden ja verojen luomisessa, jotta vaaditut verot voidaan soveltaa ja kirjata automaattisesti.\n"
+"\n"
+"Sinun tarvitsee vain tarkistaa, että ehdotettu kartoitus sopii myymillesi tuotteille ja palveluille.\n"
+"\n"
+"Viitteet\n"
+"++++++++++\n"
+"Neuvoston direktiivi (EU) 2017/2455 Neuvoston direktiivi (EU) 2019/1995\n"
+"Neuvoston täytäntöönpanoasetus (EU) 2019/2026\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_oss_reports
@@ -3843,6 +4363,12 @@ msgid ""
 "Provides Reports for OSS with export files for available EU countries.\n"
 "\n"
 msgstr ""
+"\n"
+"EU:n keskitetyn palvelupisteen (OSS) ALV-raportit\n"
+"=============================================================================================\n"
+"\n"
+"Tarjoaa raportteja OSS:ää varten sekä vientitiedostoja käytettävissä olevista EU-maista.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3850,6 +4376,8 @@ msgid ""
 "\n"
 "Easily access your documents from your employee profile.\n"
 msgstr ""
+"\n"
+"Pääset helposti käsiksi asiakirjoihisi työntekijäprofiilissasi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -3863,6 +4391,14 @@ msgid ""
 "the transmission of said documents to various parties involved in the exchange (other company,\n"
 "governements, etc.)\n"
 msgstr ""
+"\n"
+"Sähköinen tiedonvaihto\n"
+"=======================================\n"
+"EDI on liiketoimintatietojen sähköinen vaihto standardoitua muotoa käyttäen.\n"
+"\n"
+"Tämä on perusmoduuli laskujen tuontia ja vientiä varten eri EDI-muodoissa ja\n"
+"mainittujen asiakirjojen välittämiseen vaihtoon osallistuville eri osapuolille (toinen yritys,\n"
+"viranomaiset jne.)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports
@@ -3874,6 +4410,12 @@ msgid ""
 "\n"
 "DIOT Report\n"
 msgstr ""
+"\n"
+"Sähköiset kirjanpitoraportit\n"
+"    - COA\n"
+"    - Trial Balance\n"
+"\n"
+"DIOT-raportti\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports
@@ -3885,6 +4427,12 @@ msgid ""
 "\n"
 "P&L + balance Sheet\n"
 msgstr ""
+"\n"
+"Sähköiset kirjanpitoraportit\n"
+"    - Myyntiraportti\n"
+"    - Ostoraportti\n"
+"\n"
+"Tuloslaskelma + tase\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_ubl_cii
@@ -3908,6 +4456,24 @@ msgid ""
 "the \"Factur-X PDF/A-3\" option on the journal. This option will also validate the xml against the Factur-X and Chorus\n"
 "Pro rules and show the errors.\n"
 msgstr ""
+"\n"
+"Sähköinen laskutusmoduuli\n"
+"===========================\n"
+"\n"
+"Mahdollistaa formaattien viennin ja tuonnin: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Kun laskun PDF-tiedosto luodaan, PDF-tiedosto upotetaan xml-tiedostoon kaikkien UBL-formaattien osalta. Tämä mahdollistaa\n"
+"vastaanottaja voi hakea PDF-tiedoston vain xml-tiedoston avulla. Huomaa, että **EHF3 on täysin toteutettu UBL Bis 3:ssa** (`viittaus\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"Muodot voidaan valita laskun yhteydessä olevasta lehdestä (Lehti > Lisäasetukset).\n"
+"\n"
+"Huomaa, että E-FFF, NLCIUS ja XRechnung (UBL) ovat käytettävissä vain belgialaisille, hollantilaisille ja saksalaisille yrityksille,\n"
+"vastaavasti. UBL Bis 3 on käytettävissä vain yrityksille, joiden maa on EAS-luettelossa\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Huomaa myös, että jotta Chorus Pro tunnistaa automaattisesti \"PDF/A-3 (Factur-X)\" -formaatin, sinun on aktivoitava seuraavat tiedot\n"
+"\"Factur-X PDF/A-3\" -vaihtoehto lehdessä. Tämä vaihtoehto validoi myös xml-tiedoston Factur-X- ja Chorus Pro -muodon perusteella\n"
+"Pro -sääntöjen kanssa ja näyttää virheet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -3915,6 +4481,8 @@ msgid ""
 "\n"
 "Employee 281.10 and 281.45 forms will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Lomakkeet 281.10 ja 281.45 integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_ke_hr_payroll
@@ -3922,6 +4490,8 @@ msgid ""
 "\n"
 "Employee Tax Deduction Card forms will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Työntekijöiden verovähennyskorttilomakkeet integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_contract
@@ -3929,6 +4499,8 @@ msgid ""
 "\n"
 "Employee contracts files will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Työntekijöiden sopimustiedostot integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_hk_hr_payroll
@@ -3936,6 +4508,8 @@ msgid ""
 "\n"
 "Employee ir56 forms will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Työntekijän ir56-lomakkeet integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_payroll
@@ -3943,6 +4517,8 @@ msgid ""
 "\n"
 "Employee payslips will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Työntekijöiden palkkalaskelmat integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_ch_hr_payroll
@@ -3950,6 +4526,8 @@ msgid ""
 "\n"
 "Employees' individual account forms are automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Työntekijöiden yksilölliset tililomakkeet integroidaan automaattisesti asiakirjasovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_keypay
@@ -3958,6 +4536,9 @@ msgid ""
 "Employment Hero Payroll Integration\n"
 "This Module will synchronise all payrun journals from Employment Hero to Odoo.\n"
 msgstr ""
+"\n"
+"Employment Hero Palkanlaskennan integrointi\n"
+"Tämä moduuli synkronoi kaikki Employment Heron palkkapäiväkirjat Odoon.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -3974,6 +4555,8 @@ msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
+"\n"
+"Ota ohjattu ALV:n asetustoiminto käyttöön veroilmoituksen päiväkirjamerkintää kirjattaessa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -3982,6 +4565,9 @@ msgid ""
 "Enrich lead created automatically through an appointment with gathered website visitor information such as language,\n"
 "country and detailed information like pages browsed by the lead (through a link to website visitor).\n"
 msgstr ""
+"\n"
+"Rikastuta automaattisesti tapaamisen kautta luotuja johtolankoja verkkosivuston kävijän kerätyillä tiedoilla, kuten kielellä,\n"
+"maa ja yksityiskohtaiset tiedot, kuten sivut, joita liidit ovat selanneet (linkin kautta verkkosivuvierailijaan).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -3989,6 +4575,8 @@ msgid ""
 "\n"
 "Enterprise digest data\n"
 msgstr ""
+"\n"
+"Yrityksen digest-tiedot\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_exports
@@ -3999,6 +4587,11 @@ msgid ""
 "We should also consider that there may be users without the inventory application installed and keep a less\n"
 "complex logic.\n"
 msgstr ""
+"\n"
+"Vaikka pakettien määrä on ilmeisesti vain varastosovelluksen luontainen ominaisuus, tarvitsemme tätä varten kentän\n"
+"laskussa, koska tämä tieto voi riippua myös DUS-ilmoituksesta.\n"
+"Meidän on myös otettava huomioon, että voi olla käyttäjiä, joilla ei ole varastosovellusta asennettuna ja jotka pitävät vähemmän\n"
+"monimutkaista logiikkaa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
@@ -4006,6 +4599,8 @@ msgid ""
 "\n"
 "Expense documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Kuluasiakirjat integroidaan automaattisesti Asiakirjat-sovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_payment_nacha
@@ -4013,6 +4608,8 @@ msgid ""
 "\n"
 "Export payments as NACHA files for use in the United States.\n"
 msgstr ""
+"\n"
+"Vie maksut NACHA-tiedostoina käytettäväksi Yhdysvalloissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -4025,6 +4622,13 @@ msgid ""
 "\n"
 "It is primarily used for EDIs that might need a special city code.\n"
 msgstr ""
+"\n"
+"Laajennettujen osoitteiden hallinta\n"
+"=============================\n"
+"\n"
+"Tämä moduuli tarjoaa mahdollisuuden valita kaupunki luettelosta (tietyissä maissa).\n"
+"\n"
+"Käytetään ensisijaisesti EDI-järjestelmissä, joissa saatetaan tarvita erityistä kaupunkikoodia.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account_followup
@@ -4032,6 +4636,8 @@ msgid ""
 "\n"
 "Extension to send follow-up documents by post\n"
 msgstr ""
+"\n"
+"Laajennus seuranta-asiakirjojen lähettämiselle postitse\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm
@@ -4050,6 +4656,19 @@ msgid ""
 "- add products on tasks\n"
 "\n"
 msgstr ""
+"\n"
+"Kenttäpalvelujen hallinta\n"
+"=========================\n"
+"Tämä moduuli lisää nykyaikaiseen kenttäpalvelujen hallintaan tarvittavat ominaisuudet.\n"
+"Asentaa seuraavat sovellukset:\n"
+"- Projekti\n"
+"- Työaikakirjanpidon\n"
+"\n"
+"Lisää seuraavat vaihtoehdot:\n"
+"- raportteja tehtävistä\n"
+"- FSM-sovellus, jossa on mukautettu näkymä paikan päällä työskentelevälle työntekijälle\n"
+"- tuotteiden lisääminen tehtäviin\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_accountant
@@ -4057,6 +4676,8 @@ msgid ""
 "\n"
 "Filters the stock lines out of the reconciliation widget\n"
 msgstr ""
+"\n"
+"Suodattaa varastorivit pois täsmäytyswidgetistä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -4080,6 +4701,24 @@ msgid ""
 "    - The payslip.line with appears_in_payslip = False should appears in the\n"
 "      payslip interface, but not in the payslip report\n"
 msgstr ""
+"\n"
+"Ranskan palkanlaskentasäännöt.\n"
+"=====================\n"
+"\n"
+"    - Hr_payrollin konfigurointi ranskalaista lokalisointia varten\n"
+"    - Kaikki ranskalaisen palkkalaskelman tärkeimmät maksusäännöt, cadre- ja non-cadre-luokissa\n"
+"    - Uusi palkkatietoraportti\n"
+"\n"
+"TODO:\n"
+"-----\n"
+"    - Integrointi lomamoduulin kanssa vähennyksiä ja korvauksia varten\n"
+"    - Integrointi hr_payroll_account-moduulin kanssa automaattista account_move_linea varten\n"
+"      luominen palkkatodistuksesta\n"
+"    - Jatketaan maksuosuuden integrointia. Ainoastaan tärkeimmät maksut ovat\n"
+"      tällä hetkellä toteutettu\n"
+"    - Raportin uudistaminen webkit-käyttöjärjestelmän mukaisesti\n"
+"    - Payslip.line -rivin, jossa appears_in_payslip = False, pitäisi näkyä seuraavassa raportissa\n"
+"      payslip-käyttöliittymässä, mutta ei payslip-raportissa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -4088,6 +4727,9 @@ msgid ""
 "Full Traceability Report Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Täydellinen jäljitettävyysraportti Demo Data\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_edi
@@ -4161,6 +4803,74 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Toiminnallinen\n"
+"----------\n"
+"\n"
+"Pystyt luomaan Odoo-ohjelmassa päiväkirjoja sähköisten asiakaslaskujen luomiseksi ja niiden raportoimiseksi AFIP:lle (verkkopalvelujen kautta).\n"
+"Käytettävissä olevat vaihtoehdot ovat:\n"
+"\n"
+"    * Sähköinen lasku - verkkopalvelu\n"
+"    * Vienti tositteen - Web Service\n"
+"    * Sähköinen verovelkakirja - verkkopalvelu\n"
+"\n"
+"Sähköisissä päiväkirjoissa, jos vahvistat laskun, tämä vahvistetaan sekä Odoo:ssa että AFIP:ssä. Tämä validointi on\n"
+"tehdään heti, kun saamme AFIP:stä tilan \"hyväksytty/hyväksytty huomautuksella/hylätty\". Jos laskulla on\n"
+"aFIP on hylännyt, sitä ei lähetetä järjestelmään, vaan näytetään ponnahdusviesti, jossa on sekä virheen yksityiskohdat (hylkäyssyyt) että virheilmoitus\n"
+"saamamme tiedot ja VINKKI siitä, mistä ongelma voi johtua.\n"
+"\n"
+"Tilintarkastusta ja vianmääritystä varten olemme myös lisänneet valikon \"Consulit Invoice in AFIP\", jonka avulla voimme kuulla laskuja aiemmin\n"
+"aFIP:iin lähetetyt laskut ja viimeisen numeron, jota käytettiin tukena mahdollisten Odoon ja AFIP:n väliseen sekvenssien synkronointiin liittyvien ongelmien varalta.\n"
+"\n"
+"    HUOMAUTUS: Päiväkirjan lomakkeen näkymästä voimme pakottaa synkronoinnin Odoo-sekvenssien välillä kuhunkin asiakirjatyyppiin vuonna\n"
+"    aFIPiin rekisteröityjen viimeisten numeroiden kanssa.\n"
+"\n"
+"Myyjän laskuista olemme lisänneet toiminnallisuuden, joka voidaan määrittää kirjanpidon asetuksissa, jotta voidaan tarkistaa, että\n"
+"myyjän laskut AFIP:ssä, jotta voidaan tarkistaa, ovatko myyjän laskut todellisia (lisätietoja on asetuksen kuvauksessa).\n"
+"\n"
+"Konfigurointi:\n"
+"\n"
+"1. Mene kohtaan Kirjanpitoasetukset > Argentiinan lokalisointi\n"
+"\n"
+"    1.1. Määritä AFIP-verkkopalvelutila:\n"
+"\n"
+"    * Testausympäristö, jotta voidaan käyttää demovarmenteita, joita käytetään instanssin testaamiseen ja jotta NOT\n"
+"      todellisia laskuja AFIP:lle. on vain testausta varten. Demoinstansseille on jo valmiiksi määritetty, sinun ei tarvitse konfiguroida\n"
+"      sitä (AFIP:ssä yleisesti nimetty Homologation-ympäristöksi).\n"
+"    * Tuotantoympäristö, jotta voidaan luoda todellisia todistuksia ja laillisia laskuja AFIP:lle,\n"
+"\n"
+"    1.2. Konfiguroi AFIP-sertifikaatti: Jos olet demo-instanssissa, tämä on oletusarvoisesti asetettu. Jos\n"
+"         olet tuotantotilassa, sinun tarvitsee vain ladata AFIP-sertifikaatti\n"
+"\n"
+"    1.3. Valinnaisesti voit määrittää, haluatko pystyä tarkistamaan myyjän laskut AFIP:ssä.\n"
+"\n"
+"2. Luo myyntipäiväkirjat, jotka edustavat jokaista AFIP POS (Available in AFIP Portal), jota haluat käyttää Odoossa.\n"
+"\n"
+"    2.1. Käytä asiakirjoja -kenttä on asetettu oletusarvoisesti, älä muuta sitä\n"
+"    2.2. Aseta AFIP POS-järjestelmä yhdeksi sähköisistä.\n"
+"\n"
+"        * Sähköinen lasku - verkkopalvelu'\n"
+"        * Sähköinen verovelkakirja - verkkopalvelu\"\n"
+"        * Vientitosite - verkkopalvelu\"\n"
+"\n"
+"    2.3. Aseta AFIP POS-numero ja AFIP POS-osoite ottaen huomioon, mitä olet määrittänyt AFIP-portaalissa.\n"
+"\n"
+"    HUOMAUTUS: Voit käyttää \"Check Available AFIP POS\" -painiketta Journal's form -lomakkeessa vahvistaaksesi, mitä käytetään päiväkirjojen luomiseen.\n"
+"\n"
+"Lisätietoja Argentiinan sähköisestä laskutuksesta saat osoitteesta http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Tekninen\n"
+"---------\n"
+"\n"
+"Toteutetut verkkopalvelut ovat yleisimpiä:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (sähköinen lasku)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (sähköinen verovelkakirja)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (sähköinen vientilasku - sama kuin vientitosite)\n"
+"* wscdc - \"Constatación de Comprobantes\" (laskujen tarkastus) - \"Constatación de Comprobantes\" (laskujen tarkastus)\n"
+"\n"
+"Kehitystietoja on osoitteessa http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -4362,6 +5072,34 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Toiminnallinen\n"
+"----------\n"
+"\n"
+"Tämä moduuli lisää kirjanpito-ominaisuudet Ecuadorin lokalisointia varten, mikä\n"
+"edustavat vähimmäisvaatimuksia, jotta yritys voi toimia Ecuadorissa vaatimusten mukaisesti\n"
+"paikallisten sääntelyelinten, kuten Ecuadorin veroviranomaisen -SRI- ja ecuadorilaisen\n"
+"Super Intendencia de Compañías -Yhtiöiden valvontavirasto -Super Intendencia de Compañías-\n"
+"\n"
+"Seuraa seuraavia konfigurointivaiheita:\n"
+"1. Siirry yritykseesi ja määritä maaksi Ecuador\n"
+"2. Asenna laskutus- tai kirjanpitomoduuli, kaikki hoituu automaattisesti\n"
+"\n"
+"Kohokohdat:\n"
+"* Asennetaan automaattisesti Ecuadorin tilikartta, joka perustuu Super Intendencia de Compañíasin antamaan esimerkkiin\n"
+"* Luettelo veroista (mukaan lukien ennakonpidätykset) asennetaan myös, voit kytkeä pois ne, joita yrityksesi ei käytä\n"
+"* Verotuksellinen asema, asiakirjatyypit, luettelo paikallisista pankeista, luettelo paikallisista osavaltioista jne. asennetaan myös\n"
+"\n"
+"Tekninen\n"
+"---------\n"
+"Master Data:\n"
+"* Tilikartta, joka perustuu Super Cíasin suositukseen\n"
+"* Ecuadorin verot, verotunnisteet ja veroryhmät\n"
+"* Ecuadorin veropositiot\n"
+"* Asiakirjatyypit (Ecuadorissa on noin 41 ostoasiakirjatyyppiä)\n"
+"* Tunnistustyypit\n"
+"* Ecuadorin pankit\n"
+"* Yhteistyökumppanit: Consumidor Final, SRI, IESS ja myös arvonlisäveron perusvalidointi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -4370,6 +5108,9 @@ msgid ""
 "GCC POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"GCC POS-lokalisointi\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr
@@ -4382,6 +5123,13 @@ msgid ""
 "** GSTR-2B: matching\n"
 "** GSTR-3B: view report\n"
 msgstr ""
+"\n"
+"GST-ilmoituksen tekeminen IAP:n avulla\n"
+"================================\n"
+"\n"
+"** GSTR-1: Yhteenvetoraportin lähettäminen ja tarkastelu\n"
+"** GSTR-2B: täsmäytys\n"
+"** GSTR-3B: raportin tarkastelu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr_pos
@@ -4389,6 +5137,8 @@ msgid ""
 "\n"
 "GSTR-1 return data set as per point of sale orders\n"
 msgstr ""
+"\n"
+"GSTR-1-palautustiedot myyntipisteen tilausten mukaan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -4423,6 +5173,8 @@ msgid ""
 "\n"
 "Gantt view for Attendance\n"
 msgstr ""
+"\n"
+"Gantt-näkymä läsnäoloa varten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -4430,6 +5182,8 @@ msgid ""
 "\n"
 "Gantt view for Time Off Dashboard\n"
 msgstr ""
+"\n"
+"Gantt-näkymä Time Off Dashboardissa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_contract_gantt
@@ -4437,6 +5191,8 @@ msgid ""
 "\n"
 "Gantt view for Time Off Dashboard with Contracts\n"
 msgstr ""
+"\n"
+"Gantt-näkymä sopimuksia sisältävälle Time Off Dashboard -taululle\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -4468,6 +5224,32 @@ msgid ""
 "   * Consumidor Final Anónimo Uruguayo.\n"
 "\n"
 msgstr ""
+"\n"
+"Yleinen tilikartta.\n"
+"==========================\n"
+"\n"
+"Tämä moduuli lisää kirjanpitotoiminnot Uruguayn lokalisointia varten, mikä vastaa vähimmäiskokoonpanoa, jota yritys tarvitsee toimiakseen Uruguayssa DGI:n (Dirección General Impositiva) antamien säännösten ja ohjeiden mukaisesti.\n"
+"\n"
+"Toiminnallisuuksia ovat muun muassa seuraavat:\n"
+"\n"
+"* Uruguayn yleinen tilikartta\n"
+"* Valmiiksi määritetyt alv-verot ja veroryhmät.\n"
+"* Uruguayn oikeudelliset asiakirjatyypit.\n"
+"* Uruguayssa voimassa olevat yhteystietotyypit.\n"
+"* Uruguayn valuuttojen (UYU, UYI - Unidad Indexada Uruguaya) konfigurointi ja aktivointi.\n"
+"* Usein käytetyt oletuskontaktit on jo määritetty: DGI, Consumidor Final Uruguayo.\n"
+"\n"
+"Konfigurointi\n"
+"-------------\n"
+"\n"
+"Demo data testausta varten:\n"
+"\n"
+"* Uruguayn yritys nimeltä \"UY Company\", jossa on jo asennettu Uruguayn tilikartta, valmiiksi määritetyt verot, asiakirjatyypit ja tunnistetyypit.\n"
+"* Uruguayn yhteystiedot testausta varten:\n"
+"\n"
+"   * IEB Internacional\n"
+"   * Consumidor Final Anónimo Uruguayo.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_loyalty
@@ -4475,6 +5257,8 @@ msgid ""
 "\n"
 "Generate Coupons from Helpdesks tickets\n"
 msgstr ""
+"\n"
+"Luo kuponkeja Helpdeskin tukipyynnöistä\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -4485,6 +5269,11 @@ msgid ""
 "This module follow the implementation guidelines issued by the European Payment Council.\n"
 "For more information about the SEPA standards: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 msgstr ""
+"\n"
+"Luo SEPA-normin suosittelemat maksutoimeksiannot pain.001-sanomien avulla. Tuetut pain-versiot (maat) ovat pain.001.001.03 (yleinen), pain.001.001.03.ch.02 (Sveitsi) ja pain.001.001.001.03.de (Saksa). Luodun XML-tiedoston voi sitten ladata pankkiin.\n"
+"\n"
+"Tämä moduuli noudattaa Euroopan maksuneuvoston antamia soveltamisohjeita.\n"
+"Lisätietoja SEPA-standardeista: http://www.iso20022.org/ ja http://www.europeanpaymentscouncil.eu/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -4493,6 +5282,9 @@ msgid ""
 "Generate short links with analytics trackers (UTM) to share your pages through marketing campaigns.\n"
 "Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to analyze the efficiency of those campaigns in terms of lead generation, related revenues (sales orders), recruitment, etc.\n"
 msgstr ""
+"\n"
+"Luo lyhyitä linkkejä analytiikkaseurantalaitteilla (UTM), jotta voit jakaa sivujasi markkinointikampanjoiden kautta.\n"
+"Näitä seurantatunnisteita voidaan käyttää Google Analyticsissa napsautusten ja kävijöiden seuraamiseen tai Odoo-raporteissa näiden kampanjoiden tehokkuuden analysoimiseksi liidien tuottamisen, niihin liittyvien tulojen (myyntitilausten), rekrytoinnin jne. osalta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_project
@@ -4500,6 +5292,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module (available in Odoo Enterprise) in order to build the form.\n"
 msgstr ""
+"\n"
+"Luo tehtäviä Project-sovelluksessa verkkosivustolla julkaistusta lomakkeesta. Tämä moduuli edellyttää *Form Builder* -moduulin käyttöä (saatavilla Odoo Enterprisessa) lomakkeen rakentamiseksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -4509,6 +5303,10 @@ msgid ""
 "Based on invoices.\n"
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 msgstr ""
+"\n"
+"Luo Intrastat XML-raportin ilmoitusta varten\n"
+"Laskujen perusteella.\n"
+"Lisää Intrastat XML -raporttiin mahdollisuuden määrittää tavaroiden alkuperämaa ja kumppanin alv.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -4516,6 +5314,8 @@ msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
 msgstr ""
+"\n"
+"Luo Alankomaiden Intrastat-raportin laskuihin perustuvaa ilmoitusta varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -4528,6 +5328,13 @@ msgid ""
 "    * Payment Encoding\n"
 "    * Company Contribution Management\n"
 msgstr ""
+"\n"
+"Yleinen palkanlaskentajärjestelmä, joka on integroitu kirjanpitoon.\n"
+"==================================================\n"
+"\n"
+"    * Kulujen koodaus\n"
+"    * Maksujen koodaus\n"
+"    * Yritysmaksujen hallinta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -4537,6 +5344,10 @@ msgid ""
 "\n"
 "So this module is to get the warehouse address if the bill is created from Purchase Order\n"
 msgstr ""
+"\n"
+"Hae varaston osoite, jos lasku luodaan ostotilauksesta\n"
+"\n"
+"Tämän moduulin tarkoituksena on siis saada varaston osoite, jos lasku on luotu ostotilauksesta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -4547,6 +5358,11 @@ msgid ""
 "\n"
 "So this module is to get the warehouse address if the invoice is created from Sale Order\n"
 msgstr ""
+"\n"
+"Hae varaston osoite, jos lasku luodaan myyntitilauksesta\n"
+"Intialaisessa EDI:ssä lähetämme toimitusosoitteen tiedot, jos ne ovat saatavilla\n"
+"\n"
+"Tämän moduulin tarkoituksena on siis saada varasto-osoite, jos lasku on luotu myyntitilauksesta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -4592,6 +5408,23 @@ msgid ""
 "    - Install additional features easily using your team form view.\n"
 "\n"
 msgstr ""
+"\n"
+"Helpdesk - Tukipyyntöjen hallintasovellus\n"
+"================================\n"
+"\n"
+"Ominaisuudet:\n"
+"\n"
+"    - Käsittele tukipyyntöjä eri vaiheiden kautta niiden ratkaisemiseksi.\n"
+"    - Lisää prioriteetteja, tyyppejä, kuvauksia ja tunnisteita tukipyyntöjen hallitsemiseksi.\n"
+"    - Käytä chatteria lisätietojen välittämiseen ja pingaa työtovereita tiketeistä.\n"
+"    - Nauti mukautetun kojelaudan käytöstä ja helppokäyttöisestä kanban-näkymästä tukipyyntöjen käsittelyssä.\n"
+"    - Tee perusteellinen analyysi tukipyynnöistä raporttivalikon pivot-näkymän avulla.\n"
+"    - Luo tiimi ja määrittele sen jäsenet, käytä halutessasi automaattista määritysmenetelmää.\n"
+"    - Käytä sähköpostialiaksia luodaksesi automaattisesti tukipyyntöjä ja kommunikoidaksesi asiakkaidesi kanssa.\n"
+"    - Lisää palvelutasosopimuksen määräajat automaattisesti tukipyyntöihin.\n"
+"    - Hanki asiakaspalautetta käyttämällä luokituksia.\n"
+"    - Asenna lisäominaisuuksia helposti tiimilomakkeen näkymän avulla.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_knowledge
@@ -4599,6 +5432,8 @@ msgid ""
 "\n"
 "Helpdesk integration with knowledge\n"
 msgstr ""
+"\n"
+"Helpdeskin integrointi tietämyksenhallinnan kanssa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -4606,6 +5441,8 @@ msgid ""
 "\n"
 "Helpdesk integration with time off\n"
 msgstr ""
+"\n"
+"Helpdesk-integraatio vapaa-ajan hallinnan kanssa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -4614,6 +5451,9 @@ msgid ""
 "Hong Kong Payroll Rules.\n"
 "========================\n"
 msgstr ""
+"\n"
+"Hongkongin palkanlaskentasäännöt.\n"
+"========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -4621,6 +5461,8 @@ msgid ""
 "\n"
 "Import Data From Winbooks\n"
 msgstr ""
+"\n"
+"Tuo tietoja Winbooksista\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -4655,6 +5497,18 @@ msgid ""
 "    * FBA: A stock location and stock moves allow to monitor your stock in Amazon Fulfilment Centers.\n"
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"Tuo Amazonin tilaukset Odoon ja synkronoi toimitukset\n"
+"============================================================\n"
+"\n"
+"Tärkeimmät ominaisuudet\n"
+"------------\n"
+"* Tuo tilauksia useilta tileiltä ja kauppapaikoilta.\n"
+"* Tilaukset sovitetaan Odoo-tuotteisiin niiden sisäisen viitteen perusteella (SKU Amazonissa).\n"
+"* Odoossa vahvistetut toimitukset synkronoidaan Amazonissa.\n"
+"* Tuki sekä Fulfilment by Amazonille (FBA) että Fulfilment by Merchantille (FBM):\n"
+"    * FBA: Varaston sijainti ja varaston siirrot mahdollistavat varaston seuraamisen Amazonin Fulfilment-keskuksissa.\n"
+"    * FBM: Toimitusilmoitukset lähetetään Amazonille jokaisesta vahvistetusta poiminnasta (osatoimitusystävällinen).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -4665,6 +5519,11 @@ msgid ""
 "It is like a regular invoice, but we need to keep track of the link with the original invoice.  \n"
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
+"\n"
+"Monissa maissa veloitusilmoitusta käytetään olemassa olevan laskun määrien korottamiseen\n"
+"tai joissakin erityistapauksissa hyvityslaskun peruuttamiseen.\n"
+"Se on kuin tavallinen lasku, mutta yhteys alkuperäiseen laskuun on säilytettävä.  \n"
+"Ohjattu toiminto on samanlainen kuin hyvityslaskussa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -4691,6 +5550,27 @@ msgid ""
 "print the amount in words (special Chinese characters for numbers)\n"
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 msgstr ""
+"\n"
+"Sisältää seuraavat tiedot kiinankielistä lokalisointia varten\n"
+"========================================================\n"
+"\n"
+"Tilin tyyppi/科目类型\n"
+"\n"
+"Valtion tiedot/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"Lisäsimme mahdollisuuden tulostaa kupongin, joka tulostaa myös\n"
+"tulostaa summan sanoina (numeroiden kiinalaiset erikoismerkit)\n"
+"oikein, kun cn2an-kirjasto on asennettu. (esim. pip3 install cn2an -ohjelmalla)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -4702,6 +5582,12 @@ msgid ""
 "City Data/城市数据\n"
 "\n"
 msgstr ""
+"\n"
+"Sisältää seuraavat tiedot kiinankielistä lokalisointia varten\n"
+"========================================================\n"
+"\n"
+"Kaupunkitiedot/城市数据\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi
@@ -4719,6 +5605,18 @@ msgid ""
 "\n"
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 msgstr ""
+"\n"
+"Intialainen - sähköinen laskutus\n"
+"====================\n"
+"Laskutuksen toimittaminen API:n kautta hallitukselle.\n"
+"Käytämme GSP:nä \"Tera Software Limitediä\"\n"
+"\n"
+"Vaihe 1: Ensin sinun on luotava API-käyttäjätunnus ja salasana verkkolaskuportaalissa.\n"
+"Vaihe 2: Siirry kyseiseen GST-numeroon liittyvään yritykseen\n"
+"Vaihe 3: Aseta tuo käyttäjätunnus ja salasana Odoo:ssa (Siirry: Laskutus/kirjanpito -> Konfigurointi -> Asetukset -> Asiakaslaskut tai etsi \"E-invoice\" hakupalkista)\n"
+"Vaihe 4: Toista vaiheet 1,2,3 kaikille GSTIN-tunnuksille, jotka sinulla on Odoossa. Jos sinulla on useita yrityksiä, joilla on sama GST-numero, suorita vaihe 1 vain ensimmäiselle yritykselle.\n"
+"\n"
+"API-käyttäjätunnuksen ja -salasanan luomista varten katso tätä asiakirjaa: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
@@ -4734,6 +5632,16 @@ msgid ""
 "Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Indian Electronic WayBill or find \"E-waybill\" in search bar)\n"
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 msgstr ""
+"\n"
+"Intialainen - E-waybill\n"
+"====================================\n"
+"E-waybillin lähettäminen hallitukselle API:n kautta.\n"
+"Käytämme GSP:nä \"Tera Software Limited\"\n"
+"\n"
+"Vaihe 1: Ensin sinun on luotava API-käyttäjätunnus ja salasana E-waybill-portaaliin.\n"
+"Vaihe 2: Siirry kyseiseen GST-numeroon liittyvään yritykseen\n"
+"Vaihe 3: Aseta tuo käyttäjätunnus ja salasana Odoo:ssa (Siirry: Laskutus/kirjanpito -> Konfigurointi -> Asetukset -> Intian sähköinen rahtikirja tai etsi \"E-waybill\" hakupalkista)\n"
+"Vaihe 4: Toista vaiheet 1,2,3 kaikille GSTIN-tunnuksille, jotka sinulla on Odoossa. Jos sinulla on useita yrityksiä, joilla on sama GST-numero, suorita vaihe 1 vain ensimmäiselle yritykselle.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -4750,6 +5658,17 @@ msgid ""
 "31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 msgstr ""
+"\n"
+"Intian kirjanpito: Tilikartta.\n"
+"====================================\n"
+"\n"
+"Intian tilikartta ja lokalisointi.\n"
+"\n"
+"Odoo mahdollistaa Intian kirjanpidon hallinnan tarjoamalla kaksi tilikarttamuotoa eli Intian tilikartta - Standard ja Intian tilikartta - Schedule VI.\n"
+"\n"
+"Huomautus: MCA on tarkistanut Schedule VI:n, ja sitä sovelletaan kaikkiin taseisiin, jotka on laadittu sen jälkeen\n"
+"31. maaliskuuta 2011. Siinä on luovuttu aiemmista kahdesta vaihtoehdosta, jotka koskivat taseen muotoa\n"
+"Nyt sallitaan vain vertikaalinen muoto, jota Odoo tukee.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -4770,6 +5689,21 @@ msgid ""
 "    - Payroll Advice and Report\n"
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 msgstr ""
+"\n"
+"Intian palkanmaksusäännöt.\n"
+"============================\n"
+"\n"
+"    -Hr_payrollin konfigurointi Intian lokalisointia varten\n"
+"    -Kaikki Intian palkkalaskelman tärkeimmät maksusäännöt.\n"
+"    * Uusi palkkatietoraportti\n"
+"    * Työntekijöiden sopimukset\n"
+"    * Mahdollistaa perus/brutto-/nettopalkan määrityksen\n"
+"    * Työntekijän palkkatodistus\n"
+"    * Korvaukset / vähennykset\n"
+"    * Integroitu lomien hallintaan\n"
+"    * Sairauskorvaus, matkakorvaus, lapsilisä, ...\n"
+"    - Palkanlaskennan neuvonta ja raportti\n"
+"    - Vuosipalkka pääluokittain ja vuosipalkka työntekijöittäin Raportti\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -4778,6 +5712,9 @@ msgid ""
 "Intrastat Reports\n"
 "==================\n"
 msgstr ""
+"\n"
+"Intrastat-raportit\n"
+"==================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_avatax_stock
@@ -4791,6 +5728,14 @@ msgid ""
 "product A, 2 shipped from warehouse #1 and 8 from warehouse #2). In this case the sale orders should be\n"
 "split per delivery.\n"
 msgstr ""
+"\n"
+"Avataxin varastonhallinta\n"
+"=======================================\n"
+"Tämä moduuli mahdollistaa rivitason osoitteet, kun veroja haetaan avataxista.\n"
+"\n"
+"Tämänhetkinen rajoitus on yksi tilausrivi, jossa on useampi kuin yksi varastosiirto (esim. 10 yksikköä ..\n"
+"tuotetta A, 2 toimitettu varastosta #1 ja 8 varastosta #2). Tässä tapauksessa myyntitilausten pitäisi olla\n"
+"jaettava toimituskohtaisesti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -4802,6 +5747,12 @@ msgid ""
 "\n"
 "You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"Laskutus ja maksut\n"
+"====================\n"
+"Odoon erityisen ja helppokäyttöisen laskutusjärjestelmän avulla voit pitää kirjaa kirjanpidostasi, vaikka et olisikaan kirjanpitäjä. Se tarjoaa helpon tavan seurata myyjiäsi ja asiakkaitasi.\n"
+"\n"
+"Voit käyttää tätä yksinkertaistettua kirjanpitoa siinä tapauksessa, että käytät (ulkoista) tiliä kirjanpitosi pitämiseen ja haluat silti seurata maksuja. Tämä moduuli tarjoaa myös helpon tavan rekisteröidä maksut ilman, että sinun tarvitsee koodata täydellisiä tiliotteita.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -4836,6 +5787,8 @@ msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
 msgstr ""
+"\n"
+"Se mahdollistaa tuotteiden vertailun toivelistalta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
@@ -4844,6 +5797,9 @@ msgid ""
 "K.S.A. POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"K.S.A. POS-lokalisointi\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -4851,6 +5807,8 @@ msgid ""
 "\n"
 "Keeps track of all appointments related to applicants.\n"
 msgstr ""
+"\n"
+"Pitää kirjaa kaikista hakijoihin liittyvistä tapaamisista.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
@@ -4866,6 +5824,16 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Kenian palkanlaskentasäännöt.\n"
+"=====================\n"
+"\n"
+"    * Työntekijän tiedot\n"
+"    * Työntekijöiden sopimukset\n"
+"    * Korvaukset/vähennykset\n"
+"    * Mahdollistaa perus-/brutto-/nettopalkan määrittelyn\n"
+"    * Työntekijän palkkakuitti\n"
+"    * Integroitu lomien hallintaan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
@@ -5650,6 +6618,10 @@ msgid ""
 "The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"Norjalainen SAF-T on standarditiedostomuoto erityyppisten kirjanpitotapahtumatietojen vientiä varten XML-muodossa.\n"
+"SAF-T Financialin ensimmäinen versio rajoittuu pääkirjanpitotasolle, mukaan lukien asiakas- ja toimittajatapahtumat.\n"
+"Mukana on myös tarvittavat kantatiedot.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_account_accountant
@@ -5657,6 +6629,8 @@ msgid ""
 "\n"
 "Notify that a matching sale order exists in the reconciliation widget.\n"
 msgstr ""
+"\n"
+"Ilmoita, että täsmäytyswidgetissä on vastaava myyntitilaus.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -5676,6 +6650,11 @@ msgid ""
 "\n"
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 msgstr ""
+"\n"
+"Odoo Enterprise Web Client.\n"
+"===========================\n"
+"\n"
+"Tämä moduuli muokkaa web-lisäosaa Enterprise-suunnittelun ja reagointikyvyn tarjoamiseksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -6445,6 +7424,8 @@ msgid ""
 "\n"
 "Technical module.\n"
 msgstr ""
+"\n"
+"Tekninen moduuli.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_configurator
@@ -6669,6 +7650,8 @@ msgid ""
 "\n"
 "This is a base module. It holds website-related stuff for Contact model (res.partner).\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli. Se pitää sisällään verkkosivustoon liittyviä asioita Contact-mallia varten (res.partner).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -6676,6 +7659,8 @@ msgid ""
 "\n"
 "This is a bridge module that adds multi-website support for payment providers.\n"
 msgstr ""
+"\n"
+"Tämä on yhdysmoduuli, joka lisää usean verkkosivuston tuen maksupalveluntarjoajille.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -6691,6 +7676,16 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
+"\n"
+"Tämä on monipuolinen kalenterijärjestelmä.\n"
+"========================================\n"
+"\n"
+"Tukee:\n"
+"------------\n"
+"    - Tapahtumakalenteri\n"
+"    - Toistuvat tapahtumat\n"
+"\n"
+"Jos haluat hallita kokouksia, sinun kannattaa asentaa CRM-moduuli.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mrp
@@ -6698,6 +7693,8 @@ msgid ""
 "\n"
 "This is a link module between Point of Sale and Mrp.\n"
 msgstr ""
+"\n"
+"Tämä on linkkimoduuli kassan ja valmistusmoduulin välillä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi
@@ -6714,6 +7711,17 @@ msgid ""
 "\n"
 "Set the payment reference type from the Sales Journal.\n"
 msgstr ""
+"\n"
+"Tämä on Odoo-moduuli Suomen kirjanpidon hallintaan.\n"
+"============================================================\n"
+"\n"
+"Kun olet asentanut tämän moduulin, saat käyttöösi seuraavat toiminnot:\n"
+"    * Suomalainen tilikartta\n"
+"    * Verotukselliset kannat\n"
+"    * Laskun maksun viitetyypit (suomalainen vakioviite & suomalainen velkojan viite (RF))\n"
+"    * Myyntitilausten suomalainen viitetietomuoto\n"
+"\n"
+"Aseta maksuviitetyyppi Myyntipäiväkirjasta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -6722,6 +7730,9 @@ msgid ""
 "This is the base module for managing Units of measure.\n"
 "========================================================================\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli mittayksiköiden hallintaa varten.\n"
+"========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -6746,6 +7757,25 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli tuotteiden ja hinnastojen hallintaan Odoossa.\n"
+"========================================================================\n"
+"\n"
+"Tuotteet tukevat variantteja, eri hinnoittelumenetelmiä ja myyjätietoja,\n"
+"make to stock/order, eri mittayksiköt, pakkaukset ja ominaisuudet.\n"
+"\n"
+"Hinnastot tukevat:\n"
+"-------------------\n"
+"    * Monitasoiset alennukset (tuotteittain, kategorioittain, määrien mukaan)\n"
+"    * Hinnan laskeminen eri kriteerien perusteella:\n"
+"        * Muu hinnasto\n"
+"        * Omakustannushinta\n"
+"        * Listahinta\n"
+"        * Myyjän hinta\n"
+"\n"
+"Hinnastot tuotteittain ja/tai kumppaneittain.\n"
+"\n"
+"Tuotetarrojen tulostaminen viivakoodilla.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs
@@ -6755,6 +7785,10 @@ msgid ""
 "This module is based on the official document \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 msgstr ""
+"\n"
+"Tämä on serbialaisen lokalisoinnin perusmoduuli. Se hallinnoi tilikarttaa ja veroja.\n"
+"Tämä moduuli perustuu viralliseen asiakirjaan \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
+"Lähde: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -6788,6 +7822,34 @@ msgid ""
 "        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli Belgian kirjanpitokaavion hallintaan Odoossa.\n"
+"==============================================================================\n"
+"\n"
+"Kun tämä moduuli on asennettu, kirjanpidon konfigurointiohjattu konfigurointi käynnistyy.\n"
+"    * Meillä on tilimalleja, joista voi olla apua tilikarttojen luomisessa.\n"
+"    * Kyseisessä ohjatussa toiminnossa sinua pyydetään antamaan yrityksen nimi,\n"
+"      seurattava tilikarttamalli, luotavien numeroiden määrä, tilikarttasi koodi\n"
+"      tili ja pankkitili, valuutta, jolla päiväkirjat luodaan.\n"
+"\n"
+"Näin luodaan puhdas kopio Chart Template -kaaviointimallista.\n"
+"\n"
+"Tämän moduulin tarjoamat ohjatut toiminnot:\n"
+"--------------------------------\n"
+"    * Partner VAT Intra: Luetteloi kumppanit ja niihin liittyvät alv:t ja laskut\n"
+"      määrät. Valmistelee XML-tiedostomuodon.\n"
+"\n"
+"        **Polku, josta pääsee käsiksi:** Laskutus/Raportointi/Lainsäädäntöraportit/Belgium Statements/Kumppanin alv Intra\n"
+"    * Säännöllinen alv-ilmoitus: Valmistelee XML-tiedoston alv-ilmoitusta varten\n"
+"      parhaillaan kirjautuneen käyttäjän pääyhtiön.\n"
+"\n"
+"        **Polku, johon pääsee:** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration (Laskutus/Raportointi/Lainsäädäntöraportit/Belgium Statements/Periodical VAT Declaration)\n"
+"    * Arvonlisäverovelvollisten asiakkaiden vuosittainen luettelointi: Valmistelee XML-tiedoston arvonlisäverotusta varten\n"
+"      Sisäänkirjautuneen käyttäjän pääyrityksen ilmoitus Perustuu seuraavaan\n"
+"      Verovuosi.\n"
+"\n"
+"        **Polku, johon pääsee:** Laskutus/Raportointi/Lainmukaiset raportit/Belgium-ilmoitukset/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -9085,7 +10147,7 @@ msgstr ""
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "- %s (%s)"
-msgstr ""
+msgstr "- %s (%s)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__type
@@ -9097,6 +10159,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Yhteystiedot: Käytä tätä järjestämään tietyn yrityksen työntekijöiden yhteystiedot (esim. toimitusjohtaja, talousjohtaja, ...).\n"
+"- Laskun osoite: Kaikkien laskujen ensisijainen osoite. Valitaan oletusarvoisesti, kun laskutat tilauksen, joka kuuluu tälle yritykselle.\n"
+"- Toimitusosoite: Kaikkien toimitusten ensisijainen osoite. Valitaan oletusarvoisesti, kun toimitat tälle yritykselle kuuluvan tilauksen.\n"
+"- Yksityinen: Yksityiset osoitteet näkyvät vain valtuutetuille käyttäjille, ja ne sisältävät arkaluonteisia tietoja (työntekijöiden kotiosoitteet, ...).\n"
+"- Muu: Yrityksen muu osoite (esim. tytäryhtiö, ...)"
 
 #. module: base
 #. odoo-python
@@ -9105,6 +10172,8 @@ msgstr ""
 msgid ""
 "- Only a root company can be set on %(record)r. Currently set to %(company)r"
 msgstr ""
+"- Ainoastaan ylin yritys (root) voidaan asettaa arvoon %(record)r. Tällä "
+"hetkellä asetettu %(company)r"
 
 #. module: base
 #. odoo-python
@@ -9175,7 +10244,7 @@ msgstr "1. %b, %B         ==&gt; joulu, joulukuu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
 msgid "1099 Reporting"
-msgstr ""
+msgstr "1099-raportointi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9205,12 +10274,12 @@ msgstr "360 palaute"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
 msgid "3rd Party Tax Calculation"
-msgstr ""
+msgstr "kolmannen osapuolen verolaskenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_external_tax
 msgid "3rd Party Tax Calculation for Sale"
-msgstr ""
+msgstr "3. osapuolen verolaskelma myyntiä varten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9250,12 +10319,12 @@ msgstr "9. %w              ==&gt; 5 ( perjantai on 6. päivä)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<b invisible=\"not is_company\">Address</b>"
-msgstr ""
+msgstr "<b invisible=\"not is_company\">Osoite</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>Command</code>: x2many komennot nimiavaruus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9263,12 +10332,16 @@ msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
 msgstr ""
+"<code>UserError</code>: poikkeusluokka käyttäjälle suunnattujen "
+"varoitusviestien lähettämiseen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
 msgstr ""
+"<code>_logger.info(message)</code>: kirjaaja, joka lähettää viestejä "
+"palvelimen lokitiedostoihin"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9293,6 +10366,8 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
+"<code>float_compare()</code>: apufunktio, jolla voidaan vertailla "
+"liukulukuja tietyn tarkkuuden perusteella"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9315,14 +10390,14 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr ""
+msgstr "<code>record</code>: tietue, johon toiminto kohdistuu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
-"<code>tietue</code>: tietue, johon toiminto kohdistuu; voi olla mitätön"
+"<code>record</code>: tietue, johon toiminto kohdistuu; voi olla mitätön"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9330,6 +10405,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode"
 msgstr ""
+"<code>records</code>: kaikkien niiden tietueiden tietueet, joihin toiminto "
+"kohdistuu monitoimitilassa"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9383,7 +10460,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -9423,6 +10500,8 @@ msgid ""
 "<span class=\"o_form_label\">The selected modules have been "
 "updated/installed!</span>"
 msgstr ""
+"<span class=\"o_form_label\">Valitut moduulit on päivitetty tai "
+"asennettu.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -9436,27 +10515,27 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "<span class=\"o_stat_text\">Activate and Translate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aktivoi ja käännä</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Add to the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lisää 'Tulosta' -valikkoon</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Qweb Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Qweb-näkymät</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Remove from the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Poista \"Tulosta\"-valikosta</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arkistoitu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -9467,6 +10546,8 @@ msgstr "<span class=\"text-white text-uppercase\">Vaaravyöhyke</span>"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span colspan=\"2\" class=\"text-muted\"> Available variables: </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted\"> Käytettävissä olevat muuttujat: "
+"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -9511,6 +10592,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or not update_field_type == "
 "'many2many'\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or not update_field_type == "
+"'many2many'\">tekjiä</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9518,6 +10601,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type == "
 "'many2many'\">to</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type == "
+"'many2many'\">osoitteeseen</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -9526,6 +10611,9 @@ msgid ""
 "                        <span invisible=\"reset_mode != 'hard'\">This view is not coming from a file.</span>\n"
 "                        <span invisible=\"reset_mode != 'other_view'\">You need two views to compare.</span>"
 msgstr ""
+"<span invisible=\"reset_mode != 'soft'\">Tästä näkymästä ei ole aiempaa versiota.</span>\n"
+"                        <span invisible=\"reset_mode != 'hard'\">Tämä näkymä ei tule tiedostosta.</span>\n"
+"                        <span invisible=\"reset_mode != 'other_view'\">Tarvitset kaksi näkymää vertailuun.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9535,6 +10623,10 @@ msgid ""
 "                                to this Python expression:\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type == 'equation'\" class=\"text-muted\">Aseta arvo...</span>\n"
+"                            <span invisible=\"evaluation_type != 'equation'\">\n"
+"                                tähän Python-lausekkeeseen:\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -9621,7 +10713,7 @@ msgstr "<strong>C</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies:</strong>"
-msgstr ""
+msgstr "<strong>Riippuvuudet:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -9662,7 +10754,7 @@ msgstr "<strong>Osikko</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Menu:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9694,7 +10786,7 @@ msgstr "<strong>R</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports:</strong>"
-msgstr ""
+msgstr "<strong>Raportit:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9745,7 +10837,7 @@ msgstr "<strong>U</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View:</strong>"
-msgstr ""
+msgstr "<strong>Näkymä:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9985,6 +11077,9 @@ msgid ""
 "effortlessly check in and out while ensuring seamless notifications for "
 "hosts."
 msgstr ""
+"Kattava vastaanottotiskin hallintajärjestelmä, jonka avulla vieraat voivat "
+"kirjautua sisään ja ulos vaivattomasti ja joka varmistaa saumattomat "
+"ilmoitukset isännille."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -10154,6 +11249,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
 msgid "A payment provider for enabling Sepa Direct Debit in the EU."
 msgstr ""
+"Maksupalveluntarjoaja, joka mahdollistaa Sepa-suoraveloituksen EU:ssa."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_demo
@@ -10444,7 +11540,7 @@ msgstr "Tilinumero"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "Account SEPA QR Code"
-msgstr ""
+msgstr "Tilin SEPA QR-koodi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -10514,7 +11610,7 @@ msgstr "Kirjanpidon johdonmukaisuustestaus"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_customer_statements
 msgid "Accounting Customer Statements"
-msgstr ""
+msgstr "Kirjanpito Asiakkaan tiliotteet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_base_import
@@ -10632,7 +11728,7 @@ msgstr "Toiminnon kuvaus"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Action Details"
-msgstr ""
+msgstr "Toiminnan yksityiskohdat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -10807,7 +11903,7 @@ msgstr "Lisää ilmoitus, kun veroraportti on luotu"
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_account_payment
 msgid "Add a payment step at the end of appointment and resource bookings"
-msgstr ""
+msgstr "Lisää maksuvaihe tapaamisten ja resurssivarausten loppuun"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_account_payment
@@ -10939,7 +12035,7 @@ msgstr "Lisää variantteja myyntitilaukseen ruudukkomerkinnän kautta."
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
 msgid "Add variants to your purchase orders through an Order Grid Entry."
-msgstr ""
+msgstr "Lisää variantteja ostotilauksiisi tilausruutumerkinnän kautta."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -10949,7 +12045,7 @@ msgstr "Lisää näkymiä ja hienosäätöjä tapahtumaan"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
 msgid "Adding"
-msgstr ""
+msgstr "Lisätään"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
@@ -10973,16 +12069,22 @@ msgid ""
 "Addon for the POS App that allows customers to view the menu on their "
 "smartphone."
 msgstr ""
+"Kassa-sovelluksen lisäosa, jonka avulla asiakkaat voivat tarkastella "
+"ruokalistaa älypuhelimellaan."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_adyen
 msgid "Addon for the Self Order App that allows customers to pay by Adyen."
 msgstr ""
+"Lisäosa Self Order App -sovellukseen, jonka avulla asiakkaat voivat maksaa "
+"Adyenilla."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_stripe
 msgid "Addon for the Self Order App that allows customers to pay by Stripe."
 msgstr ""
+"Lisäosa Self Order App -sovellukseen, jonka avulla asiakkaat voivat maksaa "
+"Stripen avulla."
 
 #. module: base
 #. odoo-python
@@ -11033,12 +12135,13 @@ msgstr "Lisää Stripeen amerikkalaistyylisen juomarahojen määrityksen"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_payroll
 msgid "Adds a Gross to Net Salary Simulaton"
-msgstr ""
+msgstr "Lisää brutto-nettopalkka-simulaation"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
 msgid "Adds a button to schedule calls from leads in Kanban."
 msgstr ""
+"Lisää painikkeen, jolla voit ajoittaa puheluita Kanbanin liidien avulla."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_stock
@@ -11064,12 +12167,16 @@ msgid ""
 "Adds a softphone and helpers to make phone calls directly from within your "
 "Odoo database."
 msgstr ""
+"Lisää softapuhelimen ja apuohjelmia, joiden avulla voit soittaa puheluita "
+"suoraan Odoo-tietokannastasi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 "Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Lisää tilastopainikkeen lead-lomakkeen näkymään, jolla pääsee käsiksi "
+"livechat-istuntoihin."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_loyalty_delivery
@@ -11079,7 +12186,7 @@ msgstr "Lisää ilmaisen toimitusmekanismin myyntitilauksiin"
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
 msgid "Adds notably the map view of contact"
-msgstr ""
+msgstr "Lisää erityisesti yhteystietojen karttanäkymän"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_hr
@@ -11352,7 +12459,7 @@ msgstr "Algeria - Kirjanpito"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dz_reports
 msgid "Algeria - Accounting Reports"
-msgstr ""
+msgstr "Algeria - Kirjanpitoraportit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -11362,7 +12469,7 @@ msgstr "Kaikki"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__all_child_ids
 msgid "All Child"
-msgstr ""
+msgstr "Kaikki alemman tason"
 
 #. module: base
 #. odoo-python
@@ -11434,7 +12541,7 @@ msgstr "Salli ostajien lisätä tuotteita listoille"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_stock
 msgid "Allow to create recurring order on storable product"
-msgstr ""
+msgstr "Mahdollistaa toistuvan tilauksen luomisen varastoitavalle tuotteelle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -11445,7 +12552,7 @@ msgstr "Sallitut yritykset"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__groups_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__groups_id
 msgid "Allowed Groups"
-msgstr ""
+msgstr "Sallitut ryhmät"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_plugin
@@ -11455,17 +12562,17 @@ msgstr "Mahdollistaa integroinnin sähköpostiliitännäisten kanssa."
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
 msgid "Allows the subcontracting process with the barcode views"
-msgstr ""
+msgstr "Mahdollistaa alihankintaprosessin viivakoodinäkymien avulla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
 msgid "Allows the usage of quality checks within the barcode views"
-msgstr ""
+msgstr "Mahdollistaa laatutarkastusten käytön viivakoodinäkymissä"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_map
 msgid "Allows the viewing of records on a map"
-msgstr ""
+msgstr "Mahdollistaa tietueiden tarkastelun kartalla"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
@@ -11510,18 +12617,18 @@ msgstr "Mahdollistaa lähettää tekstiviestejä sivuston kävijä, joka on joht
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
 msgid "Allows use of stock application to manage rentals inventory"
-msgstr ""
+msgstr "Mahdollistaa varastosovelluksen käytön vuokrien varaston hallintaan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_batch_payment
 msgid "Allows using Reconciliation with the Batch Payment feature."
-msgstr ""
+msgstr "Mahdollistaa täsmäytyksen käyttämisen Erämaksut-ominaisuuden kanssa."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_sendcloud
 #: model:ir.module.module,summary:base.module_website_sale_fedex
 msgid "Allows website customers to choose delivery pick-up points"
-msgstr ""
+msgstr "Verkkosivun asiakkaat voivat valita toimituksen noutopisteet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
@@ -11531,7 +12638,7 @@ msgstr "Amazon Connector"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
 msgid "Amazon/TaxCloud Bridge"
-msgstr ""
+msgstr "Amazon/TaxCloud Bridge"
 
 #. module: base
 #. odoo-python

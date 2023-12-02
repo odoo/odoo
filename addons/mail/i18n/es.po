@@ -1014,7 +1014,7 @@ msgstr "Seudónimo del dominio"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_name
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Nombre del dominio de alias"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -1027,7 +1027,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Correo electrónico del alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
@@ -1039,17 +1039,17 @@ msgstr "Seudónimo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Estado del alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr ""
+msgstr "Nombre del dominio de alias"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Estado del alias evaluado en el último mensaje recibido."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1625,6 +1625,8 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
+"El alias de devolución %(bounce)s que ya se utiliza para otro dominio con el"
+" mismo nombre. Utilice otro o simplemente utilice el otro dominio de alias."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
@@ -1842,6 +1844,9 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
+"El alias catchall %(catchall)s ya se utiliza para otro dominio con el mismo "
+"nombre. Utilice otro catchall o simplemente utilice el otro dominio de "
+"alias."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -1967,7 +1972,7 @@ msgstr "Mensajes hijos"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template..."
-msgstr ""
+msgstr "Elije una plantilla..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3187,7 +3192,7 @@ msgstr "Alias de correo electrónico Mixin"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin_optional
 msgid "Email Aliases Mixin (light)"
-msgstr ""
+msgstr "Mixin de alias de correo electrónico (claro)"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3321,6 +3326,8 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
+"El alias de correo electrónico %(alias_name)s no se puede usar en varios "
+"registros al mismo tiempo. Actualice los registros uno por uno."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -4946,7 +4953,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON que mapea IDs de un campo many2one a segundos utilizados"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -9122,6 +9129,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"La dirección %(alias_display_name)s no pudo aceptar el siguiente mensaje.\n"
+"                 Solo %(contact_description)s puede ponerse en contacto.<br /><br />\n"
+"                 Asegúrese de que está utilizando la dirección correcta o póngase en contacto con nosotros en %(default_email)s."
 
 #. module: mail
 #. odoo-python
@@ -9418,7 +9428,7 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To-Do"
-msgstr ""
+msgstr "Actividades pendientes"
 
 #. module: mail
 #. odoo-javascript
@@ -10244,6 +10254,10 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
+"No se pudo crear el alias %(alias_name)s porque el dominio "
+"%(alias_domain_name)s le pertenece a la empresa %(alias_company_names)s "
+"mientras que el documento propietario pertenece a la empresa "
+"%(company_name)s."
 
 #. module: mail
 #. odoo-python
@@ -10254,6 +10268,10 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
+"No se pudo crear el alias %(alias_name)s porque el dominio "
+"%(alias_domain_name)s le pertenece a la empresa %(alias_company_names)s "
+"mientras que el documento de destino pertenece a la empresa "
+"%(company_name)s."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks

@@ -9,6 +9,7 @@
 # Chloe Wang, 2023
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2452,8 +2453,8 @@ msgstr ""
 "\n"
 "* 成本结构报告\n"
 "\n"
-"此外，还可以根据产品的 BoM，使用其组件和工作中心操作的成本计算产品的成本。\n"
-"它不仅可以在产品本身添加一个按钮，还可以在产品列表视图中添加一个操作。\n"
+"此外，还可以根据产品的 BoM，使用其组件和工作中心作业的成本计算产品的成本。\n"
+"它不仅可以在产品本身添加一个按钮，还可以在产品列表视图中添加一个作业。\n"
 "如果自动库存估价已激活，则将创建必要的会计分录。\n"
 "\n"
 
@@ -3579,7 +3580,7 @@ msgid ""
 "Contains the enterprise views for Stock account\n"
 msgstr ""
 "\n"
-"包含股票账户的企业视图\n"
+"包含库存科目的企业视图\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_enterprise
@@ -6415,18 +6416,18 @@ msgid ""
 "procure.\n"
 msgstr ""
 "\n"
-" 主生产计划\n"
+" 主制造计划\n"
 "==========================\n"
 "\n"
 " 有时，您需要为\n"
-" 将在稍后创建的生产单的组件预先创建采购单。或为稍后才能发生销售订单的生产单，预先创建采购单\n"
+" 将在稍后创建的制造单的组件预先创建采购单。或为稍后才能发生销售订单的制造单，预先创建采购单\n"
 "解决方案旨在预测\n"
-" 您的销售，并且根据该预测，创建一部分生产\n"
+" 您的销售，并且根据该预测，创建一部分制造\n"
 " 订单或采购单。\n"
 "\n"
 " 您需要选择希望添加到报告中的产品。您可以选择\n"
 " 报告的周期：日、周、月等。也可定义\n"
-" 安全库存量，供应的最小/最大库存以及手动覆盖将生产的产品数量。\n"
+" 安全库存量，供应的最小/最大库存以及手动覆盖将制造的产品数量。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -9475,7 +9476,7 @@ msgid ""
 "take them into account in your stock valuation.\n"
 msgstr ""
 "\n"
-"通过该模块，您可以轻松地为生产订单添加额外成本\n"
+"通过该模块，您可以轻松地为制造订单添加额外成本\n"
 "并决定这些成本在库存移动中的分配，以便在库存估值中将其考虑在内。\n"
 "在库存估价中将其考虑在内。\n"
 
@@ -13558,7 +13559,7 @@ msgstr "管理员"
 #: model:ir.model.fields,help:base.field_res_country_state__name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr "管理国家/地区或州省的分类。"
+msgstr "一个国家的行政区划. E.g. 省/州, 部, 区"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
@@ -13956,7 +13957,7 @@ msgstr "分析会计企业版"
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "生产辅助核算项"
+msgstr "制造辅助核算项"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
@@ -16897,7 +16898,7 @@ msgstr "国家/地区名称"
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "国家/地区省/州"
+msgstr "国家省/州"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
@@ -17003,7 +17004,7 @@ msgstr "创建菜单"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
 msgid "Create a State"
-msgstr "创建状态"
+msgstr "创建省/州"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_title_contact
@@ -19679,12 +19680,12 @@ msgstr "法罗群岛"
 #: model:ir.model.fields,field_description:base.field_res_bank__state
 #: model:ir.model.fields,field_description:base.field_res_company__state_id
 msgid "Fed. State"
-msgstr "联邦国家"
+msgstr "联邦州"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 msgid "Fed. States"
-msgstr "州/省"
+msgstr "联邦州"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
@@ -23246,7 +23247,7 @@ msgstr "分包订单的到岸成本"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
 msgid "Landed Costs on Manufacturing Order"
-msgstr "生产单上的到岸成本"
+msgstr "制造单上的到岸成本"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
@@ -24452,7 +24453,7 @@ msgstr "法国非全日制工人的假期管理"
 #: model:res.partner.industry,name:base.res_partner_industry_C
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
-msgstr "生产"
+msgstr "制造"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_product_expiry
@@ -24463,7 +24464,7 @@ msgstr "制造期限"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders & BOMs"
-msgstr "生产单和物料清单"
+msgstr "制造单和物料清单"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__many2one
@@ -26680,7 +26681,7 @@ msgstr ""
 "计划。使用高级分析\n"
 "功能来检测资源能力和库存位置的瓶颈。\n"
 "\n"
-"高效安排生产订单\n"
+"高效安排制造订单\n"
 "-----------------------------------------\n"
 "\n"
 "根据您的\n"
@@ -26692,12 +26693,12 @@ msgstr ""
 "\n"
 "灵活创建多级物料清单、可选路由、\n"
 "版本更改和幽灵物料清单。您可以将物料清单用于套件或\n"
-"生产订单。\n"
+"制造订单。\n"
 "\n"
-"在所有操作中获得灵活性\n"
+"在所有作业中获得灵活性\n"
 "---------------------------------\n"
 "\n"
-"在任何进度级别手动编辑所有建议的操作。有了 Odoo、\n"
+"在任何进度级别手动编辑所有建议的作业。有了 Odoo、\n"
 "您将不会因僵化的系统而感到沮丧。\n"
 "\n"
 "安排工单\n"
@@ -26705,14 +26706,14 @@ msgstr ""
 "\n"
 "检查资源能力，解决瓶颈问题。  定义路线并计划\n"
 "工作时间和资源能力。快速确定资源\n"
-"需求和瓶颈，以确保您的生产符合交货计划日期。\n"
+"需求和瓶颈，以确保您的制造符合交货计划日期。\n"
 "计划日期。\n"
 "\n"
 "\n"
 "高效的用户界面\n"
 "---------------------------\n"
 "\n"
-"以您喜欢的方式组织生产订单和工单。处理下一个\n"
+"以您喜欢的方式组织制造订单和工单。处理下一个\n"
 "在列表视图中处理下一个订单，在日历视图中进行控制，并在甘特图视图中编辑建议的时间表。\n"
 "计划。\n"
 "\n"
@@ -29003,7 +29004,7 @@ msgstr "根据 GS1-128 规范解析条形码"
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "往来单位"
+msgstr "合作伙伴"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
@@ -29024,7 +29025,7 @@ msgstr "合作伙伴标题"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr "联系人称谓"
+msgstr "合作伙伴称谓"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
@@ -29731,7 +29732,7 @@ msgstr "不能远程调用私有方法（如 %s）。"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
 msgid "Process Manufacturing Orders from the barcode application"
-msgstr "通过条形码应用程序处理生产订单"
+msgstr "通过条形码应用程序处理制造订单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -30311,7 +30312,7 @@ msgstr "采购请求库存"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr "购买股票"
+msgstr "采购库存"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -32078,7 +32079,7 @@ msgstr "发送短信作为活动提醒"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr "在最终股票变动时发送短信"
+msgstr "最后库存移动时发送文本消息"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sms
@@ -32365,7 +32366,7 @@ msgstr "共享组"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_share
 #: model:ir.model.fields,field_description:base.field_res_users__partner_share
 msgid "Share Partner"
-msgstr "分享的伙伴"
+msgstr "共享合作伙伴"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__share
@@ -33057,7 +33058,7 @@ msgstr "销售电子表格仪表板"
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_stock
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_stock_account
 msgid "Spreadsheet dashboard for stock"
-msgstr "股票电子表格仪表板"
+msgstr "用于库存的电子表格仪表板"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_subscription
@@ -33109,12 +33110,12 @@ msgstr "开始配置训练！"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "省/ 州"
+msgstr "省/州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "州/省代码"
+msgstr "省/州代码"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
@@ -33124,7 +33125,7 @@ msgstr "省/州名称"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr "省/州 必填"
+msgstr "省/州必填"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -33256,7 +33257,7 @@ msgstr "街道"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr "街道2..."
+msgstr "详细地址..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private

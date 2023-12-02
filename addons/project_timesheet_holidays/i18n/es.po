@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,12 +62,14 @@ msgstr "Empleado"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheets"
-msgstr ""
+msgstr "Generar hojas de horas"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
 msgstr ""
+"Genere hojas de horas al validar solicitudes con este tipo de tiempo "
+"personal."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -98,7 +101,7 @@ msgstr "Proyecto interno"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__is_timeoff_task
 msgid "Is Time off Task"
-msgstr ""
+msgstr "Es una tarea de tiempo libre"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -133,6 +136,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"El proyecto por defecto utilizado cuando se generan automáticamente hojas de"
+" horas a través de solicitudes de tiempo libre. Puede especificar otro "
+"proyecto en cada tipo de tiempo libre individualmente."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -140,6 +146,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"La tarea por defecto utilizada cuando se generan automáticamente hojas de "
+"horas a través de solicitudes de tiempo libre. Puede especificar otra tarea "
+"en cada tipo de tiempo libre individualmente."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -178,7 +187,7 @@ msgstr "Tipo de ausencia"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Número de tipos de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -190,7 +199,7 @@ msgstr "Partes de horas"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Ver tiempo personal "
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -200,6 +209,9 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"No puede crear hojas de horas para una tarea vinculada a un tipo de permiso."
+" Le recomendamos que use la aplicación Tiempo personal para solicitar uno "
+"nuevo."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -220,6 +232,9 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"No puede eliminar hojas de horas vinculadas a solicitudes de tiempo "
+"personal. Le recomendamos que cancele la solicitud desde la aplicación "
+"Tiempo personal."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -229,3 +244,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"No puede modificar las hojas de horas vinculadas a solicitudes de tiempo "
+"personal. Le recomendamos que use la aplicación Tiempo personal para "
+"modificar sus solicitudes."

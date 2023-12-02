@@ -79,6 +79,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">لا توجد "
+"سجلات</span> "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -97,6 +99,19 @@ msgid ""
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                سيتم إرسال الرسالة كرسالة نصية قصيرة إلى مستلمي القالب\n"
+"                                ولن تظهر في سجل الرسائل.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                لن يتم إرسال الرسائل القصيرة، بل سيتم نشرها فقط\n"
+"                                كملاحظة داخلية في سجل الرسائل.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                سيتم إرسال الرسائل النصية القصيرة كرسالة نصية قصيرة إلى مستلمي \n"
+"                                القالب وسيتم نشره أيضاً كملاحظة داخلية\n"
+"                                في سجل الرسائل.\n"
+"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -115,7 +130,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "هناك سجل موجود بالفعل لهذا المعرف الفريد عالمياً "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -135,6 +150,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
+"طريقة بديلة لتعريف سجل الرسائل النصية القصيرة، تُستخدم لتقارير التوصيل "
 
 #. module: sms
 #. odoo-javascript
@@ -273,7 +289,7 @@ msgstr "مطلوب التسجيل الخاص بكل بلد "
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "Country-specific registration required."
-msgstr ""
+msgstr "يتطلب التسجيل الخاص بالدول. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
@@ -638,7 +654,7 @@ msgstr "رسالة البريد الإلكتروني "
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
 msgid "Mail Notification"
-msgstr ""
+msgstr "إشعار البريد "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
@@ -648,7 +664,7 @@ msgstr "رسالة نصية قصيرة لمحادثة البريد "
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
 msgid "Marked for deletion"
-msgstr ""
+msgstr "محدد للحذف "
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -707,7 +723,7 @@ msgstr "لم يتم توصيلها "
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Note only"
-msgstr ""
+msgstr "الملاحظة فقط "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -886,7 +902,7 @@ msgstr "مرجع السجل "
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "Register now."
-msgstr ""
+msgstr "سجّل الآن "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -958,12 +974,12 @@ msgstr "الرسالة النصية القصيرة ("
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "SMS (with note)"
-msgstr ""
+msgstr "الرسائل النصية القصيرة (مع ملاحظة) "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
 msgid "SMS (without note)"
-msgstr ""
+msgstr "الرسائل النصية القصيرة (دون ملاحظة) "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1089,16 +1105,18 @@ msgstr "محتوى الرسائل النصية القصيرة "
 #, python-format
 msgid "SMS template model of %(action_name)s does not match action model."
 msgstr ""
+"نموذج قالب الرسائل النصية القصيرة %(action_name)s لا يتطابق مع نموذج "
+"الإجراء. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
 msgid "SMS trackers"
-msgstr ""
+msgstr "متتبعات الرسائل النصية القصيرة "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
 msgid "SMS uuid"
-msgstr ""
+msgstr "المعرف الفريد عالمياً للرسائل النصية القصيرة "
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -1146,7 +1164,7 @@ msgstr "إرسال رسالة نصية قصيرة (%s) "
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send SMS As"
-msgstr ""
+msgstr "إرسال الرسائل النصية القصيرة كـ"
 
 #. module: sms
 #. odoo-javascript
@@ -1296,14 +1314,14 @@ msgstr "تعذر إعادة إرسال الرسائل النصية القصير�
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "The content of the message violates rules applied by our providers."
-msgstr ""
+msgstr "محتوى الرسالة ينتهك القواعد المتبعة من قِبَل مزودي خدماتنا. "
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "دولة الوجهة غير مدعومة. "
 
 #. module: sms
 #. odoo-python
@@ -1330,7 +1348,7 @@ msgstr "لا توجد رسائل نصية قصيرة لإعادة إرسالها
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "تمت إزالة هذه الرسالة النصية القصيرة لأن الرقم مستخدَم بالفعل. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1385,7 +1403,7 @@ msgstr "المعرف الفريد عالمياً "
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
 msgid "UUID must be unique"
-msgstr ""
+msgstr "يجب أن يكون المعرف الفريد عالمياً فريداً. "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown

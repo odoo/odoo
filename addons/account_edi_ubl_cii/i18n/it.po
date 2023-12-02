@@ -635,6 +635,12 @@ msgstr "Ogni riga di fattura avrà una e una sola imposta."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "Ogni riga della fattura deve contenere un prodotto o un'etichetta."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -882,6 +888,8 @@ msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
 "allowed. You might need to set a negative quantity instead."
 msgstr ""
+"La fattura contiene righe con un prezzo unitario negativo al contrario di "
+"quanto consentito. È necessario configurare una quantità negativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

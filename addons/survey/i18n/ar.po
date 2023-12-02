@@ -70,7 +70,7 @@ msgstr "% مكتمل "
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "%(participant) just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "%(participant) قد شارك للتو في \"%(survey_title)s\". "
 
 #. module: survey
 #. odoo-python
@@ -402,6 +402,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
 "pass this assessment because no question is configured to give any points."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> لا يمكن حالياً اجتياز هذا التقييم "
+"لأنه لم تتم تهيئة أي سؤال لإعطاء أي نقاط. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -477,22 +479,22 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-muted\">Responded</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-muted\">تم الرد</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-muted\">Skipped</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-muted\">تم التخطي</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-success\">Correct</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-success\">صحيح</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-block text-warning\">Partial</span>"
-msgstr ""
+msgstr "<span class=\"d-block text-warning\">جزئي</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -536,6 +538,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">الشهادات</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">الشهادة</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -543,6 +547,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">الشهادات</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">الشهادة</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -571,6 +577,9 @@ msgid ""
 "                                <i class=\"fa fa-trash me-1\"/>Remove all filters\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
+"                                <i class=\"fa fa-trash me-1\"/>إزالة كافة عوامل التصفية\n"
+"                            </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -613,12 +622,12 @@ msgstr "<span class=\"text-muted\">نجاح</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_scored_question\">Points</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_scored_question\">النقاط</span> "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span invisible=\"not is_time_limited\"> seconds</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_time_limited\"> ثواني</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
@@ -732,6 +741,8 @@ msgid ""
 "<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
 "right\"/>Edit Survey"
 msgstr ""
+"<span>هذه المدخلات هي لاستطلاع تجريبي. </span><i class=\"oi oi-fw oi-arrow-"
+"right\"/>تحرير الاستطلاع "
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -830,6 +841,8 @@ msgid ""
 "A scored survey needs at least one question that gives points.\n"
 "Please check answers and their scores."
 msgstr ""
+"يحتاج الاستطلاع المهيأ بنظام النقاط إلى سؤال واحد على الأقل يعطي نقاطاً.\n"
+"يرجى التحقق من الإجابات ونتائجها. "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -971,7 +984,7 @@ msgstr "كافة الاستطلاعات "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Allow Roaming"
-msgstr ""
+msgstr "السماح بالتجول "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
@@ -1063,7 +1076,7 @@ msgstr "مؤرشف"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q1
 msgid "Are you vegetarian?"
-msgstr ""
+msgstr "هل أنت نباتي؟ "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5
@@ -1167,7 +1180,7 @@ msgstr "متوسط المدة "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Average Score"
-msgstr ""
+msgstr "متوسط الدرجة "
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
@@ -1384,12 +1397,12 @@ msgstr "اختر موضوعك المفضل وأرِ الجميع كم أنت ب�
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
 msgid "Choose your green meal"
-msgstr ""
+msgstr "اختر وجبتك الصحية "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q4
 msgid "Choose your meal"
-msgstr ""
+msgstr "اختر وجبتك "
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1447,6 +1460,8 @@ msgid ""
 "Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
+"لا يمكن الجمع بين التنقل و\"تسجيل الإجابات بعد كل صفحة\" في آن واحد؛ يرجى تحديث الاستطلاعات التالية:\n"
+"- %(survey_names)s "
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -1501,7 +1516,7 @@ msgstr "يتطلب احتساب الدرجة سؤالاً في النقاش. "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Conditional display"
-msgstr ""
+msgstr "العرض المشروط "
 
 #. module: survey
 #. odoo-javascript
@@ -1842,7 +1857,7 @@ msgstr "عرض التقدم كـ"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s\"."
-msgstr ""
+msgstr "يتم عرضه إذا \"%s\". "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2020,7 +2035,7 @@ msgstr "لوحة الصدارة النهايئة "
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
 msgid "Fish"
-msgstr ""
+msgstr "سمك "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
@@ -2043,7 +2058,7 @@ msgstr "أيقونة من Font awesome مثال: fa-tasks "
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_food_preferences
 msgid "Food Preferences"
-msgstr ""
+msgstr "تفضيلات الطعام "
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -2073,7 +2088,7 @@ msgstr "الفواكه والخضار "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Functional Training"
-msgstr ""
+msgstr "التدريب الوظيفي "
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
@@ -2126,7 +2141,7 @@ msgstr "قيمة جيدة للمال "
 #. module: survey
 #: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
 msgid "Got it!"
-msgstr ""
+msgstr "فهمت! "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug2
@@ -2574,7 +2589,7 @@ msgstr "هل خشب الصنوبر قاسٍ أو لين؟ "
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before any of its trigger questions?"
-msgstr ""
+msgstr "هل تم وضع هذا السؤال قبل أي من الأسئلة التي تؤدي إليه؟ "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2584,7 +2599,7 @@ msgstr "اسطنبول "
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug3
 msgid "It depends"
-msgstr ""
+msgstr "على حسب "
 
 #. module: survey
 #. odoo-python
@@ -2911,7 +2926,7 @@ msgstr "الحد الأقصى لطول النص"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_max_obtainable
 msgid "Maximum obtainable score"
-msgstr ""
+msgstr "أعلى درجة يمكن الحصول عليها "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_float_value
@@ -3084,7 +3099,7 @@ msgstr "دعوة جديدة"
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
 msgid "New participation completed."
-msgstr ""
+msgstr "تم إكمال المشاركة الجديدة. "
 
 #. module: survey
 #. odoo-javascript
@@ -3121,7 +3136,7 @@ msgstr "نوع النشاط التالي"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Next Skipped"
-msgstr ""
+msgstr "تم تخطي التالي "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
@@ -3182,7 +3197,7 @@ msgstr "لم يتم العثور على بنود مدخلات للمستخدم "
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug2
 msgid "No, it's too small for the human eye."
-msgstr ""
+msgstr "لا، إنه أصغر من أن يمكن رؤيته بالعين المجردة. "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug2
@@ -3416,7 +3431,7 @@ msgstr "فتح القسم "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Optional previous answers required"
-msgstr ""
+msgstr "الإجابات السابقة الاختيارية مطلوبة "
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3529,12 +3544,12 @@ msgstr "المشاركة في استطلاع {{ object.survey_id.display_name }}
 #: model:mail.message.subtype,name:survey.mt_survey_survey_user_input_completed
 #: model:mail.message.subtype,name:survey.mt_survey_user_input_completed
 msgid "Participation completed"
-msgstr ""
+msgstr "تم إكمال المشاركة "
 
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_user_input_completed
 msgid "Participation completed."
-msgstr ""
+msgstr "تم إكمال المشاركة. "
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3617,6 +3632,8 @@ msgid ""
 "Picking any of these answers will trigger this question.\n"
 "Leave the field empty if the question should always be displayed."
 msgstr ""
+"سيؤدي اختيار أي من تلك الإجابات إلى تشغيل هذا السؤال.\n"
+"اترك الحقل فارغاً إذا كان يجب عرض السؤال دائماً. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -3652,7 +3669,7 @@ msgstr "يرجى إدخال مستلم صالح واحد على الأقل. "
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_food_preferences
 msgid "Please give us your preferences for this event's dinner!"
-msgstr ""
+msgstr "من فضلك أرنا تفضيلاتك لعشاء هذه الفعالية! "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3789,7 +3806,7 @@ msgstr "الأسئلة والأجوبة "
 msgid ""
 "Questions containing the triggering answer(s) to display the current "
 "question."
-msgstr ""
+msgstr "الأسئلة التي تحتوي على الإجابات التي ستتسبب بعرض السؤال الحالي. "
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -4020,7 +4037,7 @@ msgstr "نوع حساب الدرجات "
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
 msgid "Scoring with answers after each page"
-msgstr ""
+msgstr "حساب الدرجات مع الإجابات بعد كل صفحة "
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
@@ -4030,7 +4047,7 @@ msgstr "حساب الدرجات مع الإجابات في النهاية "
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
 msgid "Scoring without answers"
-msgstr ""
+msgstr "حساب الدرجات دون الإجابات "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -4072,7 +4089,7 @@ msgstr "رؤية النتائج"
 #. module: survey
 #: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
 msgid "See you soon!"
-msgstr ""
+msgstr "نراك قريباً! "
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
@@ -4262,7 +4279,7 @@ msgstr "بعض الأسئلة عن شركتنا. أتعرفنا جيداً؟ "
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Someone just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "لقد شارك أحدهم للتو في \"%(survey_title)s\". "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -4358,7 +4375,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug1
 msgid "Steak with french fries"
-msgstr ""
+msgstr "شريحة لحم مع البطاطا المقلية "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_row2
@@ -4393,7 +4410,7 @@ msgstr "نسبة النجاح (%) "
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Success rate"
-msgstr ""
+msgstr "نسبة النجاح "
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.survey_question_answer_action
@@ -4806,7 +4823,7 @@ msgstr "إنها معايير تقنية تضمن استجابة الصفحة "
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "This answer cannot be overwritten."
-msgstr ""
+msgstr "لا يمكن الكتابة فوق هذه الإجابة. "
 
 #. module: survey
 #. odoo-python
@@ -4997,12 +5014,12 @@ msgstr "الأشجار "
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
 msgid "Triggering Answers"
-msgstr ""
+msgstr "الإجابات المشغلة "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
 msgid "Triggering Questions"
-msgstr ""
+msgstr "الأسئلة المشغلة "
 
 #. module: survey
 #. odoo-javascript
@@ -5012,6 +5029,8 @@ msgid ""
 "Triggers based on the following questions will not work because they are positioned after this question:\n"
 "\"%s\"."
 msgstr ""
+"لن تعمل العوامل المشغلة المستندة إلى الأسئلة التالية لأنها موضوعة بعد هذا السؤال:\n"
+"\"%s\"."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -5190,12 +5209,12 @@ msgstr "الخضروات "
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug2
 msgid "Vegetarian burger"
-msgstr ""
+msgstr "برجر نباتي "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug1
 msgid "Vegetarian pizza"
-msgstr ""
+msgstr "بيتزا نباتية "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_3_choice_1
@@ -5455,7 +5474,7 @@ msgstr "الشتاء "
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q2
 msgid "Would you prefer a veggie meal if possible?"
-msgstr ""
+msgstr "هل ستفضل وجبة نباتية، إذا أمكن؟ "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5608,7 +5627,7 @@ msgstr "الصورة المكبرة "
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "[Question Title]"
-msgstr ""
+msgstr "[عنوان السؤال] "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5765,4 +5784,4 @@ msgstr "إلى"
 msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
-msgstr ""
+msgstr "⚠️ لقد تم وضع هذا السؤال قبل بعض العوامل المشغلة له ويمكن تخطيه. "

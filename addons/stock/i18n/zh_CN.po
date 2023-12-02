@@ -6,6 +6,8 @@
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Chloe Wang, 2023
+# 何彬 <vnsoft.he@gmail.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2398,7 +2400,7 @@ msgstr "默认入向路线"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__delivery_steps
 msgid "Default outgoing route to follow"
-msgstr "默认出货路线"
+msgstr "默认出向路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
@@ -3720,7 +3722,7 @@ msgid ""
 "numbers. For moves that are returns, the detailed operations will always be "
 "prefilled, regardless of this option."
 msgstr ""
-"如果勾选该复选框，Odoo 将自动在详细操作中预填相应的产品、位置和批号/序列号。对于退货的移动，无论是否勾选该选项，详细操作都将自动预填。"
+"如果勾选该复选框，Odoo 将自动在详细作业中预填相应的产品、位置和批号/序列号。对于退货的移动，无论是否勾选该选项，详细作业都将自动预填。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -3916,7 +3918,7 @@ msgstr "进货移动行"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
 msgid "Incoming Shipments"
-msgstr "进货"
+msgstr "入向运输"
 
 #. module: stock
 #. odoo-javascript
@@ -3983,7 +3985,7 @@ msgstr "内部参考号"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "内部转账"
+msgstr "内部调拨"
 
 #. module: stock
 #. odoo-python
@@ -3992,7 +3994,7 @@ msgstr "内部转账"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "内部转账"
+msgstr "内部调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -5244,7 +5246,7 @@ msgstr "此批号没有作业"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr "未找到操作。让我们创建一个调拨！"
+msgstr "没有作业。让我们创建一个调拨！"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5313,7 +5315,7 @@ msgstr "没有库存可供显示"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "No transfer found. Let's create one!"
-msgstr "没有仓库调拨。 让我们创建一个！"
+msgstr "没有调拨。 让我们创建一个！"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5545,7 +5547,7 @@ msgstr "作业类型(ZPL)"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Operations"
-msgstr "操作"
+msgstr "作业"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -5711,7 +5713,7 @@ msgstr "出货调拨行"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
 msgid "Outgoing Shipments"
-msgstr "出货运输"
+msgstr "出向运输"
 
 #. module: stock
 #. odoo-python
@@ -6082,7 +6084,7 @@ msgstr "拣货作业"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
 msgid "Picking Properties"
-msgstr "分拣属性"
+msgstr "拣货属性"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -6153,7 +6155,7 @@ msgstr "首选路线"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr "是否存在取决于操作类型。"
+msgstr "是否存在取决于作业类型。"
 
 #. module: stock
 #. odoo-python
@@ -6962,7 +6964,7 @@ msgstr "收货路线"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "收款"
+msgstr "收货"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
@@ -7033,7 +7035,7 @@ msgstr "接收报告标签"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report Labels"
-msgstr "接待报告标签"
+msgstr "接收报告标签"
 
 #. module: stock
 #. odoo-javascript
@@ -8036,7 +8038,7 @@ msgstr "显示作业"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr "显示分拣类型"
+msgstr "显示拣货类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
@@ -8677,9 +8679,9 @@ msgid ""
 "            On the operation type you could e.g. specify if packing is needed by default,\n"
 "            if it should show the customer."
 msgstr ""
-"操作类型系统允许您分配每个库存\n"
-"            操作一个特定类型，该类型将相应地改变其视图。\n"
-"            在操作类型上，你可以指定默认情况下是否需要包装，\n"
+"作业类型系统允许您分配每个库存\n"
+"            作业一个特定类型，该类型将相应地改变其视图。\n"
+"            在作业类型上，你可以指定默认情况下是否需要包装，\n"
 "            如果它应该显示给客户。"
 
 #. module: stock
@@ -8878,7 +8880,7 @@ msgstr ""
 msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
-msgstr "使用此操作类型创建拣货时，这是默认的退货位置。"
+msgstr "使用此作业类型创建拣货时，这是默认的退货位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9285,7 +9287,7 @@ msgstr "调拨到"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Transfers"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: stock
 #. odoo-python
@@ -9305,7 +9307,7 @@ msgstr "移动%s：请添加一些要移动的项目。"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "移动允许您将产品从一个位置移动到另外一个位置。"
+msgstr "调拨允许您将产品从一个位置移动到另外一个位置。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -10026,7 +10028,7 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
-"在验证转账时:\n"
+"在验证调拨时:\n"
 " *询问:要求用户选择是否要对剩余产品进行延期订购\n"
 " * 总是:为剩余的产品自动创建延迟订单\n"
 " * 从不:剩余的产品被取消"
@@ -10359,7 +10361,7 @@ msgstr "当某个位置被指定为生产类型操作的目标位置时，不能
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
-msgstr "不能将报废位置设置为生产类型操作的目标位置。"
+msgstr "不能将报废位置设置为生产类型作业的目标位置。"
 
 #. module: stock
 #. odoo-python
@@ -10440,6 +10442,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"您有启用批次/序列号跟踪的库存产品。\n"
+"在关闭此设置之前，请先关闭所有产品的跟踪功能。"
 
 #. module: stock
 #. odoo-python
@@ -10478,7 +10482,7 @@ msgstr "您每次只能退回一次拣货。"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr "您可能需要更新该转移操作的位置"
+msgstr "您可能需要更新该转移作业的位置"
 
 #. module: stock
 #. odoo-python
