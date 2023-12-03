@@ -159,6 +159,12 @@ msgid "Each invoice line shall have one and only one tax."
 msgstr "Кожен рядок рахунка-фактури має мати лише один податок."
 
 #. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -341,6 +347,16 @@ msgstr "Поле %s вимагається на %s."
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "Поле «Чистий Номер Р'ахунку» є обов’язковим для банку-одержувача."
+
+#. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"Рахунок-фактура містить рядки з від’ємною ціною за одиницю, що неприпустимо."
+" Натомість вам може знадобитися встановити від’ємну кількість."
 
 #. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
