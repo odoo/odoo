@@ -159,6 +159,12 @@ msgstr "يجب أن يكون لكل بند فاتورة ضريبة واحدة ف
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -344,6 +350,17 @@ msgstr "الحقل %s مطلوب في %s. "
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "الحقل 'رقم الحساب السليم' مطلوب في الحساب البنكي للمستلم. "
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"تحتوي الفاتورة على بنود بها سعر وحدة سالب، وهو أمر غير مسموح به. قد تحتاج "
+"إلى تعيين كمية سالبة عوضاً عن ذلك. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
