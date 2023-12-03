@@ -102,6 +102,8 @@ msgstr "Se rechazó %(holiday_name)s."
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
+" %(leave_name)s ha sido cancelado con la siguiente justificación: <br/> "
+"%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -115,7 +117,7 @@ msgstr "%(leave_type)s: %(duration).2f días (%(start)s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(leave_type)s: %(duration).2f horas el %(date)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -143,7 +145,7 @@ msgstr "%(person)s: %(duration).2f días (%(start)s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(person)s: %(duration).2f horas el %(date)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1461,6 +1463,9 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
+"Elija a los encargados de tiempo personal que recibirán notificación para "
+"aprobar asignaciones o solicitudes de tiempo personal. Si no hay personas "
+"asignadas, no se enviará una notificación."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1942,6 +1947,8 @@ msgid ""
 "Filters only on allocations that belong to a time off type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Filtra solo las asignaciones que pertenecen a un tipo de tiempo personal "
+"\"activo\" (el campo activo es Verdadero)."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -2827,12 +2834,12 @@ msgstr "Con permiso hoy"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer: Manage all requests"
-msgstr ""
+msgstr "Gerente: gestionar todas las solicitudes"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "On Time Off"
-msgstr ""
+msgstr "En Tiempo personal"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
@@ -2998,6 +3005,8 @@ msgstr "Imprimir"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to delete an approved time off"
 msgstr ""
+"Proporcione una justificación para eliminar una solicitud de tiempo personal"
+" aprovada"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3074,7 +3083,7 @@ msgstr "Rechazado"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Refused Time Off"
-msgstr ""
+msgstr "Tiempo personal rechazado"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -3172,7 +3181,7 @@ msgstr "Tiempo de trabajo de recursos"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr ""
+msgstr "Encargado de tiempo personal notificado"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3362,6 +3371,12 @@ msgid ""
 "                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.\n"
 "                After it is complete, the new level will take effect when the next pay period begins."
 msgstr ""
+"Especifique qué ocurre si se produce una transición de nivel en mitad de un periodo de pago.\n"
+"\n"
+"                \"De inmediato\" cambiará al empleado al nuevo nivel de acumulación en la fecha exacta durante el período de pago en curso.\n"
+"\n"
+"                \"Después del periodo de acumulación\" mantendrá al empleado en el mismo nivel de asignación hasta que el periodo de pago previsto se efectúe.\n"
+"                Después de llevarse a cabo, el nuevo nivel será efectivo cuando comience el siguiente periodo de pago."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3525,6 +3540,8 @@ msgstr "Permiso tomado"
 msgid ""
 "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
+"La fecha de inicio del periodo de validez debe ser anterior a la fecha de "
+"finalización."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -3807,7 +3824,7 @@ msgstr "Calendario de tiempo personal"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
 msgid "Time Off Count"
-msgstr ""
+msgstr "Número de días de tiempo personal"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3915,7 +3932,7 @@ msgstr "Tipos de ausencia"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Time Off Validation"
-msgstr ""
+msgstr "Validación de tiempo personal"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -3950,7 +3967,7 @@ msgstr "Análisis de ausencias por empleado y tipo"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Time off Taken"
-msgstr ""
+msgstr "Tiempo personal tomado"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -4613,14 +4630,14 @@ msgstr "días del mes"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "days)"
-msgstr ""
+msgstr "días)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "deleted by %s (uid=%d)."
-msgstr ""
+msgstr "eliminado por %s (uid=%d)."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
