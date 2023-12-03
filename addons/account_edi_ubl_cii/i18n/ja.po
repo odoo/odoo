@@ -156,6 +156,12 @@ msgstr "各請求書の明細の税金は1つだけでなくてはなりませ�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -333,6 +339,15 @@ msgstr "フィールド%sが%sで必要です。"
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "受取銀行には「Sanitized Account Number」フィールドが必要です。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr "請求書に負の単価の行が含まれています。代わりに負の数量を設定する必要があるかもしれません。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

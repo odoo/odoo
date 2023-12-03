@@ -3791,6 +3791,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
+"العنصر العائد للمجال غير صحيح '%s'. يجب أن يكون من نوع عدد صحيح/فاصلة "
 
 #. module: stock
 #. odoo-python
@@ -5580,7 +5581,7 @@ msgstr "محتوى الطرد"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids
 msgid "Package Level"
-msgstr "مستوى الطرق "
+msgstr "مستوى الطرد "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
@@ -9987,6 +9988,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "لقد قمت بمعالجة كمية منتجات أقل من الطلب المبدئي."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"توجد منتجات في المخزون تم تمكين تتبع رقم المجموعة/الرقم التسلسلي لها.\n"
+"قم بإيقاف تشغيل التتبع لكافة المنتجات قبل إيقاف تشغيل هذا الإعداد. "
 
 #. module: stock
 #. odoo-python

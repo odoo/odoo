@@ -28,10 +28,10 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Martin Trigaux, 2023
 # hed shefer <hed@laylinetech.com>, 2023
-# Sagi Ahiel, 2023
 # Ha Ketem <haketem@gmail.com>, 2023
-# MichaelHadar, 2023
 # yael terner, 2023
+# MichaelHadar, 2023
+# Sagi Ahiel, 2023
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: yael terner, 2023\n"
+"Last-Translator: Sagi Ahiel, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -941,7 +941,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">כמות</span>\n"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">סה\"כ</span>\n"
 "                                        <span groups=\"account.group_show_line_subtotals_tax_included\">מחיר כולל</span>"
 
 #. module: account
@@ -2942,7 +2942,7 @@ msgstr "מחיר ממוצע"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "BILL"
-msgstr "חשבוניות רכש"
+msgstr "BILL"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -4766,6 +4766,7 @@ msgstr "מטבעות"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -7063,7 +7064,7 @@ msgstr "מזהה"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
-msgstr "חשבונית"
+msgstr "INV"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_exception_icon
@@ -8899,7 +8900,7 @@ msgstr "חשבון שער חליפין הפסד"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "MISC"
-msgstr "שונות"
+msgstr "MISC"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__made_sequence_hole
@@ -14862,7 +14863,6 @@ msgstr "פעילויות היום"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -14963,6 +14963,7 @@ msgid "Total amount you have to pay to this vendor."
 msgstr "הסכום הכולל שעליך לשלם לספק זה."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
 msgstr "סה\"כ במטבע"
