@@ -591,8 +591,8 @@ class PurchaseOrder(models.Model):
 
         if not invoice_vals_list:
             raise UserError(_(
-                    'There’s nothing to be billed for!\n'
-                    'Make sure you receive products before creating the bill. Sometimes control policies are useful :)'
+                    "There's nothing to be billed!\n"
+                    "You may need to receive products before creating a bill or double check your products control policies :)"
                 ))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation

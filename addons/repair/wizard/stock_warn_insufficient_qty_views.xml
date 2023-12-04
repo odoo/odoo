@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.stock_warn_insufficient_qty_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='description']" position="after">
-                <br/>You can still confirm the repair of <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from the <strong><field name="location_id" readonly="True"/></strong>, but get ready for an adventurous inventory to fix the negative inventory in stock!
+                <br/>You can still confirm the repair of <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from <strong><field name="location_id" readonly="True"/></strong>, but get ready to have an adventure taking inventory to fix the negative stock quantity!
             </xpath>
         </field>
     </record>

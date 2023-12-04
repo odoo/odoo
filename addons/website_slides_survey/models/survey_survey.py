@@ -35,7 +35,7 @@ class Survey(models.Model):
             certifications_course_mapping = [_('- %s (Courses - %s)', certi.title, '; '.join(certi.slide_channel_ids.mapped('name'))) for certi in certifications]
             raise ValidationError(_(
                 'Uh-oh! You can’t delete a survey used as a Course Certification! Otherwise students might think diplomas just grow on trees.\n'
-                'The courses that need it:\n%s',
+                'The courses that need it are:\n%s',
                 '\n'.join(certifications_course_mapping)))
 
     # ---------------------------------------------------------

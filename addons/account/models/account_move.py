@@ -1856,14 +1856,14 @@ class AccountMove(models.Model):
                 move = self.browse(move_id)
                 error_msg += _(
                     '\n\n'
-                    'Unbalanced move alert! The move %s is feeling a bit unbalanced, with %s on '
-                    'the debit side and %s on the credit side. We need some equilibrium here!\n\n'
-                    'Consider adding a default account on the journal \"%s\" to '
+                    'Unbalanced move alert! The move %(move)s is feeling a bit unbalanced, with %(total_debit)s on '
+                    'the debit side and %(total_credit)s on the credit side. We need some equilibrium here!\n\n'
+                    'Consider adding a default account on the journal \"%(journal)s\" to '
                     'automatically balance each move and restore order to the accounting universe!',
-                    move.display_name,
-                    format_amount(self.env, sum_debit, move.company_id.currency_id),
-                    format_amount(self.env, sum_credit, move.company_id.currency_id),
-                    move.journal_id.name)
+                    move=move.display_name,
+                    total_debit=format_amount(self.env, sum_debit, move.company_id.currency_id),
+                    total_credit=format_amount(self.env, sum_credit, move.company_id.currency_id),
+                    journal=move.journal_id.name)
             raise UserError(error_msg)
 
     def _get_unbalanced_moves(self, container):
@@ -3718,7 +3718,7 @@ class AccountMove(models.Model):
                 if invoice.is_sale_document():
                     raise UserError(_(
                         "The 'Customer' field is required to validate the invoice.\n"
-                        "You probably don’t want to explain to your auditor that you invoiced the invisible man :)"
+                        "You probably don't want to explain to your auditor that you invoiced the invisible man :)"
                     ))
                 elif invoice.is_purchase_document():
                     raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
@@ -3737,7 +3737,7 @@ class AccountMove(models.Model):
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
                 raise UserError(_(
                     "Make sure you add a line before posting the invoice. Invoices can't be created from thin air.\n"
-                    "You’ll thank me later for avoiding a weird explanation to your auditor :)"
+                    "You'll thank me later for avoiding a weird explanation to your auditor :)"
                 ))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)

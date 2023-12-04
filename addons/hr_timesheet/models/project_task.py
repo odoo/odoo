@@ -234,9 +234,9 @@ class Task(models.Model):
         task_with_timesheets_ids = [task.id for task, in timesheet_data]
         if task_with_timesheets_ids:
             if len(task_with_timesheets_ids) > 1:
-                warning_msg = _("Some timesheet entries are hitched to these tasks! Remove them first, then you’ll be able to delete it!")
+                warning_msg = _("Some timesheet entries are hitched to these tasks! Remove them first, then you’ll be able to delete the tasks!")
             else:
-                warning_msg = _("Some timesheet entries are hitched to this task! Remove them first, then you’ll be able to delete it!")
+                warning_msg = _("Some timesheet entries are hitched to this task! Remove them first, then you’ll be able to delete the tasks!")
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
                 _('See timesheet entries'), {'active_ids': task_with_timesheets_ids})

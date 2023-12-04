@@ -1110,10 +1110,15 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
-"There’s nothing to invoice!\n"
+"Cannot create an invoice. No items are available to invoice.\n"
 "\n"
-"Tip: Quantities to invoice appear in blue in the invoice form. If you have none, you might consider delivering your customer before invoicing :)\n"
-"Alternatively, you can change your product setting into “Invoice based on ordered quantities”"
+"To resolve this issue, please ensure that:\n"
+"   • The products have been delivered before attempting to invoice them.\n"
+"   • The invoicing policy of the product is configured correctly.\n"
+"\n"
+"If you want to invoice based on ordered quantities instead:\n"
+"   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
+"   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
 
 #. module: sale

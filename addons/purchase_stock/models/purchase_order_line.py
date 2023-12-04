@@ -162,8 +162,8 @@ class PurchaseOrderLine(models.Model):
                 # Prevent decreasing below received quantity
                 if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
                     raise UserError(_(
-                        "You're trying to decrease the ordered quantity below what you’ve already received. But we can't turn back time on what's already in your hands.\n\n"
-                        "To sort things out, create a return first."
+                        "You're trying to decrease the ordered quantity to a lower amount than what you’ve already received. Unfortunately we can't turn back time on what's already done.\n\n"
+                        "To make things right, create a return first."
                     ))
 
                 if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:

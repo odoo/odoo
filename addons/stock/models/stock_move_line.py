@@ -479,8 +479,8 @@ class StockMoveLine(models.Model):
             if ml.state in ('done', 'cancel'):
                 raise UserError(_(
                     "Deleting product moves after a picking is done?\n\n"
-                    "That would be like going back in time to revert all operations triggered after this move. You better not do it, Marty!\n\n"
-                    "Instead, try to change the “done” quantity to 0."
+                    "That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be! So let's not do it.\n\n"
+                    "Instead, try changing the “done” quantity to 0."
                 ))
 
     def unlink(self):

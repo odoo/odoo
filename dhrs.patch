@@ -1,0 +1,25 @@
+diff --git a/addons/phone_validation/i18n/phone_validation.pot b/addons/phone_validation/i18n/phone_validation.pot
+index c1d6c1ceb2e1..3578ee998b9b 100644
+--- a/addons/phone_validation/i18n/phone_validation.pot
++++ b/addons/phone_validation/i18n/phone_validation.pot
+@@ -183,7 +183,7 @@ msgstr ""
+ #. odoo-python
+ #: code:addons/phone_validation/tools/phone_validation.py:0
+ #, python-format
+-msgid "The number %s does not appear to be a valid number unless you're dialing aliens. Let's fix it for this dimension!"
++msgid "The number %s does not appear to be a valid number, unless you're dialing aliens. Let's fix it for this dimension!"
+ msgstr ""
+ 
+ #. module: phone_validation
+diff --git a/addons/phone_validation/tools/phone_validation.py b/addons/phone_validation/tools/phone_validation.py
+index 389d3a94081f..80e78c049cab 100644
+--- a/addons/phone_validation/tools/phone_validation.py
++++ b/addons/phone_validation/tools/phone_validation.py
+@@ -20,7 +20,6 @@ try:
+             raise UserError(_('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e)))
+ 
+         if not phonenumbers.is_possible_number(phone_nbr):
+-<<<<<<< HEAD
+             reason = phonenumbers.is_possible_number_with_reason(phone_nbr)
+             if reason == phonenumbers.ValidationResult.INVALID_COUNTRY_CODE:
+                 raise UserError(_('Impossible number %s: not a valid country prefix.', number))

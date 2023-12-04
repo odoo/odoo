@@ -22,9 +22,9 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Unbalanced move alert! The move %s is feeling a bit unbalanced, with %s on the debit side and %s on the credit side. We need some equilibrium here!\n"
+"Unbalanced move alert! The move %(move)s is feeling a bit unbalanced, with %(total_debit)s on the debit side and %(total_credit)s on the credit side. We need some equilibrium here!\n"
 "\n"
-"Consider adding a default account on the journal \"%s\" to automatically balance each move and restore order to the accounting universe!"
+"Consider adding a default account on the journal \"%(journal)s\" to automatically balance each move and restore order to the accounting universe!"
 msgstr ""
 
 #. module: account
@@ -13501,7 +13501,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
-"You probably don’t want to explain to your auditor that you invoiced the invisible man :)"
+"You probably don't want to explain to your auditor that you invoiced the invisible man :)"
 msgstr "
 
 #. module: account
@@ -15521,7 +15521,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Uh-oh! Those payment terms are quite popular and can’t be deleted, as there "
-"are still some records referencing it. How about archiving it instead?"
+"are still some records referencing them. How about archiving them instead?"
 msgstr ""
 
 #. module: account
@@ -15583,7 +15583,7 @@ msgstr ""
 #, python-format
 msgid ""
 "To reverse a journal entry, it has to be posted first.\n"
-"That would be like asking for a credit note for something not invoiced; it’s fishy :)"
+"That would be like asking for a credit note for something not invoiced: it’s fishy :)"
 msgstr ""
 
 #. module: account
@@ -15738,7 +15738,7 @@ msgstr ""
 #, python-format
 msgid ""
 "There's nothing left to pay on those selected journal items, so no payment "
-"registration necessary. You've got your finances under control like a boss!"
+"registration is necessary. You've got your finances under control like a boss!"
 msgstr ""
 
 #. module: account
@@ -16163,7 +16163,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Make sure you add a line before posting the invoice. Invoices can't be created from thin air.\n"
-"You’ll thank me later for avoiding a weird explanation to your auditor :)"
+"You'll thank me later for avoiding a weird explanation to your auditor :)"
 msgstr ""
 
 #. module: account

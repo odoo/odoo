@@ -222,7 +222,7 @@ class AccountPaymentTerm(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_referenced_terms(self):
         if self.env['account.move'].search([('invoice_payment_term_id', 'in', self.ids)]):
-            raise UserError(_('Uh-oh! Those payment terms are quite popular and can’t be deleted, as there are still some records referencing it. How about archiving it instead?'))
+            raise UserError(_('Uh-oh! Those payment terms are quite popular and can’t be deleted, as there are still some records referencing them. How about archiving them instead?'))
 
     def unlink(self):
         for terms in self:
