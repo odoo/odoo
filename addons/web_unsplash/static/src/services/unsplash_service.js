@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
+import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 
 export const unsplashService = {
-    dependencies: ['rpc'],
-    async start(env, { rpc }) {
+    async start() {
         const _cache = {};
         return {
             async getImages(query, offset = 0, pageSize = 30, orientation) {

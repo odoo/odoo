@@ -3,6 +3,7 @@
 import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
+import { rpc } from "@web/core/network/rpc";
 import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
@@ -83,11 +84,6 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     events: Object.assign({}, InputUserValueWidget.prototype.events || {}, {
         'click .o_we_redirect_to': '_onRedirectTo',
     }),
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     /**
      * @override
@@ -674,7 +670,6 @@ options.Class.include({
         // trigger handlers set with `.on`.
         this.$bsTarget = this.ownerDocument.defaultView.$(this.$target[0]);
 
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
     },
 
@@ -905,7 +900,7 @@ options.Class.include({
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        return this.rpc('/website/theme_customize_data', {
+        return rpc('/website/theme_customize_data', {
             'is_view_data': isViewData,
             'enable': enableDataKeys,
             'disable': disableDataKeys,
@@ -930,7 +925,7 @@ options.Class.include({
      */
     async _getEnabledCustomizeValues(possibleValues, isViewData) {
         const allDataKeys = this._getDataKeysFromPossibleValues(possibleValues);
-        const enabledValues = await this.rpc('/website/theme_customize_data_get', {
+        const enabledValues = await rpc('/website/theme_customize_data_get', {
             'keys': allDataKeys,
             'is_view_data': isViewData,
         });
@@ -2217,7 +2212,7 @@ options.registry.WebsiteLevelColor = options.Class.extend({
      */
     init() {
         this._super(...arguments);
-        this._rpc = options.serviceCached(this.bindService("rpc"));
+        this._rpc = options.serviceCached(rpc);
     },
     /**
      * @see this.selectClass for parameters
@@ -2287,7 +2282,7 @@ options.registry.HeaderElements = options.Class.extend({
      */
     init() {
         this._super(...arguments);
-        this._rpc = options.serviceCached(this.bindService("rpc"));
+        this._rpc = options.serviceCached(rpc);
     },
 
     //--------------------------------------------------------------------------

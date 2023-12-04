@@ -4,6 +4,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import '@website_slides/js/slides';
 import { _t } from "@web/core/l10n/translation";
 import { browser } from '@web/core/browser/browser';
+import { rpc } from "@web/core/network/rpc";
 
 export const ShareMail = publicWidget.Widget.extend({
     events: {
@@ -13,7 +14,6 @@ export const ShareMail = publicWidget.Widget.extend({
 
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
     },
 
@@ -54,7 +54,7 @@ export const ShareMail = publicWidget.Widget.extend({
                 params.channel_id = channelID;
             }
             this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
-            this.rpc(route, params).then((action) => {
+            rpc(route, params).then((action) => {
                 if (action) {
                     this.$('.alert-info').removeClass('d-none');
                     this.$('.input-group').addClass('d-none');

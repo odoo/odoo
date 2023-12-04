@@ -6,6 +6,7 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
+import { rpc } from "@web/core/network/rpc";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -74,7 +75,6 @@ export class ListController extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.userService = useService("user");
-        this.rpc = useService("rpc");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -507,7 +507,7 @@ export class ListController extends Component {
     }
 
     async getExportedFields(model, import_compat, parentParams) {
-        return await this.rpc("/web/export/get_fields", {
+        return await rpc("/web/export/get_fields", {
             ...parentParams,
             model,
             import_compat,

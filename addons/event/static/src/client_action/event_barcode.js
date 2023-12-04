@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { Component, onWillStart } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { EventRegistrationSummaryDialog } from "./event_registration_summary_dialog";
@@ -16,7 +17,6 @@ export class EventScanView extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.rpc = useService("rpc");
 
         const { default_event_id, active_model, active_id } = this.props.action.context;
         this.eventId = default_event_id || (active_model === "event.event" && active_id);
@@ -35,7 +35,7 @@ export class EventScanView extends Component {
      * from several events and tickets without reloading / changing event in UX.
      */
     async onWillStart() {
-        this.data = await this.rpc("/event/init_barcode_interface", {
+        this.data = await rpc("/event/init_barcode_interface", {
             event_id: this.eventId,
         });
     }

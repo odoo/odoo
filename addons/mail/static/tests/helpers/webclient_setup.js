@@ -3,6 +3,7 @@
 import { DiscussClientAction } from "@mail/core/web/discuss_client_action";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
@@ -56,7 +57,6 @@ function getCreateXHR() {
         const xhr = mockedXHR();
         let response = "";
         let route = "";
-        const self = this;
         xhr.status = 200;
         patch(xhr, {
             open(method, dest) {
@@ -65,9 +65,7 @@ function getCreateXHR() {
             },
             async send(data) {
                 await new Promise(setTimeout);
-                response = JSON.stringify(
-                    await self.env.services.rpc(route, { body: data, method: "POST" })
-                );
+                response = JSON.stringify(await rpc(route, { body: data, method: "POST" }));
                 return super.send(data);
             },
             upload: new EventTarget(),

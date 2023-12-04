@@ -2,6 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     selector : '#hr_recruitment_form',
@@ -9,17 +10,6 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
         'click #apply-btn': '_onClickApplyButton',
         'focusout #recruitment2' : '_onFocusOutMail',
         'focusout #recruitment4' : '_onFocusOutLinkedin',
-    },
-
-    init: function () {
-        this._super.apply(this, arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
-    willStart() {
-        return Promise.all([
-            this._super(),
-        ]);
     },
 
     _onClickApplyButton (ev) {
@@ -61,7 +51,7 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
             return;
         }
         const job_id = $('#recruitment7').val();
-        const data = await this.rpc('/website_hr_recruitment/check_recent_application',
+        const data = await rpc('/website_hr_recruitment/check_recent_application',
             {
                 email: email,
                 job_id: job_id,

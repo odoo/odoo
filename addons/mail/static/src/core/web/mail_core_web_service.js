@@ -2,6 +2,7 @@
 
 import { reactive } from "@odoo/owl";
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -15,13 +16,12 @@ export class MailCoreWeb {
         this.threadService = services["mail.thread"];
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
-        this.rpc = services.rpc;
         this.store = services["mail.store"];
     }
 
     setup() {
         this.messagingService.isReady.then(() => {
-            this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
+            rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
                 this.store.Message.insert(messages, { html: true });
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {
@@ -95,14 +95,7 @@ export class MailCoreWeb {
 }
 
 export const mailCoreWeb = {
-    dependencies: [
-        "bus_service",
-        "mail.message",
-        "mail.messaging",
-        "mail.store",
-        "rpc",
-        "mail.thread",
-    ],
+    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "mail.thread"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

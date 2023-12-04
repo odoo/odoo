@@ -15,6 +15,7 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 
+import { rpc } from "@web/core/network/rpc";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
@@ -29,7 +30,6 @@ export class CallParticipantCard extends Component {
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
         this.popover = usePopover(CallContextMenu);
-        this.rpc = useService("rpc");
         this.rtc = useState(useService("discuss.rtc"));
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
@@ -133,7 +133,7 @@ export class CallParticipantCard extends Component {
             }
             return;
         }
-        const channelData = await this.rpc("/mail/rtc/channel/cancel_call_invitation", {
+        const channelData = await rpc("/mail/rtc/channel/cancel_call_invitation", {
             channel_id: this.props.thread.id,
             member_ids: [this.channelMember.id],
         });

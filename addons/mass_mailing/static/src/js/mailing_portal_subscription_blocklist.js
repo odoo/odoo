@@ -1,6 +1,6 @@
 /** @odoo-module alias=mailing.PortalSubscriptionBlocklist **/
 
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -34,7 +34,7 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
      */
     _onBlocklistAddClick: async function (event) {
         event.preventDefault();
-        return await jsonrpc(
+        return await rpc(
             '/mailing/blocklist/add',
             {
                 document_id: this.customerData.documentId,
@@ -64,7 +64,7 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
      */
     _onBlocklistRemoveClick: async function (event) {
         event.preventDefault();
-        return await jsonrpc(
+        return await rpc(
             '/mailing/blocklist/remove',
             {
                 document_id: this.customerData.documentId,

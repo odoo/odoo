@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
@@ -62,7 +63,6 @@ export class NewContentModal extends Component {
     setup() {
         this.user = useService('user');
         this.orm = useService('orm');
-        this.rpc = useService('rpc');
         this.dialogs = useService('dialog');
         this.website = useService('website');
         this.action = useService('action');
@@ -163,7 +163,7 @@ export class NewContentModal extends Component {
                 elementsToUpdate[element.model] = element;
             }
         }
-        const accesses = await this.rpc("/website/check_new_content_access_rights", {
+        const accesses = await rpc("/website/check_new_content_access_rights", {
             models: modelsToCheck,
         });
         for (const [model, access] of Object.entries(accesses)) {
@@ -278,7 +278,6 @@ class NewContentSystray extends Component {
     static components = { NewContentModal };
 
     setup() {
-        this.rpc = useService('rpc');
         this.website = useService('website');
         this.websiteContext = useState(this.website.context);
     }

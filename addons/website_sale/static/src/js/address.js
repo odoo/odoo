@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 
 publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
@@ -17,7 +18,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
-        this.rpc = this.bindService('rpc');
     },
 
     /**
@@ -53,7 +53,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         if (!$("#country_id").val()) {
             return;
         }
-        return this.rpc("/shop/country_infos/" + $("#country_id").val(), {
+        return rpc("/shop/country_infos/" + $("#country_id").val(), {
             mode: $("#country_id").attr('mode'),
         }).then(function (data) {
             // placeholder phone_code

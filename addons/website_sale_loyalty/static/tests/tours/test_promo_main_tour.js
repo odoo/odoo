@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import tourUtils from '@website_sale/js/tours/tour_utils';
 
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "go to shop",
             trigger: 'div>strong:contains("10.0% discount on total amount")',
             run: function () {
-                jsonrpc('/web/dataset/call_kw/account.tax/create', {
+                rpc('/web/dataset/call_kw/account.tax/create', {
                     model: 'account.tax',
                     method: 'create',
                     args: [{
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                     }],
                     kwargs: {},
                 }).then(function (tax_id) {
-                    jsonrpc('/web/dataset/call_kw/product.template/create', {
+                    rpc('/web/dataset/call_kw/product.template/create', {
                         model: 'product.template',
                         method: 'create',
                         args: [{

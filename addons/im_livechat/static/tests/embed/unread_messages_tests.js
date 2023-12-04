@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -27,10 +29,10 @@ QUnit.test("new message from operator displays unread counter", async () => {
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     cookie.set("im_livechat_session", JSON.stringify(channelInfo));
-    const env = await start();
+    await start();
     $(".o-mail-Composer-input").blur();
     pyEnv.withUser(pyEnv.adminUserId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -55,10 +57,10 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     cookie.set("im_livechat_session", JSON.stringify(channelInfo));
-    const env = await start();
+    await start();
     $(".o-mail-Composer-input").blur();
     pyEnv.withUser(pyEnv.adminUserId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

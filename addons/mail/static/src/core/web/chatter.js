@@ -94,7 +94,6 @@ export class Chatter extends Component {
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
-        this.rpc = useService("rpc");
         this.state = useState({
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,

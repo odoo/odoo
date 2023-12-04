@@ -6,7 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { post } from "@web/core/network/http_service";
 import { Component } from "@odoo/owl";
-import { RPCError } from "@web/core/network/rpc_service";
+import { rpc, RPCError } from "@web/core/network/rpc";
 
 /**
  * Widget PortalComposer
@@ -37,7 +37,6 @@ var PortalComposer = publicWidget.Widget.extend({
             'res_id': false,
         }, options || {});
         this.attachments = [];
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
     },
     /**
@@ -87,7 +86,7 @@ var PortalComposer = publicWidget.Widget.extend({
 
         this.$sendButton.prop('disabled', true);
 
-        return this.rpc('/portal/attachment/remove', {
+        return rpc('/portal/attachment/remove', {
             'attachment_id': attachmentId,
             'access_token': accessToken,
         }).then(function () {
@@ -199,7 +198,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _chatterPostMessage: async function (route) {
-        const result = await this.rpc(route, this._prepareMessageData());
+        const result = await rpc(route, this._prepareMessageData());
         Component.env.bus.trigger('reload_chatter_content', result);
         return result;
     },

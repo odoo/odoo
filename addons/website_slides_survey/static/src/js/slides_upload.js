@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import SlidesUpload from "@website_slides/js/slides_upload";
 
 /**
@@ -56,10 +57,9 @@ SlidesUpload.SlideUploadDialog.include({
     _bindSelect2Dropdown: function () {
         this._super.apply(this, arguments);
 
-        var self = this;
         this.$('#certification_id').select2(this._select2Wrapper(_t('Certification'), false,
             function () {
-                return self.rpc('/slides_survey/certification/search_read', {
+                return rpc('/slides_survey/certification/search_read', {
                     fields: ['title'],
                 });
             }, 'title')

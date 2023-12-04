@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { debounce } from '@web/core/utils/timing';
 
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
@@ -55,7 +55,7 @@ paymentExpressCheckoutForm.include({
                 'zip':shippingInfo.querySelector('#o_payment_demo_shipping_country').value
             };
         }
-        await jsonrpc(
+        await rpc(
             document.querySelector(
                 '[name="o_payment_express_checkout_form"]'
             ).dataset['expressCheckoutRoute'],
@@ -72,7 +72,7 @@ paymentExpressCheckoutForm.include({
                 },
             }
         );
-        const processingValues = await jsonrpc(
+        const processingValues = await rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(providerId),
         )

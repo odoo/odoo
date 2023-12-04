@@ -7,6 +7,7 @@ import { makeEnv, startServices } from "@web/env";
 import { templates } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import {KioskGreetings} from "@hr_attendance/components/greetings/greetings";
@@ -26,7 +27,6 @@ class kioskAttendanceApp extends Component{
     };
 
     setup() {
-        this.rpc = useService("rpc");
         this.barcode = useService("barcode");
         this.notification = useService("notification");
         this.companyImageUrl = url("/web/image", {
@@ -55,7 +55,7 @@ class kioskAttendanceApp extends Component{
     }
 
     async kioskConfirm(employeeId){
-        const employee = await this.rpc('attendance_employee_data',
+        const employee = await rpc('attendance_employee_data',
             {
                 'token': this.props.token,
                 'employee_id': employeeId
@@ -83,7 +83,7 @@ class kioskAttendanceApp extends Component{
     }
 
     async onManualSelection(employeeId, enteredPin){
-        const result = await this.rpc('manual_selection',
+        const result = await rpc('manual_selection',
             {
                 'token': this.props.token,
                 'employee_id': employeeId,
@@ -104,7 +104,7 @@ class kioskAttendanceApp extends Component{
             return;
         }
         this.lockScanner = true;
-        const result = await this.rpc('attendance_barcode_scanned',
+        const result = await rpc('attendance_barcode_scanned',
             {
                 'barcode': barcode,
                 'token': this.props.token

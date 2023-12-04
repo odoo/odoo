@@ -3,16 +3,12 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     selector: ".o_wslides_js_slide_archive",
     events: {
         click: "_onArchiveSlideClick",
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -29,7 +25,7 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
                 /**
                  * Calls 'archive' on slide controller and then visually removes the slide dom element
                  */
-                const isArchived = await this.rpc("/slides/slide/archive", {
+                const isArchived = await rpc("/slides/slide/archive", {
                     slide_id: slideId,
                 });
                 if (isArchived) {

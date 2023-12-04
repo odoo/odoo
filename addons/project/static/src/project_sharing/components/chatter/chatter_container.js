@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 import { ChatterComposer } from "./chatter_composer";
 import { ChatterMessageCounter } from "./chatter_message_counter";
 import { ChatterMessages } from "./chatter_messages";
@@ -33,7 +33,6 @@ export class ChatterContainer extends Component {
     };
 
     setup() {
-        this.rpc = useService('rpc');
         this.state = useState({
             currentPage: this.props.pagerStart,
             messages: [],
@@ -102,7 +101,7 @@ export class ChatterContainer extends Component {
 
     async initChatter(params) {
         if (params.res_id && params.res_model) {
-            const chatterData = await this.rpc(
+            const chatterData = await rpc(
                 '/mail/chatter_init',
                 params,
             );
@@ -115,7 +114,7 @@ export class ChatterContainer extends Component {
     }
 
     async fetchMessages() {
-        const result = await this.rpc(
+        const result = await rpc(
             '/mail/chatter_fetch',
             this.messagesParams(this.props),
         );

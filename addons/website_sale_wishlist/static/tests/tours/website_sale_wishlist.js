@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Create a product with dynamic attribute and its values.",
             trigger: 'body',
             run: function () {
-                jsonrpc("/web/dataset/call_kw/product.attribute/create", {
+                rpc("/web/dataset/call_kw/product.attribute/create", {
                     model: 'product.attribute',
                     method: 'create',
                     args: [{
@@ -138,7 +138,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                     }],
                     kwargs: {},
                 }).then(function (attributeId) {
-                    return jsonrpc("/web/dataset/call_kw/product.template/create", {
+                    return rpc("/web/dataset/call_kw/product.template/create", {
                         model: 'product.template',
                         method: 'create',
                         args: [{
@@ -241,14 +241,14 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Archive the first variant",
             trigger: 'header#top:contains("Mitchell Admin")',
             run: function () {
-                jsonrpc("/web/dataset/call_kw/product.product/search", {
+                rpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
                     kwargs: {},
                 })
                 .then(function (productIds) {
-                    return jsonrpc("/web/dataset/call_kw/product.product/write", {
+                    return rpc("/web/dataset/call_kw/product.product/write", {
                         model: 'product.product',
                         method: 'write',
                         args: [productIds[0], {active: false}],
@@ -309,14 +309,14 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Archive all variants",
             trigger: 'header#top:contains("Mitchell Admin")',
             run: function () {
-                jsonrpc("/web/dataset/call_kw/product.product/search", {
+                rpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
                     kwargs: {},
                 })
                 .then(function (productIds) {
-                    return jsonrpc("/web/dataset/call_kw/product.product/write", {
+                    return rpc("/web/dataset/call_kw/product.product/write", {
                         model: 'product.product',
                         method: 'write',
                         args: [productIds, {active: false}],

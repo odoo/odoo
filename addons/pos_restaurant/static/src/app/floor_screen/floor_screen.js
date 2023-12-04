@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 

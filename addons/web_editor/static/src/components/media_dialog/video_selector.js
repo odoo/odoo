@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { debounce } from '@web/core/utils/timing';
 
@@ -33,7 +34,6 @@ export class VideoSelector extends Component {
     };
 
     setup() {
-        this.rpc = useService('rpc');
         this.http = useService('http');
 
         this.PLATFORMS = {
@@ -226,7 +226,7 @@ export class VideoSelector extends Component {
      * Keep rpc call in distinct method make it patchable by test.
      */
     async _getVideoURLData(url, options) {
-        return await this.rpc('/web_editor/video_url/data', {
+        return await rpc('/web_editor/video_url/data', {
             video_url: url,
             ...options,
         });

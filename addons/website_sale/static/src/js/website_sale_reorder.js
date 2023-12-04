@@ -5,6 +5,7 @@ import { debounce as debounceFn } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formatCurrency } from "@web/core/currency";
+import { rpc } from "@web/core/network/rpc";
 
 // Widget responsible for openingn the modal (giving out the sale order id)
 
@@ -50,7 +51,6 @@ export class ReorderDialog extends Component {
     };
 
     setup() {
-        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
         this.formatCurrency = formatCurrency;
@@ -62,10 +62,10 @@ export class ReorderDialog extends Component {
         // Cart Qty should not change while the dialog is opened.
         this.cartQty = parseInt(sessionStorage.getItem("website_sale_cart_quantity"));
         if (!this.cartQty) {
-            this.cartQty = await this.rpc("/shop/cart/quantity");
+            this.cartQty = await rpc("/shop/cart/quantity");
         }
         // Get required information about the order
-        this.content = await this.rpc("/my/orders/reorder_modal_content", {
+        this.content = await rpc("/my/orders/reorder_modal_content", {
             order_id: this.props.orderId,
             access_token: this.props.accessToken,
         });
@@ -91,7 +91,7 @@ export class ReorderDialog extends Component {
     }
 
     async loadProductCombinationInfo(product) {
-        product.combinationInfo = await this.rpc("/website_sale/get_combination_info", {
+        product.combinationInfo = await rpc("/website_sale/get_combination_info", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
             combination: product.combination,
@@ -139,7 +139,7 @@ export class ReorderDialog extends Component {
             this.dialogService.add(ReorderConfirmationDialog, {
                 body: _t("Do you wish to clear your cart before adding products to it?"),
                 confirm: async () => {
-                    await this.rpc("/shop/cart/clear");
+                    await rpc("/shop/cart/clear");
                     await onConfirm();
                 },
                 cancel: onConfirm,
@@ -154,7 +154,7 @@ export class ReorderDialog extends Component {
             if (!product.add_to_cart_allowed) {
                 continue;
             }
-            await this.rpc("/shop/cart/update_json", {
+            await rpc("/shop/cart/update_json", {
                 product_id: product.product_id,
                 add_qty: product.qty,
                 no_variant_attribute_values: JSON.stringify(product.no_variant_attribute_values),

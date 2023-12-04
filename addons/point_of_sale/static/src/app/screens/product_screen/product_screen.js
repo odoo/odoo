@@ -7,7 +7,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";

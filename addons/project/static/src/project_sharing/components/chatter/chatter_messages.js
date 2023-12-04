@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 import { ChatterAttachmentsViewer } from "./chatter_attachments_viewer";
 import { Component } from "@odoo/owl";
@@ -17,17 +17,13 @@ export class ChatterMessages extends Component {
     };
     static components = { ChatterAttachmentsViewer };
 
-    setup() {
-        this.rpc = useService('rpc');
-    }
-
     /**
      * Toggle the visibility of the message.
      *
      * @param {Object} message message to change the visibility
      */
     async toggleMessageVisibility(message) {
-        const result = await this.rpc(
+        const result = await rpc(
             '/mail/update_is_internal',
             { message_id: message.id, is_internal: !message.is_internal },
         );

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-    import { jsonrpc } from "@web/core/network/rpc_service";
+    import { rpc } from "@web/core/network/rpc";
     import { registry } from "@web/core/registry";
     import tourUtils from "@website_sale/js/tours/tour_utils";
 
@@ -173,7 +173,7 @@
         extra_trigger: '.o_frontend_to_backend_nav', // Check if the user is connected
         trigger: '#wrapwrap',
         run: function () {
-            var def1 = jsonrpc(`/web/dataset/call_kw/res.config.settings/create`, {
+            var def1 = rpc(`/web/dataset/call_kw/res.config.settings/create`, {
                 model: "res.config.settings",
                 method: "create",
                 args: [{
@@ -183,7 +183,7 @@
                 kwargs: {},
             });
             var def2 = def1.then(function (resId) {
-                return jsonrpc(`/web/dataset/call_kw/res.config.settings/execute`, {
+                return rpc(`/web/dataset/call_kw/res.config.settings/execute`, {
                     model: "res.config.settings",
                     method: "execute",
                     args: [[resId]],

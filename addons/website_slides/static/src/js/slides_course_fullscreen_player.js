@@ -13,6 +13,7 @@
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
     import { browser } from '@web/core/browser/browser';
+    import { rpc } from "@web/core/network/rpc";
 
     import { markup } from "@odoo/owl";
 
@@ -385,7 +386,6 @@
             this.slide = slide;
             this.session = session;
 
-            this.rpc = this.bindService("rpc");
             this.notification = this.bindService("notification");
         },
 
@@ -412,7 +412,7 @@
             if (input.val()) {
                 form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
                 var slideID = form.find('button').data('slide-id');
-                this.rpc('/slides/slide/send_share_email', {
+                rpc('/slides/slide/send_share_email', {
                     slide_id: slideID,
                     emails: input.val(),
                     fullscreen: true
@@ -552,9 +552,8 @@
          * @private
          */
         _fetchHtmlContent: function (){
-            var self = this;
             var currentSlide = this.get('slide');
-            return self.rpc("/slides/slide/get_html_content", {
+            return rpc("/slides/slide/get_html_content", {
                 'slide_id': currentSlide.id
             }).then(function (data){
                 if (data.html_content) {

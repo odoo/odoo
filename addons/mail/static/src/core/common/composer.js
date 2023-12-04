@@ -25,6 +25,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { rpc } from "@web/core/network/rpc";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -92,7 +93,6 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
-        this.rpc = useService("rpc");
         this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
@@ -408,7 +408,7 @@ export class Composer extends Component {
                 .filter((recipient) => recipient.checked && !recipient.persona)
                 .map((recipient) => recipient.email);
             if (emailsWithoutPartners.length !== 0) {
-                const partners = await this.rpc("/mail/partner/from_email", {
+                const partners = await rpc("/mail/partner/from_email", {
                     emails: emailsWithoutPartners,
                 });
                 for (const index in partners) {

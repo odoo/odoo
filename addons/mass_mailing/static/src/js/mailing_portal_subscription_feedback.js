@@ -1,7 +1,7 @@
 /** @odoo-module alias=mailing.PortalSubscriptionFeedback **/
 
 import { _t } from "@web/core/l10n/translation";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -38,7 +38,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
         event.preventDefault();
         const formData = new FormData(document.querySelector('div#o_mailing_subscription_feedback form'));
         const optoutReasonId = parseInt(formData.get('opt_out_reason_id'));
-        return await jsonrpc(
+        return await rpc(
             '/mailing/feedback',
             {
                 csrf_token: formData.get('csrf_token'),

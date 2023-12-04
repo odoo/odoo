@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "../browser/browser";
-import { ConnectionLostError, RPCError } from "../network/rpc_service";
+import { ConnectionLostError, RPCError, rpc } from "../network/rpc";
 import { registry } from "../registry";
 import {
     ClientErrorDialog,
@@ -106,8 +106,7 @@ export function lostConnectionHandler(env, error, originalError) {
         );
         let delay = 2000;
         browser.setTimeout(function checkConnection() {
-            env.services
-                .rpc("/web/webclient/version_info", {})
+            rpc("/web/webclient/version_info", {})
                 .then(function () {
                     if (connectionLostNotifRemove) {
                         connectionLostNotifRemove();

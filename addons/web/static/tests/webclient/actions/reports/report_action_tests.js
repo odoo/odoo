@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
@@ -161,7 +162,7 @@ QUnit.module("ActionManager", (hooks) => {
             patchWithCleanup(ReportAction.prototype, {
                 setup() {
                     super.setup(...arguments);
-                    this.env.services.rpc(this.reportUrl);
+                    rpc(this.reportUrl);
                     this.reportUrl = "about:blank";
                 },
             });
@@ -219,7 +220,7 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(ReportAction.prototype, {
             setup() {
                 super.setup(...arguments);
-                this.env.services.rpc(this.reportUrl);
+                rpc(this.reportUrl);
                 this.reportUrl = "about:blank";
             },
         });
@@ -351,7 +352,7 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(ReportAction.prototype, {
             setup() {
                 super.setup(...arguments);
-                this.env.services.rpc(this.reportUrl);
+                rpc(this.reportUrl);
                 this.reportUrl = "about:blank";
             },
         });

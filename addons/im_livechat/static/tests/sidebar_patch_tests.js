@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -75,14 +77,14 @@ QUnit.test("Do not show channel when visitor is typing", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await pyEnv.withGuest(guestId, () =>
-        env.services.rpc("/im_livechat/notify_typing", {
+        rpc("/im_livechat/notify_typing", {
             is_typing: true,
             uuid: channel.uuid,
         })
@@ -468,10 +470,10 @@ QUnit.test("Message unread counter", async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss();
     pyEnv.withGuest(guestId, () =>
-        env.services.rpc("/im_livechat/chat_post", {
+        rpc("/im_livechat/chat_post", {
             message_content: "hu",
             uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
         })

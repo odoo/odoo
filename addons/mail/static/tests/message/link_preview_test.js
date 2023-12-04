@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -260,11 +262,11 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss();
-    env.services.rpc("/mail/link_preview", { message_id: messageId });
+    rpc("/mail/link_preview", { message_id: messageId });
     assert.ok(true);
-    env.services.rpc("/mail/link_preview/delete", { link_preview_ids: [linkPreviewId] });
+    rpc("/mail/link_preview/delete", { link_preview_ids: [linkPreviewId] });
     assert.ok(true);
 });
 

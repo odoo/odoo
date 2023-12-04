@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { odooExceptionTitleMap, ErrorDialog } from "@web/core/errors/error_dialogs";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 

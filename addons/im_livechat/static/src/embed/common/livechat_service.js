@@ -6,6 +6,7 @@ import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
@@ -34,11 +35,20 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
     "_"
 )}_im_livechat.odoo_version`;
 
+const TEMPORARY_ID = "livechat_temporary_thread";
+const SESSION_COOKIE = "im_livechat_session";
+const OPERATOR_COOKIE = "im_livechat_previous_operator";
+const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
+
+export function getGuestToken() {
+    return localStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
+}
+
 export class LivechatService {
-    TEMPORARY_ID = "livechat_temporary_thread";
-    SESSION_COOKIE = "im_livechat_session";
-    OPERATOR_COOKIE = "im_livechat_previous_operator";
-    GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
+    TEMPORARY_ID = TEMPORARY_ID;
+    SESSION_COOKIE = SESSION_COOKIE;
+    OPERATOR_COOKIE = OPERATOR_COOKIE;
+    GUEST_TOKEN_STORAGE_KEY = GUEST_TOKEN_STORAGE_KEY;
     /** @type {keyof typeof SESSION_STATE} */
     state = SESSION_STATE.NONE;
     /** @type {LivechatRule} */
@@ -59,7 +69,6 @@ export class LivechatService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
-     * rpc: ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>,
      * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService>,
      * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
@@ -68,7 +77,6 @@ export class LivechatService {
         this.env = env;
         this.busService = services.bus_service;
         this.chatWindowService = services["mail.chat_window"];
-        this.rpc = services.rpc;
         this.notificationService = services.notification;
         this.store = services["mail.store"];
         this.available = session.livechatData?.isAvailable;
@@ -78,7 +86,7 @@ export class LivechatService {
     async initialize() {
         let init;
         if (!this.options.isTestChatbot) {
-            init = await this.rpc("/im_livechat/init", {
+            init = await rpc("/im_livechat/init", {
                 channel_id: this.options.channel_id,
             });
             // Clear session if it is outdated.
@@ -133,7 +141,7 @@ export class LivechatService {
         try {
             if (session?.uuid && notifyServer) {
                 this.busService.deleteChannel(session.uuid);
-                await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+                await rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
             }
         } finally {
             localStorage.removeItem(this.GUEST_TOKEN_STORAGE_KEY);
@@ -188,7 +196,7 @@ export class LivechatService {
             const chatbotScriptId = this.sessionCookie
                 ? this.sessionCookie.chatbot_script_id
                 : this.rule.chatbot?.scriptId;
-            threadData = await this.rpc(
+            threadData = await rpc(
                 "/im_livechat/get_session",
                 {
                     channel_id: this.options.channel_id,
@@ -263,7 +271,7 @@ export class LivechatService {
      * @returns {string|undefined}
      */
     get guestToken() {
-        return localStorage.getItem(this.GUEST_TOKEN_STORAGE_KEY);
+        return getGuestToken();
     }
 
     /**
@@ -285,14 +293,7 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: [
-        "bus_service",
-        "mail.chat_window",
-        "mail.store",
-        "notification",
-        "notification",
-        "rpc",
-    ],
+    dependencies: ["bus_service", "mail.chat_window", "mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         if (livechat.available) {

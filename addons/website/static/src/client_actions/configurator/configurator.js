@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import {svgToPNG} from '@website/js/utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import { mixCssColors } from '@web/core/utils/colors';
 import {
     Component,
@@ -222,7 +223,6 @@ class PaletteSelectionScreen extends Component {
         this.state = useStore();
         this.logoInputRef = useRef('logoSelectionInput');
         this.notification = useService("notification");
-        this.rpc = useService("rpc");
         this.orm = useService('orm');
 
         onMounted(() => {
@@ -241,7 +241,7 @@ class PaletteSelectionScreen extends Component {
         if (logoSelectInput.files.length === 1) {
             const file = logoSelectInput.files[0];
             const data = await getDataURLFromFile(file);
-            const attachment = await this.rpc('/web_editor/attachment/add_data', {
+            const attachment = await rpc('/web_editor/attachment/add_data', {
                 'name': 'logo',
                 'data': data.split(',')[1],
                 'is_image': true,

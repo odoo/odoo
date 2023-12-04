@@ -8,16 +8,18 @@ import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { patchWithCleanup } from "../helpers/utils";
+import { patchRPCWithCleanup } from "../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
 QUnit.module("company service");
 
 QUnit.test("reload webclient when updating a res.company", async (assert) => {
+    patchRPCWithCleanup();
     serviceRegistry.add("company", companyService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("action", {
-        start(env) {
+        start() {
             return {
                 doAction(action) {
                     assert.step(action);
@@ -49,7 +51,7 @@ QUnit.test(
                 };
             },
         });
-        const env = await makeTestEnv();
+        await makeTestEnv();
         assert.verifySteps([]);
         rpcBus.trigger("RPC:RESPONSE", {
             data: { params: { model: "res.company", method: "write" } },

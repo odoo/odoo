@@ -5,7 +5,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import {
     useBus,

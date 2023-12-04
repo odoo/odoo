@@ -6,6 +6,7 @@ import { cookie } from "@web/core/browser/cookie";;
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { renderToString } from "@web/core/utils/render";
 
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
@@ -29,7 +30,6 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.comparelist_product_ids = JSON.parse(cookie.get('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
         this.guard = new Mutex();
-        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -106,7 +106,6 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 $form,
                 productId,
                 $form.find('.product_template_id').val(),
-                false
             ).then(function (productId) {
                 productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
                 if (!productId) {
@@ -136,7 +135,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     _loadProducts: function (product_ids) {
         var self = this;
-        return this.rpc('/shop/get_product_data', {
+        return rpc('/shop/get_product_data', {
             product_ids: product_ids,
             cookies: JSON.parse(cookie.get('comparelist_product_ids') || '[]'),
         }).then(function (data) {
@@ -265,10 +264,6 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
     /**
      * @override
      */

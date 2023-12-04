@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { click, contains, insertText } from "@web/../tests/utils";
@@ -28,14 +30,14 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     pyEnv.withGuest(guestId, () =>
-        env.services.rpc("/im_livechat/chat_post", {
+        rpc("/im_livechat/chat_post", {
             uuid: channel.uuid,
             message_content: "new message",
         })

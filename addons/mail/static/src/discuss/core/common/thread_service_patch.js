@@ -2,6 +2,7 @@
 
 import { ThreadService } from "@mail/core/common/thread_service";
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -34,7 +35,7 @@ patch(ThreadService.prototype, {
         }
         thread.isLoadingAttachments = true;
         try {
-            const rawAttachments = await this.rpc("/discuss/channel/attachments", {
+            const rawAttachments = await rpc("/discuss/channel/attachments", {
                 before: Math.min(...thread.attachments.map(({ id }) => id)),
                 channel_id: thread.id,
                 limit,
@@ -49,13 +50,13 @@ patch(ThreadService.prototype, {
     },
 
     async muteThread(thread, { minutes = false } = {}) {
-        await this.rpc("/discuss/channel/mute", { channel_id: thread.id, minutes });
+        await rpc("/discuss/channel/mute", { channel_id: thread.id, minutes });
     },
 
     async updateCustomNotifications(thread, custom_notifications) {
         // Update the UI instantly to provide a better UX (no need to wait for the RPC to finish).
         thread.custom_notifications = custom_notifications;
-        await this.rpc("/discuss/channel/update_custom_notifications", {
+        await rpc("/discuss/channel/update_custom_notifications", {
             channel_id: thread.id,
             custom_notifications,
         });

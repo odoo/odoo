@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { rpc } from "@web/core/network/rpc";
 import {useService} from "@web/core/utils/hooks";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { onWillStart, useState } from "@odoo/owl";
 
 /**
@@ -20,7 +21,6 @@ export const PageControllerMixin = (component) => class extends component {
         super.setup();
         this.website = useService('website');
         this.dialog = useService('dialog');
-        this.rpc = useService('rpc');
 
         this.websiteSelection = odoo.debug ? [{id: 0, name: _t("All Websites")}] : [];
 
@@ -48,7 +48,7 @@ export const PageControllerMixin = (component) => class extends component {
         const action = this.props.context.create_action;
         if (action) {
             if (/^\//.test(action)) {
-                const url = await this.rpc(action);
+                const url = await rpc(action);
                 this.website.goToWebsite({ path: url, edition: true });
                 return;
             }

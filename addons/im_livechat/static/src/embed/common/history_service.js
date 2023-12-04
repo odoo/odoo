@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { cookie as cookieManager } from "@web/core/browser/cookie";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export class HistoryService {
@@ -9,8 +10,6 @@ export class HistoryService {
     static HISTORY_LIMIT = 15;
 
     constructor(env, services) {
-        /** @type {ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>} */
-        this.rpc = services.rpc;
         /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
         this.busService = services.bus_service;
         /** @type {import("@im_livechat/embed/common/livechat_service").LivechatService} */
@@ -25,7 +24,7 @@ export class HistoryService {
             }
             const cookie = cookieManager.get(HistoryService.HISTORY_COOKIE);
             const history = cookie ? JSON.parse(cookie) : [];
-            this.rpc("/im_livechat/history", {
+            rpc("/im_livechat/history", {
                 pid: this.livechatService.thread.operator.id,
                 channel_uuid: this.livechatService.thread.uuid,
                 page_history: history,
@@ -53,7 +52,7 @@ export class HistoryService {
 }
 
 export const historyService = {
-    dependencies: ["im_livechat.livechat", "bus_service", "rpc"],
+    dependencies: ["im_livechat.livechat", "bus_service"],
     start(env, services) {
         const history = new HistoryService(env, services);
         history.setup();

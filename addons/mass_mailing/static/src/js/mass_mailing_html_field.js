@@ -31,7 +31,6 @@ export class MassMailingHtmlField extends HtmlField {
             onWysiwygReset: this._resetIframe.bind(this),
         });
         this.action = useService('action');
-        this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.dialog = useService('dialog');
 

@@ -3,6 +3,7 @@
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
+import { rpc } from "@web/core/network/rpc";
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
@@ -28,7 +29,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     init() {
         this.isFullscreen = false;
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
         return this._super(...arguments);
     },
@@ -73,7 +73,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _getGMapAPIKey(refetch) {
         if (refetch || !this._gmapAPIKeyProm) {
             this._gmapAPIKeyProm = new Promise(async resolve => {
-                const data = await this.rpc('/website/google_maps_api_key');
+                const data = await rpc('/website/google_maps_api_key');
                 resolve(JSON.parse(data).google_maps_api_key || '');
             });
         }
@@ -225,7 +225,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         }
 
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
-        this.rpc($data.data('controller') || '/website/publish', {
+        rpc($data.data('controller') || '/website/publish', {
             id: +$data.data('id'),
             object: $data.data('object'),
         })

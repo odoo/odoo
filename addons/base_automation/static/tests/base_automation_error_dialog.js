@@ -5,7 +5,6 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
     makeFakeLocalizationService,
-    makeFakeRPCService,
 } from "@web/../tests/helpers/mock_services";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -38,7 +37,6 @@ QUnit.module("base_automation", {}, function () {
             registry.category("error_dialogs").add("base_automation", BaseAutomationErrorDialog);
             // Both of these are unused but required for the error service to call error handlers
             serviceRegistry.add("notification", notificationService);
-            serviceRegistry.add("rpc", makeFakeRPCService());
             const windowAddEventListener = browser.addEventListener;
             browser.addEventListener = (type, cb) => {
                 if (type === "unhandledrejection") {

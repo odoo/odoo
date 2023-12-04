@@ -4,7 +4,8 @@ import { loadJS } from "@web/core/assets";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
+import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -33,8 +34,6 @@ export class NameAndSignature extends Component {
     };
 
     setup() {
-        this.rpc = useService("rpc");
-
         this.htmlId = htmlId++;
         this.defaultName = this.props.signature.name || "";
         this.currentFont = 0;
@@ -60,7 +59,7 @@ export class NameAndSignature extends Component {
         );
 
         onWillStart(async () => {
-            this.fonts = await this.rpc(`/web/sign/get_fonts/${this.props.defaultFont}`);
+            this.fonts = await rpc(`/web/sign/get_fonts/${this.props.defaultFont}`);
         });
 
         onWillStart(async () => {

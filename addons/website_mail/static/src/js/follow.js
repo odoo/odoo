@@ -1,15 +1,11 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.js_follow)',
     disabledInEditableMode: false,
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     /**
      * @override
@@ -39,7 +35,7 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
             records[model].push(parseInt(el.dataset.id));
         }
 
-        this.rpc('/website_mail/is_follower', {
+        rpc('/website_mail/is_follower', {
             records: records,
         }).then(always, always);
 
@@ -113,7 +109,7 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {
-            this.rpc('/website_mail/follow', {
+            rpc('/website_mail/follow', {
                 'id': +$jsFollow.data('id'),
                 'object': $jsFollow.data('object'),
                 'message_is_follower': $jsFollow.attr("data-follow") || "off",

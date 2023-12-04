@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 
 /**
@@ -9,18 +11,15 @@ import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 export class HWPrinter extends BasePrinter {
     /**
      * @param {Object} params
-     * @param {Function} params.rpc the web's rpc service.
      * @param {string} params.url full address of the iot box. E.g. `http://10.23.45.67:8069`.
      */
     setup(params) {
         super.setup(...arguments);
-        const { rpc, url } = params;
-        this.rpc = rpc;
-        this.url = url;
+        this.url = params.url;
     }
 
     sendAction(data) {
-        return this.rpc(`${this.url}/hw_proxy/default_printer_action`, { data });
+        return rpc(`${this.url}/hw_proxy/default_printer_action`, { data });
     }
 
     /**

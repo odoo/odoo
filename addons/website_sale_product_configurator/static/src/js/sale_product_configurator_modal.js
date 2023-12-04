@@ -3,7 +3,7 @@
 import Dialog from '@web/legacy/js/core/dialog';
 import VariantMixin from '@website_sale/js/sale_variant_mixin';
 import { uniqueId } from '@web/core/utils/functions';
-import { jsonrpc } from '@web/core/network/rpc_service';
+import { rpc } from '@web/core/network/rpc';
 
 export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     events:  Object.assign({}, Dialog.prototype.events, VariantMixin.events, {
@@ -72,8 +72,6 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 self.$el.closest('.modal-content').css('min-height', self.previousModalHeight + 'px');
             }
         });
-
-        this.rpc = this.bindService("rpc");
     },
      /**
      * @override
@@ -81,7 +79,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     willStart: function () {
         var self = this;
 
-        var getModalContent = jsonrpc("/sale_product_configurator/show_advanced_configurator", {
+        var getModalContent = rpc("/sale_product_configurator/show_advanced_configurator", {
             mode: self.mode,
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
@@ -202,7 +200,6 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                 $item,
                 parseInt($item.find('input.product_id').val(), 10),
                 parseInt($item.find('input.product_template_id').val(), 10),
-                true
             );
             products.push({
                 'product_id': productID,
@@ -388,11 +385,10 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             $parent,
             $parent.find('.product_id').val(),
             productTemplateId,
-            true
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
-            jsonrpc("/sale_product_configurator/optional_product_items", {
+            rpc("/sale_product_configurator/optional_product_items", {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {

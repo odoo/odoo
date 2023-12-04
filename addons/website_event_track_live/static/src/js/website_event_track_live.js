@@ -4,17 +4,13 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import TrackSuggestionWidget from "@website_event_track_live/js/website_event_track_suggestion";
 import ReplaySuggestionWidget from "@website_event_track_live/js/website_event_track_replay_suggestion";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     selector: '.o_wevent_event_track_live',
     custom_events: Object.assign({}, publicWidget.Widget.prototype.custom_events, {
         'video-ended': '_onVideoEnded'
     }),
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     start: function () {
         var self = this;
@@ -50,7 +46,7 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
             class: 'owevent_track_suggestion_loading position-absolute w-100'
         }));
         var self = this;
-        this.rpc('/event_track/get_track_suggestion', {
+        rpc('/event_track/get_track_suggestion', {
             track_id: this.$el.data('trackId'),
         }).then(function (suggestion) {
             self.nextSuggestion = suggestion;

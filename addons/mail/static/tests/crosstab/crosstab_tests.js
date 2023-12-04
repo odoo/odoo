@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -41,7 +43,7 @@ QUnit.test("Delete starred message updates counter", async () => {
     tab2.openDiscuss(channelId);
     await contains("button", { target: tab2.target, text: "Starred1" });
 
-    tab1.env.services.rpc("/mail/message/update_content", {
+    rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
         attachment_ids: [],
@@ -143,7 +145,7 @@ QUnit.test("Adding attachments", async () => {
         name: "test.txt",
         mimetype: "text/plain",
     });
-    tab1.env.services.rpc("/mail/message/update_content", {
+    rpc("/mail/message/update_content", {
         body: "Hello world!",
         attachment_ids: [attachmentId],
         message_id: messageId,

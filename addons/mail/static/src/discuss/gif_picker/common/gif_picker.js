@@ -3,6 +3,7 @@
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
+import { rpc } from "@web/core/network/rpc";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -51,7 +52,6 @@ export class GifPicker extends Component {
     static props = ["PICKERS?", "className?", "close?", "onSelect", "state?"];
 
     setup() {
-        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.userService = useService("user");
@@ -144,7 +144,7 @@ export class GifPicker extends Component {
 
     async loadCategories() {
         try {
-            const { tags } = await this.rpc(
+            const { tags } = await rpc(
                 "/discuss/gif/categories",
                 {
                     country: this.userService.lang.slice(3, 5),
@@ -186,7 +186,7 @@ export class GifPicker extends Component {
             }
             const res = await this.sequential(() => {
                 this.state.loadingGif = true;
-                const res = this.rpc("/discuss/gif/search", params, {
+                const res = rpc("/discuss/gif/search", params, {
                     silent: true,
                 });
                 this.state.loadingGif = false;
@@ -254,18 +254,14 @@ export class GifPicker extends Component {
             if (index >= 0) {
                 this.state.favorites.gifs.splice(index, 1);
             }
-            await this.rpc(
-                "/discuss/gif/remove_favorite",
-                { tenor_gif_id: gif.id },
-                { silent: true }
-            );
+            await rpc("/discuss/gif/remove_favorite", { tenor_gif_id: gif.id }, { silent: true });
         }
     }
 
     async loadFavorites() {
         this.state.loadingGif = true;
         try {
-            const [results] = await this.rpc(
+            const [results] = await rpc(
                 "/discuss/gif/favorites",
                 { offset: this.offset },
                 { silent: true }

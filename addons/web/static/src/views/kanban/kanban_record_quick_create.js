@@ -14,7 +14,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { formView } from "../form/form_view";
 import { getDefaultConfig } from "../view";

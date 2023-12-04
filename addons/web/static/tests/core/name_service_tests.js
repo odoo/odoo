@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ERROR_INACCESSIBLE_OR_MISSING, nameService } from "@web/core/name_service";
-import { rpcBus } from "@web/core/network/rpc_service";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";

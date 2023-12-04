@@ -19,6 +19,7 @@ import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "@web_editor/js/common/utils";
 import { isIconElement, isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
+import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
@@ -132,7 +133,6 @@ export class Wysiwyg extends Component {
         }),
     }
     imageCropProps = useState({
-        rpc: this._rpc.bind(this),
         showCount: 0,
         media: undefined,
         mimetype: undefined,
@@ -145,7 +145,6 @@ export class Wysiwyg extends Component {
 
     setup() {
         this.orm = useService('orm');
-        this.rpc = useService('rpc');
         this.getColorPickerTemplateService = useService('get_color_picker_template');
         this.notification = useService("notification");
         this.popover = useService("popover");
@@ -3490,13 +3489,10 @@ export class Wysiwyg extends Component {
                 ...params.kwargs.context,
             };
         }
-        return this.rpc(route, params, {
+        return rpc(route, params, {
             silent: settings.shadow,
             xhr: settings.xhr,
         });
-    }
-    _rpc({ route,  params }) {
-        return this._serviceRpc(route, params)
     }
 }
 Wysiwyg.activeCollaborationChannelNames = new Set();

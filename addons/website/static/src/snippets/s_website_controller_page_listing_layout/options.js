@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
 import options from "@web_editor/js/editor/snippets.options";
+import { rpc } from "@web/core/network/rpc";
 
 const mainObjectRe = /website\.controller\.page\(((\d+,?)*)\)/;
 
 options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
         this.resModel = "website.controller.page";
     },
@@ -46,7 +46,7 @@ options.registry.WebsiteControllerPageListingLayout = options.Class.extend({
         // save the default layout display, and set the layout for the current user
         await Promise.all([
             this.orm.write(this.resModel, this.resIds, { default_layout: widgetValue }),
-            this.rpc("/website/save_session_layout_mode", params),
+            rpc("/website/save_session_layout_mode", params),
         ]);
     },
 

@@ -16,7 +16,6 @@ import { useService } from "@web/core/utils/hooks";
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
     static props = {
-        rpc: Function,
         showCount: { type: Number, optional: true },
         activeOnStart: { type: Boolean, optional: true },
         media: { optional: true },
@@ -124,7 +123,7 @@ export class ImageCrop extends Component {
                 'image/jpeg';
         this.mimetype = this.props.mimetype || mimetype;
 
-        await loadImageInfo(this.media, this.props.rpc);
+        await loadImageInfo(this.media);
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
         this.uncroppable = false;
         if (this.media.dataset.originalSrc && !isIllustration) {

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { WebsiteSale } from '@website_sale/js/website_sale';
+import { rpc } from "@web/core/network/rpc";
 import { isEmail } from '@web/core/utils/strings';
 
 WebsiteSale.include({
@@ -38,7 +39,7 @@ WebsiteSale.include({
             return this._displayEmailIncorrectMessage(stockNotificationEl);
         }
 
-        this.rpc("/shop/add/stock_notification", {
+        rpc("/shop/add/stock_notification", {
             product_id: productId,
             email,
         }).then((data) => {

@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -22,7 +23,6 @@ export class BoardController extends Component {
 
     setup() {
         this.board = useState(this.props.board);
-        this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
         if (this.env.isSmall) {
             this.selectLayout("1", false);
@@ -124,7 +124,7 @@ export class BoardController extends Component {
         const result = xmlSerializer.serializeToString(root);
         const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
 
-        this.rpc("/web/view/edit_custom", {
+        rpc("/web/view/edit_custom", {
             custom_id: this.board.customViewId,
             arch,
         });

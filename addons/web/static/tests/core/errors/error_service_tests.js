@@ -9,7 +9,7 @@ import {
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { errorService, UncaughtPromiseError } from "@web/core/errors/error_service";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
 import { registry } from "@web/core/registry";
@@ -20,7 +20,6 @@ import {
     makeFakeDialogService,
     makeFakeLocalizationService,
     makeFakeNotificationService,
-    makeFakeRPCService,
 } from "../../helpers/mock_services";
 import { getFixture, makeDeferred, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
 
@@ -39,7 +38,6 @@ QUnit.module("Error Service", {
         serviceRegistry.add("error", errorService);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("notification", notificationService);
-        serviceRegistry.add("rpc", makeFakeRPCService());
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("ui", uiService);
         const windowAddEventListener = browser.addEventListener;
@@ -424,7 +422,6 @@ QUnit.module("Error Service", {
         serviceRegistry.add("error", errorService);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("notification", notificationService);
-        serviceRegistry.add("rpc", makeFakeRPCService());
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("ui", uiService);
         // remove the override of the defaultHandler done in qunit.js

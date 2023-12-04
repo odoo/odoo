@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { makeFakeRPCService } from "@web/../tests/helpers/mock_services";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, editInput, getFixture, mount, nextTick } from "../helpers/utils";
+import { patchRPCWithCleanup } from "../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
@@ -25,13 +25,12 @@ const getNameAndSignatureButtonNames = (target) => {
 
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(async () => {
-        const mockRPC = async (route, args) => {
+        patchRPCWithCleanup((route) => {
             if (route === "/web/sign/get_fonts/") {
                 return {};
             }
-        };
+        });
         serviceRegistry.add("hotkey", hotkeyService);
-        serviceRegistry.add("rpc", makeFakeRPCService(mockRPC));
 
         target = getFixture();
         const signature = {};

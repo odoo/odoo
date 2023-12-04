@@ -11,7 +11,6 @@ patch(AttendeeCalendarController.prototype, {
         super.setup(...arguments);
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.rpc = useService("rpc");
     },
 
     async onGoogleSyncCalendar() {

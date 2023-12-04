@@ -5,6 +5,7 @@ import wSaleUtils from "@website_sale/js/website_sale_utils";
 import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "@website_sale/js/website_sale";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.WebsiteSale.include({
 
@@ -104,7 +105,7 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
                 const productAndOptions = JSON.stringify(products);
-                this.rpc('/shop/cart/update_option', {
+                rpc('/shop/cart/update_option', {
                     product_and_options: productAndOptions,
                     ...this._getOptionalCombinationInfoParam(),
                 }).then(function (values) {

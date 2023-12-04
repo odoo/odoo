@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     // /shop/checkout
@@ -9,14 +10,6 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         'click .js_change_billing': '_onClickChangeBilling',
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
-    },
-
-    /**
-     * @constructor
-     */
-    init() {
-        this._super.apply(this, arguments);
-        this.rpc = this.bindService('rpc');
     },
 
     //--------------------------------------------------------------------------
@@ -54,7 +47,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         $new.removeClass(cardClass);
         $new.addClass('bg-primary border border-primary');
 
-        this.rpc(
+        rpc(
             '/shop/cart/update_address',
             {
                 mode: $new.attr('mode'),

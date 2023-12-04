@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
@@ -17,7 +18,6 @@ export class PersonaService {
      */
     setup(env, services) {
         this.env = env;
-        this.rpc = services.rpc;
         this.orm = services.orm;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
@@ -30,7 +30,7 @@ export class PersonaService {
     }
 
     async updateGuestName(guest, name) {
-        await this.rpc("/mail/guest/update_name", {
+        await rpc("/mail/guest/update_name", {
             guest_id: guest.id,
             name,
         });
@@ -70,7 +70,7 @@ export class PersonaService {
 }
 
 export const personaService = {
-    dependencies: ["orm", "rpc", "mail.store"],
+    dependencies: ["orm", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

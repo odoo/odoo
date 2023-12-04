@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.testError = publicWidget.Widget.extend({
     selector: '.rpc_error',
     events: {
         'click a': '_onRpcErrorClick',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     //----------------------------------------------------------------------
@@ -26,6 +22,6 @@ publicWidget.registry.testError = publicWidget.Widget.extend({
     _onRpcErrorClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        return this.rpc($link.attr('href'));
+        return rpc($link.attr('href'));
     }
 });
