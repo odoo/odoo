@@ -100,3 +100,18 @@ class TestPoSSaleReport(TestPoSCommon):
         move_id = self.env['account.move'].browse(order_ids[0]['account_move'])
         self.assertEqual(move_id.partner_id.id, self.customer.id)
         self.assertEqual(move_id.partner_shipping_id.id, self.other_customer.id)
+
+    def test_warehouse(self):
+
+        self.open_new_session()
+        session = self.pos_session
+        orders = []
+
+        # Process two orders
+        orders.append(self.create_ui_order_data([(self.product0, 3)]))
+        self.env['pos.order'].create_from_ui(orders)
+
+        session.action_pos_session_closing_control()
+
+        reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id', limit=2)
+        self.assertEqual(reports[0].warehouse_id.id, self.config.picking_type_id.warehouse_id.id)
