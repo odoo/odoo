@@ -107,7 +107,7 @@ patch(ThreadService.prototype, {
         if (id === false) {
             thread.messages.push({
                 id: this.messageService.getNextTemporaryId(),
-                author: { id: this.store.self.id },
+                author: this.store.self,
                 body: _t("Creating a new record..."),
                 message_type: "notification",
                 trackingValues: [],
