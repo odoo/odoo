@@ -327,10 +327,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     _addToolbar() {
         this._super(...arguments);
         this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
-            <div class="btn fa fa-fw fa-2x o_we_highlight_animated_text d-none
+            <we-button class="fa fa-fw o_we_link o_we_highlight_animated_text d-none
                 ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"
                 title="${_t('Highlight Animated Text')}"
-                aria-label="Highlight Animated Text"/>
+                aria-label="Highlight Animated Text">
+            </we-button>
         `));
         this._toggleTextOptionsButton(".o_we_animate_text");
         this._toggleHighlightAnimatedTextButton();
