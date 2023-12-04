@@ -6,8 +6,6 @@
  */
 
 import { App } from "@odoo/owl";
-import { patch, unpatch } from "@web/core/utils/patch";
-import { ORM } from "@web/core/orm_service";
 import { browser } from "@web/core/browser/browser";
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
@@ -41,20 +39,12 @@ let testedModals;
  * This should be done only once.
  */
 function setup() {
-    patch(ORM.prototype, "PatchedORM", {
-        async call(model, method, args = [], kwargs = {}) {
-            calledRPC.push(`${model}.${method}`);
-            try {
-                return await this._super(...arguments);
-            } finally {
-                calledRPC.splice(calledRPC.indexOf(`${model}.${method}`), 1);
-            }
-        },
-    });
     env = odoo.__WOWL_DEBUG__.root.env;
     env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
+    env.bus.addEventListener("RPC:REQUEST", onRPCRequest);
+    env.bus.addEventListener("RPC:RESPONSE", onRPCResponse);
     actionCount = 0;
-    calledRPC = [];
+    calledRPC = {};
     studioCount = 0;
     testedApps = [];
     testedMenus = [];
@@ -66,13 +56,22 @@ function setup() {
     isEnterprise = odoo.info && odoo.info.isEnterprise;
 }
 
+function onRPCRequest({ detail }) {
+    calledRPC[detail.data.id] = detail.url;
+}
+
+function onRPCResponse({ detail }) {
+    delete calledRPC[detail.data.id];
+}
+
 function uiUpdate() {
     actionCount++;
 }
 
 function cleanup() {
-    unpatch(ORM.prototype, "PatchedORM");
     env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
+    env.bus.removeEventListener("RPC:REQUEST", onRPCRequest);
+    env.bus.removeEventListener("RPC:RESPONSE", onRPCResponse);
 }
 
 /**
@@ -119,7 +118,7 @@ function waitForCondition(stopCondition) {
         const initialTime = 30000;
 
         function hasPendingRPC() {
-            return calledRPC.length > 0;
+            return Object.keys(calledRPC).length > 0;
         }
         function hasScheduledTask() {
             let size = 0;
@@ -146,8 +145,8 @@ function waitForCondition(stopCondition) {
                         initialTime / 1000
                     } seconds to load\n`;
                     msg += `Waiting for:\n`;
-                    if (calledRPC.length > 0) {
-                        msg += ` * ${calledRPC.join(", ")} RPC\n`;
+                    if (Object.keys(calledRPC).length > 0) {
+                        msg += ` * ${Object.values(calledRPC).join(", ")} RPC\n`;
                     }
                     let scheduleTasks = "";
                     for (const app of App.apps) {
@@ -158,7 +157,9 @@ function waitForCondition(stopCondition) {
                     if (scheduleTasks.length > 0) {
                         msg += ` * ${scheduleTasks} scheduled tasks\n`;
                     }
-                    msg += ` * stopCondition: ${stopCondition.toString()}`;
+                    if (!stopCondition()) {
+                        msg += ` * stopCondition: ${stopCondition.toString()}`;
+                    }
                     browser.console.error(msg);
                     reject();
                 }

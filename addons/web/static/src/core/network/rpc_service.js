@@ -56,7 +56,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
     let rejectFn;
     const promise = new Promise((resolve, reject) => {
         rejectFn = reject;
-        bus.trigger("RPC:REQUEST", { data, settings });
+        bus.trigger("RPC:REQUEST", { data, url, settings });
         // handle success
         request.addEventListener("load", () => {
             if (request.status === 502) {
