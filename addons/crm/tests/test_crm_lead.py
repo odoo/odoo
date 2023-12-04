@@ -646,17 +646,17 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(lead.stage_id, self.stage_team1_1)
             self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(
-            leads[0].date_last_stage_update, updated_time,
-            'FIXME: set same stage when changing user_id, should not update')
+            leads[0].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
         self.assertEqual(
             leads[0].date_open, updated_time,
             'User assigned -> assign date updated')
         self.assertEqual(
-            leads[1].date_last_stage_update, updated_time,
-            'FIXME: set same stage when changing user_id, should not update')
+            leads[1].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
         self.assertEqual(
             leads[1].date_open, updated_time,
-            'FIXME: Should not update date_open, was already the same user_id')
+            'Should not update date_open, was already the same user_id, but done in batch so ...')
 
         # set won changes stage -> update date_last_stage_update
         newer_time = datetime(2023, 11, 26, 8, 0, 0)
@@ -679,16 +679,16 @@ class TestCRMLead(TestCrmCommon):
                 auto_unlink=False,
             )
             leads.flush_recordset()
-        self.assertEqual(leads[0].date_last_stage_update, updated_time)
+        self.assertEqual(leads[0].date_last_stage_update, first_now)
         self.assertEqual(leads[0].date_open, updated_time)
         self.assertEqual(leads[0].stage_id, self.stage_team1_1)
         self.assertEqual(leads[0].team_id, self.sales_team_1)
         self.assertEqual(
-            leads[1].date_last_stage_update, last_time,
-            'FIXME: should not rewrite when setting same stage')
+            leads[1].date_last_stage_update, newer_time,
+            'Should not rewrite when setting same stage')
         self.assertEqual(
-            leads[1].date_open, last_time,
-            'FIXME: should not rewrite when setting same user_id')
+            leads[1].date_open, updated_time,
+            'Should not rewrite when setting same user_id')
         self.assertEqual(leads[1].stage_id, self.stage_gen_won)
         self.assertEqual(leads[1].team_id, self.sales_team_1)
         self.assertEqual(leads[1].user_id, self.user_sales_salesman)
