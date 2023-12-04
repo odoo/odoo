@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { Dialog } from '@web/core/dialog/dialog';
@@ -60,14 +61,13 @@ export class Attachment extends Component {
     };
     setup() {
         this.dialogs = useService('dialog');
-        this.rpc = useService('rpc');
     }
 
     remove() {
         this.dialogs.add(ConfirmationDialog, {
             body: _t("Are you sure you want to delete this file?"),
             confirm: async () => {
-                const prevented = await this.rpc('/web_editor/attachment/remove', {
+                const prevented = await rpc('/web_editor/attachment/remove', {
                     ids: [this.props.id],
                 });
                 if (!Object.keys(prevented).length) {

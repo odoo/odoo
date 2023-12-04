@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { browser } from "../browser/browser";
-import { registry } from "../registry";
-
 import { EventBus } from "@odoo/owl";
+import { browser } from "../browser/browser";
+
+export const rpcBus = new EventBus();
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -29,11 +29,6 @@ export class ConnectionLostError extends Error {
 
 export class ConnectionAbortedError extends Error {}
 
-export const rpcBus = new EventBus();
-
-// -----------------------------------------------------------------------------
-// Main RPC method
-// -----------------------------------------------------------------------------
 export function makeErrorFromResponse(reponse) {
     // Odoo returns error like this, in a error field instead of properly
     // using http error codes...
@@ -47,8 +42,15 @@ export function makeErrorFromResponse(reponse) {
     return error;
 }
 
+// -----------------------------------------------------------------------------
+// Main RPC method
+// -----------------------------------------------------------------------------
 let rpcId = 0;
-export function jsonrpc(url, params = {}, settings = {}) {
+export function rpc(url, params = {}, settings = {}) {
+    return rpc._rpc(url, params, settings);
+}
+// such that it can be overriden in tests
+rpc._rpc = function (url, params, settings) {
     const XHR = browser.XMLHttpRequest;
     const data = {
         id: rpcId++,
@@ -115,25 +117,4 @@ export function jsonrpc(url, params = {}, settings = {}) {
         }
     };
     return promise;
-}
-
-// -----------------------------------------------------------------------------
-// RPC service
-// -----------------------------------------------------------------------------
-export const rpcService = {
-    async: true,
-    start(env) {
-        /**
-         * @param {string} route
-         * @param {Object} params
-         * @param {Object} [settings]
-         * @param {boolean} settings.silent
-         * @param {XMLHttpRequest} settings.xhr
-         */
-        return function rpc(route, params = {}, settings = {}) {
-            return jsonrpc(route, params, settings);
-        };
-    },
 };
-
-registry.category("services").add("rpc", rpcService);

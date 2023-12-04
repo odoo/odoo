@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 
 var SelectBox = publicWidget.Widget.extend({
     events: {
@@ -120,7 +121,6 @@ var RecentLinkBox = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.link_obj = obj;
         this.animating_copy = false;
-        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -225,7 +225,7 @@ var RecentLinkBox = publicWidget.Widget.extend({
         if (initCode === newCode) {
             showNewCode(newCode);
         } else {
-            this.rpc('/website_links/add_code', {
+            rpc('/website_links/add_code', {
                 init_code: initCode,
                 new_code: newCode,
             }).then(function (result) {
@@ -268,11 +268,6 @@ var RecentLinkBox = publicWidget.Widget.extend({
 });
 
 var RecentLinks = publicWidget.Widget.extend({
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -282,7 +277,7 @@ var RecentLinks = publicWidget.Widget.extend({
      */
     getRecentLinks: function (filter) {
         var self = this;
-        return this.rpc('/website_links/recent_links', {
+        return rpc('/website_links/recent_links', {
             filter: filter,
             limit: 20,
         }).then(function (result) {
@@ -339,11 +334,6 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         'keyup #url': '_onUrlKeyUp',
         'click #btn_shorten_url': '_onShortenUrlButtonClick',
         'submit #o_website_links_link_tracker_form': '_onFormSubmit',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -485,7 +475,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         $('#btn_shorten_url').text(_t("Generating link..."));
 
-        this.rpc('/website_links/new', params).then(function (result) {
+        rpc('/website_links/new', params).then(function (result) {
             if ('error' in result) {
                 // Handle errors
                 if (result.error === 'empty_url') {

@@ -3,6 +3,7 @@
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { deduceUrl } from "@point_of_sale/utils";
 import { effect } from "@web/core/utils/reactive";
@@ -14,13 +15,12 @@ import { effect } from "@web/core/utils/reactive";
  * by using the bus for two-way communication?
  */
 export class HardwareProxy extends EventBus {
-    static serviceDependencies = ["rpc"];
+    static serviceDependencies = [];
     constructor() {
         super();
         this.setup(...arguments);
     }
-    setup({ rpc }) {
-        this.rpc = rpc;
+    setup() {
         this.debugWeight = 0;
         this.useDebugWeight = false;
         this.host = "";
@@ -70,7 +70,7 @@ export class HardwareProxy extends EventBus {
     }
 
     connectToPrinter() {
-        this.printer = new HWPrinter({ rpc: this.rpc, url: this.host });
+        this.printer = new HWPrinter({ url: this.host });
     }
 
     /**
@@ -104,7 +104,7 @@ export class HardwareProxy extends EventBus {
             const always = () => setTimeout(status, 5000);
             const xhr = new browser.XMLHttpRequest();
             xhr.timeout = 2500;
-            this.rpc(`${this.host}/hw_proxy/status_json`, {}, { silent: true, xhr })
+            rpc(`${this.host}/hw_proxy/status_json`, {}, { silent: true, xhr })
                 .then(
                     (drivers) => this.setConnectionInfo({ status: "connected", drivers }),
                     () => {
@@ -132,7 +132,7 @@ export class HardwareProxy extends EventBus {
         if (this.connectionInfo.status === "disconnected") {
             return Promise.reject();
         }
-        return this.rpc(`${this.host}/hw_proxy/${name}`, params, { silent: true });
+        return rpc(`${this.host}/hw_proxy/${name}`, params, { silent: true });
     }
 
     /**

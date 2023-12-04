@@ -8,6 +8,7 @@ import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
@@ -96,7 +97,6 @@ export class Rtc {
         this.env = env;
         this.store = services["mail.store"];
         this.notification = services.notification;
-        this.rpc = services.rpc;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         this.state = reactive({
@@ -729,7 +729,7 @@ export class Rtc {
             return;
         }
         this.pttExtService.subscribe();
-        const { rtcSessions, iceServers, sessionId } = await this.rpc(
+        const { rtcSessions, iceServers, sessionId } = await rpc(
             "/mail/rtc/channel/join_call",
             {
                 channel_id: channel.id,
@@ -771,7 +771,7 @@ export class Rtc {
                 if (!this.state.selfSession) {
                     return;
                 }
-                await this.rpc(
+                await rpc(
                     "/mail/rtc/session/update_and_broadcast",
                     {
                         session_id: this.state.selfSession.id,
@@ -834,7 +834,7 @@ export class Rtc {
     }
 
     async rpcLeaveCall(channel) {
-        await this.rpc(
+        await rpc(
             "/mail/rtc/channel/leave_call",
             {
                 channel_id: channel.id,
@@ -844,7 +844,7 @@ export class Rtc {
     }
 
     async ping() {
-        const { rtcSessions } = await this.rpc(
+        const { rtcSessions } = await rpc(
             "/discuss/channel/ping",
             {
                 channel_id: this.state.channel.id,
@@ -1016,7 +1016,7 @@ export class Rtc {
             ]);
         });
         try {
-            await this.rpc(
+            await rpc(
                 "/mail/rtc/session/notify_call_members",
                 {
                     peer_notifications: notifications,
@@ -1572,7 +1572,6 @@ export const rtcService = {
         "mail.sound_effects",
         "mail.store",
         "notification",
-        "rpc",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env

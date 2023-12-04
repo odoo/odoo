@@ -5,18 +5,13 @@ import { renderToElement } from '@web/core/utils/render';
 import { markup } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from '@web/core/l10n/translation';
-import { ConnectionLostError, RPCError } from '@web/core/network/rpc_service';
+import { ConnectionLostError, rpc, RPCError } from '@web/core/network/rpc';
 
 publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
     selector: 'div[name="o_payment_status"]',
 
     timeout: 0,
     pollCount: 0,
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     async start() {
         this.call('ui', 'block', {
@@ -31,7 +26,7 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
         setTimeout(() => {
             // Fetch the post-processing values from the server.
             const self = this;
-            this.rpc('/payment/status/poll', {
+            rpc('/payment/status/poll', {
                 'csrf_token': odoo.csrf_token,
             }).then(postProcessingValues => {
                 let { state, display_message, landing_route } = postProcessingValues;

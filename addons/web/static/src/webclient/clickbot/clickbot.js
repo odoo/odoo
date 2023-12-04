@@ -7,6 +7,7 @@
 
 import { App } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc";
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
 const BLACKLISTED_MENUS = [
@@ -41,8 +42,8 @@ let testedModals;
 function setup() {
     env = odoo.__WOWL_DEBUG__.root.env;
     env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
-    env.bus.addEventListener("RPC:REQUEST", onRPCRequest);
-    env.bus.addEventListener("RPC:RESPONSE", onRPCResponse);
+    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
+    rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
     actionCount = 0;
     calledRPC = {};
     studioCount = 0;
@@ -70,8 +71,8 @@ function uiUpdate() {
 
 function cleanup() {
     env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
-    env.bus.removeEventListener("RPC:REQUEST", onRPCRequest);
-    env.bus.removeEventListener("RPC:RESPONSE", onRPCResponse);
+    rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
+    rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
 }
 
 /**

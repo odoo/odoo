@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -43,7 +44,6 @@ export class ResourceEditor extends Component {
         this.website = useService("website");
         this.user = useService("user");
         this.orm = useService("orm");
-        this.rpc = useService("rpc");
         this.dialog = useService("dialog");
 
         this.keepLast = new KeepLast();
@@ -177,7 +177,7 @@ export class ResourceEditor extends Component {
 
     async loadResources() {
         const resources = await this.keepLast.add(
-            this.rpc("/web_editor/get_assets_editor_resources", {
+            rpc("/web_editor/get_assets_editor_resources", {
                 key: this.viewKey,
                 bundles: this.state.xmlFilter === "all",
                 bundles_restriction: BUNDLES_RESTRICTION,

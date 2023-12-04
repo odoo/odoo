@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { registry } from "./registry";
+import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * This ORM service is the standard way to interact with the ORM in python from
@@ -94,9 +95,8 @@ export const UPDATE_METHODS = [
 ];
 
 export class ORM {
-    constructor(rpc, user) {
-        /** @protected */
-        this.rpc = rpc;
+    constructor(user) {
+        this.rpc = rpc; // to be overridable by the SampleORM
         /** @protected */
         this.user = user;
         /** @protected */
@@ -314,7 +314,7 @@ export class ORM {
  * const result = await this.orm.withOption({shadow: true}).read('res.partner', [id]);
  */
 export const ormService = {
-    dependencies: ["rpc", "user"],
+    dependencies: ["user"],
     async: [
         "call",
         "create",
@@ -327,8 +327,8 @@ export const ormService = {
         "webSearchRead",
         "write",
     ],
-    start(env, { rpc, user }) {
-        return new ORM(rpc, user);
+    start(env, { user }) {
+        return new ORM(user);
     },
 };
 

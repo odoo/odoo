@@ -1,6 +1,6 @@
 /** @odoo-module alias=mailing.PortalSubscriptionForm **/
 
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { renderToFragment } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -49,7 +49,7 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
         event.preventDefault();
         const formData = new FormData(document.querySelector('div#o_mailing_subscription_form form'));
         const mailingListOptinIds = formData.getAll('mailing_list_ids').map(id_str => parseInt(id_str));
-        return await jsonrpc(
+        return await rpc(
             '/mailing/list/update',
             {
                 csrf_token: formData.get('csrf_token'),

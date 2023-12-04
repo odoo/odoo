@@ -4,7 +4,7 @@ import { Component, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 export class SlideUnsubscribeDialog extends Component {
     static template = "website_slides.SlideUnsubscribeDialog";
@@ -17,8 +17,6 @@ export class SlideUnsubscribeDialog extends Component {
     };
 
     setup() {
-        this.rpc = useService("rpc");
-
         this.state = useState({
             buttonDisabled: false,
         });
@@ -56,7 +54,7 @@ export class SlideUnsubscribeDialog extends Component {
         }
         this.state.buttonDisabled = true;
 
-        await this.rpc("/slides/channel/leave", { channel_id: this.channelID });
+        await rpc("/slides/channel/leave", { channel_id: this.channelID });
         if (this.props.visibility === "public" || this.props.visibility === "connected") {
             window.location.reload();
         } else {
@@ -73,7 +71,7 @@ export class SlideUnsubscribeDialog extends Component {
         if (this.isFollower === this.isChecked) {
             this.props.close();
         } else {
-            await this.rpc(`/slides/channel/${this.isChecked ? "subscribe" : "unsubscribe"}`, {
+            await rpc(`/slides/channel/${this.isChecked ? "subscribe" : "unsubscribe"}`, {
                 channel_id: this.channelID,
             });
             window.location.reload();

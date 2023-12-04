@@ -59,7 +59,7 @@
             'web/static/src/session.js',
             'web/static/src/env.js',
             'web/static/src/core/network/http_service.js',
-            'web/static/src/core/network/rpc_service.js',
+            'web/static/src/core/network/rpc.js',
             'web/static/src/core/user_service.js',
             'web/static/src/core/l10n/**/*.js',
             'web/static/src/core/network/download.js',

@@ -2,6 +2,7 @@
 
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 
@@ -373,7 +374,7 @@ export class DynamicList extends DataPoint {
         if (offset) {
             params.offset = offset;
         }
-        const wasResequenced = await this.model.rpc("/web/dataset/resequence", params);
+        const wasResequenced = await rpc("/web/dataset/resequence", params);
         if (!wasResequenced) {
             return;
         }

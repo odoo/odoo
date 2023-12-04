@@ -3,6 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
 /**
@@ -46,7 +47,6 @@ var Quiz = publicWidget.Widget.extend({
         this.userId = session.user_id;
         this.redirectURL = encodeURIComponent(document.URL);
 
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
     },
 
@@ -210,7 +210,7 @@ var Quiz = publicWidget.Widget.extend({
     _submitQuiz: function () {
         var self = this;
 
-        return this.rpc('/event_track/quiz/submit', {
+        return rpc('/event_track/quiz/submit', {
             event_id: self.track.eventId,
             track_id: self.track.id,
             answer_ids: this._getQuizAnswers(),
@@ -256,7 +256,7 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _onClickReset: function () {
-        this.rpc('/event_track/quiz/reset', {
+        rpc('/event_track/quiz/reset', {
             event_id: this.track.eventId,
             track_id: this.track.id
         }).then(this._resetQuiz.bind(this));

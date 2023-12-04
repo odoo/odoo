@@ -5,6 +5,7 @@ import { TranscriptSender } from "@im_livechat/embed/common/feedback_panel/trans
 
 import { Component, useState } from "@odoo/owl";
 
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { url } from "@web/core/utils/urls";
@@ -29,7 +30,6 @@ export class FeedbackPanel extends Component {
     setup() {
         this.session = session;
         this.livechatService = useService("im_livechat.livechat");
-        this.rpc = useService("rpc");
         this.state = useState({
             step: this.STEP.RATING,
             rating: null,
@@ -46,7 +46,7 @@ export class FeedbackPanel extends Component {
     }
 
     async onClickSendFeedback() {
-        this.rpc("/im_livechat/feedback", {
+        rpc("/im_livechat/feedback", {
             reason: this.state.feedback,
             rate: this.state.rating,
             uuid: this.props.thread.uuid,

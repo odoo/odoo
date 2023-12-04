@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -25,7 +27,7 @@ QUnit.test("Should open chat window on send chat request to website visitor", as
         },
     });
     await openFormView("website.visitor", visitorId);
-    await env.services.rpc("/web/dataset/call_button", {
+    await rpc("/web/dataset/call_button", {
         args: [visitorId],
         kwargs: { context: env.context },
         method: "action_send_chat_request",

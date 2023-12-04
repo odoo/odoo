@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { rpc } from "@web/core/network/rpc";
 import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import { _t } from "@web/core/l10n/translation";
@@ -30,7 +31,7 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
         if (visitorChoice) {
             this._handleAdd($(ev.currentTarget.closest('div')));
         } else {
-            const isAddToCartAllowed = await this.rpc(`/shop/product/is_add_to_cart_allowed`, {
+            const isAddToCartAllowed = await rpc(`/shop/product/is_add_to_cart_allowed`, {
                 product_id: productId,
             });
             if (!isAddToCartAllowed) {

@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { routeToUrl } from "@web/core/browser/router_service";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
@@ -106,7 +107,7 @@ registry.category("actions").add("home", home);
  */
 async function reloadContext(env, action) {
     // side-effect of get_session_info is to refresh the session context
-    await env.services.rpc("/web/session/get_session_info");
+    await rpc("/web/session/get_session_info");
     reload(env, action);
 }
 

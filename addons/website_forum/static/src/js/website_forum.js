@@ -7,6 +7,7 @@ import { cookie } from "@web/core/browser/cookie";;
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
+import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
@@ -35,7 +36,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
         this.notification = this.bindService("notification");
     },
@@ -331,7 +331,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onFlagAlertClick: function (ev) {
         ev.preventDefault();
         const elem = ev.currentTarget;
-        this.rpc(
+        rpc(
             elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
         ).then(data => {
             if (data.error) {
@@ -373,7 +373,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onVotePostClick: function (ev) {
         ev.preventDefault();
         var $btn = $(ev.currentTarget);
-        this.rpc($btn.data('href')).then(data => {
+        rpc($btn.data('href')).then(data => {
             if (data.error) {
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
@@ -471,7 +471,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         const link = ev.currentTarget;
         const target = link.dataset.target;
-        const data = await this.rpc(link.dataset.href);
+        const data = await rpc(link.dataset.href);
         if (data.error) {
             const message = data.error === 'anonymous_user'
                 ? _t('Sorry, anonymous users cannot choose correct answers.')
@@ -506,7 +506,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onFavoriteQuestionClick: async function (ev) {
         ev.preventDefault();
         const link = ev.currentTarget;
-        const data = await this.rpc(link.dataset.href);
+        const data = await rpc(link.dataset.href);
         link.classList.toggle('opacity-50', !data);
         link.classList.toggle('opacity-100-hover', !data);
         const link_icon = link.querySelector('.fa');
@@ -523,7 +523,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         var $link = $(ev.currentTarget);
         var $container = $link.closest('.o_wforum_post_comments_container');
 
-        this.rpc($link.closest('form').attr('action')).then(function () {
+        rpc($link.closest('form').attr('action')).then(function () {
             $link.closest('.o_wforum_post_comment').remove();
 
             var count = $container.find('.o_wforum_post_comment').length;
@@ -573,7 +573,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     async _onFlagMarkAsOffensiveClick(ev) {
         ev.preventDefault();
-        const template = await this.rpc($(ev.currentTarget).data('action'));
+        const template = await rpc($(ev.currentTarget).data('action'));
         this.call("dialog", "add", FlagMarkAsOffensiveDialog, {
             title: _t("Offensive Post"),
             body: markup(template),

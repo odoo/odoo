@@ -6,7 +6,7 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NON_IDLE_EVENTS = [
     "mousemove",

@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -616,10 +618,10 @@ QUnit.test("Counter is updated when receiving new message", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             thread_id: channelId,
             thread_model: "discuss.channel",
             post_data: {
@@ -1000,13 +1002,13 @@ QUnit.test("preview for channel should show latest non-deleted message", async (
         model: "discuss.channel",
         res_id: channelId,
     });
-    const { env } = await start();
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-2" });
     // Simulate deletion of message-2
-    env.services.rpc("/mail/message/update_content", {
+    rpc("/mail/message/update_content", {
         message_id: messageId_2,
         body: "",
         attachment_ids: [],

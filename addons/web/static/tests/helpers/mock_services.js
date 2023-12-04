@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
-import { Component, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { routerService } from "@web/core/browser/router_service";
 import { effectService } from "@web/core/effects/effect_service";
 import { localization } from "@web/core/l10n/localization";
-import { rpcService } from "@web/core/network/rpc_service";
+import { ConnectionAbortedError, rpcBus, rpc } from "@web/core/network/rpc";
 import { ormService } from "@web/core/orm_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { userService } from "@web/core/user_service";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
-import { ConnectionAbortedError, rpcBus } from "../../src/core/network/rpc_service";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 
@@ -46,51 +44,35 @@ export function makeFakeLocalizationService(config = {}) {
     };
 }
 
-function buildMockRPC(mockRPC) {
-    return async function (...args) {
-        if (this instanceof Component && status(this) === "destroyed") {
-            return new Promise(() => {});
-        }
-        if (mockRPC) {
-            return mockRPC(...args);
-        }
-    };
-}
-
-export function makeFakeRPCService(mockRPC) {
-    return {
-        name: "rpc",
-        start(env) {
-            const rpcService = buildMockRPC(mockRPC);
-            let nextId = 1;
-            return function (route, params = {}, settings = {}) {
-                let rejectFn;
-                const data = {
-                    id: nextId++,
-                    jsonrpc: "2.0",
-                    method: "call",
-                    params: params,
-                };
-                rpcBus.trigger("RPC:REQUEST", { data, url: route, settings });
-                const rpcProm = new Promise((resolve, reject) => {
-                    rejectFn = reject;
-                    rpcService(...arguments)
-                        .then((result) => {
-                            rpcBus.trigger("RPC:RESPONSE", { data, settings, result });
-                            resolve(result);
-                        })
-                        .catch(reject);
-                });
-                rpcProm.abort = (rejectError = true) => {
-                    if (rejectError) {
-                        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
-                    }
-                };
-                return rpcProm;
+export function patchRPCWithCleanup(mockRPC = () => {}) {
+    let nextId = 1;
+    patchWithCleanup(rpc, {
+        _rpc: function (route, params = {}, settings = {}) {
+            let rejectFn;
+            const data = {
+                id: nextId++,
+                jsonrpc: "2.0",
+                method: "call",
+                params: params,
             };
+            rpcBus.trigger("RPC:REQUEST", { data, url: route, settings });
+            const rpcProm = new Promise((resolve, reject) => {
+                rejectFn = reject;
+                Promise.resolve(mockRPC(...arguments))
+                    .then((result) => {
+                        rpcBus.trigger("RPC:RESPONSE", { data, settings, result });
+                        resolve(result);
+                    })
+                    .catch(reject);
+            });
+            rpcProm.abort = (rejectError = true) => {
+                if (rejectError) {
+                    rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                }
+            };
+            return rpcProm;
         },
-        specializeForComponent: rpcService.specializeForComponent,
-    };
+    });
 }
 
 export function makeMockXHR(response, sendCb, def) {
@@ -148,7 +130,6 @@ export function makeMockXHR(response, sendCb, def) {
 // -----------------------------------------------------------------------------
 
 export function makeMockFetch(mockRPC) {
-    const _rpc = buildMockRPC(mockRPC);
     return async (input, params) => {
         let route = typeof input === "string" ? input : input.url;
         if (route.includes("load_menus")) {
@@ -161,7 +142,7 @@ export function makeMockFetch(mockRPC) {
         let res;
         let status;
         try {
-            res = await _rpc(route, params);
+            res = await mockRPC(route, params);
             status = 200;
         } catch {
             status = 500;
@@ -339,7 +320,6 @@ export const mocks = {
     localization: makeFakeLocalizationService,
     notification: makeFakeNotificationService,
     router: makeFakeRouterService,
-    rpc: makeFakeRPCService,
     title: () => fakeTitleService,
     ui: () => uiService,
     user: () => userService,

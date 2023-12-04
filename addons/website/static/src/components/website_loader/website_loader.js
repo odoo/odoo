@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { useBus, useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
+import { useBus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
@@ -12,8 +13,6 @@ export class WebsiteLoader extends Component {
     static template = "website.website_loader";
 
     setup() {
-        this.rpc = useService("rpc");
-
         const initialState = {
             isVisible: false,
             title: '',
@@ -171,7 +170,7 @@ export class WebsiteLoader extends Component {
      * @param {integer[]} selectedFeatures
      */
     async trackModules(selectedFeatures) {
-        const installInfo = await this.rpc(
+        const installInfo = await rpc(
             "/website/track_installing_modules",
             {
                 selected_features: selectedFeatures,

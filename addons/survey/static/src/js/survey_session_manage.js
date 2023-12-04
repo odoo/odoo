@@ -6,6 +6,7 @@ import SurveySessionChart from "@survey/js/survey_session_chart";
 import SurveySessionTextAnswers from "@survey/js/survey_session_text_answers";
 import SurveySessionLeaderBoard from "@survey/js/survey_session_leaderboard";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 
 const nextPageTooltips = {
@@ -29,7 +30,6 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
 
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
     },
 
@@ -341,7 +341,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             delete this.resultsRefreshInterval;
         }
 
-        var nextQuestionPromise = this.rpc(
+        var nextQuestionPromise = rpc(
             `/survey/session/next_question/${self.surveyAccessToken}`,
             {
                 'go_back': goBack,
@@ -454,7 +454,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     _refreshResults: function () {
         var self = this;
 
-        return this.rpc(
+        return rpc(
             `/survey/session/results/${self.surveyAccessToken}`
         ).then(function (questionResults) {
             if (questionResults) {

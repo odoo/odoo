@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import wUtils from "@website/js/utils";
 
 export const cartHandlerMixin = {
@@ -28,7 +29,7 @@ export const cartHandlerMixin = {
      * @private
      */
     async _addToCartInPage(params) {
-        const data = await this.rpc("/shop/cart/update_json", {
+        const data = await rpc("/shop/cart/update_json", {
             ...params,
             display: false,
             force_create: true,

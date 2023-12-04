@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useService } from '@web/core/utils/hooks';
+import { rpc } from "@web/core/network/rpc";
 import { TextField } from '@web/views/fields/text/text_field';
 import { PortalAttachDocument } from '../portal_attach_document/portal_attach_document';
 import { ChatterAttachmentsViewer } from './chatter_attachments_viewer';
@@ -35,7 +35,6 @@ export class ChatterComposer extends Component {
     };
 
     setup() {
-        this.rpc = useService('rpc');
         this.state = useState({
             displayError: false,
             attachments: this.props.attachments.map(file => file.state === 'done'),
@@ -89,7 +88,7 @@ export class ChatterComposer extends Component {
             return;
         }
 
-        await this.rpc(
+        await rpc(
             "/mail/chatter_post",
             this.prepareMessageData(),
         );
@@ -119,7 +118,7 @@ export class ChatterComposer extends Component {
     async deleteAttachment(attachment) {
         this.clearErrors();
         try {
-            await this.rpc(
+            await rpc(
                 '/portal/attachment/remove',
                 {
                     attachment_id: attachment.id,

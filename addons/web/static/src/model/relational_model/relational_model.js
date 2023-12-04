@@ -99,7 +99,7 @@ const errorHandlerRegistry = registry.category("error_handlers");
 errorHandlerRegistry.add("fetchRecordErrorHandler", fetchRecordErrorHandler);
 
 export class RelationalModel extends Model {
-    static services = ["action", "company", "dialog", "notification", "orm", "rpc", "user"];
+    static services = ["action", "company", "dialog", "notification", "orm", "user"];
     static Record = Record;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -114,11 +114,10 @@ export class RelationalModel extends Model {
     /**
      * @param {Params} params
      */
-    setup(params, { action, company, dialog, notification, rpc, user }) {
+    setup(params, { action, company, dialog, notification, user }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
-        this.rpc = rpc;
         this.user = user;
 
         this.bus = new EventBus();

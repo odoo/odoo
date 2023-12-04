@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
@@ -144,7 +145,6 @@ class Keyword extends Component {
 
     setup() {
         this.website = useService('website');
-        this.rpc = useService('rpc');
 
         this.seoContext = useState(seoContext);
 
@@ -153,7 +153,7 @@ class Keyword extends Component {
         });
 
         onMounted(async () => {
-            const suggestions = await this.rpc('/website/seo_suggest', {
+            const suggestions = await rpc('/website/seo_suggest', {
                 lang: this.props.language,
                 keywords: this.props.keyword,
             });
@@ -202,7 +202,6 @@ class MetaKeywords extends Component {
     };
 
     setup() {
-        this.rpc = useService('rpc');
         this.website = useService('website');
 
         this.seoContext = useState(seoContext);
@@ -215,7 +214,7 @@ class MetaKeywords extends Component {
         this.maxKeywords = 10;
 
         onWillStart(async () => {
-            this.languages = await this.rpc('/website/get_languages');
+            this.languages = await rpc('/website/get_languages');
             this.state.language = this.getLanguage();
         });
     }
@@ -377,7 +376,6 @@ export class OptimizeSEODialog extends Component {
     };
 
     setup() {
-        this.rpc = useService('rpc');
         this.website = useService('website');
         this.dialogs = useService('dialog');
         this.orm = useService('orm');
@@ -391,7 +389,7 @@ export class OptimizeSEODialog extends Component {
             const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
 
             this.object = seoObject || mainObject;
-            this.data = await this.rpc('/website/get_seo_data', {
+            this.data = await rpc('/website/get_seo_data', {
                 'res_id': this.object.id,
                 'res_model': this.object.model,
             });

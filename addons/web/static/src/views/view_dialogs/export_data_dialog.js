@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
+import { rpc } from "@web/core/network/rpc";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -92,7 +93,6 @@ export class ExportDataDialog extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.rpc = useService("rpc");
         this.draggableRef = useRef("draggable");
         this.exportListRef = useRef("exportList");
         this.searchRef = useRef("search");
@@ -145,7 +145,7 @@ export class ExportDataDialog extends Component {
         });
 
         onWillStart(async () => {
-            this.availableFormats = await this.rpc("/web/export/formats");
+            this.availableFormats = await rpc("/web/export/formats");
             this.templates = await this.orm.searchRead(
                 "ir.exports",
                 [["resource", "=", this.props.root.resModel]],
@@ -242,7 +242,7 @@ export class ExportDataDialog extends Component {
         if (!value || value === "new_template") {
             return;
         }
-        const fields = await this.rpc("/web/export/namelist", {
+        const fields = await rpc("/web/export/namelist", {
             model: this.props.root.resModel,
             export_id: Number(value),
         });

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToString } from "@web/core/utils/render";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
@@ -35,8 +36,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.isDesplayedAsMobile = uiUtils.isSmall();
         this.unique_id = uniqueId("s_dynamic_snippet_");
         this.template_key = 'website.s_dynamic_snippet.grid';
-
-        this.rpc = this.bindService("rpc");
     },
     /**
      *
@@ -119,7 +118,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
     async _fetchData() {
         if (this._isConfigComplete()) {
             const nodeData = this.el.dataset;
-            const filterFragments = await this.rpc(
+            const filterFragments = await rpc(
                 '/website/snippet/filters',
                 Object.assign({
                     'filter_id': parseInt(nodeData.filterId),

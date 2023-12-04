@@ -4,6 +4,7 @@ import { uniqueId } from '@web/core/utils/functions';
 import { _t } from "@web/core/l10n/translation";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { rpc } from "@web/core/network/rpc";
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
@@ -36,7 +37,6 @@ var TagCourseDialog = Dialog.extend({
         // Open with a tag name as default
         this.defaultTag = options.defaultTag;
         this._super(parent, options);
-        this.rpc = this.bindService("rpc");
     },
     start: function () {
         var self = this;
@@ -62,7 +62,7 @@ var TagCourseDialog = Dialog.extend({
         var self = this;
         this.$('#tag_id').select2(this._select2Wrapper(_t('Tag'),
             function () {
-                return self.rpc('/slides/channel/tag/search_read', {
+                return rpc('/slides/channel/tag/search_read', {
                     fields: ['name'],
                     domain: [['id', 'not in', self.tagIds], ['color', '!=', 0]],
                 });
@@ -70,7 +70,7 @@ var TagCourseDialog = Dialog.extend({
         );
         this.$('#tag_group_id').select2(this._select2Wrapper(_t('Tag Group (required for new tags)'),
             function () {
-                return self.rpc('/slides/channel/tag/group/search_read', {
+                return rpc('/slides/channel/tag/group/search_read', {
                     fields: ['name'],
                     domain: [],
                 });
@@ -281,7 +281,7 @@ var TagCourseDialog = Dialog.extend({
         var $form = this.$('#slides_channel_tag_add_form');
         if (this._formValidate($form)) {
             var values = this._getSelect2DropdownValues();
-            return this.rpc('/slides/channel/tag/add', {
+            return rpc('/slides/channel/tag/add', {
                 'channel_id': this.channelID,
                 'tag_id': values.tag_id,
                 'group_id': values.group_id,
@@ -303,7 +303,7 @@ var TagCourseDialog = Dialog.extend({
         this.$('#tag_id').select2('readonly', true);
         if (valid) {
             var values = this._getSelect2DropdownValues();
-            return this.rpc('/slide_channel_tag/add', {
+            return rpc('/slide_channel_tag/add', {
                 'tag_id': values.tag_id,
                 'group_id': values.group_id
             }).then(function (data) {

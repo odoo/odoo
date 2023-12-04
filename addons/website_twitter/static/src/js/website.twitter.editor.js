@@ -2,18 +2,14 @@
 
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
+import { rpc } from "@web/core/network/rpc";
 import sOptions from "@web_editor/js/editor/snippets.options";
 
 sOptions.registry.twitter = sOptions.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
     /**
      * @override
      */
     start: function () {
-        var self = this;
         var $configuration = dom.renderButton({
             attrs: {
                 class: 'btn-primary d-none',
@@ -26,7 +22,7 @@ sOptions.registry.twitter = sOptions.Class.extend({
         $configuration.appendTo(div).on('click', function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            self.rpc('/website_twitter/reload');
+            rpc('/website_twitter/reload');
         });
         this.$target.on('mouseover.website_twitter', function () {
             var $selected = $(this);

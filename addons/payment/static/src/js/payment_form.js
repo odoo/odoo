@@ -6,7 +6,7 @@ import { browser } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { renderToMarkup } from '@web/core/utils/render';
-import { RPCError } from '@web/core/network/rpc_service';
+import { rpc, RPCError } from '@web/core/network/rpc';
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '#o_payment_form',
@@ -24,7 +24,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
     },
 
@@ -340,7 +339,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _assignToken(tokenId) {
-        this.rpc(this.paymentContext['assignTokenRoute'], {
+        rpc(this.paymentContext['assignTokenRoute'], {
             'token_id': tokenId,
             'access_token': this.paymentContext['accessToken'],
         }).then(() => {
@@ -374,7 +373,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        this.rpc(
+        rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
         ).then(processingValues => {
@@ -491,7 +490,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _archiveToken(tokenId) {
-        this.rpc('/payment/archive_token', {
+        rpc('/payment/archive_token', {
             'token_id': tokenId,
         }).then(() => {
             browser.location.reload();

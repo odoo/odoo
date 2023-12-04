@@ -6,11 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { useDynamicPlaceholder } from "@web/views/fields/dynamic_placeholder_hook";
-import {
-    useBus,
-    useService,
-    useSpellCheck,
-} from "@web/core/utils/hooks";
+import { useBus, useSpellCheck } from "@web/core/utils/hooks";
 import {
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
@@ -30,6 +26,7 @@ import {
     status,
 } from "@odoo/owl";
 import { uniqueId } from '@web/core/utils/functions';
+import { rpc } from "@web/core/network/rpc";
 // Ensure `@web/views/fields/html/html_field` is loaded first as this module
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
@@ -69,7 +66,6 @@ export class HtmlField extends Component {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
-        this.rpc = useService("rpc");
 
         this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
 
@@ -576,7 +572,7 @@ export class HtmlField extends Component {
         checklistId = checklistId && checklistId.replace('checkId-', '');
         checklistId = parseInt(checklistId || '0');
 
-        const value = await this.rpc('/web_editor/checklist', {
+        const value = await rpc('/web_editor/checklist', {
             res_model: this.props.record.resModel,
             res_id: this.props.record.resId,
             filename: this.props.name,
@@ -604,7 +600,7 @@ export class HtmlField extends Component {
         let starsId = $(node).parent().attr('id');
         starsId = starsId && starsId.replace('checkId-', '');
         starsId = parseInt(starsId || '0');
-        const value = await this.rpc('/web_editor/stars', {
+        const value = await rpc('/web_editor/stars', {
             res_model: this.props.record.resModel,
             res_id: this.props.record.resId,
             filename: this.props.name,

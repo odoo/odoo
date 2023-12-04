@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
@@ -104,7 +105,6 @@ export class LunchDashboard extends Component {
     static template = "lunch.LunchDashboard";
     setup() {
         super.setup();
-        this.rpc = useService("rpc");
         this.user = useService("user");
         this.state = useState({
             infos: {},
@@ -118,7 +118,7 @@ export class LunchDashboard extends Component {
     }
 
     async lunchRpc(route, args = {}) {
-        return await this.rpc(route, {
+        return await rpc(route, {
             ...args,
             context: this.user.context,
             user_id: this.env.searchModel.lunchState.userId,

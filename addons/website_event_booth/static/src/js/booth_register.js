@@ -3,6 +3,7 @@
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',
@@ -11,11 +12,6 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         'change .form-check > input[type="checkbox"]': '_onChangeBooth',
         'click .o_wbooth_registration_submit': '_onSubmitBoothSelectionClick',
         'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     start() {
@@ -40,7 +36,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _check_booths_availability(eventBoothIds) {
         const self = this;
-        return this.rpc("/event/booth/check_availability", {
+        return rpc("/event/booth/check_availability", {
             event_booth_ids: eventBoothIds,
         }).then(function (result) {
             if (result.unavailable_booths.length) {
@@ -164,7 +160,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     _fetchBoothsAndUpdateUI() {
         if (this.boothCache[this.activeBoothCategoryId] === undefined) {
             var self = this;
-            this.rpc('/event/booth_category/get_available_booths', {
+            rpc('/event/booth_category/get_available_booths', {
                 event_id: this.eventId,
                 booth_category_id: this.activeBoothCategoryId,
             }).then(function (result) {

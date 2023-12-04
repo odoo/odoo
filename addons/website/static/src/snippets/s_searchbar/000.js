@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
@@ -28,8 +29,6 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
 
         this._onInput = debounce(this._onInput, 400);
         this._onFocusOut = debounce(this._onFocusOut, 100);
-
-        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -113,7 +112,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     async _fetch() {
-        const res = await this.rpc('/website/snippet/autocomplete', {
+        const res = await rpc('/website/snippet/autocomplete', {
             'search_type': this.searchType,
             'term': this.$input.val(),
             'order': this.order,

@@ -16,7 +16,6 @@ export class DiscussCoreCommon {
         this.notificationService = services.notification;
         this.orm = services.orm;
         this.presence = services.presence;
-        this.rpc = services.rpc;
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
@@ -296,7 +295,6 @@ export const discussCoreCommon = {
         "notification",
         "orm",
         "presence",
-        "rpc",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env

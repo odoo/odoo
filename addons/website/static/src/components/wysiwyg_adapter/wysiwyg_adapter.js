@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 
+import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
@@ -71,7 +72,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
 
         this.websiteService = useService('website');
         this.userService = useService('user');
-        this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.dialogs = useService('dialog');
         this.action = useService('action');
@@ -101,7 +101,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             let switchableRelatedViews = [];
             const viewKey = this.websiteService.pageDocument.documentElement.dataset.viewXmlid;
             if (this.websiteService.isDesigner && viewKey) {
-                switchableRelatedViews = this.rpc('/website/get_switchable_related_views', {key: viewKey});
+                switchableRelatedViews = rpc('/website/get_switchable_related_views', {key: viewKey});
             }
             // Set utils functions' editable window to the current iframe's window.
             // This allows those function to access the correct styles definitions,
@@ -580,7 +580,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
      async _reloadBundles(event) {
-        const bundles = await this.rpc('/website/theme_customize_bundle_reload');
+        const bundles = await rpc('/website/theme_customize_bundle_reload');
         let $allLinksIframe = $();
         const proms = [];
         const createLinksProms = (bundleURLs, $insertionEl) => {

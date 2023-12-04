@@ -8,6 +8,7 @@ import { EventBus, markup, reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
@@ -41,7 +42,6 @@ export class ChatBotService {
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
      * "mail.message": import("@mail/core/common/message_service").MessageService,
      * "mail.store": import("@mail/core/common/store_service").Store,
-     * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
      * }} services
      */
     setup(env, services) {
@@ -50,7 +50,6 @@ export class ChatBotService {
         this.livechatService = services["im_livechat.livechat"];
         this.messageService = services["mail.message"];
         this.store = services["mail.store"];
-        this.rpc = services.rpc;
 
         this.debouncedProcessUserAnswer = debounce(
             this._processUserAnswer.bind(this),
@@ -128,7 +127,7 @@ export class ChatBotService {
         if (!this.completed || !this.livechatService.thread) {
             return;
         }
-        const message = await this.rpc("/chatbot/restart", {
+        const message = await rpc("/chatbot/restart", {
             channel_uuid: this.livechatService.thread.uuid,
             chatbot_script_id: this.chatbot.scriptId,
         });
@@ -141,7 +140,7 @@ export class ChatBotService {
      * Save the welcome steps on the server.
      */
     async postWelcomeSteps() {
-        const rawMessages = await this.rpc("/chatbot/post_welcome_steps", {
+        const rawMessages = await rpc("/chatbot/post_welcome_steps", {
             channel_uuid: this.livechatService.thread.uuid,
             chatbot_script_id: this.chatbot.scriptId,
         });
@@ -221,7 +220,7 @@ export class ChatBotService {
                 },
             };
         }
-        const nextStepData = await this.rpc("/chatbot/step/trigger", {
+        const nextStepData = await rpc("/chatbot/step/trigger", {
             channel_uuid: this.livechatService.thread.uuid,
             chatbot_script_id: this.chatbot.scriptId,
         });
@@ -255,7 +254,7 @@ export class ChatBotService {
         this.currentStep.hasAnswer = true;
         this.save();
         if (answer) {
-            await this.rpc("/chatbot/answer/save", {
+            await rpc("/chatbot/answer/save", {
                 channel_uuid: this.livechatService.thread.uuid,
                 message_id: stepMessage.id,
                 selected_answer_id: answer.id,
@@ -273,7 +272,7 @@ export class ChatBotService {
      * thread.
      */
     async validateEmail() {
-        const { success, posted_message: msg } = await this.rpc("/chatbot/step/validate_email", {
+        const { success, posted_message: msg } = await rpc("/chatbot/step/validate_email", {
             channel_uuid: this.livechatService.thread.uuid,
         });
         this.currentStep.isEmailValid = success;
@@ -398,7 +397,7 @@ export class ChatBotService {
 }
 
 export const chatBotService = {
-    dependencies: ["im_livechat.livechat", "mail.message", "mail.store", "rpc"],
+    dependencies: ["im_livechat.livechat", "mail.message", "mail.store"],
     start(env, services) {
         return new ChatBotService(env, services);
     },

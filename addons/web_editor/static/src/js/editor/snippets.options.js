@@ -40,7 +40,7 @@ import {
     normalizeCSSColor,
  } from '@web/core/utils/colors';
 import { renderToElement } from "@web/core/utils/render";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -65,6 +65,7 @@ function serviceCached(service) {
     const cache = _serviceCache;
     return Object.assign(Object.create(service), {
         call() {
+            // FIXME
             const serviceName = Object.prototype.hasOwnProperty.call(service, "call")
                 ? "orm"
                 : "rpc";
@@ -6000,13 +6001,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-    /**
-     * @override
-     */
     async willStart() {
         const _super = this._super.bind(this);
         await this._initializeImage();
@@ -6250,7 +6244,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _loadImageInfo(attachmentSrc = '') {
         const img = this._getImg();
-        await loadImageInfo(img, this.rpc, attachmentSrc);
+        await loadImageInfo(img, attachmentSrc);
         if (!img.dataset.originalId) {
             this.originalId = null;
             this.originalSrc = null;
@@ -6388,7 +6382,6 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     init() {
         this.shapeCache = {};
-        this.rpc = this.bindService("rpc");
         return this._super(...arguments);
     },
     /**
@@ -6424,7 +6417,6 @@ registry.ImageTools = ImageHandlerOption.extend({
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
-            rpc: this.rpc,
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
@@ -6487,7 +6479,6 @@ registry.ImageTools = ImageHandlerOption.extend({
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
-            rpc: this.rpc,
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
@@ -8855,7 +8846,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             // current widget has been destroyed and is orphaned, so this._rpc
                             // will not work as it can't trigger_up. For this reason, we need
                             // to bypass the service provider and use the global RPC directly
-                            await jsonrpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
+                            await rpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
                                 model: "ir.ui.view",
                                 method: "save_snippet",
                                 args: [],

@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -254,7 +256,7 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { env } = await start({
+        await start({
             mockRPC(route, args) {
                 if (args.method === "channel_fetched") {
                     assert.strictEqual(args.args[0][0], channelId);
@@ -268,7 +270,7 @@ QUnit.test(
         });
         await contains(".o_menu_systray i[aria-label='Messages']");
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "Hello!", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -297,7 +299,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const { env, openDiscuss } = await start({
+        const { openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (args.method === "channel_fetched" && args.args[0] === channelId) {
                     throw new Error(
@@ -313,7 +315,7 @@ QUnit.test(
         await focus(".o-mail-Composer-input");
         // simulate receiving a message
         await pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "<p>Some new message</p>", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -343,14 +345,14 @@ QUnit.test(
                 res_id: channelId,
             });
         }
-        const { env } = await start();
+        await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
         await contains(".o-mail-Message", { count: 11 });
         await contains(".o-mail-Thread", { scroll: "bottom" });
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hello", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -380,7 +382,7 @@ QUnit.test(
                 res_id: channelId,
             });
         }
-        const { env } = await start();
+        await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
         await contains(".o-mail-Message", { count: 11 });
@@ -388,7 +390,7 @@ QUnit.test(
         await scroll(".o-mail-Thread", 0);
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hello", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -500,7 +502,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
@@ -508,7 +510,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -754,7 +756,7 @@ QUnit.test(
                 res_id: channelId,
             },
         ]);
-        const { openDiscuss, env } = await start();
+        const { openDiscuss } = await start();
         openDiscuss(channelId);
         // send a command that leads to receiving a transient message
         await insertText(".o-mail-Composer-input", "/who");
@@ -764,7 +766,7 @@ QUnit.test(
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "test", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -940,7 +942,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-        const { env, openDiscuss } = await start({
+        const { openDiscuss } = await start({
             mockRPC(route, args) {
                 if (args.model === "mail.message" && args.method === "mark_all_as_read") {
                     assert.step("mark-all-messages-as-read");
@@ -949,7 +951,7 @@ QUnit.test(
         });
         openDiscuss(channelId);
         await click("button", { text: "Inbox" });
-        await env.services.rpc("/mail/message/post", {
+        await rpc("/mail/message/post", {
             post_data: {
                 body: "Hello world!",
                 attachment_ids: [],

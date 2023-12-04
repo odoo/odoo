@@ -8,7 +8,7 @@ import { notificationService } from "@web/core/notifications/notification_servic
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
 import {
     click,
     getFixture,
@@ -262,8 +262,6 @@ QUnit.test("dialog component crashes", async (assert) => {
         },
     });
 
-    const rpc = makeFakeRPCService();
-    serviceRegistry.add("rpc", rpc, { force: true });
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("error", errorService);
 

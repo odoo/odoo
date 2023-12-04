@@ -2,6 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website_sale/js/website_sale_delivery";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
 const WebsiteSaleDeliveryWidget = publicWidget.registry.websiteSaleDelivery;
@@ -110,7 +111,7 @@ WebsiteSaleDeliveryWidget.include({
         if (!this.lastRelaySelected) {
             return;
         }
-        this.rpc('/website_sale_mondialrelay/update_shipping', {
+        rpc('/website_sale_mondialrelay/update_shipping', {
             ...this.lastRelaySelected,
         }).then((o) => {
             $('#address_on_payment').html(o.address);

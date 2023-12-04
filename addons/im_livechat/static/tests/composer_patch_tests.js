@@ -5,6 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { rpc } from "@web/core/network/rpc";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer (patch)");
@@ -48,13 +49,13 @@ QUnit.test('Receives visitor typing status "is typing"', async () => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing", { text: "" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     pyEnv.withGuest(guestId, () =>
-        env.services.rpc("/im_livechat/notify_typing", {
+        rpc("/im_livechat/notify_typing", {
             is_typing: true,
             uuid: channel.uuid,
         })

@@ -14,7 +14,6 @@ patch(WebClient.prototype, {
      */
     setup() {
         super.setup();
-        this.rpc = useService("rpc");
         this.orm = useService("orm");
         if (this._canSendNativeNotification) {
             this._subscribePush();

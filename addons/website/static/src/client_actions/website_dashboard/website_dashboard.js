@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -10,7 +11,6 @@ class WebsiteDashboard extends Component {
     static components = { Layout };
     setup() {
         super.setup();
-        this.rpc = useService("rpc");
         this.userService = useService("user");
         this.keepLast = new KeepLast();
 
@@ -37,7 +37,7 @@ class WebsiteDashboard extends Component {
 
     async fetchData() {
         const dashboardData = await this.keepLast.add(
-            this.rpc("/website/fetch_dashboard_data", {
+            rpc("/website/fetch_dashboard_data", {
                 website_id: this.state.website,
             })
         );

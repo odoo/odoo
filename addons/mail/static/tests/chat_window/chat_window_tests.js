@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import {
@@ -38,12 +40,12 @@ QUnit.test(
             channel_type: "chat",
         });
         patchUiSize({ size: SIZES.SM });
-        const { env } = await start();
+        await start();
         await contains(".o_menu_systray i[aria-label='Messages']");
         await contains(".o-mail-MessagingMenu-counter", { count: 0 });
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hu", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -682,10 +684,10 @@ QUnit.test(
             ["partner_id", "=", pyEnv.currentPartnerId],
         ]);
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-        const { env } = await start();
+        await start();
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hu", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -713,10 +715,10 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { env } = await start();
+        await start();
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hu", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
@@ -737,10 +739,10 @@ QUnit.test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    const { env } = await start();
+    await start();
     await contains(".o-mail-ChatWindowContainer");
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -759,10 +761,10 @@ QUnit.test("chat window should not open when receiving a new DM from odoobot", a
         ],
         channel_type: "chat",
     });
-    const { env } = await start();
+    await start();
     await contains(".o-mail-ChatWindowContainer");
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -826,11 +828,11 @@ QUnit.test("chat window should remain folded when new message is received", asyn
         ],
         channel_type: "chat",
     });
-    const { env } = await start();
+    await start();
     await contains(".o-mail-ChatWindow.o-folded");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "New Message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -953,11 +955,11 @@ QUnit.test(
             ["partner_id", "=", pyEnv.currentPartnerId],
         ]);
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-        const { env } = await start();
+        await start();
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "hu", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",

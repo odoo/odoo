@@ -5,6 +5,7 @@ import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
@@ -29,7 +30,6 @@ export class ThreadService {
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
-        this.rpc = services.rpc;
         this.notificationService = services.notification;
         this.router = services.router;
         this.ui = services.ui;
@@ -45,7 +45,7 @@ export class ThreadService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async fetchChannel(id) {
-        const channelData = await this.rpc("/discuss/channel/info", { channel_id: id });
+        const channelData = await rpc("/discuss/channel/info", { channel_id: id });
         if (!channelData) {
             return;
         }
@@ -58,7 +58,7 @@ export class ThreadService {
 
     async fetchChannelMembers(thread) {
         const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
-        const results = await this.rpc("/discuss/channel/members", {
+        const results = await rpc("/discuss/channel/members", {
             channel_id: thread.id,
             known_member_ids: known_member_ids,
         });
@@ -90,7 +90,7 @@ export class ThreadService {
             thread.model === "discuss.channel" &&
             newestPersistentMessage
         ) {
-            this.rpc("/discuss/channel/set_last_seen_message", {
+            rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
             })
@@ -190,7 +190,7 @@ export class ThreadService {
         }
         try {
             // ordered messages received: newest to oldest
-            const { messages: rawMessages } = await this.rpc(this.getFetchRoute(thread), {
+            const { messages: rawMessages } = await rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 limit: FETCH_LIMIT,
                 after,
@@ -292,7 +292,7 @@ export class ThreadService {
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
             thread.isLoaded = false;
-            const { messages } = await this.rpc(this.getFetchRoute(thread), {
+            const { messages } = await rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
@@ -696,7 +696,7 @@ export class ThreadService {
             thread.messages.push(tmpMsg);
             thread.seen_message_id = tmpMsg.id;
         }
-        const data = await this.rpc(this.getMessagePostRoute(thread), params);
+        const data = await rpc(this.getMessagePostRoute(thread), params);
         tmpMsg?.delete();
         if (!data) {
             return;
@@ -707,7 +707,7 @@ export class ThreadService {
         const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
-            this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
+            rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
         return message;
     }
@@ -839,7 +839,7 @@ export class ThreadService {
      * @param {string} data base64 representation of the binary
      */
     async notifyThreadAvatarToServer(threadId, data) {
-        await this.rpc("/discuss/channel/update_avatar", {
+        await rpc("/discuss/channel/update_avatar", {
             channel_id: threadId,
             data,
         });
@@ -910,7 +910,7 @@ export class ThreadService {
      * @param {number|false} [before]
      */
     async search(searchTerm, thread, before = false) {
-        const { messages, count } = await this.rpc(this.getFetchRoute(thread), {
+        const { messages, count } = await rpc(this.getFetchRoute(thread), {
             ...this.getFetchParams(thread),
             search_term: escape(searchTerm),
             before,
@@ -927,7 +927,6 @@ export const threadService = {
     dependencies: [
         "mail.store",
         "orm",
-        "rpc",
         "notification",
         "router",
         "mail.message",

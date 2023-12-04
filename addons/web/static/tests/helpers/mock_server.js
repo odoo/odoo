@@ -13,12 +13,10 @@ import {
 import { registry } from "@web/core/registry";
 import { intersection, unique } from "@web/core/utils/arrays";
 import { deepCopy, pick } from "@web/core/utils/objects";
-import { makeFakeRPCService, makeMockFetch } from "./mock_services";
+import { patchRPCWithCleanup, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
-import { makeErrorFromResponse } from "@web/core/network/rpc_service";
+import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registerCleanup } from "./cleanup";
-
-const serviceRegistry = registry.category("services");
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
@@ -2552,10 +2550,10 @@ export async function makeMockServer(serverData, mockRPC) {
         }
         return res;
     };
-    const rpcService = makeFakeRPCService(_mockRPC);
     patchWithCleanup(browser, {
         fetch: makeMockFetch(_mockRPC),
     });
+    patchRPCWithCleanup(_mockRPC);
     if (mockRPC) {
         const { loadJS, loadCSS } = assets;
         patchWithCleanup(assets, {
@@ -2586,6 +2584,5 @@ export async function makeMockServer(serverData, mockRPC) {
     }
     // Replace RPC service
     registerCleanup(() => (mockServer.active = false));
-    serviceRegistry.add("rpc", rpcService, { force: true });
     return mockServer;
 }

@@ -11,7 +11,6 @@ export class WelcomePage extends Component {
 
     setup() {
         this.store = useState(useService("mail.store"));
-        this.rpc = useService("rpc");
         this.personaService = useService("mail.persona");
         this.state = useState({
             userName: "Guest",

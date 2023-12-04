@@ -1,10 +1,10 @@
 /* @odoo-module */
 
+import { getGuestToken } from "@im_livechat/embed/common/livechat_service";
 import { livechatRoutingMap } from "@im_livechat/embed/cors/livechat_routing_map";
 
 import { browser } from "@web/core/browser/browser";
-import { jsonrpc } from "@web/core/network/rpc_service";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 
 (async function boot() {
@@ -15,31 +15,24 @@ import { session } from "@web/session";
         }
         return fetch(url, ...args);
     };
-    // Override the rpc service to forward requests to CORS-allowed routes. The
-    // "guest_token" will be appended to the request parameters for
-    // authentication.
-    registry.category("services").add(
-        "rpc",
-        {
-            async: true,
-            start(env) {
-                return function rpc(route, params = {}, settings) {
-                    if (route in livechatRoutingMap.content) {
-                        route = livechatRoutingMap.get(route, route);
-                        if (env.services["im_livechat.livechat"]?.guestToken) {
-                            params = {
-                                ...params,
-                                guest_token: env.services["im_livechat.livechat"].guestToken,
-                            };
-                        }
-                    }
-                    if (!route.match(/^(?:https?:)?\/\//)) {
-                        route = session.origin + route;
-                    }
-                    return jsonrpc(route, params, { bus: env.bus, ...settings });
+
+    // Override rpc to forward requests to CORS-allowed routes.
+    // The "guest_token" will be appended to the request parameters for authentication.
+    const originalRPC = rpc._rpc;
+    rpc._rpc = function (route, params, settings) {
+        if (route in livechatRoutingMap.content) {
+            route = livechatRoutingMap.get(route, route);
+            const guestToken = getGuestToken();
+            if (guestToken) {
+                params = {
+                    ...params,
+                    guest_token: guestToken,
                 };
-            },
-        },
-        { force: true }
-    );
+            }
+        }
+        if (!route.match(/^(?:https?:)?\/\//)) {
+            route = session.origin + route;
+        }
+        return originalRPC(route, params, settings);
+    };
 })();

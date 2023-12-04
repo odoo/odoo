@@ -3,6 +3,7 @@
 import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { escape } from "@web/core/utils/strings";
+import { rpc } from "@web/core/network/rpc";
 
 import { markup } from "@odoo/owl";
 
@@ -15,11 +16,6 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         'click .twitter_timeline .tweet': '_onTweetClick',
     },
 
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
     /**
      * @override
      */
@@ -28,7 +24,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         var $timeline = this.$('.twitter_timeline');
 
         $timeline.append('<center><div><img src="/website_twitter/static/src/img/loadtweet.gif"></div></center>');
-        var def = this.rpc('/website_twitter/get_favorites').then(function (data) {
+        var def = rpc('/website_twitter/get_favorites').then(function (data) {
             $timeline.empty();
 
             if (data.error) {

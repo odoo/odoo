@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { rpc } from "@web/core/network/rpc";
 import { Component } from "@odoo/owl";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
@@ -15,11 +16,6 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         "click .o_remove_order_location": "_onClickRemoveLocation",
         "click .o_show_pickup_locations": "_onClickShowLocations",
         "click .o_payment_option_card": "_onClickPaymentMethod"
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -57,7 +53,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @private
      */
     _getCurrentLocation: async function () {
-        const data = await this.rpc("/shop/access_point/get");
+        const data = await rpc("/shop/access_point/get");
         const carriers = document.querySelectorAll('.o_delivery_carrier_select')
         for (let carrier of carriers) {
             const deliveryType = carrier.querySelector('input[type="radio"]').getAttribute("delivery_type");
@@ -130,7 +126,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @params {Object} carrier: The carrier element
      */
     _getCarrierRateShipment: async function(carrierInput) {
-        const result = await this.rpc('/shop/carrier_rate_shipment', {
+        const result = await rpc('/shop/carrier_rate_shipment', {
             'carrier_id': carrierInput.value,
         });
         this._handleCarrierUpdateResultBadge(result);
@@ -141,7 +137,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResult: async function (carrierInput) {
-        const result = await this.rpc('/shop/update_carrier', {
+        const result = await rpc('/shop/update_carrier', {
             'carrier_id': carrierInput.value,
         })
         this.result = result;
@@ -225,7 +221,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
 
     _checkCarrier: async function (ev, carrier_id) {
         ev.stopPropagation();
-        await this.keepLast.add(this.rpc('/shop/update_carrier', {
+        await this.keepLast.add(rpc('/shop/update_carrier', {
             carrier_id: carrier_id,
         }))
         var closestDocElement = ev.currentTarget.closest('.o_delivery_carrier_select');
@@ -250,7 +246,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             return;
         }
         const carrier_id = carrierChecked?.querySelector('input')?.value;
-        const result = await this.rpc('/shop/update_carrier', {
+        const result = await rpc('/shop/update_carrier', {
             'carrier_id': carrier_id,
         })
         this._enableButton(result.status);
@@ -288,7 +284,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onClickRemoveLocation: async function (ev) {
         ev.stopPropagation();
-        await this.rpc("/shop/access_point/set", {
+        await rpc("/shop/access_point/set", {
             access_point_encoded: null,
         })
         const deliveryTypeInput = ev.currentTarget.closest(".o_delivery_carrier_select").querySelector('input[name="delivery_type"]');
@@ -320,7 +316,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const deliveryTypeId = deliveryTypeInput.value;
         await this._checkCarrier(ev,deliveryTypeId)
         $(renderToElement(deliveryType + "_pickup_location_loading")).appendTo($(modal));
-        const data = await this.rpc("/shop/access_point/close_locations");
+        const data = await rpc("/shop/access_point/close_locations");
         if (modal.firstChild){
             modal.firstChild.remove();
         }
@@ -374,7 +370,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         await this._checkCarrier(ev,carrierId)
         const modal = ev.target.closest(".o_list_pickup_locations");
         const encodedLocation = ev.target.previousElementSibling.innerText;
-        await this.rpc("/shop/access_point/set", {
+        await rpc("/shop/access_point/set", {
             access_point_encoded: encodedLocation,
         })
         while (modal.firstChild) {
@@ -382,7 +378,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
         await this._getCurrentLocation();
         document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
-        const result = await this.rpc('/shop/update_carrier', {
+        const result = await rpc('/shop/update_carrier', {
             'carrier_id': carrierId,
             'no_reset_access_point_address': true,
         })

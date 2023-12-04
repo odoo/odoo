@@ -6,6 +6,7 @@ import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { EvaluationError } from "@web/core/py_js/py_builtin";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
@@ -35,7 +36,6 @@ export class DomainField extends Component {
     };
 
     setup() {
-        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.getDomainTreeDescription = useGetDomainTreeDescription();
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
@@ -233,7 +233,7 @@ export class DomainField extends Component {
         if (domain.isInvalid) {
             return false;
         }
-        return this.rpc("/web/domain/validate", { model: resModel, domain });
+        return rpc("/web/domain/validate", { model: resModel, domain });
     }
 
     update(domain, isDebugEdited = false) {

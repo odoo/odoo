@@ -2,6 +2,7 @@
 
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { SlideCoursePage } from '@website_slides/js/slides_course_page';
 
 publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
@@ -106,7 +107,7 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
     },
     _reorderSlides: function (){
         var self = this;
-        self.rpc('/web/dataset/resequence', {
+        rpc('/web/dataset/resequence', {
             model: "slide.slide",
             ids: self._getSlides(),
         }).then(function (res) {

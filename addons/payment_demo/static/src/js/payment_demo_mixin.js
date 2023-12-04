@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { jsonrpc, RPCError } from "@web/core/network/rpc_service";
+import { rpc, RPCError } from "@web/core/network/rpc";
 
 export default {
 
@@ -16,7 +16,7 @@ export default {
         const customerInput = document.getElementById('customer_input').value;
         const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
 
-        jsonrpc('/payment/demo/simulate_payment', {
+        rpc('/payment/demo/simulate_payment', {
             'reference': processingValues.reference,
             'payment_details': customerInput,
             'simulated_state': simulatedPaymentState,

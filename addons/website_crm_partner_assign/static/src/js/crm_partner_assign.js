@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { parseDate, formatDate, serializeDate } from "@web/core/l10n/dates";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 const { DateTime } = luxon;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({

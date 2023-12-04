@@ -2,6 +2,7 @@
 
 import { assignDefined } from "@mail/utils/common/misc";
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export class AttachmentService {
@@ -16,7 +17,6 @@ export class AttachmentService {
     setup(env, services) {
         this.env = env;
         this.store = services["mail.store"];
-        this.rpc = services["rpc"];
     }
 
     /**
@@ -40,7 +40,7 @@ export class AttachmentService {
     async delete(attachment) {
         this.remove(attachment);
         if (attachment.id > 0) {
-            await this.rpc(
+            await rpc(
                 "/mail/attachment/delete",
                 assignDefined(
                     { attachment_id: attachment.id },
@@ -52,7 +52,7 @@ export class AttachmentService {
 }
 
 export const attachmentService = {
-    dependencies: ["mail.store", "rpc"],
+    dependencies: ["mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

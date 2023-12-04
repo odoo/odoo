@@ -1,10 +1,10 @@
 /** @odoo-modules */
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export const userInviteService = {
-    dependencies: ["rpc"],
-    async start(env, { rpc }) {
+    async start() {
         let dataProm;
         return {
             fetchData(reload = false) {

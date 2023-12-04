@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 patch(NewContentModal.prototype, {
@@ -14,7 +15,7 @@ patch(NewContentModal.prototype, {
     },
 
     async createNewJob() {
-        const url = await this.rpc('/jobs/add');
+        const url = await rpc('/jobs/add');
         this.website.goToWebsite({ path: url, edition: true });
         this.websiteContext.showNewContentModal = false;
     }

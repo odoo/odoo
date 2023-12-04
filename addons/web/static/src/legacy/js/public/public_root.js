@@ -14,7 +14,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { _t } from "@web/core/l10n/translation";
 import { App, Component, whenReady } from "@odoo/owl";
-import { RPCError } from '@web/core/network/rpc_service';
+import { RPCError } from '@web/core/network/rpc';
 
 const { Settings } = luxon;
 

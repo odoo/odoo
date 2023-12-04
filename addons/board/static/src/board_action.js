@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { makeContext } from "@web/core/context";
@@ -10,7 +11,6 @@ export class BoardAction extends Component {
     static components = { View };
     static cache = {};
     setup() {
-        const rpc = useService("rpc");
         const userService = useService("user");
         this.actionService = useService("action");
         const action = this.props.action;

@@ -834,7 +834,8 @@ export function buildSampleORM(resModel, fields, user) {
         const { groupby: groupBy } = kwargs;
         return sampleServer.mockRpc({ method, model, args, ...kwargs, groupBy });
     };
-    const sampleORM = new ORM(fakeRPC, user);
+    const sampleORM = new ORM(user);
+    sampleORM.rpc = fakeRPC;
     sampleORM.isSample = true;
     sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
     return sampleORM;
