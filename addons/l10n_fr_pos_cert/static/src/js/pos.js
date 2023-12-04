@@ -22,7 +22,13 @@ patch(PosStore.prototype, {
         const result = super.disallowLineQuantityChange(...arguments);
         let selectedOrderLine = this.selectedOrder.get_selected_orderline();
         //Note: is_reward_line is a field in the pos_loyalty module
+<<<<<<< HEAD
         if (selectedOrderLine?.is_reward_line) {
+||||||| parent of 1175c4d5cb47 (temp)
+        if (selectedOrderLine.is_reward_line) {
+=======
+        if (selectedOrderLine && selectedOrderLine.is_reward_line) {
+>>>>>>> 1175c4d5cb47 (temp)
             //Always allow quantity change for reward lines
             return false || result;
         }
