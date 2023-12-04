@@ -30,7 +30,7 @@ SUPPORTED_CURRENCIES = [
 # Mapping of transaction states to Mercado Pago payment statuses.
 # See https://www.mercadopago.com.mx/developers/en/reference/payments/_payments_id/get.
 TRANSACTION_STATUS_MAPPING = {
-    'pending': ('pending', 'in_process', 'in_mediation'),
+    'pending': ('pending', 'in_process', 'in_mediation', 'authorized'),
     'done': ('approved', 'refunded'),
-    'canceled': ('cancelled', 'null'),
+    'canceled': ('cancelled', 'null', 'rejected'),
 }
