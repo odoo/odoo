@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { uiService } from "@web/core/ui/ui_service";
 import {
     useAutofocus,
@@ -11,7 +12,14 @@ import {
 } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { destroy, getFixture, makeDeferred, mount, nextTick } from "@web/../tests/helpers/utils";
+import {
+    destroy,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 
 import { Component, onMounted, useState, xml } from "@odoo/owl";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -110,45 +118,44 @@ QUnit.module("utils", () => {
             assert.strictEqual(document.activeElement, comp.inputRef.el);
         });
 
-        QUnit.test("useAutofocus returns also a ref when isSmall is true", async function (assert) {
-            assert.expect(2);
-            class MyComponent extends Component {
-                static template = xml`
-                    <span>
-                        <input type="text" t-ref="autofocus" />
-                    </span>
-                `;
-                setup() {
-                    this.inputRef = useAutofocus();
-                    assert.ok(this.env.isSmall);
-                    onMounted(() => {
-                        assert.ok(this.inputRef.el);
-                    });
+        QUnit.test(
+            "useAutofocus returns also a ref when screen has touch",
+            async function (assert) {
+                assert.expect(1);
+                class MyComponent extends Component {
+                    static template = xml`
+                        <span>
+                            <input type="text" t-ref="autofocus" />
+                        </span>
+                    `;
+                    setup() {
+                        this.inputRef = useAutofocus();
+                        onMounted(() => {
+                            assert.ok(this.inputRef.el);
+                        });
+                    }
                 }
+
+                registry.category("services").add("ui", uiService);
+
+                // patch matchMedia to alter hasTouch value
+                patchWithCleanup(browser, {
+                    matchMedia: (media) => {
+                        if (media === "(pointer:coarse)") {
+                            return { matches: true };
+                        }
+                        this._super();
+                    },
+                });
+
+                const env = await makeTestEnv();
+                const target = getFixture();
+                await mount(MyComponent, target, { env });
             }
-
-            const fakeUIService = {
-                start(env) {
-                    const ui = {};
-                    Object.defineProperty(env, "isSmall", {
-                        get() {
-                            return true;
-                        },
-                    });
-
-                    return ui;
-                },
-            };
-
-            registry.category("services").add("ui", fakeUIService);
-
-            const env = await makeTestEnv();
-            const target = getFixture();
-            await mount(MyComponent, target, { env });
-        });
+        );
 
         QUnit.test(
-            "useAutofocus works when isSmall and you provide mobile param",
+            "useAutofocus works when screen has touch and you provide mobile param",
             async function (assert) {
                 class MyComponent extends Component {
                     static template = xml`
@@ -161,20 +168,17 @@ QUnit.module("utils", () => {
                     }
                 }
 
-                const fakeUIService = {
-                    start(env) {
-                        const ui = {};
-                        Object.defineProperty(env, "isSmall", {
-                            get() {
-                                return true;
-                            },
-                        });
+                registry.category("services").add("ui", uiService);
 
-                        return ui;
+                // patch matchMedia to alter hasTouch value
+                patchWithCleanup(browser, {
+                    matchMedia: (media) => {
+                        if (media === "(pointer:coarse)") {
+                            return { matches: true };
+                        }
+                        this._super();
                     },
-                };
-
-                registry.category("services").add("ui", fakeUIService);
+                });
 
                 const env = await makeTestEnv();
                 const target = getFixture();
@@ -182,41 +186,36 @@ QUnit.module("utils", () => {
                 assert.strictEqual(document.activeElement, comp.inputRef.el);
             }
         );
-        QUnit.test(
-            "useAutofocus does not focus when isSmall and you don't provide mobile param",
-            async function (assert) {
-                class MyComponent extends Component {
-                    static template = xml`
-                        <span>
-                            <input type="text" t-ref="autofocus" />
-                        </span>
-                    `;
-                    setup() {
-                        this.inputRef = useAutofocus();
-                    }
+
+        QUnit.test("useAutofocus does not focus when screen has touch", async function (assert) {
+            class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" t-ref="autofocus" />
+                    </span>
+                `;
+                setup() {
+                    this.inputRef = useAutofocus();
                 }
-
-                const fakeUIService = {
-                    start(env) {
-                        const ui = {};
-                        Object.defineProperty(env, "isSmall", {
-                            get() {
-                                return true;
-                            },
-                        });
-
-                        return ui;
-                    },
-                };
-
-                registry.category("services").add("ui", fakeUIService);
-
-                const env = await makeTestEnv();
-                const target = getFixture();
-                const comp = await mount(MyComponent, target, { env });
-                assert.notEqual(document.activeElement, comp.inputRef.el);
             }
-        );
+
+            registry.category("services").add("ui", uiService);
+
+            // patch matchMedia to alter hasTouch value
+            patchWithCleanup(browser, {
+                matchMedia: (media) => {
+                    if (media === "(pointer:coarse)") {
+                        return { matches: true };
+                    }
+                    this._super();
+                },
+            });
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, target, { env });
+            assert.notEqual(document.activeElement, comp.inputRef.el);
+        });
 
         QUnit.test("supports different ref names", async (assert) => {
             class MyComponent extends Component {
@@ -281,12 +280,12 @@ QUnit.module("utils", () => {
             async function (assert) {
                 class MyComponent extends Component {
                     static template = xml`
-                    <div>
-                        <input type="text" t-ref="autofocus" />
-                        <div class="o_dialog_container"/>
-                        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
-                    </div>
-                `;
+                        <div>
+                            <input type="text" t-ref="autofocus" />
+                            <div class="o_dialog_container"/>
+                            <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+                        </div>
+                    `;
                     setup() {
                         this.inputRef = useAutofocus();
                     }
