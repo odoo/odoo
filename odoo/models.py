@@ -632,21 +632,27 @@ class BaseModel(metaclass=MetaModel):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'
 
+    def _is_class_field(self, name):
+        """ Check that `name` is an existing field in the model, or any model in the _inherits. """
+        cls = type(self)
+        return any(
+            isinstance(getattr(model, name, None), fields.Field)
+            for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
+        )
+
+    def _check_field(self, name):
+        """ Assert this is a valid field name. """
+        if not (self._is_class_field(name) or name.startswith('x_')):
+            raise ValidationError(
+                f"The field `{name}` is not defined in the `{type(self)._name}` Python class and does not start with 'x_'"
+            )
+
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
         cls = type(self)
 
-        # Assert the name is an existing field in the model, or any model in the _inherits
-        # or a custom field (starting by `x_`)
-        is_class_field = any(
-            isinstance(getattr(model, name, None), fields.Field)
-            for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
-        )
-        if not (is_class_field or name.startswith('x_')):
-            raise ValidationError(
-                f"The field `{name}` is not defined in the `{cls._name}` Python class and does not start with 'x_'"
-            )
+        self._check_field(name)
 
         # Assert the attribute to assign is a Field
         if not isinstance(field, fields.Field):
