@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { onChange } from "@mail/utils/common/misc";
 import { markRaw, markup, reactive, toRaw } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
@@ -67,22 +68,23 @@ export function makeStore(env) {
                                     !rfield.sorting &&
                                     !rfield.computing
                                 ) {
-                                    if (Record.UPDATE !== 0) {
-                                        if (rfield.compute) {
-                                            rfield.computeInNeed = true;
-                                        }
-                                        if (rfield.sort) {
-                                            rfield.sortInNeed = true;
-                                        }
-                                    } else if (rfield.computeOnNeed || rfield.sortOnNeed) {
+                                    rfield.reading = true;
+                                    Record.FR_QUEUE.push(rfield);
+                                    if (rfield.compute) {
+                                        rfield.computeInNeed = true;
+                                    }
+                                    if (rfield.sort) {
+                                        rfield.sortInNeed = true;
+                                    }
+                                    if (rfield.computeOnNeed || rfield.sortOnNeed) {
                                         if (rfield.computeOnNeed) {
                                             rfield.computeOnNeed = false;
-                                            rfield.computeInNeed = false;
+                                            rfield.computeInNeed = true;
                                             rfield.compute();
                                         }
                                         if (rfield.sortOnNeed) {
                                             rfield.sortOnNeed = false;
-                                            rfield.sortInNeed = false;
+                                            rfield.sortInNeed = true;
                                             rfield.sort();
                                         }
                                     }
@@ -213,7 +215,7 @@ export function makeStore(env) {
                     for (const name in Model._fields) {
                         const { compute, default: defaultVal, eager, sort } = Model._fields[name];
                         const SYM = this[name]?.[0];
-                        this._fields[name] = { [SYM]: true, eager };
+                        this._fields[name] = { [SYM]: true, eager, name };
                         const field = this._fields[name];
                         if (Record.isRelation(SYM)) {
                             // Relational fields contain symbols for detection in original class.
@@ -236,6 +238,7 @@ export function makeStore(env) {
                             this[name] = defaultVal;
                         }
                         const rfield = toRaw(field);
+                        onChange(proxy, name, () => (rfield.changed = true));
                         if (compute) {
                             const proxy2 = reactive(proxy, () => rfield.requestCompute());
                             Object.assign(rfield, {
@@ -246,8 +249,12 @@ export function makeStore(env) {
                                         return; // record was probably deleted;
                                     }
                                     rfield.computing = true;
+                                    rfield.changed = false;
                                     exactProxy[name] = compute.call(proxy2);
+                                    const changed = rfield.changed;
+                                    rfield.changed = false;
                                     rfield.computing = false;
+                                    return changed;
                                 },
                                 _compute: () => {
                                     // dummy call to keep reactive cb
@@ -263,12 +270,16 @@ export function makeStore(env) {
                                     } else {
                                         if (rfield.eager) {
                                             rfield.compute();
-                                        } else if (rfield.computeInNeed) {
-                                            rfield.computeInNeed = false;
-                                            rfield.computeOnNeed = false;
-                                            rfield.compute();
                                         } else {
                                             rfield.computeOnNeed = true;
+                                            if (rfield.computeInNeed) {
+                                                rfield.computeInNeed = rfield.reading;
+                                                rfield.computeOnNeed = false;
+                                                const changed = rfield.compute();
+                                                if (!changed) {
+                                                    rfield.computeInNeed = true;
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -286,8 +297,12 @@ export function makeStore(env) {
                                         return; // record was probably deleted;
                                     }
                                     rfield.sorting = true;
+                                    rfield.changed = false;
                                     proxy2[name].sort(Model._fields[name].sort.bind(exactProxy));
+                                    const changed = rfield.changed;
+                                    rfield.changed = false;
                                     rfield.sorting = false;
+                                    return changed;
                                 },
                                 _sort: () => {
                                     // dummy call to keep reactive cb
@@ -303,12 +318,16 @@ export function makeStore(env) {
                                     } else {
                                         if (rfield.eager) {
                                             rfield.sort();
-                                        } else if (rfield.sortInNeed) {
-                                            rfield.sortInNeed = false;
-                                            rfield.sortOnNeed = false;
-                                            rfield.sort();
                                         } else {
                                             rfield.sortOnNeed = true;
+                                            if (rfield.sortInNeed) {
+                                                rfield.sortInNeed = rfield.reading;
+                                                rfield.sortOnNeed = false;
+                                                const changed = rfield.sort();
+                                                if (!changed) {
+                                                    rfield.sortInNeed = true;
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -860,6 +879,7 @@ class RecordList extends Array {
  */
 /**
  * @typedef {Object} RecordField
+ * @property {string} name the name of the field in the model definition
  * @property {boolean} [ATTR_SYM] true when this is an attribute, i.e. a non-relational field.
  * @property {boolean} [MANY_SYM] true when this is a many relation.
  * @property {boolean} [ONE_SYM] true when this is a one relation.
@@ -891,6 +911,11 @@ class RecordList extends Array {
  *   This is only set when there's a get on this lazy sorted-field during an update cycle (UPDATE !== 0), as sorted
  *   fields are invoked only at the end of an update cycle. When outside of an update cycle, only `sortOnNeed`
  *   determines (re-)sort.
+ * @property {boolean} [reading] on computed and sorted field, determines whether the field is being read during the
+ *   current update cycle. Useful to preserve compute/sortInNeed whenever the fields need compute/sort. This is cleared
+ *   automatically after the update cycle.
+ * @property {boolean} [changed] on computed and sorted field, determines whether the field has been changed by the compute
+ *   or sort. This is useful to keep track of "in-need" flags when the compute and/or sort did not change the field value.
  * @property {() => void} [_sort] on sorted field, function to trigger observing of sort without side-effect to actually
  *   sort the field. Since OWL reactive are consumable and their callback can be triggered during a sorting in update cycle,
  *   there's likely a need to re-observe the reactive. This function is handy for this specific case for the sort.
@@ -919,6 +944,8 @@ export class Record {
     static FC_QUEUE = []; // field-computes
     /** @type {RecordField[]} */
     static FC2_QUEUE = []; // field-computes (dummy _compute, i.e. observing of compute, see Record._compute)
+    /** @type {RecordField[]} */
+    static FR_QUEUE = []; // field-readings
     /** @type {RecordField[]} */
     static FS_QUEUE = []; // field-sorts
     /** @type {RecordField[]} */
@@ -1033,6 +1060,10 @@ export class Record {
                     delete record.Model.records[record.localId];
                 }
             }
+            while (selfRaw.FR_QUEUE.length > 0) {
+                const field = selfRaw.FR_QUEUE.pop();
+                field.reading = false;
+            }
             selfRaw.UPDATE--;
         }
         return res;
@@ -1063,11 +1094,17 @@ export class Record {
                 }
             }
             if (type === "sort") {
+                if (!rawField.value?.fieldDefinition.sort) {
+                    return;
+                }
                 if (!selfRaw.FS_QUEUE.some((f) => toRaw(f) === rawField)) {
                     selfRaw.FS_QUEUE.push(field);
                 }
             }
             if (type === "onAdd") {
+                if (rawField.value?.fieldDefinition.sort) {
+                    this.ADD_QUEUE(fieldOrRecord, "sort");
+                }
                 if (!rawField.value?.fieldDefinition.onAdd) {
                     return;
                 }
