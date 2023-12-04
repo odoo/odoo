@@ -2097,7 +2097,24 @@ export class SearchModel extends EventBus {
                 }
                 return context;
             }
-            case "favorite":
+            case "favorite": {
+                const viewType = this.env.config.viewType;
+                const context = makeContext([searchItem.context && deepCopy(searchItem.context)]);
+                if (!this.consumed) {
+                    this.consumed = {};
+                }
+                if (!viewType || this.consumed[viewType] !== searchItemId) {
+                    this.consumed[viewType] = searchItemId;
+                    return context;
+                }
+                const modifiedContext = {};
+                for (const key in context) {
+                    if (!key.startsWith(`${viewType}_`)) {
+                        modifiedContext[key] = context[key];
+                    }
+                }
+                return modifiedContext;
+            }
             case "filter": {
                 //Return a deep copy of the filter/favorite to avoid the view to modify the context
                 return makeContext([searchItem.context && deepCopy(searchItem.context)]);
