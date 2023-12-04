@@ -369,6 +369,8 @@ export class OdooEditor extends EventTarget {
             });
         });
         // Create the table UI.
+        this._tableUiContainer = this.document.createElement('div');
+        this._tableUiContainer.classList.add('o_table_ui_container');
         const parser = new DOMParser();
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
@@ -432,8 +434,9 @@ export class OdooEditor extends EventTarget {
             this.addDomListener(uiMenu.querySelector('.o_reset_table_size'), 'click', () => this.execCommand('resetSize', this._tableUiTarget));
 
             this[`_${direction}Ui`] = ui;
-            this.document.body.append(ui);
+            this._tableUiContainer.append(ui);
             this.addDomListener(ui.querySelector('.o_table_ui_menu_toggler'), 'click', this._onTableMenuTogglerClick);
+            this.editable.before(this._tableUiContainer);
         }
 
         // --------
@@ -638,6 +641,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
+        this.addDomListener(this.document, 'scroll', this._onScroll, true);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -772,10 +776,10 @@ export class OdooEditor extends EventTarget {
         this.options.onPostSanitize(target);
     }
 
-    addDomListener(element, eventName, callback) {
+    addDomListener(element, eventName, callback, useCapture) {
         const boundCallback = callback.bind(this);
         this._domListeners.push([element, eventName, boundCallback]);
-        element.addEventListener(eventName, boundCallback);
+        element.addEventListener(eventName, boundCallback, useCapture);
     }
 
     _generateId() {
@@ -1331,12 +1335,12 @@ export class OdooEditor extends EventTarget {
                         }
                         this.idSet(nodeToRemove);
                     }
-                    if (mutation.nextId && this.idFind(mutation.nextId)) {
-                        const node = this.idFind(mutation.nextId);
-                        node && node.before(nodeToRemove);
-                    } else if (mutation.previousId && this.idFind(mutation.previousId)) {
-                        const node = this.idFind(mutation.previousId);
-                        node && node.after(nodeToRemove);
+                    const next = mutation.nextId && this.idFind(mutation.nextId);
+                    const previous = !(next && next.isConnected) && mutation.previousId && this.idFind(mutation.previousId);
+                    if (next && next.isConnected) {
+                        next && next.before(nodeToRemove);
+                    } else if (previous && previous.isConnected) {
+                        previous && previous.after(nodeToRemove);
                     } else {
                         const node = this.idFind(mutation.parentId);
                         node && node.append(nodeToRemove);
@@ -2130,6 +2134,7 @@ export class OdooEditor extends EventTarget {
         } else if (fullySelectedTables.length) {
             fullySelectedTables.forEach(table => table.remove());
         }
+        this._toggleTableUi();
         return false;
     }
 
@@ -2683,16 +2688,11 @@ export class OdooEditor extends EventTarget {
      * @param {HTMLTableRowElement|HTMLTableCellElement} element
      */
     _positionTableUi(element) {
+        const tableUiContainerRect = this._tableUiContainer.getBoundingClientRect();
         const isRow = element.nodeName === 'TR';
         const ui = isRow ? this._rowUi : this._columnUi;
         const elementRect = element.getBoundingClientRect();
-        const tableRect = closestElement(element, 'table').getBoundingClientRect();
         const wrappedUi = ui.firstElementChild;
-        const togglerRect = ui.querySelector('.o_table_ui_menu_toggler').getBoundingClientRect();
-        const props = {
-            xy: {left: 'x', top: 'y'},
-            size: {left: 'width', top: 'height'}
-        };
         const table = getInSelection(this.document, 'table');
         const resetTableSize = ui.querySelector('.o_reset_table_size');
         if (table && !table.hasAttribute('style')) {
@@ -2700,15 +2700,10 @@ export class OdooEditor extends EventTarget {
         } else {
             resetTableSize.classList.remove('d-none');
         }
-        const side1 = isRow ? 'left' : 'top';
-        ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
-        ui.style[props.size[side1]] = !isRow && togglerRect[props.size[side1]] + 'px';
+        ui.style.left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0) + 'px';
+        ui.style.top = elementRect.top - tableUiContainerRect.top - (isRow ? 0 : wrappedUi.clientHeight) + 'px';
+        wrappedUi.style[isRow ? 'height' : 'width'] = elementRect[isRow ? 'height' : 'width'] + 'px';
 
-        const side2 = isRow ? 'top' : 'left';
-        wrappedUi.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
-        ui.style[side2] = tableRect[props.xy[side2]] + 'px';
-        wrappedUi.style[side2] = elementRect[side2] - tableRect[side2] - 1 + 'px';
-        ui.style[props.size[side2]] = tableRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -3876,9 +3871,6 @@ export class OdooEditor extends EventTarget {
             //    wasn't changed.
             this._setLinkZws();
 
-            if (this.options.onCollaborativeSelectionChange) {
-                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
-            }
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
@@ -3910,6 +3902,13 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
+        }
+        if (
+            selection.rangeCount &&
+            selection.getRangeAt(0) &&
+            this.options.onCollaborativeSelectionChange
+        ) {
+            this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
         }
     }
 
@@ -4357,6 +4356,15 @@ export class OdooEditor extends EventTarget {
             this.document.addEventListener('mousemove', resizeTable);
             this.document.addEventListener('mouseup', stopResizing);
             this.document.addEventListener('mouseleave', stopResizing);
+        }
+    }
+
+    _onScroll(ev) {
+        if (this._rowUiTarget && !this._rowUi.classList.contains('o_open')) {
+            this._positionTableUi(this._rowUiTarget);
+        }
+        if (this._columnUiTarget && !this._columnUi.classList.contains('o_open')) {
+            this._positionTableUi(this._columnUiTarget);
         }
     }
 

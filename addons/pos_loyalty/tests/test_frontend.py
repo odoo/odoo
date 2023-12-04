@@ -1284,3 +1284,51 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltySpecificDiscountCategoryTour",
             login="accountman",
         )
+
+    def test_promo_with_different_taxes(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "10.00",
+        })
+        self.product_a = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, self.tax01.ids)],
+            }
+        )
+        self.product_b = self.env["product.product"].create(
+            {
+                "name": "Product B",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+        self.free_product = self.env['loyalty.program'].create({
+            'name': 'Free Product A',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'money',
+                'reward_point_amount': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 5,
+                'discount_mode': 'per_order',
+                'discount': 5,
+            })],
+        })
+        self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour9",
+            login="accountman",
+        )

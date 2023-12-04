@@ -300,10 +300,9 @@ class IrModel(models.Model):
 
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
-        if self.state == 'manual':
-            self.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
-        else:
-            self.field_id._prepare_update()
+        manual_models = self.filtered(lambda model: model.state == 'manual')
+        manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
+        (self - manual_models).field_id._prepare_update()
 
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
