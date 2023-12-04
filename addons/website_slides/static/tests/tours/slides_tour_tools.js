@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { contains } from "@web/../tests/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
 /*
@@ -204,11 +205,13 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Exercise")`,
 }, {
     content: 'eLearning: check uploaded pdf presence and perform comparison',
-    trigger: (backend ? 'iframe ' : '') + '.o_wslides_fs_content',
+    trigger: (backend ? 'iframe.o_iframe ' : '') + '.o_wslides_fs_content',
     run: async () => {
-        const baseElement = backend ? document.querySelector('iframe').contentDocument : document;
-        const pdfViewer = baseElement.querySelector('iframe.o_wslides_iframe_viewer').contentDocument
-            .querySelector('#PDFSlideViewer');
+        const baseElement = backend ? document.querySelector('iframe.o_iframe').contentDocument : document;
+        await contains('iframe.o_wslides_iframe_viewer', { target: baseElement });
+        const iframeViewerDoc = baseElement.querySelector('iframe.o_wslides_iframe_viewer').contentDocument;
+        await contains('#PDFSlideViewer', { target: iframeViewerDoc });
+        const pdfViewer = iframeViewerDoc.querySelector('#PDFSlideViewer');
         if (await compareBase64Content(pdfViewer.getAttribute('data-slideurl'), 'Exercise.pdf', 'application/pdf', testPdf)) {
             baseElement.querySelector('.o_wslides_fs_content').classList.add('o_wslides_tour_pdf_upload_success');
         }
