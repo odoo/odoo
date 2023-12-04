@@ -175,7 +175,7 @@ from .tools._vendor.useragents import UserAgent
 
 
 _logger = logging.getLogger(__name__)
-
+_logger_proxy = _logger.getChild('proxy')
 
 # =========================================================
 # Lib fixes
@@ -1977,14 +1977,17 @@ class Application:
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
-            # The ProxyFix middleware has a side effect of updating the
-            # environ, see https://github.com/pallets/werkzeug/pull/2184
-            def fake_app(environ, start_response):
-                return []
-            def fake_start_response(status, headers):
-                return
-            ProxyFix(fake_app)(environ, fake_start_response)
+        if odoo.tools.config['proxy_mode']:
+            if environ.get('HTTP_X_FORWARDED_HOST'):
+                # The ProxyFix middleware has a side effect of updating the
+                # environ, see https://github.com/pallets/werkzeug/pull/2184
+                def fake_app(environ, start_response):
+                    return []
+                def fake_start_response(status, headers):
+                    return
+                ProxyFix(fake_app)(environ, fake_start_response)
+            else:
+                _logger_proxy.warning("X-Forwarded-Host missing from header; --proxy-mode ignored for this request")
 
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
