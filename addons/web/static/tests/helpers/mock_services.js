@@ -73,7 +73,7 @@ export function makeFakeRPCService(mockRPC) {
                     method: "call",
                     params: params,
                 };
-                env.bus.trigger("RPC:REQUEST", { data, settings });
+                env.bus.trigger("RPC:REQUEST", { data, url: route, settings });
                 const rpcProm = new Promise((resolve, reject) => {
                     rejectFn = reject;
                     rpcService(...arguments)
