@@ -135,9 +135,13 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     _loadProducts: function (product_ids) {
         var self = this;
+        const cookies = JSON.parse(cookie.get('comparelist_product_ids') || '[]');
+        if (product_ids.length == 0 && cookies.length == 0) {
+            return Promise.resolve(true);
+        }
         return rpc('/shop/get_product_data', {
             product_ids: product_ids,
-            cookies: JSON.parse(cookie.get('comparelist_product_ids') || '[]'),
+            cookies: cookies,
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
             delete data.cookies;
