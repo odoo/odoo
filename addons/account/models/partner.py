@@ -383,11 +383,11 @@ class ResPartner(models.Model):
               FROM res_partner partner
          LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
               JOIN account_move move ON move.id = aml.move_id
-              JOIN res_company line_company ON line_company.id = line.company_id
+              JOIN res_company line_company ON line_company.id = aml.company_id
         RIGHT JOIN account_account acc ON aml.account_id = acc.id
              WHERE acc.account_type = %s
                AND NOT acc.deprecated
-               AND SPLIT_PART(line_company.parent_path, '/', 1):int == %s
+               AND SPLIT_PART(line_company.parent_path, '/', 1)::int = %s
                AND move.state = 'posted'
           GROUP BY aml.partner_id
             HAVING %s * COALESCE(SUM(aml.amount_residual), 0) {operator} %s''',
