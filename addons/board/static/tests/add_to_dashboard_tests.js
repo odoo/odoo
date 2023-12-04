@@ -514,4 +514,38 @@ QUnit.module("Board", (hooks) => {
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
     });
+
+    QUnit.test("Add to my dashboard is not available in form views", async function (assert) {
+        serverData.views = {
+            "partner,false,list": '<list><field name="foo"/></list>',
+            "partner,false,form": '<form><field name="foo"/></form>',
+            "partner,false,search": "<search></search>",
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            context: { fire: "on the bayou" },
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_list_view", "should display the list view");
+
+        // sanity check
+        await click(target, ".o_cp_action_menus .dropdown-toggle");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu .o_add_to_board");
+
+        // open form view
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        await click(target, ".o_cp_action_menus .dropdown-toggle");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu");
+        assert.containsNone(target, ".o_cp_action_menus .dropdown-menu .o_add_to_board");
+    });
 });
