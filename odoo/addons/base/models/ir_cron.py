@@ -70,6 +70,14 @@ class ir_cron(models.Model):
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
+    _sql_constraints = [
+        (
+            'check_strictly_positive_interval',
+            'CHECK(interval_number > 0)',
+            'The interval number must be a strictly positive number.'
+        ),
+    ]
+
     @api.depends('ir_actions_server_id.name')
     def _compute_cron_name(self):
         for cron in self.with_context(lang='en_US'):
