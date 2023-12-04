@@ -16,8 +16,17 @@ class TestAutomation(TransactionCase):
             "name": "Force Archived Contacts",
             "trigger": "on_create_or_write",
             "model_id": model.id,
-            "trigger_field_ids": [(6, 0, [self.env.ref("base.field_res_partner__name").id])],
+            "trigger_field_ids": [(6, 0, [
+                self.env.ref("base.field_res_partner__name").id,
+                self.env.ref("base.field_res_partner__vat").id,
+            ])],
         })
+
+        # trg_field should only be set when trigger is 'on_stage_set' or 'on_tag_set'
+        self.assertFalse(automation.trg_field_ref)
+        self.assertFalse(automation.trg_field_ref_display_name)
+        self.assertFalse(automation.trg_field_ref_model_name)
+
         action = self.env["ir.actions.server"].create({
             "name": "Set Active To False",
             "base_automation_id": automation.id,
