@@ -309,7 +309,7 @@
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
                                 decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
-                            <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
+                            <field name="user_id" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
                             <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)">
