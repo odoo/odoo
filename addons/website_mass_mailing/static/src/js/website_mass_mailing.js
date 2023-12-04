@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
@@ -17,7 +18,6 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     init: function () {
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
     },
     /**
@@ -40,7 +40,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         }
         const always = this._updateView.bind(this);
         const inputName = this.el.querySelector('input').name;
-        return Promise.all([def, this.rpc('/website_mass_mailing/is_subscriber', {
+        return Promise.all([def, rpc('/website_mass_mailing/is_subscriber', {
             'list_id': this._getListId(),
             'subscription_type': inputName,
         }).then(always, always)]);
@@ -107,7 +107,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             });
             return false;
         }
-        this.rpc('/website_mass_mailing/subscribe', {
+        rpc('/website_mass_mailing/subscribe', {
             'list_id': this._getListId(),
             'value': $input.length ? $input.val() : false,
             'subscription_type': inputName,

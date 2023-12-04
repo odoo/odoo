@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { tourService } from "@web_tour/tour_service/tour_service";
-import { rpcService } from "@web/core/network/rpc_service";
 import { userService } from "@web/core/user_service";
 import { ormService } from "@web/core/orm_service";
 import { notificationService } from "@web/core/notifications/notification_service";
@@ -21,6 +20,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { patchRPCWithCleanup } from "@web/../tests/helpers/mock_services";
 import { Component, useState, xml } from "@odoo/owl";
 import { session } from "@web/session";
 
@@ -67,9 +67,9 @@ QUnit.module("Tour service", (hooks) => {
             macroEngines.forEach((e) => e.stop());
             macroEngines = [];
         });
+        patchRPCWithCleanup();
         registry
             .category("services")
-            .add("rpc", rpcService)
             .add("user", userService)
             .add("orm", ormService)
             .add("notification", notificationService)

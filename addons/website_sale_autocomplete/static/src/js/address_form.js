@@ -4,6 +4,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import { KeepLast } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { renderToElement } from "@web/core/utils/render";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.AddressForm = publicWidget.Widget.extend({
     selector: '.oe_cart .checkout_autoformat:has(input[name="street"][data-autocomplete-enabled="1"])',
@@ -22,8 +23,6 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
 
         this._onChangeStreet = debounce(this._onChangeStreet, 200);
         this._super.apply(this, arguments);
-
-        this.rpc = this.bindService("rpc");
     },
 
      /**
@@ -49,7 +48,7 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         const inputContainer = ev.currentTarget.parentNode;
         if (ev.currentTarget.value.length >= 5) {
             this.keepLast.add(
-                this.rpc('/autocomplete/address', {
+                rpc('/autocomplete/address', {
                     partial_address: ev.currentTarget.value,
                     session_id: this.sessionId || null
                 })).then((response) => {
@@ -76,7 +75,7 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         spinner.classList.add('spinner-border', 'text-warning', 'text-center', 'm-auto');
         dropDown.appendChild(spinner);
 
-        const address = await this.rpc('/autocomplete/address_full', {
+        const address = await rpc('/autocomplete/address_full', {
             address: ev.currentTarget.innerText,
             google_place_id: ev.currentTarget.dataset.googlePlaceId,
             session_id: this.sessionId || null

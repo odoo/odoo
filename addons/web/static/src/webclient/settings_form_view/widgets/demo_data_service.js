@@ -1,10 +1,10 @@
 /** @odoo-modules */
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export const demoDataService = {
-    dependencies: ["rpc"],
-    async start(env, { rpc }) {
+    async start() {
         let isDemoDataActiveProm;
         return {
             isDemoDataActive() {

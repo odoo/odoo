@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import MailGroup from "@mail_group/js/mail_group";
 
@@ -12,7 +13,7 @@ MailGroup.include({
         // Because it's rendered only once when the admin add the snippets
         // for the first time, we make a RPC call to setup the widget properly
         const email = (new URL(document.location.href)).searchParams.get('email');
-        const response = await this.rpc('/group/is_member', {
+        const response = await rpc('/group/is_member', {
             'group_id': this.mailgroupId,
             'email': email,
             'token': this.token,

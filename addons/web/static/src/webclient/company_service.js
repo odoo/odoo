@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc_service";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";

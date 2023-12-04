@@ -5,6 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
 import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
+import { rpc } from "@web/core/network/rpc";
 import { useService } from '@web/core/utils/hooks';
 import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_progress_toast/upload_service';
 
@@ -208,7 +209,7 @@ patch(ImageSelector.prototype, {
 
     async submitCredentials(key, appId) {
         this.state.unsplashError = null;
-        await this.rpc('/web_unsplash/save_unsplash', { key, appId });
+        await rpc('/web_unsplash/save_unsplash', { key, appId });
         await this.searchUnsplash();
     },
 });
@@ -240,7 +241,7 @@ patch(MediaDialog.prototype, {
 });
 
 patch(uploadService, {
-    start(env, { rpc }) {
+    start(env) {
         const service = super.start(...arguments);
         return {
             ...service,

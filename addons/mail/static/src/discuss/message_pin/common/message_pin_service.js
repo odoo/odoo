@@ -9,6 +9,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -61,7 +62,6 @@ export class MessagePin {
         this.busService = services.bus_service;
         this.dialogService = services.dialog;
         this.ormService = services.orm;
-        this.rpcService = services.rpc;
         this.store = services["mail.store"];
     }
 
@@ -77,7 +77,7 @@ export class MessagePin {
         }
         channel.pinnedMessagesState = "loading";
         try {
-            const messagesData = await this.rpcService("/discuss/channel/pinned_messages", {
+            const messagesData = await rpc("/discuss/channel/pinned_messages", {
                 channel_id: channel.id,
             });
             this.store.Message.insert(messagesData, { html: true });
@@ -171,7 +171,7 @@ export class MessagePin {
 }
 
 export const messagePinService = {
-    dependencies: ["bus_service", "dialog", "mail.store", "orm", "rpc"],
+    dependencies: ["bus_service", "dialog", "mail.store", "orm"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

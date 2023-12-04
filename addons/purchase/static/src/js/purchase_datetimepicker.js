@@ -1,18 +1,16 @@
 /** @odoo-module */
+
 import PublicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 export const PurchaseDatePicker = PublicWidget.Widget.extend({
     selector: ".o-purchase-datetimepicker",
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
     start() {
         this.call("datetime_picker", "create", {
             target: this.el,
             onChange: (newDate) => {
                 const { accessToken, orderId, lineId } = this.el.dataset;
-                this.rpc(`/my/purchase/${orderId}/update?access_token=${accessToken}`, {
+                rpc(`/my/purchase/${orderId}/update?access_token=${accessToken}`, {
                     [lineId]: newDate.toISODate(),
                 });
             },

@@ -3,6 +3,7 @@
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -18,7 +19,6 @@ export class Messaging {
     setup(env, services) {
         this.env = env;
         this.store = services["mail.store"];
-        this.rpc = services.rpc;
         this.orm = services.orm;
         this.router = services.router;
         this.isReady = new Deferred();
@@ -47,7 +47,7 @@ export class Messaging {
      * Import data received from init_messaging
      */
     async initialize() {
-        await this.rpc("/mail/init_messaging", {}, { silent: true }).then(
+        await rpc("/mail/init_messaging", {}, { silent: true }).then(
             this.initMessagingCallback.bind(this)
         );
     }
@@ -107,7 +107,17 @@ export class Messaging {
 }
 
 export const messagingService = {
-    dependencies: ["mail.store", "rpc", "orm", "user", "router"],
+    dependencies: [
+        "mail.store",
+        "orm",
+        "user",
+        "router",
+        "im_status",
+        "mail.attachment", // FIXME: still necessary until insert is managed by this service
+        "mail.thread", // FIXME:     still necessary until insert is managed by this service
+        "mail.message", // FIXME: still necessary until insert is managed by this service
+        "mail.persona", // FIXME: still necessary until insert is managed by this service
+    ],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

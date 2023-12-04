@@ -4,6 +4,7 @@ import { Composer } from "@mail/core/common/composer";
 import { Typing } from "@mail/discuss/typing/common/typing";
 
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
@@ -33,7 +34,7 @@ patch(Composer.prototype, {
      */
     notifyIsTyping(is_typing = true) {
         if (["chat", "channel", "group"].includes(this.thread?.type)) {
-            this.rpc(
+            rpc(
                 "/discuss/channel/notify_typing",
                 {
                     channel_id: this.thread.id,

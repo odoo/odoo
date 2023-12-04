@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { UPDATE_METHODS } from "@web/core/orm_service";
-import { rpcBus } from "@web/core/network/rpc_service";
+import { rpcBus } from "@web/core/network/rpc";
 
 registry.category("services").add("stock_warehouse", {
     dependencies: ["action"],

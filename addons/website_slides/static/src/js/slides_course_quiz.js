@@ -8,6 +8,7 @@
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
+    import { rpc } from "@web/core/network/rpc";
 
     import { _t } from "@web/core/l10n/translation";
 
@@ -73,7 +74,6 @@
             this.redirectURL = encodeURIComponent(document.URL);
             this.channel = channel_data;
 
-            this.rpc = this.bindService("rpc");
             this.orm = this.bindService("orm");
         },
 
@@ -194,7 +194,7 @@
          * @private
          */
         _reorderQuestions: function () {
-            this.rpc('/web/dataset/resequence', {
+            rpc('/web/dataset/resequence', {
                 model: "slide.question",
                 ids: this._getQuestionsIds()
             }).then(this._modifyQuestionsSequence.bind(this))
@@ -205,7 +205,7 @@
          */
         _fetchQuiz: function () {
             var self = this;
-            return self.rpc('/slides/slide/quiz/get', {
+            return rpc('/slides/slide/quiz/get', {
                 'slide_id': self.slide.id,
             }).then(function (quiz_data) {
                 self.slide.sessionAnswers = quiz_data.session_answers;
@@ -370,7 +370,7 @@
          * @private
          */
          async _submitQuiz() {
-            const data = await this.rpc('/slides/slide/quiz/submit', {
+            const data = await rpc('/slides/slide/quiz/submit', {
                 slide_id: this.slide.id,
                 answer_ids: this._getQuizAnswers(),
             });
@@ -480,7 +480,7 @@
          * @private
          */
         _onClickReset: function () {
-            this.rpc('/slides/slide/quiz/reset', {
+            rpc('/slides/slide/quiz/reset', {
                 slide_id: this.slide.id
             }).then(function () {
                 window.location.reload();
@@ -495,7 +495,7 @@
         _saveQuizAnswersToSession: function () {
             this._hideErrorMessage();
 
-            return this.rpc('/slides/slide/quiz/save_to_session', {
+            return rpc('/slides/slide/quiz/save_to_session', {
                 'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': this._getQuizAnswers()},
             });
         },

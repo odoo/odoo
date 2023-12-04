@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -1095,7 +1097,7 @@ QUnit.test("Can leave channel", async () => {
 QUnit.test("Do no channel_info after unpin", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
-    const { env, openDiscuss } = await start({
+    const { openDiscuss } = await start({
         mockRPC(route, args, originalRPC) {
             if (route === "/discuss/channel/info") {
                 assert.step("channel_info");
@@ -1105,7 +1107,7 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
     });
     openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
-    env.services.rpc("/mail/message/post", {
+    rpc("/mail/message/post", {
         thread_id: channelId,
         thread_model: "discuss.channel",
         post_data: {

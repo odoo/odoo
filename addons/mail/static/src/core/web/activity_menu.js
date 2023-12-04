@@ -8,7 +8,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };

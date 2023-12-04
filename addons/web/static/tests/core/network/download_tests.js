@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { makeDeferred, patchWithCleanup } from "../../helpers/utils";
 import { download } from "@web/core/network/download";
 import { makeMockXHR } from "../../helpers/mock_services";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { registerCleanup } from "../../helpers/cleanup";
 
 QUnit.module("download", (hooks) => {

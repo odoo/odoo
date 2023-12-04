@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
@@ -166,7 +166,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
         content: "Check mail.mail records have been created",
         trigger: "body",
         run: function () {
-            var mailDef = jsonrpc(`/web/dataset/call_kw/mail.mail/search_count`, {
+            var mailDef = rpc(`/web/dataset/call_kw/mail.mail/search_count`, {
                 model: "mail.mail",
                 method: "search_count",
                 args: [[

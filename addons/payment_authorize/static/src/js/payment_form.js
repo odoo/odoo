@@ -5,7 +5,7 @@ import { _t } from '@web/core/l10n/translation';
 import { loadJS } from '@web/core/assets';
 
 import paymentForm from '@payment/js/payment_form';
-import { RPCError } from '@web/core/network/rpc_service';
+import { rpc, RPCError } from '@web/core/network/rpc';
 
 paymentForm.include({
 
@@ -141,7 +141,7 @@ paymentForm.include({
         }
 
         // Initiate the payment
-        this.rpc('/payment/authorize/payment', {
+        rpc('/payment/authorize/payment', {
             'reference': processingValues.reference,
             'partner_id': processingValues.partner_id,
             'opaque_data': response.opaqueData,

@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
@@ -135,7 +137,7 @@ QUnit.test("channel preview ignores messages from the past", async () => {
         parent_id: messageId,
         res_id: channelId,
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message-content", { text: "last message" });
@@ -147,7 +149,7 @@ QUnit.test("channel preview ignores messages from the past", async () => {
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
     pyEnv.withUser(pyEnv.currentUserId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

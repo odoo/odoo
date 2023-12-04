@@ -3,6 +3,7 @@
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { Component } from "@odoo/owl";
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
@@ -17,7 +18,6 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._onReminderToggleClick = debounce(this._onReminderToggleClick, 500, true);
-        this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
     },
 
@@ -41,7 +41,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
         var reminderOnValue = !this.reminderOn;
 
-        this.rpc('/event/track/toggle_reminder', {
+        rpc('/event/track/toggle_reminder', {
             track_id: $trackLink.data('trackId'),
             set_reminder_on: reminderOnValue,
         }).then(function (result) {

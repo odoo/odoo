@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     selector: '.o_survey_quick_access',
@@ -16,7 +17,6 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
 
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
     },
     
@@ -75,7 +75,7 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
             self.$('.o_survey_session_error_invalid_code').removeClass('d-none');
             return;
         }
-        this.rpc(`/survey/check_session_code/${sessionCodeInputVal}`).then(function (response) {
+        rpc(`/survey/check_session_code/${sessionCodeInputVal}`).then(function (response) {
             if (response.survey_url) {
                 window.location = response.survey_url;
             } else {

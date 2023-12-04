@@ -1,7 +1,7 @@
 /** @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 import { ResConfigDevTool } from "@web/webclient/settings_form_view/widgets/res_config_dev_tool";
 
@@ -16,13 +16,8 @@ class ResConfigDevToolDownloadXsd extends ResConfigDevTool {
 
     static template = "res_config_dev_tool";
 
-    setup() {
-        super.setup();
-        this.rpc = useService("rpc");
-    }
-
     async onClickDownloadXSD() {
-        await this.rpc("/web/dataset/call_kw/ir.attachment/action_download_xsd_files", {
+        await rpc("/web/dataset/call_kw/ir.attachment/action_download_xsd_files", {
             model: 'ir.attachment',
             method: 'action_download_xsd_files',
             args: [],

@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
 
 import { Domain } from '@web/core/domain';
+import { rpc } from "@web/core/network/rpc";
 import { SearchModel } from '@web/search/search_model';
 import { useState, onWillStart } from "@odoo/owl";
 
@@ -10,14 +10,13 @@ export class LunchSearchModel extends SearchModel {
     setup() {
         super.setup(...arguments);
 
-        this.rpc = useService('rpc');
         this.lunchState = useState({
             locationId: false,
             userId: false,
         });
 
         onWillStart(async () => {
-            const locationId = await this.rpc('/lunch/user_location_get', {});
+            const locationId = await rpc('/lunch/user_location_get', {});
             this.updateLocationId(locationId);
         });
     }

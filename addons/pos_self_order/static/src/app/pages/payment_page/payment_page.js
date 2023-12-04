@@ -2,6 +2,7 @@
 
 import { Component, onWillStart, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 // This component is only use in Kiosk mode
@@ -12,7 +13,6 @@ export class PaymentPage extends Component {
         this.selfOrder = useSelfOrder();
         this.selfOrder.isOrder();
         this.router = useService("router");
-        this.rpc = useService("rpc");
         this.state = useState({
             selection: true,
             paymentMethodId: null,
@@ -34,7 +34,7 @@ export class PaymentPage extends Component {
     get showFooterBtn() {
         return this.selfOrder.paymentError || this.state.selection;
     }
-
+    rpc;
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
@@ -50,7 +50,7 @@ export class PaymentPage extends Component {
     async startPayment() {
         this.selfOrder.paymentError = false;
         try {
-            const result = await this.rpc(`/kiosk/payment/${this.selfOrder.pos_config_id}/kiosk`, {
+            const result = await rpc(`/kiosk/payment/${this.selfOrder.pos_config_id}/kiosk`, {
                 order: this.selfOrder.currentOrder,
                 access_token: this.selfOrder.access_token,
                 payment_method_id: this.state.paymentMethodId,

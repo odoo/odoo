@@ -12,7 +12,7 @@ import { deduceUrl } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -305,7 +305,7 @@ export class PosStore extends Reactive {
     }
     create_printer(config) {
         const url = deduceUrl(config.proxy_ip || "");
-        return new HWPrinter({ rpc: this.env.services.rpc, url });
+        return new HWPrinter({ url });
     }
     _loadPoSConfig() {
         this.db.set_uuid(this.config.uuid);

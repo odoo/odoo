@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 import DynamicSnippetCarousel from "@website/snippets/s_dynamic_snippet_carousel/000";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
@@ -115,7 +116,6 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
     init(root, options) {
         const parent = options.parent || root;
         this._super(parent, options);
-        this.rpc = this.bindService("rpc");
     },
 
     start() {
@@ -133,7 +133,7 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card');
-        const data = await this.rpc("/shop/cart/update_json", {
+        const data = await rpc("/shop/cart/update_json", {
             product_id: $card.find('input[data-product-id]').data('product-id'),
             add_qty: 1,
             display: false,
@@ -154,7 +154,7 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onRemoveFromRecentlyViewed(ev) {
         const $card = $(ev.currentTarget).closest('.card');
-        await this.rpc("/shop/products/recently_viewed_delete", {
+        await rpc("/shop/products/recently_viewed_delete", {
             product_id: $card.find('input[data-product-id]').data('product-id'),
         });
         this.trigger_up('widgets_start_request', {

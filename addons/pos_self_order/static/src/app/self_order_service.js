@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { Reactive, effect } from "@web/core/utils/reactive";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { Product } from "@pos_self_order/app/models/product";
@@ -25,12 +25,11 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { rpc, notification, router, printer, renderer }) {
+    async setup(env, { notification, router, printer, renderer }) {
         // services
         this.notification = notification;
         this.router = router;
         this.env = env;
-        this.rpc = rpc;
         this.printer = printer;
         this.renderer = renderer;
 
@@ -301,7 +300,7 @@ export class SelfOrder extends Reactive {
                 ? "/pos-self-order/update-existing-order"
                 : `/pos-self-order/process-new-order/${this.config.self_ordering_mode}`;
 
-            const order = await this.rpc(rpcUrl, {
+            const order = await rpc(rpcUrl, {
                 order: this.currentOrder,
                 access_token: this.access_token,
                 table_identifier: this.table ? this.table.identifier : null,
@@ -330,7 +329,7 @@ export class SelfOrder extends Reactive {
         }
 
         try {
-            const orders = await this.rpc(`/pos-self-order/get-orders/`, {
+            const orders = await rpc(`/pos-self-order/get-orders/`, {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
             });
@@ -420,7 +419,7 @@ export class SelfOrder extends Reactive {
                 this.priceLoading.abort(false);
             }
 
-            this.priceLoading = this.rpc(`/pos-self-order/get-orders-taxes/`, {
+            this.priceLoading = rpc(`/pos-self-order/get-orders-taxes/`, {
                 order: this.currentOrder,
                 access_token: this.access_token,
             });
@@ -611,9 +610,9 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router", "printer", "renderer"],
-    async start(env, { rpc, notification, router, printer, renderer }) {
-        return new SelfOrder(env, { rpc, notification, router, printer, renderer }).ready;
+    dependencies: ["notification", "router", "printer", "renderer"],
+    async start(env, { notification, router, printer, renderer }) {
+        return new SelfOrder(env, { notification, router, printer, renderer }).ready;
     },
 };
 

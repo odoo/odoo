@@ -4,6 +4,7 @@ import { isValidEmail } from "@im_livechat/embed/common/misc";
 
 import { Component, useState } from "@odoo/owl";
 
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -25,7 +26,6 @@ export class TranscriptSender extends Component {
     setup() {
         this.isValidEmail = isValidEmail;
         this.livechatService = useService("im_livechat.livechat");
-        this.rpc = useService("rpc");
         this.state = useState({
             email: "",
             status: this.STATUS.IDLE,
@@ -35,7 +35,7 @@ export class TranscriptSender extends Component {
     async onClickSend() {
         this.state.status = this.STATUS.SENDING;
         try {
-            await this.rpc("/im_livechat/email_livechat_transcript", {
+            await rpc("/im_livechat/email_livechat_transcript", {
                 uuid: this.props.thread.uuid,
                 email: this.state.email,
             });

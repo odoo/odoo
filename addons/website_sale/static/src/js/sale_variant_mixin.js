@@ -6,7 +6,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { insertThousandsSep } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 
 var VariantMixin = {
     events: {
@@ -70,7 +70,7 @@ var VariantMixin = {
                 const $currentOptionalProduct = $(optionalProduct);
                 const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
                 const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
-                jsonrpc('/website_sale/get_combination_info', {
+                rpc('/website_sale/get_combination_info', {
                     'product_template_id': productTemplateId,
                     'product_id': this._getProductId($currentOptionalProduct),
                     'combination': childCombination,
@@ -89,7 +89,7 @@ var VariantMixin = {
             );
         }
 
-        return jsonrpc('/website_sale/get_combination_info', {
+        return rpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
@@ -317,10 +317,9 @@ var VariantMixin = {
      * @param {$.Element} $container the container to look into
      * @param {integer} productId the product id
      * @param {integer} productTemplateId the corresponding product template id
-     * @param {boolean} useAjax wether the rpc call should be done using jsonrpc or using _rpc
      * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
-    selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
+    selectOrCreateProduct: function ($container, productId, productTemplateId) {
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
         var productReady = Promise.resolve();
@@ -334,11 +333,7 @@ var VariantMixin = {
             };
 
             var route = '/sale/create_product_variant';
-            if (useAjax) {
-                productReady = jsonrpc(route, params);
-            } else {
-                productReady = this.rpc(route, params);
-            }
+            productReady = rpc(route, params);
         }
 
         return productReady;

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Switch } from '@website/components/switch/switch';
 import { useService, useBus } from '@web/core/utils/hooks';
@@ -22,7 +23,6 @@ class PublishSystray extends Component {
 
     setup() {
         this.website = useService('website');
-        this.rpc = useService('rpc');
 
         this.state = useState({
             published: this.website.currentWebsite.metadata.isPublished,
@@ -47,7 +47,7 @@ class PublishSystray extends Component {
         this.state.processing = true;
         this.state.published = !this.state.published;
         const { metadata: { mainObject } } = this.website.currentWebsite;
-        return this.rpc('/website/publish', {
+        return rpc('/website/publish', {
             id: mainObject.id,
             object: mainObject.model,
         }).then(

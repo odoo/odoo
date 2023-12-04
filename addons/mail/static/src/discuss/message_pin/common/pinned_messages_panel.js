@@ -24,7 +24,6 @@ export class PinnedMessagesPanel extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.rpc = useService("rpc");
         this.messagePinService = useState(useService("discuss.message.pin"));
         onWillStart(() => {
             this.messagePinService.fetchPinnedMessages(this.props.thread);

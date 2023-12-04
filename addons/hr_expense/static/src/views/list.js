@@ -17,7 +17,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         super.setup();
         this.orm = useService('orm');
         this.actionService = useService('action');
-        this.rpc = useService("rpc");
         this.user = useService("user");
         this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
 

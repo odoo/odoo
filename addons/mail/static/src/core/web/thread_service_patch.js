@@ -4,6 +4,7 @@ import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 let nextId = 1;
@@ -32,7 +33,7 @@ patch(ThreadService.prototype, {
         if (requestList.includes("messages")) {
             this.fetchNewMessages(thread);
         }
-        const result = await this.rpc("/mail/thread/data", {
+        const result = await rpc("/mail/thread/data", {
             request_list: requestList,
             thread_id: thread.id,
             thread_model: thread.model,

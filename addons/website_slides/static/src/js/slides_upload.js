@@ -7,6 +7,7 @@ import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
@@ -66,7 +67,6 @@ var SlideUploadDialog = Dialog.extend({
         this.file = {};
         this.isValidUrl = true;
 
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
     },
     start: function () {
@@ -108,21 +108,21 @@ var SlideUploadDialog = Dialog.extend({
         var self = this;
         this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
             function () {
-                return self.rpc('/slides/category/search_read', {
+                return rpc('/slides/category/search_read', {
                     fields: ['name'],
                     domain: [['channel_id', '=', self.channelID]],
                 });
             })
         );
         this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return self.rpc('/slides/tag/search_read', {
+            return rpc('/slides/tag/search_read', {
                 fields: ['name'],
                 domain: [],
             });
         }));
     },
     _fetchUrlPreview: function (url, slideCategory) {
-        return this.rpc('/slides/prepare_preview/', {
+        return rpc('/slides/prepare_preview/', {
             'url': url,
             'slide_category': slideCategory,
             'channel_id': this.channelID
@@ -715,7 +715,7 @@ var SlideUploadDialog = Dialog.extend({
         var oldType = this.get('state');
         this.set('state', '_upload');
 
-        const data = await this.rpc('/slides/add_slide', values);
+        const data = await rpc('/slides/add_slide', values);
         this._onFormSubmitDone(data, oldType);
     },
 

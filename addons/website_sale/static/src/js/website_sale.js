@@ -7,7 +7,7 @@ const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { Component } from "@odoo/owl";
@@ -56,8 +56,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
-
-        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -198,7 +196,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         });
         $input.data('update_change', true);
 
-        this.rpc("/shop/cart/update_json", {
+        rpc("/shop/cart/update_json", {
             line_id: line_id,
             product_id: parseInt($input.data('product-id'), 10),
             set_qty: value,
@@ -396,7 +394,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             $form,
             parseInt($form.find(productSelector.join(', ')).first().val(), 10),
             $form.find('.product_template_id').val(),
-            false
         );
 
         return productReady.then(function (productId) {
@@ -680,7 +677,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         var clickedValue = $(ev.target).val();
         var isList = clickedValue === 'list';
         if (!this.editableMode) {
-            jsonrpc('/shop/save_shop_layout_mode', {
+            rpc('/shop/save_shop_layout_mode', {
                 'layout_mode': isList ? 'list' : 'grid',
             });
         }

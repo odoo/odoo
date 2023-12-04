@@ -2,6 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 
@@ -38,11 +39,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     //--------------------------------------------------------------------------
     // Widget
     //--------------------------------------------------------------------------
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     /**
     * @override
@@ -335,7 +331,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.preventEnterSubmit = false;
             this.readonly = false;
             this._nextScreen(
-                this.rpc(
+                rpc(
                     `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`
                 ), {
                     initTimer: true,
@@ -403,7 +399,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.readonly = true;
         }
 
-        const submitPromise = this.rpc(
+        const submitPromise = rpc(
             `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
             params
         );

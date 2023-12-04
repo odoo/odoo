@@ -4,8 +4,6 @@ import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
-import { SERVICES_METADATA } from "@web/env";
-import { Component } from "@odoo/owl";
 
 QUnit.module('core', {}, function () {
 
@@ -397,60 +395,6 @@ QUnit.module('core', {}, function () {
             assert.ok(true, "alive(p, true) should fail its promise");
             done();
         });
-    });
-
-    QUnit.test("calling _rpc on destroyed widgets", async function (assert) {
-        assert.expect(2);
-
-        SERVICES_METADATA.rpc = true;
-        var def;
-        Component.env = {
-            services: {
-                rpc: () => {
-                    def = testUtils.makeTestPromise();
-                    return def;
-                },
-            },
-        };
-
-        const ChildWidget = Widget.extend({
-            init() {
-                this._super(...arguments);
-                this.rpc = this.bindService("rpc");
-            },
-        });
-        var widget = new ChildWidget();
-
-        widget.rpc('/a/route').then(function () {
-            assert.ok(true, "The ajax call should be resolve");
-        });
-        await testUtils.nextMicrotaskTick();
-        def.resolve();
-        await testUtils.nextMicrotaskTick();
-        def = null;
-
-        widget.rpc('/a/route').then(function () {
-            throw Error("Calling _rpc on a destroyed widget should return a " +
-            "promise that remains pending forever");
-        }).catch(function () {
-            throw Error("Calling _rpc on a destroyed widget should return a " +
-            "promise that remains pending forever");
-        });
-        widget.destroy();
-        def.resolve();
-        await testUtils.nextMicrotaskTick();
-        def = null;
-
-        widget.rpc('/a/route').then(function () {
-            throw Error("Calling _rpc on a destroyed widget should return a " +
-                "promise that remains pending forever");
-        }).catch(function () {
-            throw Error("Calling _rpc on a destroyed widget should return a " +
-            "promise that remains pending forever");
-        });
-
-        assert.ok(true,
-            "there should be no crash when calling _rpc on a destroyed widget");
     });
 
     QUnit.test("calling do_hide on a widget destroyed before being rendered", async function (assert) {

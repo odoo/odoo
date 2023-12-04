@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.WebsiteControllerPageListingLayout = publicWidget.Widget.extend({
     selector: ".o_website_listing_layout",
@@ -8,11 +9,7 @@ publicWidget.registry.WebsiteControllerPageListingLayout = publicWidget.Widget.e
     events: {
         "change .listing_layout_switcher input": "_onApplyLayoutChange",
     },
-    init(parent, options) {
-        this._super(parent, options);
-        this.rpc = this.bindService("rpc");
-    },
-
+    
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -29,7 +26,7 @@ publicWidget.registry.WebsiteControllerPageListingLayout = publicWidget.Widget.e
         const clickedValue = ev.target.value;
         const isList = clickedValue === "list";
         if (!this.editableMode) {
-            this.rpc("/website/save_session_layout_mode", {
+            rpc("/website/save_session_layout_mode", {
                 layout_mode: isList ? "list" : "grid",
                 view_id: document
                     .querySelector(".listing_layout_switcher")

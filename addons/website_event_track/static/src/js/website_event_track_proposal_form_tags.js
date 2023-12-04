@@ -1,15 +1,11 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form_tags',
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     start: function () {
         var self = this;
@@ -24,10 +20,9 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
      * @private
      */
     _bindSelect2Dropdown: function () {
-        var self = this;
         this.$('.o_wetrack_select2_tags').select2(this._select2Wrapper(_t('Select categories'),
             function () {
-                return self.rpc("/event/track_tag/search_read", {
+                return rpc("/event/track_tag/search_read", {
                     fields: ['name', 'category_id'],
                     domain: [],
                 });

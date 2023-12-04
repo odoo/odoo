@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
 import { checkFileSize } from "@web/core/utils/files";
@@ -10,8 +11,8 @@ import { reactive } from "@odoo/owl";
 export const AUTOCLOSE_DELAY = 3000;
 
 export const uploadService = {
-    dependencies: ['rpc', 'notification'],
-    start(env, { rpc, notification }) {
+    dependencies: ['notification'],
+    start(env, { notification }) {
         let fileId = 0;
         const progressToast = reactive({
             files: {},

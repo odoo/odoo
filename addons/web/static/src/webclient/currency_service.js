@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { rpcBus } from "@web/core/network/rpc_service";
+import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { currencies } from "@web/core/currency";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 
 export const currencyService = {
-    dependencies: ["rpc"],
-    start(env, { rpc }) {
+    start() {
         /**
          * Reload the currencies (initially given in session_info)
          */

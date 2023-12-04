@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -11,7 +12,6 @@ class HrOrgChartPopover extends Component {
     async setup() {
         super.setup();
 
-        this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.actionService = useService("action");
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
@@ -35,7 +35,6 @@ export class HrOrgChart extends Component {
     async setup() {
         super.setup();
 
-        this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.actionService = useService("action");
         this.user = useService("user");
@@ -73,7 +72,7 @@ export class HrOrgChart extends Component {
             this.view_employee_id = null;
         } else if (employeeId !== this.view_employee_id || force) {
             this.view_employee_id = employeeId;
-            let orgData = await this.rpc(
+            let orgData = await rpc(
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,

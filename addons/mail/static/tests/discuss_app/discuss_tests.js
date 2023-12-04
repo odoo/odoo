@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
@@ -1098,14 +1100,14 @@ QUnit.test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
 
     // simulate receiving the first message on channel 11
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -1474,7 +1476,7 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
-    const { env, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 25 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
@@ -1484,7 +1486,7 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -1726,7 +1728,7 @@ QUnit.test("restore thread scroll position", async () => {
 });
 
 QUnit.test("Message shows up even if channel data is incomplete", async () => {
-    const { env, openDiscuss, pyEnv } = await start();
+    const { openDiscuss, pyEnv } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -1750,13 +1752,13 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
         channel_type: "chat",
     });
     await pyEnv.withUser(correspondentUserId, () =>
-        env.services.rpc("/discuss/channel/notify_typing", {
+        rpc("/discuss/channel/notify_typing", {
             is_typing: true,
             channel_id: channelId,
         })
     );
     await pyEnv.withUser(correspondentUserId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "hello world", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

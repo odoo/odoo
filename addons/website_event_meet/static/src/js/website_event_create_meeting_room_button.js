@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({
@@ -9,18 +10,13 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
         'click': '_onClickCreate',
     },
 
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     _onClickCreate: async function () {
         if (!this.$createModal) {
-            const langs = await this.rpc("/event/active_langs");
+            const langs = await rpc("/event/active_langs");
 
             this.$createModal = $(renderToElement(
                 'event_meet_create_room_modal',

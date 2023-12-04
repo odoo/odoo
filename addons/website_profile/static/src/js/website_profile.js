@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { rpc } from "@web/core/network/rpc";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
@@ -8,11 +9,6 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     read_events: {
         'click .send_validation_email': '_onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -25,7 +21,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         var $element = $(ev.currentTarget);
-        this.rpc('/profile/send_validation_email', {
+        rpc('/profile/send_validation_email', {
             'redirect_url': $element.data('redirect_url'),
         }).then(function (data) {
             if (data) {
@@ -38,7 +34,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      * @private
      */
     _onCloseValidatedEmailClick: function () {
-        this.rpc('/profile/validate_email/close');
+        rpc('/profile/validate_email/close');
     },
 });
 

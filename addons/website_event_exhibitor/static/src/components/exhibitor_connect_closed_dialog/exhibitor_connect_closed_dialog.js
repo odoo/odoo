@@ -2,7 +2,7 @@
 
 import { Component, onWillStart, markup } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 import { formatDuration } from "@web/core/l10n/dates";
 
 export class ExhibitorConnectClosedDialog extends Component {
@@ -13,8 +13,6 @@ export class ExhibitorConnectClosedDialog extends Component {
     };
 
     setup() {
-        this.rpc = useService("rpc");
-
         onWillStart(() => this.fetchSponsor());
     }
 
@@ -22,7 +20,7 @@ export class ExhibitorConnectClosedDialog extends Component {
      * @private
      */
     async fetchSponsor() {
-        const sponsorData = await this.rpc(
+        const sponsorData = await rpc(
             `/event_sponsor/${encodeURIComponent(this.props.sponsorId)}/read`
         );
         sponsorData.website_description = markup(sponsorData.website_description);

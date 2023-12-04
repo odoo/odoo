@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import PortalChatter from "@portal/js/portal_chatter";
+import { rpc } from "@web/core/network/rpc";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -293,7 +294,7 @@ PortalChatter.include({
         var messageIndex = $source.data("mes_index");
         var ratingId = this.messages[messageIndex].rating.id;
 
-        this.rpc('/website/rating/comment', {
+        rpc('/website/rating/comment', {
             "rating_id": ratingId,
             "publisher_comment": '' // Empty publisher comment means no comment
         }).then(function (res) {
@@ -315,7 +316,7 @@ PortalChatter.include({
         var comment = this._getCommentTextarea($source).val();
         var ratingId = this.messages[messageIndex].rating.id;
 
-        this.rpc('/website/rating/comment', {
+        rpc('/website/rating/comment', {
             "rating_id": ratingId,
             "publisher_comment": comment
         }).then(function (res) {

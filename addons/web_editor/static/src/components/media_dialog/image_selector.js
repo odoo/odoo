@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from '@web/core/utils/hooks';
+import { rpc } from "@web/core/network/rpc";
 import weUtils from '@web_editor/js/common/utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -70,7 +70,6 @@ export class ImageSelector extends FileSelector {
     setup() {
         super.setup();
 
-        this.rpc = useService('rpc');
         this.keepLastLibraryMedia = new KeepLast();
 
         this.state.libraryMedia = [];
@@ -212,7 +211,7 @@ export class ImageSelector extends FileSelector {
 
         this.state.isFetchingLibrary = true;
         try {
-            const response = await this.rpc(
+            const response = await rpc(
                 '/web_editor/media_library_search',
                 {
                     'query': this.state.needle,
@@ -282,7 +281,7 @@ export class ImageSelector extends FileSelector {
     /**
      * Utility method used by the MediaDialog component.
      */
-    static async createElements(selectedMedia, { orm, rpc }) {
+    static async createElements(selectedMedia, { orm }) {
         // Create all media-library attachments.
         const toSave = Object.fromEntries(selectedMedia.filter(media => media.mediaType === 'libraryMedia').map(media => [
             media.id, {

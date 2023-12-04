@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
+import { rpc } from "./network/rpc";
 import { registry } from "./registry";
 import { session } from "@web/session";
 import { Cache } from "./utils/cache";
 
 export const userService = {
-    dependencies: ["rpc"],
     async: ["hasGroup"],
-    start(env, { rpc }) {
+    start(env) {
         const groupCache = new Cache((group) => {
             if (!context.uid) {
                 return Promise.resolve(false);

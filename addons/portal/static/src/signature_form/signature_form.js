@@ -2,10 +2,10 @@
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
-import { useService } from "@web/core/utils/hooks";
 
 /**
  * This Component is a signature request form. It uses
@@ -18,7 +18,6 @@ class SignatureForm extends Component {
 
     setup() {
         this.rootRef = useRef("root");
-        this.rpc = useService("rpc");
 
         this.csrfToken = odoo.csrf_token;
         this.state = useState({
@@ -64,7 +63,7 @@ class SignatureForm extends Component {
     async onClickSubmit() {
         const name = this.signature.name;
         const signature = this.signature.getSignatureImage()[1];
-        const data = await this.rpc(this.props.callUrl, { name, signature });
+        const data = await rpc(this.props.callUrl, { name, signature });
         if (data.force_refresh) {
             if (data.redirect_url) {
                 redirect(data.redirect_url);

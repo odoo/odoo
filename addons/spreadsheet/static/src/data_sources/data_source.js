@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**

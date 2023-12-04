@@ -5,14 +5,10 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
+import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
     /**
      * @override
      */
@@ -44,21 +40,21 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             return false;
         }
         this.ppg = Math.min(ppg, PPG_LIMIT);
-        return this.rpc('/shop/config/website', { 'shop_ppg': this.ppg });
+        return rpc('/shop/config/website', { 'shop_ppg': this.ppg });
     },
     /**
      * @see this.selectClass for params
      */
     setPpr: function (previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
-        this.rpc('/shop/config/website', { 'shop_ppr': this.ppr });
+        rpc('/shop/config/website', { 'shop_ppr': this.ppr });
     },
     /**
      * @see this.selectClass for params
      */
     setDefaultSort: function (previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
-        this.rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
+        rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
     },
 
     //--------------------------------------------------------------------------
@@ -104,11 +100,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         'mouseover .o_wsale_soptions_menu_sizes td': '_onTableItemMouseEnter',
         'click .o_wsale_soptions_menu_sizes td': '_onTableItemClick',
     }),
-
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
 
     /**
      * @override
@@ -229,7 +220,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
-        this.rpc('/shop/config/product', {
+        rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             sequence: widgetValue,
         }).then(() => this._reloadEditable());
@@ -429,7 +420,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1
-        this.rpc('/shop/config/product', {
+        rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             x: x,
             y: y,
@@ -458,7 +449,6 @@ class AttachmentMediaDialog extends MediaDialog {
 options.registry.WebsiteSaleProductPage = options.Class.extend({
     init() {
         this._super(...arguments);
-        this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
         this.notification = this.bindService("notification");
     },
@@ -484,7 +474,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     _updateWebsiteConfig(params) {
-        this.rpc('/shop/config/website', params).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+        rpc('/shop/config/website', params).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
     _getZoomOptionData() {
@@ -585,7 +575,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                         await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
                     }
                 }
-                this.rpc(`/shop/product/extra-images`, {
+                rpc(`/shop/product/extra-images`, {
                     images: attachments,
                     product_product_id: this.productProductID,
                     product_template_id: this.productTemplateID,
@@ -648,7 +638,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Removes all extra-images from the product.
      */
     clearImages: function () {
-        this.rpc(`/shop/product/clear-images`, {
+        rpc(`/shop/product/clear-images`, {
             model: this.mode,
             product_product_id: this.productProductID,
             product_template_id: this.productTemplateID,
@@ -668,14 +658,14 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             2: 'medium',
             3: 'big',
         }[widgetValue];
-        this.rpc('/shop/config/website', {
+        rpc('/shop/config/website', {
             'product_page_image_spacing': spacing,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
         this.productPageGrid.dataset.image_spacing = spacing;
     },
 
     setColumns(previewMode, widgetValue, params) {
-        this.rpc('/shop/config/website', {
+        rpc('/shop/config/website', {
             'product_page_grid_columns': widgetValue,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
         this.productPageGrid.dataset.grid_columns = widgetValue;
@@ -730,11 +720,6 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
 });
 
 options.registry.WebsiteSaleProductAttribute = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-    },
-
     /**
      * @override
      */
@@ -747,7 +732,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
      * @see this.selectClass for params
      */
     setDisplayType: function (previewMode, widgetValue, params) {
-        this.rpc('/shop/config/attribute', {
+        rpc('/shop/config/attribute', {
             attribute_id: this.attributeID,
             display_type: widgetValue,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
@@ -809,7 +794,7 @@ options.registry.ReplaceMedia.include({
      *
      */
     async setPosition(previewMode, widgetValue, params) {
-        this.rpc('/shop/product/resequence-image', {
+        rpc('/shop/product/resequence-image', {
             image_res_model: this.recordModel,
             image_res_id: this.recordId,
             move: widgetValue,

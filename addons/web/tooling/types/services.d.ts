@@ -13,7 +13,7 @@ declare module "services" {
     import { ormService } from "@web/core/orm_service";
     import { popoverService } from "@web/core/popover/popover_service";
     import { routerService } from "@web/core/browser/router_service";
-    import { rpcService } from "@web/core/network/rpc_service";
+    import { rpcService } from "@web/core/network/rpc";
     import { titleService } from "@web/core/browser/title_service";
     import { uiService } from "@web/core/ui/ui_service";
     import { userService } from "@web/core/user_service";

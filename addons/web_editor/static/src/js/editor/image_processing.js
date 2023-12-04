@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
@@ -435,12 +436,10 @@ export async function activateCropper(image, aspectRatio, dataset) {
  * Marks an <img> with its attachment data (originalId, originalSrc, mimetype)
  *
  * @param {HTMLImageElement} img the image whose attachment data should be found
- * @param {Function} rpc a function that can be used to make the RPC. Typically
- *   this would be passed as 'this._rpc.bind(this)' from widgets.
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  */
-export async function loadImageInfo(img, rpc, attachmentSrc = '') {
+export async function loadImageInfo(img, attachmentSrc = '') {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
     // If the image does not have the "mimetypeBeforeConversion" attribute, it

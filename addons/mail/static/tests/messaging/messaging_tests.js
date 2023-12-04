@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -20,10 +22,10 @@ QUnit.test("Receiving a new message out of discuss app should open a chat window
         ],
         channel_type: "chat",
     });
-    const { env } = await start();
+    await start();
     // simulate receving new message
     pyEnv.withUser(userId, () =>
-        env.services.rpc("/mail/message/post", {
+        rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -45,11 +47,11 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { env, openDiscuss, openFormView } = await start();
+        const { openDiscuss, openFormView } = await start();
         await openDiscuss();
         // simulate receiving new message
         pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+            rpc("/mail/message/post", {
                 post_data: { body: "new message", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",

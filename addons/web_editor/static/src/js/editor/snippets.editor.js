@@ -26,7 +26,7 @@ import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { RPCError } from "@web/core/network/rpc_service";
+import { RPCError } from "@web/core/network/rpc";
 
 let cacheSnippetTemplate = {};
 

@@ -3,6 +3,7 @@
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";;
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',
@@ -17,7 +18,6 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
     init: function () {
         this._super.apply(this, arguments);
         this._onProductChange = debounce(this._onProductChange, this.debounceValue);
-        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if ($(this.el).find('.js_product.css_not_available').length) {
             return; // Variant not possible
         }
-        this.rpc('/shop/products/recently_viewed_update', {
+        rpc('/shop/products/recently_viewed_update', {
             product_id: productId,
         }).then(function (res) {
             cookie.set(cookieName, productId, 30 * 60, 'optional');

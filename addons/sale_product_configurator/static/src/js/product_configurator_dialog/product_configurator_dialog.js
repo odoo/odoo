@@ -3,8 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
+import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
-import { useService } from "@web/core/utils/hooks";
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
@@ -37,7 +37,6 @@ export class ProductConfiguratorDialog extends Component {
 
     setup() {
         this.title = _t("Configure your product");
-        this.rpc = useService("rpc");
         this.state = useState({
             products: [],
             optionalProducts: [],
@@ -74,7 +73,7 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
 
     async _loadData(onlyMainProduct) {
-        return this.rpc('/sale_product_configurator/get_values', {
+        return rpc('/sale_product_configurator/get_values', {
             product_template_id: this.props.productTemplateId,
             quantity: this.props.quantity,
             currency_id: this.props.currencyId,
@@ -88,14 +87,14 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     async _createProduct(product) {
-        return this.rpc('/sale_product_configurator/create_product', {
+        return rpc('/sale_product_configurator/create_product', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
         });
     }
 
     async _updateCombination(product, quantity) {
-        return this.rpc('/sale_product_configurator/update_combination', {
+        return rpc('/sale_product_configurator/update_combination', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
             currency_id: this.props.currencyId,
@@ -108,7 +107,7 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     async _getOptionalProducts(product) {
-        return this.rpc('/sale_product_configurator/get_optional_products', {
+        return rpc('/sale_product_configurator/get_optional_products', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
             parent_combination: this._getParentsCombination(product),

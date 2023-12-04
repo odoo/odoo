@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { rpc } from "@web/core/network/rpc";
+
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
@@ -22,7 +24,7 @@ QUnit.test("Notify message received out of focus", async () => {
         ],
     });
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
-    const { env } = await start({
+    await start({
         services: {
             presence: makeFakePresenceService({
                 isOdooFocused() {
@@ -32,7 +34,7 @@ QUnit.test("Notify message received out of focus", async () => {
         },
     });
     await pyEnv.withGuest(guestId, () =>
-        env.services.rpc("/im_livechat/chat_post", {
+        rpc("/im_livechat/chat_post", {
             message_content: "Hello",
             uuid: channel.uuid,
         })

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
@@ -282,7 +283,6 @@ export class AddPageTemplates extends Component {
         super.setup();
         this.tabsRef = useRef("tabs");
         this.panesRef = useRef("panes");
-        this.rpc = useService('rpc');
 
         this.state = useState({
             pages: [{
@@ -316,7 +316,7 @@ export class AddPageTemplates extends Component {
             return this.pages;
         }
 
-        const newPageTemplates = await this.rpc("/website/get_new_page_templates");
+        const newPageTemplates = await rpc("/website/get_new_page_templates");
         newPageTemplates[0].templates.unshift({
             isBlank: true,
         });
@@ -382,7 +382,6 @@ export class AddPageDialog extends Component {
         this.website = useService('website');
         this.dialogs = useService("dialog");
         this.orm = useService('orm');
-        this.rpc = useService('rpc');
         this.http = useService('http');
         this.action = useService('action');
         this.userService = useService('user');

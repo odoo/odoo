@@ -2,6 +2,7 @@
 
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 
@@ -12,7 +13,6 @@ export class PopupTable extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        this.rpc = useService("rpc");
         this.tables = [];
         this.state = useState({
             selectedTable: null,
@@ -25,7 +25,7 @@ export class PopupTable extends Component {
 
     async getTable() {
         try {
-            this.tables = await this.rpc("/pos-self-order/get-tables", {
+            this.tables = await rpc("/pos-self-order/get-tables", {
                 access_token: this.selfOrder.access_token,
             });
         } catch (e) {

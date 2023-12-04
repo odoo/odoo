@@ -181,6 +181,12 @@ function patchBrowserWithCleanup() {
                 registerCleanup(() => this.close());
             }
         },
+        // XHR: we don't want tests to do real RPCs
+        XMLHttpRequest: class MockXHR {
+            constructor() {
+                throw new Error("XHR not patched in a test. Consider using patchRPCWithCleanup.");
+            }
+        },
     });
 }
 

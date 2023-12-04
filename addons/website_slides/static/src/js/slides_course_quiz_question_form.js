@@ -3,6 +3,7 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * This Widget is responsible of displaying the question inputs when adding a new question or when updating an
@@ -33,7 +34,6 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         this.sequence = options.sequence;
         this.slideId = options.slideId;
         this._super.apply(this, arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -151,7 +151,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
 
         if (this._isValidForm($form)) {
             var values = this._serializeForm($form);
-            var renderedQuestion = await this.rpc('/slides/slide/quiz/question_add_or_update', values);
+            var renderedQuestion = await rpc('/slides/slide/quiz/question_add_or_update', values);
 
             if (typeof renderedQuestion === 'object' && renderedQuestion.error) {
                 this.$('.o_wslides_js_quiz_validation_error')

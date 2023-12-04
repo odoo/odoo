@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { rpc } from "@web/core/network/rpc";
 
 const CUSTOM_BUTTON_EXTRA_WIDTH = 10;
 
@@ -12,13 +13,6 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         'click .s_donation_btn': '_onClickPrefilledButton',
         'click .s_donation_donate_btn': '_onClickDonateNowButton',
         'input #s_donation_range_slider': '_onInputRangeSlider',
-    },
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -88,7 +82,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
      * @private
      */
     _displayCurrencies() {
-        return this.rpc('/website/get_current_currency').then((result) => {
+        return rpc('/website/get_current_currency').then((result) => {
             this.currency = result;
             this.$('.s_donation_currency').remove();
             const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');
