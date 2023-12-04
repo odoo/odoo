@@ -312,6 +312,7 @@ QUnit.test("base rendering when chatter has no record", async () => {
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Message");
+    await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-body", { text: "Creating a new record..." });
     await contains("button", { count: 0, text: "Load More" });
     await contains(".o-mail-Message-actions");
