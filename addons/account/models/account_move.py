@@ -3668,21 +3668,23 @@ class AccountMove(models.Model):
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
 
+        validation_msgs = set()
+
         for invoice in self.filtered(lambda move: move.is_invoice(include_receipts=True)):
             if invoice.quick_edit_mode and invoice.quick_edit_total_amount and invoice.quick_edit_total_amount != invoice.amount_total:
-                raise UserError(_(
+                validation_msgs.add(_(
                     "The current total is %s but the expected total is %s. In order to post the invoice/bill, "
                     "you can adjust its lines or the expected Total (tax inc.).",
                     formatLang(self.env, invoice.amount_total, currency_obj=invoice.currency_id),
                     formatLang(self.env, invoice.quick_edit_total_amount, currency_obj=invoice.currency_id),
                 ))
             if invoice.partner_bank_id and not invoice.partner_bank_id.active:
-                raise UserError(_(
+                validation_msgs.add(_(
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
                 ))
             if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
-                raise UserError(_(
+                validation_msgs.add(_(
                     "You cannot validate an invoice with a negative total amount. "
                     "You should create a credit note instead. "
                     "Use the action menu to transform it into a credit note or refund."
@@ -3690,9 +3692,9 @@ class AccountMove(models.Model):
 
             if not invoice.partner_id:
                 if invoice.is_sale_document():
-                    raise UserError(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
+                    validation_msgs.add(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
                 elif invoice.is_purchase_document():
-                    raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
+                    validation_msgs.add(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
@@ -3700,29 +3702,33 @@ class AccountMove(models.Model):
                 if invoice.is_sale_document(include_receipts=True):
                     invoice.invoice_date = fields.Date.context_today(self)
                 elif invoice.is_purchase_document(include_receipts=True):
-                    raise UserError(_("The Bill/Refund date is required to validate this document."))
+                    validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
             if move.state in ['posted', 'cancel']:
-                raise UserError(_('The entry %s (id %s) must be in draft.', move.name, move.id))
+                validation_msgs.add(_('The entry %s (id %s) must be in draft.', move.name, move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
-                raise UserError(_('You need to add a line before posting.'))
+                validation_msgs.add(_('You need to add a line before posting.'))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
-                raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
+                validation_msgs.add(_("This move is configured to be auto-posted on %s", date_msg))
             if not move.journal_id.active:
-                raise UserError(_(
+                validation_msgs.add(_(
                     "You cannot post an entry in an archived journal (%(journal)s)",
                     journal=move.journal_id.display_name,
                 ))
             if move.display_inactive_currency_warning:
-                raise UserError(_(
+                validation_msgs.add(_(
                     "You cannot validate a document with an inactive currency: %s",
                     move.currency_id.name
                 ))
 
             if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self._context.get('skip_account_deprecation_check'):
-                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
+                validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
+
+        if validation_msgs:
+            msg = "\n".join([line for line in validation_msgs])
+            raise UserError(msg)
 
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
