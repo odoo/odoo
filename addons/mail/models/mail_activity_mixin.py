@@ -258,6 +258,7 @@ class MailActivityMixin(models.AbstractModel):
     def _read_group_groupby(self, groupby_spec, query):
         if groupby_spec != 'activity_state':
             return super()._read_group_groupby(groupby_spec, query)
+        self.check_field_access_rights('read', ['activity_state'])
 
         self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
         self.env['res.users'].flush_model(['partner_id'])
@@ -287,7 +288,7 @@ class MailActivityMixin(models.AbstractModel):
         )
         alias = query.join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
-        return SQL.identifier(alias, 'activity_state'), ['activity_state']
+        return SQL.identifier(alias, 'activity_state')
 
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing
