@@ -49,7 +49,8 @@
                 <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="id"/>
                 <field name="picking_id" required="1" readonly="id"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
-                <field name="lot_id" groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']"/>
+                <field name="lot_id"   groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="parent.show_lots_text" />
+                <field name="lot_name" groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="not parent.show_lots_text"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -72,6 +73,7 @@
                 <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="is_wave" invisible="1"/>
+                <field name="show_lots_text" invisible="1"/>
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
