@@ -81,7 +81,7 @@
             <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
                 <button t-attf-class="btn border-0 dropdown-toggle #{_btn_class or 'btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-if="not no_text"
-                            t-attf-class="align-middle #{_txt_class}"
+                            t-attf-class="#{_txt_class}"
                             t-esc="active_lang[2].split('/').pop()"/>
                     <span t-elif="codes" class="align-middle" t-esc="active_lang[1].split('_').pop(0).upper()"/>
                 </button>
