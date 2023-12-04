@@ -4728,11 +4728,7 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.containsNone(
-                target,
-                ".o_resize",
-                "There shouldn't be any resize handle if no data"
-            );
+            assert.containsN(target, ".o_resize", 8);
             assertions.forEach((a) => {
                 assert.strictEqual(
                     target.querySelector(`th[data-name="${a.field}"]`).offsetWidth,
@@ -4919,11 +4915,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.isVisible(target.querySelector(".o_field_one2many"));
 
-            assert.containsNone(
-                target,
-                ".o_field_one2many .o_resize",
-                "There shouldn't be any resize handle if no data"
-            );
+            assert.containsN(target, ".o_field_one2many .o_resize", 8);
             assertions.forEach((a) => {
                 assert.strictEqual(
                     target.querySelector(`.o_field_one2many th[data-name="${a.field}"]`).style
@@ -5359,11 +5351,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["int_field"],
             });
 
-            assert.containsNone(
-                target,
-                ".o_resize",
-                "There shouldn't be any resize handle if no data"
-            );
+            assert.containsN(target, ".o_resize", 8);
             assertions.forEach((a) => {
                 assert.strictEqual(
                     a.expected,
