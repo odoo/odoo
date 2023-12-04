@@ -1478,16 +1478,14 @@ header {
             padding-left: $padding-size;
 
             > header {
+                --Offcanvas-horizontal-width: #{o-website-value('sidebar-width')};
+
                 inset: 0 auto 0 0;
                 position: fixed;
                 z-index: $zindex-fixed;
                 display: flex;
                 width: o-website-value('sidebar-width');
                 transform: none !important;
-
-                .o_mega_menu, .o_mega_nav {
-                    width: o-website-value('sidebar-width') !important;
-                }
 
                 .navbar {
                     width: 100%;
