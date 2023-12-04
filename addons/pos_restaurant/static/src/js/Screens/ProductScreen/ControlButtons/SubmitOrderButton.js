@@ -3,6 +3,13 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const ProductScreen = require('point_of_sale.ProductScreen');
+<<<<<<< HEAD
+||||||| parent of 85fe2dc6b897 (temp)
+    const { useListener } = require('web.custom_hooks');
+=======
+    const { useListener } = require('web.custom_hooks');
+    const { useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
+>>>>>>> 85fe2dc6b897 (temp)
     const Registries = require('point_of_sale.Registries');
 
     /**
@@ -12,9 +19,20 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
      * After setting new current order, we update the listeners.
      */
     class SubmitOrderButton extends PosComponent {
+<<<<<<< HEAD
         setup() {
             super.setup();
             this.clicked = false; //mutex, we don't want to be able to spam the printers
+||||||| parent of 85fe2dc6b897 (temp)
+        constructor() {
+            super(...arguments);
+            useListener('click', this.onClick);
+=======
+        constructor() {
+            super(...arguments);
+            this.lockedOnClick = useAsyncLockedMethod(this.onClick);
+            useListener('click', this.lockedOnClick);
+>>>>>>> 85fe2dc6b897 (temp)
         }
         async _onClick() {
             if (!this.clicked) {
