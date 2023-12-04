@@ -155,6 +155,10 @@ export class Thread extends Record {
         onUpdate() {
             if (this.isLoaded) {
                 this.isLoadedDeferred.resolve();
+            } else {
+                const def = this.isLoadedDeferred;
+                this.isLoadedDeferred = new Deferred();
+                this.isLoadedDeferred.then(() => def.resolve());
             }
         },
     });

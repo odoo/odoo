@@ -85,7 +85,7 @@ QUnit.test("Jump to old reply should prompt jump to presence", async () => {
     openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Message", { count: 46 });
+    await contains(".o-mail-Message", { count: 16 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Hello world!" });
     await contains(".o-mail-Thread", { text: "You're viewing older messagesJump to Present" });
     await click(".o-mail-Thread-jumpPresent");
