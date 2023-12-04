@@ -161,4 +161,24 @@ class PosOrderLine(models.Model):
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
     down_payment_details = fields.Text(string="Down Payment Details")
+    qty_delivered = fields.Float(
+        string="Delivery Quantity",
+        compute="_compute_qty_delivered",
+        store=True, readonly=False, copy=False)
+
+    @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
+    def _compute_qty_delivered(self):
+        for order_line in self:
+            if order_line.order_id.state in ['paid', 'done', 'invoiced']:
+                outgoing_pickings = order_line.order_id.picking_ids.filtered(
+                    lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
+                )
+
+                if outgoing_pickings:
+                    moves = outgoing_pickings.move_ids.filtered(
+                        lambda m: m.state == 'done' and m.product_id == order_line.product_id
+                    )
+                    order_line.qty_delivered = sum(moves.mapped('quantity'))
+                else:
+                    order_line.qty_delivered = 0
 

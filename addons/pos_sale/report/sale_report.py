@@ -29,8 +29,8 @@ class SaleReport(models.Model):
             l.product_id AS product_id,
             t.uom_id AS product_uom,
             SUM(l.qty) AS product_uom_qty,
-            SUM(l.qty) AS qty_delivered,
-            0 AS qty_to_deliver,
+            SUM(l.qty_delivered) AS qty_delivered,
+            SUM(l.qty - l.qty_delivered) AS qty_to_deliver,
             CASE WHEN pos.state = 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_invoiced,
             CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
             SUM(l.price_subtotal_incl)
