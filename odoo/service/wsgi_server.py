@@ -22,6 +22,7 @@ import odoo
 from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
+_logger_proxy = logging.getLogger('odoo.http.proxy')
 
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
@@ -106,7 +107,9 @@ def application(environ, start_response):
     #        we're ignoring the user configuration, and that means we won't
     #        support the standardised Forwarded header once werkzeug supports
     #        it
-    if config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
-        return ProxyFix(application_unproxied)(environ, start_response)
-    else:
-        return application_unproxied(environ, start_response)
+    if config['proxy_mode']:
+        if 'HTTP_X_FORWARDED_HOST' in environ:
+            return ProxyFix(application_unproxied)(environ, start_response)
+        else:
+            _logger_proxy.warning("X-Forwarded-Host missing from header; --proxy-mode ignored for this request")
+    return application_unproxied(environ, start_response)
