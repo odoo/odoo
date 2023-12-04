@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
+from odoo.tools import SQL, Query
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
 
@@ -11,11 +12,6 @@ class AnalyticMixin(models.AbstractModel):
     analytic_distribution = fields.Json(
         'Analytic Distribution',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
-    )
-    # Json non stored to be able to search on analytic_distribution.
-    analytic_distribution_search = fields.Json(
-        store=False,
-        search="_search_analytic_distribution"
     )
     analytic_precision = fields.Integer(
         store=False,
@@ -36,40 +32,52 @@ class AnalyticMixin(models.AbstractModel):
             self.env.cr.execute(query)
         super().init()
 
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        """ Hide analytic_distribution_search from filterable/searchable fields"""
-        res = super().fields_get(allfields, attributes)
-        if res.get('analytic_distribution_search'):
-            res['analytic_distribution_search']['searchable'] = False
-        return res
-
     def _compute_analytic_distribution(self):
         pass
 
-    def _search_analytic_distribution(self, operator, value):
-        if operator not in ['=', '!=', 'ilike', 'not ilike'] or not isinstance(value, (str, bool)):
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+        # Don't use this override when account_report_analytic_groupby is truly in the context
+        # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
+        # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
+        if fname != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
+            return super()._condition_to_sql(alias, fname, operator, value, query)
+
+        if operator not in ('=', '!=', 'ilike', 'not ilike', 'in', 'not in'):
             raise UserError(_('Operation not supported'))
-        operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
-        account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
 
-        query = f"""
-            SELECT id
-            FROM {self._table}
-            WHERE analytic_distribution ?| array[%s]
-        """
-        operator_inselect = 'inselect' if operator in ('=', 'ilike') else 'not inselect'
-        return [('id', operator_inselect, (query, [[str(account_id) for account_id in account_ids]]))]
+        if operator in ('=', '!=') and isinstance(value, bool):
+            return super()._condition_to_sql(alias, fname, operator, value, query)
 
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        domain = self._apply_analytic_distribution_domain(domain)
-        return super()._search(domain, offset, limit, order, access_rights_uid)
+        if isinstance(value, str) and operator in ('=', '!=', 'ilike', 'not ilike'):
+            value = list(self.env['account.analytic.account']._name_search(
+                name=value, operator=('=' if operator in ('=', '!=') else 'ilike'),
+            ))
+            operator = 'in' if operator in ('=', 'ilike') else 'not in'
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        domain = self._apply_analytic_distribution_domain(domain)
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        analytic_distribution_sql = self._field_to_sql(alias, 'analytic_distribution', query)
+        value = [str(id_) for id_ in value if id_]  # list of ids -> list of string
+        if operator == 'in':  # 'in' -> ?|
+            return SQL(
+                "%s ?| ARRAY[%s]",
+                analytic_distribution_sql,
+                value,
+            )
+        if operator == 'not in':
+            return SQL(
+                "(NOT %s ?| ARRAY[%s] OR %s IS NULL)",
+                analytic_distribution_sql,
+                value,
+                analytic_distribution_sql,
+            )
+        raise UserError(_('Operation not supported'))
+
+    def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
+        if groupby_spec == 'analytic_distribution':
+            return SQL(
+                'jsonb_object_keys(%s)',
+                self._field_to_sql(self._table, 'analytic_distribution', query),
+            )
+        return super()._read_group_groupby(groupby_spec, query)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
@@ -106,9 +114,3 @@ class AnalyticMixin(models.AbstractModel):
             vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
-
-    def _apply_analytic_distribution_domain(self, domain):
-        return [
-            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], str) else leaf
-            for leaf in domain
-        ]

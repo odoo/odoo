@@ -3,12 +3,11 @@
 
 import json
 from collections import defaultdict
-from datetime import date
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import Query, SQL, OrderedSet
+from odoo.tools import Query, SQL
 
 
 
@@ -100,16 +99,12 @@ class Project(models.Model):
             project.sale_order_count = len(sale_order_lines.order_id)
 
     def _compute_invoice_count(self):
-        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
-        query.add_where('analytic_distribution ?| %s', [[str(project.analytic_account_id.id) for project in self]])
-        query.order = None
-        query_string, query_param = query.select(
-            'jsonb_object_keys(account_move_line.analytic_distribution) as account_id',
-            'COUNT(DISTINCT move_id) as move_count',
+        data = self.env['account.move.line']._read_group(
+            [('move_id.move_type', 'in', ['out_invoice', 'out_refund']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            groupby=['analytic_distribution'],
+            aggregates=['move_id:count_distinct'],
         )
-        query_string = f"{query_string} GROUP BY jsonb_object_keys(account_move_line.analytic_distribution)"
-        self._cr.execute(query_string, query_param)
-        data = {int(row.get('account_id')): row.get('move_count') for row in self._cr.dictfetchall()}
+        data = {int(account_id): move_count for account_id, move_count in data}
         for project in self:
             project.invoice_count = data.get(project.analytic_account_id.id, 0)
 
@@ -226,11 +221,14 @@ class Project(models.Model):
         return action
 
     def action_open_project_invoices(self):
-        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
-        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query_string, query_param = query.select('DISTINCT move_id')
-        self._cr.execute(query_string, query_param)
-        invoice_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
+        move_lines = self.env['account.move.line'].search_fetch(
+            [
+                ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+            ],
+            ['move_id'],
+        )
+        invoice_ids = move_lines.move_id.ids
         action = {
             'name': _('Invoices'),
             'type': 'ir.actions.act_window',
@@ -554,32 +552,27 @@ class Project(models.Model):
         """
         if excluded_move_line_ids is None:
             excluded_move_line_ids = []
-        query = self.env['account.move.line'].sudo()._search(
-            self._get_revenues_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
+        invoices_move_lines = self.env['account.move.line'].sudo().search_fetch(
+            expression.AND([
+                self._get_revenues_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
+                [('analytic_distribution', 'in', self.analytic_account_id.ids)]
+            ]),
+            ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type', 'move_id']
         )
-        query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        # account_move_line__move_id is the alias of the joined table account_move in the query
-        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id')
-        self._cr.execute(query_string, query_param)
-        invoices_move_line_read = self._cr.dictfetchall()
-        if invoices_move_line_read:
-            currency_ids = OrderedSet(iml['currency_id'] for iml in invoices_move_line_read)
-            move_ids = set()
+        # TODO: invoices_move_lines.with_context(prefetch_fields=False).move_id.move_type ??
+        if invoices_move_lines:
             amount_invoiced = amount_to_invoice = 0.0
-            for moves_read in invoices_move_line_read:
-                currency = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)
-                price_subtotal = currency._convert(moves_read['price_subtotal'], self.currency_id, self.company_id)
-                analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
-                move_ids.add(moves_read['move_id'])
-                if moves_read['parent_state'] == 'draft':
-                    if moves_read['move_type'] == 'out_invoice':
+            for move_line in invoices_move_lines:
+                currency = move_line.currency_id
+                price_subtotal = currency._convert(move_line.price_subtotal, self.currency_id, self.company_id)
+                analytic_contribution = move_line.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                if move_line.parent_state == 'draft':
+                    if move_line.move_type == 'out_invoice':
                         amount_to_invoice += price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'out_refund'
+                    else:  # move_line.move_type == 'out_refund'
                         amount_to_invoice -= price_subtotal * analytic_contribution
-                else:  # moves_read['parent_state'] == 'posted'
-                    if moves_read['move_type'] == 'out_invoice':
+                else:  # move_line.parent_state == 'posted'
+                    if move_line.move_type == 'out_invoice':
                         amount_invoiced += price_subtotal * analytic_contribution
                     else:  # moves_read['move_type'] == 'out_refund'
                         amount_invoiced -= price_subtotal * analytic_contribution
@@ -593,7 +586,7 @@ class Project(models.Model):
                     'to_invoice': amount_to_invoice,
                 }
                 if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
-                    invoices_revenues['action'] = self._get_action_for_profitability_section(list(move_ids), section_id)
+                    invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.ids, section_id)
                 return {
                     'data': [invoices_revenues],
                     'total': {
@@ -717,11 +710,14 @@ class Project(models.Model):
         return action
 
     def action_open_project_vendor_bills(self):
-        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['in_invoice', 'in_refund'])])
-        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query_string, query_param = query.select('DISTINCT move_id')
-        self._cr.execute(query_string, query_param)
-        vendor_bill_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
+        move_lines = self.env['account.move.line'].search_fetch(
+            [
+                ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
+                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+            ],
+            ['move_id'],
+        )
+        vendor_bill_ids = move_lines.move_id.ids
         action_window = {
             'name': _('Vendor Bills'),
             'type': 'ir.actions.act_window',

@@ -5,7 +5,6 @@ import json
 from collections import defaultdict
 
 from odoo import models, _lt
-from odoo.tools.misc import OrderedSet
 
 
 class Project(models.Model):
@@ -26,34 +25,27 @@ class Project(models.Model):
     def _get_costs_items_from_purchase(self, domain, profitability_items, with_action=True):
         """ This method is used in sale_project and project_purchase. Since project_account is the only common module (except project), we create the method here. """
         # calculate the cost of bills without a purchase order
-        query = self.env['account.move.line'].sudo()._search(domain)
-        query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        # account_move_line__move_id is the alias of the joined table account_move in the query
-        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id')
-        self._cr.execute(query_string, query_param)
-        bills_move_line_read = self._cr.dictfetchall()
-        if bills_move_line_read:
+        account_move_lines = self.env['account.move.line'].sudo().search_fetch(
+            domain + [('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type', 'move_id'],
+        )
+        if account_move_lines:
             # Get conversion rate from currencies to currency of the current company
-            currency_ids = OrderedSet(bml['currency_id'] for bml in bills_move_line_read)
             amount_invoiced = amount_to_invoice = 0.0
-            move_ids = set()
-            for moves_read in bills_move_line_read:
-                price_subtotal = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)._convert(
-                    from_amount=moves_read['price_subtotal'], to_currency=self.currency_id,
+            for move_line in account_move_lines:
+                price_subtotal = move_line.currency_id._convert(
+                    from_amount=move_line.price_subtotal, to_currency=self.currency_id,
                 )
-                analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
-                move_ids.add(moves_read['move_id'])
-                if moves_read['parent_state'] == 'draft':
-                    if moves_read['move_type'] == 'in_invoice':
+                analytic_contribution = move_line.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                if move_line.parent_state == 'draft':
+                    if move_line.move_type == 'in_invoice':
                         amount_to_invoice -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
+                    else:  # move_line.move_type == 'in_refund'
                         amount_to_invoice += price_subtotal * analytic_contribution
-                else:  # moves_read['parent_state'] == 'posted'
-                    if moves_read['move_type'] == 'in_invoice':
+                else:  # move_line.parent_state == 'posted'
+                    if move_line.move_type == 'in_invoice':
                         amount_invoiced -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
+                    else:  # move_line.move_type == 'in_refund'
                         amount_invoiced += price_subtotal * analytic_contribution
             # don't display the section if the final values are both 0 (bill -> vendor credit)
             if amount_invoiced != 0 or amount_to_invoice != 0:
@@ -66,7 +58,7 @@ class Project(models.Model):
                     'to_bill': amount_to_invoice,
                 }
                 if with_action:
-                    bills_costs['action'] = self._get_action_for_profitability_section(list(move_ids), section_id)
+                    bills_costs['action'] = self._get_action_for_profitability_section(account_move_lines.move_id.ids, section_id)
                 costs['data'].append(bills_costs)
                 costs['total']['billed'] += amount_invoiced
                 costs['total']['to_bill'] += amount_to_invoice
