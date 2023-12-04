@@ -129,7 +129,12 @@ export function parseAccountingDate(dateRange, locale) {
 }
 
 const ODOO_FIN_ARGS = () => [
-    arg("account_codes (string)", _t("The prefix of the accounts.")),
+    arg(
+        "account_codes (string)",
+        _t(
+            "The prefix of the accounts. Multiple accounts can be specified by separating them with a comma. For example: 1, 201, 961000"
+        )
+    ),
     arg(
         "date_range (string, date)",
         _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
