@@ -58,9 +58,9 @@ def locate_node(arch, spec):
         expr = spec.get('expr')
         try:
             xPath = etree.ETXPath(expr)
-        except etree.XPathSyntaxError as e:
+            nodes = xPath(arch)
+        except (etree.XPathEvalError, etree.XPathSyntaxError) as e:
             raise ValidationError(_("Invalid Expression while parsing xpath %r", expr)) from e
-        nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
         # Only compare the field name: a field can be only once in a given view
