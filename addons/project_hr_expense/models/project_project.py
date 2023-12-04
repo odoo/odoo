@@ -4,7 +4,6 @@ import json
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
-from collections import defaultdict
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -13,19 +12,12 @@ class Project(models.Model):
 
     @api.depends('analytic_account_id')
     def _compute_expenses_count(self):
-        if not self.analytic_account_id:
-            self.expenses_count = 0
-            return
-        query = self.env['hr.expense']._search([])
-        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
-
-        query_string, query_param = query.select(
-            'jsonb_object_keys(analytic_distribution) as account_id',
-            'COUNT(DISTINCT(id)) as expense_count',
+        data = self.env['hr.expense']._read_group(
+            [('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            ['analytic_distribution'],
+            ['__count'],
         )
-        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
-        self._cr.execute(query_string, query_param)
-        data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
+        data = {int(account_id): expense_count for account_id, expense_count in data}
         for project in self:
             project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
@@ -87,22 +79,24 @@ class Project(models.Model):
         if not self.analytic_account_id:
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query_string, query_param = query.select('currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount')
-        query_string = f"{query_string} GROUP BY currency_id"
-        self._cr.execute(query_string, query_param)
-        expenses_read_group = [expense for expense in self._cr.dictfetchall()]
-        if not expenses_read_group or not expenses_read_group[0].get('ids'):
+
+        expenses_read_group = self.env['hr.expense']._read_group(
+            [
+                ('state', 'in', ['approved', 'done']),
+                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+            ],
+            groupby=['currency_id'],
+            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+        )
+        if not expenses_read_group:
             return {}
         expense_ids = []
         amount_billed = amount_to_bill = 0.0
-        all_currencies = {res['currency_id'] for res in expenses_read_group}
-        for res in expenses_read_group:
+        for currency, ids, untaxed_amount_currency_sum in expenses_read_group:
             if can_see_expense:
-                expense_ids.extend(res['ids'])
-            amount_to_bill += self.env['res.currency'].browse(res['currency_id']).with_prefetch(all_currencies)._convert(
-                from_amount=res['untaxed_amount'],
+                expense_ids.extend(ids)
+            amount_to_bill += currency._convert(
+                from_amount=untaxed_amount_currency_sum,
                 to_currency=self.currency_id,
                 company=self.company_id,
             )

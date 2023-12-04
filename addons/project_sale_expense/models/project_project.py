@@ -11,32 +11,26 @@ class Project(models.Model):
     _inherit = 'project.project'
 
     def _get_expenses_profitability_items(self, with_action=True):
-        if not self.analytic_account_id:
-            return {}
-        can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query_string, query_param = query.select('sale_order_id', 'product_id', 'currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount_currency')
-        query_string = f"{query_string} GROUP BY sale_order_id, product_id, currency_id"
-        self._cr.execute(query_string, query_param)
-        expenses_read_group = [expense for expense in self._cr.dictfetchall()]
+        expenses_read_group = self.env['hr.expense']._read_group(
+            [('state', 'in', ['approved', 'done']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            groupby=['sale_order_id', 'product_id', 'currency_id'],
+            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+        )
         if not expenses_read_group:
             return {}
         expenses_per_so_id = {}
         expense_ids = []
         dict_amount_per_currency = defaultdict(lambda: 0.0)
-        for res in expenses_read_group:
-            so_id = res['sale_order_id']
-            product_id = res['product_id']
-            expenses_per_so_id.setdefault(so_id, {})[product_id] = res['ids']
+        can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
+        for sale_order, product, currency, ids, untaxed_amount_currency_sum in expenses_read_group:
+            expenses_per_so_id.setdefault(sale_order.id, {})[product.id] = ids
             if can_see_expense:
-                expense_ids.extend(res['ids'])
-            dict_amount_per_currency[res['currency_id']] += res['untaxed_amount_currency']
+                expense_ids.extend(ids)
+            dict_amount_per_currency[currency] += untaxed_amount_currency_sum
 
         amount_billed = amount_to_bill = 0.0
-        for currency_id in dict_amount_per_currency:
-            currency = self.env['res.currency'].browse(currency_id).with_prefetch(dict_amount_per_currency)
-            amount_to_bill += currency._convert(dict_amount_per_currency[currency_id], self.currency_id, self.company_id)
+        for currency, untaxed_amount_currency_sum in dict_amount_per_currency.items():
+            amount_to_bill += currency._convert(untaxed_amount_currency_sum, self.currency_id, self.company_id)
 
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
