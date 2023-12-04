@@ -2872,17 +2872,7 @@ export class Wysiwyg extends Component {
             },
             onRequest: {
                 get_start_time: () => this._startCollaborationTime,
-                get_client_name: async () => {
-                    if (!this._userName) {
-                        const [user] = await this.orm.read(
-                            'res.users',
-                            [session.uid],
-                            ['name'],
-                        );
-                        this._userName = user.name;
-                    }
-                    return this._userName;
-                },
+                get_client_name: () => session.name,
                 get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`,
                 get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
                 get_history_from_snapshot: () => this._getHistorySnapshot(),
