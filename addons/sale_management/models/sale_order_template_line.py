@@ -110,4 +110,5 @@ class SaleOrderTemplateLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
             'product_uom': self.product_uom_id.id,
+            'sequence': self.sequence,
         }
