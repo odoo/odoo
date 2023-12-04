@@ -2,14 +2,18 @@
 
 <templates xml:space="preserve">
     <t t-name="pos_event.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('section-product-info-title')]/div" position="inside">
+            <t t-if="props.info.eventData">
+                <span class="fs-3"> Event Registration - <t t-esc="props.product.name"/></span>
+            </t>
+        </xpath>
         <xpath expr="//div[hasclass('flex-column')]" position="after">
-            <t t-if="eventData">
+            <t t-if="props.info.eventData">
                 <div class="section-event mt-3 mb-4 pb-4 border-bottom text-start">
                     <h3 class="section-title">Event Info</h3>
                     <div class="section-event-body d-flex flex-column text-start">
-                        <span><t t-esc="this.formatDate(eventData.date_begin)"/> > <t t-esc="this.formatDate(eventData.date_end)"/></span>
-                        <span t-esc="eventData.name"/>
-                        <span t-esc="this.formatAddress(eventData.address_inline)"/>
+                        <span><t t-esc="this.formatDate(props.info.eventData.date_begin)"/> > <t t-esc="this.formatDate(props.info.eventData.date_end)"/></span>
+                        <span t-esc="this.formatAddress(props.info.eventData.address_inline)"/>
                     </div>
                 </div>
             </t>

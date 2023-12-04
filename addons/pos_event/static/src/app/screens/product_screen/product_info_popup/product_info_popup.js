@@ -5,6 +5,12 @@ import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/prod
 import { formatDate,deserializeDateTime } from "@web/core/l10n/dates";
 
 patch(ProductInfoPopup.prototype, {
+    setup() {
+        super.setup();
+        if(this.props.product.event_id) {
+            this.props.product["display_name"]=this.props.product.event_id[1];
+        }
+    },
     formatDate(date) {
         return formatDate(deserializeDateTime(date));
     },

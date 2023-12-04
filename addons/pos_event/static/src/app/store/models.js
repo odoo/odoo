@@ -3,9 +3,9 @@
 
 import { patch } from "@web/core/utils/patch";
 import { Order, Orderline } from "@point_of_sale/app/store/models";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 patch(Order.prototype, {
     //@override
@@ -23,7 +23,7 @@ patch(Order.prototype, {
     async pay() {
         const order = this.pos.get_order();
         if (order.hasEventLines() && !order.get_partner()) {
-            const {confirmed} = await  this.pos.env.services.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.env.services.dialog, {
                 title: _t("Customer needed"),
                 body: _t("Buying event ticket requires a customer to be selected"),
             });
@@ -166,11 +166,11 @@ patch(PosStore.prototype, {
         }
     },
     async getProductInfo(product, quantity) {
-        info = await super.getProductInfo(...arguments);
-        if (product.eventId) {
+        if (product.event_id) {
+            const info = await super.getProductInfo(this.db.get_product_by_id(product.product_id[0]), 1);
             const [eventData] = await this.orm.read(
                 "event.event",
-                [product.eventId],
+                [product.event_id[0]],
                 [
                     "name",
                     "date_begin",
@@ -179,7 +179,9 @@ patch(PosStore.prototype, {
                 ]
             );
             info['eventData'] = eventData;
+            return info
         }
+        return await super.getProductInfo(...arguments);
 
     }
 });

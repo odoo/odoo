@@ -241,7 +241,7 @@ export class PaymentScreen extends Component {
             this.numberBuffer.capture();
             if (this.pos.config.cash_rounding) {
                 if (!this.pos.get_order().check_paymentlines_rounding()) {
-                    this.popup.add(AlertDialog, {
+                    this.dialog.add(AlertDialog, {
                         title: _t("Rounding error in payment lines"),
                         body: _t(
                             "The amount of your payment lines must be rounded to validate the transaction."

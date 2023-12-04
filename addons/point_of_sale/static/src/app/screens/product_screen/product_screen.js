@@ -107,6 +107,14 @@ export class ProductScreen extends Component {
                 };
             });
     }
+
+    getProductInfoIcon(product) {
+        return true;
+    }
+
+    getProductId(product) {
+        return product.id;
+    }
     getNumpadButtons() {
         return [
             { value: "1" },

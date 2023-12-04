@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates xml:space="preserve">
-    <t t-name="pos_event.CategorySelector" t-inherit="point_of_sale.CategorySelector" t-inherit-mode="extension" owl="1">
-        <xpath  expr="//div[hasclass('category-selector')]" position="inside">
-            <span t-if="getEventSelected()" class="d-flex align-items-center">
+    <t t-name="pos_event.CategorySelector" t-inherit="point_of_sale.CategorySelector" t-inherit-mode="extension">
+        <xpath  expr="//div" position="inside">
+            <span t-if="props.getEventSelected()" class="d-flex align-items-center">
                 <i class="px-2 fa fa-caret-right" aria-hidden="true"/>
                 <button class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center category-item p-1 h-100"
                     t-on-click="() => {}">
-                    <t t-esc="getEventSelected().name"></t>
+                    <t t-esc="props.getEventSelected().name"></t>
                 </button>
             </span>
         </xpath>

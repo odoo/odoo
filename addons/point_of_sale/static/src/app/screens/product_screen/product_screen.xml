@@ -56,13 +56,14 @@
                     <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
-                            name="getDisplayName(product)"                            productId="product.id"
+                            name="getDisplayName(product)"
+                            productId="getProductId(product)"
                             price="getPrice(product)"
                             imageUrl="getImageUrl(product)"
                             onClick="() => this.onClickProduct(product)"
                             seats_available="product.seats_available"
                             image_128="product.image_128"
-                            productInfo="true"
+                            productInfo="getProductInfoIcon(product)"
                             onProductInfoClick="() => this.onProductInfoClick(product)"
                         />
                     </div>

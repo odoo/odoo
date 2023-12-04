@@ -15,13 +15,6 @@ class PosOrder(models.Model):
         action['domain'] = [('pos_order_id', 'in', self.ids)]
         return action
 
-    def action_pos_order_paid(self):
-        res = super().action_pos_order_paid()
-        event_registration_ids = self.lines.filtered('event_registration_ids').event_registration_ids
-        event_registration_ids.action_confirm()
-        event_registration_ids._action_set_paid()
-
-        return res
 
 
 class PosOrderLine(models.Model):
@@ -42,3 +35,9 @@ class PosOrderLine(models.Model):
         result['event_ticket_id'] = orderline.event_ticket_id.id
         result['event_registration_ids'] = orderline.event_registration_ids.ids
         return result
+
+    def _get_event_sale_total(self):
+        return self.price_subtotal_incl
+
+    def _get_event_sale_state(self):
+        return self.order_id.state in ['done', 'paid', 'invoiced']

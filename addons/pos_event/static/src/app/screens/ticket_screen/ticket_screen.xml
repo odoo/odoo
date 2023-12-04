@@ -3,12 +3,12 @@
     <t t-name="pos_event.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
         <xpath  expr="//div[hasclass('control-buttons')]" position="before">
             <div t-if="_selectedSyncedOrder?.hasEventLines()" class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
-                <div class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="printFullPageTickets">
+                <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="printFullPageTickets">
                     <i class="fa fa-print"/> Print Full Page Ticket
-                </div>
-                <div class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="printFoldableBadge">
+                </button>
+                <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="printFoldableBadge">
                     <i class="fa fa-print"/> Print Foldable Badge
-                </div>
+                </button>
             </div>
         </xpath>
     </t>

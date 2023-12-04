@@ -100,5 +100,17 @@ patch(ProductScreen.prototype, {
             const result = product.seats_available - this.pos.get_order().getTicketOrderQuantity()[product.id]
             return result
         }
-    }
+    },
+    getProductInfoIcon(product) {
+        if (this.pos.events.includes(product)){
+            return false;
+        }
+        return super.getProductInfoIcon(...arguments);
+    },
+    getProductId(product) {
+        if (product.product_id) {
+            return product.product_id[0];
+        }
+        return super.getProductId(...arguments)
+    },
 });
