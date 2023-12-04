@@ -43,7 +43,7 @@ class TaskWithHours extends Many2OneField {
         super.computeActiveActions(props);
         const activeActions = this.state.activeActions;
         activeActions.create = activeActions.create && this.canCreate;
-        activeActions.createEdit = activeActions.create;
+        activeActions.createEdit = activeActions.createEdit && this.canCreate;
     }
 
 }
