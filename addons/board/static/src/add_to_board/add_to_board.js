@@ -98,7 +98,10 @@ AddToBoard.components = { Dropdown };
 export const addToBoardItem = {
     Component: AddToBoard,
     groupNumber: 20,
-    isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window" && config.actionId,
+    isDisplayed: ({ config }) => {
+        const { actionType, actionId, viewType } = config;
+        return actionType === "ir.actions.act_window" && actionId && viewType !== "form";
+    },
 };
 
 cogMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });
