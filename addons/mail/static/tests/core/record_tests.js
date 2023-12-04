@@ -199,7 +199,7 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
     assert.deepEqual(logs, ["LAZY"]);
     logs = [];
     thread.members.add("John");
-    assert.deepEqual(logs, ["EAGER"]);
+    assert.deepEqual(logs, ["LAZY", "EAGER"]); // lazy-needed field are re-computed/sorted again at least once, because no track of "unread"
     logs = [];
     assert.strictEqual(thread.typeEager, "self-chat");
     assert.deepEqual(logs, []);
@@ -264,19 +264,25 @@ QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
         name;
         members = Record.many("Member", {
             inverse: "thread",
-            onAdd: (member) => assert.step(`Thread.onAdd::${member.name}.${member.type}`),
+            onAdd: (member) =>
+                assert.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
         });
     }).register();
     (class Member extends Record {
         static id = "name";
         name;
         type;
+        isAdmin = Record.attr(false, {
+            compute() {
+                return this.type === "admin";
+            },
+        });
         thread = Record.one("Thread");
     }).register();
     const store = await start();
     const thread = store.Thread.insert("General");
     thread.members.add({ name: "John", type: "admin" });
-    assert.verifySteps(["Thread.onAdd::John.admin"]);
+    assert.verifySteps(["Thread.onAdd::John.admin.true"]);
 });
 
 QUnit.test("Can insert with relation as id, using relation as data object", async (assert) => {
