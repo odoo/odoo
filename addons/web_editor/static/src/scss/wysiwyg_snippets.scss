@@ -385,7 +385,8 @@ body.editor_enable.editor_has_snippets {
                 @include o-grab-cursor;
 
                 .oe_snippet_thumbnail_title {
-                    display: block;
+                    @include o-text-overflow(block);
+                    white-space: normal;
                     padding: $o-we-sidebar-blocks-content-spacing / 2;
                     text-align: center;
                 }
@@ -427,7 +428,7 @@ body.editor_enable.editor_has_snippets {
                 min-width: 0; // Ensure text-overflow on flex children
             }
             .oe_snippet_thumbnail_title {
-                @include o-text-overflow(block);
+                white-space: nowrap;
             }
             .oe_snippet_thumbnail_img {
                 flex-shrink: 0;
