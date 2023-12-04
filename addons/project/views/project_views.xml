@@ -1167,7 +1167,7 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('is_private', '=', True)]}">
                             <field name="child_ids"
-                                   context="{'default_user_ids': user_ids, 'default_parent_id': id,
+                                   context="{'default_user_ids': user_ids, 'default_parent_id': id, 'default_project_id': project_id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
                                    widget="subtasks_one2many">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
