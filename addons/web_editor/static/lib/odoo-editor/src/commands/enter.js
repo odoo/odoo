@@ -115,6 +115,19 @@ HTMLLIElement.prototype.oEnter = function () {
     this.oShiftTab();
 };
 /**
+ * Specifc behaviour for Table: When cursor at end of table and then enter
+ */
+HTMLTableElement.prototype.oEnter = function () {
+    const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
+    ['table', 'table-bordered'].forEach((className) => {
+        if (newEl.classList.contains(className)) {
+            newEl.classList.remove(className);
+        }
+    });
+    const node = setTagName(newEl, 'P');
+    setCursorStart(node);
+};
+/**
  * Specific behavior for pre: insert newline (\n) in text or insert p at end.
  */
 HTMLPreElement.prototype.oEnter = function (offset) {
