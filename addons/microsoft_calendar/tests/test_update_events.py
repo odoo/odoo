@@ -4,6 +4,7 @@ from dateutil.parser import parse
 import logging
 import pytz
 from unittest.mock import patch, ANY
+from freezegun import freeze_time
 
 from odoo import Command
 
@@ -1372,3 +1373,14 @@ class TestUpdateEvents(TestCommon):
                          "The event organizer must be user B (self.attendee_user) after the event organizer update.")
         self.assertTrue(self.attendee_user.partner_id.id in new_event.partner_ids.ids,
                         "User B (self.attendee_user) should be listed as attendee after the event organizer update.")
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_restart_sync_with_synced_recurrence(self, mock_patch):
+        """ Ensure that sync restart is not blocked when there are recurrence outliers in Odoo database. """
+        # Stop synchronization, set recurrent events as outliers and restart sync with Outlook.
+        self.organizer_user.stop_microsoft_synchronization()
+        self.recurrent_events.with_user(self.organizer_user).write({'microsoft_id': False, 'follow_recurrence': False})
+        self.attendee_user.with_user(self.attendee_user).restart_microsoft_synchronization()
+        self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
+        self.assertTrue(all(ev.need_sync_m for ev in self.recurrent_events))

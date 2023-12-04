@@ -52,6 +52,7 @@ class MicrosoftCalendarController(http.Controller):
                 })
 
             # If App authorized, and user access accepted, We launch the synchronization
+            sync_context.update({'dont_notify': True})
             need_refresh = request.env.user.sudo().with_context(sync_context)._sync_microsoft_calendar()
 
             # If synchronization has been stopped

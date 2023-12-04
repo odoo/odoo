@@ -35,11 +35,11 @@ class ResetMicrosoftAccount(models.TransientModel):
                     microsoft.delete(event.ms_universal_event_id, token=token)
 
         if self.delete_policy in ('delete_odoo', 'delete_both'):
-            events.microsoft_id = False
+            events.with_context(dont_notify=True).write({'microsoft_id': False})
             events.unlink()
 
         if self.sync_policy == 'all':
-            events.write({
+            events.with_context(dont_notify=True).write({
                 'microsoft_id': False,
                 'need_sync_m': True,
             })
