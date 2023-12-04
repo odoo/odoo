@@ -8208,6 +8208,30 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("on a touch screen, fields are not focused", async function (assert) {
+        // patch matchMedia to alter hasTouch value
+        patchWithCleanup(browser, {
+            matchMedia: (media) => {
+                if (media === "(pointer:coarse)") {
+                    return { matches: true };
+                }
+                this._super();
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"/><field name="bar"/></form>',
+        });
+
+        assert.notEqual(
+            document.activeElement,
+            target.querySelector('.o_field_widget[name="foo"] input')
+        );
+    });
+
     QUnit.test(
         "no autofocus with disable_autofocus option [REQUIRE FOCUS]",
         async function (assert) {
