@@ -8,12 +8,21 @@ from odoo.tools import float_compare, float_is_zero
 class AccountAnalyticPlan(models.Model):
     _inherit = 'account.analytic.plan'
 
-    def _calculate_distribution_amount(self, amount, percentage, distribution_on_each_plan):
+    def _calculate_distribution_amount(self, amount, percentage, total_percentage, distribution_on_each_plan):
+        """
+        Ensures that the total amount distributed across all lines always adds up to exactly `amount` per
+        plan. We try to correct for compounding rounding errors by assigning the exact outstanding amount when
+        we detect that a line will close out a plan's total percentage. However, since multiple plans can be
+        assigned to a line, with different prior distributions, there is the possible edge case that one line
+        closes out two (or more) tallies with different compounding errors. This means there is no one correct
+        amount that we can assign to a line that will correctly close out both all plans. This is described in
+        more detail in the commit message, under "concurrent closing line edge case".
+        """
         existing_amount = distribution_on_each_plan.get(self, 0)
         distribution_plan = existing_amount + percentage
         decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
-        if float_compare(distribution_plan, 100, precision_digits=decimal_precision) == 0:
-            distributed_amount = amount * (100 - existing_amount) / 100.0
+        if float_compare(distribution_plan, total_percentage, precision_digits=decimal_precision) == 0:
+            distributed_amount = amount - (amount * existing_amount / 100)
         else:
             distributed_amount = amount * percentage / 100.0
         distribution_on_each_plan[self] = distribution_plan
@@ -41,37 +50,60 @@ class AccountAnalyticAccount(models.Model):
         :returns: a list of dicts containing the values for new analytic lines that need to be created
         :rtype:   dict
         """
+        if not distribution:
+            lines.unlink()
+            return []
+
+        # Does this: {'15': 40, '14,16': 60} -> { account(15): 40, account(14,16): 60 }
+        distribution = {
+            self.env['account.analytic.account'].browse(map(int, ids.split(','))) : percentage
+            for ids, percentage in distribution.items()
+        }
+
+        plans = self.env['account.analytic.plan']
+        plans = sum(plans._get_all_plans(), plans)
+        line_columns = [p._column_name() for p in plans]
+
+        lines_to_link = []
         distribution_on_each_plan = {}
-        processed_distributions = []
+        total_percentages = {}
+
+        for accounts, percentage in distribution.items():
+            for plan in accounts.root_plan_id:
+                total_percentages[plan] = total_percentages.get(plan, 0) + percentage
+
         for existing_aal in lines:
-            if distribution and existing_aal.account_id.id in [int(i) for i in distribution]:
+            # TODO: recommend something better for this line in review, please
+            accounts = sum(map(existing_aal.mapped, line_columns), self.env['account.analytic.account'])
+            if accounts in distribution:
                 # Update the existing AAL for this account
-                percentage = distribution[str(existing_aal.account_id.id)]
-                new_amount = existing_aal.account_id.root_plan_id._calculate_distribution_amount(amount, percentage, distribution_on_each_plan)
-                new_unit_amount = amount
+                percentage = distribution[accounts]
+                new_amount = 0
+                new_unit_amount = unit_amount
+                for account in accounts:
+                    plan = account.root_plan_id
+                    new_amount = plan._calculate_distribution_amount(amount, percentage, total_percentages[plan], distribution_on_each_plan)
                 if additive:
                     new_amount += existing_aal.amount
                     new_unit_amount += existing_aal.unit_amount
-                currency = existing_aal.account_id.currency_id or obj.company_id.currency_id
+                currency = accounts[0].currency_id or obj.company_id.currency_id
                 if float_is_zero(new_amount, precision_rounding=currency.rounding):
                     existing_aal.unlink()
                 else:
                     existing_aal.amount = new_amount
                     existing_aal.unit_amount = new_unit_amount
-                processed_distributions.append(existing_aal.account_id.id)
+                # Prevent this distribution from being applied again
+                del distribution[accounts]
             else:
                 # Delete the existing AAL if it is no longer present in the new distribution
                 existing_aal.unlink()
-        lines_to_link = []
-        if not distribution:
-            return []
-        for account_id, percentage in distribution.items():
-            # Only create a new AAL if an existing one was not already modified before
-            account_id = int(account_id)
-            if account_id not in processed_distributions:
-                account = self.browse(account_id)
-                new_amount = account.root_plan_id._calculate_distribution_amount(amount, percentage, distribution_on_each_plan)
-                currency = account.currency_id or obj.company_id.currency_id
-                if not float_is_zero(new_amount, precision_rounding=currency.rounding):
-                    lines_to_link.append(obj._prepare_analytic_line_values(account.id, new_amount, unit_amount))
+        # Create new lines from remaining distributions
+        for accounts, percentage in distribution.items():
+            account_field_values = {}
+            for account in accounts:
+                new_amount = account.root_plan_id._calculate_distribution_amount(amount, percentage, total_percentages[plan], distribution_on_each_plan)
+                account_field_values[account.plan_id._column_name()] = account.id
+            currency = account.currency_id or obj.company_id.currency_id
+            if not float_is_zero(new_amount, precision_rounding=currency.rounding):
+                lines_to_link.append(obj._prepare_analytic_line_values(account_field_values, new_amount, unit_amount))
         return lines_to_link
