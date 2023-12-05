@@ -490,3 +490,12 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return {}
+
+    def _get_lang(self):
+        res = super()._get_lang()
+
+        if self.website_id and request and request.is_frontend:
+            # Use request lang as cart lang if request comes from frontend
+            return request.env.lang
+
+        return res

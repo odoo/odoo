@@ -42,8 +42,8 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
         if reward.reward_type == 'shipping':
-            self = self.with_context(lang=self.partner_id.lang)
-            reward = reward.with_context(lang=self.partner_id.lang)
+            self = self.with_context(lang=self._get_lang())
+            reward = reward.with_context(lang=self._get_lang())
             return self._get_reward_values_free_shipping(reward, coupon, **kwargs)
         return super()._get_reward_line_values(reward, coupon, **kwargs)
 

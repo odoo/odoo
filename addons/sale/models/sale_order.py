@@ -1502,3 +1502,13 @@ class SaleOrder(models.Model):
         # Override for correct taxcloud computation
         # when using coupon and delivery
         return True
+
+    #=== TOOLING ===#
+
+    def _get_lang(self):
+        self.ensure_one()
+
+        if self.partner_id.lang and not self.partner_id.is_public:
+            return self.partner_id.lang
+
+        return self.env.lang
