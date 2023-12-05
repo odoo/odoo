@@ -721,14 +721,9 @@
                                 invisible="not to_check" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
-                    <div class="alert alert-warning mb-0" role="alert"
-                         invisible="state != 'draft' or not duplicated_ref_ids">
-                        Warning: this bill might be a duplicate of
-                        <button name="open_duplicated_ref_bill_view"
-                                type="object"
-                                string="one of those bills"
-                                class="btn btn-link p-0"
-                        />
+                    <div class="alert alert-warning mb-0 w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
+                        <span>Warning: this bill might be a duplicate of</span>
+                        <field name="duplicated_ref_ids" widget="x2many_buttons" string="Duplicated Bills" context="{'name_as_amount_total': True}"/>
                     </div>
                     <div class="alert alert-info mb-0" role="alert" invisible="not is_being_sent">
                         This invoice is being sent in the background.
@@ -871,7 +866,6 @@
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>
                         <field name="quick_edit_mode" invisible="1"/>
                         <field name="hide_post_button" invisible="1"/>
-                        <field name="duplicated_ref_ids" invisible="1"/>
                         <field name="quick_encoding_vals" invisible="1"/>
                         <field name="show_delivery_date" invisible="1"/>
                         <field name="is_being_sent" invisible="1"/>
