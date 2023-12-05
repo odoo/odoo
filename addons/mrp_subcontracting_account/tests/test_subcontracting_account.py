@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, fields
-from odoo.tests.common import Form
+from odoo.tests.common import Form, tagged
 from odoo.tools.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.mrp_account.tests.test_bom_price import TestBomPriceCommon
 
 
+@tagged('post_install', '-at_install')
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
         # pylint: disable=bad-whitespace
@@ -16,9 +17,34 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
+
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
+        in_account = self.env['account.account'].create({
+            'name': 'IN Account',
+            'code': '000001',
+            'account_type': 'asset_current',
+        })
+        out_account = self.env['account.account'].create({
+            'name': 'OUT Account',
+            'code': '000002',
+            'account_type': 'asset_current',
+        })
+        valu_account = self.env['account.account'].create({
+            'name': 'VALU Account',
+            'code': '000003',
+            'account_type': 'asset_current',
+        })
+        production_cost_account = self.env['account.account'].create({
+            'name': 'PROD COST Account',
+            'code': '000004',
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_stock_account_input_categ_id = in_account
+        product_category_all.property_stock_account_output_categ_id = out_account
+        product_category_all.property_stock_account_production_cost_id = production_cost_account
+        product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
         stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
         stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
@@ -144,6 +170,30 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
+        in_account = self.env['account.account'].create({
+            'name': 'IN Account',
+            'code': '000001',
+            'account_type': 'asset_current',
+        })
+        out_account = self.env['account.account'].create({
+            'name': 'OUT Account',
+            'code': '000002',
+            'account_type': 'asset_current',
+        })
+        valu_account = self.env['account.account'].create({
+            'name': 'VALU Account',
+            'code': '000003',
+            'account_type': 'asset_current',
+        })
+        production_cost_account = self.env['account.account'].create({
+            'name': 'PROD COST Account',
+            'code': '000004',
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_stock_account_input_categ_id = in_account
+        product_category_all.property_stock_account_output_categ_id = out_account
+        product_category_all.property_stock_account_production_cost_id = production_cost_account
+        product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
         stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
         stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
@@ -356,10 +406,34 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
+
+        in_account = self.env['account.account'].create({
+            'name': 'IN Account',
+            'code': '000001',
+            'account_type': 'asset_current',
+        })
+        out_account = self.env['account.account'].create({
+            'name': 'OUT Account',
+            'code': '000002',
+            'account_type': 'asset_current',
+        })
+        valu_account = self.env['account.account'].create({
+            'name': 'VALU Account',
+            'code': '000003',
+            'account_type': 'asset_current',
+        })
+        production_cost_account = self.env['account.account'].create({
+            'name': 'PROD COST Account',
+            'code': '000004',
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_stock_account_input_categ_id = in_account
+        product_category_all.property_stock_account_output_categ_id = out_account
+        product_category_all.property_stock_account_production_cost_id = production_cost_account
+        product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
         stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
         stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
-
         self.comp1.standard_price = 10
         self.comp2.standard_price = 20
         self.finished.standard_price = 40
