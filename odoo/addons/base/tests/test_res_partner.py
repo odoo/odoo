@@ -6,9 +6,10 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.base.models.res_partner import Partner
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import tagged, TransactionCase
 
 # samples use effective TLDs from the Mozilla public suffix
 # list at http://publicsuffix.org
@@ -23,7 +24,7 @@ SAMPLES = [
 
 
 @tagged('res_partner')
-class TestPartner(TransactionCase):
+class TestPartner(TransactionCaseWithUserDemo):
 
     @contextmanager
     def mockPartnerCalls(self):
@@ -66,7 +67,7 @@ class TestPartner(TransactionCase):
         with self.assertRaises(RedirectWarning):
             test_partner.with_user(self.env.ref('base.user_admin')).toggle_active()
         with self.assertRaises(ValidationError):
-            test_partner.with_user(self.env.ref('base.user_demo')).toggle_active()
+            test_partner.with_user(self.user_demo).toggle_active()
 
         # Can archive the user but the partner stays active
         test_user.toggle_active()
