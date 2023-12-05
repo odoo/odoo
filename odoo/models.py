@@ -4724,7 +4724,7 @@ Fields:
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain
-            return 0 if count else []
+            return 0 if count else expression.expression(expression.FALSE_DOMAIN, self).query
 
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(args, order=order)
