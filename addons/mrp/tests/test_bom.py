@@ -12,6 +12,11 @@ from freezegun import freeze_time
 @freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
+
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
         self.assertEqual(set([bom[0].id for bom in boms]), set(self.bom_1.ids))

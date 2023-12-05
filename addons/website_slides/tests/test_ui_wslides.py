@@ -14,7 +14,14 @@ from odoo.modules.module import get_module_resource
 class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUICommon, self).setUp()
+        super().setUp()
+        self.env.ref('gamification.rank_student').description_motivational = """
+            <div class="media align-items-center">
+                <div class="media-body">Reach the next rank and gain a very nice mug !</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.png"/>
+            </div>"""
+
+
         # Load pdf and img contents
         pdf_path = get_module_resource('website_slides', 'static', 'src', 'img', 'presentation.pdf')
         pdf_content = base64.b64encode(open(pdf_path, "rb").read())
@@ -138,9 +145,20 @@ class TestUi(TestUICommon):
 
     def test_full_screen_edition_website_restricted_editor(self):
         # group_website_designer
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
+        })
+        user_demo = self.user_demo
+        self.env['slide.slide.partner'].create({
+            'slide_id': self.channel.slide_ids[1].id,
+            'partner_id': self.partner_demo.id,
+            'completed': True,
+            'vote': 1,
+        })
+        self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.partner_demo.id,
         })
 
         self.browser_js(

@@ -73,6 +73,13 @@ class TestMenu(common.TransactionCase):
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']
+        if self.env['website'].search_count([]) == 1:
+            self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
+
         Menu = self.env['website.menu']
         existing_menus = Menu.search([])
 

@@ -368,6 +368,14 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         currency_eur = self.env.ref("base.EUR")
         currency_usd = self.env.ref("base.USD")
         (currency_usd | currency_eur).active = True
+<<<<<<< HEAD
+||||||| parent of fefeaf8c4c25 (temp)
+
+=======
+
+        self.env.ref('base.main_company').currency_id = currency_usd
+
+>>>>>>> fefeaf8c4c25 (temp)
         # 1 USD = 0.5 EUR
         self.env['res.currency.rate'].create([{
             'name': fields.Datetime.today(),
