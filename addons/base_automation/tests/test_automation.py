@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< HEAD
 from odoo.tests import TransactionCase
 from odoo import Command
+||||||| parent of 1f345283c9c4 (temp)
+from odoo.tests import TransactionCase
+from odoo.exceptions import UserError
+=======
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.exceptions import UserError
+>>>>>>> 1f345283c9c4 (temp)
 
 import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestAutomation(TransactionCase):
+class TestAutomation(TransactionCaseWithUserDemo):
 
     def test_01_on_create_or_write(self):
         """ Simple on_create with admin user """
@@ -46,7 +55,14 @@ class TestAutomation(TransactionCase):
         bilbo.name = "Bilbo"
         self.assertFalse(bilbo.active)
 
+<<<<<<< HEAD
     def test_02_on_create_or_write_restricted(self):
+||||||| parent of 1f345283c9c4 (temp)
+
+    def test_02_on_create_restricted(self):
+=======
+    def test_02_on_create_restricted(self):
+>>>>>>> 1f345283c9c4 (temp)
         """ on_create action with low portal user """
         model = self.env.ref("base.model_ir_filters")
         automation = self.env["base.automation"].create({
@@ -68,7 +84,7 @@ class TestAutomation(TransactionCase):
         # action cached was cached with admin, force CacheMiss
         automation.env.clear()
 
-        self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
+        self_portal = self.env["ir.filters"].with_user(self.user_demo.id)
         # verify the portal user can create ir.filters but can not read base.automation
         self.assertTrue(self_portal.env["ir.filters"].check_access_rights("create", raise_exception=False))
         self.assertFalse(self_portal.env["base.automation"].check_access_rights("read", raise_exception=False))
@@ -106,7 +122,7 @@ class TestAutomation(TransactionCase):
         # action cached was cached with admin, force CacheMiss
         automation.env.clear()
 
-        self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
+        self_portal = self.env["ir.filters"].with_user(self.user_demo.id)
 
         # simulate a onchange call on name
         result = self_portal.onchange({}, [], {"name": {}, "active": {}})

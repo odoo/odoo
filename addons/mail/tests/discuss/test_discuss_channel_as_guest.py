@@ -4,9 +4,18 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
+<<<<<<< HEAD
 
 @tagged("post_install", "-at_install")
 class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
+||||||| parent of 1f345283c9c4 (temp)
+@odoo.tests.tagged('-at_install', 'post_install')
+class TestMailPublicPage(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+=======
+
+@odoo.tests.tagged('-at_install', 'post_install')
+class TestMailPublicPage(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+>>>>>>> 1f345283c9c4 (temp)
     """Checks that the invite page redirects to the channel and that all
     modules load correctly on the welcome and channel page when authenticated as various users"""
 

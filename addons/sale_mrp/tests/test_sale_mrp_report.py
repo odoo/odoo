@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo.tests import common
 
+||||||| parent of 1f345283c9c4 (temp)
+from odoo.tests import common, Form
+
+=======
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import common, Form
+>>>>>>> 1f345283c9c4 (temp)
 from odoo.tools import html2plaintext
 
+
 @common.tagged('post_install', '-at_install')
-class TestSaleMrpInvoices(common.TransactionCase):
+class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
         cls.product_by_lot = cls.env['product.product'].create({
             'name': 'Product By Lot',
             'type': 'product',
@@ -37,7 +47,7 @@ class TestSaleMrpInvoices(common.TransactionCase):
                 'product_qty': 1,
             })]
         })
-        cls.partner = cls.env.ref('base.res_partner_1')
+        cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
 
     def test_deliver_and_invoice_tracked_components(self):
         """

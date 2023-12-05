@@ -91,6 +91,77 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             "Alipay: invalid inputs specified in the redirect form.",
         )
 
+<<<<<<< HEAD
+||||||| parent of 1f345283c9c4 (temp)
+    def test_03_redirect_form_with_fees(self):
+        # update provider: compute fees
+        self.alipay.write({
+            'fees_active': True,
+            'fees_dom_fixed': 1.0,
+            'fees_dom_var': 0.0035,
+            'fees_int_fixed': 1.5,
+            'fees_int_var': 0.005,
+        })
+
+        transaction_fees = self.currency.round(
+            self.alipay._compute_fees(
+                self.amount,
+                self.currency,
+                self.partner.country_id,
+            )
+        )
+        self.assertEqual(transaction_fees, 18.78)
+        total_fee = self.currency.round(self.amount + transaction_fees)
+        self.assertEqual(total_fee, 1129.89)
+
+        tx = self._create_transaction(flow='redirect')
+        self.assertEqual(tx.fees, 18.78)
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = tx._get_processing_values()
+        redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
+
+        self.assertEqual(redirect_form_data['inputs']['total_fee'], f'{total_fee:.2f}')
+
+=======
+    def test_03_redirect_form_with_fees(self):
+        # Ensure fixed amount is correctly converted without demo data
+        self.env.company.country_id = self.env.ref('base.us')
+        if not self.env.ref('base.rateCNY', raise_if_not_found=False):
+            self.env['res.currency.rate'].create({
+                'rate': 8.7556,
+                'currency_id': self.env.ref('base.CNY').id,
+                'name': '2010-01-01',
+            })
+
+        # update provider: compute fees
+        self.alipay.write({
+            'fees_active': True,
+            'fees_dom_fixed': 1.0,
+            'fees_dom_var': 0.0035,
+            'fees_int_fixed': 1.5,
+            'fees_int_var': 0.005,
+        })
+
+        transaction_fees = self.currency.round(
+            self.alipay._compute_fees(
+                self.amount,
+                self.currency,
+                self.partner.country_id,
+            )
+        )
+        self.assertEqual(transaction_fees, 18.78)
+        total_fee = self.currency.round(self.amount + transaction_fees)
+        self.assertEqual(total_fee, 1129.89)
+
+        tx = self._create_transaction(flow='redirect')
+        self.assertEqual(tx.fees, 18.78)
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = tx._get_processing_values()
+        redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
+
+        self.assertEqual(redirect_form_data['inputs']['total_fee'], f'{total_fee:.2f}')
+
+>>>>>>> 1f345283c9c4 (temp)
     def test_21_standard_checkout_feedback(self):
         self.alipay.alipay_payment_method = 'standard_checkout'
         self.currency = self.currency_euro

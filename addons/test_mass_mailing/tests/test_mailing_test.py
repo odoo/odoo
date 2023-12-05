@@ -76,10 +76,47 @@ class TestMailingTest(TestMassMailCommon):
             mailing_test.send_mail_test()
 
     def test_mailing_test_equals_reality(self):
+<<<<<<< HEAD
         """ Check that both test and real emails will format the qweb and inline
         placeholders correctly in body and subject. """
         mailing = self.test_mailing_bl.with_env(self.env)
         mailing.write({
+||||||| parent of 1f345283c9c4 (temp)
+        """
+        Check that both test and real emails will format the qweb and inline placeholders correctly in body and subject.
+        """
+        contact_list = self.env['mailing.list'].create({
+            'name': 'Testers',
+            'contact_ids': [Command.create({
+                'name': 'Mitchell Admin',
+                'email': 'real@real.com',
+            })],
+        })
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject {{ object.name }} <t t-out="object.name"/>',
+            'state': 'draft',
+            'mailing_type': 'mail',
+=======
+        """
+        Check that both test and real emails will format the qweb and inline placeholders correctly in body and subject.
+        """
+        self.env['mailing.contact'].search([]).unlink()
+        contact_list = self.env['mailing.list'].create({
+            'name': 'Testers',
+            'contact_ids': [Command.create({
+                'name': 'Mitchell Admin',
+                'email': 'real@real.com',
+            })],
+        })
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject {{ object.name }} <t t-out="object.name"/>',
+            'state': 'draft',
+            'mailing_type': 'mail',
+>>>>>>> 1f345283c9c4 (temp)
             'body_html': '<p>Hello {{ object.name }} <t t-out="object.name"/></p>',
             'subject': 'Subject {{ object.name }} <t t-out="object.name"/>',
         })

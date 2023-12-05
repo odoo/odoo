@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tests.test_base_url import TestUrlCommon
 from odoo.addons.website_event.tests.common import OnlineEventCase
@@ -15,7 +15,7 @@ from odoo.tools import mute_logger
 from odoo.tests.common import users
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)

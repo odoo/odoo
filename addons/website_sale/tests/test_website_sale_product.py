@@ -6,9 +6,90 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 @tagged('post_install', '-at_install')
 class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
 
+<<<<<<< HEAD
     def setUp(self):
         super().setUp()
         self.website = self.env.ref('website.default_website')
+||||||| parent of 1f345283c9c4 (temp)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.WebsiteSaleController = WebsiteSale()
+        cls.website = cls.env.ref('website.default_website')
+
+        cls.tax_5 = cls.env['account.tax'].create({
+            'name': '5% Tax',
+            'amount_type': 'percent',
+            'amount': 5,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': '10% Tax',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.tax_15 = cls.env['account.tax'].create({
+            'name': '15% Tax',
+            'amount_type': 'percent',
+            'amount': 15,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.fiscal_country = cls.env['res.country'].create({
+            'name': "Super Fiscal Position",
+            'code': 'SFP',
+        })
+        cls.product = cls.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100.0,
+        })
+=======
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.WebsiteSaleController = WebsiteSale()
+        cls.website = cls.env.ref('website.default_website')
+        cls.website.company_id = cls.env.company
+
+        cls.tax_5 = cls.env['account.tax'].create({
+            'name': '5% Tax',
+            'amount_type': 'percent',
+            'amount': 5,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': '10% Tax',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.tax_15 = cls.env['account.tax'].create({
+            'name': '15% Tax',
+            'amount_type': 'percent',
+            'amount': 15,
+            'price_include': False,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+        cls.fiscal_country = cls.env['res.country'].create({
+            'name': "Super Fiscal Position",
+            'code': 'SFP',
+        })
+        cls.product = cls.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100.0,
+        })
+>>>>>>> 1f345283c9c4 (temp)
 
     def test_website_sale_contextual_price(self):
         contextual_price = self.computer._get_contextual_price()

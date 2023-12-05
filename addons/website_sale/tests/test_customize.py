@@ -12,7 +12,8 @@ from odoo.tools.misc import file_open
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
