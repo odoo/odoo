@@ -348,4 +348,9 @@ QUnit.module("py", {}, () => {
             ],
         });
     });
+
+    QUnit.test("cannot parse []a", (assert) => {
+        assert.throws(() => parseExpr("[]a"), /Error: Token\(s\) unused/);
+        assert.throws(() => parseExpr("[]a b"), /Error: Token\(s\) unused/);
+    });
 });
