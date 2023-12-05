@@ -9,6 +9,11 @@ from odoo.tools import mute_logger
 
 class TestSaleMrpProcurement(TransactionCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
+
     def test_sale_mrp(self):
         # Required for `uom_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('uom.group_uom')

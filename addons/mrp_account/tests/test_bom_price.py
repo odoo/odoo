@@ -21,6 +21,8 @@ class TestBomPriceCommon(common.TransactionCase):
         super().setUpClass()
         # Required for `product_uom_id ` to be visible in the view
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        # Required for `product_id ` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('product.group_product_variant')
         cls.Product = cls.env['product.product']
         cls.Bom = cls.env['mrp.bom']
 
