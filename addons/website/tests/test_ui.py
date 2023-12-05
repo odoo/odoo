@@ -62,6 +62,82 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(odoo.tests.HttpCase):
+<<<<<<< HEAD
+||||||| parent of 47ad0a47a756 (temp)
+
+    def test_html_editor_language(self):
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        nl_lang = self.env['res.lang']._activate_lang('nl_NL')
+        default_website.language_ids += nl_lang
+        default_website.default_lang_id = nl_lang.id
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            nl_lang.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = nl_lang.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='nl_NL').arch)
+
+=======
+
+    def test_html_editor_language(self):
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        parseltongue = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.env['res.lang']._activate_lang(parseltongue.code)
+        default_website.language_ids += parseltongue
+        default_website.default_lang_id = parseltongue.id
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            parseltongue.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = parseltongue.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
+
+>>>>>>> 47ad0a47a756 (temp)
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
         View = self.env['ir.ui.view']
