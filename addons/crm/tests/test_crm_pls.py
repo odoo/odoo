@@ -6,7 +6,7 @@ from datetime import timedelta
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, tagged, users, loaded_demo_data
 from odoo.tests.common import TransactionCase
 
 
@@ -206,7 +206,12 @@ class TestCRMPLS(TransactionCase):
         Lead._cron_update_automated_probabilities()
         lead_13_no_team_proba = leads[13].automated_probability
         self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
-        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
+        # Todo: Make this test fully independent from demo data
+        if not loaded_demo_data(self.env):
+            expected_proba = 35.19
+        else:
+            expected_proba = 36.65
+        self.assertAlmostEqual(lead_13_no_team_proba, expected_proba, places=2)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])
