@@ -112,6 +112,42 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     assert.ok(thread.messages.length === 0);
 });
 
+QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => {
+    let logs = [];
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            inverse: "thread",
+            onAdd: (member) => logs.push(`Thread.onAdd(${member.name})`),
+            onDelete: (member) => logs.push(`Thread.onDelete(${member.name})`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    thread.members.add(john);
+    assert.deepEqual(logs, ["Thread.onAdd(John)"]);
+    logs = [];
+    thread.members.add(john);
+    assert.deepEqual(logs, []);
+    marc.thread = thread;
+    assert.deepEqual(logs, ["Thread.onAdd(Marc)"]);
+    logs = [];
+    thread.members.delete(marc);
+    assert.deepEqual(logs, ["Thread.onDelete(Marc)"]);
+    logs = [];
+    thread.members.delete(marc);
+    assert.deepEqual(logs, []);
+    john.thread = undefined;
+    assert.deepEqual(logs, ["Thread.onDelete(John)"]);
+});
+
 QUnit.test("Computed fields", async (assert) => {
     (class Thread extends Record {
         static id = "name";
