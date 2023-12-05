@@ -19,6 +19,22 @@ class TestFrontend(odoo.tests.HttpCase):
                 "self_order_view_mode": True,
             }
         )
+
+        pos_categories = self.env['pos.category'].create([{
+            'name': 'Test Tag 1',
+        }, {
+            'name': 'Test Tag 2',
+        }])
+        self.env['product.product'].create({
+            "name": "Desk Test Product",
+            "type": "product",
+            "available_in_pos": True,
+            "list_price": 10,
+            "taxes_id": False,
+            'pos_categ_id': pos_categories[0].id,
+            'description_sale': 'Test Description',
+        })
+
         basic_product = {
             "name": "Test Product",
             "type": "product",

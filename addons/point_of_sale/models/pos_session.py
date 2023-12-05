@@ -1591,6 +1591,7 @@ class PosSession(models.Model):
             "products": self._load_model('product.product'),
         }
 
+
     def _load_model(self, model):
         model_name = model.replace('.', '_')
         loader = getattr(self, '_get_pos_ui_%s' % model_name, None)
