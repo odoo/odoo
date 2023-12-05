@@ -1606,6 +1606,7 @@ class PosSession(models.Model):
             'pos.order': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
         }
 
+
     def _load_model(self, model):
         model_name = model.replace('.', '_')
         loader = getattr(self, '_get_pos_ui_%s' % model_name, None)
