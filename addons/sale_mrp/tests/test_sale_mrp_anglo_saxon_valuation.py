@@ -247,7 +247,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Sell 3 kits
         so = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [
                 (0, 0, {
                     'name': kit.name,
@@ -352,7 +352,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Sell 3 kits
         so = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [
                 (0, 0, {
                     'name': kit.name,
