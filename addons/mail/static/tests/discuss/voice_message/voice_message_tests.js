@@ -141,7 +141,6 @@ QUnit.test("make voice message in chat", async () => {
             return super.fetchFile(url("/mail/static/src/audio/call_02_in_.mp3"));
         },
     });
-    patchDate(2023, 6, 31, 13, 0, 0);
     mockGetMedia();
     const cleanUp = patchAudio();
     const pyEnv = await startServer();
@@ -155,11 +154,25 @@ QUnit.test("make voice message in chat", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    await contains("button[title='Voice Message']");
+    patchDate(2023, 6, 31, 13, 0, 0, 0);
     await click("button[title='Voice Message']");
     await contains(".o-mail-VoiceRecorder", { text: "00 : 00" });
-    await Promise.resolve();
-    // simulate 10 sec elapsed
-    patchDate(2023, 6, 31, 13, 0, 11); // +1 so exactly 10 sec elapsed
+    /**
+     * Simulate 10 sec elapsed.
+     * `patchDate` does not freeze the time, it merely changes the value of "now" at the time it was
+     * called. The code of click following the first `patchDate` doesn't actually happen at the time
+     * that was specified, but few miliseconds later (8 ms on my machine).
+     * The process following the next `patchDate` is intended to be between 10s and 11s later than
+     * the click, because the test wants to assert a 10 sec counter, and the two dates are
+     * substracted and then rounded down in the code (it means absolute values are irrelevant here).
+     * The problem with aiming too close to a 10s difference is that if the click is longer than
+     * the following process, it will round down to 9s.
+     * The problem with aiming too close to a 11s difference is that if the click is shorter than
+     * the following process, it will round down to 11s.
+     * The best bet is therefore to use 10s + 500ms difference.
+     */
+    patchDate(2023, 6, 31, 13, 0, 10, 500);
     // simulate some microphone data
     audioProcessor.process([[new Float32Array(128)]]);
     await contains(".o-mail-VoiceRecorder", { text: "00 : 10" });
