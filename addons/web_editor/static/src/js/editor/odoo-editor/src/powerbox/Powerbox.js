@@ -367,7 +367,7 @@ export class Powerbox {
      * @param {KeyboardEvent} ev
      */
     _onKeydown(ev) {
-        if (ev.key === 'Enter') {
+        if (['Enter', 'Tab'].includes(ev.key)) {
             ev.stopImmediatePropagation();
             this._pickCommand();
             ev.preventDefault();
