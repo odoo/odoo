@@ -244,8 +244,7 @@ class IrModel(models.Model):
     def _check_model_name(self):
         for model in self:
             if model.state == 'manual':
-                if not model.model.startswith('x_'):
-                    raise ValidationError(_("The model name must start with 'x_'."))
+                self._check_manual_name(model.model)
             if not models.check_object_name(model.model):
                 raise ValidationError(_("The model name can only contain lowercase characters, digits, underscores and dots."))
 
@@ -442,6 +441,15 @@ class IrModel(models.Model):
             __doc__ = model_data['info']
 
         return CustomModel
+
+    @api.model
+    def _is_manual_name(self, name):
+        return name.startswith('x_')
+
+    @api.model
+    def _check_manual_name(self, name):
+        if not self._is_manual_name(name):
+            raise ValidationError(_("The model name must start with 'x_'."))
 
     def _add_manual_models(self):
         """ Add extra models to the registry. """
@@ -1221,7 +1229,7 @@ class IrModelFields(models.Model):
         elif field_data['ttype'] == 'monetary':
             # be sure that custom monetary field are always instanciated
             if not self.pool.loaded and \
-                not (field_data['currency_field'] and field_data['currency_field'].startswith('x_')):
+                not (field_data['currency_field'] and self._is_manual_name(field_data['currency_field'])):
                 return
             attrs['currency_field'] = field_data['currency_field']
         # add compute function if given
@@ -1234,6 +1242,10 @@ class IrModelFields(models.Model):
         attrs = self._instanciate_attrs(field_data)
         if attrs:
             return fields.Field.by_type[field_data['ttype']](**attrs)
+
+    @api.model
+    def _is_manual_name(self, name):
+        return name.startswith('x_')
 
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
