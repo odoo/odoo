@@ -13,7 +13,8 @@ class TestCommonTimesheet(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestCommonTimesheet, cls).setUpClass()
-
+        cls.env.user.tz = "Europe/Brussels"
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.
         # but there is an ir.rule about it, crashing during its evaluation

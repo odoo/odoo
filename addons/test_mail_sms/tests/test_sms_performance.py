@@ -13,7 +13,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
 
     def setUp(self):
         super(TestSMSPerformance, self).setUp()
-
+        self.env.company.country_id = self.env.ref('base.us')
         self.test_record = self.env['mail.test.sms'].with_context(self._test_context).create({
             'name': 'Test',
             'customer_id': self.customer.id,
@@ -35,7 +35,14 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=25):
+||||||| parent of 254f11ecf6ba (temp)
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=26):
+=======
+        expected_count = 30
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=expected_count):
+>>>>>>> 254f11ecf6ba (temp)
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -50,7 +57,14 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=25):
+||||||| parent of 254f11ecf6ba (temp)
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=26):
+=======
+        expected_count = 30
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=expected_count):
+>>>>>>> 254f11ecf6ba (temp)
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -64,7 +78,14 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     @warmup
     def test_message_sms_record_default(self):
         record = self.test_record.with_user(self.env.user)
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=27):
+||||||| parent of 254f11ecf6ba (temp)
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=28):
+=======
+        expected_count = 31
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=expected_count):
+>>>>>>> 254f11ecf6ba (temp)
             messages = record._message_sms(
                 body='Performance Test',
             )

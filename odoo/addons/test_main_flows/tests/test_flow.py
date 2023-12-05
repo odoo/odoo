@@ -1,6 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
+||||||| parent of 254f11ecf6ba (temp)
+import odoo
+=======
+import logging
+import odoo
+>>>>>>> 254f11ecf6ba (temp)
 import odoo.tests
+
+_logger = logging.getLogger(__name__)
+
 
 class BaseTestUi(odoo.tests.HttpCase):
 
@@ -70,6 +80,10 @@ class BaseTestUi(odoo.tests.HttpCase):
 class TestUi(BaseTestUi):
 
     def test_01_main_flow_tour(self):
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.main_flow_tour()
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -79,4 +93,8 @@ class TestUiMobile(BaseTestUi):
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
+        # TODO: Adapt to work without demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.main_flow_tour()

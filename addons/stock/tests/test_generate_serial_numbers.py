@@ -9,7 +9,14 @@ from odoo.tests.common import Form, TransactionCase
 class StockGenerateCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
+<<<<<<< HEAD
         super().setUpClass()
+||||||| parent of 254f11ecf6ba (temp)
+        super(StockGenerate, cls).setUpClass()
+=======
+        super(StockGenerate, cls).setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+>>>>>>> 254f11ecf6ba (temp)
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
             'name': 'Tracked by SN',

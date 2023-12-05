@@ -5,9 +5,14 @@ import json
 import odoo
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools import mute_logger
+<<<<<<< HEAD
 from odoo.tests import HttpCase
 from odoo.http import STATIC_CACHE_LONG
 from odoo import Command
+||||||| parent of 254f11ecf6ba (temp)
+from odoo.tests import HttpCase
+=======
+>>>>>>> 254f11ecf6ba (temp)
 
 
 @odoo.tests.tagged("-at_install", "post_install")

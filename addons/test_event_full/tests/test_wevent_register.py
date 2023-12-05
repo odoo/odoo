@@ -11,6 +11,7 @@ from odoo.addons.test_event_full.tests.common import TestWEventCommon
 class TestWEventRegister(TestWEventCommon):
 
     def test_register(self):
+        self.env.company.country_id = self.env.ref('base.us')
         with freeze_time(self.reference_now, tick=True):
             self.start_tour('/event', 'wevent_register', login=None)
         new_registrations = self.event.registration_ids

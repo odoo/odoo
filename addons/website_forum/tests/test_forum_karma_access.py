@@ -236,11 +236,86 @@ class TestForumKarma(TestForumCommon):
         self.post.create_uid.karma = KARMA['unlink_own']
         self.post.write({'active': False})
 
+<<<<<<< HEAD:addons/website_forum/tests/test_forum_karma_access.py
     def test_downvote(self):
         self.post.create_uid.karma = 50
+||||||| parent of 254f11ecf6ba (temp):addons/website_forum/tests/test_forum.py
+        check_vote_records_count_and_integrity(2)
+        self.post.create_uid.karma = KARMA['ask']
+=======
+        ORIGIN_COUNT = len(self.env['forum.post.vote'].search([]).post_id)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT)
+        self.post.create_uid.karma = KARMA['ask']
+>>>>>>> 254f11ecf6ba (temp):addons/website_forum/tests/test_forum.py
         self.user_portal.karma = KARMA['dwv']
+<<<<<<< HEAD:addons/website_forum/tests/test_forum_karma_access.py
         self.post.with_user(self.user_portal).vote(upvote=False)
         self.assertEqual(self.post.create_uid.karma, 50 + KARMA['gen_que_dwv'], 'website_forum: wrong karma generation of downvoted question author')
+||||||| parent of 254f11ecf6ba (temp):addons/website_forum/tests/test_forum.py
+        initial_vote_count = self.post.vote_count
+        post_as_portal = self.post.with_user(self.user_portal)
+        res = post_as_portal.vote(upvote=True)
+
+        self.assertEqual(res['user_vote'], '1')
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(post_as_portal.user_vote, 1)
+        self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
+
+        # On voting again with the same value, nothing changes
+        res = post_as_portal.vote(upvote=True)
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(res['user_vote'], '1')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, 1)
+
+        # On reverting vote, vote cancels
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count)
+        self.assertEqual(res['user_vote'], '0')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, 0)
+
+        # Everything works from "0" too
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count - 1)
+        self.assertEqual(res['user_vote'], '-1')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, -1)
+
+        check_vote_records_count_and_integrity(3)
+=======
+        initial_vote_count = self.post.vote_count
+        post_as_portal = self.post.with_user(self.user_portal)
+        res = post_as_portal.vote(upvote=True)
+
+        self.assertEqual(res['user_vote'], '1')
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(post_as_portal.user_vote, 1)
+        self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
+
+        # On voting again with the same value, nothing changes
+        res = post_as_portal.vote(upvote=True)
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(res['user_vote'], '1')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, 1)
+
+        # On reverting vote, vote cancels
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count)
+        self.assertEqual(res['user_vote'], '0')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, 0)
+
+        # Everything works from "0" too
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count - 1)
+        self.assertEqual(res['user_vote'], '-1')
+        self.post.invalidate_recordset()
+        self.assertEqual(post_as_portal.user_vote, -1)
+
+        check_vote_records_count_and_integrity(ORIGIN_COUNT + 1)
+>>>>>>> 254f11ecf6ba (temp):addons/website_forum/tests/test_forum.py
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):
