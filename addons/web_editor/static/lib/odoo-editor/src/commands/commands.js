@@ -572,6 +572,8 @@ export const editorCommands = {
             colorElement(element, color, mode);
             return [element];
         }
+        console.log(`mode:`, mode);
+        return formatSelection(editor, mode, {applyStyle: true, tagName: 'font', formatProps: {color}});
         const selection = editor.document.getSelection();
         let wasCollapsed = false;
         if (selection.getRangeAt(0).collapsed) {
@@ -587,66 +589,79 @@ export const editorCommands = {
             selectedNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
 
-        function getFonts(selectedNodes) {
-            return selectedNodes.flatMap(node => {
-                let font = closestElement(node, "font") || closestElement(node, "span");
-                const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
-                    // Partially selected <font>: split it.
-                    const selectedChildren = children.filter(child => selectedNodes.includes(child));
-                    if (selectedChildren.length) {
-                        font = splitAroundUntil(selectedChildren, font);
-                    } else {
-                        font = [];
-                    }
-                } else if (
-                    (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
-                    (isEmptyBlock(node.parentNode)) ||
-                    (node.nodeType === Node.ELEMENT_NODE &&
-                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
-                        isVisibleStr(node.textContent) &&
-                        !node.classList.contains('btn') &&
-                        !node.querySelector('font'))
-                ) {
-                    // Node is a visible text or inline node without font nor a button:
-                    // wrap it in a <font>.
-                    const previous = node.previousSibling;
-                    const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
-                    if (
-                        previous &&
-                        previous.nodeName === 'FONT' &&
-                        !previous.style[mode === 'color' ? 'backgroundColor' : 'color'] &&
-                        !classRegex.test(previous.className) &&
-                        selectedNodes.includes(previous.firstChild) &&
-                        selectedNodes.includes(previous.lastChild)
-                    ) {
-                        // Directly follows a fully selected <font> that isn't
-                        // colored in the other mode: append to that.
-                        font = previous;
-                    } else {
-                        // No <font> found: insert a new one.
-                        font = document.createElement('font');
-                        node.after(font);
-                    }
-                    if (node.textContent) {
-                        font.appendChild(node);
-                    } else {
-                        fillEmpty(font);
-                    }
+        let allFonts = [];
+        selectedNodes.flatMap(node => {
+            let font = closestElement(node, "font") || closestElement(node, "span");
+            const children = font && descendants(font);
+            if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                // Partially selected <font>: split it.
+                const selectedChildren = children.filter(child => selectedNodes.includes(child));
+                if (selectedChildren.length) {
+                    font = splitAroundUntil(selectedChildren, font);
+                    console.log(`font:`, font);
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    font = [];
                 }
-                return font;
-            });
-        }
+            } else if (
+                (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
+                (isEmptyBlock(node.parentNode)) ||
+                (node.nodeType === Node.ELEMENT_NODE &&
+                    ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                    isVisibleStr(node.textContent) &&
+                    !node.classList.contains('btn') &&
+                    !node.querySelector('font'))
+            ) {
+                // Node is a visible text or inline node without font nor a button:
+                // wrap it in a <font>.
+                const previous = node.previousSibling;
+                const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
+                if (
+                    previous &&
+                    previous.nodeName === 'FONT' &&
+                    !previous.style[mode === 'color' ? 'backgroundColor' : 'color'] &&
+                    !classRegex.test(previous.className) &&
+                    selectedNodes.includes(previous.firstChild) &&
+                    selectedNodes.includes(previous.lastChild)
+                ) {
+                    // Directly follows a fully selected <font> that isn't
+                    // colored in the other mode: append to that.
+                    font = previous;
+                } else {
+                    // No <font> found: insert a new one.
+                    font = document.createElement('font');
+                    node.after(font);
+                }
+                if (node.textContent) {
+                    font.appendChild(node);
+                } else {
+                    fillEmpty(font);
+                }
+            } else {
+                font = []; // Ignore non-text or invisible text nodes.
+            }
+            allFonts.push(font);
+        });
 
-        let fonts = getFonts(selectedNodes);
+        // let fonts = getFonts(selectedNodes);
+        allFonts = [...new Set(allFonts.flat().filter(n=>n.isConnected))];
+        console.log(`allFonts:`, allFonts);
+        // fonts = [
+        //     ...new Set([selectedNodes.map(node => {
+        //             const spanElement = closestElement(node, "span");
+        //             return closestElement(node, "font") || (spanElement && spanElement.style[mode] && spanElement);
+        //         })
+        //     ])
+        // ].filter(Boolean);
+        // console.log(`fonts:`, fonts);
+        // console.log(`fonts.every((font) => font.isConnected)1:`, fonts.every((font) => font.isConnected));
+        // fonts = getFonts(selectedNodes);
+        // console.log(`fonts.every((font) => font.isConnected)2:`, fonts.every((font) => font.isConnected));
         // the returned font elements should always be connected
-        while (!fonts.every((font) => font.isConnected)) {
-            fonts = getFonts(selectedNodes);
-        }
+        // while (!fonts.every((font) => font.isConnected)) {
+        // }
         // Color the selected <font>s and remove uncolored fonts.
-        const fontsSet = new Set(fonts);
+        // const fontsSet = new Set(fonts.filter(font => font.isConnected));
+        const fontsSet = new Set(allFonts);
         for (const font of fontsSet) {
             colorElement(font, color, mode);
             if ((!hasColor(font, 'color') && !hasColor(font,'backgroundColor')) && (!font.hasAttribute('style') || !color)) {

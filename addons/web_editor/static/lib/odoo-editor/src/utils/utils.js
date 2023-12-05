@@ -849,6 +849,24 @@ const formatsSpecs = {
     },
     switchDirection: {
         isFormatted: isDirectionSwitched,
+    },
+    color: {
+        isFormatted: (node, props) => {
+            const element = closestElement(node);
+            return getComputedStyle(element)['color'] === props.color;
+        },
+        hasStyle: (node) => node.style && node.style['color'],
+        addStyle: (node, props) => node.style['color'] = props.color,
+        removeStyle: (node) => removeStyle(node, 'color'),
+    },
+    backgroundColor: {
+        isFormatted: (node, props) => {
+            const element = closestElement(node);
+            return getComputedStyle(element)['backgroundColor'] === props.color;
+        },
+        hasStyle: (node) => node.style && node.style['backgroundColor'],
+        addStyle: (node, props) => node.style['backgroundColor'] = props.color,
+        removeStyle: (node) => removeStyle(node, 'backgroundColor'),
     }
 
 }
@@ -864,12 +882,12 @@ const removeStyle = (node, styleName, item) => {
         node.removeAttribute('style');
     }
 };
-const getOrCreateSpan = (node, ancestors) => {
-    const span = ancestors.find((element) => element.tagName === 'SPAN' && element.isConnected);
-    if (span) {
-        return span;
+const getOrCreateInline = (node, ancestors, {tagName = 'span'} = {}) => {
+    const inline = ancestors.find((element) => (element.tagName === 'SPAN' || element.tagName === 'FONT') && element.isConnected);
+    if (inline) {
+        return inline;
     } else {
-        const span = document.createElement('span');
+        const span = document.createElement(tagName);
         node.after(span);
         span.append(node);
         return span;
@@ -904,7 +922,7 @@ const removeFormat = (node, formatSpec) => {
     }
 }
 
-export const formatSelection = (editor, formatName, {applyStyle, formatProps} = {}) => {
+export const formatSelection = (editor, formatName, {applyStyle, tagName, formatProps} = {}) => {
     const selection = editor.document.getSelection();
     if (!selection.rangeCount) return;
     const wasCollapsed = selection.getRangeAt(0).collapsed;
@@ -960,7 +978,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
 
         if (firstBlockOrClassHasFormat && !applyStyle) {
-            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateInline(selectedTextNode, inlineAncestors, {tagName}));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
             const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
             if (tag) {
@@ -970,10 +988,10 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                 if (!formatSpec.isFormatted(tag, formatProps)) {
                     tag.after(selectedTextNode);
                     tag.remove();
-                    formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                    formatSpec.addStyle(getOrCreateInline(selectedTextNode, inlineAncestors, {tagName}), formatProps);
                 }
             } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
-                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                formatSpec.addStyle(getOrCreateInline(selectedTextNode, inlineAncestors, {tagName}), formatProps);
             }
         }
     }
