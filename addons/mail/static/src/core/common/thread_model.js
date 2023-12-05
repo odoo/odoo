@@ -9,10 +9,6 @@ import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
- * @typedef SeenInfo
- * @property {{id: number|undefined}} lastFetchedMessage
- * @property {{id: number|undefined}} lastSeenMessage
- * @property {{id: number}} partner
  * @typedef SuggestedRecipient
  * @property {string} email
  * @property {import("models").Persona|false} persona
@@ -121,16 +117,20 @@ export class Thread extends Record {
                 }
             }
             if ("seen_partners_info" in serverData) {
-                this.seenInfos = serverData.seen_partners_info.map(
-                    ({ fetched_message_id, partner_id, seen_message_id }) => {
-                        return {
+                this._store.ChannelMember.insert(
+                    serverData.seen_partners_info.map(
+                        ({ id, fetched_message_id, partner_id, guest_id, seen_message_id }) => ({
+                            id,
+                            persona: {
+                                id: partner_id ?? guest_id,
+                                type: partner_id ? "partner" : "guest",
+                            },
                             lastFetchedMessage: fetched_message_id
                                 ? { id: fetched_message_id }
                                 : undefined,
                             lastSeenMessage: seen_message_id ? { id: seen_message_id } : undefined,
-                            partner: { id: partner_id, type: "partner" },
-                        };
-                    }
+                        })
+                    )
                 );
             }
         }
@@ -262,8 +262,6 @@ export class Thread extends Record {
     type;
     /** @type {string} */
     defaultDisplayMode;
-    /** @type {SeenInfo[]} */
-    seenInfos = [];
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
@@ -466,15 +464,15 @@ export class Thread extends Record {
     }
 
     get lastSelfMessageSeenByEveryone() {
-        const otherSeenInfos = [...this.seenInfos].filter(
-            (seenInfo) => seenInfo.partner.id !== this._store.self?.id
+        const otherMembers = this.channelMembers.filter((member) =>
+            member.persona.notEq(this._store.self)
         );
-        if (otherSeenInfos.length === 0) {
+        if (otherMembers.length === 0) {
             return false;
         }
-        const otherLastSeenMessageIds = otherSeenInfos
-            .filter((seenInfo) => seenInfo.lastSeenMessage)
-            .map((seenInfo) => seenInfo.lastSeenMessage.id);
+        const otherLastSeenMessageIds = otherMembers
+            .filter((member) => member.lastSeenMessage)
+            .map((member) => member.lastSeenMessage.id);
         if (otherLastSeenMessageIds.length === 0) {
             return false;
         }

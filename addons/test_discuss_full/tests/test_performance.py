@@ -106,7 +106,15 @@ class TestDiscussFullPerformance(HttpCase):
                 'channel_id': im_livechat_channel.id,
                 'previous_operator_id': self.users[0].partner_id.id,
             })['id'])
-        self.channel_livechat_2.with_user(self.env.ref('base.public_user')).sudo().message_post(body="test")
+        guest_sudo = self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.sudo()
+        self.make_jsonrpc_request("/mail/message/post", {
+            "post_data": {
+                "body": "test",
+                "message_type": "comment",
+            },
+            "thread_id": self.channel_livechat_2.id,
+            "thread_model": "discuss.channel",
+        }, headers={"Cookie": f"{guest_sudo._cookie_name}={guest_sudo._format_auth_cookie()};"})
         # add needaction
         self.users[0].notification_type = 'inbox'
         message = self.channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
@@ -980,7 +988,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'custom_channel_name': False,
                     'id': self.channel_livechat_2.id,
                     'memberCount': 2,
-                    'message_unread_counter': 0,
+                    'message_unread_counter': 1,
                     'model': "discuss.channel",
                     'create_uid': self.env.ref('base.public_user').id,
                     'defaultDisplayMode': False,
@@ -998,6 +1006,12 @@ class TestDiscussFullPerformance(HttpCase):
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('ADD', [])],
                     'seen_partners_info': [
+                        {
+                            'fetched_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
+                            'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).id,
+                            'guest_id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.id,
+                            'seen_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
+                        },
                         {
                             'fetched_message_id': False,
                             'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
