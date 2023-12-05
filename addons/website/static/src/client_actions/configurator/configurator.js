@@ -235,6 +235,23 @@ class PaletteSelectionScreen extends Component {
         this.logoInputRef.el.click();
     }
 
+    /**
+     * Removes the previously uploaded logo.
+     *
+     * @param {Event} ev
+     */
+    async removeLogo(ev) {
+        ev.stopPropagation();
+        // Permit to trigger onChange even with the same file.
+        this.logoInputRef.el.value = "";
+        if (this.state.logoAttachmentId) {
+            await this._removeAttachments([this.state.logoAttachmentId]);
+        }
+        this.state.changeLogo();
+        // Remove recommended palette.
+        this.state.setRecommendedPalette();
+    }
+
     async changeLogo() {
         const logoSelectInput = this.logoInputRef.el;
         if (logoSelectInput.files.length === 1) {
