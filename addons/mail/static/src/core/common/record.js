@@ -765,7 +765,7 @@ class RecordList extends Array {
             if (Record.isRecord(last) && last.in(toRaw(this))) {
                 return;
             }
-            this._insert(
+            const record = this._insert(
                 last,
                 (r) => {
                     if (r.notEq(this[0])) {
@@ -778,13 +778,14 @@ class RecordList extends Array {
                 },
                 { inv: false }
             );
+            Record.ADD_QUEUE(this.owner._fields[this.name], "onAdd", record);
             return;
         }
         for (const val of records) {
             if (Record.isRecord(val) && val.in(toRaw(this))) {
                 continue;
             }
-            this._insert(
+            const record = this._insert(
                 val,
                 (r) => {
                     if (this.indexOf(r) === -1) {
@@ -794,6 +795,7 @@ class RecordList extends Array {
                 },
                 { inv: false }
             );
+            Record.ADD_QUEUE(this.owner._fields[this.name], "onAdd", record);
         }
     }
     /** @param {...R}  */
@@ -822,7 +824,7 @@ class RecordList extends Array {
      */
     _deleteNoinv(...records) {
         for (const val of records) {
-            this._insert(
+            const record = this._insert(
                 val,
                 (r) => {
                     const index = this.indexOf(r);
@@ -833,6 +835,7 @@ class RecordList extends Array {
                 },
                 { inv: false }
             );
+            Record.ADD_QUEUE(this.owner._fields[this.name], "onDelete", record);
         }
     }
     clear() {
