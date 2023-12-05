@@ -14,6 +14,15 @@ patch(Thread.prototype, {
     get hasMemberList() {
         return this.type === "livechat" || super.hasMemberList;
     },
+    get canLeave() {
+        return this.type !== "livechat" && super.canLeave;
+    },
+    get canUnpin() {
+        if (this.type === "livechat") {
+            return this.message_unread_counter === 0;
+        }
+        return super.canUnpin;
+    },
 
     get correspondents() {
         return super.correspondents.filter((correspondent) => !correspondent.is_bot);
