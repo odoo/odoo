@@ -270,12 +270,8 @@ QUnit.module("DebugMenu", (hooks) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);
             }
-            if (route === "/web/dataset/call_kw/ir.attachment/search") {
-                assert.step("ir.attachment/search");
-                return [1, 2, 3];
-            }
-            if (route === "/web/dataset/call_kw/ir.attachment/unlink") {
-                assert.step("ir.attachment/unlink");
+            if (route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {
+                assert.step("ir.attachment/regenerate_assets_bundles");
                 return Promise.resolve(true);
             }
         };
@@ -293,7 +289,7 @@ QUnit.module("DebugMenu", (hooks) => {
         const item = target.querySelector(".dropdown-menu .dropdown-item");
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
-        assert.verifySteps(["ir.attachment/search", "ir.attachment/unlink", "reloadPage"]);
+        assert.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
     });
 
     QUnit.test("can open a view", async (assert) => {
