@@ -112,6 +112,42 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     assert.ok(thread.messages.length === 0);
 });
 
+QUnit.test("onAdd/onDelete hooks on relational with inverse", async (assert) => {
+    let logs = [];
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            inverse: "thread",
+            onAdd: (member) => logs.push(`Thread.onAdd(${member.name})`),
+            onDelete: (member) => logs.push(`Thread.onDelete(${member.name})`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    thread.members.add(john);
+    assert.deepEqual(logs, ["Thread.onAdd(John)"]);
+    logs = [];
+    thread.members.add(john);
+    assert.deepEqual(logs, []);
+    marc.thread = thread;
+    assert.deepEqual(logs, ["Thread.onAdd(Marc)"]);
+    logs = [];
+    thread.members.delete(marc);
+    assert.deepEqual(logs, ["Thread.onDelete(Marc)"]);
+    logs = [];
+    thread.members.delete(marc);
+    assert.deepEqual(logs, []);
+    john.thread = undefined;
+    assert.deepEqual(logs, ["Thread.onDelete(John)"]);
+});
+
 QUnit.test("Computed fields", async (assert) => {
     (class Thread extends Record {
         static id = "name";
@@ -199,7 +235,7 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
     assert.deepEqual(logs, ["LAZY"]);
     logs = [];
     thread.members.add("John");
-    assert.deepEqual(logs, ["EAGER"]);
+    assert.deepEqual(logs, ["LAZY", "EAGER"]); // lazy-needed field are re-computed/sorted again at least once, because no track of "unread"
     logs = [];
     assert.strictEqual(thread.typeEager, "self-chat");
     assert.deepEqual(logs, []);
@@ -256,6 +292,33 @@ QUnit.test("Unshift preserves order", async (assert) => {
         thread.messages.map((msg) => msg.id),
         [7, 6, 5, 4, 3, 2, 1]
     );
+});
+
+QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            inverse: "thread",
+            onAdd: (member) =>
+                assert.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
+        });
+    }).register();
+    (class Member extends Record {
+        static id = "name";
+        name;
+        type;
+        isAdmin = Record.attr(false, {
+            compute() {
+                return this.type === "admin";
+            },
+        });
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    thread.members.add({ name: "John", type: "admin" });
+    assert.verifySteps(["Thread.onAdd::John.admin.true"]);
 });
 
 QUnit.test("Can insert with relation as id, using relation as data object", async (assert) => {
