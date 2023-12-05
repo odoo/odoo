@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Date
-from odoo.tests import Form
+from odoo.tests import Form, tagged, loaded_demo_data
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
+_logger = logging.getLogger(__name__)
 
+
+@tagged('post_install', '-at_install')
 class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def setUp(self):
@@ -250,6 +255,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
         """
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
         product_category_all = self.env.ref('product.product_category_all')
