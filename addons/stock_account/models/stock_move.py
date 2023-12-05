@@ -446,12 +446,12 @@ class StockMove(models.Model):
     def _ignore_automatic_valuation(self):
         return False
 
-    def _prepare_analytic_line_values(self, account, amount, unit_amount):
+    def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
         return {
             'name': self.name,
             'amount': amount,
-            'auto_account_id': account,
+            **account_field_values,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_id.uom_id.id,
