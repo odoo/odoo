@@ -31,15 +31,10 @@ export function regenerateAssets({ env }) {
         type: "item",
         description: env._t("Regenerate Assets Bundles"),
         callback: async () => {
-            const domain = [
-                "&",
-                ["res_model", "=", "ir.ui.view"],
-                "|",
-                ["name", "=like", "%.assets_%.css"],
-                ["name", "=like", "%.assets_%.js"],
-            ];
-            const ids = await env.services.orm.search("ir.attachment", domain);
-            await env.services.orm.unlink("ir.attachment", ids);
+            await env.services.orm.call(
+                "ir.attachment",
+                "regenerate_assets_bundles",
+            );
             browser.location.reload();
         },
         sequence: 430,
