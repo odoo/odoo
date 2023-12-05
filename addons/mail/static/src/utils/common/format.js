@@ -171,7 +171,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         const placeholder = `@-mention-partner-${partner.id}`;
         const text = `@${escape(partner.name)}`;
         mentions.push({
-            class: "o_mail_redirect",
+            class: "o_mail_redirect fw-bolder",
             id: partner.id,
             model: "res.partner",
             placeholder,
