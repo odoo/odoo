@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from odoo import Command, fields
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import tagged, users
 from odoo.tools import float_compare
 
@@ -118,11 +119,11 @@ class TestEventBoothSale(TestEventBoothSaleWData):
 
 
 @tagged('post_install', '-at_install')
-class TestEventBoothSaleInvoice(TestEventBoothSaleWData):
+class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWData):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestEventBoothSaleInvoice, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Add group `group_account_invoice` to user_sales_salesman to allow to pay the invoice
         cls.user_sales_salesman.groups_id += cls.env.ref('account.group_account_invoice')

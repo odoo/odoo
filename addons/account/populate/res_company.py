@@ -17,7 +17,24 @@ class ResCompany(models.Model):
 
     def _populate(self, size):
         _logger.info('Loading Chart Template')
+<<<<<<< HEAD
         records = super()._populate(size)
+||||||| parent of 7c08ab9d16ad (temp)
+        default_chart_templates = self.env['account.chart.template'].search([], limit=1)
+        if not default_chart_templates:
+            # TODO install l10n_generic_coa ?
+            raise UserError(_(
+                "At least one localization is needed to be installed in order to populate the "
+                "database with accounting"
+            ))
+        random = populate.Random('res.company+chart_template_selector')
+=======
+        default_chart_templates = self.env['account.chart.template'].search([], limit=1)
+        if not default_chart_templates:
+            # TODO install l10n_generic_coa ?
+            return records
+        random = populate.Random('res.company+chart_template_selector')
+>>>>>>> 7c08ab9d16ad (temp)
 
         # Load the a chart of accounts matching the country_id of the company for the 3 first created companies
         # We are loading an existing CoA and not populating it because:

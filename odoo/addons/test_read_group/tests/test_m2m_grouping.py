@@ -3,10 +3,11 @@
 
 from odoo.fields import Command
 from odoo.tests import common
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 @common.tagged('test_m2m_read_group')
-class TestM2MGrouping(common.TransactionCase):
+class TestM2MGrouping(TransactionCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -171,7 +172,7 @@ class TestM2MGrouping(common.TransactionCase):
         ])
 
         # as demo user, ir.rule should apply
-        tasks = self.tasks.with_user(self.browse_ref('base.user_demo'))
+        tasks = self.tasks.with_user(self.user_demo)
 
         # warming up various caches; this avoids extra queries
         tasks.read_group(domain=[], fields=['name:array_agg'], groupby=['user_ids'])

@@ -6,14 +6,15 @@ from odoo import fields
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install')
-class TestEventProductConfiguratorUi(HttpCase):
+class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Adding sale users to test the access rights
         cls.salesman = mail_new_test_user(
@@ -112,6 +113,13 @@ class TestEventProductConfiguratorUi(HttpCase):
             cls.event_product_template.optional_product_ids = [cls.product_product_memorabilia.id,]
 
     def test_event_using_product_configurator(self):
+        # Disable noisy pricelist (aka demo data Benelux)
+        pricelist = self.env.ref('product.list0')
+        self.env.user.partner_id.write({
+            'property_product_pricelist': pricelist.id,
+        })
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
+
         self.start_tour("/web", 'event_sale_with_product_configurator_tour', login='salesman')
 
         sale_order = self.env['sale.order'].search([('create_uid', "=", self.salesman.id)])

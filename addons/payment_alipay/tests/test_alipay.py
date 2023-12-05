@@ -92,6 +92,14 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         )
 
     def test_03_redirect_form_with_fees(self):
+        # Ensure fixed amount is correctly converted without demo data
+        if not self.env.ref('base.rateCNY', raise_if_not_found=False):
+            self.env['res.currency.rate'].create({
+                'rate': 8.7556,
+                'currency_id': self.env.ref('base.CNY').id,
+                'name': '2010-01-01',
+            })
+
         # update provider: compute fees
         self.alipay.write({
             'fees_active': True,
