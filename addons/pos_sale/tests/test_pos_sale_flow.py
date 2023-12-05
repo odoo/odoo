@@ -45,7 +45,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.bom_a = bom_product_form.save()
 
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.kit.id,
                 'name': self.kit.name,
@@ -92,14 +92,16 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'lst_price': 11,
             'taxes_id': [odoo.Command.clear()],
         })
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        partner_2 = self.env['res.partner'].create({'name': 'Test Partner 2'})
         self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
-            'partner_shipping_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': partner_1.id,
+            'partner_shipping_id': partner_2.id,
             'order_line': [(0, 0, {'product_id': product1.id})],
         })
         self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
-            'partner_shipping_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': partner_1.id,
+            'partner_shipping_id': partner_1.id,
             'order_line': [(0, 0, {'product_id': product2.id})],
         })
         self.main_pos_config.open_ui()
@@ -124,7 +126,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
@@ -199,7 +201,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         quants.action_apply_inventory()
 
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
                 'name': self.product.name,
@@ -232,7 +234,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
     def test_downpayment_refund(self):
         #create a sale order
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'name': self.product_a.name,
@@ -274,7 +276,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
