@@ -47,6 +47,7 @@ class AccountTestInvoicingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass()
+        cls.env.ref('base.main_company').currency_id = cls.env.ref('base.USD')
         instantiate_accountman(cls)
 
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
