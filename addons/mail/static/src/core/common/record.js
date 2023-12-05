@@ -28,6 +28,7 @@ export function OR(...args) {
 }
 
 export function makeStore(env) {
+    let storeReady = false;
     const res = {
         // fake store for now, until it becomes a model
         /** @type {import("models").Store} */
@@ -115,7 +116,16 @@ export function makeStore(env) {
                         /** @param {Record} receiver */
                         set(target, name, val, receiver) {
                             return Record.MAKE_UPDATE(() => {
-                                if (name === "Model" || !(name in target.Model._fields)) {
+                                if (name === "Model") {
+                                    Reflect.set(target, name, val, receiver);
+                                    return true;
+                                }
+                                if (target instanceof BaseStore && storeReady && name in Models) {
+                                    // "store.Model =" is considered a Model.insert()
+                                    res.store[name].insert(val);
+                                    return true;
+                                }
+                                if (!(name in target.Model._fields)) {
                                     Reflect.set(target, name, val, receiver);
                                     return true;
                                 }
@@ -388,6 +398,7 @@ export function makeStore(env) {
         Model.store = res.store;
         res.store[Model.name] = Model;
     }
+    storeReady = true;
     return res.store;
 }
 
@@ -1311,8 +1322,20 @@ export class Record {
             const obj = new this.Class();
             obj.Model = this;
             const ids = this._retrieveIdFromData(data);
+            for (const name in ids) {
+                if (
+                    ids[name] &&
+                    !Record.isRecord(ids[name]) &&
+                    !Record.isCommand(ids[name]) &&
+                    Record.isRelation(this._fields[name])
+                ) {
+                    // preinsert that record in relational field,
+                    // as it is required to make current local id
+                    ids[name] = this.store[this._fields[name].targetModel].preinsert(ids[name]);
+                }
+            }
             let record = Object.assign(obj, {
-                localId: this.localId(data),
+                localId: this.localId(ids),
                 ...ids,
             });
             Object.assign(record, { _store: this.store });
