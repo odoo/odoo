@@ -1532,9 +1532,10 @@ class AccountMove(models.Model):
     def _compute_duplicated_ref_ids(self):
         move_to_duplicate_move = self._fetch_duplicate_supplier_reference()
         for move in self:
-            move.duplicated_ref_ids = move_to_duplicate_move.get(move, self.env['account.move'])
+            # Uses move._origin.id to handle records in edition/existing records and 0 for new records, for duplicated reference ID assignment.
+            move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin.id or 0, self.env['account.move'])
 
-    def _fetch_duplicate_supplier_reference(self, only_posted=False):
+    def _fetch_duplicate_supplier_reference(self, matching_states=('draft', 'posted')):
         moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
         if not moves:
             return {}
@@ -1544,10 +1545,11 @@ class AccountMove(models.Model):
 
         move_table_and_alias = "account_move AS move"
         place_holders = {}
-        if not moves.ids:
-            # This handles the special case of a record creation in the UI which isn't searchable in the DB
+        if not moves[0].id: # check if record is in creation/edition in UI
+            # Inject the values of the record directly in the query as a record under creation isn't searchable
+            # in the DB and a record under edition isn't up to date in the db before saving it
             place_holders = {
-                "id": 0,
+                "id": moves._origin.id or 0,
                 **{
                     field_name: moves._fields[field_name].convert_to_write(moves[field_name], moves) or None
                     for field_name in used_fields
@@ -1563,22 +1565,24 @@ class AccountMove(models.Model):
               FROM {move_table_and_alias}
               JOIN account_move AS duplicate_move ON
                    move.company_id = duplicate_move.company_id
-               AND move.commercial_partner_id = duplicate_move.commercial_partner_id
+               AND (
+                   move.commercial_partner_id = duplicate_move.commercial_partner_id
+                   OR (move.commercial_partner_id IS NULL AND duplicate_move.state = 'draft')
+               )
                AND move.ref = duplicate_move.ref
                AND move.move_type = duplicate_move.move_type
                AND move.id != duplicate_move.id
-               AND (move.invoice_date = duplicate_move.invoice_date OR NOT %(only_posted)s)
-               AND duplicate_move.state != 'cancel'
-               AND (duplicate_move.state = 'posted' OR NOT %(only_posted)s)
+               AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
+               AND duplicate_move.state IN %(matching_states)s
              WHERE move.id IN %(moves)s
              GROUP BY move.id
         """, {
-            "only_posted": only_posted,
+            "matching_states": matching_states,
             "moves": tuple(moves.ids or [0]),
             **place_holders
         })
         return {
-            self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
+            res['move_id']: self.env['account.move'].browse(res['duplicate_ids'])
             for res in self.env.cr.dictfetchall()
         }
 
@@ -2017,11 +2021,11 @@ class AccountMove(models.Model):
     @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
         """ Assert the move which is about to be posted isn't a duplicated move from another posted entry"""
-        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted')._fetch_duplicate_supplier_reference(only_posted=True)
+        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted')._fetch_duplicate_supplier_reference(matching_states=('posted',))
         if any(duplicate_move for duplicate_move in move_to_duplicate_moves.values()):
             duplicate_move_ids = list(set(
                 move_id
-                for move_ids in (move.ids + duplicate.ids for move, duplicate in move_to_duplicate_moves.items() if duplicate)
+                for move_ids in ([current_move_id] + duplicate.ids for current_move_id, duplicate in move_to_duplicate_moves.items() if duplicate)
                 for move_id in move_ids
             ))
             action = self.env['ir.actions.actions']._for_xml_id('account.action_move_line_form')
@@ -3555,6 +3559,12 @@ class AccountMove(models.Model):
         :return:            A string representing the invoice.
         '''
         self.ensure_one()
+        if self.env.context.get('name_as_amount_total'):
+            currency_amount = self.currency_id.format(self.amount_total)
+            if self.state == 'posted':
+                return _("%(ref)s (%(currency_amount)s)", ref=self.ref, currency_amount=currency_amount)
+            else:
+                return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
         name = ''
         if self.state == 'draft':
             name += {
