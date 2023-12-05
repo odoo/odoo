@@ -7,6 +7,14 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseGamification):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['forum.post'].create({
+            'name': 'Very Smart Question',
+            'forum_id': cls.env.ref('website_forum.forum_help').id,
+        })
+
     def test_01_admin_forum_tour(self):
         self.start_tour("/", 'question', login="admin", step_delay=100)
 
