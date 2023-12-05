@@ -60,6 +60,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 
 
 def execute(db, uid, obj, method, *args, **kw):
+    # TODO could be conditionnaly readonly as in _call_kw_readonly
     with odoo.registry(db).cursor() as cr:
         check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)

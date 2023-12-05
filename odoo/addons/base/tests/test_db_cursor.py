@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 import logging
 from functools import partial
+from unittest.mock import patch
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
@@ -80,6 +82,43 @@ class TestHTTPCursor(HttpCase):
             cr.execute("SELECT 1")
             cr.commit()
             self.assertTrue(cr.readonly)
+
+    def test_call_kw_readonly(self):
+        self.authenticate('admin', 'admin')
+        self.env.user.partner_id.id
+
+        # a generic patcher to check if the method was called with a readonly cursor or not.
+        def return_readonly(self, *args, **kwargs):
+            return ['ok', self.env.cr.readonly]
+
+        with patch.object(type(self.env['res.partner']), 'read', return_readonly):
+            result_read = self.url_open('/web/dataset/call_kw', data=json.dumps({
+                "params": {
+                    'model': 'res.partner',
+                    'method': 'read',
+                    'args': [self.env.user.partner_id.id, ['name']],
+                    'kwargs': {},
+                },
+            }), headers={"Content-Type": "application/json"})
+            self.assertEqual(result_read.status_code, 200)
+            ok, readonly = result_read.json()['result']
+            self.assertEqual(ok, 'ok')
+            self.assertEqual(readonly, True, 'Call to read are expecte to be read only')
+
+
+        with patch.object(type(self.env['res.partner']), 'write', return_readonly):
+            result_write = self.url_open('/web/dataset/call_kw', data=json.dumps({
+                "params": {
+                    'model': 'res.partner',
+                    'method': 'write',
+                    'args': [self.env.user.partner_id.id, {'name': 'Urgo'}],
+                    'kwargs': {},
+                },
+            }), headers={"Content-Type": "application/json"})
+            self.assertEqual(result_write.status_code, 200)
+            ok, readonly = result_write.json()['result']
+            self.assertEqual(ok, 'ok')
+            self.assertEqual(readonly, False, 'Call to write are expecte to be read write')
 
 
 class TestTestCursor(common.TransactionCase):

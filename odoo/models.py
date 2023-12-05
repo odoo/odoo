@@ -1567,6 +1567,7 @@ class BaseModel(metaclass=MetaModel):
         return not has_groups
 
     @api.model
+    @api.readonly
     def search_count(self, domain, limit=None):
         """ search_count(domain[, limit=None]) -> int
 
@@ -1584,6 +1585,7 @@ class BaseModel(metaclass=MetaModel):
         return len(query)
 
     @api.model
+    @api.readonly
     @api.returns('self')
     def search(self, domain, offset=0, limit=None, order=None):
         """ search(domain[, offset=0][, limit=None][, order=None])
@@ -1605,6 +1607,7 @@ class BaseModel(metaclass=MetaModel):
         return self.search_fetch(domain, [], offset=offset, limit=limit, order=order)
 
     @api.model
+    @api.readonly
     @api.returns('self')
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         """ search_fetch(domain, field_names[, offset=0][, limit=None][, order=None])
@@ -1699,6 +1702,7 @@ class BaseModel(metaclass=MetaModel):
             return False
 
     @api.model
+    @api.readonly
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
@@ -2612,6 +2616,7 @@ class BaseModel(metaclass=MetaModel):
                 row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
 
     @api.model
+    @api.readonly
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
 
@@ -3481,6 +3486,7 @@ class BaseModel(metaclass=MetaModel):
 
         return field_names
 
+    @api.readonly
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
 
@@ -5654,6 +5660,7 @@ class BaseModel(metaclass=MetaModel):
         return cls._transient
 
     @api.model
+    @api.readonly
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         """ Perform a :meth:`search_fetch` followed by a :meth:`_read_format`.
 
