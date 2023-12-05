@@ -5,7 +5,29 @@ import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestWebsiteBlogUi(odoo.tests.HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        blog = cls.env['blog.blog'].create({
+            "name": 'aaa Blog Test',
+            "subtitle": 'Blog Test Subtitle',
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+        })
+
+        blog_tag = cls.env.ref('website_blog.blog_tag_2', raise_if_not_found=False)
+        if not blog_tag:
+            blog_tag = cls.env['blog.tag'].create({'name': 'adventure'})
+        cls.env['blog.post'].create({
+            "name": "Post Test",
+            "subtitle": "Subtitle Test",
+            "blog_id": blog.id,
+            "author_id": cls.env.user.id,
+            "tag_ids": [(4, blog_tag.id)],
+            "is_published": True,
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+        })
+
     def test_admin(self):
         # Ensure at least two blogs exist for the step asking to select a blog
         self.env['blog.blog'].create({'name': 'Travel'})
