@@ -272,7 +272,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "channelMembers": [
                     [
@@ -336,7 +336,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "channelMembers": [
                     [
@@ -400,7 +400,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "channelMembers": [
                     [
@@ -464,7 +464,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "channelMembers": [
                     [
@@ -589,7 +589,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "channelMembers": [
                     [
@@ -653,7 +653,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "group",
                 "channelMembers": [
                     [
@@ -741,7 +741,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "channelMembers": [
                     [
@@ -829,7 +829,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "channelMembers": [
                     [
@@ -917,7 +917,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "channelMembers": [
                     [
@@ -1005,7 +1005,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "channelMembers": [
                     [
@@ -1099,7 +1099,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "name": "India",
                 },
                 "anonymous_name": False,
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "livechat",
                 "channelMembers": [
                     [
@@ -1189,7 +1189,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "name": "Belgium",
                 },
                 "anonymous_name": "anon 2",
-                "avatarCacheKey": channel._get_avatar_cache_key(),
+                "avatarCacheKey": channel.avatar_cache_key,
                 "channel_type": "livechat",
                 "channelMembers": [
                     [

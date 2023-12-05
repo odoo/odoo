@@ -29,6 +29,7 @@ export function _makeUser(session) {
         username: login,
         user_context: context,
         user_settings,
+        partner_write_date: writeDate,
     } = session;
     let settings = user_settings;
 
@@ -44,6 +45,7 @@ export function _makeUser(session) {
     delete session.username;
     delete session.user_context;
     delete session.user_settings;
+    delete session.partner_write_date;
 
     // Generate caches for has_group and check_access_rights calls
     const getGroupCacheValue = (group, context) => {
@@ -82,6 +84,7 @@ export function _makeUser(session) {
         homeActionId,
         showEffect,
         userId, // TODO: rename into id?
+        writeDate,
         get context() {
             return Object.assign({}, context, { uid: this.userId });
         },

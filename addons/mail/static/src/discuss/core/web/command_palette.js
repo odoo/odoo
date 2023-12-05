@@ -6,8 +6,7 @@ import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { url } from "@web/core/utils/urls";
-import { imageCacheKey } from "@web/views/fields/image/image_field";
+import { imageUrl } from "@web/core/utils/urls";
 import { ImStatus } from "@mail/core/common/im_status";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -148,7 +147,7 @@ commandProviderRegistry.add("discuss.channel", {
         const channelsData = await messaging.orm.searchRead(
             "discuss.channel",
             domain,
-            ["channel_type", "name", "avatar_128"],
+            ["channel_type", "name", "avatar_cache_key"],
             { limit: 10 }
         );
         channelsData
@@ -162,11 +161,8 @@ commandProviderRegistry.add("discuss.channel", {
                     },
                     name: data.name,
                     props: {
-                        imgUrl: url("/web/image", {
-                            model: "discuss.channel",
-                            field: "avatar_128",
-                            id: data.id,
-                            unique: imageCacheKey(data.avatar_128),
+                        imgUrl: imageUrl("discuss.channel", data.id, "avatar_128", {
+                            unique: data.avatar_cache_key,
                         }),
                     },
                 });

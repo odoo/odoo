@@ -17,6 +17,9 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { click, contains, insertText, triggerEvents } from "@web/../tests/utils";
+import { getOrigin } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 QUnit.module("messaging menu");
 
@@ -64,17 +67,21 @@ QUnit.test("counter is taking into account failure notification", async () => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
-QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
+QUnit.test("rendering with OdooBot has a request (default)", async () => {
     patchBrowserNotification("default");
+    const pyEnv = await startServer();
+    const odoobot = pyEnv.mockServer.getRecords("res.partner", [["id", "in", pyEnv.odoobotId]], {
+        active_test: false,
+    })[0];
     await start();
     await contains(".o-mail-MessagingMenu-counter");
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    assert.ok(
-        $(".o-mail-NotificationItem img")
-            .data("src")
-            .includes("/web/image?field=avatar_128&id=2&model=res.partner")
+    await contains(
+        `.o-mail-NotificationItem img[data-src='${getOrigin()}/web/image/res.partner/${
+            pyEnv.odoobotId
+        }/avatar_128?unique=${DateTime.fromSQL(odoobot.write_date).ts}']`
     );
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
@@ -146,7 +153,10 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
             return super.getItem(key);
         },
     });
-
+    const pyEnv = await startServer();
+    const odoobot = pyEnv["res.partner"].searchRead([["id", "in", pyEnv.odoobotId]], {
+        context: { active_test: false },
+    })[0];
     const { env } = await start();
     patchWithCleanup(env.services.installPrompt, {
         show() {
@@ -159,10 +169,10 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    assert.ok(
-        target
-            .querySelector(".o-mail-NotificationItem img")
-            .dataset.src.includes("/web/image?field=avatar_128&id=2&model=res.partner")
+    await contains(
+        `.o-mail-NotificationItem img[data-src='${getOrigin()}/web/image/res.partner/${
+            pyEnv.odoobotId
+        }/avatar_128?unique=${DateTime.fromSQL(odoobot.write_date).ts}']`
     );
     assert.strictEqual(
         target.querySelector(".o-mail-NotificationItem-name").textContent,

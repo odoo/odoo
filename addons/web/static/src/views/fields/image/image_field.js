@@ -4,13 +4,12 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { imageUrl } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, useState } from "@odoo/owl";
-const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -20,21 +19,6 @@ export const fileTypeMagicWordMap = {
     U: "webp",
 };
 const placeholder = "/web/static/img/placeholder.png";
-
-/**
- * Formats a value to be injected in the image's url in order for that url
- * to be correctly cached and discarded by the browser (the browser caches
- * fetch requests with the url as key).
- *
- * For records, a not-so-bad approximation is to compute that key on the basis
- * of the record's write_date field.
- */
-export function imageCacheKey(value) {
-    if (value instanceof DateTime) {
-        return value.ts;
-    }
-    return "";
-}
 
 export class ImageField extends Component {
     static template = "web.ImageField";
@@ -104,12 +88,12 @@ export class ImageField extends Component {
         }
         if (this.state.isValid && this.props.record.data[this.props.name]) {
             if (isBinarySize(this.props.record.data[this.props.name])) {
-                this.lastURL = url("/web/image", {
-                    model: this.props.record.resModel,
-                    id: this.props.record.resId,
-                    field: previewFieldName,
-                    unique: imageCacheKey(this.rawCacheKey),
-                });
+                this.lastURL = imageUrl(
+                    this.props.record.resModel,
+                    this.props.record.resId,
+                    previewFieldName,
+                    { unique: this.rawCacheKey }
+                );
             } else {
                 // Use magic-word technique for detecting image type
                 const magic =
