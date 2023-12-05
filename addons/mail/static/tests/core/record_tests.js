@@ -278,3 +278,25 @@ QUnit.test("onAdd hook should see fully inserted data", async (assert) => {
     thread.members.add({ name: "John", type: "admin" });
     assert.verifySteps(["Thread.onAdd::John.admin"]);
 });
+
+QUnit.test("Can insert with relation as id, using relation as data object", async (assert) => {
+    (class User extends Record {
+        static id = "name";
+        name;
+        settings = Record.one("Settings");
+    }).register();
+    (class Settings extends Record {
+        static id = "user";
+        pushNotif;
+        user = Record.one("User", { inverse: "settings" });
+    }).register();
+    const store = await start();
+    store.Settings.insert([
+        { pushNotif: true, user: { name: "John" } },
+        { pushNotif: false, user: { name: "Paul" } },
+    ]);
+    assert.ok(store.User.get("John"));
+    assert.ok(store.User.get("John").settings.pushNotif);
+    assert.ok(store.User.get("Paul"));
+    assert.notOk(store.User.get("Paul").settings.pushNotif);
+});
