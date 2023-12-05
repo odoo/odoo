@@ -13,7 +13,6 @@ class TestWebsiteResetPassword(HttpCase):
 
     def test_01_website_reset_password_tour(self):
         """The goal of this test is to make sure the reset password works."""
-
         # We override unlink because we don't want the email to be auto deleted
         # if the send works.
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
@@ -33,13 +32,21 @@ class TestWebsiteResetPassword(HttpCase):
                 'name': 'The King',
                 'email': 'noop@example.com',
             })
-            website_1 = self.env['website'].browse(1)
-            website_2 = self.env['website'].browse(2)
+            websites = self.env['website'].search([])
+            website_1 = websites[0]
+            if len(websites) == 1:
+                website_2 = self.env['website'].create({
+                    'name': 'My Website 2',
+                    'domain': '',
+                    'sequence': 20,
+                })
+            else:
+                website_2 = websites[1]
 
             website_1.domain = "my-test-domain.com"
             website_2.domain = "https://domain-not-used.fr"
 
-            user.partner_id.website_id = 2
+            user.partner_id.website_id = website_2.id
             self.env.invalidate_all()  # invalidate get_base_url
 
             user.action_reset_password()
@@ -47,7 +54,7 @@ class TestWebsiteResetPassword(HttpCase):
 
             self.env.invalidate_all()
 
-            user.partner_id.website_id = 1
+            user.partner_id.website_id = website_1.id
             user.action_reset_password()
             self.assertIn(website_1.domain, user.signup_url)
 
