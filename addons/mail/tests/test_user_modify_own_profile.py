@@ -14,6 +14,12 @@ class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
     def test_user_modify_own_profile(self):
         """" A user should be able to modify their own profile.
         Even if that user does not have access rights to write on the res.users model. """
+        if 'hr.employee' in self.env and not self.user_demo.employee_id:
+            self.env['hr.employee'].create({
+                'name': 'Marc Demo',
+                'user_id': self.user_demo.id,
+            })
+        self.user_demo.tz = "Europe/Brussels"
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
         with patch.object(Users, 'preference_save', lambda self: True):
