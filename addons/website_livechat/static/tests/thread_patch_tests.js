@@ -6,6 +6,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
+const { DateTime } = luxon;
 
 QUnit.module("thread (patch)");
 
@@ -40,9 +41,9 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     assert.containsOnce(
         $,
         `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
-            `/web/image?field=avatar_128&id=${guestId}&model=mail.guest&unique=${encodeURIComponent(
-                guest.write_date
-            )}`
+            `/web/image/mail.guest/${guestId}/avatar_128?unique=${
+                DateTime.fromSQL(guest.write_date).ts
+            }`
         )}']`
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");

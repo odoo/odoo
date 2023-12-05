@@ -2,6 +2,7 @@
 
 import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { getOrigin } from "@web/core/utils/urls";
 
 let serverData;
 let target;
@@ -120,7 +121,7 @@ QUnit.module(
             assert.hasAttrValue(
                 badges[0].querySelector("img"),
                 "data-src",
-                "/web/image/partner/1/avatar_128",
+                `${getOrigin()}/web/image/partner/1/avatar_128`,
                 "should have correct avatar image"
             );
             assert.verifySteps(["get_attendee_detail"]);

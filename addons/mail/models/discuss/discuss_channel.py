@@ -57,6 +57,7 @@ class Channel(models.Model):
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
+    avatar_cache_key = fields.Char(compute="_compute_avatar_cache_key")
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Partners',
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
@@ -78,7 +79,6 @@ class Channel(models.Model):
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
     allow_public_upload = fields.Boolean(default=False)
-
     _sql_constraints = [
         ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
@@ -124,6 +124,14 @@ class Channel(models.Model):
     def _compute_avatar_128(self):
         for record in self:
             record.avatar_128 = record.image_128 or record._generate_avatar()
+
+    @api.depends('avatar_128')
+    def _compute_avatar_cache_key(self):
+        for channel in self:
+            if not channel.avatar_128:
+                channel.avatar_cache_key = 'no-avatar'
+            else:
+                channel.avatar_cache_key = sha512(channel.avatar_128).hexdigest()
 
     def _generate_avatar(self):
         if self.channel_type not in ('channel', 'group'):
@@ -279,7 +287,7 @@ class Channel(models.Model):
             for channel in self:
                 notifications.append([channel, 'mail.record/insert', {
                     'Thread': {
-                        'avatarCacheKey': channel._get_avatar_cache_key(),
+                        'avatarCacheKey': channel.avatar_cache_key,
                         'id': channel.id,
                         'model': "discuss.channel",
                     }
@@ -817,7 +825,7 @@ class Channel(models.Model):
     def _channel_basic_info(self):
         self.ensure_one()
         return {
-            'avatarCacheKey': self._get_avatar_cache_key(),
+            'avatarCacheKey': self.avatar_cache_key,
             'channel_type': self.channel_type,
             'memberCount': self.member_count,
             'id': self.id,
@@ -1216,11 +1224,6 @@ class Channel(models.Model):
             'channelMembers': [('ADD', list(unknown_members._discuss_channel_member_format().values()))],
             'memberCount': count,
         }
-
-    def _get_avatar_cache_key(self):
-        if not self.avatar_128:
-            return 'no-avatar'
-        return sha512(self.avatar_128).hexdigest()
 
     # ------------------------------------------------------------
     # COMMANDS

@@ -4,7 +4,7 @@ import hashlib
 import json
 
 import odoo
-from odoo import api, models
+from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import ormcache, ustr
 from odoo.tools.misc import str2bool
@@ -100,6 +100,7 @@ class Http(models.AbstractModel):
             "support_url": "https://www.odoo.com/buy",
             "name": user.name,
             "username": user.login,
+            "partner_write_date": fields.Datetime.to_string(user.partner_id.write_date),
             "partner_display_name": user.partner_id.display_name,
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),

@@ -17,6 +17,7 @@ import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
 import { contains } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { onMounted, onWillUnmount } from "@odoo/owl";
+import { getOrigin } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 let serverData;
@@ -883,39 +884,38 @@ QUnit.module("test_mail", {}, function () {
     );
 
     QUnit.test("activity view: Domain should not reset on load", async function (assert) {
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,list":
-                    '<tree string="MailTestActivity"><field name="name"/></tree>',
-            });
-            const { env, openView } = await start({
-                serverData,
-            });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[false, "activity"]],
-                domain: [['id', '=', 1]],
-            });
-            patchWithCleanup(env.services.action, {
-                doAction(action, options) {
-                    assert.step("doAction");
-                    options.onClose();
-                },
-            });
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/></tree>',
+        });
+        const { env, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+            domain: [["id", "=", 1]],
+        });
+        patchWithCleanup(env.services.action, {
+            doAction(action, options) {
+                assert.step("doAction");
+                options.onClose();
+            },
+        });
 
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // search create dialog
-            await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
-            assert.verifySteps(["doAction"]);
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // search create dialog
+        await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
+        assert.verifySteps(["doAction"]);
 
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // again open search create dialog
-            assert.strictEqual(
-                document.querySelectorAll(".modal-lg .o_data_row").length,
-                1,
-                "Should contains only one record after calling schedule activity which load view again"
-            );
-        }
-    );
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // again open search create dialog
+        assert.strictEqual(
+            document.querySelectorAll(".modal-lg .o_data_row").length,
+            1,
+            "Should contains only one record after calling schedule activity which load view again"
+        );
+    });
 
     QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
         assert.expect(2);
@@ -1291,7 +1291,7 @@ QUnit.module("test_mail", {}, function () {
             </activity>`,
         });
 
-        const { target, openView } = await start({
+        const { openView } = await start({
             serverData,
             mockRPC(route, { method, kwargs }, result) {
                 if (method === "web_search_read") {
@@ -1311,13 +1311,8 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
 
-        assert.ok(
-            target
-                .querySelector(".o_activity_record img")
-                .dataset.src.endsWith(
-                    "/web/image?model=partner&field=image&id=2&unique=1659688620000"
-                ),
-            "image src is the preview image given in option"
+        await contains(
+            `.o_activity_record img[data-src='${getOrigin()}/web/image/partner/2/image?unique=1659688620000']`
         );
     });
 

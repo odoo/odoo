@@ -22,6 +22,7 @@ import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
+import { imageUrl } from "@web/core/utils/urls";
 
 /**
  * Represent one property value.
@@ -144,7 +145,7 @@ export class PropertyValue extends Component {
                     colorIndex: 0,
                     img:
                         this.showAvatar && hasAccess
-                            ? `/web/image/${this.props.comodel}/${many2manyValue[0]}/avatar_128`
+                            ? imageUrl(this.props.comodel, many2manyValue[0], "avatar_128")
                             : null,
                 };
             });

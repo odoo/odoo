@@ -2,6 +2,7 @@
 
 import { session } from "@web/session";
 import { browser } from "../browser/browser";
+const { DateTime } = luxon;
 
 export class RedirectionError extends Error {}
 
@@ -56,6 +57,40 @@ export function url(route, queryParams, options = {}) {
     );
     prefix = prefix ? "" : origin;
     return `${prefix}${route}${queryString}`;
+}
+
+/**
+ * @param {string} model
+ * @param {number} id
+ * @param {string} field
+ * @param {Object} [options]
+ * @param {string} [options.filename]
+ * @param {number} [options.height]
+ * @param {string|import('luxon').DateTime} [options.unique]
+ * @param {number} [options.width]
+ */
+export function imageUrl(model, id, field, { filename, height, unique, width } = {}) {
+    let route = `/web/image/${model}/${id}/${field}`;
+    if (width && height) {
+        route = `${route}/${width}x${height}`;
+    }
+    if (filename) {
+        route = `${route}/${filename}`;
+    }
+    const urlParams = {};
+    if (unique) {
+        if (unique instanceof DateTime) {
+            urlParams.unique = unique.ts;
+        } else {
+            const dateTimeFromUnique = DateTime.fromSQL(unique);
+            if (dateTimeFromUnique.isValid) {
+                urlParams.unique = dateTimeFromUnique.ts;
+            } else if (typeof unique === "string" && unique.length > 0) {
+                urlParams.unique = unique;
+            }
+        }
+    }
+    return url(route, urlParams);
 }
 
 /**

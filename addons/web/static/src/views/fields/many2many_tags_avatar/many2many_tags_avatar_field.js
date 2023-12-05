@@ -9,6 +9,7 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
+import { imageUrl } from "@web/core/utils/urls";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
@@ -23,7 +24,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
-            img: `/web/image/${this.relation}/${record.resId}/avatar_128`,
+            img: imageUrl(this.relation, record.resId, "avatar_128"),
         };
     }
 }

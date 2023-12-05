@@ -13,6 +13,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { triggerHotkey } from "../../helpers/utils";
+import { getOrigin } from "@web/core/utils/urls";
+import { contains } from "@web/../tests/utils";
 
 let serverData;
 let target;
@@ -73,11 +75,8 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should have 2 records"
         );
-        assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .o_avatar img")
-                .dataset.src,
-            "/web/image/partner/2/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_field_many2many_tags_avatar.o_field_widget .o_avatar:nth-child(1) img[data-src='${getOrigin()}/web/image/partner/2/avatar_128']`
         );
     });
 
@@ -109,11 +108,8 @@ QUnit.module("Fields", (hooks) => {
                     <field name="partner_ids" widget="many2many_tags_avatar"/>
                 </tree>`,
         });
-        assert.strictEqual(
-            target.querySelector(".o_data_row .o_field_many2many_tags_avatar img.o_m2m_avatar")
-                .dataset.src,
-            "/web/image/partner/1/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_data_row:nth-child(1) .o_field_many2many_tags_avatar .o_avatar img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128']`
         );
         assert.strictEqual(
             target
@@ -150,33 +146,17 @@ QUnit.module("Fields", (hooks) => {
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/1/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(1) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128']`
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/2/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/2/avatar_128']`
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(3) img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/4/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(3) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(4) img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/5/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(4) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
         );
         assert.containsNone(
             target,
@@ -357,19 +337,11 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should have 2 records"
         );
-        assert.strictEqual(
-            target.querySelector(
-                ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
-            ).dataset.src,
-            "/web/image/partner/5/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
         );
-        assert.strictEqual(
-            target.querySelectorAll(
-                ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar img.o_m2m_avatar"
-            )[1].dataset.src,
-            "/web/image/partner/4/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
         );
         assert.containsOnce(
             target,
@@ -443,10 +415,8 @@ QUnit.module("Fields", (hooks) => {
             2,
             "Should have 2 tags"
         );
-        assert.strictEqual(
-            o_kanban_record.querySelector("img.o_m2m_avatar").dataset.src,
-            "/web/image/partner/4/avatar_128",
-            "should have correct avatar image"
+        await contains(
+            `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
         );
         await click(
             target.querySelector(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar")
@@ -694,7 +664,11 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, `div[name="partner_ids"] input`, "A new partner");
             await clickOpenedDropdownItem(target, "partner_ids", "Create and edit...");
 
-            assert.containsOnce(target, ".modal .o_form_view", "Here we should have opened the modal form view");
+            assert.containsOnce(
+                target,
+                ".modal .o_form_view",
+                "Here we should have opened the modal form view"
+            );
             assert.verifySteps(["onchange with context given"]);
         }
     );

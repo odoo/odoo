@@ -10,6 +10,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { pagerNext } from "@web/../tests/search/helpers";
+import { getOrigin } from "@web/core/utils/urls";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -531,10 +532,9 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.ok(
-            JSON.parse(
-                target.querySelector(".o_field_image img").dataset["tooltipInfo"]
-            ).url.endsWith("/web/image?model=partner&id=1&field=document&unique=1659688620000"),
+        assert.strictEqual(
+            JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
+            `${getOrigin()}/web/image/partner/1/document?unique=1659688620000`,
             "tooltip show the full image from the field value"
         );
         assert.strictEqual(
@@ -560,11 +560,9 @@ QUnit.module("Fields", (hooks) => {
                     <field name="document" widget="image" options="{'zoom': true, 'preview_image': 'document_preview', 'zoom_delay': 600}" readonly="1" />
                 </form>`,
             });
-
-            assert.ok(
-                JSON.parse(
-                    target.querySelector(".o_field_image img").dataset["tooltipInfo"]
-                ).url.endsWith("/web/image?model=partner&id=1&field=document&unique=1659688620000"),
+            assert.strictEqual(
+                JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
+                `${getOrigin()}/web/image/partner/1/document?unique=1659688620000`,
                 "tooltip show the full image from the field value"
             );
             assert.strictEqual(
@@ -572,12 +570,9 @@ QUnit.module("Fields", (hooks) => {
                 "600",
                 "tooltip has the right delay"
             );
-            assert.ok(
-                target
-                    .querySelector(".o_field_image img")
-                    .dataset.src.endsWith(
-                        "/web/image?model=partner&id=1&field=document_preview&unique=1659688620000"
-                    ),
+            assert.strictEqual(
+                JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
+                `${getOrigin()}/web/image/partner/1/document?unique=1659688620000`,
                 "image src is the preview image given in option"
             );
         }

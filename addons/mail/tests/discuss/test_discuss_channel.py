@@ -347,7 +347,7 @@ class TestChannelInternals(MailCommon):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
         # do the operation once before the assert to grab the value to expect
         channel.image_128 = base64.b64encode(("<svg/>").encode())
-        avatar_cache_key = channel._get_avatar_cache_key()
+        avatar_cache_key = channel.avatar_cache_key
         channel.image_128 = False
         self.env['bus.bus'].search([]).unlink()
         with self.assertBus(

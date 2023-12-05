@@ -9,10 +9,10 @@ import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { imageUrl } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Field } from "@web/views/fields/field";
-import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
+import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
@@ -150,12 +150,7 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
         return placeholder;
     } else {
         // Else: fetches the image related to the given id.
-        return url("/web/image", {
-            model,
-            field,
-            id,
-            unique: imageCacheKey(record.data.write_date),
-        });
+        return imageUrl(model, id, field, { unique: record.data.write_date });
     }
 }
 
