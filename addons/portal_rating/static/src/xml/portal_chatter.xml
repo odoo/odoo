@@ -71,8 +71,8 @@
     </t>
 
     <t t-name="portal_rating.chatter_rating_publisher_comment">
-        <div class="d-flex o_portal_chatter_message">
-            <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
+        <div class="d-flex o_portal_chatter_message gap-2">
+            <img class="o_avatar o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
                     <div class="d-inline-block">
@@ -98,15 +98,15 @@
         </div>
     </t>
     <t t-name="portal_rating.chatter_rating_publisher_form">
-        <div t-if="is_publisher" class="d-flex o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1">
-            <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
+        <div t-if="is_publisher" class="d-flex o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1 gap-2">
+            <img class="o_avatar o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
                     <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
                 </div>
                 <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-esc="rating.publisher_comment"/></textarea>
                 <div>
-                    <button class="btn btn-primary mt-2 o_wrating_js_publisher_comment_submit" t-att-data-mes_index="rating.mes_index">
+                    <button class="btn btn-primary mt-2 o_wrating_js_publisher_comment_submit me-1" t-att-data-mes_index="rating.mes_index">
                         <t t-if="rating.publisher_comment === ''">
                             Post comment
                         </t><t t-else="">
