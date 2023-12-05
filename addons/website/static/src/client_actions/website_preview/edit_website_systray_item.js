@@ -1,8 +1,12 @@
 import { Component, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
+
+const websiteSystrayRegistry = registry.category("website_systray");
 
 export class EditWebsiteSystrayItem extends Component {
     static template = "website.EditWebsiteSystrayItem";
@@ -18,7 +22,15 @@ export class EditWebsiteSystrayItem extends Component {
 
     setup() {
         this.websiteService = useService("website");
+        this.notification = useService("notification");
         this.websiteContext = useState(this.websiteService.context);
+        // TODO: website service should share a reactive
+        useBus(
+            websiteSystrayRegistry,
+            "CONTENT-UPDATED",
+            () => this.checkPendingTranslations()
+        );
+        this.isEnteringTranslateMode = false;
     }
 
     onClickEditPage() {
@@ -81,6 +93,7 @@ export class EditWebsiteSystrayItem extends Component {
     }
 
     startTranslate() {
+        this.isEnteringTranslateMode = true;
         const { pathname, search, hash } = this.getLocation();
         const searchParams = new URLSearchParams(search);
         searchParams.set("edit_translations", "1");
@@ -89,5 +102,25 @@ export class EditWebsiteSystrayItem extends Component {
             translation: true,
             htmlBuilder: true,
         });
+    }
+
+    async checkPendingTranslations() {
+        if (this.translatable && !this.isEnteringTranslateMode) {
+            const { pathname, search, hash } = this.getLocation();
+            const searchParams = new URLSearchParams(search);
+            searchParams.set("edit_translations", "1");
+            const path = pathname + `?${searchParams.toString() + hash}`;
+            const response = await fetch(path);
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            if (doc.querySelector("#wrap .o_delay_translation")) {
+                this.notification.add(
+                    _t('Click on "Edit/Translate" to apply changes made on default language.'),
+                    { type: "info" }
+                );
+            }
+        }
+        this.isEnteringTranslateMode = false;
     }
 }

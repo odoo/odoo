@@ -130,9 +130,7 @@ export class SavePlugin extends Plugin {
             return;
         }
 
-        // TODO: Restore the delay translation feature once it's fixed, see
-        // commit msg for more info.
-        const delay = delayTranslations ? { delay_translations: false } : {};
+        const delay = delayTranslations ? { delay_translations: true } : {};
         const context = {
             website_id: this.services.website.currentWebsite.id,
             lang: this.services.website.currentWebsite.metadata.lang,
