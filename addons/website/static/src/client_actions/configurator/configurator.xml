@@ -106,6 +106,7 @@
                             <div t-if="state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center bg-white w-100 h-100">
                                 <img style="height: 120px" t-attf-src="{{state.logo}}"/>
                             </div>
+                            <i t-if="state.logo" class="fa fa-2x fa-times-circle text-danger position-absolute top-0 end-0 pe-2 pt-2" t-on-click="removeLogo"/>
                         </div>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
                             <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
