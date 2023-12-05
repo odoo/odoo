@@ -67,9 +67,15 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         Page = self.env['website.page']
 
         default_website = self.env.ref('website.default_website')
-        nl_lang = self.env['res.lang']._activate_lang('nl_NL')
-        default_website.language_ids += nl_lang
-        default_website.default_lang_id = nl_lang.id
+        parseltongue = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.env['res.lang']._activate_lang(parseltongue.code)
+        default_website.language_ids += parseltongue
+        default_website.default_lang_id = parseltongue.id
 
         page = Page.create({
             'name': 'Test page',
@@ -86,14 +92,14 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         })
 
         page.view_id.update_field_translations('arch_db', {
-            nl_lang.code: {
+            parseltongue.code: {
                 'rumbler': 'rommelpot',
             }
         })
-        self.env.ref('base.user_admin').lang = nl_lang.code
+        self.env.ref('base.user_admin').lang = parseltongue.code
         self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
         self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
-        self.assertIn("rommelpot", page.view_id.with_context(lang='nl_NL').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
 
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
