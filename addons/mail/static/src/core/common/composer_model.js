@@ -13,6 +13,16 @@ export class Composer extends Record {
         return super.insert(...arguments);
     }
 
+    clear() {
+        this.attachments.length = 0;
+        this.textInputContent = "";
+        Object.assign(this.selection, {
+            start: 0,
+            end: 0,
+            direction: "none",
+        });
+    }
+
     attachments = Record.many("Attachment");
     message = Record.one("Message");
     mentionedPartners = Record.many("Persona");

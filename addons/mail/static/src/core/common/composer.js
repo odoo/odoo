@@ -474,7 +474,7 @@ export class Composer extends Component {
     }
 
     clear() {
-        this.threadService.clearComposer(this.props.composer);
+        this.props.composer.clear();
     }
 
     notifySendFromMailbox() {

@@ -17,17 +17,6 @@ patch(ThreadService.prototype, {
         }
     },
 
-    canLeave(thread) {
-        return thread.type !== "livechat" && super.canLeave(thread);
-    },
-
-    canUnpin(thread) {
-        if (thread.type === "livechat") {
-            return thread.message_unread_counter === 0;
-        }
-        return super.canUnpin(thread);
-    },
-
     /** @deprecated */
     sortChannels() {
         super.sortChannels();

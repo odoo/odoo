@@ -67,7 +67,7 @@ commandProviderRegistry.add("mail.partner", {
                     props: {
                         imgUrl: channel.avatarUrl,
                         persona: channel.type === "chat" ? channel.correspondent : undefined,
-                        counter: threadService.getCounter(channel),
+                        counter: channel.importantCounter,
                     },
                 });
             });
@@ -87,7 +87,7 @@ commandProviderRegistry.add("mail.partner", {
                     props: {
                         imgUrl: partner.avatarUrl,
                         persona: partner,
-                        counter: chat ? threadService.getCounter(chat) : undefined,
+                        counter: chat ? chat.importantCounter : undefined,
                     },
                 });
             });
@@ -134,7 +134,7 @@ commandProviderRegistry.add("discuss.channel", {
                         category: "discuss_recent",
                         props: {
                             imgUrl: channel.avatarUrl,
-                            counter: threadService.getCounter(channel),
+                            counter: channel.importantCounter,
                         },
                     });
                 });
@@ -184,7 +184,7 @@ commandProviderRegistry.add("discuss.channel", {
                 name: channel.displayName,
                 props: {
                     imgUrl: channel.avatarUrl,
-                    counter: threadService.getCounter(channel),
+                    counter: channel.importantCounter,
                 },
             });
         });
