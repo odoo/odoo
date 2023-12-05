@@ -47,11 +47,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
         bilbo.name = "Bilbo"
         self.assertFalse(bilbo.active)
 
-<<<<<<< HEAD
     def test_02_on_create_or_write_restricted(self):
-=======
-    def test_02_on_create_restricted(self):
->>>>>>> 31f52b97943c ([FIX] base_automation: Make tests demo data independent)
         """ on_create action with low portal user """
         model = self.env.ref("base.model_ir_filters")
         automation = self.env["base.automation"].create({
