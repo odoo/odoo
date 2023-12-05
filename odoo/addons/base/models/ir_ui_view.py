@@ -2384,6 +2384,7 @@ class Model(models.AbstractModel):
         return view
 
     @api.model
+    @api.readonly
     def get_views(self, views, options=None):
         """ Returns the fields_views of given views, along with the fields of
         the current model, and optionally its filters for the given action.

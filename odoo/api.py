@@ -375,6 +375,17 @@ def model(method):
     method._api = 'model'
     return method
 
+def readonly(method):
+    """ Decorate a record-style method where ``self.env.cr`` can be a
+        readonly cursor when called trough a rpc call.
+
+            @api.readonly
+            def method(self, args):
+                ...
+
+    """
+    method._readonly = True
+    return method
 
 _create_logger = logging.getLogger(__name__ + '.create')
 
