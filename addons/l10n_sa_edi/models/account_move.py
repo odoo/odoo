@@ -202,3 +202,22 @@ class AccountMove(models.Model):
         """
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    @api.depends('price_subtotal', 'price_total')
+    def _compute_tax_amount(self):
+        super()._compute_tax_amount()
+        taxes_vals_by_move = {}
+        for record in self:
+            move = record.move_id
+            if move.country_code == 'SA':
+                taxes_vals = taxes_vals_by_move.get(move.id)
+                if not taxes_vals:
+                    taxes_vals = move._prepare_invoice_aggregated_taxes(
+                        filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention
+                    )
+                    taxes_vals_by_move[move.id] = taxes_vals
+                record.l10n_gcc_invoice_tax_amount = abs(taxes_vals.get('tax_details_per_record', {}).get(record, {}).get('tax_amount_currency', 0))
