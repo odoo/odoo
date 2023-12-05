@@ -104,6 +104,7 @@ class QueryTestCase(BaseCase):
 class TestQuery(TransactionCase):
     def test_auto(self):
         model = self.env['res.partner.category']
+        model.create([{'name': 'Test Category 1'}, {'name': 'Test Category 2'}])
         query = model._search([])
         self.assertIsInstance(query, Query)
 

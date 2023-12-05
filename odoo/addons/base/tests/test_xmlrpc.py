@@ -67,6 +67,7 @@ class TestXMLRPC(common.HttpCase):
 
     def test_xmlrpc_frozendict_marshalling(self):
         """ Test that the marshalling of a frozendict object works properly over XMLRPC """
+        self.env.ref('base.user_admin').tz = "Europe/Brussels"
         ctx = self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
             'res.users', 'context_get',
