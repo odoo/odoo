@@ -814,6 +814,7 @@ class TestCRMLead(TestCrmCommon):
 class TestLeadFormTools(FormatAddressCase):
 
     def test_address_view(self):
+        self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')
 
 
