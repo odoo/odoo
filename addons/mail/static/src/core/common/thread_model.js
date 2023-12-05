@@ -83,6 +83,16 @@ export class Thread extends Record {
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
     activeRtcSession = Record.one("RtcSession");
+    get canLeave() {
+        return (
+            ["channel", "group"].includes(this.type) &&
+            !this.message_needaction_counter &&
+            !this.group_based_subscription
+        );
+    }
+    get canUnpin() {
+        return this.type === "chat" && this.importantCounter === 0;
+    }
     channelMembers = Record.many("ChannelMember", {
         onDelete: (r) => r.delete(),
         /** @this {import("models").Thread} */
@@ -147,6 +157,15 @@ export class Thread extends Record {
     isAdmin = false;
     loadOlder = false;
     loadNewer = false;
+    get importantCounter() {
+        if (this.type === "mailbox") {
+            return this.counter;
+        }
+        if (this.isChatChannel) {
+            return this.message_unread_counter || this.message_needaction_counter;
+        }
+        return this.message_needaction_counter;
+    }
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = Record.attr(false, {

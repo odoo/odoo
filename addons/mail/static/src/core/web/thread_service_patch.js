@@ -249,7 +249,7 @@ patch(ThreadService.prototype, {
             });
     },
     getNeedactionChannels() {
-        return this.getRecentChannels().filter((channel) => this.getCounter(channel) > 0);
+        return this.getRecentChannels().filter((channel) => channel.importantCounter > 0);
     },
 });
 
