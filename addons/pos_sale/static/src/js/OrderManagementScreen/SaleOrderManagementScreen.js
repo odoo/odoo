@@ -202,7 +202,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
-                        description: line.name,
+                        description: line.product_id[1],
                         price: line.price_unit,
                         tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: false,
