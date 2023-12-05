@@ -48,13 +48,14 @@ import {
  * @param {number} [hours]
  * @param {number} [minutes]
  * @param {number} [seconds]
+ * @param {number} [ms=0]
  */
-export function patchDate(year, month, day, hours, minutes, seconds) {
+export function patchDate(year, month, day, hours, minutes, seconds, ms = 0) {
     var RealDate = window.Date;
     var actualDate = new RealDate();
 
     // By default, RealDate uses the browser offset, so we must replace it with the offset fixed in luxon.
-    var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
+    var fakeDate = new RealDate(year, month, day, hours, minutes, seconds, ms);
     if (!(luxon.Settings.defaultZone instanceof luxon.FixedOffsetZone)) {
         throw new Error("luxon.Settings.defaultZone must be a FixedOffsetZone");
     }
