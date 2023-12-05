@@ -18,7 +18,8 @@
                         </div>
                     </t>
                     <div class="o_hierarchy_row row justify-content-center flex-wrap row-cols-2 row-cols-lg-5 g-2 g-lg-3"
-                        t-att-data-parent-node-id="row.parentNode?.id" t-att-data-row-id="row_index"
+                        t-att-class="{ 'pb-4': row_last }" t-att-data-parent-node-id="row.parentNode?.id"
+                        t-att-data-row-id="row_index"
                     >
                         <t t-foreach="row.nodes" t-as="node" t-key="node.id">
                             <HierarchyCard
