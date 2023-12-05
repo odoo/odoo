@@ -273,8 +273,12 @@ class View(models.Model):
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for
         # tests)
-        self = self.with_context(website_id=self.env['website'].get_current_website().id)
-        return super(View, self).get_related_views(key, bundles=bundles)
+        current_website = self.env['website'].get_current_website()
+        return super(View, self.with_context(
+            website_id=current_website.id
+        )).get_related_views(key, bundles=bundles).with_context(
+            lang=current_website.default_lang_id.code,
+        )
 
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key.
