@@ -6,9 +6,10 @@ import logging
 import random
 import time
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.fields import Command
 
-from odoo.tests import common, tagged
+from odoo.tests import tagged
 from odoo.tests.common import users, warmup
 
 _logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ def prepare(func, self):
 
 
 @tagged('so_batch_perf')
-class TestPERF(common.TransactionCase):
+class TestPERF(TransactionCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -42,7 +43,7 @@ class TestPERF(common.TransactionCase):
             'name': 'Partner %s' % i,
         } for i in range(cls.ENTITIES)])
 
-        cls.salesmans = cls.env.ref('base.user_admin') | cls.env.ref('base.user_demo')
+        cls.salesmans = cls.env.ref('base.user_admin') | cls.user_demo
 
         cls.env.flush_all()
 
