@@ -49,7 +49,7 @@ patch(PosStore.prototype, {
         }
     },
     async actionAfterIdle() {
-        if (document.querySelector(".modal-open")) {
+        if (!document.querySelector(".modal-open")) {
             const table = this.table;
             const order = this.get_order();
             if (order && order.get_screen_data().name === "ReceiptScreen") {
