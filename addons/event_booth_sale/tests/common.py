@@ -11,6 +11,10 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
     def setUpClass(cls):
         super(TestEventBoothSaleCommon, cls).setUpClass()
 
+        cls.env['account.tax.group'].create(
+            {'name': 'Test Account Tax Group', 'company_id': cls.env.company.id}
+        )
+
         cls.event_booth_product = cls.env['product.product'].create({
             'name': 'Test Booth Product',
             'description_sale': 'Mighty Booth Description',
