@@ -50,11 +50,11 @@ odoo.define('pos_sale.tour', function (require) {
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickQuotationButton();
     ProductScreen.do.selectFirstOrder();
-    ProductScreen.do.clickOrderline("Product A", "1");
-    ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
-    ProductScreen.do.clickOrderline("Product B", "1");
+    ProductScreen.do.clickOrderline('[A001] Product A', '1');
+    ProductScreen.check.selectedOrderlineHas('[A001] Product A', '1.00');
+    ProductScreen.do.clickOrderline('[A002] Product B', '1');
     ProductScreen.do.pressNumpad('Qty 0');
-    ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
+    ProductScreen.check.selectedOrderlineHas('[A002] Product B', '0.00');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.check.remainingIs('0.0');
