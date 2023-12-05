@@ -215,7 +215,12 @@ class IrUiMenu(models.Model):
         :return: the root menu ids
         :rtype: list(int)
         """
-        return self.search([('parent_id', '=', False)])
+        menus_blacklist = self._load_menus_root_blacklist()
+        domain = expression.AND([[('parent_id', '=', False)], [('id', 'not in', menus_blacklist)]])
+        return self.search(domain)
+
+    def _load_menus_root_blacklist(self):
+        return []
 
     def _load_menus_blacklist(self):
         return []
