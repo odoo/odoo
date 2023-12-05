@@ -7,6 +7,7 @@ import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
+import { makeSortedColumn } from "@web/views/pivot/pivot_utils";
 
 QUnit.module("spreadsheet > positional pivot formula", {}, () => {
     QUnit.test("Can have positional args in pivot formula", async function (assert) {
@@ -117,11 +118,12 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     id: "1",
                     measures: [{ field: "probability" }],
                     model: "partner",
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
+                        colGroupBys: ["foo"],
                         groupId: [[], [1]],
                         measure: "probability",
                         order: "asc",
-                    },
+                    }),
                 },
             },
         };
@@ -155,11 +157,12 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     id: "1",
                     measures: [{ field: "probability" }],
                     model: "partner",
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
+                        colGroupBys: ["foo"],
                         groupId: [[], [1]],
                         measure: "probability",
                         order: "desc",
-                    },
+                    }),
                 },
             },
         };
@@ -194,11 +197,12 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     model: "partner",
                     rowGroupBys: ["bar"],
                     name: "Partners by Foo",
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
+                        colGroupBys: ["foo"],
                         groupId: [[], [2]],
                         measure: "probability",
                         order: "asc",
-                    },
+                    }),
                 },
             },
         };
@@ -233,11 +237,12 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     model: "partner",
                     rowGroupBys: ["bar"],
                     name: "Partners by Foo",
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
+                        colGroupBys: ["foo"],
                         groupId: [[], [2]],
                         measure: "probability",
                         order: "desc",
-                    },
+                    }),
                 },
             },
         };
@@ -271,11 +276,11 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     id: "1",
                     measures: [{ field: "probability" }, { field: "foo" }],
                     model: "partner",
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
                         groupId: [[], []],
                         measure: "foo",
                         order: "asc",
-                    },
+                    }),
                 },
             },
         };
@@ -305,11 +310,11 @@ QUnit.module("spreadsheet > positional pivot formula", {}, () => {
                     measures: [{ field: "probability" }, { field: "foo" }],
                     model: "partner",
                     rowGroupBys: ["product_id"],
-                    sortedColumn: {
+                    sortedColumn: makeSortedColumn({
                         groupId: [[], []],
                         measure: "foo",
                         order: "desc",
-                    },
+                    }),
                 },
             },
         };

@@ -423,13 +423,7 @@ export class PivotCorePlugin extends CorePlugin {
                         rowGroupBys: pivot.rowGroupBys,
                         activeMeasures: pivot.measures.map((elt) => elt.field),
                         resModel: pivot.model,
-                        sortedColumn: !pivot.sortedColumn
-                            ? undefined
-                            : {
-                                  groupId: pivot.sortedColumn.groupId,
-                                  measure: pivot.sortedColumn.measure,
-                                  order: pivot.sortedColumn.order,
-                              },
+                        sortedColumn: pivot.sortedColumn && { ...pivot.sortedColumn },
                     },
                     searchParams: {
                         groupBy: [],
