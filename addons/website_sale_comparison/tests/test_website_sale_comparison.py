@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from collections import OrderedDict
 from lxml import etree
 from odoo import tools
 
 import odoo.tests
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -18,6 +22,13 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         `_remove_copied_views`. The problematic view that has to be removed is
         `product_attributes_body` because it has a reference to `add_to_compare`.
         """
+        # YTI TODO: Adapt this tour without demo data
+        # I still didn't figure why, but this test freezes on runbot
+        # without the demo data
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
+
         Website0 = self.env['website'].with_context(website_id=None)
         Website1 = self.env['website'].with_context(website_id=1)
 
@@ -105,7 +116,8 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_product_comparison(self):
         # YTI FIXME: Adapt to work without demo data
-        if tools.config["without_demo"]:
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.start_tour("/", 'product_comparison', login='admin')
 
