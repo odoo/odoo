@@ -987,6 +987,7 @@ class Users(models.Model):
         }
 
     @api.model
+    @api.readonly
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid

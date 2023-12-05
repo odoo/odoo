@@ -42,6 +42,7 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
+    @api.readonly
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
@@ -75,6 +76,7 @@ class Base(models.AbstractModel):
             self = self.browse(next_id)
         return self.with_context(bin_size=True).web_read(specification)
 
+    @api.readonly
     def web_read(self, specification: Dict[str, Dict]) -> List[Dict]:
         fields_to_read = list(specification) or ['id']
 
@@ -218,6 +220,7 @@ class Base(models.AbstractModel):
         return values_list
 
     @api.model
+    @api.readonly
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
         """
         Returns the result of a read_group and the total number of groups matching the search domain.
@@ -264,6 +267,7 @@ class Base(models.AbstractModel):
         return groups
 
     @api.model
+    @api.readonly
     def read_progress_bar(self, domain, group_by, progress_bar):
         """
         Gets the data needed for all the kanban column progressbars.
