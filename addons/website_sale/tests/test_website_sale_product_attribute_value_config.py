@@ -2,20 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
-class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-
         # Use the testing environment.
+        cls.env['website'].get_current_website().company_id = cls.env.company
+        cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
 
     def test_get_combination_info(self):
@@ -80,6 +80,13 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         product = self.env['product.template'].create({
             'name': 'Test Product',
             'list_price': 2000,
@@ -168,10 +175,13 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
 
 @tagged('post_install', '-at_install', 'product_pricelist')
-class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
-        self.env.user.partner_id.country_id = False
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
@@ -223,7 +233,10 @@ class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProduc
 
     def test_cart_update_with_fpos_no_variant_product(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
-        self.env.user.partner_id.country_id = False
+        self.env.user.partner_id.write({
+            'country_id': False,
+            'property_product_pricelist': self.env.ref('product.list0').id,
+        })
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
