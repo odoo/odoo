@@ -11,6 +11,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
     def setUpClass(cls):
         super(TestHrHolidaysCommon, cls).setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
+        cls.env.user.company_id.resource_calendar_id.tz = "Europe/Brussels"
 
         cls.company = cls.env['res.company'].create({'name': 'Test company'})
         cls.env.user.company_id = cls.company
