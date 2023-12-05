@@ -1172,6 +1172,7 @@ class ModelChildM2o(models.Model):
     _description = 'dummy model with override write and ValidationError'
 
     name = fields.Char('Name')
+    code = fields.Char('Code')
     parent_id = fields.Many2one('test_new_api.model_parent_m2o', ondelete='cascade')
     size1 = fields.Integer(compute='_compute_sizes', store=True)
     size2 = fields.Integer(compute='_compute_sizes', store=True)
@@ -1205,8 +1206,14 @@ class ModelParentM2o(models.Model):
 
     @api.depends('child_ids.cost')
     def _compute_cost(self):
+        self.compute_cost_called()
         for record in self:
             record.cost = sum(child.cost for child in record.child_ids)
+
+    def compute_cost_called(self):
+        """
+        Dummy method for counting calls of the `_compute_cost` method
+        """
 
 
 class Country(models.Model):
