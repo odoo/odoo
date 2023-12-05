@@ -5,12 +5,20 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueCommon
 from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-class TestSaleProductAttributeValueCommon(TestProductAttributeValueCommon):
+@tagged("post_install", "-at_install")
+class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.computer.company_id = cls.env.company
+        cls.computer = cls.computer.with_env(cls.env)
 
     @classmethod
     def _setup_currency(cls, currency_ratio=2):
