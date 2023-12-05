@@ -699,9 +699,8 @@ registerModel({
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
                 ? this.env._t("%s Message")
                 : this.env._t("%s Messages");
-            this.env.bus.trigger('set_title_part', {
-                part: '_chat',
-                title: sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
+            this.env.services["title"].setParts({
+                _chat: sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
             });
         },
         /**
