@@ -1692,7 +1692,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         # Create a SO for product Main Kit Product
         order_form = Form(self.env['sale.order'])
-        order_form.partner_id = self.env.ref('base.res_partner_2')
+        order_form.partner_id = self.env['res.partner'].create({'name': 'Test Partner'})
         with order_form.order_line.new() as line:
             line.product_id = main_kit_product
             line.product_uom_qty = 1
@@ -1797,7 +1797,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Create environment
         self.env.company.currency_id = self.env.ref('base.USD')
         self.env.company.anglo_saxon_accounting = True
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
         account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
         account_income = self.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'asset_current', 'reconcile': True})
@@ -1927,7 +1927,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
     def test_reconfirm_cancelled_kit(self):
         so = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [
                 (0, 0, {
                     'name': self.kit_1.name,
@@ -2203,7 +2203,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         in_moves._action_done()
 
         so = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [
                 (0, 0, {
                     'name': kit.name,
