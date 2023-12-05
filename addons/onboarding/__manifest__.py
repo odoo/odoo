@@ -28,7 +28,10 @@ This module allows to manage onboardings and their progress
         ],
         'web._assets_primary_variables': [
             'onboarding/static/src/scss/onboarding.variables.scss',
-        ]
+        ],
+        'web.qunit_suite_tests': [
+            'onboarding/static/tests/*.js',
+        ],
     },
     'license': 'LGPL-3',
 }
