@@ -27,6 +27,8 @@ export class SelectCreateDialog extends Component {
         title: { type: String, optional: true },
         noCreate: { type: Boolean, optional: true },
         onUnselect: { type: Function, optional: true },
+        noContentHelpMessage: { type: String, optional: true },
+        noContentHelpDescription: { type: String, optional: true },
     };
     static defaultProps = {
         dynamicFilters: [],
@@ -34,21 +36,33 @@ export class SelectCreateDialog extends Component {
         searchViewId: false,
         domain: [],
         context: {},
+        noContentHelpMessage: _t("No records found!"),
     };
 
     setup() {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
-        // ℹ️ `_t` can only be inlined directly inside JS template literals
-        // after Babel has been updated to version 2.12.
-        const translatedText = _t("No records found!");
+        const noContentHelp = this.props.noContentHelpDescription
+            ? markup(
+                  `<p class='o_view_nocontent_smiling_face'>
+                    ${escape(this.props.noContentHelpMessage)}
+                  </p>
+                  <p class='o_view_nocontent_description'>${escape(
+                      this.props.noContentHelpDescription
+                  )}</p>`
+              )
+            : markup(
+                  `<p class='o_view_nocontent_smiling_face'>
+                    ${escape(this.props.noContentHelpMessage)}
+                  </p>`
+              );
         this.baseViewProps = {
             display: { searchPanel: false },
             editable: false, // readonly
             noBreadcrumbs: true,
-            noContentHelp: markup(`<p>${escape(translatedText)}</p>`),
             showButtons: false,
+            noContentHelp,
             selectRecord: (resId) => this.select([resId]),
             onSelectionChanged: (resIds) => {
                 this.state.resIds = resIds;

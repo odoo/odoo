@@ -514,4 +514,51 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsNone(target, ".o_dialog");
         assert.verifySteps(["onSelected 4"]);
     });
+
+    QUnit.test("SelectCreateDialog: NoContent message/description props", async function (assert) {
+        assert.expect(6);
+        serverData.views = {
+            "partner,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner,false,search": `
+                <search>
+                    <field name="display_name"/>
+                </search>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+
+        webClient.env.services.dialog.add(SelectCreateDialog, {
+            domain: [["display_name", "like", "no_records_found"]],
+            resModel: "partner",
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_view_nocontent_smiling_face");
+        assert.strictEqual(
+            target.querySelector(".o_view_nocontent_smiling_face").innerText,
+            "No records found!"
+        );
+        await click(target.querySelector(".o_dialog .o_form_button_cancel"));
+        assert.containsNone(target, ".o_dialog");
+
+        await nextTick();
+
+        webClient.env.services.dialog.add(SelectCreateDialog, {
+            domain: [["display_name", "like", "no_records_found"]],
+            resModel: "partner",
+            noContentHelpMessage: "Custom NoContent message",
+            noContentHelpDescription: "Custom NoContent decription",
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_view_nocontent_smiling_face");
+        assert.strictEqual(
+            target.querySelector(".o_view_nocontent_smiling_face").innerText,
+            "Custom NoContent message"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_view_nocontent_description").innerText,
+            "Custom NoContent decription"
+        );
+    });
 });
