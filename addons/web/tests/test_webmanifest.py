@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests.common import tagged
+
 
 @tagged("-at_install", "post_install")
-class WebManifestRoutesTest(HttpCase):
+class WebManifestRoutesTest(HttpCaseWithUserDemo):
     """
     This test suite is used to request the routes used by the PWA backend implementation
     """
