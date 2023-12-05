@@ -15,7 +15,13 @@ from odoo.tools.misc import file_open
 class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUICommon, self).setUp()
+        super().setUp()
+        self.env.ref('gamification.rank_student').description_motivational = """
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">Reach the next rank and gain a very nice mug!</div>
+                <img class="ms-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.png"/>
+            </div>"""
+
         # Load pdf and img contents
         pdf_content = base64.b64encode(file_open('website_slides/static/src/img/presentation.pdf', "rb").read())
         img_content = base64.b64encode(file_open('website_slides/static/src/img/slide_demo_gardening_1.jpg', "rb").read())
@@ -152,9 +158,20 @@ class TestUi(TestUICommon):
 
     def test_full_screen_edition_website_restricted_editor(self):
         # group_website_designer
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
+        })
+        user_demo = self.user_demo
+        self.env['slide.slide.partner'].create({
+            'slide_id': self.channel.slide_ids[1].id,
+            'partner_id': self.partner_demo.id,
+            'completed': True,
+            'vote': 1,
+        })
+        self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.partner_demo.id,
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'full_screen_web_editor', login=user_demo.login)
