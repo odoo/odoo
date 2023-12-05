@@ -6,9 +6,11 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 @tagged('post_install', '-at_install')
 class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.website = self.env.ref('website.default_website')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.website.company_id = cls.env.company
 
     def test_website_sale_contextual_price(self):
         contextual_price = self.computer._get_contextual_price()
