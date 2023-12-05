@@ -7,6 +7,11 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @tagged('post_install', '-at_install')
 class TestRepairTraceability(TestMrpCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+
     def test_tracking_repair_production(self):
         """
         Test that removing a tracked component with a repair does not block the flow of using that component in another
