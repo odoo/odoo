@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestMailingUi(MassMailCommon, HttpCase):
+class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -17,8 +18,29 @@ class TestMailingUi(MassMailCommon, HttpCase):
                 (4, cls.env.ref('mail.group_mail_template_editor').id),
             ],
         })
+        cls.user_demo.write({
+            'groups_id': [
+                (4, cls.env.ref('mass_mailing.group_mass_mailing_campaign').id),
+                (4, cls.env.ref('mass_mailing.group_mass_mailing_user').id),
+            ],
+        })
 
     def test_mailing_campaign_tour(self):
+        # self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_campaign').id)]})
+        campaign = self.env['utm.campaign'].create({
+            'name': 'Test Newsletter',
+            'user_id': self.env.ref("base.user_admin").id,
+            'tag_ids': [(4, self.env.ref('utm.utm_tag_1').id)],
+        })
+        self.env['mailing.mailing'].create({
+            'name': 'First Mailing to disply x2many',
+            'subject': 'Bioutifoul mailing',
+            'state': 'draft',
+            'campaign_id': campaign.id,
+        })
+        self.env['mailing.list'].create({
+            'name': 'Test Newsletter',
+        })
         self.user_marketing.write({
             'groups_id': [
                 (4, self.env.ref('mass_mailing.group_mass_mailing_campaign').id),
