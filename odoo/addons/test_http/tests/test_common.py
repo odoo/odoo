@@ -4,12 +4,12 @@ from unittest.mock import patch
 
 import odoo
 from odoo.http import Session
-from odoo.tests.common import HttpCase
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools.func import lazy_property
 from odoo.addons.test_http.utils import MemoryGeoipResolver, MemorySessionStore
 
 
-class TestHttpBase(HttpCase):
+class TestHttpBase(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

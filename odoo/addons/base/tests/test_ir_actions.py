@@ -11,10 +11,11 @@ import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common, tagged
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo import Command
 
 
-class TestServerActionsBase(common.TransactionCase):
+class TestServerActionsBase(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(TestServerActionsBase, self).setUp()
@@ -461,7 +462,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'code': """record.write({'date': datetime.date.today()})""",
         })
 
-        user_demo = self.env.ref("base.user_demo")
+        user_demo = self.user_demo
         self_demo = self.action.with_user(user_demo.id)
 
         # can write on contact partner
