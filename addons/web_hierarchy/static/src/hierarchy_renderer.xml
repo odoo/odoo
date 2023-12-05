@@ -10,7 +10,7 @@
                         <div t-if="row.parentNode and previousRow.nodes.length > 1"
                             class="o_hierarchy_parent_node_container d-flex justify-content-center"
                         >
-                            <span t-esc="row.parentNode.data.name" />
+                            <span t-esc="row.parentNode.data.display_name || row.parentNode.data.name" />
                         </div>
                         <div class="o_hierarchy_separator d-flex pb-4">
                             <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
