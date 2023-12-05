@@ -645,6 +645,14 @@ class TestBatchPicking02(TransactionCase):
     def setUp(self):
         super().setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        if not self.stock_location.child_ids:
+            self.stock_location.create([{
+                'name': 'Shelf 1',
+                'location_id': self.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': self.stock_location.id,
+            }])
         self.picking_type_internal = self.env.ref('stock.picking_type_internal')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
