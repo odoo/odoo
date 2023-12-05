@@ -24,7 +24,8 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
         # User employee
-        emp1 = cls.env.ref("hr.employee_han").sudo().copy({
+        emp1 = cls.env['hr.employee'].create({
+            'name': 'Test Employee 1',
             "company_id": cls.env.company.id,
         })
         emp1_user = new_test_user(
@@ -37,7 +38,8 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp1.write({"name": "Pos Employee1", "pin": "2580", "user_id": emp1_user.id})
 
         # Non-user employee
-        emp2 = cls.env.ref("hr.employee_jve").sudo().copy({
+        emp2 = cls.env['hr.employee'].create({
+            'name': 'Test Employee 2',
             "company_id": cls.env.company.id,
         })
         emp2.write({"name": "Pos Employee2", "pin": "1234"})
