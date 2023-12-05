@@ -974,7 +974,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_attendees_state_after_update(self):
         """ Ensure that after the organizer updates a recurrence, the attendees state will be pending and current user accepted. """
         # Create events with organizer and attendee state set as accepted.
-        organizer = self.env['res.users'].search([('email', '=', 'admin@yourcompany.example.com')])
+        organizer = self.env.ref('base.user_admin')
         attendee_partner = self.env['res.partner'].create({'name': "attendee", "email": 'attendee@email.com'})
         first_event = self.env['calendar.event'].with_user(organizer).create({
             'name': "Recurrence",

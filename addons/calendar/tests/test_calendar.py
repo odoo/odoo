@@ -5,6 +5,7 @@ import datetime
 from datetime import date, datetime, timedelta
 
 from odoo import fields, Command
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests import Form, HttpCase, tagged
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
@@ -439,8 +440,9 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
+
 @tagged('post_install', '-at_install')
-class TestCalendarTours(HttpCase):
+class TestCalendarTours(HttpCaseWithUserDemo):
     def test_calendar_month_view_start_hour_displayed(self):
         """ Test that the time is displayed in the month view. """
         self.start_tour("/web", 'calendar_appointments_hour_tour', login="demo")
@@ -473,7 +475,7 @@ class TestCalendarTours(HttpCase):
             Check that we can decline events.
         """
         user_admin = self.env.ref('base.user_admin')
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
         stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
         event = self.env['calendar.event'].with_user(user_admin).create({
@@ -498,7 +500,7 @@ class TestCalendarTours(HttpCase):
             Check that we can decline events with the "Everybody's calendars" filter.
         """
         user_admin = self.env.ref('base.user_admin')
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
         stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
         event = self.env['calendar.event'].with_user(user_admin).create({
@@ -520,7 +522,7 @@ class TestCalendarTours(HttpCase):
 
     def test_default_duration(self):
         # Check the default duration depending on various parameters
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         second_company = self.env['res.company'].sudo().create({'name': "Second Company"})
 
         duration = self.env['calendar.event'].get_default_duration()
