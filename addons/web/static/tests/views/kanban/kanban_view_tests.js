@@ -49,6 +49,7 @@ import { SampleServer } from "@web/model/sample_server";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { contains } from "@web/../tests/utils";
 
 import {
     patchDialog,
@@ -72,6 +73,7 @@ import {
     toggleColumnActions,
     loadMore,
 } from "./helpers";
+import { getOrigin } from "@web/core/utils/urls";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -10544,7 +10546,7 @@ QUnit.module("Views", (hooks) => {
 
         // since the field image is not set, kanban_image will generate an URL
         const imageOnRecord = target.querySelectorAll(
-            'img[data-src*="/web/image"][data-src*="&id=1"]'
+            `img[data-src="${getOrigin()}/web/image/partner/1/image"]`
         );
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
         assert.strictEqual(
@@ -10580,13 +10582,8 @@ QUnit.module("Views", (hooks) => {
             domain: [["id", "in", [1]]],
         });
 
-        assert.ok(
-            target
-                .querySelector(".o_kanban_record:not(.o_kanban_ghost) img")
-                .dataset.src.endsWith(
-                    "/web/image?model=partner&field=image&id=1&unique=1659688620000"
-                ),
-            "image src is the preview image given in option"
+        await contains(
+            `.o_kanban_record:not(.o_kanban_ghost) img[data-src='${getOrigin()}/web/image/partner/1/image?unique=1659688620000']`
         );
     });
 
@@ -10644,7 +10641,7 @@ QUnit.module("Views", (hooks) => {
         // -> for the record matching the ID, the base64 should be returned
         // -> for all the other records, the image should be displayed by url
         const imageOnRecord = target.querySelectorAll(
-            'img[data-src*="/web/image"][data-src*="&id=1"]'
+            `img[data-src="${getOrigin()}/web/image/partner/1/image"]`
         );
         assert.strictEqual(
             imageOnRecord.length,
@@ -10687,12 +10684,12 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=1&unique="]',
+            `img[data-src="${getOrigin()}/web/image/partner/1/image"]`,
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=&unique="]',
+            `img[data-src="${getOrigin()}/web/image/partner/null/image"]`,
             "image url should contain an empty id if partner_id is not set"
         );
     });

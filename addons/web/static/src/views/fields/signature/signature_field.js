@@ -4,9 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { imageUrl } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
-import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
+import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, useState } from "@odoo/owl";
@@ -41,11 +41,8 @@ export class SignatureField extends Component {
         const { name, previewImage, record } = this.props;
         if (this.state.isValid && this.value) {
             if (isBinarySize(this.value)) {
-                return url("/web/image", {
-                    model: record.resModel,
-                    id: record.resId,
-                    field: previewImage || name,
-                    unique: imageCacheKey(this.rawCacheKey),
+                return imageUrl(record.resModel, record.resId, previewImage || name, {
+                    unique: this.rawCacheKey,
                 });
             } else {
                 // Use magic-word technique for detecting image type

@@ -10,6 +10,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { getOrigin } from "@web/core/utils/urls";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+const { DateTime } = luxon;
 
 QUnit.module("discuss sidebar");
 
@@ -725,23 +726,26 @@ QUnit.test("channel - avatar: should have correct avatar", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
-        avatarCacheKey: "100111",
+        avatarCacheKey: "notaDateCache",
     });
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
-        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=100111']`
+        `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`
     );
 });
 
 QUnit.test("channel - avatar: should update avatar url from bus", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ avatarCacheKey: "101010", name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({
+        avatarCacheKey: "notaDateCache",
+        name: "test",
+    });
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(
-        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=101010']`,
+        `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`,
         { count: 2 }
     );
     await env.services.orm.call("discuss.channel", "write", [
@@ -751,7 +755,7 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
     const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
     await contains(
-        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=${newCacheKey}']`,
+        `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
         { count: 2 }
     );
 });
@@ -1003,9 +1007,9 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
 
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
-        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${partnerId}&model=res.partner&unique=${encodeURIComponent(
-            partner.write_date
-        )}']`
+        `img[data-src='${getOrigin()}/web/image/res.partner/${partnerId}/avatar_128?unique=${
+            DateTime.fromSQL(partner.write_date).ts
+        }']`
     );
 });
 

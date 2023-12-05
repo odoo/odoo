@@ -7,6 +7,7 @@ import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, click } from "@web/../tests/helpers/utils";
 import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { getOrigin } from "@web/core/utils/urls";
 
 /* The widgets M2XAVatarEmployee inherits from M2XAvatarUser. Those tests therefore allows
    to test the opening of popover employee cards for both widgets type. If the widgets
@@ -344,7 +345,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             document
                 .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                 .getAttribute("data-src"),
-            `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
         );
 
         // Clicking on first employee's avatar
@@ -449,7 +450,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 document
                     .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                     .getAttribute("data-src"),
-                `/web/image/hr.employee/${employeeId_1}/avatar_128`
+                `${getOrigin()}/web/image/hr.employee/${employeeId_1}/avatar_128`
             );
 
             await click(
@@ -617,7 +618,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
                 )
                 .getAttribute("data-src"),
-            `/web/image/hr.employee.public/${employeeId_2}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128`
         );
         assert.strictEqual(
             document
@@ -625,7 +626,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
                 )[1]
                 .getAttribute("data-src"),
-            `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
         );
 
         // Clicking on first employee's avatar
@@ -706,7 +707,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 document
                     .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                     .getAttribute("data-src"),
-                `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+                `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
             );
 
             // Clicking on first employee's avatar (employee with no user)

@@ -1,8 +1,8 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { url } from "@web/core/utils/urls";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
+import { imageUrl } from "@web/core/utils/urls";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -71,33 +71,14 @@ export class Persona extends Record {
     }
 
     get avatarUrl() {
-        const urlParams = {};
-        if (this.write_date) {
-            urlParams.unique = this.write_date;
-        }
         if (this.type === "partner") {
-            return url("/web/image", {
-                field: "avatar_128",
-                id: this.id,
-                model: "res.partner",
-                ...urlParams,
-            });
+            return imageUrl("res.partner", this.id, "avatar_128", { unique: this.write_date });
         }
         if (this.type === "guest") {
-            return url("/web/image", {
-                field: "avatar_128",
-                id: this.id,
-                model: "mail.guest",
-                ...urlParams,
-            });
+            return imageUrl("mail.guest", this.id, "avatar_128", { unique: this.write_date });
         }
         if (this.user?.id) {
-            return url("/web/image", {
-                field: "avatar_128",
-                id: this.user.id,
-                model: "res.users",
-                ...urlParams,
-            });
+            return imageUrl("res.users", this.user.id, "avatar_128", { unique: this.write_date });
         }
         return DEFAULT_AVATAR;
     }

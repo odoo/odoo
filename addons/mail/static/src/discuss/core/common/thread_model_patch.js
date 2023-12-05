@@ -1,10 +1,9 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
-import { assignDefined } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { url } from "@web/core/utils/urls";
+import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 
 patch(Thread.prototype, {
@@ -60,12 +59,8 @@ patch(Thread.prototype, {
     },
     get avatarUrl() {
         if (this.type === "channel" || this.type === "group") {
-            const urlParams = assignDefined({}, { unique: this.avatarCacheKey });
-            return url("/web/image", {
-                field: "avatar_128",
-                id: this.id,
-                model: "discuss.channel",
-                ...urlParams,
+            return imageUrl("discuss.channel", this.id, "avatar_128", {
+                unique: this.avatarCacheKey,
             });
         }
         if (this.type === "chat" && this.correspondent) {

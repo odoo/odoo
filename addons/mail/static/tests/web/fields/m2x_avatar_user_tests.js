@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
+import { getOrigin } from "@web/core/utils/urls";
 
 const fakeMultiTab = {
     start() {
@@ -471,7 +472,7 @@ QUnit.test("avatar_user widget displays the appropriate user image in form view"
         views: [[false, "form"]],
     });
     await contains(
-        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="/web/image/res.users/${userId}/avatar_128"]`
+        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128"]`
     );
 });
 
