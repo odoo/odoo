@@ -368,6 +368,12 @@
                             </setting>
                         </block>
 
+                        <block title="Food Delivery Services" id="pos_food_delivery_services">
+                            <setting string="Deliveroo" help="Integrate Deliveroo in POS">
+                                <field name="pos_delivery_service_ids"/>
+                            </setting>
+                        </block>
+
                         <block title="Inventory" id="pos_inventory_section">
                             <setting title="Operation types show up in the Inventory dashboard." string="Operation Type" help="Used to record product pickings. Products are consumed from its default source location.">
                                 <field name="pos_picking_type_id" domain="[('company_id', '=', company_id)]" required="pos_config_id"/>

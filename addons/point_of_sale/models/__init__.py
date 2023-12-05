@@ -12,6 +12,7 @@ from . import chart_template
 from . import digest
 from . import pos_category
 from . import pos_config
+from . import pos_delivery_service
 from . import pos_order
 from . import pos_session
 from . import pos_combo

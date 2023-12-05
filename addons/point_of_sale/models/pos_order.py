@@ -35,6 +35,16 @@ class PosOrder(models.Model):
         return sum(tax.get('amount', 0.0) for tax in taxes)
 
     @api.model
+    def _generate_unique_id(self, *args, config_id=None, prefix="Order"):
+        """
+        param: args: tuple of (session)id, login_number, sequence_number)
+        """
+        if config_id:
+            session_id = config_id.current_session_id
+            return f"{prefix} {session_id.name}-{session_id.login_number:0>3}-{session_id.sequence_number:0>4}"
+        return f"{prefix} {args[0]:0>5}-{args[1]:0>3}-{args[2]:0>4}"
+
+    @api.model
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
         return {
@@ -331,6 +341,7 @@ class PosOrder(models.Model):
         comodel_name='account.fiscal.position', string='Fiscal Position',
         readonly=False,
     )
+    delivery_service_id = fields.Many2one('pos.delivery.service', string='Delivery Service')
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
