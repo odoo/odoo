@@ -10,6 +10,7 @@ class EmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
     _description = "Skill level for an employee"
     _order = "skill_type_id, skill_level_id"
+    _rec_name = "skill_id"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
     skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True, domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
