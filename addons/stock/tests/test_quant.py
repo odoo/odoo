@@ -799,6 +799,7 @@ class StockQuant(TransactionCase):
 
     def test_quant_display_name(self):
         """ Check the display name of a quant. """
+        self.env.user.groups_id += self.env.ref('stock.group_production_lot')
         sn1 = self.env['stock.lot'].create({
             'name': 'sn1',
             'product_id': self.product_serial.id,
