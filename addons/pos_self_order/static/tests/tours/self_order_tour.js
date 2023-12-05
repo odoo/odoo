@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("pos_self_order_tour", {
         {
             content: "Test that the search box is visible after clicking on the search icon",
             trigger: "input[placeholder='Pizza']",
-            run: "text Desk",
+            run: "text Test Product",
         },
         {
             content: "Test that the search results are present",

@@ -7,6 +7,15 @@ from odoo.tests import HttpCase
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderControllers(HttpCase):
     def test_menu_redirect(self):
+        self.env['pos.config'].create({
+            'name': 'Bar',
+            'module_pos_restaurant': True,
+            'iface_splitbill': True,
+            'iface_printbill': True,
+            'iface_orderline_notes': True,
+            'start_category': True,
+            'self_order_view_mode': True,
+        })
         response = self.url_open("/menu")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.history[0].status_code, 303)
