@@ -34,7 +34,7 @@ class PurchaseReport(models.Model):
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, group_operator='avg',
                               help="Amount of time between date planned and order by date for each purchase order line.")
     price_total = fields.Float('Total', readonly=True)
-    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg")
+    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg", digits='Product Price')
     nbr_lines = fields.Integer('# of Lines', readonly=True)
     category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
