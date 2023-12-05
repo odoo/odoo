@@ -682,15 +682,15 @@ patch(MockServer.prototype, {
                 ];
             }
             if (channel.channel_type !== "channel") {
-                res["seen_partners_info"] = members
-                    .filter((member) => member.partner_id)
-                    .map((member) => {
-                        return {
-                            partner_id: member.partner_id,
-                            seen_message_id: member.seen_message_id,
-                            fetched_message_id: member.fetched_message_id,
-                        };
-                    });
+                res["seen_partners_info"] = members.map((member) => {
+                    return {
+                        id: member.id,
+                        [member.partner_id ? "partner_id" : "guest_id"]:
+                            member.partner_id || member.guest_id,
+                        seen_message_id: member.seen_message_id,
+                        fetched_message_id: member.fetched_message_id,
+                    };
+                });
                 res["channelMembers"] = [
                     [
                         "ADD",
@@ -780,15 +780,6 @@ patch(MockServer.prototype, {
             return;
         }
         this._mockDiscussChannel_SetLastSeenMessage([channel.id], last_message_id);
-        this.pyEnv["bus.bus"]._sendone(
-            channel.channel_type === "chat" ? channel : this.pyEnv.currentPartner,
-            "discuss.channel.member/seen",
-            {
-                channel_id: channel.id,
-                last_message_id: last_message_id,
-                partner_id: this.pyEnv.currentPartnerId,
-            }
-        );
     },
     /**
      * Simulates `channel_rename` on `discuss.channel`.
@@ -1043,5 +1034,25 @@ patch(MockServer.prototype, {
                 seen_message_id: message_id,
             });
         }
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "in", ids]]);
+        const [partner, guest] = this._mockResPartner__getCurrentPersona();
+        let target = guest ?? partner;
+        if (this._mockDiscussChannel__typesAllowingSeenInfos().includes(channel.channel_type)) {
+            target = channel;
+        }
+        this.pyEnv["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
+            channel_id: channel.id,
+            id: memberOfCurrentUser?.id,
+            last_message_id: message_id,
+            [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
+        });
+    },
+    /**
+     * Simulates `_types_allowing_seen_infos` on `discuss.channel`.
+     *
+     * @returns {string[]}
+     */
+    _mockDiscussChannel__typesAllowingSeenInfos() {
+        return ["chat", "group"];
     },
 });

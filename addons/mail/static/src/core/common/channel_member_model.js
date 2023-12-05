@@ -27,6 +27,8 @@ export class ChannelMember extends Record {
     persona = Record.one("Persona", { inverse: "channelMembers" });
     rtcSession = Record.one("RtcSession");
     thread = Record.one("Thread", { inverse: "channelMembers" });
+    lastFetchedMessage = Record.one("Message");
+    lastSeenMessage = Record.one("Message");
 
     /**
      * @returns {string}

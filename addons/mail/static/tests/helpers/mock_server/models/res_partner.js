@@ -387,4 +387,14 @@ patch(MockServer.prototype, {
         ]);
         return [...channels, ...directMessages];
     },
+    /**
+     * Simulates `_get_current_persona` on `res.partner`.
+     *
+     */
+    _mockResPartner__getCurrentPersona() {
+        if (this.pyEnv.currentUser?._is_public()) {
+            return [null, this._mockMailGuest__getGuestFromContext()];
+        }
+        return [this.pyEnv.currentPartner, null];
+    },
 });

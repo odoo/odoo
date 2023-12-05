@@ -90,4 +90,12 @@ patch(MockServer.prototype, {
         });
         this._mockMailGuest__setAuthCookie(guestId);
     },
+    /**
+     * Simulates `_types_allowing_seen_infos` on `discuss.channel`.
+     *
+     * @returns {string[]}
+     */
+    _mockDiscussChannel__typesAllowingSeenInfos() {
+        return super._mockDiscussChannel__typesAllowingSeenInfos(...arguments).concat(["livechat"]);
+    },
 });
