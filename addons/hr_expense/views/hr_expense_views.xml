@@ -1073,6 +1073,7 @@
                 'default_department_id': active_id
                 }
             </field>
+            <field name="domain">[('state', '=', 'submit')]</field>
         </record>
 
         <record id="action_hr_expense_sheet_department_filtered" model="ir.actions.act_window">

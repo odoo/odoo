@@ -85,6 +85,13 @@ class SaleOrder(models.Model):
             else:
                 order.is_abandoned_cart = False
 
+    @api.depends('partner_id')
+    def _compute_payment_term_id(self):
+        super()._compute_payment_term_id()
+        for order in self:
+            if order.website_id:
+                order.payment_term_id = order.website_id.with_company(order.company_id).sale_get_payment_term(order.partner_id)
+
     def _search_abandoned_cart(self, operator, value):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         deadlines = [[
@@ -483,3 +490,12 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return {}
+
+    def _get_lang(self):
+        res = super()._get_lang()
+
+        if self.website_id and request and request.is_frontend:
+            # Use request lang as cart lang if request comes from frontend
+            return request.env.lang
+
+        return res
