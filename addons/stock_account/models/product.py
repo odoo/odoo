@@ -588,8 +588,14 @@ class ProductProduct(models.Model):
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
 
-            debit_account_id = expense_account.id
-            credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            value = out_stock_valuation_layer.value
+            if out_stock_valuation_layer.currency_id.compare_amounts(value, 0) < 0:
+                debit_account_id = expense_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            else:
+                debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                credit_account_id = expense_account.id
+
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -624,11 +630,11 @@ class ProductProduct(models.Model):
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
 
-            debit_account_id = product_accounts[product.id]['stock_valuation'].id
-            credit_account_id = product_accounts[product.id]['stock_input'].id
             value = out_stock_valuation_layer.value
-            if out_stock_valuation_layer.currency_id.compare_amounts(value, 0) < 0:
-                # Swap accounts makes a negative value in accounting
+            if out_stock_valuation_layer.currency_id.compare_amounts(value, 0) > 0:
+                debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                credit_account_id = product_accounts[product.id]['stock_input'].id
+            else:
                 debit_account_id = product_accounts[product.id]['stock_output'].id
                 credit_account_id = product_accounts[product.id]['stock_valuation'].id
 

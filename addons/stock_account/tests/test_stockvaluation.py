@@ -3108,6 +3108,56 @@ class TestStockValuation(SavepointCase):
 
         self.assertEqual(self.product1.standard_price, 15)
 
+    def test_change_cost_method_3(self):
+        """ Change the cost method from AVCO to FIFO.
+        """
+        self.product2.property_account_expense_id = self.expense_account.id
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product2.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product2.standard_price = 10
+
+        self._make_in_move(self.product1, 10, 100)
+        out_move = self._make_out_move(self.product2, 10)
+        out_move.quantity_done = 10
+        out_move._action_done()
+        # SVL values
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.value_svl, 1000)
+        self.assertEqual(self.product2.quantity_svl, -10)
+        self.assertEqual(self.product2.value_svl, -100)
+        # AML values
+        valuation_amls = self._get_stock_valuation_move_lines()
+        input_amls = self._get_stock_input_move_lines()
+        output_amls = self._get_stock_output_move_lines()
+        self.assertEqual(len(valuation_amls), 2)
+        self.assertEqual(len(input_amls), 1)
+        self.assertEqual(len(output_amls), 1)
+        self.assertEqual(sum(valuation_amls.mapped('balance')), 900)
+        self.assertEqual(input_amls.balance, -1000)
+        self.assertEqual(output_amls.balance, 100)
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        # Everything should remain the same
+        # SVL values
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.value_svl, 1000)
+        self.assertEqual(self.product2.quantity_svl, -10)
+        self.assertEqual(self.product2.value_svl, -100)
+        # AML values
+        valuation_amls = self._get_stock_valuation_move_lines()
+        input_amls = self._get_stock_input_move_lines()
+        output_amls = self._get_stock_output_move_lines()
+        expense_amls = self.env['account.move.line'].search([
+            ('account_id', '=', self.expense_account.id)])
+        self.assertEqual(len(valuation_amls), 6)
+        self.assertEqual(len(input_amls), 2)
+        self.assertEqual(len(output_amls), 2)
+        self.assertEqual(sum(valuation_amls.mapped('balance')), 900)
+        self.assertEqual(sum(input_amls.mapped('balance')), -2000)
+        self.assertEqual(sum(output_amls.mapped('balance')), 200)
+        self.assertEqual(sum(expense_amls.mapped('balance')), 900)
+
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
         product, put 1 unit in an internal sublocation and the second
