@@ -14,7 +14,7 @@ import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
  * the same x position to prevent triggering horizontal moves.
  * @param {string} from
  */
-const sortableDrag = async (from) => {
+export const sortableDrag = async (from) => {
     const fixture = getFixture();
     const fromEl = fixture.querySelector(from);
     const fromRect = fromEl.getBoundingClientRect();
