@@ -24,12 +24,12 @@ class MrpWorkorder(models.Model):
         (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()
         return super().action_cancel()
 
-    def _prepare_analytic_line_values(self, account, amount, unit_amount):
+    def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
         return {
             'name': _("[WC] %s", self.display_name),
             'amount': amount,
-            'auto_account_id': account,
+            **account_field_values,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,

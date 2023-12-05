@@ -298,3 +298,97 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.move_raw_ids[0].quantity = 0
         self.assertEqual(analytic_account.debit, 0)
         self.assertFalse(analytic_account.line_ids)
+
+    def test_cross_analytics(self):
+        """ Test analytic distributions (AD) with cross analytics on an MO."""
+
+        ap1 = self.env['account.analytic.plan'].create({
+            'name': 'Plan 1',
+        })
+        ap2 = self.env['account.analytic.plan'].create({
+            'name': 'Plan 2',
+        })
+        ac1A = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 1 account A',
+            'plan_id': ap1.id,
+        })
+        ac1B = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 1 account B',
+            'plan_id': ap1.id,
+        })
+        ac1C = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 1 account C',
+            'plan_id': ap1.id,
+        })
+        ac2A = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 2 account A',
+            'plan_id': ap2.id,
+        })
+        ac2B = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 2 account B',
+            'plan_id': ap2.id,
+        })
+        ac2C = self.env['account.analytic.account'].create({
+            'name': 'test_cross_analytics plan 2 account C',
+            'plan_id': ap2.id,
+        })
+
+        analytic_distribution = {
+            f"{ac1A.id},{ac2A.id}": 33.33,
+            f"{ac1B.id},{ac2B.id}": 33.33,
+            f"{ac1C.id},{ac2C.id}": 33.33,
+        }
+
+        # create a mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 10.0
+        mo_form.analytic_distribution = analytic_distribution
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 0)
+        # increase qty_producing to 5.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo_form.save()
+        self.assertEqual(mo.state, 'progress')
+        aals = mo.move_raw_ids.analytic_account_line_ids
+        self.assertEqual(len(aals), 3)
+        self.assertEqual(sum(aals.mapped('amount')), -49.99)
+
+        # increase qty_producing to 10.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 10.0
+        mo_form.save()
+        mo.workorder_ids.button_finish()
+        aals = mo.move_raw_ids.analytic_account_line_ids
+
+        self.assertEqual(mo.state, 'to_close')
+        self.assertEqual(len(aals), 3)
+        self.assertEqual(sum(aals.mapped('amount')), -99.99)
+
+        # mark as done
+        mo.button_mark_done()
+        aals = mo.move_raw_ids.analytic_account_line_ids
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(len(aals), 3)
+        self.assertEqual(sum(aals.mapped('amount')), -99.99)
+
+        # assert the right accounts are on the right analytic lines
+        ap1_column = ap1._column_name()
+        ap2_column = ap2._column_name()
+        line_with_A_accounts = aals.filtered_domain([(ap1_column, '=', ac1A.id)])
+        line_with_B_accounts = aals.filtered_domain([(ap1_column, '=', ac1B.id)])
+        line_with_C_accounts = aals.filtered_domain([(ap1_column, '=', ac1C.id)])
+        self.assertEqual(line_with_A_accounts[ap2_column], ac2A)
+        self.assertEqual(line_with_B_accounts[ap2_column], ac2B)
+        self.assertEqual(line_with_C_accounts[ap2_column], ac2C)
+
+        # ensure the right amounts are on the right lines
+        # the distribution calculation corrects for rounding error accumulation to ensure
+        # the total sum is correct, so individual lines can have minor deviations
+        self.assertAlmostEqual(line_with_A_accounts.amount, -100/3, delta=0.02)
+        self.assertAlmostEqual(line_with_B_accounts.amount, -100/3, delta=0.02)
+        self.assertAlmostEqual(line_with_B_accounts.amount, -100/3, delta=0.02)
