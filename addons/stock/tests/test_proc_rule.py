@@ -21,6 +21,18 @@ class TestProcRule(TransactionCase):
         })
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
 
+    def test_qty_to_order_remainder_decimal(self):
+        """Test case for when remainder is decimal"""
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
+        orderpoint_form.product_min_qty = 4.0
+        orderpoint_form.product_max_qty = 5.1
+        orderpoint_form.qty_multiple = 0.1
+        orderpoint = orderpoint_form.save()
+        self.assertEqual(orderpoint.qty_to_order, orderpoint.product_max_qty)
+
     def test_endless_loop_rules_from_location(self):
         """ Creates and configure a rule the way, when trying to get rules from
         location, it goes in a state where the found rule tries to trigger another
