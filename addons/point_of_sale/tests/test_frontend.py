@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from odoo import Command
+
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 
-import odoo.tests
+_logger = logging.getLogger(__name__)
 
 
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
@@ -515,9 +518,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
 
         self.main_pos_config.write({
             'iface_tipproduct': True,
@@ -547,6 +553,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -566,6 +575,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
 
     def test_05_ticket_screen(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -722,6 +734,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
 
     def test_rounding_half_up_cash_and_bank(self):
+        self.env['res.partner'].create({'name': 'Nicole Ford'})
         company = self.main_pos_config.company_id
         rouding_method = self.env['account.cash.rounding'].create({
             'name': 'Rounding HALF-UP',
