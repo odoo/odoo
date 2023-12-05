@@ -26,6 +26,15 @@ class Crawler(HttpCaseWithUserDemo):
 
     def setUp(self):
         super(Crawler, self).setUp()
+        self.env.ref('website.default_website').write({
+            'social_facebook': "https://www.facebook.com/Odoo",
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+            'social_tiktok': 'https://www.tiktok.com/@odoo',
+        })
 
         if hasattr(self.env['res.partner'], 'grade_id'):
             # Create at least one published parter, so that /partners doesn't
@@ -96,6 +105,19 @@ class Crawler(HttpCaseWithUserDemo):
         _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
+        # Demo user without sales/crm/helpdesk/... rights won't be able to access to
+        # portals like /my/leads. Grant him those rights if exists.
+        groups = self.env['res.groups']
+        group_xmlids = [
+            'sales_team.group_sale_salesman',
+            'purchase.group_purchase_user',
+            'helpdesk.group_helpdesk_user',
+        ]
+        for group_xmlid in group_xmlids:
+            group = self.env.ref(group_xmlid, raise_if_not_found=False)
+            if group:
+                groups += group
+        self.env.ref('base.group_user').write({'implied_ids': [(4, group.id) for group in groups]})
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('demo', 'demo')
@@ -106,6 +128,12 @@ class Crawler(HttpCaseWithUserDemo):
         _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
     def test_30_crawl_admin(self):
+        # If no forum.post is existing, the route /forum//ask will be called instead -> 404
+        if 'forum.post' in self.env:
+            self.env['forum.post'].create({
+                'name': 'Very Smart Question',
+                'forum_id': self.env.ref('website_forum.forum_help').id,
+            })
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('admin', 'admin')
