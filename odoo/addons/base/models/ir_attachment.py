@@ -13,7 +13,7 @@ import uuid
 from collections import defaultdict
 from PIL import Image
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import config, human_size, ImageProcess, str2bool
 from odoo.tools.mimetypes import guess_mimetype
@@ -668,3 +668,14 @@ class IrAttachment(models.Model):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
+
+    @api.model
+    def regenerate_assets_bundles(self):
+        self.search([
+            ('public', '=', True),
+            ("url", "=like", "/web/assets/%"),
+            ('res_model', '=', 'ir.ui.view'),
+            ('res_id', '=', 0),
+            ('create_uid', '=', SUPERUSER_ID),
+        ]).unlink()
+        self.clear_caches()
