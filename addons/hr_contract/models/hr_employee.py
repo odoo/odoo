@@ -134,7 +134,7 @@ class Employee(models.Model):
         for contract in employee_contracts:
             tmp_date_from = max(date_from_date, contract.date_start)
             tmp_date_to = min(date_to_date, contract.date_end) if contract.date_end else date_to_date
-            unusual_days.update(contract.resource_calendar_id._get_unusual_days(
+            unusual_days.update(contract.resource_calendar_id.sudo(False)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC)
             ))
