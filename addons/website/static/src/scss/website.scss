@@ -1191,6 +1191,9 @@ header {
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
+        > li.nav-item {
+            align-self: center !important;
+        }
         @include media-breakpoint-up(lg) {
             width: 50%;
         }
@@ -1224,6 +1227,10 @@ header {
                 align-items: center !important;
             }
         }
+    }
+} @else if o-website-value('header-template') == 'slogan' {
+    #top_menu_container > ul.nav > li.nav-item {
+        align-self: center;
     }
 }
 
