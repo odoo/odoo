@@ -169,8 +169,8 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
                 trigger: '.o_nav_entry[data-menu-xmlid="mass_mailing.menu_email_campaigns"]',
             },
             {
-                content: 'Select "Newsletter" campaign',
-                trigger: '.oe_kanban_card:contains("Newsletter")',
+                content: 'Select "Test Newsletter" campaign',
+                trigger: '.oe_kanban_card:contains("Test Newsletter")',
             },
             {
                 content: 'Add a line (create new mailing)',
@@ -193,11 +193,11 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             {
                 content: 'Fill in Mailing list',
                 trigger: '#contact_list_ids',
-                run: 'text Newsletter',
+                run: 'text Test Newsletter',
             },
             {
-                content: 'Pick "Newsletter" option',
-                trigger: '.o_input_dropdown a:contains(Newsletter)',
+                content: 'Pick "Test Newsletter" option',
+                trigger: '.o_input_dropdown a:contains(Test Newsletter)',
             },
             {
                 content: 'Save form',
