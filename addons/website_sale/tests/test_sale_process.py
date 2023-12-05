@@ -683,3 +683,32 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         })
         invoice.action_post()
         self.assertFalse(partner_1._can_edit_name())
+
+    def test_11_payment_term_when_address_change(self):
+        ''' This test ensures that the payment term set when triggering
+            `onchange_partner_id` by changing the address of a website sale
+            order is computed by `sale_get_payment_term`.
+        '''
+        self._setUp_multicompany_env()
+        product_id = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'website_published': True,
+            'sale_ok': True}).id
+
+        env = api.Environment(self.env.cr, self.portal_user.id, {})
+        with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:
+            req.httprequest.method = "POST"
+
+            self.WebsiteSaleController.cart_update(product_id)
+            so = self.portal_user.sale_order_ids[0]
+            self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
+
+            self.default_address_values['partner_id'] = self.portal_partner.id
+            self.default_address_values['name'] = self.portal_partner.name
+            self.WebsiteSaleController.address(**self.default_address_values)
+            self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
+
+            so.website_id = False
+            self.WebsiteSaleController.address(**self.default_address_values)
+            self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")
