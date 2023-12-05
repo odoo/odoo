@@ -82,6 +82,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             Allocations = self.env['hr.leave.allocation']
             HolidaysStatus = self.env['hr.leave.type']
 
+            self.env.ref('hr.employee_admin').tz = "Europe/Brussels"
+
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
                 'requires_allocation': 'yes',
@@ -100,7 +102,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }, {
-                    'name': 'Paid Time off for David',
+                    'name': 'Paid Time off for Admin',
                     'holiday_status_id': holiday_status_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.ref('hr.employee_admin'),
