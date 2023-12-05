@@ -733,6 +733,10 @@ class Website(Home):
                 result.append(group)
         return result
 
+    @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
+
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
