@@ -11,12 +11,11 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
     @classmethod
     def setUpClass(cls):
         super(TestSaleCouponCommon, cls).setUpClass()
-
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
 
         # Set all the existing programs to active=False to avoid interference
-        cls.env['loyalty.program'].search([]).write({'active': False})
+        cls.env['loyalty.program'].search([]).sudo().write({'active': False})
 
         # create partner for sale order.
         cls.steve = cls.env['res.partner'].create({
