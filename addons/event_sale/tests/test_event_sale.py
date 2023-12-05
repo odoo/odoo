@@ -40,7 +40,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         cls.sale_order = cls.env['sale.order'].create({
-            'partner_id': cls.env.ref('base.res_partner_2').id,
+            'partner_id': cls.env['res.partner'].create({'name': 'Test Partner'}).id,
             'note': 'Invoice after delivery',
             'payment_term_id': cls.env.ref('account.account_payment_term_end_following_month').id
         })
@@ -68,6 +68,10 @@ class TestEventSale(TestEventSaleCommon):
         cls.customer_so = cls.env['sale.order'].with_user(cls.user_sales_salesman).create({
             'partner_id': cls.event_customer.id,
         })
+
+        cls.env['account.tax.group'].create(
+            {'name': 'Test Account Tax Group', 'company_id': cls.env.company.id}
+        )
 
     @users('user_sales_salesman')
     def test_event_crm_sale(self):
