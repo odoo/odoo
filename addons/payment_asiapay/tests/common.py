@@ -3,13 +3,14 @@
 from odoo import Command
 
 from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-class AsiaPayCommon(PaymentCommon):
+class AsiaPayCommon(AccountTestInvoicingCommon, PaymentCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.asiapay = cls._prepare_provider('asiapay', update_values={
             'asiapay_merchant_id': '123456789',

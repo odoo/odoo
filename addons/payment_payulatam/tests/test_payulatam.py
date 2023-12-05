@@ -21,7 +21,7 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
     def test_incompatibility_with_unsupported_currency(self):
         """ Test that the PayULatam provider is not compatible with an unsupported currency. """
         compatible_providers = self.env['payment.provider']._get_compatible_providers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
+            self.env.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
         self.assertNotIn(self.payulatam, compatible_providers)
 
