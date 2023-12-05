@@ -19,9 +19,12 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: function () {
                 var url = window.location.host + '/contactus';
                 $('#o_website_links_link_tracker_form input#url').val(url);
-                $('.o_website_links_utm_forms input#campaign-select').val(1).change();
-                $('.o_website_links_utm_forms input#channel-select').val(1).change();
-                $('.o_website_links_utm_forms input#source-select').val(1).change();
+                const campaignId = Object.entries($('#s2id_campaign-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Sale").id
+                $('.o_website_links_utm_forms input#campaign-select').val(campaignId).change();
+                const channelId = Object.entries($('#s2id_channel-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Website").id
+                $('.o_website_links_utm_forms input#channel-select').val(channelId).change();
+                const sourceId = Object.entries($('#s2id_source-select')[0]).find(([key, value]) => value.select2)[1].select2.opts.data.find(d => d.text === "Search engine").id
+                $('.o_website_links_utm_forms input#source-select').val(sourceId).change();
                 // Patch and ignore write on clipboard in tour as we don't have permissions
                 const oldWriteText = browser.navigator.clipboard.writeText;
                 browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
@@ -44,7 +47,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             run: function () {
                 var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
                 if (window.location.pathname + window.location.search !== expectedUrl) {
-                    console.error("The link was not correctly created.");
+                    console.error("The link was not correctly created. " + window.location.search);
                 }
                 window.location.href = '/r';
             },
