@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanCoverImageDialog">
-        <Dialog title="'Set a Cover Image'" size="'lg'">
+        <Dialog title="'Set Cover Image'" size="'lg'">
             <div t-if="attachments.length" class="o_kanban_cover_container bg-100">
                 <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
                     <div class="o_kanban_cover_image position-relative d-inline-block m-2 border bg-white o_cursor_pointer" t-att-class="{
@@ -33,8 +33,8 @@
                 <button class="btn btn-primary" t-on-click="uploadImage">
                     Upload and Set
                 </button>
-                <button t-if="coverId" class="btn btn-secondary" t-on-click="removeCover">
-                    Remove Cover Image
+                <button t-if="state.selectedAttachmentId" class="btn btn-secondary" t-on-click="removeCover">
+                    Remove Cover
                 </button>
                 <button class="btn btn-secondary" t-on-click="dialog.close">
                     Discard
