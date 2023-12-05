@@ -32,5 +32,6 @@ SUPPORTED_CURRENCIES = [
 TRANSACTION_STATUS_MAPPING = {
     'pending': ('pending', 'in_process', 'in_mediation', 'authorized'),
     'done': ('approved', 'refunded'),
-    'canceled': ('cancelled', 'null', 'rejected'),
+    'canceled': ('cancelled', 'null'),
+    'error': ('rejected'),
 }

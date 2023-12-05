@@ -5,7 +5,7 @@ import pprint
 
 from werkzeug import urls
 
-from odoo import _, models
+from odoo import _, models, api
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment_mercado_pago.const import TRANSACTION_STATUS_MAPPING
@@ -160,6 +160,14 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif payment_status in TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
+        elif payment_status in TRANSACTION_STATUS_MAPPING['error']:
+            state_message = self._mercado_pago_response_msg(verified_payment_data)
+            status_detail = verified_payment_data.get('status_detail')
+            _logger.warning(
+                "Received data for transaction with reference %s with status: %s and error code: %s",
+                self.reference, payment_status, status_detail
+            )
+            self._set_error(state_message)
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
                 "Received data for transaction with reference %s with invalid payment status: %s",
@@ -168,3 +176,41 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Mercado Pago: " + _("Received data with invalid status: %s", payment_status)
             )
+
+    @api.model
+    def _mercado_pago_response_msg(self, verified_payment_data):
+        """ Return the response status in the human language.
+
+        :return: The response message
+        :param dict verified_payment_data: MercadoPago transaction response
+        """
+        mercadopago_messages = {
+            'accredited': _("Mercado Pago: Your payment has been credited. In your summary you will see the charge of {amount} as {statement_descriptor}."),
+            'pending_contingency': _("Mercado Pago: We are processing your payment. Don't worry, less than 2 business days we will notify you by e-mail if your payment has been credited."),
+            'pending_review_manual': _("Mercado Pago: We are processing your payment. Don't worry, less than 2 business days we will notify you by e-mail if your payment has been credited or if we need more information."),
+            'cc_rejected_bad_filled_card_number': _("Mercado Pago: Check the card number."),
+            'cc_rejected_bad_filled_date': _("Mercado Pago: Check expiration date."),
+            'cc_rejected_bad_filled_other': _("Mercado Pago: Check the data."),
+            'cc_rejected_bad_filled_security_code': _("Mercado Pago: Check the card security code."),
+            'cc_rejected_blacklist': _("Mercado Pago: We were unable to process your payment, please use another card."),
+            'cc_rejected_call_for_authorize': _("Mercado Pago: You must authorize before {payment_method_id} the payment of {amount}."),
+            'cc_rejected_card_disabled': _("Mercado Pago: Call {payment_method_id} to activate your card or use another payment method. The phone number is on the back of your card."),
+            'cc_rejected_card_error': _("Mercado Pago: We were unable to process your payment, please check your card information."),
+            'cc_rejected_duplicated_payment': _("Mercado Pago: If you need to pay again, use another card or another payment method."),
+            'cc_rejected_high_risk': _("Mercado Pago: We were unable to process your payment, please use another car."),
+            'cc_rejected_insufficient_amount': _("Mercado Pago: Your {payment_method_id} has not enough funds."),
+            'cc_rejected_invalid_installments': _("Mercado Pago: {payment_method_id} does not process payments in {installments} installments."),
+            'cc_rejected_max_attempts': _("Mercado Pago: You have reached the limit of allowed attempts. Choose another card or other means of payment."),
+            'cc_rejected_other_reason': _("Mercado Pago: {payment_method_id} did not process payment, use another card or contact issuer.")
+        }
+        status = verified_payment_data.get('status_detail', 'cc_rejected_other_reason')
+        try:
+            message = mercadopago_messages[status].format(
+                payment_method_id=verified_payment_data.get('payment_method_id'),
+                amount=verified_payment_data.get('transaction_amount'),
+                statement_descriptor=verified_payment_data.get('statement_descriptor'),
+                installments=verified_payment_data.get('installments')
+            )
+        except KeyError:
+            message = _("Mercadopago could not process this payment. Error code: %s") % verified_payment_data.get('status_detail')
+        return message
