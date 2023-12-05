@@ -5,6 +5,7 @@ import odoo
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestMailPublicPage(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     """Checks that the invite page redirects to the channel and that all

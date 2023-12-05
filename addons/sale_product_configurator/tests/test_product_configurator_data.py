@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.product.tests.common import ProductAttributesCommon, ProductVariantsCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestProductConfiguratorData(HttpCase, ProductVariantsCommon, SaleCommon):
+class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
 
     def request_get_values(self, product_template):
         base_url = product_template.get_base_url()

@@ -15,7 +15,14 @@ class TestSnippets(HttpCase):
         emails = mailing_list.contact_ids.mapped('email')
         self.assertIn("hello@world.com", emails)
 
+<<<<<<< HEAD
     def test_snippet_newsletter_block_witih_edit(self):
+||||||| parent of f9bf63941758 (temp)
+    def test_02_newsletter_block_edition(self):
+=======
+    def test_02_newsletter_block_edition(self):
+        self.env.ref('base.user_admin').email = 'admin@yourcompany.example.com'
+>>>>>>> f9bf63941758 (temp)
         admin_email = self.env.ref('base.user_admin').email
         # Get contacts with this email
         mass_mailing_contacts = self.env['mailing.contact'].search([('email', '=', admin_email)])

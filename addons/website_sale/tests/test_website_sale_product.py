@@ -15,6 +15,7 @@ class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
         super().setUpClass()
         cls.WebsiteSaleController = WebsiteSale()
         cls.website = cls.env.ref('website.default_website')
+        cls.website.company_id = cls.env.company
 
         cls.tax_5 = cls.env['account.tax'].create({
             'name': '5% Tax',

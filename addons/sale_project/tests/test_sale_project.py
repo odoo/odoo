@@ -2,13 +2,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+<<<<<<< HEAD
 from odoo.tests.common import new_test_user
 from .common import TestSaleProjectCommon
 from odoo.tests import Form
 from odoo.tests.common import tagged
+||||||| parent of f9bf63941758 (temp)
+from odoo.tests.common import TransactionCase, users
+=======
+from odoo.tests.common import users
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+>>>>>>> f9bf63941758 (temp)
 
+<<<<<<< HEAD
 @tagged('post_install', '-at_install')
 class TestSaleProject(TestSaleProjectCommon):
+||||||| parent of f9bf63941758 (temp)
+
+class TestSaleProject(TransactionCase):
+=======
+
+class TestSaleProject(TransactionCaseWithUserDemo):
+>>>>>>> f9bf63941758 (temp)
 
     @classmethod
     def setUpClass(cls):

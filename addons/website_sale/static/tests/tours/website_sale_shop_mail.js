@@ -1,41 +1,20 @@
 /** @odoo-module **/
 
-import rpc from "web.rpc";
 import { registry } from "@web/core/registry";
 import tourUtils from "website_sale.tour_utils";
 
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
+<<<<<<< HEAD
     url: '/',
     steps: () => [
-    {
-        content: "Change the domain of the websites and go to shop",
-        trigger: 'body',
-        run: function () {
-            // We change the domain of the website to test that the email that
-            // will be sent uses the correct domain for its links.
-            var def1 = rpc.query({
-                'model': 'website',
-                'method': 'write',
-                'args': [[1], {
-                    'domain': "my-test-domain.com",
-                }],
-            });
-            // We need to change the domain of all the websites otherwise the
-            // website selector will return the website 2 since the domain we
-            // set on website 1 doesn't actually match our test server.
-            var def2 = rpc.query({
-                'model': 'website',
-                'method': 'write',
-                'args': [[2], {
-                    'domain': "https://domain-not-used.fr",
-                }],
-            });
-            Promise.all([def1, def2]).then(function (data) {
-                window.location.href = '/shop?search=Acoustic Bloc Screens';
-            });
-        },
-    },
+||||||| parent of f9bf63941758 (temp)
+    url: '/',
+    steps: [
+=======
+    url: '/shop?search=Acoustic Bloc Screens',
+    steps: [
+>>>>>>> f9bf63941758 (temp)
     {
         content: "select Acoustic Bloc Screens",
         trigger: '.oe_product_cart a:containsExact("Acoustic Bloc Screens")',

@@ -55,5 +55,32 @@ class TestMailingUi(MassMailCommon, HttpCase):
     def test_snippets_mailing_menu_toolbar_mobile_tour(self):
         self.start_tour("/web", 'snippets_mailing_menu_toolbar_mobile', login="demo")
 
+<<<<<<< HEAD
     def test_mass_mailing_code_view_tour(self):
+||||||| parent of f9bf63941758 (temp)
+    def test_06_mass_mailing_campaign_new_mailing(self):
+        self.start_tour("/web", 'mass_mailing_campaing_new_mailing', login="demo")
+
+    def test_07_mass_mailing_code_view_tour(self):
+=======
+    def test_06_mass_mailing_campaign_new_mailing(self):
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('mass_mailing.group_mass_mailing_campaign').id)]})
+        campaign = self.env['utm.campaign'].create({
+            'name': 'Test Newsletter',
+            'user_id': self.env.ref("base.user_admin").id,
+            'tag_ids': [(4, self.env.ref('utm.utm_tag_1').id)],
+        })
+        self.env['mailing.mailing'].create({
+            'name': 'First Mailing to disply x2many',
+            'subject': 'Bioutifoul mailing',
+            'state': 'draft',
+            'campaign_id': campaign.id,
+        })
+        self.env['mailing.list'].create({
+            'name': 'Test Newsletter',
+        })
+        self.start_tour("/web", 'mass_mailing_campaing_new_mailing', login="demo")
+
+    def test_07_mass_mailing_code_view_tour(self):
+>>>>>>> f9bf63941758 (temp)
         self.start_tour("/web?debug=tests", 'mass_mailing_code_view_tour', login="demo")
