@@ -18,6 +18,9 @@ class ProductCommon(
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.currency_id = cls.env.ref('base.USD')
+        cls.currency = cls.env.ref('base.USD')
+
         # Ideally, this logic should be moved into sthg like a NoAccountCommon in account :D
         # Since tax fields are specified in account module, cannot be given as create values
         NO_TAXES_CONTEXT = {
