@@ -116,7 +116,7 @@ class OnboardingStep(models.Model):
             'view_mode': 'tree',
             'limit': 99999999,
             'search_view_id': [self.env.ref('account.view_account_search').id],
-            'views': [[view_id, 'list']],
+            'views': [[view_id, 'list'], [False, 'form']],
             'domain': domain,
         }
 
