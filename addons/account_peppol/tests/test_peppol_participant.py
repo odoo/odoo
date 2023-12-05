@@ -28,6 +28,7 @@ class TestPeppolParticipant(TransactionCase):
             'account_peppol_eas': '9925',
             'account_peppol_endpoint': '0000000000',
             'account_peppol_phone_number': '+32483123456',
+            'account_peppol_contact_email': 'yourcompany@test.example.com',
         }
 
     @contextmanager
