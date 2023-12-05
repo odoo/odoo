@@ -27,7 +27,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.driver_id:
                 vehicle.driver_employee_id = self.env['hr.employee'].search([
-                    ('address_home_id', '=', vehicle.driver_id.id),
+                    ('name', '=', vehicle.driver_id.name),
                 ], limit=1)
             else:
                 vehicle.driver_employee_id = False
