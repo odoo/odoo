@@ -61,7 +61,7 @@ class Meeting(models.Model):
             time_offset = timedelta(minutes=5)
             domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
 
-        self.env['calendar.event'].search(domain).write({
+        self.env['calendar.event'].with_context(dont_notify=True).search(domain).write({
             'need_sync_m': True,
         })
 
