@@ -187,6 +187,7 @@ export class KanbanRecord extends Component {
     static defaultProps = {
         colors: COLORS,
         deleteRecord: () => {},
+        archiveRecord: () => {},
         openRecord: () => {},
     };
     static props = [
@@ -198,6 +199,7 @@ export class KanbanRecord extends Component {
         "group?",
         "list",
         "deleteRecord?",
+        "archiveRecord?",
         "openRecord?",
         "readonly?",
         "record",
@@ -333,7 +335,7 @@ export class KanbanRecord extends Component {
      * @param {Object} params
      */
     triggerAction(params) {
-        const { archInfo, openRecord, deleteRecord, record } = this.props;
+        const { archInfo, openRecord, deleteRecord, record, archiveRecord } = this.props;
         const { type } = params;
         switch (type) {
             case "edit": {
@@ -341,6 +343,12 @@ export class KanbanRecord extends Component {
             }
             case "open": {
                 return openRecord(record);
+            }
+            case "archive": {
+                return archiveRecord(record, true);
+            }
+            case "unarchive": {
+                return archiveRecord(record, false);
             }
             case "delete": {
                 return deleteRecord(record);
