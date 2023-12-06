@@ -155,6 +155,12 @@
             <field name="name">Color</field>
             <field name="sequence">20</field>
         </record>
+        <record id="product_attribute_value_color_wood" model="product.attribute.value">
+            <field name="name">Wood</field>
+            <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="sequence">0</field>
+            <field name="image" type="base64" file="product/static/img/wood.jpg"/>
+        </record>
         <record id="product_attribute_value_3" model="product.attribute.value">
             <field name="name">White</field>
             <field name="attribute_id" ref="product_attribute_2"/>
@@ -541,7 +547,7 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_24-image.jpg"/>
         </record>
 
-        <record id="product_product_25" model="product.product">
+        <record id="product_template_acoustic_bloc_screens" model="product.template">
             <field name="name">Acoustic Bloc Screens</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">287.0</field>
@@ -550,9 +556,21 @@
             <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
-            <field name="default_code">FURN_6666</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('product.product_attribute_2'),
+                    'value_ids': [
+                        Command.set([
+                            ref('product.product_attribute_value_3'),
+                            ref('product.product_attribute_value_color_wood')
+                        ])
+                    ]
+                })
+            ]"/>
         </record>
+
+        <function model="product.template" name="_demo_configure_variants"/>
 
         <record id="product_product_25_document" model="product.document">
             <field name="name">Acoustic Bloc Screens Document.pdf</field>
@@ -779,7 +797,7 @@
         </record>
 
         <record id="product_supplierinfo_16" model="product.supplierinfo">
-            <field name="product_tmpl_id" ref="product_product_25_product_template"/>
+            <field name="product_tmpl_id" ref="product_template_acoustic_bloc_screens"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="delay">8</field>
             <field name="min_qty">1</field>
