@@ -210,3 +210,14 @@ class TestHttp(http.Controller):
             raise SerializationFailureError()
 
         return data.decode()
+
+    # =====================================================
+    # Security
+    # =====================================================
+    @http.route('/test_http/httprequest_attrs', type='http', auth='none')
+    def request_attrs(self):
+        return json.dumps(dir(request.httprequest))
+
+    @http.route('/test_http/httprequest_environ', type='http', auth='none')
+    def request_environ(self):
+        return json.dumps(list(request.httprequest.environ.keys()))
