@@ -9,7 +9,7 @@ import { constructFullProductName } from "@point_of_sale/utils";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
-    static props = ["product", "currentProductCard?"];
+    static props = ["product", "currentProductCard?", "isAvailable?"];
 
     selfRef = useRef("selfProductCard");
     currentProductCardRef = useRef("currentProductCard");
@@ -88,7 +88,7 @@ export class ProductCard extends Component {
     async selectProduct(qty = 1) {
         const product = this.props.product;
 
-        if (!this.selfOrder.ordering || !product.self_order_available) {
+        if (!this.selfOrder.ordering || !product.self_order_available || !this.props.isAvailable) {
             return;
         }
 

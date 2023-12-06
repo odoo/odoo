@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState, onWillStart } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
@@ -85,6 +85,14 @@ export class ProductListPage extends Component {
             },
             () => [this.selfOrder.currentCategory]
         );
+
+        onWillStart(() => {
+            this.onWillStart();
+        });
+    }
+
+    onWillStart() {
+        this.selfOrder.updateCategoryList();
     }
 
     focusSearch() {

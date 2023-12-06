@@ -64,10 +64,14 @@
                     <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
                     <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
                     <t t-if="availableProducts.length > 0">
-                        <h2 t-esc="category.name" class="pt-4 pb-2 px-3 mb-4 mx-n3 bg-200 display-6 fw-bold"/>
+                        <div class="pt-4 pb-2 px-3 mb-4 mx-n3 bg-200 fw-bold">
+                            <h2 t-esc="category.name"/>
+                            <span t-if="!selfOrder.isCategoryAvailable(category.id)" class="unavailable-text">Unavailable at this time of the day</span>
+                        </div>
+                        
                         <div class="o-so-products-row">
                             <t t-foreach="availableProducts" t-as="product" t-key="product.id">
-                                <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard"/>
+                                <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" isAvailable="selfOrder.isCategoryAvailable(category.id)"/>
                             </t>
                         </div>
                     </t>
