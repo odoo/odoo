@@ -86,6 +86,50 @@ class TestTourManualConsumption(HttpCase):
         self.assertEqual(move_sn.manual_consumption, True)
         self.assertEqual(move_lot.manual_consumption, True)
 
+    def test_mrp_manual_consumption_02(self):
+        """
+        test that when a new quantity is manually set for a component,
+        and the MO is marked as done, the component quantity is not overwritten.
+        """
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'finish',
+            'type': 'product',
+            'tracking': 'none',})
+        product_nt = Product.create({
+            'name': 'No tracking',
+            'type': 'product',
+            'tracking': 'none',})
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_nt.id, 'product_qty': 1}),
+            ],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.bom_id = bom
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.assertEqual(mo.state, 'confirmed')
+        move_nt = mo.move_raw_ids
+        self.assertEqual(move_nt.manual_consumption, False)
+        self.assertEqual(move_nt.quantity, 0)
+        self.assertFalse(move_nt.picked)
+
+        action_id = self.env.ref('mrp.menu_mrp_production_action').action
+        url = "/web#model=mrp.production&view_type=form&action=%s&id=%s" % (str(action_id.id), str(mo.id))
+        self.start_tour(url, "test_mrp_manual_consumption_02", login="admin", timeout=100)
+
+        self.assertEqual(move_nt.manual_consumption, True)
+        self.assertEqual(move_nt.picked, True)
+        self.assertEqual(move_nt.quantity, 16.0)
 
 class TestManualConsumption(TestMrpCommon):
     @classmethod
