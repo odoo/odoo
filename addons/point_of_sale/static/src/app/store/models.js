@@ -1546,7 +1546,7 @@ export class Order extends PosModel {
             shippingDate:
                 this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
             headerData: {
-                ...this.pos.getReceiptHeaderData(),
+                ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
             },
         };

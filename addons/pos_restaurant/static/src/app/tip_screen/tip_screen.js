@@ -110,15 +110,16 @@ export class TipScreen extends Component {
         return { name: "ReceiptScreen" };
     }
     async printTipReceipt() {
+        const order = this.currentOrder;
         const receipts = [
-            this.currentOrder.selected_paymentline.ticket,
-            this.currentOrder.selected_paymentline.cashier_receipt,
+            order.selected_paymentline.ticket,
+            order.selected_paymentline.cashier_receipt,
         ];
         for (let i = 0; i < receipts.length; i++) {
             await this.printer.print(
                 TipReceipt,
                 {
-                    headerData: this.pos.getReceiptHeaderData(),
+                    headerData: this.pos.getReceiptHeaderData(order),
                     data: receipts[i],
                     total: this.env.utils.formatCurrency(this.totalAmount),
                 },

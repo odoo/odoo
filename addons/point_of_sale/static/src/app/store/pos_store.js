@@ -1938,7 +1938,7 @@ export class PosStore extends Reactive {
         return false;
     }
 
-    getReceiptHeaderData() {
+    getReceiptHeaderData(order) {
         return {
             company: this.company,
             cashier: this.get_cashier()?.name,
