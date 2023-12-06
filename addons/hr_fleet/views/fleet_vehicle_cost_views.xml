@@ -8,6 +8,16 @@
             <xpath expr="//field[@name='purchaser_id']" position="after">
                 <field name="purchaser_employee_id" string="Driver" invisible="1"/>
             </xpath>
+            <sheet position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_employee" type="object" class="oe_stat_button" icon="fa-id-card-o" groups="hr.group_hr_user" invisible="not purchaser_employee_id">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Employee</span>
+                            <span class="o_stat_value"><field name="purchaser_employee_id"/></span>
+                        </div>
+                    </button>
+                </div>
+            </sheet>
         </field>
     </record>
 
