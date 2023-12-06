@@ -179,11 +179,6 @@ class AccountJournal(models.Model):
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
 
-    # Sale journals fields
-    sale_activity_type_id = fields.Many2one('mail.activity.type', string='Schedule Activity', default=False, help="Activity will be automatically scheduled on payment due date, improving collection process.")
-    sale_activity_user_id = fields.Many2one('res.users', string="Activity User", help="Leave empty to assign the Salesperson of the invoice.")
-    sale_activity_note = fields.Text('Activity Summary')
-
     # alias configuration for journals
     alias_id = fields.Many2one(help="Send one separate email for each invoice.\n\n"
                                     "Any file extension will be accepted.\n\n"

@@ -3772,18 +3772,6 @@ class AccountMove(models.Model):
                 if p not in invoice.sudo().message_partner_ids
             ])
 
-            if (
-                invoice.is_sale_document()
-                and invoice.journal_id.sale_activity_type_id
-                and (invoice.journal_id.sale_activity_user_id or invoice.invoice_user_id).id not in (self.env.ref('base.user_root').id, False)
-            ):
-                invoice.activity_schedule(
-                    date_deadline=min((date for date in invoice.line_ids.mapped('date_maturity') if date), default=invoice.date),
-                    activity_type_id=invoice.journal_id.sale_activity_type_id.id,
-                    summary=invoice.journal_id.sale_activity_note,
-                    user_id=invoice.journal_id.sale_activity_user_id.id or invoice.invoice_user_id.id,
-                )
-
         customer_count, supplier_count = defaultdict(int), defaultdict(int)
         for invoice in to_post:
             if invoice.is_sale_document():
