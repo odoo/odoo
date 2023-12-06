@@ -54,7 +54,7 @@ class LeaveReport(models.Model):
                 from (select
                     null as leave_id,
                     allocation.employee_id as employee_id,
-                    allocation.private_name as name,
+                    allocation.name as name,
                     allocation.number_of_days as number_of_days,
                     allocation.category_id as category_id,
                     allocation.department_id as department_id,
