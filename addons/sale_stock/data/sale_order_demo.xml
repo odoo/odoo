@@ -42,8 +42,8 @@
 
         <record id="sale_order_line_42" model="sale.order.line">
             <field name="order_id" ref="sale_order_19"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
-            <field name="product_id" ref="product.product_product_25"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25_product_template').product_variant_id.get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_25_product_template"/>
             <field name="product_uom_qty">5</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
@@ -73,8 +73,8 @@
 
         <record id="sale_order_line_44" model="sale.order.line">
             <field name="order_id" ref="sale_order_20"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
-            <field name="product_id" ref="product.product_product_25"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25_product_template').product_variant_id.get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_25_product_template"/>
             <field name="product_uom_qty">5</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
@@ -95,8 +95,8 @@
 
         <record id="sale_order_line_45" model="sale.order.line">
             <field name="order_id" ref="sale_order_21"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
-            <field name="product_id" ref="product.product_product_25"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25_product_template').product_variant_id.get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_25_product_template"/>
             <field name="product_uom_qty">10</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>

@@ -16,6 +16,12 @@
         trigger: '.btn[id="stock.view_diagram_button"]',
     },
     {
+        trigger: '.btn-primary > span:contains("Overview")',
+    },
+    {
+        trigger: '.btn-primary > span:contains("Save")',
+    },
+    {
         trigger: 'iframe .o_report_stock_rule',
         isCheck: true,
     },
