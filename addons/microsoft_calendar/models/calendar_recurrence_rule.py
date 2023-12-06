@@ -182,3 +182,11 @@ class RecurrenceRule(models.Model):
             )
 
         return new_recurrence
+
+    def _get_event_user_m(self, user_id=None):
+        """ Get the user who will send the request to Microsoft (organizer if synchronized and current user otherwise). """
+        self.ensure_one()
+        event = self._get_first_event()
+        if event:
+            return event._get_event_user_m(user_id)
+        return self.env.user
