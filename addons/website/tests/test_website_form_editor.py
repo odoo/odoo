@@ -5,11 +5,45 @@ import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
+<<<<<<< HEAD
 class TestWebsiteFormEditor(odoo.tests.HttpCase):
     def test_tour(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=120)
         self.start_tour('/', 'website_form_editor_tour_submit')
         self.start_tour('/', 'website_form_editor_tour_results', login="admin")
+||||||| parent of 1c865de4eabb (temp)
+class TestWebsiteFormEditor(HttpCaseWithUserPortal):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.email = "info@yourcompany.example.com"
+        cls.env.ref("base.user_admin").write({
+            'name': "Mitchell Admin",
+            'phone': "+1 555-555-5555",
+        })
+
+    def test_00_tour(self):
+        self.start_tour("/", 'website_form_editor_tour', login="admin")
+        self.start_tour("/", 'website_form_editor_tour_submit')
+        self.start_tour("/", 'website_form_editor_tour_results', login="admin")
+=======
+class TestWebsiteFormEditor(HttpCaseWithUserPortal):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.email = "info@yourcompany.example.com"
+        cls.env.ref("base.user_admin").write({
+            'name': "Mitchell Admin",
+            'phone': "+1 555-555-5555",
+        })
+
+    def test_00_tour(self):
+        self.start_tour("/", 'website_form_editor_tour', login="admin", timeout=150)
+        self.start_tour("/", 'website_form_editor_tour_submit')
+        self.start_tour("/", 'website_form_editor_tour_results', login="admin")
+>>>>>>> 1c865de4eabb (temp)
 
     def test_website_form_contact_us_edition_with_email(self):
         self.start_tour('/web', 'website_form_contactus_edition_with_email', login="admin")
