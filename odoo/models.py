@@ -6584,6 +6584,12 @@ class BaseModel(metaclass=MetaModel):
                         subtree.pop(field.inverse_name, None)
             return tree
 
+        # the purpose of this dict is to collect the ids of many2one fields, in
+        # order to fix their prefetching when computing their display_name, as
+        # the default prefetching is actually empty after the cache has been
+        # invalidated
+        prefetch_many2one_ids = defaultdict(OrderedSet)
+
         class Snapshot(dict):
             """ A dict with the values of a record, following a prefix tree. """
             __slots__ = ()
@@ -6599,7 +6605,11 @@ class BaseModel(metaclass=MetaModel):
                 """ Set the value of field ``name`` from the record's value. """
                 record = self['<record>']
                 tree = self['<tree>']
-                if record._fields[name].type in ('one2many', 'many2many'):
+                field = record._fields[name]
+                if field.type == 'many2one':
+                    self[name] = value = record[name]
+                    prefetch_many2one_ids[value._name].update(value._ids)
+                elif field.type in ('one2many', 'many2many'):
                     # x2many fields are serialized as a list of line snapshots
                     self[name] = [Snapshot(line, tree[name]) for line in record[name]]
                 else:
@@ -6638,7 +6648,10 @@ class BaseModel(metaclass=MetaModel):
                     if not force and other.get(name) == self[name]:
                         continue
                     field = record._fields[name]
-                    if field.type == 'properties':
+                    if field.type == 'many2one':
+                        value = self[name].with_prefetch(prefetch_many2one_ids[field.comodel_name])
+                        result[name] = field.convert_to_onchange(value, record, {})
+                    elif field.type == 'properties':
                         result[name] = field.convert_to_onchange(self[name], record, {'__snapshot': self})
                     elif field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
