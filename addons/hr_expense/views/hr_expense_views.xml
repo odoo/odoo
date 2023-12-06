@@ -550,6 +550,9 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <form string="Expense Categories">
+                    <div class="alert alert-warning" role="alert" invisible="not standard_price_update_warning">
+                        <field name="standard_price_update_warning"/>
+                    </div>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name='product_variant_count' invisible='1'/>
