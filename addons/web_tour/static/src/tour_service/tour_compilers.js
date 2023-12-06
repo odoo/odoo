@@ -289,8 +289,8 @@ export function compileStepAuto(stepIndex, step, options) {
                 skipAction = false;
                 console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
                 if (!keepWatchBrowser) {
-                    clearTimeout(tourTimeout);
-                    tourTimeout = setTimeout(() => {
+                    browser.clearTimeout(tourTimeout);
+                    tourTimeout = browser.setTimeout(() => {
                         // The logged text shows the relative position of the failed step.
                         // Useful for finding the failed step.
                         console.warn(describeFailedStepDetailed(step, tour));
