@@ -233,13 +233,11 @@ class SaleOrderLine(models.Model):
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
-            'description': description,
             'project_id': project.id,
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
