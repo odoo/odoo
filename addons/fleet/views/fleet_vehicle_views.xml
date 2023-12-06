@@ -591,7 +591,7 @@
         <field name="name">fleet.vehicle.assignation.log.view.tree</field>
         <field name="model">fleet.vehicle.assignation.log</field>
         <field name="arch" type="xml">
-            <tree string="Assignment Logs" editable="bottom">
+            <tree default_order="date_start desc, id desc" string="Assignment Logs" editable="bottom">
                 <field name="vehicle_id" />
                 <field name="driver_id" widget="many2one_avatar" string="Current Driver" />
                 <field name="date_start"/>
