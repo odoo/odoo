@@ -31,19 +31,19 @@ class WebsiteSale(main.WebsiteSale):
             order = request.website.sale_get_order(force_create=True)
 
         main_product = json.loads(main_product)
-        optional_products = json.loads(optional_products)
 
         values = order._cart_update(
-            product_id=main_product['id'],
+            product_id=main_product['product_id'],
             add_qty=main_product['quantity'],
-            # product_custom_attribute_values=main_product['product_custom_attribute_values'],
-            # no_variant_attribute_values=main_product['no_variant_attribute_values'],
+            product_custom_attribute_values=main_product['product_custom_attribute_values'],
+            no_variant_attribute_values=main_product['no_variant_attribute_values'],
             **kwargs
         )
 
         line_ids = [values['line_id']]
         # TODO VCR WEIRD
         if optional_products and values['line_id']:
+            optional_products = json.loads(optional_products)
             # Link option with its parent iff line has been created.
             option_parent = {main_product['unique_id']: values['line_id']}
             for option in optional_products:
@@ -52,8 +52,8 @@ class WebsiteSale(main.WebsiteSale):
                     product_id=option['product_id'],
                     set_qty=option['quantity'],
                     linked_line_id=option_parent[parent_unique_id],
-                    # product_custom_attribute_values=option['product_custom_attribute_values'],
-                    # no_variant_attribute_values=option['no_variant_attribute_values'],
+                    product_custom_attribute_values=option['product_custom_attribute_values'],
+                    no_variant_attribute_values=option['no_variant_attribute_values'],
                     **kwargs
                 )
                 option_parent[option['unique_id']] = option_values['line_id']
