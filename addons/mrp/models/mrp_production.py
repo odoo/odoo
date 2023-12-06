@@ -333,26 +333,33 @@ class MrpProduction(models.Model):
                 ('raw_material_production_id.state', 'in', ('cancel', 'done', 'draft'))])
             return [('move_raw_ids', 'in', raw_stock_moves.ids)]
 
-        raw_stock_moves = self.env['stock.move'].search([
-            ('raw_material_production_id', '!=', False),
-            ('raw_material_production_id.state', 'not in', ('cancel', 'done', 'draft'))])
-        if operator == '=':
-            raw_stock_moves = get_stock_moves(raw_stock_moves, value)
-        elif operator == '!=':
-            raw_stock_moves = raw_stock_moves - get_stock_moves(raw_stock_moves, value)
-        elif operator == 'in':
-            search_raw_moves = self.env['stock.move']
-            for state in value:
-                search_raw_moves |= get_stock_moves(raw_stock_moves, state)
-            raw_stock_moves = search_raw_moves
-        elif operator == 'not in':
-            search_raw_moves = self.env['stock.move']
-            for state in value:
-                search_raw_moves |= raw_stock_moves - get_stock_moves(raw_stock_moves, state)
-            raw_stock_moves = search_raw_moves
-        else:
-            raise UserError(_('Operation not supported'))
-        return [('move_raw_ids', 'in', raw_stock_moves.ids)]
+        raw_productions = self.env['mrp.production'].search([('state', 'not in', ('done', 'cancel', 'draft'))])
+        selected_productions = self.env['mrp.production']
+        for prod in raw_productions:
+            raw_stock_moves = prod.move_raw_ids
+            if len(raw_stock_moves) == 0:
+                continue
+            is_production_selected = False
+            if operator == '=':
+                is_production_selected = len(get_stock_moves(raw_stock_moves, value)) == len(raw_stock_moves)
+            elif operator == '!=':
+                is_production_selected = len(get_stock_moves(raw_stock_moves, value)) == 0
+            elif operator == 'in':
+                search_raw_moves = self.env['stock.move']
+                for state in value:
+                    search_raw_moves |= get_stock_moves(raw_stock_moves, state)
+                is_production_selected = len(search_raw_moves) == len(raw_stock_moves)
+            elif operator == 'not in':
+                search_raw_moves = self.env['stock.move']
+                for state in value:
+                    search_raw_moves |= get_stock_moves(raw_stock_moves, state)
+                is_production_selected = len(search_raw_moves) == 0
+            else:
+                raise UserError(_('Operation not supported'))
+            if not is_production_selected:
+                continue
+            selected_productions += prod
+        return [('id', 'in', selected_productions.ids)]
 
     @api.depends('state', 'reservation_state', 'date_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
