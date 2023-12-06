@@ -413,3 +413,56 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertFalse(subtask.display_in_project)
         subtask.action_archive()
         self.assertTrue(subtask.display_in_project)
+
+    def test_toggle_active_task_with_subtasks(self):
+        """ This test will check archiving task should archive it's subtasks and vice versa"""
+
+        parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Parent Task',
+            'project_id': self.project_goats.id,
+        })
+        child_1, child_2, child_3, child_4 = self.env['project.task'].with_context({'mail_create_nolog': True}).create([
+            {
+                'name': 'child 1',
+                'parent_id': parent_task.id,
+                'child_ids': [
+                    Command.create({
+                        'name': 'Child 1 (Subtask 1)',
+                    }),
+                    Command.create({
+                        'name': 'Child 1 (Subtask 2)',
+                        'child_ids': [Command.create({'name': 'Subsubtask'})],
+                    }),
+                ],
+            },
+            {
+                'name': 'child 2',
+                'parent_id': parent_task.id,
+            },
+            {
+                'name': 'child 3',
+                'parent_id': parent_task.id,
+                'project_id': self.project_goats.id,
+                'child_ids': [
+                    Command.create({
+                        'name': 'Child 3 (Subtask 1)',
+                    }),
+                    Command.create({
+                        'name': 'Child 3 (Subtask 2)',
+                    }),
+                ],
+            },
+            {
+                'name': 'child 4',
+                'parent_id': parent_task.id,
+                'project_id': self.project_goats.id,
+            },
+        ])
+        self.assertEqual(9, len(parent_task._get_all_subtasks()), "Should have 9 subtasks")
+        parent_task.action_archive()
+        self.assertFalse(all((parent_task + child_1._get_all_subtasks() + child_2).mapped('active')),
+            "Parent, `child 1` task (with its descendant tasks) and `Child 2` task should be archived")
+        self.assertTrue(all(child_3._get_all_subtasks().mapped('active')), "`child 3` task and its descendant tasks should be unarchived")
+        self.assertEqual(2, len(parent_task.child_ids), "Should have 2 direct non archived subtasks")
+        self.assertEqual(parent_task.child_ids, child_3 + child_4, "Should have 2 direct non archived subtasks")
+        self.assertEqual(4, len(parent_task._get_all_subtasks().filtered('active')), "Should have 4 non archived subtasks")

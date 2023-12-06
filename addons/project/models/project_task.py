@@ -1868,6 +1868,9 @@ class Task(models.Model):
         }
 
     def action_archive(self):
+        child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
+        if child_tasks:
+            child_tasks.action_archive()
         self.filtered(lambda t: not t.display_in_project and t.parent_id).display_in_project = True
         return super().action_archive()
 
