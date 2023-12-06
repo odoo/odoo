@@ -17,9 +17,7 @@ try:
     import schedule
 except ImportError:
     schedule = None
-    # For now, it is intended to not be installed on the iot-box as it uses native Unix cron system
-    if platform.system() == 'Windows':
-        _logger.warning('Could not import library schedule')
+    _logger.warning('Could not import library schedule')
 
 try:
     from dbus.mainloop.glib import DBusGMainLoop
