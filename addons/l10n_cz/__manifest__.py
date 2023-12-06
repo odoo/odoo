@@ -24,7 +24,7 @@ Tento modul definuje:
         'base_vat',
     ],
     'demo': [
-        'data/demo_company.xml',
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }
