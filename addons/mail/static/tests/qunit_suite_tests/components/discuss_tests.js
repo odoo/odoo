@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { destroy } from '@web/../tests/helpers/utils';
+import { destroy, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { contains, focus, scroll } from "@web/../tests/utils";
 
 import { makeTestPromise, file } from "web.test_utils";
@@ -3415,8 +3415,6 @@ QUnit.module("mail", {}, function () {
         QUnit.test(
             "receive new chat message: out of odoo focus (notification, channel)",
             async function (assert) {
-                assert.expect(4);
-
                 const pyEnv = await startServer();
                 const mailChannelId1 = pyEnv["mail.channel"].create({ channel_type: "chat" });
                 const { env, openDiscuss } = await start({
@@ -3425,10 +3423,11 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                env.bus.addEventListener("set_title_part", ({ detail: payload }) => {
-                    assert.step("set_title_part");
-                    assert.strictEqual(payload.part, "_chat");
-                    assert.strictEqual(payload.title, "1 Message");
+                patchWithCleanup(env.services["title"], {
+                    setParts(parts) {
+                        assert.step("set_title_part");
+                        assert.strictEqual(parts._chat, "1 Message");
+                    },
                 });
 
                 const mailChannel1 = pyEnv["mail.channel"].searchRead([
@@ -3452,8 +3451,6 @@ QUnit.module("mail", {}, function () {
         QUnit.test(
             "receive new chat message: out of odoo focus (notification, chat)",
             async function (assert) {
-                assert.expect(4);
-
                 const pyEnv = await startServer();
                 const mailChannelId1 = pyEnv["mail.channel"].create({ channel_type: "chat" });
                 const { env, openDiscuss } = await start({
@@ -3462,10 +3459,11 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                env.bus.addEventListener("set_title_part", ({ detail: payload }) => {
-                    assert.step("set_title_part");
-                    assert.strictEqual(payload.part, "_chat");
-                    assert.strictEqual(payload.title, "1 Message");
+                patchWithCleanup(env.services["title"], {
+                    setParts(parts) {
+                        assert.step("set_title_part");
+                        assert.strictEqual(parts._chat, "1 Message");
+                    },
                 });
 
                 const mailChannel1 = pyEnv["mail.channel"].searchRead([
@@ -3489,8 +3487,6 @@ QUnit.module("mail", {}, function () {
         QUnit.test(
             "receive new chat messages: out of odoo focus (tab title)",
             async function (assert) {
-                assert.expect(12);
-
                 let step = 0;
                 const pyEnv = await startServer();
                 const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
@@ -3503,19 +3499,20 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
-                env.bus.addEventListener("set_title_part", ({ detail: payload }) => {
-                    step++;
-                    assert.step("set_title_part");
-                    assert.strictEqual(payload.part, "_chat");
-                    if (step === 1) {
-                        assert.strictEqual(payload.title, "1 Message");
-                    }
-                    if (step === 2) {
-                        assert.strictEqual(payload.title, "2 Messages");
-                    }
-                    if (step === 3) {
-                        assert.strictEqual(payload.title, "3 Messages");
-                    }
+                patchWithCleanup(env.services["title"], {
+                    setParts(parts) {
+                        step++;
+                        assert.step("set_title_part");
+                        if (step === 1) {
+                            assert.strictEqual(parts._chat, "1 Message");
+                        }
+                        if (step === 2) {
+                            assert.strictEqual(parts._chat, "2 Messages");
+                        }
+                        if (step === 3) {
+                            assert.strictEqual(parts._chat, "3 Messages");
+                        }
+                    },
                 });
 
                 const mailChannel1 = pyEnv["mail.channel"].searchRead([
