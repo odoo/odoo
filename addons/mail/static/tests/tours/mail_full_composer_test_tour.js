@@ -59,9 +59,9 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             trigger: '[name="subject"] input',
             run() {
                 const subjectValue = document.querySelector('[name="subject"] input').value;
-                if (subjectValue !== "Test User") {
+                if (subjectValue !== "Jane") {
                     console.error(
-                        `Full composer should have "Test User" in subject input (actual: ${subjectValue})`
+                        `Full composer should have "Jane" in subject input (actual: ${subjectValue})`
                     );
                 }
             },
