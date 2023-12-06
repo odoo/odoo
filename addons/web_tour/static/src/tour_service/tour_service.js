@@ -68,18 +68,21 @@ export const tourService = {
         function register(name, tour) {
             name = tour.saveAs || name;
             const wait_for = tour.wait_for || Promise.resolve();
+            let steps;
             tours[name] = {
                 wait_for,
                 name,
                 get steps() {
-                    if (typeof tour.steps === "function") {
-                        return tour.steps().map((step) => {
+                    if (typeof tour.steps !== "function") {
+                        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
+                    }
+                    if (!steps) {
+                        steps = tour.steps().map((step) => {
                             step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
                             return step;
                         });
-                    } else {
-                        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
                     }
+                    return steps;
                 },
                 shadow_dom: tour.shadow_dom,
                 url: tour.url,
