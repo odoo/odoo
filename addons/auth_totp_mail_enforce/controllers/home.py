@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
 import odoo.addons.auth_totp.controllers.home
 
 from odoo import http
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
+
+_logger = logging.getLogger(__name__)
 
 
 class Home(odoo.addons.auth_totp.controllers.home.Home):
@@ -22,5 +25,7 @@ class Home(odoo.addons.auth_totp.controllers.home.Home):
             response.qcontext['user']._send_totp_mail_code()
         except (AccessDenied, UserError) as e:
             response.qcontext['error'] = str(e)
-
+        except Exception as e:
+            _logger.exception('Unable to send TOTP email')
+            response.qcontext['error'] = str(e)
         return response
