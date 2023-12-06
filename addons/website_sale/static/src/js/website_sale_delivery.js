@@ -248,6 +248,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const carrier_id = carrierChecked?.querySelector('input')?.value;
         const result = await this.rpc('/shop/update_carrier', {
             'carrier_id': carrier_id,
+            'no_reset_access_point_address': true,
         })
         this._enableButton(result.status);
     },
