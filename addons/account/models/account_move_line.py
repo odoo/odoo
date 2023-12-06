@@ -1349,11 +1349,25 @@ class AccountMoveLine(models.Model):
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
             vals = vals.copy()
-            if 'balance' in vals:
-                vals.pop('debit', None)
-                vals.pop('credit', None)
-            else:
-                vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
+            if 'balance' not in vals:
+                if 'move_id' in vals:
+                    move = self.env['account.move'].browse(vals['move_id'])
+                    is_invoice = move.is_invoice(include_receipts=True)
+                    currency_id = move.currency_id
+                    company_id = move.company_id
+                    date = move.date
+                else:
+                    is_invoice = vals.get('invoice_type') != 'entry'
+                    currency_id = vals.get('currency_id')
+                    company_id = vals.get('company_id', self.env.company)
+                    date = fields.Date.today()
+                if not is_invoice and currency_id and vals.get('debit') is False and vals.get('credit') is False:
+                    vals['amount_currency'] = vals.get('amount_currency', 0.0)
+                    vals['balance'] = currency_id._convert(vals['amount_currency'], company_id.currency_id, company_id, date)
+                else:
+                    vals['balance'] = vals.get('debit', 0) - vals.get('credit', 0)
+            vals.pop('debit', None)
+            vals.pop('credit', None)
         return vals
 
     def _prepare_create_values(self, vals_list):
