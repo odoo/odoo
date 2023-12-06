@@ -1830,7 +1830,7 @@ class Lead(models.Model):
             'is_company': is_company,
             'type': 'contact'
         }
-        if self.lang_id:
+        if self.lang_id.active:
             res['lang'] = self.lang_id.code
         return res
 
