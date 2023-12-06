@@ -473,6 +473,9 @@
                                 <div colspan="2">
                                     <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
                                 </div>
+                                <div colspan="2">
+                                    <button name="action_view_devices" type="object" string="Connected devices" class="btn btn-secondary"/>
+                                </div>
                             </group>
                             <group string="API Keys">
                                 <div class="text-muted" colspan="2">
@@ -539,6 +542,99 @@
             <field name="view_mode">tree</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="view_id" ref="base.view_apikeys"/>
+        </record>
+
+        <record model="ir.ui.view" id="res_users_device_view_form">
+            <field name="name">res.users.device.form</field>
+            <field name="model">res.users.device</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="user_id"/>
+                        <field name="readable_fingerprint"/>
+                        <field name="last_ip_address"/>
+                        <field name="last_activity"/>
+                        <field name="is_suspicious"/>
+                        <field name="raw_fingerprint"/>
+                        <field name="is_active"/>
+                    </group>
+                    <footer>
+                        <button type="object" invisible="not is_active" name="revoke" string="Revoke" class="btn btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_users_device_view_tree">
+            <field name="name">res.users.device.tree</field>
+            <field name="model">res.users.device</field>
+            <field name="arch" type="xml">
+                <tree default_order="last_activity desc" decoration-danger="is_suspicious">
+                    <header>
+                        <button type="object" class="btn btn-primary" name="revoke" string="Revoke session"/>
+                    </header>
+                    <field name="readable_fingerprint"/>
+                    <field name="last_ip_address"/>
+                    <field name="last_activity"/>
+                    <field name="user_id" optional="hidden"/>
+                    <field name="first_activity" optional="hidden"/>
+                    <field name="is_suspicious" optional="hidden"/>
+                    <field name="is_active" optional="hidden"/>
+                    <button type="object" invisible="not is_active" name="revoke" string="Revoke" class="btn btn-secondary"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_users_device_view_gantt">
+            <field name="name">res.users.device.gantt</field>
+            <field name="model">res.users.device</field>
+            <field name="arch" type="xml">
+                <gantt
+                    string="Session Activity"
+                    date_start="first_activity"
+                    date_stop="last_activity"
+                    default_group_by="user_id"
+                    default_scale="day"
+                    precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half', 'year': 'day:full'}"
+                    color="user_id"
+                    decoration-danger="is_suspicious"
+                >
+                    <field name="user_id"/>
+                    <field name="readable_fingerprint"/>
+                    <field name="last_ip_address"/>
+                    <field name="first_activity"/>
+                    <field name="last_activity"/>
+                    <field name="is_suspicious"/>
+                    <header>
+                        <button type="object" class="btn btn-primary" name="revoke" string="Revoke session"/>
+                    </header>
+                    <templates title="readable_fingerprint">
+                        <div t-name="gantt-popover" title="readbale_fingerprint">
+                            <div><strong><t t-esc="readable_fingerprint"/></strong></div>
+                            <div><t t-esc="last_ip_address"/></div>
+                            <div><t t-esc="first_activity.toFormat('f ')"/><i class="fa fa-long-arrow-right" title="Arrow"/><t t-esc="last_activity.toFormat('f ')"/></div>
+                        </div>
+                    </templates>
+                </gantt>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_users_device">
+            <field name="name">Devices</field>
+            <field name="res_model">res.users.device</field>
+            <field name="view_mode">tree,gantt,form</field>
+            <field name="view_id" ref="base.res_users_device_view_tree"/>
+        </record>
+
+        <record id="res_users_device_search_view" model="ir.ui.view">
+            <field name="name">res.users.device.search</field>
+            <field name="model">res.users.device</field>
+            <field name="arch" type="xml">
+                <search string="Device">
+                    <filter string="Current User" name="current_user" domain="[('user_id','=', uid)]"/>
+                    <filter string="Is Active" name="is_active" domain="[('is_active','=', True)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
+                </search>
+            </field>
         </record>
 
     </data>

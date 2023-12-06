@@ -11,11 +11,12 @@ import json
 import logging
 import os
 import time
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from functools import wraps
 from hashlib import sha256
 from itertools import chain, repeat
 from markupsafe import Markup
+import re
 
 import babel.core
 import pytz
@@ -852,10 +853,18 @@ class Users(models.Model):
     def _compute_session_token(self, sid):
         """ Compute a session token given a session id and a user id """
         # retrieve the fields used to generate the session token
-        session_fields = ', '.join(sorted(self._get_session_token_fields()))
-        self.env.cr.execute("""SELECT %s, (SELECT value FROM ir_config_parameter WHERE key='database.secret')
+        session_fields = ', '.join(map(lambda field: 'res_users.' + field, sorted(self._get_session_token_fields())))
+        self.env.cr.execute(f"""
+                                SELECT
+                                    {session_fields},
+                                    COALESCE(bool_and(device.is_active), true),
+                                    (SELECT value FROM ir_config_parameter WHERE key='database.secret') as secret
                                 FROM res_users
-                                WHERE id=%%s""" % (session_fields), (self.id,))
+                                LEFT JOIN res_users_device as device
+                                    ON device.user_id = %s AND key = %s
+                                WHERE res_users.id=%s
+                                GROUP BY {session_fields}, secret
+                            """, (self.id, sha256(sid.encode('utf-8')).hexdigest(), self.id))
         if self.env.cr.rowcount != 1:
             self.env.registry.clear_cache()
             return False
@@ -983,6 +992,18 @@ class Users(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('base.res_users_identitycheck_view_form_revokedevices').id,
             'context': ctx,
+        }
+
+    def action_view_devices(self):
+        return {
+            'name': _('Connected devices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.device',
+            'view_mode': 'tree,gantt',
+            'views': [
+                [self.env.ref('base.res_users_device_view_tree').id, 'tree'],
+                [self.env.ref('base.res_users_device_view_gantt').id, 'gantt'],
+            ],
         }
 
     @api.model
@@ -2166,3 +2187,77 @@ class APIKeyShow(models.AbstractModel):
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()
     key = fields.Char(readonly=True)
+
+FINGERPRINT_HEADERS = ['HTTP_SEC_CH_UA_PLATFORM', 'HTTP_SEC_CH_UA', 'HTTP_USER_AGENT']
+class Device(models.Model):
+    _name = 'res.users.device'
+    _description = 'Devices'
+
+    raw_fingerprint = fields.Char("Raw fingerprint")
+    readable_fingerprint = fields.Char("Device", compute="_compute_readable_fingerprint",
+        readonly=True,
+        help='Human readable format of the collected fingerprint')
+
+    last_ip_address = fields.Char("Last IP address", help="Tracking IP address")
+    first_activity = fields.Datetime("First Activity", help="Tracking first activity time")
+    last_activity = fields.Datetime("Last Activity", help="Tracking last activity time")
+
+    user_id = fields.Many2one('res.users', index=True)
+    is_active = fields.Boolean("Currently Active", default=True)
+    is_suspicious = fields.Boolean("Potentially suspect (an other fingerprint for the same session)")
+    key = fields.Char()
+
+    def _parse_fingerprint(self, raw_fingerprint):
+        readable_fingerprint = ''
+        os_pattern = re.compile(r'linux|windows|mac os', re.IGNORECASE)
+        browser_pattern = re.compile(r'microsoft edge|firefox|chrome|safari', re.IGNORECASE)
+        os = os_pattern.search(raw_fingerprint)
+        browser = browser_pattern.search(raw_fingerprint)
+        readable_fingerprint = (os.group(0) if os else 'Unknown OS') + ' ' + (browser.group(0) if browser else 'Unknown Browser')
+        return readable_fingerprint
+
+    def _compute_readable_fingerprint(self):
+        for device in self:
+            device.readable_fingerprint = self._parse_fingerprint(device.raw_fingerprint)
+
+    def _extract_fingerprint(self):
+        headers = request.httprequest.headers.environ
+        raw_fingerprint = OrderedDict({key: val for key, val in headers.items() if key in FINGERPRINT_HEADERS})
+        return json.dumps(raw_fingerprint)
+
+    @check_identity
+    def revoke(self):
+        return self._revoke()
+
+    def _revoke(self):
+        self.env.registry.clear_cache()
+        self.sudo().write({
+            'is_active': False,
+        })
+
+    @api.model
+    def _update_device(self):
+        sid = request.session.sid
+        raw_fingerprint = self._extract_fingerprint()
+        key = sha256(sid.encode('utf-8')).hexdigest()
+        devices = self.sudo().search([('key', '=', key)])
+        device = devices.filtered(lambda d: d.raw_fingerprint == raw_fingerprint)
+        if not device:
+            device = self.sudo().create({
+                'user_id': request.session.uid,
+                'raw_fingerprint': raw_fingerprint,
+                'first_activity': fields.Datetime.now(),
+                'is_suspicious': bool(len(devices)),
+                'key': key,
+            })
+        device.sudo().write({
+            'last_ip_address': request.httprequest.remote_addr,
+            'last_activity': fields.Datetime.now(),
+        })
+
+    @api.model
+    def _remove_device(self):
+        sid = request.session.sid
+        key = sha256(sid.encode('utf-8')).hexdigest()
+        devices = self.sudo().search([('key', '=', key)])
+        devices.sudo().unlink()

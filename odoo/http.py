@@ -890,6 +890,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
     def rotate(self, session, env):
         self.delete(session)
+        if env:
+            env['res.users.device']._remove_device()
         session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
