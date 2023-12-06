@@ -315,7 +315,7 @@ class MailingMailing(models.Model):
 
         result_per_mailing = defaultdict(lambda: defaultdict(int))
         for mailing, trace_status, count, links_click_datetime, sent_datetime in result:
-            result_per_mailing[mailing][trace_status] = count
+            result_per_mailing[mailing][trace_status] += count
             result_per_mailing[mailing]['links_click_datetime'] += links_click_datetime
             result_per_mailing[mailing]['sent_datetime'] += sent_datetime
 

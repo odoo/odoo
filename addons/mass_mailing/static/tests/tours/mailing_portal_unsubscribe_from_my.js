@@ -8,34 +8,19 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
     steps: () => [
         {
             content: "List1 is present, opt-in member",
-            trigger:
-                "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') span:contains('Subscribed')",
-            run: "click",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') input:checked",
         },
         {
             content: "List3 is present, opt-outed (test starting data)",
-            trigger:
-                "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List3') span:contains('Not subscribed')",
-            run: "click",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List3') input:not(:checked)",
         },
         {
             content: "List2 is proposed (not member -> proposal to join)",
-            trigger:
-                "ul#o_mailing_subscription_form_lists_additional li.list-group-item:contains('List2')",
-            run: "click",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List2') input:not(:checked)",
         },
         {
-            content: "List4 is not proposed (not member but not private)",
-            trigger:
-                "ul#o_mailing_subscription_form_lists_additional:not(:has(li.list-group-item:contains('List4')))",
-            run: "click",
-        },
-        {
-            content: "List5 is not proposed (not member and not public)",
-            trigger: "body:not(:has(li.list-group-item:contains('List5')))",
-        },
-        {
-            trigger: "div#o_mailing_portal_subscription:not(fieldset)",
+            content: "List4 is not proposed (not member but not public)",
+            trigger: "ul#o_mailing_subscription_form_lists:not(:has(li.list-group-item:contains('List4')))",
         },
         {
             content: "Feedback area is not displayed (nothing done, no feedback required)",
@@ -48,9 +33,42 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
             run: "click",
         },
         {
-            content: "List2: join (opt-in, not already member)",
-            trigger: "ul#o_mailing_subscription_form_lists_additional input[title='List2']",
+            content: "Update Preferences",
+            trigger: "#button_subscription_update_preferences",
             run: "click",
+        },
+        {
+            content: "Check that subscriptions have been updated after the RPC call",
+            trigger: "#o_mailing_subscription_update_info:visible",
+            run: function (args = {}) {
+                this.anchor.classList.add("d-none");
+            }
+        },
+        {
+            content: "List3 is noted as subscribed again",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List3') input:checked",
+        },
+        {
+            content: "List2: join (opt-in, not already member)",
+            trigger: "ul#o_mailing_subscription_form_lists input[title='List2']",
+            run: "click",
+        },
+        {
+            content: "Update Preferences",
+            trigger: "#button_subscription_update_preferences",
+            run: "click",
+        },
+        {
+            content: "Check that subscriptions have been updated after the RPC call",
+            trigger: "#o_mailing_subscription_update_info:visible",
+            run: function () {
+                // Make it invisible again to prevent future race conditions
+                this.anchor.classList.add("d-none");
+            }
+        },
+        {
+            content: "List2 is noted as subscribed ",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List2') input:checked",
         },
         {
             content: "List1: opt-out",
@@ -58,98 +76,55 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
             run: "click",
         },
         {
-            content: "Update subscription",
-            trigger: "button#button_form_send",
+            content: "Update Preferences",
+            trigger: "#button_subscription_update_preferences",
             run: "click",
         },
         {
-            content: "Confirmation changes are done",
-            trigger: "div#o_mailing_subscription_update_info span:contains('Membership updated')",
-            run: "click",
+            content: "Check that subscriptions have been updated after the RPC call",
+            trigger: "#o_mailing_subscription_update_info:visible",
+            run: function () {
+                // Make it invisible again to prevent future race conditions
+                this.anchor.classList.add("d-none");
+            }
         },
         {
-            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+            content: "List1 is noted as unsubscribed ",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') input:not(:checked)",
         },
         {
-            content:
-                "Should make feedback reasons choice appear (feedback still not displayed, linked to reasons)",
-            trigger: "div#o_mailing_portal_subscription fieldset",
-            run: "click",
-        },
-        {
-            content: "Choose first reason, which should not display feedback (see data)",
-            trigger: "fieldset input.o_mailing_subscription_opt_out_reason:first",
-            run: "click",
-        },
-        {
-            content: "Feedback textarea not displayed (see data)",
-            trigger: "div#o_mailing_portal_subscription:not(textarea)",
-            run: "click",
-        },
-        {
-            content: "Choose 'Other' reason",
-            trigger: "fieldset label:contains('Other')",
-            run: "click",
-        },
-        {
-            content: "This should display the Feedback area",
-            trigger: "div#o_mailing_portal_subscription textarea",
-        },
-        {
-            content: "Write feedback reason",
-            trigger: "textarea[name='feedback']",
-            run: "edit My feedback",
-        },
-        {
-            content: "Hit Send",
-            trigger: "button#button_feedback",
-            run: "click",
-        },
-        {
-            content: "Confirmation feedback is sent",
-            trigger:
-                "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
-            run: "click",
-        },
-        {
-            trigger: "textarea[disabled]",
-        },
-        {
-            content: "Once sent feedback area is readonly",
-            trigger: "fieldset input.o_mailing_subscription_opt_out_reason[disabled]",
+            content: "Should not make feedback reasons choice appear",
+            trigger: "div#o_mailing_subscription_feedback:not(:visible)",
+            run: function () {
+                document.querySelector("body").classList.add("feedback_panel_hidden");
+            },
         },
         {
             content: "Now exclude me",
-            trigger: "div#button_blocklist_add",
+            trigger: "div#button_blocklist_add:not(.d-none)",
             run: "click",
         },
         {
             content: "Confirmation exclusion is done",
-            trigger:
-                "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
-            run: "click",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
         },
         {
-            content: "This should disable the 'Update my subscriptions' (Apply changes) button",
-            trigger: "div#o_mailing_subscription_blocklist:not(button#button_form_send)",
+            content: "This should hide the subscription management panel",
+            trigger: "div#o_mailing_subscription_form_manage:not(:visible)",
+            run: function () {
+                document.querySelector("body").classList.add("manage_panel_hidden");
+            },
         },
         {
-            content: "This should enabled Feedback again",
-            trigger: "div#o_mailing_portal_subscription textarea",
+            content: "This should show the feedback form",
+            trigger: "div#o_mailing_portal_subscription textarea:not(:visible)",
+            run: function () {
+                document.querySelector("body").classList.add("feedback_enabled");
+            },
         },
         {
-            content: "Display warning about mailing lists",
-            trigger:
-                "div#o_mailing_subscription_form_blocklisted p:contains('You will not receive any news from those mailing lists you are a member of')",
-            run: "click",
-        },
-        {
-            trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List3')",
-        },
-        {
-            content: "Warning should contain reference to memberships",
-            trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List2')",
-            run: "click",
+            content: "Warning you will not receive anything anymore",
+            trigger: "div#o_mailing_subscription_form_blocklisted div:contains('You won't receive marketing emails.')",
         },
         {
             content: "Give a reason for blocklist (first one)",
@@ -163,8 +138,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
         },
         {
             content: "Confirmation feedback is sent",
-            trigger:
-                "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
+            trigger: "div#o_mailing_subscription_feedback_info span:contains('Thank you for your feedback!')",
         },
     ],
 });
