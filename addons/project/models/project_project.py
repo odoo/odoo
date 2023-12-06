@@ -497,7 +497,13 @@ class Project(models.Model):
             elif (date_end_update and no_current_date_begin and not date_start_update):
                 del vals['date']
 
-        res = super(Project, self).write(vals) if vals else True
+        if 'company_id' in vals:
+            project_with_same_company = self.filtered(lambda project: project.company_id.id == vals.get('company_id'))
+            res = super(Project, self - project_with_same_company).write(vals)
+            del vals['company_id']
+            res &= super(Project, project_with_same_company).write(vals)
+        else:
+            res = super(Project, self).write(vals) if vals else True
 
         if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})

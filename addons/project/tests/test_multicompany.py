@@ -478,3 +478,17 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.assertRaises(AccessError):
                 with Form(task) as task_form:
                     task_form.name = "Testing changing name in a company I can not read/write"
+
+    def test_company_not_reset_on_task(self):
+        """ This test ensure that when a task has a company set but not its project, setting the company of the project to False does not trigger the compute of the task.
+            This behavior is needed because when a user changes the value of a field in the project view form, that field will be present in the 'vals' of the write,
+            even if the value was set back to its original value. In such a case with the company of a project, it is not expected for the task to have their companies be reset.
+        """
+        project = self.Project.create({'name': 'Project'})
+        task = self.env['project.task'].create({
+            'name': 'task no company',
+            'project_id': project.id,
+            'company_id': self.company_a.id,
+        })
+        project.write({'company_id': False})
+        self.assertEqual(task.company_id, self.company_a, "The company of the task should not have been updated")
