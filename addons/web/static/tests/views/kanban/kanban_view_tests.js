@@ -10324,7 +10324,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(getCard(0), "img", "Initially there is no image.");
 
         await click(document.body, ".modal .o_kanban_cover_image img", true);
-        await click(document.body, ".modal .btn-primary:first-child");
+        await click(document.querySelector(".modal .btn-primary:first-child"));
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
