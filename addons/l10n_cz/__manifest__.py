@@ -2,8 +2,8 @@
 {
     'name': 'Czech - Accounting',
     'version': '1.1',
-    'author': '26HOUSE',
-    'website': 'http://www.26house.com',
+    'author': '26HOUSE (http://www.26house.com)',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Czech accounting chart and localization.  With Chart of Accounts with taxes and basic fiscal positions.
@@ -22,7 +22,7 @@ Tento modul definuje:
         'base_vat',
     ],
     'demo': [
-        'data/demo_company.xml',
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }
