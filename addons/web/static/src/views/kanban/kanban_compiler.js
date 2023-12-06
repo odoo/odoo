@@ -19,7 +19,7 @@ import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_co
  */
 
 const ACTION_TYPES = ["action", "object"];
-const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover"];
+const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover", "archive", "unarchive"];
 
 export class KanbanCompiler extends ViewCompiler {
     setup() {

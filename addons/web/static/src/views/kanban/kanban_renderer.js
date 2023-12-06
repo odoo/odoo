@@ -14,7 +14,7 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 
@@ -371,6 +371,19 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
+
+    async archiveRecord(record, active) {
+        if (active) {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("Are you sure that you want to archive this record?"),
+                confirmLabel: _t("Archive"),
+                confirm: () => record.archive(),
+                cancel: () => {},
+            });
+        } else {
+            return record.unarchive();
+        }
+    }
 
     async validateQuickCreate(recordId, mode, group) {
         this.props.quickCreateState.groupId = false;

@@ -1596,6 +1596,70 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(column, ".o_kanban_load_more");
     });
 
+    QUnit.test("click on a button type='archive' to archive a record in a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="archive" class="dropdown-item o_archive">archive</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            mockRPC: (_, { method, args }) => {
+                if (method === "action_archive") {
+                    assert.step(`archive:${args[0]}`);
+                    return true;
+                }
+            },
+        });
+        const column = getColumn(target);
+        assert.containsN(column, ".o_kanban_record", 2);
+
+        await click(column.querySelector(".o_kanban_record .o_archive"));
+        assert.containsOnce(target, ".modal");
+        assert.verifySteps([]);
+
+        await click(target, ".modal .btn-primary");
+        assert.verifySteps(["archive:1"]);
+    });
+
+    QUnit.test("click on a button type='unarchive' to unarchive a record in a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="unarchive" class="dropdown-item o_unarchive">unarchive</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            mockRPC: (_, { method, args }) => {
+                if (method === "action_unarchive") {
+                    assert.step(`unarchive:${args[0]}`);
+                    return true;
+                }
+            },
+        });
+        const column = getColumn(target);
+        assert.containsN(column, ".o_kanban_record", 2);
+
+        await click(column.querySelector(".o_kanban_record .o_unarchive"));
+        assert.verifySteps(["unarchive:1"]);
+    });
+
     QUnit.test("kanban with an action id as on_create attrs", async (assert) => {
         const actionService = {
             start() {
