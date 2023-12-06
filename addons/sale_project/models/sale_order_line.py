@@ -233,19 +233,27 @@ class SaleOrderLine(models.Model):
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
-        return {
+        res = {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
             'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
-            'description': description,
             'project_id': project.id,
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
             'company_id': project.company_id.id,
             'user_ids': False,  # force non assigned task, as created as sudo()
         }
+        if 'calendar_event_id' in self\
+                and 'planned_date_begin' in self.env["project.task"]\
+                and 'date_deadline' in self.env["project.task"]\
+                and self.calendar_event_id.start\
+                and self.calendar_event_id.stop:
+            res.update({
+                'planned_date_begin': self.calendar_event_id.start,
+                'date_deadline': self.calendar_event_id.stop,
+            })
+        return res
 
     def _timesheet_create_task(self, project):
         """ Generate task for the given so line, and link it.
