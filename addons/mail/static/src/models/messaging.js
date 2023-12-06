@@ -267,9 +267,7 @@ Patch({
          */
         _handleGlobalWindowFocus() {
             this.update({ outOfFocusUnreadMessageCounter: 0 });
-            this.env.bus.trigger("set_title_part", {
-                part: "_chat",
-            });
+            this.env.services["title"].setParts({ _chat: undefined });
         },
         /**
          * @private
