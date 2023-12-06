@@ -22,13 +22,11 @@ export class OutOfFocusService {
             : url("/mail/static/src/audio/ting.mp3");
         this.counter = 0;
         this.multiTab = services.multi_tab;
-        this.busService = services.bus_service;
         this.notificationService = services.notification;
-        this.busService.addEventListener("window_focus", () => {
+        this.titleService = services.title;
+        env.bus.addEventListener("window_focus", () => {
             this.counter = 0;
-            this.busService.trigger("set_title_part", {
-                part: "_chat",
-            });
+            this.titleService.setParts({ _chat: undefined });
         });
     }
 
@@ -58,10 +56,7 @@ export class OutOfFocusService {
         });
         this.counter++;
         const titlePattern = this.counter === 1 ? _t("%s Message") : _t("%s Messages");
-        this.busService.trigger("set_title_part", {
-            part: "_chat",
-            title: sprintf(titlePattern, this.counter),
-        });
+        this.titleService.setParts({ _chat: sprintf(titlePattern, this.counter) });
     }
 
     /**
@@ -144,7 +139,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["bus_service", "multi_tab", "notification"],
+    dependencies: ["multi_tab", "notification", "title"],
     start(env, services) {
         const service = new OutOfFocusService(env, services);
         return service;
