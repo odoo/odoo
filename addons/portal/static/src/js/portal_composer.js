@@ -35,6 +35,7 @@ var PortalComposer = publicWidget.Widget.extend({
             'token': false,
             'res_model': false,
             'res_id': false,
+            'send_button_label': _t("Send"),
         }, options || {});
         this.attachments = [];
         this.notification = this.bindService("notification");
