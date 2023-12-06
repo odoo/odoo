@@ -40,6 +40,7 @@ export class DateTimeField extends Component {
         endDateField: { type: String, optional: true },
         maxDate: { type: String, optional: true },
         minDate: { type: String, optional: true },
+        alwaysRange: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
@@ -198,7 +199,11 @@ export class DateTimeField extends Component {
         if (!this.relatedField) {
             return false;
         }
-        return this.props.required || ensureArray(value).filter(Boolean).length === 2;
+        return (
+            this.props.alwaysRange ||
+            this.props.required ||
+            ensureArray(value).filter(Boolean).length === 2
+        );
     }
 
     /**
@@ -216,9 +221,10 @@ export class DateTimeField extends Component {
      */
     shouldShowSeparator() {
         return (
-            this.state.range &&
-            (this.props.required ||
-                (!this.isEmpty(this.startDateField) && !this.isEmpty(this.endDateField)))
+            this.props.alwaysRange ||
+            (this.state.range &&
+                (this.props.required ||
+                    (!this.isEmpty(this.startDateField) && !this.isEmpty(this.endDateField))))
         );
     }
 
@@ -275,6 +281,7 @@ export const dateField = {
         endDateField: options[END_DATE_FIELD_OPTION],
         maxDate: options.max_date,
         minDate: options.min_date,
+        alwaysRange: archParseBoolean(options.always_range),
         placeholder: attrs.placeholder,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
@@ -341,6 +348,15 @@ export const dateRangeField = {
             name: END_DATE_FIELD_OPTION,
             type: "field",
             availableTypes: ["date", "datetime"],
+        },
+        {
+            label: _t("Always range"),
+            name: "always_range",
+            type: "boolean",
+            default: false,
+            help: _t(
+                `Set to true the full range input has to be display by default, even if empty.`
+            ),
         },
     ],
     supportedTypes: ["date", "datetime"],

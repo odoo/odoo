@@ -1167,4 +1167,56 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(textSiblings, ["->", "02/03/2017"]);
     });
+
+    QUnit.test(
+        "always range: related end date, both start date and end date empty",
+        async (assert) => {
+            serverData.models.partner.records[0].datetime = false;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': '1'}"/>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.strictEqual(getInputs().length, 2);
+            assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+            assert.strictEqual(getInputs()[0].value, "");
+            assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+            assert.strictEqual(getInputs()[1].value, "");
+            assert.containsNone(target, ".o_add_date");
+
+            await editInput(getInputs()[0], null, "06/06/2023 12:00:00");
+
+            assert.strictEqual(getInputs().length, 2);
+            assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+            assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+            assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+            assert.strictEqual(getInputs()[1].value, "");
+            assert.containsNone(target, ".o_add_date");
+
+            await editInput(getInputs()[1], null, "07/07/2023 13:00:00");
+
+            assert.strictEqual(getInputs().length, 2);
+            assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+            assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+            assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+            assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
+            assert.containsNone(target, ".o_add_date");
+
+            await editInput(getInputs()[0], null, "");
+
+            assert.strictEqual(getInputs().length, 2);
+            assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+            assert.strictEqual(getInputs()[0].value, "");
+            assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+            assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
+            assert.containsNone(target, ".o_add_date");
+        }
+    );
 });
