@@ -528,11 +528,23 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_stages(self):
-        lead = self.lead_1.with_user(self.env.user)
-        self.assertEqual(lead.team_id, self.sales_team_1)
+        first_now = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: first_now), \
+             freeze_time(first_now):
+            self.lead_1.write({'date_open': first_now})
 
-        lead.convert_opportunity(self.contact_1)
+        lead = self.lead_1.with_user(self.env.user)
+        self.assertEqual(lead.date_open, first_now)
         self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
+
+        second_now = datetime(2023, 11, 8, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: second_now), \
+             freeze_time(second_now):
+            lead.convert_opportunity(self.contact_1)
+        self.assertEqual(lead.date_open, first_now)
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
 
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
