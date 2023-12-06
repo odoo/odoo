@@ -13,6 +13,7 @@
         "security/ir.model.access.csv",
         "views/pos_self_order.index.xml",
         "views/qr_code.xml",
+        "views/pos_category_views.xml",
         "views/pos_config_view.xml",
         "views/pos_session_view.xml",
         "views/custom_link_views.xml",

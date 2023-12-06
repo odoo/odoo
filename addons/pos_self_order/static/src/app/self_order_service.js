@@ -199,17 +199,12 @@ export class SelfOrder extends Reactive {
                 id: 0,
                 name: _t("Uncategorised"),
                 sequence: 9999,
+                hour_until: 24,
+                hour_after: 0,
             });
         }
 
-        this.categoryList = new Set(
-            this.pos_category
-                .sort((a, b) => a.sequence - b.sequence)
-                .filter((c) => this.productsGroupedByCategory[c.id])
-                .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id))
-        );
-
-        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
+        this.updateCategoryList();
     }
 
     initKioskData() {
@@ -255,6 +250,27 @@ export class SelfOrder extends Reactive {
             await this.getOrdersFromServer();
             await this.getPricesFromServer();
         }
+    }
+
+    updateCategoryList() {
+        let now = luxon.DateTime.now();
+        now = now.hour + now.minute / 60;
+        const availableCategories = this.pos_category
+            .sort((a, b) => a.sequence - b.sequence)
+            .filter((c) => this.productsGroupedByCategory[c.id])
+            .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
+        this.categoryList = new Set(availableCategories);
+
+        this.availableCategoryListIds = availableCategories
+            .filter((c) => {
+                return now > c.hour_after && now < c.hour_until;
+            })
+            .map((c) => c.id);
+        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
+    }
+
+    isCategoryAvailable(categoryId) {
+        return this.availableCategoryListIds.includes(categoryId);
     }
 
     saveOrderToLocalStorage(orders) {

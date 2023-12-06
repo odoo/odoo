@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import ir_http
+from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_restaurant
