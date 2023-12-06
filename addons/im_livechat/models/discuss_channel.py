@@ -238,3 +238,6 @@ class DiscussChannel(models.Model):
             chatbot_script,
             Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
         )
+
+    def _types_allowing_seen_infos(self):
+        return super()._types_allowing_seen_infos() + ["livechat"]

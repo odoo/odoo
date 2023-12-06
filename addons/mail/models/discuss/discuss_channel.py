@@ -957,7 +957,7 @@ class Channel(models.Model):
 
     def _channel_seen(self, last_message_id=None, allow_older=False):
         """
-        Mark channel as seen by updating seen message id of the current logged partner
+        Mark channel as seen by updating seen message id of the current persona.
         :param last_message_id: the id of the message to be marked as seen, last message of the
         thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
         kept only for compatibility reasons.
@@ -975,25 +975,21 @@ class Channel(models.Model):
         if last_message_id is not False and not last_message:
             return
         self._set_last_seen_message(last_message, allow_older=allow_older)
-        data = {
-            'channel_id': self.id,
-            'last_message_id': last_message.id,
-            'partner_id': self.env.user.partner_id.id,
-        }
-        target = self if self.channel_type == 'chat' else self.env.user.partner_id
-        self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
         return last_message.id
 
     def _set_last_seen_message(self, last_message, allow_older=False):
         """
-        Set last seen message of `self` channels for the current user.
+        Set last seen message of `self` channels for the current persona.
         :param last_message: the message to set as last seen message
         :param allow_order: whether to allow setting and older message
         as the last seen message.
         """
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        if not current_partner and not current_guest:
+            return
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
-            [('partner_id', '=', self.env.user.partner_id.id)],
+            [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
             [] if allow_older else expression.OR([
                 [('seen_message_id', '=', False)],
                 [('seen_message_id', '<', last_message.id)]
@@ -1005,6 +1001,21 @@ class Channel(models.Model):
             'seen_message_id': last_message.id,
             'last_seen_dt': fields.Datetime.now(),
         })
+        data = {
+            'channel_id': self.id,
+            'id': member.id,
+            'last_message_id': last_message.id,
+        }
+        data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
+        target = current_partner or current_guest
+        if self.channel_type in self._types_allowing_seen_infos():
+            target = self
+        self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
+
+    def _types_allowing_seen_infos(self):
+        """ Return the channel types which allow sending seen infos notification
+        on the channel """
+        return ["chat", "group"]
 
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
