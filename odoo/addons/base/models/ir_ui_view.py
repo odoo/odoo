@@ -1646,7 +1646,11 @@ actual arch.
                 self._validate_classes(node, expr)
 
             elif attr == 'context':
-                vnames = get_expression_field_names(expr) - {'id'}
+                try:
+                    vnames = get_expression_field_names(expr) - {'id'}
+                except SyntaxError as e:
+                    message = _('Invalid context: %(expr)r is not a valid Python expression \n\n %(e)s', expr=expr, e=e)
+                    self._raise_view_error(message)
                 if vnames:
                     name_manager.must_have_fields(node, vnames, f"context ({expr})")
                 for key, val_ast in get_dict_asts(expr).items():
