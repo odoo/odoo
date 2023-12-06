@@ -664,15 +664,24 @@ class AccountEdiCommon(models.AbstractModel):
                 ('type_tax_use', '=', journal.type),
                 ('amount', '=', amount),
             ]
-            tax_excl = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
-            tax_incl = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
-            if tax_excl:
-                inv_line_vals['taxes'].append(tax_excl.id)
-            elif tax_incl:
-                inv_line_vals['taxes'].append(tax_incl.id)
-                inv_line_vals['price_unit'] *= (1 + tax_incl.amount / 100)
-            else:
+
+            tax = False
+            if hasattr(invoice_line_form, '_predict_specific_tax'):
+                # company check is already done in the prediction query
+                predicted_tax_id = invoice_line_form\
+                    ._predict_specific_tax('percent', amount, invoice_line_form.move_id.journal_id.type)
+                tax = self.env['account.tax'].browse(predicted_tax_id)
+            if not tax:
+                tax = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
+            if not tax:
+                tax = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
+
+            if not tax:
                 logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", amount, invoice_line_form.name))
+            else:
+                inv_line_vals['taxes'].append(tax.id)
+                if tax.price_include:
+                    inv_line_vals['price_unit'] *= (1 + tax.amount / 100)
 
         # Handle Fixed Taxes
         for fixed_tax_vals in inv_line_vals['fixed_taxes_list']:

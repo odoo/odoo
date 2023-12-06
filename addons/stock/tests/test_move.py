@@ -12,8 +12,20 @@ class StockMove(TransactionCase):
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
-        cls.env.user.write({'groups_id': [(4, group_stock_multi_locations.id, 0)]})
+        group_production_lot = cls.env.ref('stock.group_production_lot')
+        cls.env.user.write({'groups_id': [
+            (4, group_stock_multi_locations.id),
+            (4, group_production_lot.id)
+        ]})
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        if not cls.stock_location.child_ids:
+            cls.stock_location.create([{
+                'name': 'Shelf 1',
+                'location_id': cls.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': cls.stock_location.id,
+            }])
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
@@ -4182,7 +4194,7 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location, lot_id=lot1, package_id=package1), 1.0)
 
-        move1.move_line_ids.write({'lot_id': lot2.id})
+        move1.move_line_ids.write({'lot_id': lot2})
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location, lot_id=lot1), 0.0)

@@ -19,6 +19,7 @@ class TestProductAttributeValueCommon(TransactionCase):
         super().setUpClass()
 
         cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',

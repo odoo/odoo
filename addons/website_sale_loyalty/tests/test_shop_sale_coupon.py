@@ -8,16 +8,33 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 
 
 @tagged('post_install', '-at_install')
-class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
+class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestUi, cls).setUpClass()
+        super().setUpClass()
+        cls.env.ref('base.user_admin').write({
+            'company_id': cls.env.company.id,
+            'company_ids': [(4, cls.env.company.id)],
+            'name': 'Mitchell Admin',
+            'street': '215 Vine St',
+            'phone': '+1 555-555-5555',
+            'city': 'Scranton',
+            'zip': '18503',
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
+        })
+        cls.env.ref('base.user_admin').sudo().partner_id.company_id = cls.env.company
+        cls.env.ref('website.default_website').company_id = cls.env.company
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
         pricelist = cls.env.ref('product.list0')
         new_currency = cls._setup_currency(cls.currency_ratio)
         pricelist.currency_id = new_currency
+        cls.env.user.partner_id.write({
+            'property_product_pricelist': pricelist.id,
+        })
+        (cls.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         cls.env.flush_all()
 
     def test_01_admin_shop_sale_loyalty_tour(self):
@@ -25,9 +42,10 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             self.skipTest("Transfer provider is not installed")
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
-        transfer_provider.write({
+        transfer_provider.sudo().write({
             'state': 'enabled',
             'is_published': True,
+            'company_id': self.env.company.id,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
