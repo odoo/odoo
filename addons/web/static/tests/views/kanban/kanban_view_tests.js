@@ -11107,7 +11107,7 @@ QUnit.module("Views", (hooks) => {
         await click(document.body, ".modal .o_kanban_cover_image img", {
             skipVisibilityCheck: true,
         });
-        await click(document.body, ".modal .btn-primary:first-child");
+        await click(document.querySelector(".modal .btn-primary:first-child"));
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
