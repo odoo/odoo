@@ -85,6 +85,17 @@ QUnit.module("utils", {}, () => {
         assert.strictEqual(formatDateTime(minus13FromLocalTZ), "05/04/2009 00:00:00");
     });
 
+    QUnit.test("formatDateTime in different timezone", async (assert) => {
+        patchWithCleanup(localization, {
+            dateFormat: "MM/dd/yyyy",
+            dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        });
+        patchTimeZone(0);
+        patchDate(2009, 4, 4, 0, 0, 0);
+        assert.strictEqual(formatDateTime(DateTime.utc()),"05/04/2009 00:00:00");
+        assert.strictEqual(formatDateTime(DateTime.utc(),{ tz: "Asia/Kolkata" }),"05/04/2009 05:30:00");
+    });
+
     QUnit.test("parseDate(Time) outputs DateTime objects in local TZ", async (assert) => {
         patchWithCleanup(localization, defaultLocalization);
 
@@ -99,6 +110,13 @@ QUnit.module("utils", {}, () => {
         patchTimeZone(-660);
         assert.equal(parseDate("01/13/2019").toISO(), "2019-01-13T00:00:00.000-11:00");
         assert.equal(parseDateTime("01/13/2019 10:05:45").toISO(), "2019-01-13T10:05:45.000-11:00");
+    });
+
+    QUnit.test("parseDateTime in different timezone", async (assert) => {
+        patchWithCleanup(localization, defaultLocalization);
+        patchTimeZone(60);
+        assert.equal(parseDateTime("01/13/2019 10:05:45").toISO(),  "2019-01-13T10:05:45.000+01:00");
+        assert.equal(parseDateTime("01/13/2019 10:05:45",{ tz: "Asia/Kolkata" }).toISO(),  "2019-01-13T10:05:45.000+05:30");
     });
 
     QUnit.test("parseDate with different numbering system", async (assert) => {
@@ -428,6 +446,11 @@ QUnit.module("utils", {}, () => {
             date.toMillis()
         );
         assert.strictEqual(deserializeDateTime("2022-02-21 16:11:42").toMillis(), date.toMillis());
+    });
+
+    QUnit.test("deserializeDateTime with different timezone", async (assert) => {
+        const date = DateTime.utc(2022, 2, 21, 16, 11, 42).setZone("Europe/Brussels");
+        assert.deepEqual(deserializeDateTime("2022-02-21 16:11:42", { tz: "Europe/Brussels" }).c, date.c);
     });
 
     QUnit.test("parseDate with short notations", async (assert) => {

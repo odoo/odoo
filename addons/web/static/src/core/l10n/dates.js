@@ -288,7 +288,7 @@ export function formatDateTime(value, options = {}) {
         return "";
     }
     const format = options.format || localization.dateTimeFormat;
-    return value.setZone("default").toFormat(format);
+    return value.setZone(options.tz || "default").toFormat(format);
 }
 
 /**
@@ -408,7 +408,7 @@ export function parseDateTime(value, options = {}) {
     const fmt = options.format || localization.dateTimeFormat;
     const parseOpts = {
         setZone: true,
-        zone: "default",
+        zone: options.tz || "default",
     };
     const switchToLatin = Settings.defaultNumberingSystem !== "latn" && /[0-9]/.test(value);
 
@@ -488,7 +488,7 @@ export function parseDateTime(value, options = {}) {
         });
     }
 
-    return result.setZone("default");
+    return result.setZone(options.tz || "default");
 }
 
 /**
@@ -505,9 +505,9 @@ export function deserializeDate(value) {
  * Returns a datetime object parsed from the given serialized string.
  * @param {string} value serialized datetime string, e.g. "2018-01-01 00:00:00", expressed in UTC
  */
-export function deserializeDateTime(value) {
+export function deserializeDateTime(value, options = {}) {
     return DateTime.fromSQL(value, { numberingSystem: "latn", zone: "utc" })
-        .setZone("default")
+        .setZone(options?.tz || "default")
         .reconfigure({
             numberingSystem: Settings.defaultNumberingSystem,
         });
