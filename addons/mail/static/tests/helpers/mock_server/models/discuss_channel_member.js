@@ -5,10 +5,13 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
     _mockDiscussChannelMember__getAsSudoFromContext(channelId) {
-        const guest = this._mockMailGuest__getGuestFromContext();
+        const [partner, guest] = this._mockResPartner__getCurrentPersona();
+        if (!partner && !guest) {
+            return;
+        }
         return this.pyEnv["discuss.channel.member"].searchRead([
             ["channel_id", "=", channelId],
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", this.pyEnv.currentPartnerId],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
         ])[0];
     },
     /**

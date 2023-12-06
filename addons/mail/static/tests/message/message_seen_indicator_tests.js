@@ -202,6 +202,10 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+        id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+            ["partner_id", "=", partnerId],
+        ])[0],
         channel_id: channelId,
         last_message_id: 100,
         partner_id: partnerId,
@@ -234,6 +238,10 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+        id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+            ["partner_id", "=", partnerId],
+        ])[0],
         channel_id: channelId,
         last_message_id: 100,
         partner_id: partnerId,
@@ -268,6 +276,10 @@ QUnit.test(
         const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // Simulate received channel fetched notification
         pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+            id: pyEnv["discuss.channel.member"].search([
+                ["channel_id", "=", channelId],
+                ["partner_id", "=", partnerId],
+            ])[0],
             channel_id: channelId,
             last_message_id: 100,
             partner_id: partnerId,
@@ -276,6 +288,10 @@ QUnit.test(
 
         // Simulate received channel seen notification
         pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+            id: pyEnv["discuss.channel.member"].search([
+                ["channel_id", "=", channelId],
+                ["partner_id", "=", partnerId],
+            ])[0],
             channel_id: channelId,
             last_message_id: 100,
             partner_id: partnerId,

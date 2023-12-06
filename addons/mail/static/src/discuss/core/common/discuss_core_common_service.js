@@ -130,35 +130,24 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
-                const { channel_id, last_message_id, partner_id } = payload;
-                const channel = this.store.Thread.get({ model: "discuss.channel", id: channel_id });
-                if (channel) {
-                    const member = channel.channelMembers.find((m) => m.persona.id === partner_id);
-                    if (member) {
-                        member.fetched_message_id = { id: last_message_id };
-                    }
-                }
+                const { channel_id, id, last_message_id, partner_id } = payload;
+                this.store.ChannelMember.insert({
+                    id,
+                    fetched_message_id: { id: last_message_id },
+                    persona: { type: "partner", id: partner_id },
+                    thread: { id: channel_id, model: "discuss.channel" },
+                });
             });
             this.busService.subscribe("discuss.channel.member/seen", (payload) => {
-                const { channel_id, last_message_id, partner_id } = payload;
-                const channel = this.store.Thread.get({ model: "discuss.channel", id: channel_id });
-                if (!channel) {
-                    // for example seen from another browser, the current one has no
-                    // knowledge of the channel
-                    return;
-                }
-                if (
-                    partner_id &&
-                    this.store.self?.type === "partner" &&
-                    partner_id === this.store.self?.id
-                ) {
-                    this.threadService.updateSeen(channel, last_message_id);
-                }
-                const member = channel.channelMembers.find(
-                    (m) => m.persona.id === partner_id && m.persona.type === "partner"
-                );
-                if (member) {
-                    member.seen_message_id = { id: last_message_id };
+                const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
+                const member = this.store.ChannelMember.insert({
+                    id,
+                    seen_message_id: { id: last_message_id },
+                    persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
+                    thread: { id: channel_id, model: "discuss.channel" },
+                });
+                if (member?.persona.eq(this.store.self)) {
+                    this.threadService.updateSeen(member.thread, last_message_id);
                 }
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
