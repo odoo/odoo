@@ -75,23 +75,19 @@ class Meeting(models.Model):
         if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
             self._forbid_recurrence_creation()
 
-        # Create events separately since the sender user may differ between events.
-        events = self.env['calendar.event']
-        vals_by_user = defaultdict(lambda: [])
         for vals in vals_list:
             # If event has a different organizer, check its sync status and verify if the user is listed as attendee.
             sender_user, partner_ids = self._get_organizer_user_change_info(vals)
             partner_included = partner_ids and len(partner_ids) > 0 and sender_user.partner_id.id in partner_ids
             self._check_organizer_validation(sender_user, partner_included)
-            # Group new events values by user for later batch creation.
-            vals_by_user[sender_user].append(vals)
-            # Events from a recurrency have their `need_sync_m` attribute set to False.
-            if vals.get('recurrence_id') or vals.get('recurrency'):
-                vals['need_sync_m'] = False
 
-        for sender_user in vals_by_user:
-            events |= super(Meeting, self.with_user(sender_user).with_context(dont_notify=notify_context)).create(vals_by_user[sender_user])
-        return events
+        # for a recurrent event, we do not create events separately but we directly
+        # create the recurrency from the corresponding calendar.recurrence.
+        # That's why, events from a recurrency have their `need_sync_m` attribute set to False.
+        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+            dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
+            for vals in vals_list
+        ])
 
     def _check_organizer_validation(self, sender_user, partner_included):
         """ Check if the proposed event organizer can be set accordingly. """
@@ -635,3 +631,15 @@ class Meeting(models.Model):
         super(Meeting, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()
+
+    def _get_event_user_m(self, user_id=None):
+        """ Get the user who will send the request to Microsoft (organizer if synchronized and current user otherwise). """
+        self.ensure_one()
+        # Current user must have access to token in order to access event properties (non-public user).
+        current_user_status = self.env.user._get_microsoft_calendar_token()
+        if user_id != self.env.user and current_user_status:
+            if user_id is None:
+                user_id = self.user_id
+            if user_id and self.with_user(user_id).sudo()._check_microsoft_sync_status():
+                return user_id
+        return self.env.user
