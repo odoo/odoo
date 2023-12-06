@@ -54,7 +54,9 @@ export class CalendarCommonRenderer extends Component {
             if (this.props.model.scale === "day" || this.props.model.scale === "week") {
                 //Need to wait React
                 browser.setTimeout(() => {
-                    this.fc.api.scrollToTime("06:00:00");
+                    if (this.fc.api.view) {
+                        this.fc.api.scrollToTime("06:00:00");
+                    }
                 }, 0);
             }
         });
