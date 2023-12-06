@@ -75,7 +75,7 @@ class PosPayment(models.Model):
             journal = pos_session.config_id.journal_id
             payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
                 'journal_id': journal.id,
-                'date': fields.Date.context_today(payment),
+                'date': fields.Date.context_today(order, order.date_order),
                 'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, payment_method.name),
                 'pos_payment_ids': payment.ids,
             })
