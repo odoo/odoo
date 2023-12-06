@@ -198,6 +198,10 @@ export const editorCommands = {
             }
             // Grab the content of the last child block and isolate it.
             if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                // Empty block must contain a br element.
+                if (!container.lastElementChild.hasChildNodes()) {
+                    container.lastElementChild.appendChild(document.createElement('br'));
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }

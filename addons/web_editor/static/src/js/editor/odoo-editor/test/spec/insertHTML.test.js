@@ -106,6 +106,15 @@ describe('insert HTML', () => {
                 contentAfter: '<p>abefgh</p><p>[]cd</p>',
             });
         });
+        it('should paste an "empty" block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>efgh</p><p></p>'));
+                },
+                contentAfter: '<p>abcdefgh</p><p>[]<br></p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
