@@ -18,12 +18,14 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             content: "Wait for the chatter to be fully loaded",
             trigger: ".o_Chatter",
             async run() {
-                await contains(".o_Message", { count: 2 });
+                await contains(".o_MessageView", { count: 1 });
+                document.body.setAttribute("data-found-message", 1);
             },
         },
         {
             content: "Click on Send Message",
             trigger: ".o_ChatterTopbar_buttonSendMessage",
+            extra_trigger: "body[data-found-message=1]",
         },
         {
             content: "Write something in composer",
@@ -59,9 +61,9 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             trigger: '[name="subject"] input',
             run() {
                 const subjectValue = document.querySelector('[name="subject"] input').value;
-                if (subjectValue !== "Test User") {
+                if (subjectValue !== "Jane") {
                     console.error(
-                        `Full composer should have "Test User" in subject input (actual: ${subjectValue})`
+                        `Full composer should have "Jane" in subject input (actual: ${subjectValue})`
                     );
                 }
             },
