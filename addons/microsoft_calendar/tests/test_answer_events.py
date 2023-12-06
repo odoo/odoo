@@ -10,6 +10,7 @@ from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_tok
 from odoo.tests import users
 
 import json
+from freezegun import freeze_time
 
 
 @patch.object(User, '_get_microsoft_calendar_token', mock_get_token)
@@ -71,6 +72,7 @@ class TestAnswerEvents(TestCommon):
             timeout=20,
         )
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_accepts_event_from_outlook_calendar(self, mock_get_events):
         """
@@ -95,6 +97,7 @@ class TestAnswerEvents(TestCommon):
         ])
         self.assertEqual(attendee.state, "accepted")
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_accepts_event_from_outlook_calendar_synced_by_organizer(self, mock_get_events):
         """
@@ -130,6 +133,7 @@ class TestAnswerEvents(TestCommon):
         there is no way to update the attendee status to "declined".
         """
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_declines_event_from_outlook_calendar_synced_by_organizer(self, mock_get_events):
         """
