@@ -815,7 +815,7 @@ class WebsocketConnectionHandler:
         cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
-            socket = request.httprequest.environ['socket']
+            socket = request.httprequest._HTTPRequest__environ['socket']
             session, db, httprequest = request.session, request.db, request.httprequest
             response.call_on_close(lambda: cls._serve_forever(
                 Websocket(socket, session),
