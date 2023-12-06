@@ -3,7 +3,8 @@
 
     <t t-name="discuss.CallSettings">
         <ActionPanel title="title">
-            <div class="d-flex flex-column px-3 overflow-auto">
+            <div class="d-flex flex-column px-3">
+                <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
                 <div class="mb-3 d-flex align-items-center flex-wrap">
                     <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
                         <span class="me-2 text-truncate">Input device</span>
@@ -55,8 +56,51 @@
                     </label>
                 </div>
             </div>
-            <div class="d-flex flex-column px-3 overflow-auto">
+            <div class="d-flex flex-column px-3">
                 <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
+                <span>Camera</span>
+                <div class="mb-3">
+                    <nav class="btn-group btn-group-sm w-100 mb-1">
+                        <t t-foreach="userSettings.supportedResolutions" t-as="entry" t-key="entry_index">
+                            <button class="btn btn-secondary flex-grow-1 p-2 opacity-50"
+                                t-att-class="{
+                                    'active o-active shadow-none opacity-100': entry.value === userSettings.cameraResolution,
+                                }" t-on-click="() => this.onClickCameraResolution(entry.value)" t-esc="entry.label"
+                            />
+                        </t>
+                    </nav>
+                    <nav class="btn-group btn-group-sm w-100 mb-1">
+                        <t t-foreach="userSettings.supportedFramerates" t-as="entry" t-key="entry_index">
+                            <button class="btn btn-secondary flex-grow-1 p-2 opacity-50"
+                                t-att-class="{
+                                    'active o-active shadow-none opacity-100': entry.value === userSettings.cameraFramerate,
+                                }" t-on-click="() => this.onClickCameraFramerate(entry.value)" t-esc="entry.label"
+                            />
+                        </t>
+                    </nav>
+                </div>
+                <span>Screen share</span>
+                <div class="mb-3">
+                    <nav class="btn-group btn-group-sm w-100 mb-1">
+                        <t t-foreach="userSettings.supportedResolutions" t-as="entry" t-key="entry_index">
+                            <button class="btn btn-secondary flex-grow-1 p-2 opacity-50"
+                                t-att-class="{
+                                    'active o-active shadow-none opacity-100': entry.value === userSettings.screenResolution,
+                                }" t-on-click="() => this.onClickScreenResolution(entry.value)" t-esc="entry.label"
+                            />
+                        </t>
+                    </nav>
+                    <nav class="btn-group btn-group-sm w-100 mb-1">
+                        <t t-foreach="userSettings.supportedFramerates" t-as="entry" t-key="entry_index">
+                            <button class="btn btn-secondary flex-grow-1 p-2 opacity-50"
+                                t-att-class="{
+                                    'active o-active shadow-none opacity-100': entry.value === userSettings.screenFramerate,
+                                }" t-on-click="() => this.onClickScreenFramerate(entry.value)" t-esc="entry.label"
+                            />
+                        </t>
+                    </nav>
+                    <div t-if="showHighQualityWarning" class="alert alert-warning rounded-0 text-center">Higher resolution/framerate values increase CPU and bandwidth usage.</div>
+                </div>
                 <div class="mb-3 d-flex align-items-center flex-wrap">
                     <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
                         <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="onChangeVideoFilterCheckbox" t-att-checked="props.thread.showOnlyVideo ? 'checked' : ''" class="form-check-input"/>
@@ -88,7 +132,7 @@
                     </div>
                 </t>
             </div>
-            <div t-if="env.debug" class="d-flex flex-column px-3 overflow-auto">
+            <div t-if="env.debug" class="d-flex flex-column px-3">
                 <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">Technical Settings</div>
                 <div class="mb-3 d-flex align-items-center flex-wrap">
                     <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Log RTC events" aria-label="Log RTC events">
