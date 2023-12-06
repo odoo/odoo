@@ -87,8 +87,8 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
-                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' required="date_start or date" />
-                            <field name="date" invisible="1" />
+                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}' required="date_start or date" />
+                            <field name="date" invisible="1" required="date_start"/>
                         </group>
                     </group>
                     <notebook>
@@ -230,8 +230,7 @@
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     <field name="company_id" column_invisible="True"/>
-                    <!-- XBO: required modifiers contains a falsy domain to be able to display the daterange without any button to set the date_end -->
-                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date'}" required="False" optional="hide"/>
+                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="date" column_invisible="True" />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" column_invisible="True"/>
