@@ -246,6 +246,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             route: '/shop/update_carrier',
             params: {
                 'carrier_id': carrier_id,
+                'no_reset_access_point_address': true,
             },
         })
         this._enableButton(result.status);
