@@ -149,8 +149,7 @@ class StockMove(models.Model):
     restrict_partner_id = fields.Many2one(
         'res.partner', 'Owner ', check_company=True)
     route_ids = fields.Many2many(
-        'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route",
-        check_company=True)
+        'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity = fields.Float(
