@@ -64,9 +64,9 @@ class HrAttendance(models.Model):
     def _compute_color(self):
         for attendance in self:
             if attendance.check_out:
-                attendance.color = 1 if attendance.worked_hours > 16 else 0
+                attendance.color = 1 if attendance.worked_hours > 16 else 10
             else:
-                attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
+                attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 4
 
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
