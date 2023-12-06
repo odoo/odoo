@@ -1395,7 +1395,7 @@ class QuantPackage(models.Model):
         'stock.package.type', 'Package Type', index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_package_info',
-        index=True, readonly=True, store=True)
+        index=True, readonly=False, store=True)
     company_id = fields.Many2one(
         'res.company', 'Company', compute='_compute_package_info',
         index=True, readonly=True, store=True)
@@ -1447,6 +1447,15 @@ class QuantPackage(models.Model):
         else:
             return [('id', '=', False)]
 
+    def write(self, vals):
+        for pack in self:
+            if 'location_id' in vals:
+                if not pack.quant_ids:
+                    raise ValidationError(_('Cannot move an empty package'))
+                # create a move from the old location to new location
+                pack._move_packs(self.env['stock.location'].browse(vals['location_id']), _('Package manually relocated'))
+        return super().write(vals)
+
     def unpack(self):
         self.quant_ids.move_quants(message=_("Quantities unpacked"), unpack=True)
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
@@ -1459,6 +1468,12 @@ class QuantPackage(models.Model):
         pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
+
+    def _move_packs(self, location_dest_id, message=False):
+        """ Move pack quants in self to the location_dest_id
+        """
+        quant_to_move = self.quant_ids.filtered(lambda q: q.quantity > 0)
+        quant_to_move.move_quants(location_dest_id, message=message)
 
     def _check_move_lines_map_quant(self, move_lines):
         """ This method checks that all product (quants) of self (package) are well present in the `move_line_ids`. """
