@@ -1314,6 +1314,10 @@ class StockMove(models.Model):
 
         return moves
 
+    def _should_skip_explode(self):
+        self.ensure_one()
+        return not self.picking_type_id
+
     def _prepare_procurement_origin(self):
         self.ensure_one()
         return self.group_id and self.group_id.name or (self.origin or self.picking_id.name or "/")

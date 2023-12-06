@@ -278,6 +278,9 @@ class StockMove(models.Model):
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
+    def _should_skip_explode(self):
+        return super()._should_skip_explode() or (self.production_id and self.production_id.product_id == self.product_id)
+
     def action_explode(self):
         """ Explodes pickings """
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
@@ -287,7 +290,7 @@ class StockMove(models.Model):
         moves_ids_to_unlink = OrderedSet()
         phantom_moves_vals_list = []
         for move in self:
-            if not move.picking_type_id or (move.production_id and move.production_id.product_id == move.product_id):
+            if move._should_skip_explode():
                 moves_ids_to_return.add(move.id)
                 continue
             bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
