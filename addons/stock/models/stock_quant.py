@@ -1395,7 +1395,7 @@ class QuantPackage(models.Model):
         'stock.package.type', 'Package Type', index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_package_info',
-        index=True, readonly=True, store=True)
+        index=True, readonly=False, store=True)
     company_id = fields.Many2one(
         'res.company', 'Company', compute='_compute_package_info',
         index=True, readonly=True, store=True)
@@ -1446,6 +1446,18 @@ class QuantPackage(models.Model):
             return [('id', 'in', packs.ids)]
         else:
             return [('id', '=', False)]
+
+    def write(self, vals):
+        if 'location_id' in vals:
+            if not vals['location_id']:
+                raise UserError(_('Cannot remove the location of a non empty package'))
+            if any(not pack.quant_ids for pack in self):
+                raise UserError(_('Cannot move an empty package'))
+            # create a move from the old location to new location
+            location_dest_id = self.env['stock.location'].browse(vals['location_id'])
+            quant_to_move = self.quant_ids.filtered(lambda q: q.quantity > 0)
+            quant_to_move.move_quants(location_dest_id, message=_('Package manually relocated'))
+        return super().write(vals)
 
     def unpack(self):
         self.quant_ids.move_quants(message=_("Quantities unpacked"), unpack=True)
