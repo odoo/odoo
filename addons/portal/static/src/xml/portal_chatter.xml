@@ -45,7 +45,7 @@
                                         <div class="d-flex px-1">
                                             <button class="o_portal_chatter_attachment_btn btn fa fa-paperclip border-0" type="button" title="Add attachment"/>
                                         </div>
-                                        <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary o-last rounded-3" type="submit">Send</button>
+                                        <button t-out="widget.options['send_button_label']" t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary o-last rounded-3" type="submit"/>
                                     </div>
                                 </div>
                             </div>

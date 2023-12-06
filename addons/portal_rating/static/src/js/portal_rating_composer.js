@@ -36,6 +36,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             'csrf_token': odoo.csrf_token,
             'user_id': session.user_id,
         }, options, {});
+        this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
 
         return def;
     },
