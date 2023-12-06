@@ -4814,6 +4814,10 @@ class AccountMoveLine(models.Model):
                 })
             else:
                 vals['amount_currency'] = vals.get('amount_currency', 0.0)
+                if not move.is_invoice(include_receipts=True) and vals.get('debit') is False and vals.get('credit') is False:
+                    vals['balance'] = move.currency_id._convert(vals['amount_currency'], move.company_id.currency_id, move.company_id, move.date)
+                    vals['debit'] = vals['balance'] if vals['balance'] > 0.0 else 0.0
+                    vals['credit'] = -vals['balance'] if vals['balance'] < 0.0 else 0.0
 
             if move.is_invoice(include_receipts=True):
                 currency = move.currency_id
