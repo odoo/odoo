@@ -137,7 +137,7 @@ class ReportInvoiceWithoutPayment(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs = self.env['account.move'].browse(docids)
+        docs = self.env['account.move'].with_context(use_partner_lang=True).browse(docids)
 
         qr_code_urls = {}
         for invoice in docs:

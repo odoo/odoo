@@ -1923,6 +1923,8 @@ class AccountMove(models.Model):
                                                                 }
             }
         """
+        if self._context.get('use_partner_lang'):
+            self = self.with_context(lang=partner.lang)
         account_tax = self.env['account.tax']
 
         grouped_taxes = defaultdict(lambda: defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0, 'base_line_keys': set()}))
