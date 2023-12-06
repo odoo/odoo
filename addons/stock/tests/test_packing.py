@@ -5,6 +5,7 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_round
 from odoo.exceptions import UserError
+from odoo import Command
 
 
 class TestPackingCommon(TransactionCase):
@@ -22,6 +23,11 @@ class TestPackingCommon(TransactionCase):
 
         cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+        cls.shelf1 = cls.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': cls.stock_location.id,
+        })
 
 
 class TestPacking(TestPackingCommon):
@@ -1604,6 +1610,39 @@ class TestPacking(TestPackingCommon):
         })
         picking_03.action_confirm()
         self.assertEqual(move_03.move_line_ids.result_package_id, pack_2)
+
+    def test_change_package_location(self):
+        pack_1 = self.env['stock.quant.package'].create({
+            'name': 'Pack 1',
+            'quant_ids': [Command.create({
+                'product_id': self.productA.id,
+                'quantity': 10,
+                'location_id': self.stock_location.id,
+            })],
+        })
+        pack_2 = self.env['stock.quant.package'].create({
+            'name': 'Pack 2',
+            'quant_ids': [Command.create({
+                'product_id': self.productB.id,
+                'quantity': 10,
+                'location_id': self.stock_location.id,
+            })],
+        })
+        (pack_1 | pack_2).location_id = self.shelf1
+        moves = self.env['stock.move'].search([
+            ('location_id', '=', self.stock_location.id),
+            ('location_dest_id', '=', self.shelf1.id),
+            ('reference', '=', 'Package manually relocated'),
+        ])
+        self.assertEqual(pack_1.location_id, self.shelf1)
+        self.assertEqual(pack_2.location_id, self.shelf1)
+        self.assertEqual(len(moves), 2)
+        self.assertEqual(moves.mapped('product_id'), self.productA | self.productB)
+        with self.assertRaises(UserError):
+            pack_1.location_id = False
+        pack_1.quant_ids = False
+        with self.assertRaises(UserError):
+            pack_1.location_id = self.shelf1
 
     def test_compute_hide_picking_type_multiple_records(self):
         """
