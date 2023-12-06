@@ -171,11 +171,6 @@
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>
                                     </group>
-                                    <group string="Follow Customer Payments" invisible="type != 'sale'">
-                                        <field name="sale_activity_type_id" options="{'no_quick_create': True}"/>
-                                        <field name="sale_activity_user_id" invisible="not sale_activity_type_id" options="{'no_quick_create': True}"/>
-                                        <field name="sale_activity_note" placeholder="e.g. Give a phone call, check with others , ..."  invisible="not sale_activity_type_id"/>
-                                    </group>
                                 </group>
                             </page>
                         </notebook>
