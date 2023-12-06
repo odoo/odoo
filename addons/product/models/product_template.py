@@ -1433,3 +1433,21 @@ class ProductTemplate(models.Model):
         This method is meant to be overriden in other standard modules.
         """
         return self.env['product.pricelist'].browse(self.env.context.get('pricelist'))
+
+    ###################
+    # DEMO DATA SETUP #
+    ###################
+
+    @api.model
+    def _demo_configure_variants(self):
+        acoustic_bloc_screens = self.env.ref(
+            'product.product_template_acoustic_bloc_screens', raise_if_not_found=False
+        )
+        if acoustic_bloc_screens:
+            acoustic_bloc_screens.product_variant_ids[0].default_code = 'FURN_6666'
+            acoustic_bloc_screens.product_variant_ids[1].default_code = 'FURN_6667'
+            self.env['ir.model.data']._update_xmlids([{
+                'xml_id': 'product.product_product_25',
+                'record': acoustic_bloc_screens.product_variant_ids[1],
+                'noupdate': True,
+            }])
