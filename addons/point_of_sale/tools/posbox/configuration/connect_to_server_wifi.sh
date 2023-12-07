@@ -6,11 +6,10 @@
 # to reconnect to a previously chosen network
 function connect () {
 	SERVER="${1}"
-	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
+	CONF_FILE=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
 	HOSTS=/root_bypass_ramdisks/etc/hosts
 	HOST_FILE=/root_bypass_ramdisks/etc/hostname
 	HOSTNAME="$(hostname)"
-	TOKEN_FILE=/home/pi/token
 	TOKEN="${3}"
 	IOT_NAME="${2}"
 	IOT_NAME="${IOT_NAME//[^[:ascii:]]/}"
@@ -23,8 +22,10 @@ function connect () {
 	sudo mount -o remount,rw /root_bypass_ramdisks
 	if [ ! -z "${1}" ]
 	then
-		echo "${SERVER}" > ${CURRENT_SERVER_FILE}
-		echo "${TOKEN}" > ${TOKEN_FILE}
+		# These commands seeks for keys on the configuration file, 
+		# for each key found replace/create the corresponding value
+		sed -i "s/^\b\(odoo_remote_server\)\b.*/\1 = $SERVER/" "$CONF_FILE"
+		sed -i "s/^\b\(token\)\b.*/\1 = $TOKEN/" "$CONF_FILE"
 	fi
 	if [ "${IOT_NAME}" != "${HOSTNAME}" ]
 	then
@@ -42,32 +43,31 @@ function connect () {
 	sudo mount -o remount,ro /root_bypass_ramdisks
 
 	WPA_PASS_FILE="/tmp/wpa_pass.txt"
-	PERSISTENT_WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 	CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt" # used to repair connection when we lose it
 	LOST_WIFI_FILE="/tmp/lost_wifi.txt"
 	ESSID="${4}"
 	PASSWORD="${5}"
-	PERSIST="${6}"
-	NO_AP="${7}"
+	NO_AP="${6}"
 
 	sleep 3
 
 	sudo pkill -f keep_wifi_alive.sh
 	WIFI_WAS_LOST=$?
 
-	# make network choice persistent
 	if [ -n "${ESSID}" ] ; then
-		if [ -n "${PERSIST}" ] ; then
-			logger -t posbox_connect_to_server_wifi "Making network selection permanent"
-			sudo mount -o remount,rw /
-			echo "${ESSID}" > ${PERSISTENT_WIFI_NETWORK_FILE}
-			echo "${PASSWORD}" >> ${PERSISTENT_WIFI_NETWORK_FILE}
-			sudo mount -o remount,ro /
-		fi
+		logger -t posbox_connect_to_wifi "Making network selection permanent"
+		sudo mount -o remount,rw /
+		# These commands seek for keys on the configuration file, 
+		# for each key found replace/create the corresponding value
+		sed -i "s/^\b\(wifi_ssid\)\b.*/\1 = $ESSID/" "$CONF_FILE"
+		sed -i "s/^\b\(wifi_password\)\b.*/\1 = $PASSWORD/" "$CONF_FILE"
+		sudo mount -o remount,ro /
 	else
-		logger -t posbox_connect_to_server_wifi "Reading configuration from ${PERSISTENT_WIFI_NETWORK_FILE}"
-		ESSID=$(head -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
-		PASSWORD=$(tail -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
+		logger -t posbox_connect_to_wifi "Reading configuration from ${CONF_FILE}"
+		# These commands seek for keys on the configuration file, 
+		# for each key found, trim spaces and store the corresponding value
+		ESSID=$(awk -F= '$1~/^(wifi_ssid)[[:space:]]*/ {gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2}' "$CONF_FILE")
+		PASSWORD=$(awk -F= '$1~/^(wifi_password)[[:space:]]*/ {gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2}' "$CONF_FILE")
 	fi
 
 	echo "${ESSID}" > ${CURRENT_WIFI_NETWORK_FILE}
@@ -149,4 +149,4 @@ function connect () {
 	fi
 }
 
-connect "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" &
+connect "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" &
