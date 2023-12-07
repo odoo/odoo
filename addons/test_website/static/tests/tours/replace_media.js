@@ -34,7 +34,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         },
     },
     wTourUtils.dragNDrop({
-        name: 'Picture',
+        name: 'Title - Image',
         id: 's_picture'
     }),
     {
