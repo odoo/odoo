@@ -1457,4 +1457,53 @@ QUnit.module("MockServer", (hooks) => {
         });
         assert.deepEqual(result.value, { foo: 0 });
     });
+
+    QUnit.test(
+        "access rights attributes are present on an editable many2one field",
+        async function (assert) {
+            data.views = {
+                "bar,10001,form": `<form>
+                    <field name="partner_id"/>
+                </form>`,
+                "bar,10001,search": `<search></search>`,
+            };
+
+            const expectedForm = `<form>
+                    <field name="partner_id" can_create="true" can_write="true"/>
+                </form>`;
+            const mockServer = new MockServer(data);
+            const { views } = mockServer.mockGetViews("bar", {
+                views: [[10001, "form"]],
+                options: {},
+            });
+            assert.deepEqual(views.form.arch, expectedForm);
+        }
+    );
+
+    QUnit.test(
+        "access rights attributes are missing on an editable many2one field",
+        async function (assert) {
+            // The access rights attributes should be present,
+            // but are actually missing when a field definition is readonly and readonly=0 is on the view.
+            // @see the commit description for more details.
+
+            data.models.bar.fields.partner_id.readonly = true;
+            data.views = {
+                "bar,10001,form": `<form>
+                    <field name="partner_id" readonly="0"/>
+                </form>`,
+                "bar,10001,search": `<search></search>`,
+            };
+
+            const expectedForm = `<form>
+                    <field name="partner_id" readonly="0"/>
+                </form>`;
+            const mockServer = new MockServer(data);
+            const { views } = mockServer.mockGetViews("bar", {
+                views: [[10001, "form"]],
+                options: {},
+            });
+            assert.deepEqual(views.form.arch, expectedForm);
+        }
+    );
 });
