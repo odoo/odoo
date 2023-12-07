@@ -98,7 +98,7 @@ var DateWidget = Widget.extend({
             this.trigger("datetime_changed");
             return;
         }
-        var oldValue = this.getValue();
+        var oldValue = this.getValue() || this.options.defaultDate;
         if (this.isValid()) {
             this._setValueFromUi();
             var newValue = this.getValue();
