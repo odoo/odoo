@@ -33,7 +33,7 @@ class HrEmployeeBase(models.AbstractModel):
         store=True,
         readonly=False,
         check_company=True)
-    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
+    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False, inverse='_inverse_work_contact_details')
     phone = fields.Char(related="user_id.phone")
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
@@ -190,7 +190,9 @@ class HrEmployeeBase(models.AbstractModel):
     @api.depends('address_id')
     def _compute_phones(self):
         for employee in self:
-            if employee.address_id and employee.address_id.phone:
+            if employee.work_contact_id and employee.work_contact_id.phone:
+                employee.work_phone = employee.work_contact_id.phone
+            elif employee.address_id and employee.address_id.phone:
                 employee.work_phone = employee.address_id.phone
             else:
                 employee.work_phone = False
@@ -208,6 +210,7 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.work_contact_id = self.env['res.partner'].sudo().create({
                     'email': employee.work_email,
                     'mobile': employee.mobile_phone,
+                    'phone': employee.work_phone,
                     'name': employee.name,
                     'image_1920': employee.image_1920,
                     'company_id': employee.company_id.id
@@ -216,6 +219,7 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.work_contact_id.sudo().write({
                     'email': employee.work_email,
                     'mobile': employee.mobile_phone,
+                    'phone': employee.work_phone
                 })
 
     @api.depends('company_id')
