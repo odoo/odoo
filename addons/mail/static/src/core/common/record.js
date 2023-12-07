@@ -238,7 +238,9 @@ export function makeStore(env) {
                             this[name] = defaultVal;
                         }
                         const rfield = toRaw(field);
-                        onChange(proxy, name, () => (rfield.changed = true));
+                        if (compute || sort) {
+                            onChange(proxy, name, () => (rfield.changed = true));
+                        }
                         if (compute) {
                             const proxy2 = reactive(proxy, () => rfield.requestCompute());
                             Object.assign(rfield, {
