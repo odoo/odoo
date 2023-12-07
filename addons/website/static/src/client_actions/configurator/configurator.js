@@ -239,6 +239,7 @@ class PaletteSelectionScreen extends Component {
     async changeLogo() {
         const logoSelectInput = this.logoInputRef.el;
         if (logoSelectInput.files.length === 1) {
+            const previousLogoAttachmentId = this.state.logoAttachmentId;
             const file = logoSelectInput.files[0];
             const data = await getDataURLFromFile(file);
             const attachment = await rpc('/web_editor/attachment/add_data', {
@@ -247,6 +248,9 @@ class PaletteSelectionScreen extends Component {
                 'is_image': true,
             });
             if (!attachment.error) {
+                if (previousLogoAttachmentId) {
+                    await this._removeAttachments([previousLogoAttachmentId]);
+                }
                 this.state.changeLogo(data, attachment.id);
                 this.updatePalettes();
             } else {
@@ -277,6 +281,16 @@ class PaletteSelectionScreen extends Component {
     selectPalette(paletteName) {
         this.state.selectPalette(paletteName);
         this.props.navigate(ROUTES.featuresSelectionScreen);
+    }
+
+    /**
+     * Removes the attachments from the DB.
+     *
+     * @private
+     * @param {Array<number>} ids the attachment ids to remove
+     */
+    async _removeAttachments(ids) {
+        rpc("/web_editor/attachment/remove", { ids: ids });
     }
 }
 
