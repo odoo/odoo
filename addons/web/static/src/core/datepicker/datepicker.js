@@ -314,6 +314,10 @@ export class DatePicker extends Component {
                 this.bootstrapDateTimePicker("hide");
                 break;
             }
+            case "Enter": {
+                this.onInputChange();
+                break;
+            }
         }
     }
 
