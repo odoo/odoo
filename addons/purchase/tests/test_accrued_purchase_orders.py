@@ -13,8 +13,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.alt_exp_account = cls.company_data['default_account_expense'].copy()
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
-        cls.product_a.type = 'service'
-        cls.product_b.type = 'service'
+        cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
+        cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
         cls.product_b.property_account_expense_id = cls.alt_exp_account
         cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
