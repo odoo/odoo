@@ -2,11 +2,13 @@
 
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
+import { Record } from "@mail/core/common/record";
 import { useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
     onMounted,
+    onWillDestroy,
     onWillPatch,
     onWillUpdateProps,
     toRaw,
@@ -84,7 +86,7 @@ export class Thread extends Component {
         this.loadOlderState = useVisible(
             "load-older",
             () => {
-                if (this.loadOlderState.isVisible && !this.isJumpingRecent) {
+                if (this.loadOlderState.isVisible) {
                     this.threadService.fetchMoreMessages(this.props.thread);
                 }
             },
@@ -93,7 +95,7 @@ export class Thread extends Component {
         this.loadNewerState = useVisible(
             "load-newer",
             () => {
-                if (this.loadNewerState.isVisible && !this.isJumpingRecent) {
+                if (this.loadNewerState.isVisible) {
                     this.threadService.fetchMoreMessages(this.props.thread, "newer");
                 }
             },
@@ -112,6 +114,7 @@ export class Thread extends Component {
         useEffect(
             () => {
                 if (this.props.jumpPresent !== this.lastJumpPresent) {
+                    this.messageHighlight?.clearHighlight();
                     if (this.props.thread.loadNewer) {
                         this.jumpToPresent("instant");
                     } else {
@@ -152,12 +155,13 @@ export class Thread extends Component {
         useEffect(
             (isLoaded) => {
                 this.state.mountedAndLoaded = isLoaded;
-                if (!isLoaded) {
-                    this.loadOlderState.ready = false;
-                    this.loadNewerState.ready = false;
-                }
             },
-            () => [this.props.thread.isLoaded]
+            /**
+             * Observe `mountedAndLoaded` as well because it might change from
+             * other parts of the code without `useEffect` detecting any change
+             * for `isLoaded`, and it should still be reset when patching.
+             */
+            () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
         );
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
@@ -236,6 +240,40 @@ export class Thread extends Component {
          * in place (point 1).
          */
         let loadNewer;
+        const reset = () => {
+            this.state.mountedAndLoaded = false;
+            this.loadOlderState.ready = false;
+            this.loadNewerState.ready = false;
+            lastSetValue = undefined;
+            snapshot = undefined;
+            newestPersistentMessage = undefined;
+            oldestPersistentMessage = undefined;
+            loadedAndPatched = false;
+            loadNewer = false;
+        };
+        /**
+         * These states need to be immediately reset when the value changes on
+         * the record, because the transition is important, not only the final
+         * value. If resetting is depending on the update cycle, it can happen
+         * that the value quickly changes and then back again before there is
+         * any mounting/patching, and the change would therefore be undetected.
+         */
+        let stopOnChange = Record.onChange(this.props.thread, "isLoaded", () => {
+            if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
+                reset();
+            }
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.thread.notEq(this.props.thread)) {
+                stopOnChange();
+                stopOnChange = Record.onChange(nextProps.thread, "isLoaded", () => {
+                    if (!nextProps.thread.isLoaded || !this.state.mountedAndLoaded) {
+                        reset();
+                    }
+                });
+            }
+        });
+        onWillDestroy(() => stopOnChange());
         const saveScroll = () => {
             this.props.thread.scrollTop =
                 ref.el.scrollHeight - ref.el.scrollTop - ref.el.clientHeight < 30
@@ -249,7 +287,7 @@ export class Thread extends Component {
         };
         const applyScroll = () => {
             if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
-                loadedAndPatched = false;
+                reset();
                 return;
             }
             // Use toRaw() to prevent scroll check from triggering renders.
@@ -264,9 +302,9 @@ export class Thread extends Component {
                 (this.props.order === "asc" &&
                     newerMessages &&
                     (loadNewer || thread.scrollTop !== "bottom"));
-            if (snapshot && !this.isJumpingRecent && messagesAtTop) {
+            if (snapshot && messagesAtTop) {
                 setScroll(snapshot.scrollTop + ref.el.scrollHeight - snapshot.scrollHeight);
-            } else if (snapshot && !this.isJumpingRecent && messagesAtBottom) {
+            } else if (snapshot && messagesAtBottom) {
                 setScroll(snapshot.scrollTop);
             } else if (
                 !this.env.messageHighlight?.highlightedMessageId &&
@@ -331,20 +369,14 @@ export class Thread extends Component {
     }
 
     async jumpToPresent(behavior) {
-        this.isJumpingRecent = true;
+        this.messageHighlight?.clearHighlight();
         await this.threadService.loadAround(this.props.thread);
         this.props.thread.loadNewer = false;
         this.present.el?.scrollIntoView({
             behavior: behavior ?? (this.props.order === "asc" ? "smooth" : "instant"), // FIXME somehow smooth not working in desc mode
             block: "center",
         });
-        // Let smooth scroll a bit so load more is not visible
-        // smooth scrolling starts after 1 animation frame, hence needs to wait 2 animation frames
-        // for load more becoming not visible
-        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         this.state.showJumpPresent = false;
-        this.isJumpingRecent = false;
     }
 
     /**

@@ -110,7 +110,6 @@ export class Message extends Record {
     /** @type {number[]} */
     needaction_partner_ids = [];
     /**
-     * @deprecated
      * Still necessary until custom insert()/update() rely on this.
      * Fields are computed only at end of update cycle, thus it is not
      * computed during custom update
@@ -118,6 +117,7 @@ export class Message extends Record {
     get originThread() {
         return this._store.Thread.get({ model: this.model, id: this.res_id });
     }
+    /** @deprecated */
     originThread2 = Record.one("Thread", {
         inverse: "allMessages",
         compute() {
