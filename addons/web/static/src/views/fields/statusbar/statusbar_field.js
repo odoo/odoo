@@ -194,6 +194,7 @@ export class StatusBarField extends Component {
             itemEls.forEach((el) => el.classList.remove("o_first"));
         } else {
             hide(this.afterRef.el);
+            itemEls[0]?.classList.add("o_first");
         }
 
         // Reset items variables
