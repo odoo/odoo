@@ -280,8 +280,9 @@ export const many2ManyTagsField = {
         return relatedFields;
     },
     extractProps({ attrs, options, string }, dynamicInfo) {
+        const hasCreatePermission = attrs.can_create ? Boolean(JSON.parse(attrs.can_create)) : true;
         const noCreate = Boolean(options.no_create);
-        const canCreate = noCreate ? false : attrs.can_create && Boolean(JSON.parse(attrs.can_create));
+        const canCreate = hasCreatePermission && !noCreate;
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {
