@@ -242,7 +242,10 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 remove_element(sentinel)
             elif pos == 'before':
                 add_stripped_items_before(node, spec, extract)
-
+            elif pos == 'text':
+                node.text = spec.text
+            elif pos == 'tail':
+                node.tail = spec.text
             else:
                 raise ValueError(
                     _("Invalid position attribute: '%s'") %
