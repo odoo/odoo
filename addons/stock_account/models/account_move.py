@@ -254,17 +254,7 @@ class AccountMoveLine(models.Model):
 
     def _get_gross_unit_price(self):
         price_unit = self.price_subtotal / self.quantity
-        price_unit = -price_unit if self.move_id.move_type == 'in_refund' else price_unit
-        if not self.tax_ids:
-            return price_unit
-        prec = 1e+6
-        price_unit *= prec
-        price_unit = self.tax_ids.with_context(round=False).compute_all(
-            price_unit, currency=self.move_id.currency_id, quantity=1.0, is_refund=self.move_id.move_type == 'in_refund',
-            fixed_multiplicator=self.move_id.direction_sign,
-        )['total_excluded']
-        price_unit /= prec
-        return price_unit
+        return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
     def _get_stock_valuation_layers(self, move):
         valued_moves = self._get_valued_in_moves()
