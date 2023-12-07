@@ -273,6 +273,32 @@ function sendRequest(route, params) {
  * @returns {Promise<string>} a base64 PNG (as result of a Promise)
  */
 export async function svgToPNG(src) {
+    return _exportToPNG(src, "svg+xml");
+}
+
+/**
+ * Converts a base64 WEBP into a base64 PNG.
+ *
+ * @param {string|HTMLImageElement} src - an URL to a WEBP or a *loaded* image
+ *     with such an URL. This allows the call to potentially be a bit more
+ *     efficient in that second case.
+ * @returns {Promise<string>} a base64 PNG (as result of a Promise)
+ */
+export async function webpToPNG(src) {
+    return _exportToPNG(src, "webp");
+}
+
+/**
+ * Converts a formatted base64 image into a base64 PNG.
+ *
+ * @private
+ * @param {string|HTMLImageElement} src - an URL to a image or a *loaded* image
+ *     with such an URL. This allows the call to potentially be a bit more
+ *     efficient in that second case.
+ * @param {string} format - the format of the image
+ * @returns {Promise<string>} a base64 PNG (as result of a Promise)
+ */
+async function _exportToPNG(src, format) {
     function checkImg(imgEl) {
         // Firefox does not support drawing SVG to canvas unless it has width
         // and height attributes set on the root <svg>.
@@ -301,7 +327,7 @@ export async function svgToPNG(src) {
     return new Promise(resolve => {
         const imgEl = new Image();
         imgEl.onload = () => {
-            if (checkImg(imgEl)) {
+            if (format !== "svg+xml" || checkImg(imgEl)) {
                 resolve(imgEl);
                 return;
             }
@@ -397,6 +423,7 @@ export default {
     websiteDomain: websiteDomain,
     isHTTPSorNakedDomainRedirection: isHTTPSorNakedDomainRedirection,
     svgToPNG: svgToPNG,
+    webpToPNG: webpToPNG,
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
