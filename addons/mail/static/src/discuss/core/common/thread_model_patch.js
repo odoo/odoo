@@ -66,7 +66,7 @@ patch(Thread.prototype, {
             );
         }
         if (this.type === "chat") {
-            return this.chatPartner.avatarUrl;
+            return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;
     },
