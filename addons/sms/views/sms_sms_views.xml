@@ -15,17 +15,17 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="partner_id" string="Contact"/>
+                            <field name="partner_id" string="Contact" placeholder="Pick a Contact..."/>
                             <field name="mail_message_id" readonly="1" invisible="not mail_message_id"/>
                         </group>
                         <group>
-                            <field name="number" required="1"/>
+                            <field name="number" required="1" placeholder="e.g. +1 (650) 555-0111"/>
                             <field name="failure_type" readonly="1" invisible="not failure_type"/>
                         </group>
                     </group>
                     <group>
                         <field name="body" widget="sms_widget" string="Message" required="1"
-                            readonly="state in ('process', 'sent')"/>
+                            readonly="state in ('process', 'sent')" placeholder="Write your message..."/>
                     </group>
                 </sheet>
             </form>

@@ -39,7 +39,7 @@ class SmsSms(models.Model):
 
     uuid = fields.Char('UUID', copy=False, readonly=True, default=lambda self: uuid4().hex,
                        help='Alternate way to identify a SMS record, used for delivery reports')
-    number = fields.Char('Number')
+    number = fields.Char('Number', compute='_compute_number', readonly=False, store=True)
     body = fields.Text()
     partner_id = fields.Many2one('res.partner', 'Customer')
     mail_message_id = fields.Many2one('mail.message', index=True)
@@ -82,6 +82,12 @@ class SmsSms(models.Model):
         tracker_ids_by_sms_uuid = {tracker.sms_uuid: tracker.id for tracker in existing_trackers}
         for sms in self.filtered(lambda s: s.uuid in tracker_ids_by_sms_uuid):
             sms.sms_tracker_id = tracker_ids_by_sms_uuid[sms.uuid]
+
+    @api.depends('partner_id')
+    def _compute_number(self):
+        for sms in self:
+            if sms.partner_id and (sms.partner_id.mobile or sms.partner_id.phone):
+                sms.number = sms.partner_id.mobile or sms.partner_id.phone
 
     def action_set_canceled(self):
         self._update_sms_state_and_trackers('canceled')
