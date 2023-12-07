@@ -69,7 +69,7 @@ class AccountMoveSend(models.TransientModel):
             'res_id': move.id,
             'user_id': self.env.user.id,
             'company_id': move.company_id.id,
-            'attachment_id': move.invoice_pdf_report_id.id,
+            'report_template': self.env['ir.actions.report']._get_report('account.account_invoices').id
         }
 
     @api.model
