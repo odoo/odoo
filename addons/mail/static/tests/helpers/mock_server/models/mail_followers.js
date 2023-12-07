@@ -15,6 +15,9 @@ patch(MockServer.prototype, {
         const followers = this.getRecords("mail.followers", [["id", "in", ids]]);
         // sorted from lowest ID to highest ID (i.e. from least to most recent)
         followers.sort((f1, f2) => (f1.id < f2.id ? -1 : 1));
+        const partnerFormats = this._mockResPartnerMailPartnerFormat(
+            followers.map((follower) => follower.partner_id)
+        );
         return followers.map((follower) => {
             return {
                 id: follower.id,
@@ -23,9 +26,7 @@ patch(MockServer.prototype, {
                 display_name: follower.display_name,
                 email: follower.email,
                 is_active: follower.is_active,
-                partner: this._mockResPartnerMailPartnerFormat([follower.partner_id]).get(
-                    follower.partner_id
-                ),
+                partner: partnerFormats.get(follower.partner_id),
             };
         });
     },
