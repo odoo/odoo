@@ -620,7 +620,7 @@
                     <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
-                    <filter string="Late Components" name="late" domain="[('components_availability_state', '=', 'late')]"/>
+                    <filter string="Late Availability" name="late" domain="[('components_availability_state', '=', 'late')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
