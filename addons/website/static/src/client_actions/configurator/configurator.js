@@ -587,6 +587,7 @@ class Store {
         } else {
             this.recommendedPalette = undefined;
         }
+        this.selectedPalette = this.recommendedPalette;
     }
 
     updateRecommendedThemes(themes) {
