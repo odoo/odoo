@@ -701,6 +701,17 @@ export class PivotModel extends Model {
      * @param {SearchParams} searchParams
      */
     async load(searchParams) {
+        searchParams = { ...searchParams };
+        const previousFavoriteId = this.currentFavoriteId || null;
+        const [favorite] = this.env.searchModel.getSearchItems(
+            (item) => item.type === "favorite" && item.isActive
+        );
+        this.currentFavoriteId = favorite?.id || null;
+        if (this.currentFavoriteId === previousFavoriteId) {
+            for (const key of ["pivot_measures", "pivot_column_groupby", "pivot_row_groupby"]) {
+                delete searchParams.context[key];
+            }
+        }
         this.searchParams = searchParams;
         const processedMeasures = processMeasure(searchParams.context.pivot_measures);
         const activeMeasures = processedMeasures || this.metaData.activeMeasures;
