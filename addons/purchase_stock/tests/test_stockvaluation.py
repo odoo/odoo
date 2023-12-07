@@ -867,9 +867,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         ]
         tax = self.env['account.tax'].create({
             "name": "Tax with no account",
-            "amount_type": "fixed",
+            "amount_type": "percent",
             "amount": 5,
-            "price_include": 5,
+            "price_include": True,
             "invoice_repartition_line_ids": repartition_line_vals,
             "refund_repartition_line_ids": repartition_line_vals,
         })
@@ -884,7 +884,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
                     'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 100.0,  # 50$
+                    'price_unit': 105.0,  # 50$
                     'taxes_id': [(4, tax.id)],
                     'date_planned': date_po,
                 }),
@@ -898,6 +898,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.move_line_ids.qty_done = 1
         receipt.button_validate()
 
+        # empty stock to generate the AML values for the already out quantities
+        inventory_quant = self.env['stock.quant'].sudo().search([
+            ('location_id', '=', receipt.location_dest_id.id),
+            ('product_id', '=', self.product1.id),
+        ])
+        inventory_quant.inventory_quantity = 0
+        inventory_quant.action_apply_inventory()
+
         # Create a vendor bill
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'move_type': 'in_invoice',
@@ -907,9 +915,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'partner_id': self.partner_id.id,
             'invoice_line_ids': [(0, 0, {
                 'name': 'Test',
-                'price_unit': 100.0,
+                'price_unit': 105.0,
                 'product_id': self.product1.id,
                 'purchase_line_id': po.order_line.id,
+                'tax_ids': [(4, tax.id)],
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
             })]
@@ -918,12 +927,13 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         invoice_aml = inv.invoice_line_ids
+        self.assertEqual(len(inv.line_ids), 3)
         picking_am = receipt.move_ids.stock_valuation_layer_ids.account_move_id.ensure_one()
         picking_aml = picking_am.line_ids.filtered(lambda line: line.account_id.id == self.stock_valuation_account.id)
 
         # check EUR
         self.assertAlmostEqual(invoice_aml.amount_currency, 100, msg="Total debit value should be equal to the original PO price of the product.")
-        self.assertAlmostEqual(picking_aml.amount_currency, 95, msg="credit value for stock should be equal to the untaxed price of the product.")
+        self.assertAlmostEqual(picking_aml.amount_currency, 100, msg="credit value for stock should be equal to the untaxed price of the product.")
 
     def test_valuation_multicurrency_with_tax_without_account(self):
         """ Similar test as test_valuation_multicurrency_with_tax, but without the accounts in the tax.

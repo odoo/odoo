@@ -117,15 +117,27 @@ let PaymentStripe = PaymentInterface.extend({
         ));
     },
 
-    _getInteracTransactionId: function (processPayment) {
-        const intentCharge = processPayment.paymentIntent.charges.data[0];
-        const processPaymentDetails = intentCharge.payment_method_details;
-
-        if (processPaymentDetails.type === 'interac_present') {
-            return intentCharge.id;
+    _getCapturedCardAndTransactionId: function (processPayment) {
+        const charges = processPayment.paymentIntent.charges;
+        if (!charges) {
+            return [false, false];
         }
 
-        return false;
+        const intentCharge = charges.data[0];
+        const processPaymentDetails = intentCharge.payment_method_details;
+        const cardPresentBrand = processPaymentDetails.card_present.brand;
+
+        if (processPaymentDetails.type === 'interac_present') {
+            // Canadian interac payments should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
+            return ['interac', intentCharge.id];
+        } else if (cardPresentBrand.includes('eftpos')) {
+            // Australian eftpos should not be captured:
+            // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
+            return [cardPresentBrand, intentCharge.id];
+        }
+
+        return [false, false];
     },
 
     collectPayment: async function (amount) {
@@ -152,12 +164,10 @@ let PaymentStripe = PaymentInterface.extend({
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status('waitingCapture');
 
-                const interacTransactionId = this._getInteracTransactionId(processPayment);
-                if (interacTransactionId) {
-                    // Canadian interac payments should not be captured:
-                    // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
-                    line.card_type = 'interac';
-                    line.transaction_id = interacTransactionId;
+                const [captured_card_type, captured_transaction_id] = this._getCapturedCardAndTransactionId(processPayment);
+                if (captured_card_type && captured_transaction_id) {
+                    line.card_type = captured_card_type;
+                    line.transaction_id = captured_transaction_id;
                 } else {
                     await this.captureAfterPayment(processPayment, line);
                 }

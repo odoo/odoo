@@ -60,13 +60,11 @@ span.o_force_ltr {
     border-top: 1px solid black !important;
 }
 
-/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
 .table-sm {
     > thead > tr > th {
         border-bottom: none !important;
     }
     > tbody > tr {
-        page-break-inside: avoid !important;
         border-top: none !important;
     }
 }
