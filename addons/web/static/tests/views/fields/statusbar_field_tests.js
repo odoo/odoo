@@ -768,4 +768,52 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(target, ".o_statusbar_status button[disabled]:visible", 2);
         }
     );
+
+    QUnit.test(
+        "last status bar button have a border radius (no arrow shape) on the right side when a prior folded stage gets selected",
+        async function (assert) {
+            serverData.models = {
+                stage: {
+                    fields: {
+                        name: { string: "Name", type: "char" },
+                        folded: { string: "Folded", type: "boolean", default: false },
+                    },
+                    records: [
+                        { id: 1, name: "New" },
+                        { id: 2, name: "In Progress", folded: true },
+                        { id: 3, name: "Done" },
+                    ],
+                },
+                task: {
+                    fields: {
+                        status: { string: "Status", type: "many2one", relation: "stage" },
+                    },
+                    records: [
+                        { id: 1, status: 1 },
+                        { id: 2, status: 2 },
+                        { id: 3, status: 3 },
+                    ],
+                },
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "task",
+                resId: 3,
+                serverData,
+                arch: `
+                <form>
+                    <header>
+                        <field name="status" widget="statusbar" options="{'clickable': true, 'fold_field': 'folded'}" />
+                    </header>
+                </form>`,
+            });
+            await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
+            await click(target, ".o-dropdown .dropdown-item");
+
+            const button = target.querySelector(".o_statusbar_status button[data-value='3']");
+            assert.notEqual(button.style.borderTopRightRadius, "0px");
+            assert.hasClass(button, "o_first");
+        }
+    );
 });
