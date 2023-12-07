@@ -815,3 +815,22 @@ options.registry.ReplaceMedia.include({
         return this._super(...arguments);
     }
 });
+
+options.registry.ImageTools.include({
+
+    /**
+     * @override
+     */
+    _computeMaxDisplayWidth() {
+        const img = this._getImg();
+
+        this._super(...arguments);
+        // If the image is within an element with class '.o_img_with_max_suggested_width', set its
+        // width to MAX_SUGGESTED_WIDTH. This ensures the zoom feature works on product images,
+        // addressing the issue where optimized images couldn't be zoomed.
+        if (img.closest('[name="o_img_with_max_suggested_width"]')) {
+            return Math.round(this.MAX_SUGGESTED_WIDTH);
+        }
+    },
+
+});
