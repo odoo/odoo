@@ -90,6 +90,12 @@
             border-color: var(--o-cw-border-color);
         }
 
+        .fc-day-grid, .fc-time-grid {
+            .fc-bg .fc-day {
+                background: var(--o-calendar-grid-bg);
+            }
+        }
+
         .fc-time-grid .fc-slats .fc-minor td {
             border-top-color: var(--o-cw-border-color);
         }
@@ -260,7 +266,6 @@
 
             // Row containing "all day" events
             div.fc-day-grid {
-                background-color: $o-view-background-color;
                 box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.16);
 
                 + hr.fc-widget-header {
@@ -290,8 +295,8 @@
                 box-shadow: inset 0 1px 0 var(--o-cw-border-color);
             }
 
-            .fc-day.fc-widget-content.fc-today:not(.o_calendar_disabled) {
-                background: $o-view-background-color;
+            .fc-today:not(.o_calendar_disabled) {
+                --o-calendar-grid-bg: #{$o-view-background-color};
             }
 
             .fc-event {
