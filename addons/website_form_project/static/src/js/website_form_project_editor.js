@@ -25,6 +25,7 @@ FormEditorRegistry.add('create_task', {
         type: 'many2one',
         relation: 'project.project',
         string: _t('Project'),
-        createAction: 'project.open_view_project_all',
+        required: true,
+        createAction: 'website_form_project.create_project_web_form', 
     }],
 });

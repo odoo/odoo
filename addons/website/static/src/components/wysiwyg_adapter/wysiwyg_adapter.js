@@ -325,7 +325,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const mod = await odoo.loader.modules.get('@website/snippets/s_social_media/options')[Symbol.for('default')];
         mod.clearDbSocialValuesCache();
 
-        const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options')[Symbol.for('default')];
+        const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options');
         formOptionsMod.clearAllFormsInfo();
 
         return super.destroy(...arguments);

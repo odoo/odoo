@@ -44,7 +44,7 @@ const { DateTime } = luxon;
         },
     });
 
-    publicWidget.registry.s_website_form = publicWidget.Widget.extend({
+    const WebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
@@ -900,3 +900,7 @@ const { DateTime } = luxon;
             fileInputEl.click();
         },
     });
+
+    publicWidget.registry.s_website_form = WebsiteForm;
+
+    export default WebsiteForm;

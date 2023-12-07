@@ -14,12 +14,17 @@ Generate tasks in Project app from a form published on your website. This module
         'data/website_form_project_data.xml',
         'views/project_portal_project_task_template.xml',
         'views/project_portal_project_project_template.xml',
+        'views/project_views.xml',
         ],
     'installable': True,
     'auto_install': True,
     'assets': {
+        'web.assets_tests': [
+            'website_form_project/static/tests/**/*',
+        ],
         'website.assets_wysiwyg': [
             'website_form_project/static/src/js/website_form_project_editor.js',
+            'website_form_project/static/src/snippets/s_website_form_project/options.js',
         ],
         'project.webclient': [
             # In website, there is a patch of the LinkDialog (see
