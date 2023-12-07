@@ -701,9 +701,11 @@ export class PivotModel extends Model {
      * @param {SearchParams} searchParams
      */
     async load(searchParams) {
-        const previousQuery = this.currentQuery;
-        this.currentQuery = JSON.stringify(this.env.searchModel.query);
-        if (this.currentQuery !== previousQuery) {
+        const previousQuery = this.currentQuery || null;
+        this.currentQuery = this.env.searchModel
+            ? JSON.stringify(this.env.searchModel.query)
+            : null;
+        if (this.currentQuery && this.currentQuery !== previousQuery) {
             const previousFavoriteId = this.currentFavoriteId || null;
             const [favorite] = this.env.searchModel.getSearchItems(
                 (item) => item.type === "favorite" && item.isActive
