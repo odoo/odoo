@@ -7,6 +7,7 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common, Form
 from odoo import Command
 from odoo.tools import submap
+from ..models.test_new_api import ModelParentM2o
 
 
 def strip_prefix(prefix, names):
@@ -1147,6 +1148,40 @@ class TestComputeOnchange2(common.TransactionCase):
             with form.child_ids.edit(2) as line:
                 line.cost = 30
             self.assertEqual(form.cost, 61)
+
+    @patch.object(ModelParentM2o, 'compute_cost_called')
+    def test_onchange_one2many_call_count(self, mock_compute_cost_called):
+        record = self.env['test_new_api.model_parent_m2o'].create({
+            'name': 'Family',
+            'child_ids': [
+                Command.create({'name': 'W', 'cost': 10}),
+                Command.create({'name': 'X', 'cost': 10}),
+                Command.create({'name': 'Y'}),
+                Command.create({'name': 'Z'}),
+            ],
+        })
+
+        self.env.flush_all()
+        self.assertEqual(record.child_ids.mapped('name'), list('WXYZ'))
+        self.assertEqual(record.cost, 22)
+        self.assertEqual(mock_compute_cost_called.call_count, 1)
+
+        with common.Form(record) as form:
+            with form.child_ids.edit(1) as line:
+                line.name = 'XXX'
+
+            self.assertEqual(form.cost, 15)
+            self.assertEqual(mock_compute_cost_called.call_count, 2)
+
+            # Here we are changing child field `code` which should not trigger
+            # computation of the parent field `cost`
+            with form.child_ids.edit(1) as line:
+                line.code = 'XXX'
+
+            # Here we expect to have the number of calls unchanged as the field `code`
+            # is not listed in the dependency list, but the call count is increased
+            # once more which should not happen.
+            self.assertEqual(mock_compute_cost_called.call_count, 2)
 
     def test_onchange_editable_compute_one2many(self):
         # create a record with a computed editable field ('edit') on lines
