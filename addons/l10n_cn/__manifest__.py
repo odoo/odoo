@@ -26,6 +26,8 @@ State Data/省份数据
 
     修改小企业会计税率
 
+    增加大企业会计科目表
+
 We added the option to print a voucher which will also
 print the amount in words (special Chinese characters for numbers)
 correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
