@@ -64,12 +64,7 @@ export class RemainingDaysField extends Component {
     }
 
     onDateTimeChanged(datetime) {
-        if (datetime) {
-            this.props.record.update({ [this.props.name]: datetime });
-        } else if (typeof datetime === "string") {
-            // when the date is cleared
-            this.props.record.update({ [this.props.name]: false });
-        }
+        this.props.record.update({ [this.props.name]: datetime || false });
     }
 }
 
