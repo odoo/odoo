@@ -88,4 +88,11 @@ export class TimeOffCalendarModel extends CalendarModel {
         }
         return this.orm.searchRead(resModel, this.computeDomain(data), fieldNames, { context });
     }
+
+    computeDomain(data) {
+        return [
+            ...super.computeDomain(data),
+            ['state', '!=', 'cancel'],
+        ]
+    }
 }

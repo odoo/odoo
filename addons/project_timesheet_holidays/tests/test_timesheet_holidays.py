@@ -162,7 +162,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.env['hr.holidays.cancel.leave'].with_user(self.user_employee).with_context(default_leave_id=holiday.id) \
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
-        self.assertFalse(holiday.active, 'The time off should be archived')
+        self.assertEqual(holiday.state, 'cancel', 'The time off should be archived')
         self.assertEqual(len(holiday.timesheet_ids), 0, 'The timesheets generated should be unlink.')
 
     def test_timesheet_time_off_including_public_holiday(self):
