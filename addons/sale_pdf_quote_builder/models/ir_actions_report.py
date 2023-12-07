@@ -1,5 +1,9 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import io
+
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2.generic import NameObject, createStringObject
 
 from odoo import models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
@@ -24,6 +28,7 @@ class IrActionsReport(models.Model):
                 has_header = bool(header_record.sale_header)
                 has_footer = bool(footer_record.sale_footer)
                 included_product_docs = self.env['product.document']
+                doc_line_id_mapping = {}
                 for line in order.order_line:
                     product_product_docs = line.product_id.product_document_ids
                     product_template_docs = line.product_template_id.product_document_ids
@@ -32,91 +37,82 @@ class IrActionsReport(models.Model):
                         or product_template_docs.filtered(lambda d: d.attached_on == 'inside')
                     )
                     included_product_docs = included_product_docs | doc_to_include
+                    doc_line_id_mapping.update({doc.id: line.id for doc in doc_to_include})
 
                 if (not has_header and not included_product_docs and not has_footer):
                     continue
 
                 IrBinary = self.env['ir.binary']
-                so_form_fields = self._get_so_form_fields_mapping(order)
-                pdf_data = []
+                writer = PdfFileWriter()
                 if has_header:
                     header_stream = IrBinary._record_to_stream(header_record, 'sale_header').read()
-                    header_stream = pdf.fill_form_fields_pdf(header_stream, so_form_fields)
-                    pdf_data.append(header_stream)
+                    self._add_pages_to_writer(writer, header_stream)
                 if included_product_docs:
-                    docs_streams = self._fill_sol_documents_fields(
-                        order, included_product_docs, so_form_fields
-                    )
-                    pdf_data.extend(docs_streams)
-
-                pdf_data.append((initial_stream).getvalue())
+                    for doc in included_product_docs:
+                        doc_stream = IrBinary._record_to_stream(doc, 'datas').read()
+                        self._add_pages_to_writer(writer, doc_stream, doc_line_id_mapping[doc.id])
+                        self._prefix_sol_form_fields(writer, doc_line_id_mapping[doc.id])
+                self._add_pages_to_writer(writer, (initial_stream).getvalue())
                 if has_footer:
                     footer_stream = IrBinary._record_to_stream(footer_record, 'sale_footer').read()
-                    footer_stream = pdf.fill_form_fields_pdf(footer_stream, so_form_fields)
-                    pdf_data.append(footer_stream)
+                    self._add_pages_to_writer(writer, footer_stream)
 
-                stream = io.BytesIO(pdf.merge_pdf(pdf_data))
+                form_fields = self._get_form_fields_mapping(order)
+                pdf.fill_form_fields_pdf(writer, form_fields=form_fields)
+                with io.BytesIO() as _buffer:
+                    writer.write(_buffer)
+                    stream = io.BytesIO(_buffer.getvalue())
                 result[order.id].update({'stream': stream})
 
         return result
 
-    def _fill_sol_documents_fields(self, order, documents, so_form_fields):
-        """ Fill sale order line documents fields with sale order and sale order lines fields data.
+    def _add_pages_to_writer(self, writer, document, sol_id=None):
+        prefix = f'{sol_id}_' if sol_id else ''
+        reader = PdfFileReader(io.BytesIO(document), strict=False)
+        sol_field_names = self._get_sol_form_fields_names()
+        for page_id in range(0, reader.getNumPages()):
+            page = reader.getPage(page_id)
+            if sol_id and page.get('/Annots'):
+                for j in range(0, len(page['/Annots'])):
+                    writer_annot = page['/Annots'][j].getObject()
+                    if writer_annot.get('/T') in sol_field_names:
+                        writer_annot.update({
+                            NameObject("/T"): createStringObject(prefix + writer_annot.get('/T'))
+                        })
+            writer.addPage(page)
 
-        :param recordset order: sale.order record
-        :param recordset documents: product.document records
-        :param dict so_form_fields: sale order fields data
-        :return: a list of PDF
-        :rtype: list of datastrings
+    def _prefix_sol_form_fields(self, writer, sol_id):
+        """ Prefix all form fields in the document with the sale order line id.
+        This is necessary to avoid conflicts between fields with the same name.
+
+        :param PdfFileWriter writer: PdfFileWriter instance
+        :param int sol_id: sale.order.line id
         """
-        IrBinary = self.env['ir.binary']
-        docs_streams = []
-        for line in order.order_line:
-            if not documents:
-                return docs_streams
-            # Merge so and sol data, in case of the same field name: priority to the sol data
-            sol_form_fields = so_form_fields | self._get_sol_form_fields_mapping(line)
-            product_id = line.product_id.id
-            template_id = line.product_template_id.id
-            line_documents = documents.filtered(
-                lambda d: (d.res_model == 'product.product' and d.res_id == product_id)
-                          or (d.res_model == 'product.template' and d.res_id == template_id)
-            )
-            for doc in line_documents:
-                doc_stream = IrBinary._record_to_stream(doc, 'datas').read()
-                doc_stream = pdf.fill_form_fields_pdf(doc_stream, sol_form_fields)
-                docs_streams.append(doc_stream)
-            documents -= line_documents
-        return docs_streams
+        prefix = f'{sol_id}_'
+        sol_field_names = self._get_sol_form_fields_names()
+        if hasattr(writer, 'pages'):
+            nbr_pages = len(writer.pages)
+        else:  # This method was renamed in PyPDF2 2.0
+            nbr_pages = writer.getNumPages()
+        for page_id in range(0, nbr_pages):
+            page = writer.getPage(page_id)
+            if not page.get('/Annots'):
+                continue
+            for j in range(0, len(page['/Annots'])):
+                writer_annot = page['/Annots'][j].getObject()
+                if writer_annot.get('/T') in sol_field_names:
+                    writer_annot.update({
+                        NameObject("/T"): createStringObject(prefix + writer_annot.get('/T'))
+                    })
 
-    def _get_sol_form_fields_mapping(self, line):
-        """ Dictionary mapping specific pdf fields name to Odoo fields data for a sale order line.
-        Override this method to add new fields to the mapping.
-
-        :param recordset line: sale.order.line record
-        :rtype: dict
-        :return: mapping of fields name to Odoo fields data
-
-        Note: line.ensure_one()
+    def _get_sol_form_fields_names(self):
+        """ List of specific pdf fields name for an order line that needs to be renamed in the pdf.
+        Override this method to add new fields to the list.
         """
-        line.ensure_one()
-        env = self.with_context(use_babel=True).env
-        form_fields_mapping = {
-            'description': line.name,
-            'quantity': line.product_uom_qty,
-            'uom': line.product_uom.name,
-            'price_unit': format_amount(env, line.price_unit, line.currency_id),
-            'discount': line.discount,
-            'product_sale_price': format_amount(
-                env, line.product_id.lst_price, line.product_id.currency_id
-            ),
-            'taxes': ', '.join(tax.name for tax in line.tax_id),
-            'tax_excl_price': format_amount(env, line.price_subtotal, line.currency_id),
-            'tax_incl_price': format_amount(env, line.price_total, line.currency_id),
-        }
-        return form_fields_mapping
+        return ['description', 'quantity', 'uom', 'price_unit', 'discount', 'product_sale_price',
+                'taxes', 'tax_excl_price', 'tax_incl_price']
 
-    def _get_so_form_fields_mapping(self, order):
+    def _get_form_fields_mapping(self, order):
         """ Dictionary mapping specific pdf fields name to Odoo fields data for a sale order.
         Override this method to add new fields to the mapping.
 
@@ -140,4 +136,38 @@ class IrActionsReport(models.Model):
             'validity_date': format_date(env, order.validity_date, lang_code=lang_code),
             'client_order_ref': order.client_order_ref or '',
         }
+
+        # Adding fields from each line, prefixed by the line_id to avoid conflicts
+        for line in order.order_line:
+            form_fields_mapping.update(self._get_sol_form_fields_mapping(line))
+
         return form_fields_mapping
+
+    def _get_sol_form_fields_mapping(self, line):
+        """ Dictionary mapping specific pdf fields name to Odoo fields data for a sale order line.
+
+        Fields name are prefixed by the line id to avoid conflict between files.
+
+        Override this method to add new fields to the mapping.
+
+        :param recordset line: sale.order.line record
+        :rtype: dict
+        :return: mapping of prefixed fields name to Odoo fields data
+
+        Note: line.ensure_one()
+        """
+        line.ensure_one()
+        env = self.with_context(use_babel=True).env
+        return {
+            f'{line.id}_description': line.name,
+            f'{line.id}_quantity': line.product_uom_qty,
+            f'{line.id}_uom': line.product_uom.name,
+            f'{line.id}_price_unit': format_amount(env, line.price_unit, line.currency_id),
+            f'{line.id}_discount': line.discount,
+            f'{line.id}_product_sale_price': format_amount(
+                env, line.product_id.lst_price, line.product_id.currency_id
+            ),
+            f'{line.id}_taxes': ', '.join(tax.name for tax in line.tax_id),
+            f'{line.id}_tax_excl_price': format_amount(env, line.price_subtotal, line.currency_id),
+            f'{line.id}_tax_incl_price': format_amount(env, line.price_total, line.currency_id),
+        }

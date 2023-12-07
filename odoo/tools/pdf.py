@@ -35,7 +35,7 @@ try:
 except ImportError:
     from PyPDF2 import PdfFileWriter, PdfFileReader
 
-from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
+from PyPDF2.generic import ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject, createStringObject
 
 try:
     import fontTools
@@ -93,34 +93,48 @@ def merge_pdf(pdf_data):
         writer.write(_buffer)
         return _buffer.getvalue()
 
-def fill_form_fields_pdf(document, form_fields=None):
+def fill_form_fields_pdf(writer, form_fields):
     ''' Fill in the form fields of a PDF
-    :param datastring document: a PDF datastring
+    :param writer: a PdfFileWriter object
     :param dict form_fields: a dictionary of form fields to update in the PDF
     :return: a filled PDF datastring
     '''
-    form_fields = form_fields or {}
-    writer = PdfFileWriter()
-    reader = PdfFileReader(io.BytesIO(document), strict=False)
-    has_fields = form_fields and bool(reader.getFields())
-    if not has_fields:
-        return document
 
-    for page in range(0, reader.getNumPages()):
-        page = reader.getPage(page)
-        writer.addPage(page)
-        try:
+    # This solves a known problem with PyPDF2, where with some pdf software, forms fields aren't
+    # correctly filled until the user click on it, see: https://github.com/py-pdf/pypdf/issues/355
+    if hasattr(writer, 'set_need_appearances_writer'):
+        writer.set_need_appearances_writer()
+        is_upper_version_pypdf2 = True
+    else:  # This method was renamed in PyPDF2 2.0
+        is_upper_version_pypdf2 = False
+        catalog = writer._root_object
+        # get the AcroForm tree
+        if "/AcroForm" not in catalog:
+            writer._root_object.update({
+                NameObject("/AcroForm"): IndirectObject(len(writer._objects), 0, writer)
+            })
+        writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
+
+    nbr_pages = len(writer.pages) if is_upper_version_pypdf2 else writer.getNumPages()
+
+    for page_id in range(0, nbr_pages):
+        page = writer.getPage(page_id)
+
+        if is_upper_version_pypdf2:
             writer.update_page_form_field_values(page, form_fields)
-        except AttributeError:  # This method was renamed in PyPDF2 2.0
+        else:
             # This is a known bug on previous version of PyPDF2, fixed in 2.11
             if not page.get('/Annots'):
                 _logger.info("No fields to update in this page")
             else:
                 writer.updatePageFormFieldValues(page, form_fields)
 
-    with io.BytesIO() as _buffer:
-        writer.write(_buffer)
-        return _buffer.getvalue()
+        for raw_annot in page.get('/Annots', []):
+            annot = raw_annot.getObject()
+            for field in form_fields:
+                # Mark filled fields as readonly to avoid the blue overlay:
+                if annot.get('/T') == field:
+                    annot.update({NameObject("/Ff"): NumberObject(1)})
 
 def rotate_pdf(pdf):
     ''' Rotate clockwise PDF (90°) into a new PDF.
