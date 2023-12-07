@@ -262,3 +262,59 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertIn(gto_09_04, global_leaves_ids_35h)
         self.assertIn(gto_11_13, global_leaves_ids_35h)
         self.assertNotIn(gto_09_11, global_leaves_ids_35h)
+
+    def test_global_time_off_timesheet_creation_after_leave_refusal(self):
+        """ When a global time off is created and an employee already has a
+            validated leave at that date, a timesheet is not created for the
+            global time off.
+            We make sure that the global time off timesheet is restored if the
+            leave is refused.
+        """
+        # employee leave dates: from monday to friday
+        hr_leave_start_datetime = datetime(2023, 12, 25, 7, 0, 0, 0)
+        hr_leave_end_datetime = datetime(2023, 12, 29, 18, 0, 0, 0)
+
+        self.env.company = self.test_company
+
+        internal_project = self.test_company.internal_project_id
+        internal_task_leaves = self.test_company.leave_timesheet_task_id
+
+        hr_leave_type_with_ts = self.env['hr.leave.type'].create({
+            'name': 'Leave Type with timesheet generation',
+            'requires_allocation': 'no',
+            'timesheet_generate': True,
+            'timesheet_project_id': internal_project.id,
+            'timesheet_task_id': internal_task_leaves.id,
+        })
+
+        # create and validate a leave for full time employee
+        HrLeave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+        holiday = HrLeave.with_user(self.full_time_employee.user_id).create({
+            'name': 'Leave 1',
+            'employee_id': self.full_time_employee.id,
+            'holiday_status_id': hr_leave_type_with_ts.id,
+            'date_from': hr_leave_start_datetime,
+            'date_to': hr_leave_end_datetime,
+        })
+        holiday.sudo().action_validate()
+        self.assertEqual(len(holiday.timesheet_ids), 5)
+
+        # create overlapping global time off
+        global_leave_start_datetime = datetime(2023, 12, 27, 7, 0, 0, 0)
+        global_leave_end_datetime = datetime(2023, 12, 27, 18, 0, 0, 0)
+
+        global_time_off = self.env['resource.calendar.leaves'].create({
+            'name': '2 days afer Christmas',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': global_leave_start_datetime,
+            'date_to': global_leave_end_datetime,
+        })
+        # timesheet linked to global time off should not exist as one already exists for the leave
+        self.assertFalse(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == self.full_time_employee))
+
+        # refuse original leave
+        holiday.sudo().action_refuse()
+        self.assertFalse(holiday.timesheet_ids)
+
+        # timesheet linked to global time off should be restored as the existing leave timesheets were unlinked after refusal
+        self.assertTrue(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == self.full_time_employee))
