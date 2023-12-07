@@ -770,6 +770,35 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('Multiple-page-action-request should contain context', async function (assert) {
+        assert.expect(1);
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            context: { this_key_should_be_present_in_context: 1 },
+            arch: `
+                <tree limit="1">
+                    <header>
+                         <button name="x" type="object" class="btn_triggering_search_request" string="btn triggering search request"/>
+                    </header>
+                    <field name="foo" />
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'search') {
+                    assert.deepEqual(args.kwargs.context, { this_key_should_be_present_in_context: 1 });
+                }
+                return this._super.call(this, ...arguments);
+            }
+        });
+        // Click to: Select all records on current page
+        await testUtils.dom.click(list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]'));
+        // Click to: Select all records on ALL pages
+        await testUtils.dom.click(list.el.querySelector('.o_list_select_domain'));
+        // Click on action button to trigger "search" request
+        await testUtils.dom.click(list.el.querySelector('button[name="x"]'));       
+    });
+
     QUnit.test('column names (noLabel, label, string and default)', async function (assert) {
         assert.expect(4);
 
