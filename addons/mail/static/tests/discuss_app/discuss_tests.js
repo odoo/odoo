@@ -8,7 +8,13 @@ import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { editInput, makeDeferred, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import { click, contains, createFile, focus, insertText, scroll } from "@web/../tests/utils";
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -927,10 +933,13 @@ QUnit.test(
             },
         });
         openDiscuss();
-        env.services.bus_service.addEventListener("set_title_part", ({ detail: payload }) => {
-            assert.step("set_title_part");
-            assert.strictEqual(payload.part, "_chat");
-            assert.strictEqual(payload.title, "1 Message");
+        patchWithCleanup(env.services["title"], {
+            setParts(parts) {
+                if (parts._chat) {
+                    assert.step("set_title_part");
+                    assert.strictEqual(parts._chat, "1 Message");
+                }
+            },
         });
         const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // simulate receiving a new message with odoo out-of-focused
@@ -956,10 +965,13 @@ QUnit.test("receive new chat message: out of odoo focus (notification, chat)", a
         },
     });
     openDiscuss();
-    env.services.bus_service.addEventListener("set_title_part", ({ detail: payload }) => {
-        assert.step("set_title_part");
-        assert.strictEqual(payload.part, "_chat");
-        assert.strictEqual(payload.title, "1 Message");
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            if (parts._chat) {
+                assert.step("set_title_part");
+                assert.strictEqual(parts._chat, "1 Message");
+            }
+        },
     });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receiving a new message with odoo out-of-focused
@@ -984,8 +996,12 @@ QUnit.test("no out-of-focus notification on receiving self messages in chat", as
         },
     });
     openDiscuss();
-    env.services.bus_service.addEventListener("set_title_part", () => {
-        assert.step("set_title_part");
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            if (parts._chat) {
+                assert.step("set_title_part");
+            }
+        },
     });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receiving a new message of self with odoo out-of-focused
@@ -1015,19 +1031,23 @@ QUnit.test("receive new chat messages: out of odoo focus (tab title)", async (as
         },
     });
     openDiscuss();
-    env.services.bus_service.addEventListener("set_title_part", ({ detail: payload }) => {
-        step++;
-        assert.step("set_title_part");
-        assert.strictEqual(payload.part, "_chat");
-        if (step === 1) {
-            assert.strictEqual(payload.title, "1 Message");
-        }
-        if (step === 2) {
-            assert.strictEqual(payload.title, "2 Messages");
-        }
-        if (step === 3) {
-            assert.strictEqual(payload.title, "3 Messages");
-        }
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            if (!parts._chat) {
+                return;
+            }
+            step++;
+            assert.step("set_title_part");
+            if (step === 1) {
+                assert.strictEqual(parts._chat, "1 Message");
+            }
+            if (step === 2) {
+                assert.strictEqual(parts._chat, "2 Messages");
+            }
+            if (step === 3) {
+                assert.strictEqual(parts._chat, "3 Messages");
+            }
+        },
     });
     const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
     // simulate receiving a new message in chat 1 with odoo out-of-focused
@@ -1923,7 +1943,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     const pyEnv = await startServer();
     const [userId1, userId2] = pyEnv["res.users"].create([
         { name: "Jerry Golay" },
-        { name: "Albert" }
+        { name: "Albert" },
     ]);
     const [partnerId1] = pyEnv["res.partner"].create([
         {
@@ -1933,7 +1953,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
         {
             name: "Jerry Golay",
             user_ids: [userId1],
-        }
+        },
     ]);
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -1954,6 +1974,6 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebar-item", {
         text: "Jerry Golay",
-        before: [".o-mail-DiscussSidebar-item", { text: "Albert" }]
+        before: [".o-mail-DiscussSidebar-item", { text: "Albert" }],
     });
 });
