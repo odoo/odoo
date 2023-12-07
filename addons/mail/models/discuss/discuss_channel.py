@@ -682,11 +682,9 @@ class Channel(models.Model):
                 </div>
             '''
             notification = Markup(notification_text) % {
-                'user_pinned_a_message_to_this_channel': Markup('%s <a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a> %s') % (
-                    _('%(user_name)s pinned a', user_name=self.env.user.display_name),
+                'user_pinned_a_message_to_this_channel': Markup('<a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a>') % (
                     message_id,
-                    _('message'),
-                    _('to this channel.'),
+                    _('%(user_name)s pinned a message to this channel.', user_name=self.env.user.display_name),
                 ),
                 'see_all_pins': _('See all pinned messages.'),
             }

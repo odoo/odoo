@@ -27,7 +27,7 @@ class IrWebsocket(models.AbstractModel):
         discuss_channel_ids = list()
         for channel in reversed(channels):
             if isinstance(channel, str):
-                match = re.findall(r'discuss\.channel AND (\d+)', channel)
+                match = re.findall(r'discuss\.channel.* (\d+)', channel)
                 if match:
                     discuss_channel_ids.append(int(match[0]))
                     channels.remove(channel)

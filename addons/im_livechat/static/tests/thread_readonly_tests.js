@@ -26,7 +26,7 @@ QUnit.test("Rendering of readonly threads in Discuss", async () => {
         livechat_operator_id: operatorId,
     });
     const { env, openDiscuss } = await start();
-    // If readonly thread is opened outside Livechat, the inbox is mounted.
+    // If readonly thread is opened outside Livechat, the inbox is displayed.
     openDiscuss(channelId);
     await contains(".o-mail-Thread-empty");
     env.services["menu"].getCurrentApp = () => ({

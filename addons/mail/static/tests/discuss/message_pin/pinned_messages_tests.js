@@ -12,7 +12,7 @@ QUnit.module("pinned messages");
 QUnit.test("Pin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const messageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         body: "Hello world!",
         model: "discuss.channel",
         res_id: channelId,
@@ -27,7 +27,6 @@ QUnit.test("Pin message", async () => {
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { text: "Hello world!" });
-    await contains("a", { text: "message", oeType: "highlight", oeId: messageId });
 });
 
 QUnit.test("Unpin message", async () => {
