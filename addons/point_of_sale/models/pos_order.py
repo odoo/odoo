@@ -1049,6 +1049,7 @@ class PosOrderLine(models.Model):
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
             'refunded_orderline_id': orderline.refunded_orderline_id,
+            'full_product_name': orderline.full_product_name,
         }
 
     def export_for_ui(self):
