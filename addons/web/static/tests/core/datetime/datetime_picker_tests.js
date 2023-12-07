@@ -436,6 +436,24 @@ QUnit.module("Components", ({ beforeEach }) => {
         });
     });
 
+    QUnit.test("twelve-hour clock with non-null focus date index", async (assert) => {
+        // Test the case when we have focusDateIndex != 0
+        useTwelveHourClockFormat();
+        await mountPicker({
+            onSelect: (value) => {
+                assert.step(formatForStep(value));
+            },
+            value: [
+                DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
+                DateTime.fromObject({ day: 23, hour: 11, minute: 16 }),
+            ],
+            focusedDateIndex: 1,
+        });
+        const [hourSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "7");
+        assert.verifySteps(["2023-04-20T08:43:00,2023-04-23T07:16:00"]);
+    });
+
     QUnit.test("twelve-hour clock", async (assert) => {
         useTwelveHourClockFormat();
 
