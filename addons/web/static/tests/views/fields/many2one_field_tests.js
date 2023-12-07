@@ -3239,6 +3239,31 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("no_quick_create option on a many2one when can_create is absent", async function (assert) {
+        serverData.models.partner.fields.product_id.readonly = true;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" options="{'no_quick_create': 1}" readonly="0" />
+                    </sheet>
+                </form>`,
+        });
+        await editInput(target, ".o_field_many2one input", "new partner");
+        assert.containsOnce(
+            target,
+            ".ui-autocomplete .o_m2o_dropdown_option",
+            "Dropdown should be opened and have only one item"
+        );
+        assert.hasClass(
+            target.querySelector(".ui-autocomplete .o_m2o_dropdown_option"),
+            "o_m2o_dropdown_option_create_edit"
+        );
+    });
+
     QUnit.test("can_create and can_write option on a many2one", async function (assert) {
         serverData.models.product.options = {
             can_create: "false",
