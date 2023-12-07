@@ -137,7 +137,7 @@ export class DomainSelector extends Component {
                 };
             },
             isSupported: (path) => [0, 1].includes(path) || typeof path === "string",
-            defaultValue: () => "id",
+            defaultValue: () => this.defaultCondition.path,
             stringify: (path) => formatValue(path),
             message: _t("Invalid field chain"),
         };
