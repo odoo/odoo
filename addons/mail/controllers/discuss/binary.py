@@ -28,11 +28,6 @@ class BinaryController(Binary):
             raise NotFound()
         return request.env["ir.binary"]._get_stream_from(attachment_sudo).get_response(as_attachment=download)
 
-    @http.route("/discuss/channel/<int:channel_id>/avatar_128", methods=["GET"], type="http", auth="public")
-    @add_guest_to_context
-    def discuss_channel_avatar_128(self, channel_id, unique=False):
-        return self.content_image(model="discuss.channel", id=channel_id, field="avatar_128", unique=unique)
-
     @http.route(
         [
             "/discuss/channel/<int:channel_id>/image/<int:attachment_id>",

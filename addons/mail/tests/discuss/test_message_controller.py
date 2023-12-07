@@ -357,12 +357,12 @@ class TestMessageController(HttpCaseWithUserDemo):
         partner = self.env["res.users"].browse(test_user.uid).partner_id
         self.channel.add_members(testuser.partner_id.ids)
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/avatar_128?unique={self.channel._get_avatar_cache_key()}"
+            url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel&unique={self.channel._get_avatar_cache_key()}"
         )
         self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
 
         res = self.url_open(
-            url=f"/discuss/channel/{self.channel.id}/avatar_128"
+            url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel"
         )
         self.assertEqual(res.headers["Cache-Control"], "no-cache")
 
