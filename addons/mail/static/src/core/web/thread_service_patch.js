@@ -6,6 +6,7 @@ import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
+import { Record } from "@mail/core/common/record";
 
 let nextId = 1;
 
@@ -76,15 +77,17 @@ patch(ThreadService.prototype, {
                 thread.selfFollower = { followedThread: thread, ...result.selfFollower };
             }
             thread.followersCount = result.followersCount;
-            for (const followerData of result.followers) {
-                const follower = this.store.Follower.insert({
-                    followedThread: thread,
-                    ...followerData,
-                });
-                if (follower.notEq(thread.selfFollower)) {
-                    thread.followers.add(follower);
+            Record.MAKE_UPDATE(() => {
+                for (const followerData of result.followers) {
+                    const follower = this.store.Follower.insert({
+                        followedThread: thread,
+                        ...followerData,
+                    });
+                    if (follower.notEq(thread.selfFollower)) {
+                        thread.followers.add(follower);
+                    }
                 }
-            }
+            });
             thread.recipientsCount = result.recipientsCount;
             for (const recipientData of result.recipients) {
                 thread.recipients.add({ followedThread: thread, ...recipientData });
@@ -158,15 +161,17 @@ patch(ThreadService.prototype, {
             [thread.id],
             thread.followers.at(-1).id,
         ]);
-        for (const data of followers) {
-            const follower = this.store.Follower.insert({
-                followedThread: thread,
-                ...data,
-            });
-            if (follower.notEq(thread.selfFollower)) {
-                thread.followers.add(follower);
+        Record.MAKE_UPDATE(() => {
+            for (const data of followers) {
+                const follower = this.store.Follower.insert({
+                    followedThread: thread,
+                    ...data,
+                });
+                if (follower.notEq(thread.selfFollower)) {
+                    thread.followers.add(follower);
+                }
             }
-        }
+        });
     },
     async loadMoreRecipients(thread) {
         const recipients = await this.orm.call(
@@ -175,9 +180,11 @@ patch(ThreadService.prototype, {
             [[thread.id], thread.recipients.at(-1).id],
             { filter_recipients: true }
         );
-        for (const data of recipients) {
-            thread.recipients.add({ followedThread: thread, ...data });
-        }
+        Record.MAKE_UPDATE(() => {
+            for (const data of recipients) {
+                thread.recipients.add({ followedThread: thread, ...data });
+            }
+        });
     },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
