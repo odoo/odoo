@@ -499,7 +499,7 @@ class Picking(models.Model):
     products_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
-        ('late', 'Late')], compute='_compute_products_availability')
+        ('late', 'Late')], compute='_compute_products_availability', search='_search_products_availability_state')
 
     picking_properties = fields.Properties(
         'Properties',
@@ -728,6 +728,44 @@ class Picking(models.Model):
     def _compute_return_count(self):
         for picking in self:
             picking.return_count = len(picking.return_ids)
+
+    def _search_products_availability_state(self, operator, value):
+        def get_stock_moves(moves, state):
+            if state == 'available':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and not m.forecast_expected_date)
+            elif state == 'expected':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date <= m.picking_id.scheduled_date)
+            elif state == 'late':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date > m.picking_id.scheduled_date)
+            elif state == 'unavailable':
+                return moves.filtered(lambda m: m.forecast_availability < m.product_qty)
+            else:
+                raise UserError(_('Selection not supported.'))
+
+
+        if not value:
+            raise UserError(_('Search not supported without a value.'))
+
+        moves = self.env['stock.move'].search([
+            ('picking_id', '!=', False),
+            ('picking_id.state', 'not in', ('cancel', 'done', 'draft'))])
+        if operator == '=':
+            moves = get_stock_moves(moves, value)
+        elif operator == '!=':
+            moves = moves - get_stock_moves(moves, value)
+        elif operator == 'in':
+            search_moves = self.env['stock.move']
+            for state in value:
+                search_moves |= get_stock_moves(moves, state)
+            moves = search_moves
+        elif operator == 'not in':
+            search_moves = self.env['stock.move']
+            for state in value:
+                search_moves |= moves - get_stock_moves(moves, state)
+            moves = search_moves
+        else:
+            raise UserError(_('Operation not supported'))
+        return [('move_ids', 'in', moves.ids)]
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
