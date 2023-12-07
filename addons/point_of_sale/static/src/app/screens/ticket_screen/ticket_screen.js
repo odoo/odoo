@@ -3,7 +3,7 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { deserializeDateTime, deserializeDate, formatDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 
@@ -642,7 +642,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => deserializeDate(order.date_order).toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) => order.date_order.toFormat("yyyy-MM-dd HH:mm a"),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },
