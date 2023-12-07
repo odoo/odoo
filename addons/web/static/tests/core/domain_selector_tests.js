@@ -334,6 +334,30 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(getCurrentValue(target), "1");
     });
 
+    QUnit.test("building a domain with an invalid path (3)", async (assert) => {
+        serverData.models.partner.fields.user_id = {
+            string: "User",
+            type: "many2one",
+            relation: "user",
+            searchable: true,
+        };
+        await makeDomainSelector({
+            domain: `[(bloup, "=", "abc")]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("user_id", "in", [])]`);
+            },
+        });
+        assert.strictEqual(getCurrentPath(target), "bloup");
+        assert.ok(isNotSupportedPath(target));
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), `abc`);
+
+        await clearNotSupported(target);
+        assert.strictEqual(getCurrentPath(target), "User");
+        assert.strictEqual(getCurrentOperator(target), "is in");
+        assert.strictEqual(getCurrentValue(target), "");
+    });
+
     QUnit.test("building a domain with an invalid operator", async (assert) => {
         await makeDomainSelector({
             domain: `[("foo", "!!!!=!!!!", "abc")]`,
