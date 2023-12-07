@@ -422,8 +422,8 @@ function matchDomain(record, domain) {
     const reversedDomain = Array.from(domain).reverse();
     const condStack = [];
     for (const item of reversedDomain) {
-        if (item in operators) {
-            const operator = operators[item];
+        const operator = typeof item === "string" && operators[item];
+        if (operator) {
             const operands = condStack.splice(-operator.length);
             condStack.push(operator(...operands));
         } else {
