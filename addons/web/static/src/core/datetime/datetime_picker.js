@@ -600,14 +600,18 @@ export class DateTimePicker extends Component {
         if (isMeridiemFormat()) {
             this.meridiems = MERIDIEMS.map((m) => [m, m]);
             for (const timeValues of this.state.timeValues) {
-                timeValues.push(MERIDIEMS[Math.floor(timeValues[0] / 12) || 0]);
+                if (timeValues) {
+                    timeValues.push(MERIDIEMS[Math.floor(timeValues[0] / 12) || 0]);
+                }
             }
         }
         this.is12HourFormat = !is24HourFormat();
         if (this.is12HourFormat) {
             this.availableHours = [[0, HOURS[12][1]], ...HOURS.slice(1, 12)];
             for (const timeValues of this.state.timeValues) {
-                timeValues[0] %= 12;
+                if (timeValues) {
+                    timeValues[0] %= 12;
+                }
             }
         }
     }
