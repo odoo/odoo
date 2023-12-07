@@ -13,4 +13,9 @@
                                                 ref('base.bl'),
                                                 ref('base.nc')])]"/>
        </record>
+
+    <record id="fr_and_mc" model="res.country.group">
+        <field name="name">France and Monaco</field>
+        <field name="country_ids" eval="[Command.set([ref('base.fr'), ref('base.mc')])]"/>
+    </record>
 </odoo>
