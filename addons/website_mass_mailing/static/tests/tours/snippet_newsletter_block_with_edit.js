@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     {
         content: 'Toggle the option to display the Thanks button',
-        trigger: 'we-button[data-toggle-thanks-button] we-checkbox',
+        trigger: 'we-button[data-toggle-thanks-message] we-checkbox',
     },
     {
         content: 'Click on the Thanks button',

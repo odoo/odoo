@@ -43,10 +43,12 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      */
     cleanForSave() {
         const previewClasses = ['o_disable_preview', 'o_enable_preview'];
-        const subscribeBtn = this.$target[0].querySelector('.js_subscribe_btn');
-        subscribeBtn && subscribeBtn.classList.remove(...previewClasses);
-        const subscribedBtn = this.$target[0].querySelector('.js_subscribed_btn');
-        subscribedBtn && subscribedBtn.classList.remove(...previewClasses);
+        const toCleanElsSelector =
+            ".js_subscribe_btn, .js_subscribed_btn, #newsletter_form, .s_website_form_end_message";
+        const toCleanEls = this.$target[0].querySelectorAll(toCleanElsSelector);
+        toCleanEls.forEach(element => {
+            element.classList.remove(...previewClasses);
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -56,14 +58,15 @@ options.registry.mailing_list_subscribe = options.Class.extend({
     /**
      * @see this.selectClass for parameters
      */
-    toggleThanksButton(previewMode, widgetValue, params) {
-        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
-        const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
+    toggleThanksMessage(previewMode, widgetValue, params) {
+        const toSubscribeEl = this.$target[0].querySelector(".js_subscribe_btn, #newsletter_form");
+        const thanksMessageEl =
+            this.$target[0].querySelector(".js_subscribed_btn, .s_website_form_end_message");
 
-        thanksBtnEl.classList.toggle('o_disable_preview', !widgetValue);
-        thanksBtnEl.classList.toggle('o_enable_preview', widgetValue);
-        subscribeBtnEl.classList.toggle('o_enable_preview', !widgetValue);
-        subscribeBtnEl.classList.toggle('o_disable_preview', widgetValue);
+        thanksMessageEl.classList.toggle("o_disable_preview", !widgetValue);
+        thanksMessageEl.classList.toggle("o_enable_preview", widgetValue);
+        toSubscribeEl.classList.toggle("o_enable_preview", !widgetValue);
+        toSubscribeEl.classList.toggle("o_disable_preview", widgetValue);
     },
 
     //--------------------------------------------------------------------------
@@ -74,12 +77,12 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        if (methodName !== 'toggleThanksButton') {
+        if (methodName !== 'toggleThanksMessage') {
             return this._super(...arguments);
         }
-        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
-        return subscribeBtnEl && subscribeBtnEl.classList.contains('o_disable_preview') ?
-            'true' : '';
+        const toSubscribeElSelector =
+            ".js_subscribe_btn.o_disable_preview, #newsletter_form.o_disable_preview";
+        return this.$target[0].querySelector(toSubscribeElSelector) ? "true" : "";
     },
     /**
      * @override
@@ -101,8 +104,8 @@ options.registry.mailing_list_subscribe = options.Class.extend({
             }
         }
         const checkboxEl = document.createElement('we-checkbox');
-        checkboxEl.setAttribute('string', _t("Display Thanks Button"));
-        checkboxEl.dataset.toggleThanksButton = 'true';
+        checkboxEl.setAttribute('string', _t("Display Thanks Message"));
+        checkboxEl.dataset.toggleThanksMessage = 'true';
         checkboxEl.dataset.noPreview = 'true';
         uiFragment.appendChild(checkboxEl);
     },
