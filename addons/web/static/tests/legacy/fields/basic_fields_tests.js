@@ -5571,6 +5571,41 @@ QUnit.module('Legacy basic_fields', {
         unpatchDate();
     });
 
+    QUnit.test('remaining_days widget, enter empty value manually in edit list view', async function (assert) {
+        assert.expect(4);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), '', ['input', 'change']);
+        await testUtils.dom.click(list.$el);
+
+        assert.containsNone(document.body, '.modal');
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), '');
+
+        list.destroy();
+        unpatchDate();
+    });
+
     QUnit.test('remaining_days widget, enter wrong value manually in multi edit list view', async function (assert) {
         assert.expect(6);
 
