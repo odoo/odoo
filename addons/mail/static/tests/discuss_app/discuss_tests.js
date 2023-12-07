@@ -31,7 +31,6 @@ QUnit.test("sanity check", async (assert) => {
     });
     openDiscuss();
     await contains(".o-mail-DiscussSidebar");
-    await contains(".o_control_panel");
     await contains("h4", { text: "Congratulations, your inbox is empty" });
     assert.verifySteps([
         "/mail/init_messaging",

@@ -62,7 +62,6 @@ export class Discuss extends Component {
         });
         this.notification = useService("notification");
         this.threadActions = useThreadActions();
-        this.env?.config?.setDisplayName(_t("Discuss"));
         useExternalListener(
             window,
             "keydown",
