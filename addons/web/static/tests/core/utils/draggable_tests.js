@@ -304,7 +304,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     elements: ".item",
                     onDragStart({ element }) {
                         assert.step("start");
-                        assert.hasClass(element, "o_touch_bounce", "element has the animation class applied");
+                        assert.hasClass(element, "o_touch_drag_initiated", "element has the animation class applied");
                     },
                     onDrag() {
                         assert.step("drag");
@@ -315,7 +315,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     async onDrop({ element }) {
                         assert.step("drop");
                         await nextTick();
-                        assert.doesNotHaveClass(element, "o_touch_bounce", "element no longer has the animation class applied");
+                        assert.doesNotHaveClass(element, "o_touch_drag_initiated", "element no longer has the animation class applied");
                     },
                 });
             }

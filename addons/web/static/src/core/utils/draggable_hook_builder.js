@@ -690,7 +690,9 @@ export function makeDraggableHook(hookParams) {
                 if (initiationDelay) {
                     if (hasTouch()) {
                         if (ev.pointerType === "touch") {
-                            dom.addClass(target.closest(ctx.elementSelector), "o_touch_bounce");
+                            const el = target.closest(ctx.elementSelector);
+                            el.style.setProperty("animation-delay",  initiationDelay + "ms");
+                            dom.addClass(el, "o_touch_drag_initiated");
                         }
                         if (isBrowserFirefox()) {
                             // On Firefox mobile, long-touch events trigger an unpreventable
