@@ -308,7 +308,9 @@ function addRow(editor, beforeOrAfter) {
     const cells = row.querySelectorAll('td');
     newRow.append(...Array.from(Array(cells.length)).map(() => {
         const td = document.createElement('td');
-        td.append(document.createElement('br'));
+        const p = document.createElement('p');
+        p.appendChild(document.createElement('br'));
+        td.append(p);
         return td;
     }));
     row[beforeOrAfter](newRow);
@@ -659,7 +661,7 @@ export const editorCommands = {
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
-        const tdsHtml = new Array(colNumber).fill('<td><br></td>').join('');
+        const tdsHtml = new Array(colNumber).fill('<td><p><br></p></td>').join('');
         const trsHtml = new Array(rowNumber).fill(`<tr>${tdsHtml}</tr>`).join('');
         const tableHtml = `<table class="table table-bordered"><tbody>${trsHtml}</tbody></table>`;
         const sel = editor.document.getSelection();
@@ -676,7 +678,7 @@ export const editorCommands = {
             setSelection(...newPosition, ...newPosition, false);
         }
         const [table] = editorCommands.insertHTML(editor, tableHtml);
-        setCursorStart(table.querySelector('td'));
+        setCursorStart(table.querySelector('td > p'));
     },
     addColumnLeft: editor => {
         addColumn(editor, 'before');

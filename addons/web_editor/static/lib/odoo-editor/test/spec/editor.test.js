@@ -3781,7 +3781,7 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
                     stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
-                    contentAfter: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr><tr><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
+                    contentAfter: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr><tr><td>[<p><br></p>]</td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
                 });
             });
         });
