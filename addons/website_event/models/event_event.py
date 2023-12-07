@@ -175,7 +175,7 @@ class Event(models.Model):
         for event in self:
             date_begin_utc = utc.localize(event.date_begin, is_dst=False)
             date_end_utc = utc.localize(event.date_end, is_dst=False)
-            event.is_ongoing = date_begin_utc <= now_utc <= date_end_utc
+            event.is_ongoing = now_utc < date_end_utc and date_begin_utc.date() <= now_utc.date()
             event.is_done = now_utc > date_end_utc
             event.start_today = date_begin_utc.date() == now_utc.date()
             if date_begin_utc >= now_utc:

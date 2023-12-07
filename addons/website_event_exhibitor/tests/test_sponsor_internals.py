@@ -76,7 +76,7 @@ class TestSponsorData(TestEventExhibitorCommon):
         event.invalidate_cache(fnames=['is_ongoing'])
         sponsor.invalidate_cache(fnames=['is_in_opening_hours'])
         self.assertFalse(sponsor.is_in_opening_hours)
-        self.assertFalse(event.is_ongoing)
+        self.assertTrue(event.is_ongoing)
 
         # End day finished sooner
         self.mock_wevent_dt.now.return_value = datetime(2020, 7, 7, 13, 0, 1)

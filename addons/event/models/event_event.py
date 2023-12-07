@@ -319,7 +319,7 @@ class EventEvent(models.Model):
     def _compute_is_ongoing(self):
         now = fields.Datetime.now()
         for event in self:
-            event.is_ongoing = event.date_begin <= now < event.date_end
+            event.is_ongoing = now < event.date_end and event.date_begin.date() <= now.date()
 
     def _search_is_ongoing(self, operator, value):
         if operator not in ['=', '!=']:

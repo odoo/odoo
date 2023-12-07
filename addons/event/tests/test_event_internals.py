@@ -68,7 +68,7 @@ class TestEventData(TestEventCommon):
             'date_tz': 'Mexico/General'
         })
         self.assertTrue(event.is_one_day)
-        self.assertFalse(event.is_ongoing)
+        self.assertTrue(event.is_ongoing)
 
     @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
