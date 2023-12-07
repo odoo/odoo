@@ -25,10 +25,12 @@ export function removeFromArrayWithPredicate(array, predicate) {
  */
 export function replaceArrayWithCompare(array1, array2) {
     array1 = toRaw(array1);
+    const els1 = new Set(array1.map((el) => toRaw(el)));
     array2 = toRaw(array2);
+    const els2 = new Set(array2.map((el) => toRaw(el)));
     const elementsToRemove = new Set();
     for (const el1 of array1) {
-        if (!array2.includes(el1)) {
+        if (!els2.has(toRaw(el1))) {
             elementsToRemove.add(el1);
         }
     }
@@ -36,7 +38,7 @@ export function replaceArrayWithCompare(array1, array2) {
         removeFromArray(array1, el);
     }
     for (const el2 of array2) {
-        if (!array1.includes(el2)) {
+        if (!els1.has(toRaw(el2))) {
             array1.push(el2);
         }
     }
