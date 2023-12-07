@@ -39,14 +39,40 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_exempt_supplies" model="account.report.line">
+                    <record id="account_tax_report_line_exempt_supplies_total" model="account.report.line">
                         <field name="name">Box 3 - Total value of exempt supplies</field>
                         <field name="code">BOX3</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_line_exempt_supplies_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">Box 3</field>
+                        <field name="aggregation_formula">BOX3_EXEMPT_SUPPLIES.balance + BOX3_EXCH_DIFF.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_exempt_supplies" model="account.report.line">
+                                <field name="name">Exempt supplies</field>
+                                <field name="code">BOX3_EXEMPT_SUPPLIES</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_exempt_supplies_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Box 3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_exchange_diff" model="account.report.line">
+                                <field name="name">Exchange difference (absolute value)</field>
+                                <field name="code">BOX3_EXCH_DIFF</field>
+                                <field name="aggregation_formula">BOX3_EXCH_DIFF.balance_positive - BOX3_EXCH_DIFF.balance_negative</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_exchange_diff_positive" model="account.report.expression">
+                                        <field name="label">balance_positive</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.code','=like','502003%')]"/>
+                                        <field name="subformula">sum_if_pos</field>
+                                    </record>
+                                    <record id="account_tax_report_line_exchange_diff_negative" model="account.report.expression">
+                                        <field name="label">balance_negative</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.code','=like','502003%')]"/>
+                                        <field name="subformula">sum_if_neg</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
