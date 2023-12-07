@@ -134,6 +134,7 @@ QUnit.test("Jump to message from notification", async () => {
     }
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 21 });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
