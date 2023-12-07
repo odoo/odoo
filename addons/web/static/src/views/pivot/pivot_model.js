@@ -701,31 +701,29 @@ export class PivotModel extends Model {
      * @param {SearchParams} searchParams
      */
     async load(searchParams) {
-        searchParams = { ...searchParams };
-        const previousFavoriteId = this.currentFavoriteId || null;
-        const [favorite] = this.env.searchModel.getSearchItems(
-            (item) => item.type === "favorite" && item.isActive
-        );
-        this.currentFavoriteId = favorite?.id || null;
-        if (this.currentFavoriteId === previousFavoriteId) {
-            for (const key of ["pivot_measures", "pivot_column_groupby", "pivot_row_groupby"]) {
-                delete searchParams.context[key];
+        const previousQuery = this.currentQuery;
+        this.currentQuery = JSON.stringify(this.env.searchModel.query);
+        if (this.currentQuery !== previousQuery) {
+            const previousFavoriteId = this.currentFavoriteId || null;
+            const [favorite] = this.env.searchModel.getSearchItems(
+                (item) => item.type === "favorite" && item.isActive
+            );
+            this.currentFavoriteId = favorite?.id || null;
+            if (this.currentFavoriteId === previousFavoriteId) {
+                searchParams = { ...searchParams };
+                for (const key of ["pivot_measures", "pivot_column_groupby", "pivot_row_groupby"]) {
+                    delete searchParams.context[key];
+                }
             }
         }
         this.searchParams = searchParams;
         const processedMeasures = processMeasure(searchParams.context.pivot_measures);
         const activeMeasures = processedMeasures || this.metaData.activeMeasures;
         const metaData = this._buildMetaData({ activeMeasures });
-        if (!this.reload) {
-            metaData.rowGroupBys =
-                searchParams.context.pivot_row_groupby ||
-                (searchParams.groupBy.length ? searchParams.groupBy : metaData.rowGroupBys);
-            this.reload = true;
-        } else {
-            metaData.rowGroupBys = searchParams.groupBy.length
-                ? searchParams.groupBy
-                : searchParams.context.pivot_row_groupby || metaData.rowGroupBys;
-        }
+
+        metaData.rowGroupBys =
+            searchParams.context.pivot_row_groupby ||
+            (searchParams.groupBy.length ? searchParams.groupBy : metaData.rowGroupBys);
         metaData.colGroupBys =
             searchParams.context.pivot_column_groupby || this.metaData.colGroupBys;
 
