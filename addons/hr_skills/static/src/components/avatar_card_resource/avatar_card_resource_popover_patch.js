@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 
 
-const patchAvatarCardResourcePopover = {
+export const patchAvatarCardResourcePopover = {
     loadAdditionalData() {
         const promises = super.loadAdditionalData();
         this.skills = false;
@@ -33,4 +33,4 @@ const patchAvatarCardResourcePopover = {
     },
 };
 
-patch(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);
+export const unpatchAvatarCardResourcePopover = patch(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);
