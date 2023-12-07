@@ -433,6 +433,9 @@ class Partner(models.Model):
         if vat_label := self.env.company.country_id.vat_label:
             for node in arch.iterfind(".//field[@name='vat']"):
                 node.set("string", vat_label)
+            # In some module vat field is replaced and so above string change is not working
+            for node in arch.iterfind(".//label[@for='vat']"):
+                node.set("string", vat_label)
         return arch, view
 
     @api.constrains('parent_id')
