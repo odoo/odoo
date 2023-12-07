@@ -23,7 +23,7 @@ export class ThreadIcon extends Component {
         this.store = useState(useService("mail.store"));
     }
 
-    get chatPartner() {
-        return this.props.thread.chatPartner;
+    get correspondent() {
+        return this.props.thread.correspondent;
     }
 }

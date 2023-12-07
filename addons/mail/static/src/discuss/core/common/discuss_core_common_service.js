@@ -252,7 +252,7 @@ export class DiscussCoreCommon {
             }
         }
         if (
-            !channel.chatPartner?.eq(this.store.odoobot) &&
+            !channel.correspondent?.eq(this.store.odoobot) &&
             channel.type !== "channel" &&
             this.store.self?.type === "partner"
         ) {

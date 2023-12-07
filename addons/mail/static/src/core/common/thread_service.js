@@ -490,7 +490,7 @@ export class ThreadService {
             return;
         }
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.type === "chat" && thread.chatPartner?.eq(partner)
+            (thread) => thread.type === "chat" && thread.correspondent?.eq(partner)
         );
     }
 
@@ -817,7 +817,7 @@ export class ThreadService {
             thread.message_needaction_counter++;
         }
         if (
-            thread.chatPartner?.eq(this.store.odoobot) ||
+            thread.correspondent?.eq(this.store.odoobot) ||
             thread.muteUntilDateTime ||
             thread.custom_notifications === "no_notif" ||
             (thread.custom_notifications === "mentions" &&

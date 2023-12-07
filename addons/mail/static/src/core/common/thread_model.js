@@ -118,22 +118,6 @@ export class Thread extends Record {
         },
     });
     invitedMembers = Record.many("ChannelMember");
-    chatPartner = Record.one("Persona", {
-        /** @this {import("models").Thread} */
-        compute() {
-            if (this.type !== "chat") {
-                return undefined;
-            }
-            for (const member of this.channelMembers) {
-                if (
-                    !member.persona?.eq(this._store.self) ||
-                    (this.channelMembers.length === 1 && member.persona?.eq(this._store.self))
-                ) {
-                    return member.persona;
-                }
-            }
-        },
-    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
@@ -332,8 +316,8 @@ export class Thread extends Record {
     }
 
     get displayName() {
-        if (this.type === "chat" && this.chatPartner) {
-            return this.custom_channel_name || this.chatPartner.nameOrDisplayName;
+        if (this.type === "chat" && this.correspondent) {
+            return this.custom_channel_name || this.correspondent.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(
@@ -353,10 +337,13 @@ export class Thread extends Record {
 
     /** @type {import("models").Persona[]} */
     get correspondents() {
-        return this.channelMembers
-            .map((member) => member.persona)
-            .filter((persona) => !!persona)
-            .filter((p) => p.notEq(this._store.self));
+        const members = [];
+        for (const channelMember of this.channelMembers) {
+            if (channelMember.persona.notEq(this._store.self)) {
+                members.push(channelMember.persona);
+            }
+        }
+        return members;
     }
 
     /** @type {import("models").Persona|undefined} */

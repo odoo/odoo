@@ -44,14 +44,14 @@ commandProviderRegistry.add("mail.partner", {
         if (!options.searchValue) {
             mentionedChannels.slice(0, 3).map((channel) => {
                 if (channel.type === "chat") {
-                    displayedPartnerIds.add(channel.chatPartner.id);
+                    displayedPartnerIds.add(channel.correspondent.id);
                 }
                 commands.push({
                     Component: DiscussCommand,
                     async action() {
                         switch (channel.type) {
                             case "chat":
-                                threadService.openChat({ partnerId: channel.chatPartner.id });
+                                threadService.openChat({ partnerId: channel.correspondent.id });
                                 break;
                             case "group":
                                 threadService.open(channel);
