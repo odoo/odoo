@@ -20,7 +20,7 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
-        channel_type: "chat", // only chat channel have seen notification
+        channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
@@ -54,7 +54,7 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
-        channel_type: "chat",
+        channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
@@ -85,7 +85,7 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
-        channel_type: "chat",
+        channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
@@ -123,7 +123,7 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
-        channel_type: "chat",
+        channel_type: "group",
     });
     const mesageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
@@ -157,7 +157,7 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
             Command.create({ partner_id: partnerId_1 }),
             Command.create({ partner_id: partnerId_2 }),
         ],
-        channel_type: "chat",
+        channel_type: "group",
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
