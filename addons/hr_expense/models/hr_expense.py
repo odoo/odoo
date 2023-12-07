@@ -481,7 +481,7 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        self.message_main_attachment_id = kwargs['attachment_ids'][-1]
+        self.message_main_attachment_id = kwargs['attachment_ids'] and kwargs['attachment_ids'][-1]
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
