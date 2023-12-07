@@ -76,16 +76,9 @@
                         domain="[('employee_id.member_of_department', '=', True)]"
                         help="My Department"/>
                 <separator/>
-                <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
-                <separator/>
                 <filter name="filter_date_from" date="date_from" default_period="this_year" string="Current Year"/>
                 <separator/>
-                <filter name="active_time_off" string="Active"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
-                <filter name="archive" string="Archived"
-                    domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
-                <separator/>
-                <filter name="archived_leaves" string="Cancelled" domain="[('active', '=', False)]" />
+                <filter name="cancelled_leaves" string="Cancelled" domain="[('state', '=', 'cancel')]" />
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]" />
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -156,7 +149,7 @@
                                     <span t-if="record.state.raw_value === 'refuse'" class="fa fa-ban text-muted me-1" aria-label="refused"/>
                                     <span t-if="['confirm', 'validate1'].includes(record.state.raw_value)" class="me-1" aria-label="to refuse"/>
                                     <t t-set="classname"
-                                        t-value="{'validate': 'text-bg-success', 'refuse': 'text-bg-danger', 'confirm': 'text-bg-warning', 'validate1': 'text-bg-warning'}[record.state.raw_value] || 'text-bg-light'"/>
+                                        t-value="{'validate': 'text-bg-success', 'refuse': 'text-bg-danger', 'cancel': 'text-bg-danger', 'confirm': 'text-bg-warning', 'validate1': 'text-bg-warning'}[record.state.raw_value] || 'text-bg-light'"/>
                                     <span t-attf-class="badge rounded-pill {{ classname }}">
                                         <t t-out="record.state.value"/>
                                     </span>
@@ -240,23 +233,22 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Time Off Request" class="o_hr_leave_form">
-            <field name="active" invisible="1"/>
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
             <field name="can_cancel" invisible="1"/>
             <field name="has_mandatory_day" invisible="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft' or not active"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not active or not can_approve or state != 'confirm'"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or state != 'confirm'"/>
                 <button string="Validate" name="action_validate" invisible="state != 'validate1'" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" invisible="not active or not can_approve or state not in ('confirm', 'validate1', 'validate')"/>
-                <button string="Cancel" name="action_cancel" type="object" invisible="not active or not can_cancel" />
+                <button string="Refuse" name="action_refuse" type="object" invisible="not can_approve or state not in ('confirm', 'validate1', 'validate')"/>
+                <button string="Cancel" name="action_cancel" type="object" invisible="state == 'cancel' or not can_cancel" />
                 <button string="Mark as Draft" name="action_draft" type="object"
                         invisible="not can_reset or state not in ['confirm', 'refuse']"/>
-                <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="not active"/>
+                <field name="state" widget="statusbar" statusbar_visible="confirm,validate,cancel"/>
             </header>
             <sheet>
-                <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="active"/>
+                <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                 <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch or holiday_type == 'category'">
                     <span invisible="holiday_type != 'employee'">
                         The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
@@ -519,7 +511,7 @@
                 <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="duration_display" string="Duration"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'cancel'"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="category_id" column_invisible="True" readonly="state not in ['confirm', 'draft']"/>
                 <field name="user_id" column_invisible="True"/>
@@ -589,9 +581,6 @@
             <xpath expr="//filter[@name='my_team']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//filter[@name='active_employee']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -617,12 +606,23 @@
         </field>
     </record>
 
+    <record id="hr_leave_view_search_report" model="ir.ui.view">
+        <field name="name">hr.holidays.view.search.report</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="view_hr_holidays_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">34</field>
+        <field name="arch" type="xml">
+            <filter name="cancelled_leaves" position="replace" />
+        </field>
+    </record>
+
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
         <field name="name">Dashboard</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
         <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
-        <field name="context">{'short_name': 1, 'search_default_active_time_off': 1}</field>
+        <field name="context">{'short_name': 1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -718,6 +718,7 @@
         <field name="context">{
             'search_default_waiting_for_me': 1,
             'search_default_waiting_for_me_manager': 2,
+            'search_default_current_year': 3,
             'hide_employee_name': 1,
             'holiday_status_display_name': False}</field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
@@ -839,25 +840,13 @@
         </field>
     </record>
 
-    <record id="hr_leave_report_search_view" model="ir.ui.view">
-        <field name="name">he.leave.report.search.view</field>
-        <field name="inherit_id" ref="view_hr_holidays_filter"/>
-        <field name="mode">primary</field>
-        <field name="model">hr.leave</field>
-        <field name="arch" type="xml">
-            <filter name="active_employee" position="replace"/>
-            <filter name="archive" position="replace"/>
-            <filter name="active_time_off" position="replace"/>
-        </field>
-    </record>
-
     <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
         <field name="name">Time Off Analysis</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,graph,pivot,calendar,form</field>
-        <field name="search_view_id" ref="hr_leave_report_search_view"/>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
         <field name="context">{'search_default_filter_date_from': 1, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
-        <field name="domain">[('active', '=', True), ('active_employee','=',True)]</field>
+        <field name="domain">[('state', '!=', 'cancel')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No data to display

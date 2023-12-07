@@ -114,17 +114,16 @@ class HolidaysRequest(models.Model):
             del values['date_to']
         return values
 
-    active = fields.Boolean(default=True, readonly=True)
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False, copy=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
-    state = fields.Selection(
-        [
-            ('draft', 'To Submit'),
-            ('confirm', 'To Approve'),
-            ('refuse', 'Refused'),
-            ('validate1', 'Second Approval'),
-            ('validate', 'Approved')
+    state = fields.Selection([
+        ('draft', 'To Submit'),
+        ('confirm', 'To Approve'),
+        ('refuse', 'Refused'),
+        ('validate1', 'Second Approval'),
+        ('validate', 'Approved'),
+        ('cancel', 'Cancelled'),
         ], string='Status', compute='_compute_state', store=True, tracking=True, copy=False, readonly=False,
         help="The status is set to 'To Submit', when a time off request is created." +
         "\nThe status is 'To Approve', when time off request is confirmed by user." +
@@ -198,7 +197,7 @@ class HolidaysRequest(models.Model):
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     employee_ids = fields.Many2many(
         'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=True, groups="hr_holidays.group_hr_holidays_responsible",
-        domain=lambda self: self._get_employee_domain())
+        domain=lambda self: self._get_employee_domain(), context={'active_test': False})
     multi_employee = fields.Boolean(
         compute='_compute_from_employee_ids', store=True, compute_sudo=False,
         help='Holds whether this allocation concerns more than 1 employee')
@@ -922,13 +921,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return holidays
 
     def write(self, values):
-        if 'active' in values and not self.env.context.get('from_cancel_wizard'):
-            raise UserError(_("You can't manually archive/unarchive a time off."))
-
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
+            if any(leave.state == 'cancel' for leave in self):
+                raise UserError(_('Only a manager can modify a canceled leave.'))
 
         # Unlink existing resource.calendar.leaves for validated time off
         if 'state' in values and values['state'] != 'validate':
@@ -965,7 +963,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         if not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
             for hol in self:
-                if hol.state not in ['draft', 'confirm', 'validate1']:
+                if hol.state not in ['draft', 'confirm', 'validate1', 'cancel']:
                     raise UserError(error_message % state_description_values.get(self[:1].state))
                 if hol.date_from < now:
                     raise UserError(_('You cannot delete a time off which is in the past'))
@@ -976,9 +974,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
 
     def unlink(self):
-        self._force_cancel(_("deleted by %s (uid=%d).",
-            self.env.user.display_name, self.env.user.id
-        ))
+        self.sudo()._post_leave_cancel()
         return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
@@ -1121,14 +1117,17 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return True
 
     def action_confirm(self):
-        if self.filtered(lambda holiday: holiday.state != 'draft' and not holiday.validation_type == 'no_validation'):
-            raise UserError(_('Time off request must be in Draft state ("To Submit") in order to confirm it.'))
-        self.write({'state': 'confirm'})
-        holidays = self.filtered(lambda leave: leave.validation_type == 'no_validation')
+        # Technically, leaves should be in 'draft' to confirm them. However,
+        # due how the framework operates, it can happen that leaves are already
+        # confirmed when a confirm action is triggered again. In this case we
+        # should simply ignore these leaves and confirm the other ones.
+        to_confirm = self.filtered(lambda holiday: holiday.state == 'draft')
+        to_confirm.write({'state': 'confirm'})
+        holidays = to_confirm.filtered(lambda leave: leave.validation_type == 'no_validation')
         if holidays:
             # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
             holidays.sudo().action_validate()
-        self.activity_update()
+        to_confirm.activity_update()
         return True
 
     def action_approve(self, check_state=True):
@@ -1373,13 +1372,16 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         self._force_cancel(reason, 'mail.mt_note')
 
-    def _force_cancel(self, reason, msg_subtype='mail.mt_comment'):
+    def _force_cancel(self, reason, msg_subtype='mail.mt_comment', notify_responsibles=True):
         recs = self.browse() if self.env.context.get(MODULE_UNINSTALL_FLAG) else self
         for leave in recs:
             leave.message_post(
                 body=_('The time off has been cancelled: %s', reason),
                 subtype_xmlid=msg_subtype
             )
+
+            if not notify_responsibles:
+                continue
 
             responsibles = self.env['res.partner']
             # manager
@@ -1406,9 +1408,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     email_layout_xmlid='mail.mail_notification_light',
                 )
         leave_sudo = self.sudo()
-        leave_sudo.with_context(from_cancel_wizard=True).active = False
-        leave_sudo.meeting_id.active = False
-        leave_sudo._remove_resource_leave()
+        leave_sudo.state = 'cancel'
+        leave_sudo._post_leave_cancel()
+
+    def _post_leave_cancel(self):
+        self.meeting_id.active = False
+        self._remove_resource_leave()
 
     def action_documents(self):
         domain = [('id', 'in', self.attachment_ids.ids)]
@@ -1434,6 +1439,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             val_type = holiday.validation_type
 
             if not is_manager and state != 'confirm':
+                if holiday.state == 'cancel' and state != 'draft':
+                    raise UserError(_('A cancelled leave cannot be modified.'))
                 if state == 'draft':
                     if holiday.state == 'refuse':
                         raise UserError(_('Only a Time Off Manager can reset a refused leave.'))

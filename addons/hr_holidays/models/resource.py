@@ -40,7 +40,7 @@ class CalendarLeaves(models.Model):
                     ('date_to', '>', date['date_from']),
                     ('date_from', '<', date['date_to'])]
             ])
-        return expression.AND([domain, [('state', '!=', 'refuse'), ('active', '=', True)]])
+        return expression.AND([domain, [('state', '!=', 'refuse')]])
 
     def _get_time_domain_dict(self):
         return [{

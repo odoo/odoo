@@ -75,7 +75,7 @@ class LeaveReport(models.Model):
                 /* Obtain the sum of allocations (validated) */
                 LEFT JOIN
                     (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state = 'validate' and active = True THEN number_of_days ELSE 0 END) as number_of_days
+                        sum(CASE WHEN state = 'validate' THEN number_of_days ELSE 0 END) as number_of_days
                     FROM hr_leave_allocation
                     GROUP BY employee_id, holiday_status_id) aggregate_allocation
                 on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
@@ -113,7 +113,8 @@ class LeaveReport(models.Model):
     def action_time_off_analysis(self):
         domain = []
         if self.env.context.get('active_ids'):
-            domain = [('employee_id', 'in', self.env.context.get('active_ids', []))]
+            domain = [('employee_id', 'in', self.env.context.get('active_ids', [])),
+                      ('state', '!=', 'cancel')]
 
         return {
             'name': _('Time Off Analysis'),

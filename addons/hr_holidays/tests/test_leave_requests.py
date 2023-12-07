@@ -783,7 +783,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2021-11-15 00:00:00',
             'date_to': '2021-11-19 23:59:59',
         })
-        self.assertEqual(time_off.active, True)
+        self.assertEqual(time_off.state, 'confirm')
         self.assertEqual(time_off.number_of_days, 0)
 
     def test_holiday_type_requires_no_allocation(self):
@@ -906,45 +906,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 ml=10, lt=5, rl=5, vrl=5, vlt=5,
             )
 
-            with self.assertRaisesRegex(UserError,
-                r'You cannot archive an allocation which is in confirm or validate state.'):
-
-                # The logic of the test is relevant, so we do not remove it.
-                # However, the behaviour will change.
-                # Indeed, a confirmed or validated allocation cannot be archived
-
-                allocation_2021.active = False
-
-                # If the allocation is archived, the leaves taken are not taken into account anymore
-                # As there is no valid allocation, then there is no upcoming one (closest_allocation_to_expire)
-                self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
-                    ml=0, lt=0, rl=0, vrl=0, vlt=0,
-                )
-                self.assertEqual(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1]['closest_allocation_expire'],
-                    False,
-                )
-
-                # The holidays count in 2022 is not affected by the archived allocation in 2021
-                self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp)[self.employee_emp][0][1],
-                    ml=20, lt=4, rl=16, vrl=16, vlt=4,
-                )
-
-                allocation_2021.active = True
-
-                # The holidays count in 2021 is back to what it was when the allocation was active
-                self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
-                    ml=10, lt=5, rl=5, vrl=5, vlt=5,
-                )
-
-                # The holidays count in 2022 is still not affected by the allocation in 2021
-                self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp)[self.employee_emp][0][1],
-                    ml=20, lt=4, rl=16, vrl=16, vlt=4,
-                )
 
     def test_cancel_leave(self):
         with freeze_time('2020-09-15'):

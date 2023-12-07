@@ -403,7 +403,7 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', employees.ids),
             ('holiday_status_id', 'in', leave_types.ids),
             ('state', '=', 'validate'),
-        ]).filtered(lambda al: al.active or not al.employee_id.active)
+        ])
         allocations_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.allocation']))
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
