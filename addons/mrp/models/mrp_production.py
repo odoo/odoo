@@ -380,11 +380,19 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
-        for order in self:
-            order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
-            ])
-            order.delivery_count = len(order.picking_ids)
+        self.picking_ids = []
+        self.delivery_count = 0
+        mo_by_group = defaultdict(lambda: self.env['mrp.production'])
+        for mo in self:
+            mo_by_group[mo.procurement_group_id] |= mo
+        pickings = self.env['stock.picking'].read_group([
+            ('group_id', 'in', self.procurement_group_id.ids),
+            ('group_id', '!=', False),
+            ], ["group_id", "ids:array_agg(id)"], ["group_id"])
+        if pickings:
+            for p_group in pickings:
+                mo_by_group[p_group["group_id"][0]].picking_ids = self.env['stock.picking'].browse(p_group['ids'])
+                mo_by_group[p_group["group_id"][0]].delivery_count = p_group['group_id_count']
 
     def action_view_mo_delivery(self):
         """ This function returns an action that display picking related to
@@ -721,7 +729,9 @@ class MrpProduction(models.Model):
     @api.onchange('bom_id', 'product_id')
     def _onchange_workorder_ids(self):
         if self.bom_id and self.product_id:
-            self._create_workorder()
+            self.workorder_ids = [(5, 0)] + [(0, 0, value) for value in self._get_workorder_values()]
+            for workorder in self.workorder_ids:
+                workorder.duration_expected = workorder._get_duration_expected()
         else:
             self.workorder_ids = False
 
@@ -792,38 +802,44 @@ class MrpProduction(models.Model):
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
         return res
 
-    @api.model
-    def create(self, values):
-        # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
-        # into `move_finished_ids` to avoid duplicate and inconsistency.
-        if values.get('move_finished_ids', False):
-            values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
-        if values.get('move_byproduct_ids', False):
-            values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
-            del values['move_byproduct_ids']
-        if not values.get('name', False) or values['name'] == _('New'):
-            picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
-            picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
-            if picking_type_id:
-                values['name'] = picking_type_id.sequence_id.next_by_id()
-            else:
-                values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
-        if not values.get('procurement_group_id'):
-            procurement_group_vals = self._prepare_procurement_group_vals(values)
-            values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        production = super(MrpProduction, self).create(values)
-        (production.move_raw_ids | production.move_finished_ids).write({
-            'group_id': production.procurement_group_id.id,
-            'origin': production.name
-        })
-        production.move_raw_ids.write({'date': production.date_planned_start})
-        production.move_finished_ids.write({'date': production.date_planned_finished})
-        # Trigger SM & WO creation when importing a file
-        if 'import_file' in self.env.context:
-            production._onchange_move_raw()
-            production._onchange_move_finished()
-            production._onchange_workorder_ids()
-        return production
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
+            # into `move_finished_ids` to avoid duplicate and inconsistency.
+            if values.get('move_finished_ids', False):
+                values['move_finished_ids'] = list(filter(lambda move: move[2].get('byproduct_id', False) is False, values['move_finished_ids']))
+            if values.get('move_byproduct_ids', False):
+                values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
+                del values['move_byproduct_ids']
+            if not values.get('name', False) or values['name'] == _('New'):
+                picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
+                picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
+                if picking_type_id:
+                    values['name'] = picking_type_id.sequence_id.next_by_id()
+                else:
+                    values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+            if not values.get('procurement_group_id'):
+                procurement_group_vals = self._prepare_procurement_group_vals(values)
+                values['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
+        productions = super().create(vals_list)
+        for production in productions:
+            production.move_raw_ids.write({
+                'date': production.date_planned_start,
+                'group_id': production.procurement_group_id.id,
+                'origin': production.name,
+            })
+            production.move_finished_ids.write({
+                'date': production.date_planned_finished,
+                'group_id': production.procurement_group_id.id,
+                'origin': production.name,
+            })
+            # Trigger SM & WO creation when importing a file
+            if 'import_file' in self.env.context:
+                production._onchange_move_raw()
+                production._onchange_move_finished()
+                production._onchange_workorder_ids()
+        return productions
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
@@ -873,10 +889,16 @@ class MrpProduction(models.Model):
         return action
 
     def _create_workorder(self):
+        values = self._get_workorder_values()
+        self.env['mrp.workorder'].create(values)
+        for workorder in self.workorder_ids:
+            workorder.duration_expected = workorder._get_duration_expected()
+
+    def _get_workorder_values(self):
+        workorders_values = []
         for production in self:
             if not production.bom_id or not production.product_id:
                 continue
-            workorders_values = []
 
             product_qty = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
             exploded_boms, dummy = production.bom_id.explode(production.product_id, product_qty / production.bom_id.product_qty, picking_type=production.bom_id.picking_type_id)
@@ -896,9 +918,7 @@ class MrpProduction(models.Model):
                         'operation_id': operation.id,
                         'state': 'pending',
                     }]
-            production.workorder_ids = [(5, 0)] + [(0, 0, value) for value in workorders_values]
-            for workorder in production.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+        return workorders_values
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
         group_orders = self.procurement_group_id.mrp_production_ids
@@ -1207,9 +1227,9 @@ class MrpProduction(models.Model):
                         'product_uom_qty': move_finish.product_uom._compute_quantity(move_finish.product_uom_qty, move_finish.product_id.uom_id),
                         'product_uom': move_finish.product_id.uom_id
                     })
-            production.move_raw_ids._adjust_procure_method()
-            (production.move_raw_ids | production.move_finished_ids)._action_confirm(merge=False)
-            production.workorder_ids._action_confirm()
+        self.move_raw_ids._adjust_procure_method()
+        (self.move_raw_ids | self.move_finished_ids)._action_confirm(merge=False)
+        self.workorder_ids._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
         self.picking_ids.filtered(
