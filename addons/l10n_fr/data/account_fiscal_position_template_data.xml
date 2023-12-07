@@ -16,8 +16,7 @@
             <field name="name">Domestique - France</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
             <field name="auto_apply" eval="True" />
-            <field name="vat_required" eval="True" />
-            <field name="country_id" ref="base.fr"></field>
+            <field name="country_group_id" ref="l10n_fr.fr_and_mc"></field>
         </record>
         <record id="fiscal_position_template_intraeub2c" model="account.fiscal.position.template">
             <field name="sequence">2</field>
