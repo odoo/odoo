@@ -10,7 +10,7 @@ threadActionsRegistry.add("open-hr-profile", {
         return (
             component.thread?.type === "chat" &&
             component.props.chatWindow?.isOpen &&
-            component.thread.chatPartner.employeeId
+            component.thread.correspondent.employeeId
         );
     },
     icon: "fa fa-fw fa-id-card",
@@ -27,15 +27,15 @@ threadActionsRegistry.add("open-hr-profile", {
         const component = useComponent();
         const orm = useService("orm");
         let employeeId;
-        if (!component.thread?.correspondent?.employeeId && component.thread?.chatPartner) {
+        if (!component.thread?.correspondent?.employeeId && component.thread?.correspondent) {
             const employees = await orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", component.thread.chatPartner.id]],
+                [["user_partner_id", "=", component.thread.correspondent.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;
             if (employeeId) {
-                component.thread.chatPartner.employeeId = employeeId;
+                component.thread.correspondent.employeeId = employeeId;
             }
         }
     },

@@ -58,7 +58,7 @@ export class PersonaService {
                 }
                 return b_dt.ts - a_dt.ts;
             })
-            .map((thread) => thread.chatPartner?.id);
+            .map((thread) => thread.correspondent?.id);
     }
 
     updateUserNotificationPreference({ id, notification_preference }) {
