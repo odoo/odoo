@@ -22,13 +22,11 @@ export class OutOfFocusService {
         this.audio = undefined;
         this.counter = 0;
         this.multiTab = services.multi_tab;
-        this.busService = services.bus_service;
         this.notificationService = services.notification;
-        this.busService.addEventListener("window_focus", () => {
+        this.titleService = services.title;
+        env.bus.addEventListener("window_focus", () => {
             this.counter = 0;
-            this.busService.trigger("set_title_part", {
-                part: "_chat",
-            });
+            this.titleService.setParts({ _chat: undefined });
         });
     }
 
@@ -64,9 +62,8 @@ export class OutOfFocusService {
             type: "info",
         });
         this.counter++;
-        this.busService.trigger("set_title_part", {
-            part: "_chat",
-            title: this.counter === 1 ? _t("1 Message") : _t("%s Messages", this.counter),
+        this.titleService.setParts({
+            _chat: this.counter === 1 ? _t("1 Message") : _t("%s Messages", this.counter),
         });
     }
 
@@ -168,7 +165,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["bus_service", "multi_tab", "notification"],
+    dependencies: ["multi_tab", "notification", "title"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
