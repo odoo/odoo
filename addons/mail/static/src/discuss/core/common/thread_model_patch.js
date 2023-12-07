@@ -60,10 +60,13 @@ patch(Thread.prototype, {
     },
     get avatarUrl() {
         if (this.type === "channel" || this.type === "group") {
-            return url(
-                `/discuss/channel/${this.id}/avatar_128`,
-                assignDefined({}, { unique: this.avatarCacheKey })
-            );
+            const urlParams = assignDefined({}, { unique: this.avatarCacheKey });
+            return url("/web/image", {
+                field: "avatar_128",
+                id: this.id,
+                model: "discuss.channel",
+                ...urlParams,
+            });
         }
         if (this.type === "chat") {
             return this.correspondent.avatarUrl;

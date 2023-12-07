@@ -731,7 +731,7 @@ QUnit.test("channel - avatar: should have correct avatar", async () => {
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
-        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=100111']`
+        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=100111']`
     );
 });
 
@@ -741,7 +741,7 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(
-        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=101010']`,
+        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=101010']`,
         { count: 2 }
     );
     await env.services.orm.call("discuss.channel", "write", [
@@ -751,7 +751,7 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
     const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
     await contains(
-        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
+        `img[data-src='${getOrigin()}/web/image?field=avatar_128&id=${channelId}&model=discuss.channel&unique=${newCacheKey}']`,
         { count: 2 }
     );
 });

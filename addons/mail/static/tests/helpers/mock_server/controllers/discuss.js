@@ -62,9 +62,6 @@ patch(MockServer.prototype, {
             const is_typing = args.is_typing;
             return this._mockRouteDiscussChannelNotifyTyping(id, is_typing);
         }
-        if (new RegExp("/discuss/channel/\\d+/partner/\\d+/avatar_128").test(route)) {
-            return;
-        }
         if (route === "/discuss/channel/ping") {
             return;
         }
