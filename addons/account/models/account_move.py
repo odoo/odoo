@@ -568,6 +568,7 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('state')
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
             m.state == 'posted'
