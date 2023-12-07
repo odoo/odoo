@@ -44,7 +44,6 @@ class HolidaysAllocation(models.Model):
         search='_search_description',
         compute_sudo=False)
     name_validity = fields.Char('Description with validity', compute='_compute_description_validity')
-    active = fields.Boolean(default=True)
     private_name = fields.Char('Allocation Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('confirm', 'To Approve'),
@@ -661,9 +660,6 @@ class HolidaysAllocation(models.Model):
         return allocations
 
     def write(self, values):
-        if not self.env.context.get('toggle_active') and not bool(values.get('active', True)):
-            if any(allocation.state not in ['refuse'] for allocation in self):
-                raise UserError(_('You cannot archive an allocation which is in confirm or validate state.'))
         employee_id = values.get('employee_id', False)
         if values.get('state'):
             self._check_approval_update(values['state'])

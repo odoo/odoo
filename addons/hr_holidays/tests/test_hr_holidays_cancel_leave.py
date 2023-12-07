@@ -37,7 +37,7 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
         self.env['hr.holidays.cancel.leave'].with_user(self.user_employee).with_context(default_leave_id=self.holiday.id) \
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
-        self.assertFalse(self.holiday.active, 'The validated leave should be canceled, that is archived.')
+        self.assertEqual(self.holiday.state, 'cancel', 'The validated leave should be canceled.')
 
     def test_action_cancel_leave_in_past(self):
         """ Test if the user may cancel a validated leave in the past. """
@@ -61,4 +61,4 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
         with self.assertRaises(UserError, msg='The user should not be able to manually unarchive the leave.'):
-            self.holiday.with_user(self.user_employee).write({'active': False})
+            self.holiday.with_user(self.user_employee).write({'state': 'cancel'})

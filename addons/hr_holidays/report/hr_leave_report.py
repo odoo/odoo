@@ -67,8 +67,7 @@ class LeaveReport(models.Model):
                     allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
                 inner join hr_employee as employee on (allocation.employee_id = employee.id)
-                where employee.active IS True AND
-                allocation.active IS True
+                where employee.active IS True
                 union all select
                     request.id as leave_id,
                     request.employee_id as employee_id,

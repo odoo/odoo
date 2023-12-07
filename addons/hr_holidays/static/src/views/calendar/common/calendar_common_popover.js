@@ -15,7 +15,7 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
     get isEventDeletable() {
         const record = this.props.record.rawRecord;
         const state = record.state;
-        return record.can_cancel || state && !['validate', 'refuse'].includes(state);
+        return record.can_cancel || state && !['validate', 'refuse', 'cancel'].includes(state);
     }
 
     get isEventEditable() {
