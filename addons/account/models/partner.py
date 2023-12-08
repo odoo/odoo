@@ -563,6 +563,8 @@ class ResPartner(models.Model):
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
+    ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
