@@ -140,6 +140,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
         self.start_tour(
@@ -209,6 +210,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
 
@@ -291,6 +293,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
         self.start_tour(
@@ -319,6 +322,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
 
@@ -384,6 +388,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
         self.whiteboard_pen.write({'lst_price': 0})
@@ -499,6 +504,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
         LoyaltyProgram = self.env['loyalty.program']
@@ -541,6 +547,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
 
@@ -576,6 +583,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         - Collect points in EWalletProgramTour1.
         - Use points in EWalletProgramTour2.
         """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('event.group_event_manager').id),
+            ]
+        })
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
@@ -642,6 +654,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('event.group_event_manager').id),
             ]
         })
         # Run the tour to topup ewallets.
@@ -910,6 +923,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_refund_with_gift_card(self):
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('event.group_event_manager').id),
+            ]
+        })
         """When adding a gift card when there is a refund in the order, the amount
         of the gift card is set to the amount of the refund"""
         LoyaltyProgram = self.env['loyalty.program']

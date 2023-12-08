@@ -11,7 +11,7 @@ Sell event tickets through eCommerce app.
     'depends': ['website_event', 'event_sale', 'website_sale'],
     'data': [
         'data/event_data.xml',
-        'report/event_sale_report_views.xml',
+        'report/event_product_report_views.xml',
         'views/event_event_views.xml',
         'views/website_event_templates.xml',
         'views/website_sale_templates.xml',
