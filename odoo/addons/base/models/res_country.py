@@ -186,12 +186,11 @@ class CountryState(models.Model):
             first_state_ids = list(self._search(
                 expression.AND([domain1, domain]), limit=limit, order=order,
             ))
-        return first_state_ids + [
-            state_id
-            for state_id in self._search(expression.AND([domain2, domain]),
-                                         limit=limit, order=order)
-            if state_id not in first_state_ids
-        ]
+        return first_state_ids + list(self._search(
+            expression.AND([domain2, domain, [('id', 'not in', first_state_ids)]]),
+            limit=limit,
+            order=order,
+        ))
 
     @api.depends('country_id')
     def _compute_display_name(self):
