@@ -641,3 +641,15 @@ class Meeting(models.Model):
         super(Meeting, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()
+
+    def _get_event_user_m(self, user_id=None):
+        """ Get the user who will send the request to Microsoft (organizer if synchronized and current user otherwise). """
+        self.ensure_one()
+        # Current user must have access to token in order to access event properties (non-public user).
+        current_user_status = self.env.user._get_microsoft_calendar_token()
+        if user_id != self.env.user and current_user_status:
+            if user_id is None:
+                user_id = self.user_id
+            if user_id and self.with_user(user_id).sudo()._check_microsoft_sync_status():
+                return user_id
+        return self.env.user
