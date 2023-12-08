@@ -49,18 +49,18 @@ class ProjectUpdate(models.Model):
         ('off_track', 'Off Track'),
         ('on_hold', 'On Hold'),
         ('done', 'Done'),
-    ], required=True, tracking=True)
-    color = fields.Integer(compute='_compute_color')
+    ], required=True, tracking=True, export_string_translation=False)
+    color = fields.Integer(compute='_compute_color', export_string_translation=False)
     progress = fields.Integer(tracking=True)
-    progress_percentage = fields.Float(compute='_compute_progress_percentage')
+    progress_percentage = fields.Float(compute='_compute_progress_percentage', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Author', required=True, default=lambda self: self.env.user)
     description = fields.Html()
     date = fields.Date(default=fields.Date.context_today, tracking=True)
-    project_id = fields.Many2one('project.project', required=True)
-    name_cropped = fields.Char(compute="_compute_name_cropped")
-    task_count = fields.Integer("Task Count", readonly=True)
-    closed_task_count = fields.Integer("Closed Task Count", readonly=True)
-    closed_task_percentage = fields.Integer("Closed Task Percentage", compute="_compute_closed_task_percentage")
+    project_id = fields.Many2one('project.project', required=True, export_string_translation=False)
+    name_cropped = fields.Char(compute="_compute_name_cropped", export_string_translation=False)
+    task_count = fields.Integer("Task Count", readonly=True, export_string_translation=False)
+    closed_task_count = fields.Integer("Closed Task Count", readonly=True, export_string_translation=False)
+    closed_task_percentage = fields.Integer("Closed Task Percentage", compute="_compute_closed_task_percentage", export_string_translation=False)
 
     @api.depends('status')
     def _compute_color(self):

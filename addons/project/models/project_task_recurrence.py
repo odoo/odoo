@@ -18,7 +18,7 @@ class ProjectTaskRecurrence(models.Model):
         ('week', 'Weeks'),
         ('month', 'Months'),
         ('year', 'Years'),
-    ], default='week')
+    ], default='week', export_string_translation=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),

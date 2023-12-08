@@ -9,7 +9,7 @@ from collections import defaultdict
 class Project(models.Model):
     _inherit = 'project.project'
 
-    expenses_count = fields.Integer('# Expenses', compute='_compute_expenses_count', groups='hr_expense.group_hr_expense_team_approver')
+    expenses_count = fields.Integer('# Expenses', compute='_compute_expenses_count', groups='hr_expense.group_hr_expense_team_approver', export_string_translation=False)
 
     @api.depends('analytic_account_id')
     def _compute_expenses_count(self):

@@ -15,12 +15,11 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(
         'project.project', 'Generated Project',
-        index=True, copy=False)
+        index=True, copy=False, export_string_translation=False)
     task_id = fields.Many2one(
         'project.task', 'Generated Task',
-        index=True, copy=False)
-    # used to know if generate a task and/or a project, depending on the product settings
-    reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
+        index=True, copy=False, export_string_translation=False)
+    reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)], export_string_translation=False)
 
     def default_get(self, fields):
         res = super().default_get(fields)

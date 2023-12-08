@@ -9,10 +9,10 @@ class ProjectTaskTypeDelete(models.TransientModel):
     _name = 'project.task.type.delete.wizard'
     _description = 'Project Task Stage Delete Wizard'
 
-    project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade')
-    stage_ids = fields.Many2many('project.task.type', string='Stages To Delete', ondelete='cascade')
-    tasks_count = fields.Integer('Number of Tasks', compute='_compute_tasks_count')
-    stages_active = fields.Boolean(compute='_compute_stages_active')
+    project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade', export_string_translation=False)
+    stage_ids = fields.Many2many('project.task.type', string='Stages To Delete', ondelete='cascade', export_string_translation=False)
+    tasks_count = fields.Integer('Number of Tasks', compute='_compute_tasks_count', export_string_translation=False)
+    stages_active = fields.Boolean(compute='_compute_stages_active', export_string_translation=False)
 
     @api.depends('project_ids')
     def _compute_tasks_count(self):

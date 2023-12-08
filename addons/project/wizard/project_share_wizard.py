@@ -32,8 +32,8 @@ class ProjectShareWizard(models.TransientModel):
         project_model = self.env['ir.model']._get('project.project')
         return [(project_model.model, project_model.name)]
 
-    access_mode = fields.Selection([('read', 'Readonly'), ('edit', 'Edit')])
-    display_access_mode = fields.Boolean()
+    access_mode = fields.Selection([('read', 'Readonly'), ('edit', 'Edit')], export_string_translation=False)
+    display_access_mode = fields.Boolean(export_string_translation=False)
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):

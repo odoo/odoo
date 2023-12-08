@@ -8,9 +8,9 @@ class HrEmployeDeleteWizard(models.TransientModel):
     _name = 'hr.employee.delete.wizard'
     _description = 'Employee Delete Wizard'
 
-    employee_ids = fields.Many2many('hr.employee', string='Employees', context={'active_test': False})
-    has_active_employee = fields.Boolean(string='Has Active Employee', compute='_compute_has_active_employee')
-    has_timesheet = fields.Boolean(string='Has Timesheet', compute='_compute_has_timesheet', compute_sudo=True)
+    employee_ids = fields.Many2many('hr.employee', string='Employees', context={'active_test': False}, export_string_translation=False)
+    has_active_employee = fields.Boolean(string='Has Active Employee', compute='_compute_has_active_employee', export_string_translation=False)
+    has_timesheet = fields.Boolean(string='Has Timesheet', compute='_compute_has_timesheet', compute_sudo=True, export_string_translation=False)
 
     @api.depends('employee_ids')
     def _compute_has_timesheet(self):

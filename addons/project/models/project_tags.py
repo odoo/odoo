@@ -19,8 +19,8 @@ class ProjectTags(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer(string='Color', default=_get_default_color,
         help="Transparent tags are not visible in the kanban view of your projects and tasks.")
-    project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects')
-    task_ids = fields.Many2many('project.task', string='Tasks')
+    project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects', export_string_translation=False)
+    task_ids = fields.Many2many('project.task', string='Tasks', export_string_translation=False)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "A tag with the same name already exists."),

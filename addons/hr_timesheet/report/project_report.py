@@ -12,7 +12,7 @@ class ReportProjectTaskUser(models.Model):
     remaining_hours = fields.Float('Remaining Hours', readonly=True)
     remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
     progress = fields.Float('Progress', group_operator='avg', readonly=True)
-    overtime = fields.Float(readonly=True)
+    overtime = fields.Float(readonly=True, export_string_translation=False)
     total_hours_spent = fields.Float("Total Hours", help="Time spent on this task, including its sub-tasks.")
 
     def _select(self):

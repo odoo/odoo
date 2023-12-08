@@ -6,11 +6,11 @@ from odoo import fields, models, api
 class ProjectUpdate(models.Model):
     _inherit = "project.update"
 
-    display_timesheet_stats = fields.Boolean(compute="_compute_display_timesheet_stats")
+    display_timesheet_stats = fields.Boolean(compute="_compute_display_timesheet_stats", export_string_translation=False)
     allocated_time = fields.Integer("Allocated Time", readonly=True)
     timesheet_time = fields.Integer("Timesheet Time", readonly=True)
-    timesheet_percentage = fields.Integer(compute="_compute_timesheet_percentage")
-    uom_id = fields.Many2one("uom.uom", "Unit Of Measure", readonly=True)
+    timesheet_percentage = fields.Integer(compute="_compute_timesheet_percentage", export_string_translation=False)
+    uom_id = fields.Many2one("uom.uom", "Unit Of Measure", readonly=True, export_string_translation=False)
 
     def _compute_timesheet_percentage(self):
         for update in self:

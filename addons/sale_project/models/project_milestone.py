@@ -17,15 +17,15 @@ class ProjectMilestone(models.Model):
             ('qty_delivered_method', '=', 'milestones'),
         ], limit=1)
 
-    allow_billable = fields.Boolean(related='project_id.allow_billable')
-    project_partner_id = fields.Many2one(related='project_id.partner_id')
+    allow_billable = fields.Boolean(related='project_id.allow_billable', export_string_translation=False)
+    project_partner_id = fields.Many2one(related='project_id.partner_id', export_string_translation=False)
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, help='Sales Order Item that will be updated once the milestone is reached.',
         domain="[('order_partner_id', '=?', project_partner_id), ('qty_delivered_method', '=', 'milestones')]")
     quantity_percentage = fields.Float('Quantity (%)', compute="_compute_quantity_percentage", store=True, help='Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.')
 
-    sale_line_display_name = fields.Char("Sale Line Display Name", related='sale_line_id.display_name')
-    product_uom = fields.Many2one(related="sale_line_id.product_uom")
+    sale_line_display_name = fields.Char("Sale Line Display Name", related='sale_line_id.display_name', export_string_translation=False)
+    product_uom = fields.Many2one(related="sale_line_id.product_uom", export_string_translation=False)
     product_uom_qty = fields.Float("Quantity", compute="_compute_product_uom_qty", readonly=False)
 
     @api.depends('sale_line_id.product_uom_qty', 'product_uom_qty')

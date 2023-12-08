@@ -8,9 +8,9 @@ from odoo.osv import expression
 class Project(models.Model):
     _inherit = "project.project"
 
-    production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user')
-    workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user')
-    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user')
+    production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user', export_string_translation=False)
+    workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user', export_string_translation=False)
+    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user', export_string_translation=False)
 
     def action_view_mrp_production(self):
         self.ensure_one()

@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         help="This will set the unit of measure used in projects and tasks.\n"
              "If you use the timesheet linked to projects, don't "
              "forget to setup the right unit of measure in your employees.")
-    is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days')
+    is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days', export_string_translation=False)
     timesheet_encode_method = fields.Selection([
         ('hours', 'Hours / Minutes'),
         ('days', 'Days / Half-Days'),
