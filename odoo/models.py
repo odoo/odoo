@@ -23,7 +23,6 @@
 
 import collections
 import contextlib
-import copy
 import datetime
 import dateutil
 import fnmatch
@@ -37,10 +36,10 @@ import pytz
 import re
 import uuid
 import warnings
-from collections import defaultdict, OrderedDict, deque
-from collections.abc import MutableMapping
+from collections import defaultdict, deque
+from collections.abc import MutableMapping, Iterable
 from contextlib import closing
-from inspect import getmembers, currentframe
+from inspect import getmembers
 from operator import attrgetter, itemgetter
 from typing import Dict, List
 
@@ -527,6 +526,10 @@ class BaseModel(metaclass=MetaModel):
     the :attr:`~odoo.models.BaseModel._register` attribute may be set to False.
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
+
+    env: api.Environment
+    _ids: tuple[int | NewId]
+    _prefetch_ids: Iterable[int | NewId]
 
     _auto = False
     """Whether a database table should be created.
@@ -5310,7 +5313,7 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].flush_model(field_names)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None) -> Query:
         """
         Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,

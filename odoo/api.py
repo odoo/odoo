@@ -5,6 +5,7 @@
 
 .. todo:: Document this module
 """
+from __future__ import annotations
 
 __all__ = [
     'Environment',
@@ -15,22 +16,26 @@ __all__ = [
 ]
 
 import logging
-import warnings
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
+from typing import TYPE_CHECKING
 
 try:
     from decorator import decoratorx as decorator
 except ImportError:
     from decorator import decorator
 
+from odoo.sql_db import Cursor, TestCursor
 from .exceptions import AccessError, CacheMiss
 from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
 from .tools.translate import _
+
+if TYPE_CHECKING:
+    from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
 
@@ -459,6 +464,12 @@ class Environment(Mapping):
     names to models. It also holds a cache for records, and a data
     structure to manage recomputations.
     """
+
+    cr: Cursor | TestCursor
+    uid: int
+    context: frozendict
+    su: bool
+
     def reset(self):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
@@ -500,7 +511,7 @@ class Environment(Mapping):
         """ Test whether the given model exists. """
         return model_name in self.registry
 
-    def __getitem__(self, model_name):
+    def __getitem__(self, model_name) -> BaseModel:
         """ Return an empty recordset from the given model. """
         return self.registry[model_name](self, (), ())
 
