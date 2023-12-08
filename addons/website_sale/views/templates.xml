@@ -196,10 +196,14 @@
                         t-options="{'widget': 'image', 'preview_image': image_type, 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
 
-                    <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
-                    <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
-                    <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-                    <span t-attf-class="o_ribbon o_not_editable #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
+                    <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
+                    <t t-set="text_color" t-value="td_product['ribbon'].text_color"/>
+                    <t t-set="bg_class" t-value="td_product['ribbon']._get_position_class()"/>
+                    <span
+                        t-attf-class="o_ribbon o_not_editable #{bg_class}"
+                        t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
+                        t-out="td_product['ribbon'].name or ''"
+                    />
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -2500,10 +2504,10 @@
     <!-- Product page images -->
     <template id="website_sale.shop_product_images" name="Shop Product Images">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <t t-set="ribbon" t-value="product_variant.sudo().ribbon_id or product.sudo().website_ribbon_id"/>
+        <t t-set="ribbon" t-value="product_variant.sudo().variant_ribbon_id or product.sudo().website_ribbon_id"/>
         <t t-set="bg_color" t-value="ribbon['bg_color'] or ''"/>
         <t t-set="text_color" t-value="ribbon['text_color']"/>
-        <t t-set="bg_class" t-value="ribbon['html_class']"/>
+        <t t-set="bg_class" t-value="ribbon._get_position_class()"/>
         <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
     </template>
 
@@ -2514,9 +2518,9 @@
         <div t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
              class="position-relative d-inline-flex overflow-hidden m-auto h-100"
         >
-            <span t-attf-class="o_ribbon #{ribbon['html_class']} z-index-1"
+            <span t-attf-class="o_ribbon #{ribbon._get_position_class()} z-index-1"
                   t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                  t-out="ribbon['html'] or ''"
+                  t-out="ribbon['name'] or ''"
             />
             <div t-field="product_image.image_1920"
                  name="o_img_with_max_suggested_width"
@@ -2533,9 +2537,9 @@
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1 overflow-hidden">
                 <span t-if="len(product_images) > 1"
-                      t-attf-class="o_ribbon #{ribbon['html_class']} z-index-1"
+                      t-attf-class="o_ribbon #{ribbon._get_position_class()} z-index-1"
                       t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                      t-out="ribbon['html'] or ''"
+                      t-out="ribbon['name'] or ''"
                 />
                 <div class="carousel-inner h-100">
                     <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
@@ -2594,9 +2598,9 @@
     <template id="website_sale.shop_product_grid" name="Shop Product Grid">
         <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
             <div class="container position-relative overflow-hidden">
-                <span t-attf-class="o_ribbon #{ribbon['html_class']}"
+                <span t-attf-class="o_ribbon #{ribbon._get_position_class()}"
                       t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                      t-out="ribbon['html'] or ''"
+                      t-out="ribbon['name'] or ''"
                 />
                 <!-- One row for every two images -->
                 <t t-set="image_classes" t-value="'w-100'"/>

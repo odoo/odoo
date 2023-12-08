@@ -74,7 +74,7 @@ class ProductProduct(models.Model):
         help="Gives the different ways to package the same product.")
 
     additional_product_tag_ids = fields.Many2many(
-        string="Additional Product Tags",
+        string="Variant Tags",
         comodel_name='product.tag',
         relation='product_tag_product_product_rel',
         domain="[('id', 'not in', product_tag_ids)]",
