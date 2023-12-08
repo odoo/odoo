@@ -450,11 +450,10 @@ class DiscussController(http.Controller):
         messages = request.env['mail.message']._message_fetch(domain=[
             ('res_id', '=', int(thread_id)),
             ('model', '=', thread_model),
-            ('message_type', '!=', 'user_notification'),
         ], max_id=max_id, min_id=min_id, limit=limit)
         if not request.env.user._is_public():
             messages.set_message_done()
-        return messages.message_format()
+        return messages.filtered(lambda m: m.message_type != 'user_notification').message_format()
 
     @http.route('/mail/read_subscription_data', methods=['POST'], type='json', auth='user')
     def read_subscription_data(self, follower_id):
