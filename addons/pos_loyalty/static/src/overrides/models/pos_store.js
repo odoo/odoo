@@ -10,6 +10,7 @@ import { Domain, InvalidDomainError } from "@web/core/domain";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
+const { DateTime } = luxon;
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
 patch(PosStore.prototype, {
@@ -232,10 +233,10 @@ patch(PosStore.prototype, {
 
         for (const program of this.models["loyalty.program"].getAll()) {
             if (program.date_to) {
-                program.date_to = new Date(program.date_to);
+                program.date_to = DateTime.fromISO(program.date_to);
             }
             if (program.date_from) {
-                program.date_from = new Date(program.date_from);
+                program.date_from = DateTime.fromISO(program.date_from);
             }
         }
     },
