@@ -30,12 +30,14 @@ export function OR(...args) {
 
 export function makeStore(env) {
     let storeReady = false;
+    const recordByLocalId = new Map();
     const res = {
         // fake store for now, until it becomes a model
         /** @type {import("models").Store} */
         store: {
             env,
             get: (...args) => BaseStore.prototype.get.call(this, ...args),
+            recordByLocalId,
         },
     };
     const Models = {};
@@ -414,7 +416,6 @@ export function makeStore(env) {
     }
     // Make true store (as a model)
     res.store = reactive(res.store.Store.insert());
-    res.store.env = env;
     for (const Model of Object.values(Models)) {
         Model.store = res.store;
         res.store[Model.name] = Model;
@@ -1063,6 +1064,7 @@ export class Record {
                         }
                     }
                     delete record.Model.records[record.localId];
+                    record._store.recordByLocalId.delete(record.localId);
                 }
             }
             while (selfRaw.FR_QUEUE.length > 0) {
@@ -1243,9 +1245,6 @@ export class Record {
     static get(data) {
         return this.records[this.localId(data)];
     }
-    static modelFromLocalId(localId) {
-        return localId.split(",")[0];
-    }
     static register() {
         modelRegistry.add(this.name, this);
     }
@@ -1392,6 +1391,13 @@ export class Record {
             this.records[record.localId] = record;
             // return reactive version
             record = this.records[record.localId];
+            if (record.Model.name === "Store") {
+                Object.assign(record, {
+                    env: this.store.env,
+                    recordByLocalId: this.store.recordByLocalId,
+                });
+            }
+            this.store.recordByLocalId.set(record.localId, record);
             for (const field of Object.values(record._fields)) {
                 field.requestCompute?.();
                 field.requestSort?.();
@@ -1626,13 +1632,6 @@ export class BaseStore extends Record {
      * @returns {Record}
      */
     get(localId) {
-        if (typeof localId !== "string") {
-            return undefined;
-        }
-        const modelName = Record.modelFromLocalId(localId);
-        if (modelName === "Store") {
-            return this;
-        }
-        return this[modelName].records[localId];
+        return this.recordByLocalId.get(localId);
     }
 }
