@@ -10,7 +10,8 @@
     'depends': ['website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery'],
     'data': [
         'security/ir.model.access.csv',
-        'security/website_sale.xml',
+        'security/ir_rules.xml',
+        'security/res_groups.xml',
 
         'data/data.xml',
         'data/mail_template_data.xml',
