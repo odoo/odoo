@@ -242,7 +242,7 @@ class SaleOrder(models.Model):
             if line:
                 discount_line_amount = min(line.price_reduce * (program.discount_percentage / 100), amount_total)
                 if discount_line_amount:
-                    taxes = self.fiscal_position_id.map_tax(line.tax_id)
+                    taxes = self.fiscal_position_id.map_tax(line.tax_id).filtered(lambda t: t.amount_type != 'fixed')
 
                     reward_dict[line.tax_id] = {
                         'name': _("Discount: %s", program.name),
@@ -269,7 +269,7 @@ class SaleOrder(models.Model):
                     if line.tax_id in reward_dict:
                         reward_dict[line.tax_id]['price_unit'] -= discount_line_amount
                     else:
-                        taxes = self.fiscal_position_id.map_tax(line.tax_id)
+                        taxes = self.fiscal_position_id.map_tax(line.tax_id).filtered(lambda t: t.amount_type != 'fixed')
 
                         reward_dict[line.tax_id] = {
                             'name': _(
