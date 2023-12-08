@@ -292,6 +292,7 @@ export class ThreadService {
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
             thread.isLoaded = false;
+            thread.scrollTop = undefined;
             const { messages } = await rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 around: messageId,
@@ -309,8 +310,6 @@ export class ThreadService {
                 }
             }
             this._enrichMessagesWithTransient(thread);
-            // Give some time to the UI to update.
-            await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
     }
 

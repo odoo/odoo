@@ -1152,7 +1152,7 @@ export class Record {
     }
     static onChange(record, name, cb) {
         const selfRaw = toRaw(this);
-        this._onChange(record, name, (observe) => {
+        return this._onChange(record, name, (observe) => {
             const fn = () => {
                 observe();
                 cb();
@@ -1174,6 +1174,7 @@ export class Record {
      * @param {Record} record
      * @param {string|string[]} key
      * @param {(observe: Function) => any} callback
+     * @returns {function} function to call to stop observing changes
      */
     static _onChange(record, key, callback) {
         let proxy;
@@ -1204,9 +1205,16 @@ export class Record {
             }
             return;
         }
-        proxy = reactive(record, () => callback(_observe));
+        let ready = true;
+        proxy = reactive(record, () => {
+            if (ready) {
+                callback(_observe);
+            }
+        });
         _observe();
-        return proxy;
+        return () => {
+            ready = false;
+        };
     }
     /**
      * Contains field definitions of the model:
