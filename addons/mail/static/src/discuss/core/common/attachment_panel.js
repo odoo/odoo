@@ -3,7 +3,7 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { LinkPreview } from "@mail/core/common/link_preview";
+import { LinkPreviewList } from "@mail/core/common/link_preview_list";
 
 import { Component, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -14,11 +14,14 @@ import { useSequential, useVisible } from "@mail/utils/common/hooks";
  * @property {import("models").Thread} thread
  */
 export class AttachmentPanel extends Component {
-    static components = { ActionPanel, AttachmentList, DateSection, LinkPreview };
+    static components = { ActionPanel, AttachmentList, DateSection, LinkPreviewList };
     static props = ["thread"];
     static template = "mail.AttachmentPanel";
 
     setup() {
+        this.state = useState({
+            current: "media",
+        });
         this.sequential = useSequential();
         this.store = useService("mail.store");
         this.ormService = useService("orm");
@@ -37,61 +40,42 @@ export class AttachmentPanel extends Component {
                 this.threadService.fetchMoreAttachments(this.props.thread);
             }
         });
-        this.state = useState({
-            current: "media",
-        });
     }
 
     /**
-     * @return {Object<string, import("models").Attachment[]>}
+     * @return {Object<string, import("models").Attachment[]|import("models").LinkPreview[]>}
      */
-    get mediaAttachmentsByDate() {
-        const mediaAttachmentsByDate = {};
-        const attachments = this.props.thread.attachments.filter(
-            (attachment) => attachment.isMedia
-        );
+    get attachmentsByDate() {
+        const attachmentsByDate = {};
+        let attachments = [];
+        switch (this.state.current) {
+            case "media":
+            case "file":
+                attachments = this.props.thread.attachments.filter((attachment) => {
+                    return this.state.current === "media"
+                        ? attachment.isMedia
+                        : !attachment.isMedia;
+                });
+                break;
+
+            case "link":
+                this.props.thread.messages.forEach((message) => {
+                    attachments.push(...(message.linkPreviews || []));
+                });
+                break;
+        }
         for (const attachment of attachments) {
-            const attachments = mediaAttachmentsByDate[attachment.monthYear] ?? [];
-            attachments.push(attachment);
-            mediaAttachmentsByDate[attachment.monthYear] = attachments;
+            (attachmentsByDate[attachment.monthYear] ??= []).push(attachment);
         }
-        return mediaAttachmentsByDate;
+        return attachmentsByDate;
     }
 
-    /**
-     * @return {Object<string, import("models").LinkPreview[]>}
-     */
-    get linkAttachmentsByDate() {
-        const linkAttachmentsByDate = {};
-        const linkPreviews = this.props.thread.messages
-            .map((message) =>
-                message.linkPreviews && message.linkPreviews.length > 0
-                    ? message.linkPreviews[0]
-                    : null
-            )
-            .filter((linkPreview) => linkPreview !== null);
-        for (const attachment of linkPreviews) {
-            const attachments = linkAttachmentsByDate[attachment.monthYear] ?? [];
-            attachments.push(attachment);
-            linkAttachmentsByDate[attachment.monthYear] = attachments;
-        }
-        return linkAttachmentsByDate;
-    }
-
-    /**
-     * @return {Object<string, import("models").Attachment[]>}
-     */
-    get filesAttachmentsByDate() {
-        const fileAttachmentsByDate = {};
-        const attachments = this.props.thread.attachments.filter(
-            (attachment) => !attachment.isMedia
-        );
-        for (const attachment of attachments) {
-            const attachments = fileAttachmentsByDate[attachment.monthYear] ?? [];
-            attachments.push(attachment);
-            fileAttachmentsByDate[attachment.monthYear] = attachments;
-        }
-        return fileAttachmentsByDate;
+    get attachmentCategories() {
+        return [
+            ["media", "Media"],
+            ["link", "Links"],
+            ["file", "Files"],
+        ];
     }
 
     get hasToggleAllowPublicUpload() {

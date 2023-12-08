@@ -8,9 +8,12 @@
                     <i class="oi oi-arrow-left"/>
                 </button>
                 <div class="d-flex align-items-center fw-bolder w-100">
-                    <hr class="ms-3 flex-grow-1"/>
+                    <t t-if="props.asAttachment">
+                        <hr class="ms-3 flex-grow-1"/>
                         <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-700 px-3" t-esc="props.title"/>
-                    <hr class="me-3 flex-grow-1"/>
+                        <hr class="me-3 flex-grow-1"/>
+                    </t>
+                    <p t-elif="props.title" class="fs-6 fw-bold text-uppercase m-0 text-700 flex-grow-1" t-esc="props.title"/>
                 </div>
             </div>
             <t t-slot="default"/>

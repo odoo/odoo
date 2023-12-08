@@ -12,9 +12,10 @@ import { Component } from "@odoo/owl";
  */
 export class LinkPreviewList extends Component {
     static template = "mail.LinkPreviewList";
-    static props = ["linkPreviews", "deletable?"];
+    static props = ["linkPreviews", "deletable?", "asAttachment?"];
     static defaultProps = {
         deletable: false,
+        asAttachment: false,
     };
     static components = { LinkPreview };
 }

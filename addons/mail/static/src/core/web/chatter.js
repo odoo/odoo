@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
@@ -12,8 +13,6 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
-import { LinkPreview } from "@mail/core/common/link_preview";
-import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 
 import {
     Component,
@@ -46,6 +45,7 @@ export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = {
         AttachmentList,
+        AttachmentPanel,
         Dropdown,
         Thread,
         Composer,
@@ -54,8 +54,6 @@ export class Chatter extends Component {
         FollowerList,
         SuggestedRecipientsList,
         SearchMessagesPanel,
-        LinkPreview,
-        AttachmentPanel,
     };
     static props = [
         "close?",
@@ -425,16 +423,10 @@ export class Chatter extends Component {
 
     get attachmentCount() {
         const { thread } = this.state;
-        const mediaAttachments =
-            thread?.attachments.filter((attachment) => attachment.isMedia)?.length || 0;
-        const linkPreviews =
-            thread?.messages.reduce(
-                (count, message) => count + (message.linkPreviews?.length > 0 ? 1 : 0),
-                0
-            ) || 0;
-        const fileAttachments =
-            thread?.attachments.filter((attachment) => !attachment.isMedia)?.length || 0;
-
-        return mediaAttachments + linkPreviews + fileAttachments;
+        return (
+            (thread?.attachments.length || 0) +
+            (thread?.messages.reduce((count, message) => count + message.linkPreviews?.length, 0) ||
+                0)
+        );
     }
 }

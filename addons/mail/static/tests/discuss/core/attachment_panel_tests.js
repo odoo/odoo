@@ -15,15 +15,17 @@ QUnit.test("Empty attachment panel", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
     await contains(".o-mail-ActionPanel", {
-        contains: ["p", { text: "This channel doesn't have any media attachments." }],
+        text: "This channel doesn't have any media attachments.",
     });
+
     await click(".o-mail-Attachment-link");
     await contains(".o-mail-ActionPanel", {
-        contains: ["p", { text: "This channel doesn't have any links." }],
+        text: "This channel doesn't have any link attachments.",
     });
+
     await click(".o-mail-Attachment-file");
     await contains(".o-mail-ActionPanel", {
-        contains: ["p", { text: "This channel doesn't have any file attachments." }],
+        text: "This channel doesn't have any file attachments.",
     });
 });
 

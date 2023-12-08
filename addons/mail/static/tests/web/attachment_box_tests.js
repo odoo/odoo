@@ -77,6 +77,7 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
     await click(".o-mail-Attachment-file");
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
+
     await click("button[title='Remove']");
     await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
 

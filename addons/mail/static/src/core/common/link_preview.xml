@@ -9,10 +9,9 @@
             <t t-call="mail.LinkPreviewVideo"/>
         </t>
         <t t-if="props.linkPreview.isImage">
-            <t t-if="props.asAttachment" t-call="mail.LinkPreviewImage">
-                <t t-set="className" t-value="'o-mail-Attachement-LinkPreviewImage'"/>
+            <t t-call="mail.LinkPreviewImage">
+                <t t-set="className" t-value="'o-mail-Attachement-LinkPreviewImage' ? this.props.asAttachment : ''" />
             </t>
-            <t t-else="" t-call="mail.LinkPreviewImage"/>
         </t>
     </t>
 
@@ -22,12 +21,7 @@
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !props.linkPreview.og_description and !props.asAttachment }">
                     <div class="p-3">
                         <h6 class="card-title mb-0 me-2" t-attf-class="{{ props.linkPreview.og_description ? 'text-truncate' : 'overflow-hidden' }}">
-                            <t t-if="props.linkPreview.og_title">
-                                <a t-att-href="props.linkPreview.source_url" target="_blank" t-out="props.linkPreview.og_title"/>
-                            </t>
-                            <t t-else="">
-                                <a class="o-mail-ImageLinkPreviewCard" t-att-href="props.linkPreview.source_url" target="_blank" t-out="props.linkPreview.source_url"/>
-                            </t>
+                            <a t-att-class="!props.linkPreview.og_title ? 'o-mail-ImageLinkPreviewCard' : ''" t-att-href="props.linkPreview.source_url" target="_blank" t-out="props.linkPreview.og_title || props.linkPreview.source_url"/>
                         </h6>
                         <span t-if="props.linkPreview.og_site_name" t-out="props.linkPreview.og_site_name"/>
                         <p t-if="props.linkPreview.og_description" class="o-mail-LinkPreviewCard-description card-text mb-0 mt-2 text-muted small overflow-hidden" t-out="props.linkPreview.og_description"/>
@@ -50,14 +44,10 @@
 
     <t t-name="mail.LinkPreviewImage">
         <div class="o-mail-LinkPreviewImage position-relative mb-2" t-att-class="{ 'me-2': env.inChatter }" t-attf-class="{{ className }}">
-            <t t-if="props.asAttachment">
-                <t t-call="mail.LinkPreviewCard" />
-            </t>
-            <t t-else="">
-                <a t-if="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
-                    <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
-                </a>
-            </t>
+            <t t-if="props.asAttachment" t-call="mail.LinkPreviewCard" />
+            <a t-elif="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
+                <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
+            </a>
             <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
             </t>

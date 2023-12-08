@@ -3,7 +3,7 @@
 
     <t t-name="mail.AttachmentPanel">
         <t t-set="title">Attachments</t>
-        <ActionPanel title="title">
+        <ActionPanel title="title" asAttachment="true">
             <div t-if="hasToggleAllowPublicUpload" class="form-check form-switch">
                 <label class="form-check-label">
                     <input t-on-change="toggleAllowPublicUpload" class="form-check-input" type="checkbox" role="switch" t-att-checked="props.thread.allow_public_upload"/>
@@ -12,49 +12,25 @@
                 </label>
             </div>
             <div class="d-flex flex-column flex-grow-1">
-                <div class=".o-mail-AttachmentpanelCategory d-flex flex-row justify-content-around" t-on-click="(ev) => this.state.current = ev.target.dataset.tab">
-                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-media text-center w-100 cursor-pointer" t-att-class="this.state.current === 'media' ? 'o-selected' : '' " data-tab="media" data-title="media">
-                        Media
-                    </span>
-                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-link text-center w-100 cursor-pointer" t-att-class="this.state.current === 'links' ? 'o-selected' : '' " data-tab="links" data-title="link">
-                        Links
-                    </span>
-                    <span class="o-mail-AttachmentPanelCategory-title o-mail-Attachment-file text-center w-100 cursor-pointer" t-att-class="this.state.current === 'files' ? 'o-selected' : '' " data-tab="files" data-title="file">
-                        Files
-                    </span>
+                <div class="o-mail-AttachmentpanelCategory d-flex flex-row justify-content-around" t-on-click="(ev) => this.state.current = ev.target.dataset.tab">
+                    <t t-foreach="this.attachmentCategories" t-as="category" t-key="category[0]">
+                        <span class="o-mail-AttachmentPanelCategory-title text-center w-100 cursor-pointer"
+                            t-att-class="this.state.current === category[0] ? 'o-selected' : ''"
+                            t-attf-class='o-mail-Attachment-{{ category[0] }}'
+                            t-att-data-tab="category[0]">
+                            <t t-out="category[1]"/>
+                        </span>
+                    </t>
                 </div>
-                <div class="o-mail-attachmentPanel-Media" t-if="state.current === 'media'">
-                    <p t-if="Object.keys(this.mediaAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
-                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any media attachments.</t>
-                        <t t-else="" >This conversation doesn't have any media attachments.</t>
+                <div t-attf-class="'o-mail-attachmentPanel-{{ this.state.current }}'">
+                    <p t-if="Object.keys(attachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
+                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any <t t-out="this.state.current"/> attachments.</t>
+                        <t t-else="">This conversation doesn't have any <t t-out="this.state.current"/> attachments.</t>
                     </p>
-                    <div t-foreach="mediaAttachmentsByDate" t-as="dateDay" t-key="dateDay">
-                        <DateSection date="dateDay" className="'my-1'"/>
-                        <AttachmentList imagesHeight="100" maxWidth="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
-                    </div>
-                </div>
-                <div class="o-mail-attachmentPanel-Link" t-elif="state.current === 'links'">
-                    <p t-if="Object.keys(this.linkAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
-                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any links.</t>
-                        <t t-else="">This conversation doesn't have any links.</t>
-                    </p>
-                    <div t-foreach="linkAttachmentsByDate" t-as="links" t-key="link">
-                        <DateSection date="links" className="'my-1'"/>
-                        <div class="o-mail-linkAttachment d-flex flex-wrap">
-                            <t t-foreach="links_value" t-as="links" t-key="links.id">
-                                <LinkPreview linkPreview="links" deletable="false" asAttachment="true"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-                <div class="o-mail-attachmentPanel-File" t-elif="state.current === 'files'">
-                    <p t-if="Object.keys(this.filesAttachmentsByDate).length === 0" class="text-center fst-italic text-500 mt-4">
-                        <t t-if="props.thread.type === 'channel'">This channel doesn't have any file attachments.</t>
-                        <t t-else="">This conversation doesn't have any file attachments.</t>
-                    </p>
-                   <div t-foreach="filesAttachmentsByDate" t-as="dateDay" t-key="dateDay">
-                        <DateSection date="dateDay" className="'my-1'"/>
-                        <AttachmentList imagesHeight="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                    <div t-foreach="this.attachmentsByDate" t-as="attachments" t-key="attachments">
+                        <DateSection date="attachments" className="'my-1'"/>
+                        <LinkPreviewList t-if="this.state.current === 'link'" linkPreviews="attachments_value" deletable="false" asAttachment="true"/>
+                        <AttachmentList t-else="" imagesHeight="100" maxWidth="100" attachments="attachments_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
                     </div>
                 </div>
             </div>
