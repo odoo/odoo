@@ -175,7 +175,10 @@ class StockRule(models.Model):
         in stock_move.py inside the method _push_apply
         """
         self.ensure_one()
-        new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
+        try:
+            new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
+        except OverflowError:
+            raise UserError(_("The lead time value %s in stock rule is too far into the future", self.delay))
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
             move.write({'date': new_date, 'location_dest_id': self.location_id.id})
@@ -286,11 +289,13 @@ class StockRule(models.Model):
             group_id = values.get('group_id', False) and values['group_id'].id
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
-
-        date_scheduled = fields.Datetime.to_string(
-            fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
-        )
-        date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
+        try:
+            date_scheduled = fields.Datetime.to_string(
+                fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
+            )
+            date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
+        except OverflowError:
+            raise UserError(_("The lead time value %s in stock rule is too far into the future", self.delay))
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
         if partner:
             product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)

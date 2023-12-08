@@ -125,7 +125,10 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
-            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
+            try:
+                lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
+            except OverflowError:
+                raise UserError(_("The lead time value %s in stock rule is too far into the future", lead_days))
             orderpoint.lead_days_date = lead_days_date
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
