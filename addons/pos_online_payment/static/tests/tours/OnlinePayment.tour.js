@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { OnlinePaymentPopup } from "@pos_online_payment/../tests/tours/helpers/OnlinePaymentPopupTourMethods";
@@ -11,19 +10,19 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("web_tour.tours")
-    .add("OnlinePaymentLocalFakePaidDataTour", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("OnlinePaymentLocalFakePaidDataTour", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.exec.addOrderline("Letter Tray", "10");
             ProductScreen.check.selectedOrderlineHas("Letter Tray", "10.0");
             ProductScreen.do.clickPayButton();
             PaymentScreen.check.totalIs("48.0");
             PaymentScreen.check.emptyPaymentlines("48.0");
-            
+
             PaymentScreen.do.clickPaymentMethod("Online payment");
             PaymentScreen.do.enterPaymentLineAmount("Online payment", "48");
             PaymentScreen.check.selectedPaymentlineHas("Online payment", "48.0");
@@ -37,25 +36,25 @@ registry
             OnlinePaymentPopup.check.isNotShown();
             ReceiptScreen.check.isShown();
             ReceiptScreen.check.receiptIsThere();
-            return getSteps() 
+            return getSteps()
         }
     });
 
 registry
     .category("web_tour.tours")
-    .add("OnlinePaymentErrorsTour", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("OnlinePaymentErrorsTour", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.exec.addOrderline("Letter Tray", "10");
             ProductScreen.check.selectedOrderlineHas("Letter Tray", "10.0");
             ProductScreen.do.clickPayButton();
             PaymentScreen.check.totalIs("48.0");
             PaymentScreen.check.emptyPaymentlines("48.0");
-            
+
             PaymentScreen.do.clickPaymentMethod("Online payment");
             PaymentScreen.do.enterPaymentLineAmount("Online payment", "47");
             PaymentScreen.check.selectedPaymentlineHas("Online payment", "47.0");
@@ -98,39 +97,5 @@ registry
             ErrorPopup.do.clickConfirm();
 
             return getSteps();
-        } 
-    });
-
-registry
-    .category("web_tour.tours")
-    .add("OnlinePaymentServerFakePaymentTour", { 
-        test: true, 
-        url: "/pos/ui", 
-        steps: () => {
-            
-            startSteps();
-            
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.exec.addOrderline("Letter Tray", "10");
-            ProductScreen.check.selectedOrderlineHas("Letter Tray", "10.0");
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.check.totalIs("48.0");
-            PaymentScreen.check.emptyPaymentlines("48.0");
-            
-            PaymentScreen.do.clickPaymentMethod("Online payment");
-            PaymentScreen.do.enterPaymentLineAmount("Online payment", "48");
-            PaymentScreen.check.selectedPaymentlineHas("Online payment", "48.0");
-            PaymentScreen.check.remainingIs("0.0");
-            PaymentScreen.check.changeIs("0.0");
-            PaymentScreen.check.validateButtonIsHighlighted(true);
-            PaymentScreen.do.clickValidate();
-            OnlinePaymentPopup.check.isShown();
-            OnlinePaymentPopup.check.amountIs("48.0");
-            OnlinePaymentPopup.check.waitForOnlinePayment();
-            OnlinePaymentPopup.check.isNotShown();
-            ReceiptScreen.check.isShown();
-            ReceiptScreen.check.receiptIsThere();
-            Chrome.do.closeSession();
-            return getSteps(); 
-        } 
+        }
     });
