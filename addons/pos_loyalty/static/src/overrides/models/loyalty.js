@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 
+const { DateTime } = luxon;
 const mutex = new Mutex(); // Used for sequential cache updates
 const updateRewardsMutex = new Mutex();
 
@@ -695,10 +696,10 @@ patch(Order.prototype, {
         if (program.is_nominative && !this.get_partner()) {
             return false;
         }
-        if (program.date_from && program.date_from > new Date()) {
+        if (program.date_from && program.date_from.startOf('day') > DateTime.now()) {
             return false;
         }
-        if (program.date_to && program.date_to < new Date()) {
+        if (program.date_to && program.date_to.endOf('day') < DateTime.now()) {
             return false;
         }
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
@@ -1508,6 +1509,12 @@ patch(Order.prototype, {
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
+            if (rule.program_id.date_from && this.date_order < rule.program_id.date_from.startOf("day")) {
+                return _t("That promo code program is not yet valid.");
+            }
+            if (rule.program_id.date_to && this.date_order > rule.program_id.date_to.endOf("day")) {
+                return _t("That promo code program is expired.")
+            }
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
                 program_pricelists.length > 0 &&
