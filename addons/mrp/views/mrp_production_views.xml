@@ -347,7 +347,7 @@
                                 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
-                                    <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}" domain="[('id', '!=', parent.product_id)]"/>
+                                    <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}" domain="['&amp;', ('type', 'in', ['product', 'consu']), ('id', '!=', parent.product_id)]"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="show"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
                                     <field name="product_uom" invisible="1"/>
