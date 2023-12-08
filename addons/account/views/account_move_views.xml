@@ -496,8 +496,8 @@
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_hole"/>
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" groups="base.group_user" string="Vendor" />
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" groups="base.group_user" string="Customer" />
-                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date"/>
-                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'" string="Invoice Date"/>
+                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date" decoration-warning="abnormal_date_warning"/>
+                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'" string="Invoice Date" decoration-warning="abnormal_date_warning"/>
                     <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
                     <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
@@ -509,9 +509,9 @@
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
-                    <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
-                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="show" groups="base.group_multi_currency"/>
-                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="hide" groups="!base.group_multi_currency"/>
+                    <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" decoration-warning="abnormal_amount_warning" optional="show"/>
+                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="show" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="hide" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -526,6 +526,8 @@
                            optional="show"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
+                    <field name="abnormal_amount_warning" column_invisible="1"/>
+                    <field name="abnormal_date_warning" column_invisible="1"/>
                   </tree>
             </field>
         </record>
@@ -778,6 +780,14 @@
                     <div class="alert alert-warning mb-0" role="alert"
                          invisible="not display_inactive_currency_warning or move_type not in ('out_invoice', 'out_refund', 'out_receipt')">
                         In order to validate this invoice, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the invoice</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not abnormal_amount_warning">
+                        <field name="abnormal_amount_warning"/>
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not abnormal_date_warning">
+                        <field name="abnormal_date_warning"/>
                     </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">

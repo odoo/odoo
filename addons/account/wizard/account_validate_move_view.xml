@@ -4,16 +4,37 @@
 
         <!--Account Move lines-->
         <record id="validate_account_move_view" model="ir.ui.view">
-            <field name="name">Post Journal Entries</field>
+            <field name="name">Confirm Entries</field>
             <field name="model">validate.account.move</field>
             <field name="arch" type="xml">
-                <form string="Post Journal Entries">
-                    <group>
-                        <field name="force_post"/>
+                <form string="Confirm Entries">
+                    <field name="move_ids" invisible="1"/>
+                    <h2 class="mb-4">Validating invoices is a key action. Have you reviewed everything?</h2>
+                    <group invisible="not display_force_post">
+                        <field name="display_force_post" invisible="1"/>
+                        <div colspan="2">
+                            Future-dated invoices will auto-confirm on their respective dates.
+                            <field name="force_post" class="oe_inline"/><label for="force_post" string="Confirm them now"/>
+                        </div>
                     </group>
-                    <span class="o_form_label">All selected journal entries will be validated and posted. You won't be able to modify them afterwards.</span>
+                    <group invisible="not abnormal_date_partner_ids">
+                        <div colspan="2">
+                            Invoice dates for
+                            <field name="abnormal_date_partner_ids" widget="many2many_tags" class="oe_inline"/>
+                            fall outside the typical range.
+                            <field name="ignore_abnormal_date" class="oe_inline"/><label for="ignore_abnormal_date" string="Ignore future alerts"/>
+                        </div>
+                    </group>
+                    <group invisible="not abnormal_amount_partner_ids">
+                        <div colspan="2">
+                            Invoice amounts for
+                            <field name="abnormal_amount_partner_ids" widget="many2many_tags" class="oe_inline"/>
+                            fall outside the typical range.
+                            <field name="ignore_abnormal_amount" class="oe_inline"/><label for="ignore_abnormal_amount" string="Ignore future alerts"/>
+                        </div>
+                    </group>
                     <footer>
-                        <button string="Post Journal Entries" name="validate_move" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Confirm" name="validate_move" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
@@ -21,7 +42,7 @@
         </record>
 
         <record id="action_validate_account_move" model="ir.actions.act_window">
-            <field name="name">Post entries</field>
+            <field name="name">Confirm Entries</field>
             <field name="res_model">validate.account.move</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="validate_account_move_view"/>
