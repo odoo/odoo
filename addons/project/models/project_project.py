@@ -64,12 +64,11 @@ class Project(models.Model):
 
     name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
-    active = fields.Boolean(default=True, copy=False,
-        help="If the active field is set to False, it will allow you to hide the project without removing it.")
-    sequence = fields.Integer(default=10)
+    active = fields.Boolean(default=True, copy=False, export_string_translation=False)
+    sequence = fields.Integer(default=10, export_string_translation=False)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
-    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True)
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True, export_string_translation=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
         domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", check_company=True,
         help="Analytic account to which this project, its tasks and its timesheets are linked. \n"
@@ -80,20 +79,20 @@ class Project(models.Model):
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
-        string='Members')
+        string='Members', export_string_translation=False)
     is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
-        compute_sudo=True, string='Show Project on Dashboard')
+        compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False)
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id')
-    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
-    task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
-    open_task_count = fields.Integer(compute='_compute_task_count', string="Open Task Count")
-    task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
+        'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id', export_string_translation=False)
+    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages', export_string_translation=False)
+    task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
+    open_task_count = fields.Integer(compute='_compute_task_count', string="Open Task Count", export_string_translation=False)
+    task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
                                domain=lambda self: [('is_closed', '=', False)])
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
@@ -116,8 +115,8 @@ class Project(models.Model):
             "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
-    privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning')
-    access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message')
+    privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning', export_string_translation=False)
+    access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
@@ -127,11 +126,11 @@ class Project(models.Model):
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
 
     # Project Sharing fields
-    collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
-    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True)
+    collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False, export_string_translation=False)
+    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True, export_string_translation=False)
 
     # rating fields
-    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
+    rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True, export_string_translation=False)
     rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
         [('stage', 'when reaching a given stage'),
@@ -152,8 +151,8 @@ class Project(models.Model):
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
 
-    update_ids = fields.One2many('project.update', 'project_id')
-    last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)
+    update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
+    last_update_id = fields.Many2one('project.update', string='Last Update', copy=False, export_string_translation=False)
     last_update_status = fields.Selection(selection=[
         ('on_track', 'On Track'),
         ('at_risk', 'At Risk'),
@@ -161,16 +160,16 @@ class Project(models.Model):
         ('on_hold', 'On Hold'),
         ('to_define', 'Set Status'),
         ('done', 'Done'),
-    ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
-    last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
-    milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
-    milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
-    is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
-    milestone_progress = fields.Integer("Milestones Reached", compute='_compute_milestone_reached_count', groups="project.group_project_milestone")
-    next_milestone_id = fields.Many2one('project.milestone', compute='_compute_next_milestone_id', groups="project.group_project_milestone")
-    can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone")
-    is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone")
+    ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True, export_string_translation=False)
+    last_update_color = fields.Integer(compute='_compute_last_update_color', export_string_translation=False)
+    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True, export_string_translation=False)
+    milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone', export_string_translation=False)
+    milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone', export_string_translation=False)
+    is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded', export_string_translation=False)
+    milestone_progress = fields.Integer("Milestones Reached", compute='_compute_milestone_reached_count', groups="project.group_project_milestone", export_string_translation=False)
+    next_milestone_id = fields.Many2one('project.milestone', compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
+    can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
+    is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")

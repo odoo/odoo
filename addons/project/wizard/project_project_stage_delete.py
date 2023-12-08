@@ -8,9 +8,9 @@ class ProjectStageDelete(models.TransientModel):
     _name = 'project.project.stage.delete.wizard'
     _description = 'Project Stage Delete Wizard'
 
-    stage_ids = fields.Many2many('project.project.stage', string='Stages To Delete', ondelete='cascade', context={'active_test': False})
-    projects_count = fields.Integer('Number of Projects', compute='_compute_projects_count')
-    stages_active = fields.Boolean(compute='_compute_stages_active')
+    stage_ids = fields.Many2many('project.project.stage', string='Stages To Delete', ondelete='cascade', context={'active_test': False}, export_string_translation=False)
+    projects_count = fields.Integer('Number of Projects', compute='_compute_projects_count', export_string_translation=False)
+    stages_active = fields.Boolean(compute='_compute_stages_active', export_string_translation=False)
 
     def _compute_projects_count(self):
         for wizard in self:
