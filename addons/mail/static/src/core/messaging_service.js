@@ -80,9 +80,11 @@ export class Messaging {
      * Import data received from init_messaging
      */
     initialize() {
-        this.rpc("/mail/init_messaging", {}, { silent: true }).then(
-            this.initMessagingCallback.bind(this)
-        );
+        this.rpc(
+            "/mail/init_messaging",
+            { context: this.env.services.user.context },
+            { silent: true }
+        ).then(this.initMessagingCallback.bind(this));
     }
 
     initMessagingCallback(data) {
