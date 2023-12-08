@@ -87,7 +87,6 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         for _ in range(2):  # 2 lots of 3 to satisfy the need and check lot splitting
             lot = self.env['stock.lot'].create({
                 'product_id': product_to_use_1.id,
-                'company_id': self.env.company.id,
             })
             self.env['stock.quant'].with_context(inventory_mode=True).create({
                 'product_id': product_to_use_1.id,
@@ -98,7 +97,6 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         for _ in range(3):  # 3 serial numbers
             lot = self.env['stock.lot'].create({
                 'product_id': product_to_use_2.id,
-                'company_id': self.env.company.id,
             })
             self.env['stock.quant'].with_context(inventory_mode=True).create({
                 'product_id': product_to_use_2.id,

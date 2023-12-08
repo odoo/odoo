@@ -180,17 +180,14 @@ class TestMrpProductionBackorder(TestMrpCommon):
         lot_final = self.env['stock.lot'].create({
             'name': 'lot_final',
             'product_id': p_final.id,
-            'company_id': self.env.company.id,
         })
         lot_1 = self.env['stock.lot'].create({
             'name': 'lot_consumed_1',
             'product_id': p1.id,
-            'company_id': self.env.company.id,
         })
         lot_2 = self.env['stock.lot'].create({
             'name': 'lot_consumed_2',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, nb_product_todo*4, lot_id=lot_1)
@@ -238,7 +235,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
         lot1, lot2 = self.env['stock.lot'].create([{
             'name': f'lot_consumed_{i}',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         } for i in range(2)])
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot1)
@@ -365,17 +361,14 @@ class TestMrpProductionBackorder(TestMrpCommon):
             serials_final.append(self.env['stock.lot'].create({
                 'name': f'lot_final_{i}',
                 'product_id': p_final.id,
-                'company_id': self.env.company.id,
             }))
             serials_p1.append(self.env['stock.lot'].create({
                 'name': f'lot_consumed_1_{i}',
                 'product_id': p1.id,
-                'company_id': self.env.company.id,
             }))
             serials_p2.append(self.env['stock.lot'].create({
                 'name': f'lot_consumed_2_{i}',
                 'product_id': p2.id,
-                'company_id': self.env.company.id,
             }))
             self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1, lot_id=serials_p1[-1])
             self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1, lot_id=serials_p2[-1])

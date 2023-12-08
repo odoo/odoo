@@ -87,7 +87,6 @@ class TestUnbuild(TestMrpCommon):
         lot = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': p_final.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
@@ -164,7 +163,6 @@ class TestUnbuild(TestMrpCommon):
         lot = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': p1.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100, lot_id=lot)
@@ -249,17 +247,14 @@ class TestUnbuild(TestMrpCommon):
         lot_final = self.env['stock.lot'].create({
             'name': 'lot_final',
             'product_id': p_final.id,
-            'company_id': self.env.company.id,
         })
         lot_1 = self.env['stock.lot'].create({
             'name': 'lot_consumed_1',
             'product_id': p1.id,
-            'company_id': self.env.company.id,
         })
         lot_2 = self.env['stock.lot'].create({
             'name': 'lot_consumed_2',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100, lot_id=lot_1)
@@ -352,17 +347,14 @@ class TestUnbuild(TestMrpCommon):
         lot_1 = self.env['stock.lot'].create({
             'name': 'lot_1',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
         lot_2 = self.env['stock.lot'].create({
             'name': 'lot_2',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
         lot_3 = self.env['stock.lot'].create({
             'name': 'lot_3',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1, lot_id=lot_1)
@@ -407,14 +399,12 @@ class TestUnbuild(TestMrpCommon):
         lot_1 = self.env['stock.lot'].create({
             'name': 'lot_1',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot_1)
         lot_finished_1 = self.env['stock.lot'].create({
             'name': 'lot_finished_1',
             'product_id': p_final.id,
-            'company_id': self.env.company.id,
         })
 
         self.assertEqual(mo.product_qty, 5)
@@ -436,14 +426,12 @@ class TestUnbuild(TestMrpCommon):
         lot_2 = self.env['stock.lot'].create({
             'name': 'lot_2',
             'product_id': p2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 4, lot_id=lot_2)
         lot_finished_2 = self.env['stock.lot'].create({
             'name': 'lot_finished_2',
             'product_id': p_final.id,
-            'company_id': self.env.company.id,
         })
 
         mo = mo.procurement_group_id.mrp_production_ids[1]
@@ -635,7 +623,6 @@ class TestUnbuild(TestMrpCommon):
         lot01, lot02 = self.env['stock.lot'].create([{
             'name': n,
             'product_id': compo.id,
-            'company_id': self.env.company.id,
         } for n in ['lot01', 'lot02']])
         self.env['stock.quant']._update_available_quantity(compo, self.stock_location, 1, lot_id=lot01)
         self.env['stock.quant']._update_available_quantity(compo, self.stock_location, 1, lot_id=lot02)
@@ -751,7 +738,6 @@ class TestUnbuild(TestMrpCommon):
         product_1_sn = self.env['stock.lot'].create({
             'name': 'sn1',
             'product_id': product_1.id,
-            'company_id': self.env.company.id
         })
         component = self.env['product.product'].create({
             'name': 'Product component',
@@ -831,7 +817,6 @@ class TestUnbuild(TestMrpCommon):
         finished_product_sn = self.env['stock.lot'].create({
             'name': 'sn1',
             'product_id': finished_product.id,
-            'company_id': self.env.company.id
         })
         component = self.env['product.product'].create({
             'name': 'Product component',
@@ -873,7 +858,6 @@ class TestUnbuild(TestMrpCommon):
         component_sn = self.env['stock.lot'].create({
             'name': 'component-sn1',
             'product_id': component.id,
-            'company_id': self.env.company.id
         })
         self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=component_sn)
         #mo2 with tracked component

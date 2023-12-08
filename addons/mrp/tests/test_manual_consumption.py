@@ -151,7 +151,6 @@ class TestManualConsumption(TestMrpCommon):
         lot = self.env['stock.lot'].create({
             'name': 'lot',
             'product_id': c1.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(c1, self.stock_location, 8, lot_id=lot)
         self.env['stock.quant']._update_available_quantity(c2, self.stock_location, 2)
@@ -193,7 +192,6 @@ class TestManualConsumption(TestMrpCommon):
         lot = self.env['stock.lot'].create({
             'name': 'lot',
             'product_id': c1.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(c1, self.stock_location, 8, lot_id=lot)
         self.env['stock.quant']._update_available_quantity(c2, self.stock_location, 2)
