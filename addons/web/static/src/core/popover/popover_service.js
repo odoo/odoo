@@ -25,11 +25,11 @@ export const popoverService = {
          *
          * @param {HTMLElement} target
          * @param {typeof import("@odoo/owl").Component} component
-         * @param {object} props
+         * @param {object} [props]
          * @param {PopoverServiceAddOptions} [options]
          * @returns {() => void}
          */
-        const add = (target, component, props, options = {}) => {
+        const add = (target, component, props = {}, options = {}) => {
             const closeOnClickAway =
                 typeof options.closeOnClickAway === "function"
                     ? options.closeOnClickAway

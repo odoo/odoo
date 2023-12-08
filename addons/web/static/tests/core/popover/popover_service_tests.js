@@ -57,7 +57,7 @@ QUnit.test("simple use", async (assert) => {
 
     assert.containsNone(fixture, ".o_popover");
 
-    const remove = popovers.add(popoverTarget, Comp, {});
+    const remove = popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
@@ -75,7 +75,7 @@ QUnit.test("close on click away", async (assert) => {
         static template = xml`<div id="comp">in popover</div>`;
     }
 
-    popovers.add(popoverTarget, Comp, {});
+    popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
@@ -92,7 +92,7 @@ QUnit.test("close on 'Escape' keydown", async (assert) => {
         static template = xml`<div id="comp">in popover</div>`;
     }
 
-    popovers.add(popoverTarget, Comp, {});
+    popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
@@ -149,7 +149,7 @@ QUnit.test("sub component triggers close", async (assert) => {
         static template = xml`<div id="comp" t-on-click="() => this.props.close()">in popover</div>`;
     }
 
-    popovers.add(popoverTarget, Comp, {});
+    popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
@@ -166,7 +166,7 @@ QUnit.test("close popover if target is removed", async (assert) => {
         static template = xml`<div id="comp">in popover</div>`;
     }
 
-    popovers.add(popoverTarget, Comp, {});
+    popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
@@ -203,7 +203,7 @@ QUnit.test("keep popover if target sibling is removed", async (assert) => {
         static template = xml`<div id="comp">in popover</div>`;
     }
 
-    popovers.add(popoverTarget, Comp, {});
+    popovers.add(popoverTarget, Comp);
     await nextTick();
 
     assert.containsOnce(fixture, ".o_popover");
