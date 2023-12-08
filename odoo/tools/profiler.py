@@ -139,6 +139,9 @@ class Collector:
             self._processed = True
         return self._entries
 
+    def summary(self):
+        return f"{'='*10} {self.name} {'='*10} \n Entries: {len(self._entries)}"
+
 
 class SQLCollector(Collector):
     """
@@ -162,6 +165,13 @@ class SQLCollector(Collector):
             'start': query_start,
             'time': query_time,
         })
+
+    def summary(self):
+        total_time = sum(entry['time'] for entry in self._entries) or 1
+        sql_entries = ''
+        for entry in self._entries:
+            sql_entries += f"\n{'-' * 100}'\n'{entry['time']}  {'*' * int(entry['time'] / total_time * 100)}'\n'{entry['full_query']}"
+        return super().summary() + sql_entries
 
 
 class PeriodicCollector(Collector):
@@ -506,7 +516,7 @@ class Profiler:
     Will save sql and async stack trace by default.
     """
     def __init__(self, collectors=None, db=..., profile_session=None,
-                 description=None, disable_gc=False, params=None):
+                 description=None, disable_gc=False, params=None, log=False):
         """
         :param db: database name to use to save results.
             Will try to define database automatically by default.
@@ -528,6 +538,8 @@ class Profiler:
         self.filecache = {}
         self.params = params or {}  # custom parameters usable by collectors
         self.profile_id = None
+        self.log = log
+        self.sub_profilers = []
 
         if db is ...:
             # determine database from current thread
@@ -616,6 +628,8 @@ class Profiler:
                 gc.enable()
             if self.params:
                 del self.init_thread.profiler_params
+            if self.log:
+                _logger.info(self.summary())
 
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):
@@ -674,6 +688,13 @@ class Profiler:
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
         }, indent=4)
+
+    def summary(self):
+        result = ''
+        for profiler in [self, *self.sub_profilers]:
+            for collector in profiler.collectors:
+                result += f'\n{self.description}\n{collector.summary()}'
+        return result
 
 
 class Nested:

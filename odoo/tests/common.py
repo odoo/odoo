@@ -693,9 +693,10 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         test_method = getattr(self, '_testMethodName', 'Unknown test method')
         if not hasattr(self, 'profile_session'):
             self.profile_session = profiler.make_session(test_method)
+        if 'db' not in kwargs:
+            kwargs['db'] = self.env.cr.dbname
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            db=self.env.cr.dbname,
             profile_session=self.profile_session,
             **kwargs)
 
@@ -1864,7 +1865,9 @@ class HttpCase(TransactionCase):
         sup = super()
         _profiler = sup.profile(**kwargs)
         def route_profiler(request):
-            return sup.profile(description=request.httprequest.full_path)
+            _route_profiler = sup.profile(description=request.httprequest.full_path, db=_profiler.db)
+            _profiler.sub_profilers.append(_route_profiler)
+            return _route_profiler
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
     def make_jsonrpc_request(self, route, params=None, headers=None):
