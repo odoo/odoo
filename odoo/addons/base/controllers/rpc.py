@@ -27,9 +27,8 @@ RPC_FAULT_CODE_WARNING = 2
 RPC_FAULT_CODE_ACCESS_DENIED = 3
 RPC_FAULT_CODE_ACCESS_ERROR = 4
 
-# ustr decodes as utf-8 or latin1 so we can search for the ASCII bytes
-#   Char ::= #x9 | #xA | #xD | [#x20-#xD7FF]
-XML_INVALID = re.compile(b'[\x00-\x08\x0B\x0C\x0F-\x1F]')
+# 0 to 31, excluding tab, newline, and carriage return
+CONTROL_CHARACTERS = dict.fromkeys(set(range(32)) - {9, 10, 13})
 
 
 def xmlrpc_handle_exception_int(e):
@@ -81,14 +80,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     # In python 3, base64.b64{de,en}code() methods now works on bytes.
     # Convert them to str to have a consistent behavior between python 2 and python 3.
     def dump_bytes(self, value, write):
-        # XML 1.0 disallows control characters, check for them immediately to
-        # see if this is a "real" binary (rather than base64 or somesuch) and
-        # blank it out, otherwise they get embedded in the output and break
-        # client-side parsers
-        if XML_INVALID.search(value):
-            self.dump_unicode('', write)
-        else:
-            self.dump_unicode(ustr(value), write)
+        self.dump_unicode(ustr(value), write)
 
     def dump_datetime(self, value, write):
         # override to marshall as a string for backwards compatibility
@@ -104,11 +96,16 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         v = value._value
         return self.dispatch[type(v)](self, v, write)
 
+    def dump_unicode(self, value, write):
+        # XML 1.0 disallows control characters, remove them otherwise they break clients
+        return super().dump_unicode(value.translate(CONTROL_CHARACTERS), write)
+
     dispatch[frozendict] = dump_frozen_dict
     dispatch[bytes] = dump_bytes
     dispatch[datetime] = dump_datetime
     dispatch[date] = dump_date
     dispatch[lazy] = dump_lazy
+    dispatch[str] = dump_unicode
     dispatch[Command] = dispatch[int]
     dispatch[defaultdict] = dispatch[dict]
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
