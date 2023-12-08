@@ -180,7 +180,7 @@ class StockLot(models.Model):
         sale_orders = defaultdict(lambda: self.env['sale.order'])
         for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
             move = move_line.move_id
-            if move.picking_id.location_dest_id.usage == 'customer' and move.sale_line_id.order_id:
+            if move.picking_id.location_dest_id.usage in ('customer', 'transit') and move.sale_line_id.order_id:
                 sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
         for lot in self:
             lot.sale_order_ids = sale_orders[lot.id]

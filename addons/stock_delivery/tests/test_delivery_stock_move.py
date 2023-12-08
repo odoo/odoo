@@ -104,7 +104,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         serial_numbers = self.env['stock.lot'].create([{
             'name': str(x),
             'product_id': self.product_cable_management_box.id,
-            'company_id': self.env.company.id,
         } for x in range(5)])
 
         self.sale_prepaid = self.SaleOrder.create({

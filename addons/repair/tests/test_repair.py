@@ -163,7 +163,6 @@ class TestRepair(common.TransactionCase):
                 qDict['lot_id'] = cls.env['stock.lot'].create({
                     'name': name + str(offset + x),
                     'product_id': product.id,
-                    'company_id': cls.env.company.id
                 }).id
             vals.append(qDict)
 

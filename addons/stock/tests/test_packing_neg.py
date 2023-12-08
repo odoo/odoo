@@ -59,7 +59,7 @@ class TestPackingNeg(TransactionCase):
 
         # Put 120 pieces on Palneg 1 (package), 120 pieces on Palneg 2 with lot A and 60 pieces on Palneg 3
         # create lot A
-        lot_a = self.env['stock.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id, 'company_id': self.env.company.id})
+        lot_a = self.env['stock.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id})
         # create package
         package1 = self.env['stock.quant.package'].create({'name': 'Palneg 1'})
         package2 = self.env['stock.quant.package'].create({'name': 'Palneg 2'})

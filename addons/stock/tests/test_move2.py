@@ -466,12 +466,10 @@ class TestPickShip(TestStockCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         picking_pick, picking_client = self.create_pick_ship()
         location = self.env['stock.location'].browse(self.stock_location)
@@ -573,7 +571,6 @@ class TestPickShip(TestStockCommon):
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0, lot_id=lot)
 
@@ -658,7 +655,6 @@ class TestPickShip(TestStockCommon):
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0, lot_id=lot)
 
@@ -892,17 +888,14 @@ class TestPickShip(TestStockCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         lot3 = self.env['stock.lot'].create({
             'name': 'lot3',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
 
@@ -1440,7 +1433,6 @@ class TestSinglePicking(TestStockCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0, lot_id=lot1)
@@ -1493,12 +1485,10 @@ class TestSinglePicking(TestStockCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0, lot_id=lot1)
@@ -1553,12 +1543,10 @@ class TestSinglePicking(TestStockCommon):
         serial1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         serial2 = self.env['stock.lot'].create({
             'name': 'serial2',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0, lot_id=serial1)
@@ -1769,14 +1757,12 @@ class TestSinglePicking(TestStockCommon):
                 .create({
                     'name': 'lot1',
                     'product_id': self.productA.id,
-                    'company_id': self.env.company.id,
                 })
 
         # enter an existing lot_id, should work
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
-            'company_id': self.env.company.id,
         })
         move_line.lot_id = lot1
         delivery_order._action_done()
@@ -2434,7 +2420,7 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(move.product_uom_qty, 60.00, 'Wrong T_GT quantity')
         self.assertEqual(move.product_qty, 134400.00, 'Wrong T_LBS quantity')
 
-        lot = self.env['stock.lot'].create({'name': 'Lot TEST', 'product_id': T_TEST.id, 'company_id': self.env.company.id, })
+        lot = self.env['stock.lot'].create({'name': 'Lot TEST', 'product_id': T_TEST.id})
         self.env['stock.move.line'].create({
             'move_id': move.id,
             'product_id': T_TEST.id,
@@ -3642,17 +3628,14 @@ class TestAutoAssign(TestStockCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'serial2',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot3 = self.env['stock.lot'].create({
             'name': 'serial3',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         move.lot_ids = [(4, lot1.id)]
         move.lot_ids = [(4, lot2.id)]

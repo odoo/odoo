@@ -175,33 +175,15 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             self.stock_location_b.location_id = self.stock_location_a
 
-    def test_lot_1(self):
-        """Check it is possible to create a stock.production.lot with the same name in Company A and
-        Company B"""
-        product_lot = self.env['product.product'].create({
-            'type': 'product',
-            'tracking': 'lot',
-            'name': 'product lot',
-        })
-        self.env['stock.lot'].create({
-            'name': 'lotA',
-            'company_id': self.company_a.id,
-            'product_id': product_lot.id,
-        })
-        self.env['stock.lot'].create({
-            'name': 'lotA',
-            'company_id': self.company_b.id,
-            'product_id': product_lot.id,
-        })
-
     def test_lot_2(self):
         """Validate a picking of Company A receiving lot1 while being logged into Company B. Check
-        the lot is created in Company A.
+        the lot is created in Company A since the product belongs to Company A.
         """
         product = self.env['product.product'].create({
             'type': 'product',
             'tracking': 'serial',
             'name': 'product',
+            'company_id': self.company_a.id,
         })
         picking = self.env['stock.picking'].with_user(self.user_a).create({
             'picking_type_id': self.warehouse_a.in_type_id.id,
@@ -521,10 +503,8 @@ class TestMultiCompany(TransactionCase):
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         lot_2 = move_line_3.lot_id
-        self.assertEqual(lot_1.company_id, self.company_a)
         self.assertEqual(lot_1.name, 'lot 1')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 1.0)
-        self.assertEqual(lot_2.company_id, self.company_b)
         self.assertEqual(lot_2.name, 'lot 2')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 1.0)
 
@@ -625,9 +605,7 @@ class TestMultiCompany(TransactionCase):
         move_wha_to_cus.picking_id.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
 
-        self.assertEqual(lot_a.company_id, self.company_a)
         self.assertEqual(lot_a.name, 'lot a')
-        self.assertEqual(lot_b.company_id, self.company_b)
         self.assertEqual(lot_b.name, 'lot b')
 
     def test_route_rules_company_consistency(self):

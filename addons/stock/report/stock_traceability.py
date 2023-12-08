@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
-from odoo.tools import config
 from odoo.tools import format_datetime
 from markupsafe import Markup
 
@@ -35,7 +34,7 @@ class MrpStockReport(models.TransientModel):
                     lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                 ) - lines_seen
             # if MTS
-            elif move_line.location_id.usage == 'internal':
+            elif move_line.location_id.usage in ('internal', 'transit'):
                 lines = self.env['stock.move.line'].search([
                     ('product_id', '=', move_line.product_id.id),
                     ('lot_id', '=', move_line.lot_id.id),

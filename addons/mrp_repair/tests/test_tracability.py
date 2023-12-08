@@ -26,7 +26,6 @@ class TestRepairTraceability(TestMrpCommon):
         ptrepair_lot = self.env['stock.lot'].create({
             'name': 'A1',
             'product_id': product_to_repair.id,
-            'company_id': self.env.user.company_id.id
         })
         product_to_remove = self.env['product.product'].create({
             'name': 'other first serial to remove with repair',
@@ -35,7 +34,6 @@ class TestRepairTraceability(TestMrpCommon):
         ptremove_lot = self.env['stock.lot'].create({
             'name': 'B2',
             'product_id': product_to_remove.id,
-            'company_id': self.env.user.company_id.id
         })
         # Create a manufacturing order with product (with SN A1)
         mo_form = Form(self.env['mrp.production'])
@@ -77,7 +75,6 @@ class TestRepairTraceability(TestMrpCommon):
         mo2.lot_producing_id = self.env['stock.lot'].create({
             'name': 'A2',
             'product_id': product_to_repair.id,
-            'company_id': self.env.user.company_id.id
         })
         # Set component serial to B2 again, it is possible
         mo2.move_raw_ids.move_line_ids.lot_id = ptremove_lot
@@ -121,7 +118,6 @@ class TestRepairTraceability(TestMrpCommon):
         sn_lot = self.env['stock.lot'].create({
             'product_id': component.id,
             'name': 'USN01',
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
 

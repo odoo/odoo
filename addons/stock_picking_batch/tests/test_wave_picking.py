@@ -42,7 +42,6 @@ class TestBatchPicking(TransactionCase):
         cls.lots_p_a = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
             'product_id': cls.productA.id,
-            'company_id': cls.env.company.id,
         } for i in range(4)])
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
@@ -53,7 +52,6 @@ class TestBatchPicking(TransactionCase):
         cls.lots_p_b = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
             'product_id': cls.productB.id,
-            'company_id': cls.env.company.id,
         } for i in range(10)])
 
         Quant = cls.env['stock.quant']
@@ -293,7 +291,6 @@ class TestBatchPicking(TransactionCase):
         sns = self.env['stock.lot'].create([{
             'name': 'sn-' + str(i),
             'product_id': self.productB.id,
-            'company_id': self.env.company.id
         } for i in range(12)])
 
         for i in range(12):

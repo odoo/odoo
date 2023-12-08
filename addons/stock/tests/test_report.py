@@ -51,7 +51,6 @@ class TestReports(TestReportsCommon):
         lot1 = self.env['stock.lot'].create({
             'name': 'Volume-Beta',
             'product_id': product1.id,
-            'company_id': self.env.company.id,
         })
         target = b'\n\n^XA\n^FO100,50\n^A0N,44,33^FD[C418]Mellohi^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta^FS\n^FO100,150^BY3\n^BCN,100,Y,N,N\n^FDVolume-Beta^FS\n^XZ\n'
 

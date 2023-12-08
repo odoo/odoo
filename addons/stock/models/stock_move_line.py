@@ -7,7 +7,6 @@ from odoo import _, api, fields, tools, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class StockMoveLine(models.Model):
@@ -199,7 +198,7 @@ class StockMoveLine(models.Model):
                     elif not self.lot_id:
                         lots = self.env['stock.lot'].search([('product_id', '=', self.product_id.id),
                                                              ('name', '=', self.lot_name),
-                                                             ('company_id', '=', self.company_id.id)])
+                                                             '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])
                         quants = lots.quant_ids.filtered(lambda q: q.quantity != 0 and q.location_id.usage in ['customer', 'internal', 'transit'])
                         if quants:
                             message = _('Serial number (%s) already exists in location(s): %s. Please correct the serial number encoded.', self.lot_name, ', '.join(quants.location_id.mapped('display_name')))
@@ -540,7 +539,7 @@ class StockMoveLine(models.Model):
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
                                 lot = self.env['stock.lot'].search([
-                                    ('company_id', '=', ml.company_id.id),
+                                    '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),
                                     ('product_id', '=', ml.product_id.id),
                                     ('name', '=', ml.lot_name),
                                 ], limit=1)
@@ -632,7 +631,6 @@ class StockMoveLine(models.Model):
         return {
             'name': self.lot_name,
             'product_id': self.product_id.id,
-            'company_id': self.company_id.id,
         }
 
     def _create_and_assign_production_lot(self):
@@ -643,7 +641,7 @@ class StockMoveLine(models.Model):
         key_to_index = {}  # key to index of the lot
         key_to_mls = defaultdict(lambda: self.env['stock.move.line'])  # key to all mls
         for ml in self:
-            key = (ml.company_id.id, ml.product_id.id, ml.lot_name)
+            key = (ml.product_id.id, ml.lot_name)
             key_to_mls[key] |= ml
             if ml.tracking != 'lot' or key not in key_to_index:
                 key_to_index[key] = len(lot_vals)

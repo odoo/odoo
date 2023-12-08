@@ -101,7 +101,7 @@ class TestStockFlow(TestStockCommon):
         move_c.move_line_ids.quantity = 5
         move_d.move_line_ids.quantity = 5
         (move_a | move_b | move_c | move_d).picked = True
-        lot2_productC = LotObj.create({'name': 'C Lot 2', 'product_id': self.productC.id, 'company_id': self.env.company.id})
+        lot2_productC = LotObj.create({'name': 'C Lot 2', 'product_id': self.productC.id})
         self.StockPackObj.create({
             'product_id': self.productC.id,
             'quantity': 2,
@@ -317,12 +317,12 @@ class TestStockFlow(TestStockCommon):
         # Back Order of Incoming shipment
         # -----------------------------------------------------------------------
 
-        lot3_productC = LotObj.create({'name': 'Lot 3', 'product_id': self.productC.id, 'company_id': self.env.company.id})
-        lot4_productC = LotObj.create({'name': 'Lot 4', 'product_id': self.productC.id, 'company_id': self.env.company.id})
-        lot5_productC = LotObj.create({'name': 'Lot 5', 'product_id': self.productC.id, 'company_id': self.env.company.id})
-        lot6_productC = LotObj.create({'name': 'Lot 6', 'product_id': self.productC.id, 'company_id': self.env.company.id})
-        lot1_productD = LotObj.create({'name': 'Lot 1', 'product_id': self.productD.id, 'company_id': self.env.company.id})
-        LotObj.create({'name': 'Lot 2', 'product_id': self.productD.id, 'company_id': self.env.company.id})
+        lot3_productC = LotObj.create({'name': 'Lot 3', 'product_id': self.productC.id})
+        lot4_productC = LotObj.create({'name': 'Lot 4', 'product_id': self.productC.id})
+        lot5_productC = LotObj.create({'name': 'Lot 5', 'product_id': self.productC.id})
+        lot6_productC = LotObj.create({'name': 'Lot 6', 'product_id': self.productC.id})
+        lot1_productD = LotObj.create({'name': 'Lot 1', 'product_id': self.productD.id})
+        LotObj.create({'name': 'Lot 2', 'product_id': self.productD.id})
 
         # Confirm back order of incoming shipment.
         back_order_in.action_confirm()
@@ -1070,7 +1070,7 @@ class TestStockFlow(TestStockCommon):
         lot_obj = self.env['stock.lot']
         pack1 = pack_obj.create({'name': 'PACK00TEST1'})
         pack_obj.create({'name': 'PACK00TEST2'})
-        lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id, 'company_id': self.env.company.id})
+        lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id})
 
         packproduct_no_pack_quant = quant_obj.create({
             'product_id': packproduct.id,
@@ -1168,9 +1168,9 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_confirm()
         picking_out.action_assign()
         pack_opt = self.StockPackObj.search([('picking_id', '=', picking_out.id)], limit=1)
-        lot1 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT1', 'company_id': self.env.company.id})
-        lot2 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT2', 'company_id': self.env.company.id})
-        lot3 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT3', 'company_id': self.env.company.id})
+        lot1 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT1'})
+        lot2 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT2'})
+        lot3 = self.LotObj.create({'product_id': self.productA.id, 'name': 'LOT3'})
 
         pack_opt.write({'lot_id': lot1.id, 'quantity': 1.0})
         self.StockPackObj.create({'product_id': self.productA.id, 'move_id': move_out.id, 'product_uom_id': move_out.product_uom.id, 'lot_id': lot2.id, 'quantity': 1.0, 'location_id': self.stock_location, 'location_dest_id': self.customer_location})
@@ -2562,7 +2562,6 @@ class TestStockFlowPostInstall(TestStockCommon):
         sn = self.env['stock.lot'].create({
             'name': 'super_sn',
             'product_id': product.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=sn)
 

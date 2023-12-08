@@ -65,7 +65,6 @@ class TestReturnPicking(TestStockCommon):
         serial1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': product_serial.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial1)
 

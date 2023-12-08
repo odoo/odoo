@@ -743,7 +743,6 @@ class TestPacking(TestPackingCommon):
         lot1 = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '00001',
-            'company_id': self.warehouse.company_id.id
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, lot_id=lot1)
         ship_move_a = self.env['stock.move'].create({

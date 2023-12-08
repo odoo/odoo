@@ -24,7 +24,6 @@ class TestLotSerial(TestStockCommon):
         cls.lot_p_a = cls.LotObj.create({
             'name': 'lot_product_a',
             'product_id': cls.productA.id,
-            'company_id': cls.env.company.id,
         })
         cls.StockQuantObj.create({
             'product_id': cls.productA.id,
@@ -37,7 +36,6 @@ class TestLotSerial(TestStockCommon):
         cls.lot_p_b = cls.LotObj.create({
             'name': 'lot_product_b',
             'product_id': cls.productB.id,
-            'company_id': cls.env.company.id,
         })
         cls.StockQuantObj.create({
             'product_id': cls.productB.id,

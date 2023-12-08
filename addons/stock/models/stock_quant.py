@@ -955,9 +955,9 @@ class StockQuant(models.Model):
     @api.onchange('lot_id')
     def _onchange_serial_number(self):
         if self.lot_id and self.product_id.tracking == 'serial':
-            message, dummy = self.env['stock.quant']._check_serial_number(self.product_id,
-                                                                      self.lot_id,
-                                                                      self.company_id)
+            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
+                                                                                 self.lot_id,
+                                                                                 self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
 
@@ -1318,7 +1318,7 @@ class StockQuant(models.Model):
         :param product_id: `product.product` product to check SN for
         :param lot_id: `stock.production.lot` SN to check
         :param company_id: `res.company` company to check against (i.e. we ignore duplicate SNs across
-            different companies)
+            different companies for lots defined with a company)
         :param source_location_id: `stock.location` optional source location if using the SN rather
             than assigning it
         :param ref_doc_location_id: `stock.location` optional reference document location for
@@ -1330,12 +1330,14 @@ class StockQuant(models.Model):
         message = None
         recommended_location = None
         if product_id.tracking == 'serial':
+            internal_domain = [('location_id.usage', 'in', ('internal', 'transit'))]
+            if lot_id.company_id:
+                internal_domain = expression.AND([internal_domain, [('company_id', '=', company_id.id)]])
             quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
-                                                         ('lot_id', '=', lot_id.id),
-                                                         ('quantity', '!=', 0),
-                                                         '|', ('location_id.usage', '=', 'customer'),
-                                                              '&', ('company_id', '=', company_id.id),
-                                                                   ('location_id.usage', 'in', ('internal', 'transit'))])
+                                                     ('lot_id', '=', lot_id.id),
+                                                     ('quantity', '!=', 0),
+                                                     '|', ('location_id.usage', '=', 'customer'),
+                                                           *internal_domain])
             sn_locations = quants.mapped('location_id')
             if quants:
                 if not source_location_id:
@@ -1360,7 +1362,7 @@ class StockQuant(models.Model):
                             if location.usage != 'customer':
                                 recommended_location = location
                                 break
-                    if recommended_location:
+                    if recommended_location and recommended_location.company_id == company_id:
                         message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
                                     'Source location for this move will be changed to %s',
                                     lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
@@ -1368,6 +1370,7 @@ class StockQuant(models.Model):
                         message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
                                     lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
+                        recommended_location = None
         return message, recommended_location
 
     def move_quants(self, location_dest_id=False, package_dest_id=False, message=False, unpack=False):
