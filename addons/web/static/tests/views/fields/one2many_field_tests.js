@@ -9677,6 +9677,48 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
+        "one2many with several pages, onchange return command update on unknown record (readonly field)",
+        async function (assert) {
+            serverData.models.turtle.fields.turtle_int.readonly = true;
+            serverData.models.partner.onchanges = {
+                foo: function (obj) {
+                    obj.turtles = [[1, 3, { turtle_int: 57, turtle_foo: "yop" }]];
+                },
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="turtles">
+                        <tree editable="top" limit="1">
+                            <field name="turtle_int"/>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+                mockRPC(route, { args, method }) {
+                    if (method === "web_save") {
+                        assert.deepEqual(args[0], [1]);
+                        // for unknownCommand, we should not send readonly fields
+                        assert.deepEqual(args[1], {
+                            foo: "blip",
+                            turtles: [[1, 3, { turtle_foo: "yop" }]],
+                        });
+                    }
+                },
+                resId: 1,
+            });
+
+            await editInput(target, ".o_field_widget[name=foo] input", "blip");
+            await clickSave(target);
+        }
+    );
+
+    QUnit.test(
         "new record, with one2many with more default values than limit",
         async function (assert) {
             await makeView({
