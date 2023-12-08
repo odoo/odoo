@@ -674,7 +674,7 @@ class IrActionsReport(models.Model):
         # access the report details with sudo() but evaluation context as current user
         report_sudo = self._get_report(report_ref)
 
-        collected_streams = []
+        collected_streams = OrderedDict()
 
         # Fetch the existing attachments from the database for later use.
         # Reload the stream from the attachment in case of 'attachment_use'.
@@ -698,13 +698,13 @@ class IrActionsReport(models.Model):
                             stream.close()
                             stream = new_stream
 
-                collected_streams.append((record.id, {
+                collected_streams[record.id] = {
                     'stream': stream,
                     'attachment': attachment,
-                }))
+                }
 
         # Call 'wkhtmltopdf' to generate the missing streams.
-        res_ids_wo_stream = [res_id for res_id, stream_data in collected_streams if not stream_data['stream']]
+        res_ids_wo_stream = [res_id for res_id, stream_data in collected_streams.items() if not stream_data['stream']]
         is_whtmltopdf_needed = not res_ids or res_ids_wo_stream
 
         if is_whtmltopdf_needed:
@@ -728,7 +728,7 @@ class IrActionsReport(models.Model):
 
             bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
-            if report_sudo.attachment and sorted(res_ids_wo_stream) != sorted(html_ids):
+            if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
                     "The report's template %r is wrong, please contact your administrator. \n\n"
                     "Can not separate file to save as attachment because the report's template does not contains the"
@@ -749,18 +749,18 @@ class IrActionsReport(models.Model):
 
             # Printing a PDF report without any records. The content could be returned directly.
             if not res_ids:
-                return [(
-                    False, {
+                return {
+                    False: {
                         'stream': pdf_content_stream,
                         'attachment': None,
                     }
-                )]
+                }
 
             # Split the pdf for each record using the PDF outlines.
 
             # Only one record: append the whole PDF.
             if len(res_ids_wo_stream) == 1:
-                collected_streams[0]['stream'] = pdf_content_stream
+                collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
@@ -774,7 +774,7 @@ class IrActionsReport(models.Model):
                     attachment_writer.addPage(reader.getPage(i))
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
-                    collected_streams[i]['stream'] = stream
+                    collected_streams[res_ids[i]]['stream'] = stream
                 return collected_streams
 
             # In cases where the number of res_ids != the number of pages,
@@ -782,15 +782,15 @@ class IrActionsReport(models.Model):
             # An outline is a <h?> html tag found on the document. To retrieve this table,
             # we look on the pdf structure using pypdf to compute the outlines_pages from
             # the top level heading in /Outlines.
-            if len(res_ids_wo_stream) > 1 and sorted(res_ids_wo_stream) == sorted(html_ids_wo_none):
+            if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
-                    return [(False, {
+                    return {False: {
                         'report_action': self,
                         'stream': pdf_content_stream,
                         'attachment': None,
-                    })]
+                    }}
 
                 outlines_pages = []
                 node = root['/Outlines']['/First']
@@ -816,11 +816,11 @@ class IrActionsReport(models.Model):
                             attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
-                        collected_streams[i]['stream'] = stream #
+                        collected_streams[res_ids[i]]['stream'] = stream
 
                     return collected_streams
 
-            collected_streams.append((False, {'stream': pdf_content_stream, 'attachment': None}))
+            collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
 
@@ -844,7 +844,7 @@ class IrActionsReport(models.Model):
         # Generate the ir.attachment if needed.
         if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
             attachment_vals_list = []
-            for res_id, stream_data in collected_streams:
+            for res_id, stream_data in collected_streams.items():
                 # An attachment already exists.
                 if stream_data['attachment']:
                     continue
@@ -882,7 +882,7 @@ class IrActionsReport(models.Model):
                     _logger.info("The PDF documents %r are now saved in the database", attachment_names)
 
         # Merge all streams together for a single record.
-        streams_to_merge = [stream['stream'] for (_, stream) in collected_streams if stream['stream']]
+        streams_to_merge = [x['stream'] for x in collected_streams.values() if x['stream']]
         if len(streams_to_merge) == 1:
             pdf_content = streams_to_merge[0].getvalue()
         else:
