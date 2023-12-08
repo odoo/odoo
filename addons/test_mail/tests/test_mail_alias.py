@@ -807,6 +807,18 @@ class TestMailAliasMixin(TestMailAliasCommon):
         record_copy2 = record_copy.copy()
         self.assertEqual(record_copy2.alias_bounced_content, new_content)
 
+    @users('employee')
+    def test_copy_optional_alias_model(self):
+        """ Do not propagate alias_id to duplicate record as it could lead to
+        overwriting alias_name of old record. """
+        record = self.env['mail.test.alias.optional'].create({
+            'name': 'Test Optional Alias Record',
+            'alias_name': 'test.optional.alias.record',
+        })
+        self.assertTrue(record.alias_id)
+        record_copy = record.copy()
+        self.assertFalse(record_copy.alias_id)
+
     @users('erp_manager')
     def test_multi_company_setup(self):
         """ Test company impact on alias domains when creating or updating
