@@ -152,7 +152,7 @@ class StockPicking(models.Model):
                             }),
                         ],
                     })
-                move = self.env['account.move'].create(move_vals)
+                move = self.env['account.move'].sudo().create(move_vals)
                 move.action_post()
         return res
 
