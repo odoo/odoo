@@ -34,7 +34,7 @@ class PhoneBlackList(models.Model):
             sanitized_values = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]
             sanitized = sanitized_values['sanitized']
             if not sanitized:
-                raise UserError(sanitized_values['msg'] + _(" Please correct the number and try again."))
+                raise UserError((sanitized_values['msg'] or '') + _(" Please correct the number and try again."))
             if sanitized in done:
                 continue
             done.add(sanitized)
@@ -58,7 +58,7 @@ class PhoneBlackList(models.Model):
             sanitized_values = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]
             sanitized = sanitized_values['sanitized']
             if not sanitized:
-                raise UserError(sanitized_values['msg'] + _(" Please correct the number and try again."))
+                raise UserError((sanitized_values['msg'] or '') + _(" Please correct the number and try again."))
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 
