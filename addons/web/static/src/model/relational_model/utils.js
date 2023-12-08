@@ -560,11 +560,15 @@ function getValueFromGroupData(field, rawValue, range) {
  * expected by the server for a write.
  * For instance, for a many2one: { id: 3, display_name: "Marc" } => 3.
  */
-export function fromUnityToServerValues(values, fields, activeFields) {
+export function fromUnityToServerValues(values, fields, activeFields, { withReadonly } = {}) {
     const { CREATE, UPDATE } = x2ManyCommands;
     const serverValues = {};
     for (const fieldName in values) {
         let value = values[fieldName];
+        const field = fields[fieldName];
+        if (!withReadonly && field.readonly) {
+            continue;
+        }
         switch (fields[fieldName].type) {
             case "one2many":
             case "many2many":
@@ -572,7 +576,11 @@ export function fromUnityToServerValues(values, fields, activeFields) {
                     if (c[0] === CREATE || c[0] === UPDATE) {
                         const _fields = activeFields[fieldName].related.fields;
                         const _activeFields = activeFields[fieldName].related.activeFields;
-                        return [c[0], c[1], fromUnityToServerValues(c[2], _fields, _activeFields)];
+                        return [
+                            c[0],
+                            c[1],
+                            fromUnityToServerValues(c[2], _fields, _activeFields, { withReadonly }),
+                        ];
                     }
                     return [c[0], c[1]];
                 });

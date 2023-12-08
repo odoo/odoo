@@ -808,7 +808,8 @@ export class StaticList extends DataPoint {
                     const values = fromUnityToServerValues(
                         uCommand[2],
                         this.fields,
-                        this.activeFields
+                        this.activeFields,
+                        { withReadonly }
                     );
                     commands.push([uCommand[0], uCommand[1], values]);
                 }
