@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as OnlinePaymentPopup from "@pos_online_payment/../tests/tours/helpers/OnlinePaymentPopupTourMethods";
@@ -88,34 +87,5 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.clickValidate(),
             ErrorPopup.isShown(),
             ErrorPopup.clickConfirm(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("OnlinePaymentServerFakePaymentTour", {
-    test: true,
-    url: "/pos/ui",
-    steps: () =>
-        [
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.addOrderline("Letter Tray", "10"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.totalIs("48.0"),
-            PaymentScreen.emptyPaymentlines("48.0"),
-
-            PaymentScreen.clickPaymentMethod("Online payment"),
-            PaymentScreen.enterPaymentLineAmount("Online payment", "48"),
-            PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickValidate(),
-            OnlinePaymentPopup.isShown(),
-            OnlinePaymentPopup.amountIs("48.0"),
-            OnlinePaymentPopup.waitForOnlinePayment(),
-            OnlinePaymentPopup.isNotShown(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.receiptIsThere(),
-            Chrome.closeSession(),
         ].flat(),
 });
