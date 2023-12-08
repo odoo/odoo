@@ -224,6 +224,10 @@
                                     <field name="credit_limit" class="oe_inline" invisible="not use_partner_credit_limit"/>
                                 </div>
                             </group>
+                            <group groups="base.group_no_one">
+                                <field name="ignore_abnormal_invoice_amount"/>
+                                <field name="ignore_abnormal_invoice_date"/>
+                            </group>
                         </group>
                     </page>
                     <page string="Invoicing" name="accounting_disabled" invisible="is_company or not parent_id" groups="account.group_account_invoice,account.group_account_readonly">

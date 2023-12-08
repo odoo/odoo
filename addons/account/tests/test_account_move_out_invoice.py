@@ -3669,8 +3669,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice1.invoice_line_ids.price_unit = 12.36
         invoice2 = self.init_invoice(move_type='out_invoice', partner=self.partner_b, invoice_date='2016-01-20', products=self.product_a)
 
-        vam = self.env["validate.account.move"].create({"force_post": True})
-        vam.with_context(active_model='account.move', active_ids=[invoice2.id, invoice1.id]).validate_move()
+        self.env["validate.account.move"].create({
+            "force_post": True,
+            "move_ids": [Command.set((invoice1 + invoice2).ids)]
+        }).validate_move()
 
         for aml in invoice1.line_ids:
             self.assertEqual(aml.partner_id, self.partner_a)
