@@ -414,7 +414,7 @@ class AccountTax(models.Model):
         """
         self.ensure_one()
 
-        tax_tags = self.get_tax_tags(is_refund=False, repartition_type='tax')
+        tax_tags = self.get_tax_tags(is_refund=False, repartition_type='base') | self.get_tax_tags(is_refund=False, repartition_type='tax')
         if not tax_tags:
             return False
 
