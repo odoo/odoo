@@ -2,7 +2,6 @@
 
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
 import { patch } from "@web/core/utils/patch";
-import { markup } from "@odoo/owl";
 
 patch(WysiwygAdapterComponent.prototype, {
     /**
@@ -16,16 +15,16 @@ patch(WysiwygAdapterComponent.prototype, {
             ribbons = await this.orm.searchRead(
                 'product.ribbon',
                 [],
-                ['id', 'html', 'bg_color', 'text_color', 'html_class'],
+                ['id', 'name', 'bg_color', 'text_color', 'position'],
             );
         }
         this.ribbons = Object.fromEntries(ribbons.map(ribbon => {
-            ribbon.html = markup(ribbon.html);
             return [ribbon.id, ribbon];
         }));
         this.originalRibbons = Object.assign({}, this.ribbons);
         this.productTemplatesRibbons = [];
         this.deletedRibbonClasses = '';
+        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
     },
     /**
      * @override
@@ -147,7 +146,7 @@ patch(WysiwygAdapterComponent.prototype, {
      */
     _onGetRibbonClasses(ev) {
         const classes = Object.values(this.ribbons).reduce((classes, ribbon) => {
-            return classes + ` ${ribbon.html_class}`;
+            return classes + ` ${this.ribbonPositionClasses[ribbon.position]}`;
         }, '') + this.deletedRibbonClasses;
         ev.data.callback(classes);
     },
@@ -157,7 +156,9 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      */
     _onDeleteRibbon(ev) {
-        this.deletedRibbonClasses += ` ${this.ribbons[ev.data.id].html_class}`;
+        this.deletedRibbonClasses += ` ${
+            this.ribbonPositionClasses[this.ribbons[ev.data.id].position]
+        }`;
         delete this.ribbons[ev.data.id];
     },
     /**
@@ -169,7 +170,7 @@ patch(WysiwygAdapterComponent.prototype, {
         const {ribbon} = ev.data;
         const previousRibbon = this.ribbons[ribbon.id];
         if (previousRibbon) {
-            this.deletedRibbonClasses += ` ${previousRibbon.html_class}`;
+            this.deletedRibbonClasses += ` ${this.ribbonPositionClasses[previousRibbon.position]}`;
         }
         this.ribbons[ribbon.id] = ribbon;
     },

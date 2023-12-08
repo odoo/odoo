@@ -149,9 +149,7 @@ class ProductTemplate(models.Model):
     is_favorite = fields.Boolean(string="Favorite")
 
     product_tag_ids = fields.Many2many(
-        string="Product Template Tags",
-        comodel_name='product.tag',
-        relation='product_tag_product_template_rel',
+        string="Tags", comodel_name='product.tag', relation='product_tag_product_template_rel'
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
