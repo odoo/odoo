@@ -61,6 +61,7 @@ export const endDiscussion = [
     },
 ];
 
+<<<<<<< HEAD
 export const feedback = [
     {
         content: "Type a feedback",
@@ -81,6 +82,37 @@ export const feedback = [
         trigger: "p:contains('Thank you for your feedback')",
     },
 ];
+||||||| parent of 0d396e0bb817 (temp)
+var feedbackStep = [{
+    content: "Type a feedback",
+    trigger: "div.o_livechat_rating_reason > textarea",
+    run: "text ;-) This was really helpful. Thanks ;-)!"
+}, {
+    content: "Send the feedback",
+    trigger: "input[type='button'].o_rating_submit_button",
+}, {
+    content: "Check if feedback has been sent",
+    trigger: "div.o_thread_window_header.feedback_sent",
+}, {
+    content: "Thanks for your feedback",
+    trigger: "div.o_livechat_rating_box:has(div:contains('Thank you for your feedback'))",
+}];
+=======
+var feedbackStep = [{
+    content: "Type a feedback",
+    trigger: "div.o_livechat_rating_reason > textarea",
+    run: "text ;-) This was really helpful. Thanks ;-)!"
+}, {
+    content: "Send the feedback",
+    trigger: "button[type='button'].o_rating_submit_button",
+}, {
+    content: "Check if feedback has been sent",
+    trigger: "div.o_thread_window_header.feedback_sent",
+}, {
+    content: "Thanks for your feedback",
+    trigger: "div.o_livechat_rating_box:has(div:contains('Thank you for your feedback'))",
+}];
+>>>>>>> 0d396e0bb817 (temp)
 
 export const transcript = [
     {
