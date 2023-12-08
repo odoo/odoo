@@ -161,7 +161,7 @@ export function convertRgbaToCSSColor(r, g, b, a) {
  * but this method allows to receive one and returns the correct opacity value.
  *
  * @static
- * @param {string} cssColor - hexadecimal code or rgb() or rgba()
+ * @param {string} cssColor - hexadecimal code or rgb() or rgba() or color()
  * @returns {Object|false}
  *          - red [0, 255] (integer)
  *          - green [0, 255] (integer)
@@ -198,6 +198,26 @@ export function convertCSSColorToRgba(cssColor) {
     // Note: however, if ever implemented be careful of 'white'/'black' which
     // actually are color names for our color system...
 
+    // Check if cssColor is a color() functional notation allowing colorspace
+    // with implicit sRGB.
+    // "<color()>" allows to define a color specification in a formalized
+    // manner. It starts with the "color(" keyword, specifies color space
+    // parameters, and optionally includes an alpha value for transparency.
+    if (/color\(.+\)/.test(cssColor)) {
+        const canvasEl = document.createElement("canvas");
+        canvasEl.height = 1;
+        canvasEl.width = 1;
+        const ctx = canvasEl.getContext("2d");
+        ctx.fillStyle = cssColor;
+        ctx.fillRect(0, 0, 1, 1);
+        const data = ctx.getImageData(0, 0, 1, 1).data;
+        return {
+            red: data[0],
+            green: data[1],
+            blue: data[2],
+            opacity: data[3] / 2.55, // Convert 0-255 to percentage
+        };
+    }
     return false;
 };
 /**
