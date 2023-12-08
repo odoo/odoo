@@ -10,22 +10,22 @@ class ProjectProductEmployeeMap(models.Model):
 
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True, domain="[('id', 'not in', existing_employee_ids)]")
-    existing_employee_ids = fields.Many2many('hr.employee', compute="_compute_existing_employee_ids")
+    existing_employee_ids = fields.Many2many('hr.employee', compute="_compute_existing_employee_ids", export_string_translation=False)
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, readonly=False,
         domain=lambda self: self.env['sale.order.line']._domain_sale_line_service_str("[('order_partner_id', '=?', partner_id)]")
     )
-    sale_order_id = fields.Many2one(related="project_id.sale_order_id")
-    company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
-    partner_id = fields.Many2one(related='project_id.partner_id')
+    sale_order_id = fields.Many2one(related="project_id.sale_order_id", export_string_translation=False)
+    company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id', export_string_translation=False)
+    partner_id = fields.Many2one(related='project_id.partner_id', export_string_translation=False)
     price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_currency_id', store=True, readonly=False)
     cost = fields.Monetary(currency_field='cost_currency_id', compute='_compute_cost', store=True, readonly=False,
                            help="This cost overrides the employee's default employee hourly wage in employee's HR Settings")
     display_cost = fields.Monetary(currency_field='cost_currency_id', compute="_compute_display_cost", inverse="_inverse_display_cost", string="Hourly Cost")
-    cost_currency_id = fields.Many2one('res.currency', string="Cost Currency", related='employee_id.currency_id', readonly=True)
-    is_cost_changed = fields.Boolean('Is Cost Manually Changed', compute='_compute_is_cost_changed', store=True)
+    cost_currency_id = fields.Many2one('res.currency', string="Cost Currency", related='employee_id.currency_id', readonly=True, export_string_translation=False)
+    is_cost_changed = fields.Boolean('Is Cost Manually Changed', compute='_compute_is_cost_changed', store=True, export_string_translation=False)
 
     _sql_constraints = [
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),

@@ -61,12 +61,12 @@ class AccountAnalyticLine(models.Model):
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False},
         index=True, help="Define an 'hourly cost' on the employee to track the cost of their time.")
-    job_title = fields.Char(related='employee_id.job_title')
+    job_title = fields.Char(related='employee_id.job_title', export_string_translation=False)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True)
-    encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+    encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id', export_string_translation=False)
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
-    readonly_timesheet = fields.Boolean(string="Readonly Timesheet", compute="_compute_readonly_timesheet", compute_sudo=True)
+    readonly_timesheet = fields.Boolean(compute="_compute_readonly_timesheet", compute_sudo=True, export_string_translation=False)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
 
     @api.depends('project_id', 'task_id')

@@ -13,19 +13,19 @@ from odoo.osv.expression import AND
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated with this sale')
-    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated with this sale', export_string_translation=False)
+    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
 
-    visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
+    visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True, export_string_translation=False)
     project_id = fields.Many2one('project.project', 'Project',
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", help="Projects used in this sales order.")
-    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
-    milestone_count = fields.Integer(compute='_compute_milestone_count')
-    is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
-    show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
-    show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
-    show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", export_string_translation=False)
+    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user', export_string_translation=False)
+    milestone_count = fields.Integer(compute='_compute_milestone_count', export_string_translation=False)
+    is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone', export_string_translation=False)
+    show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
+    show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
+    show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(

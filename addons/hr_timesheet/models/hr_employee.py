@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system")
+    has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system", export_string_translation=False)
 
     def _compute_has_timesheet(self):
         self.env.cr.execute("""

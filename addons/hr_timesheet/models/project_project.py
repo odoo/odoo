@@ -20,15 +20,16 @@ class Project(models.Model):
     )
     analytic_account_active = fields.Boolean("Active Account", related="analytic_account_id.active", export_string_translation=False)
 
-    timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
+    timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets', export_string_translation=False)
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id', export_string_translation=False)
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
-        help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
-    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
-    is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
+        string="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.",
+        compute_sudo=True, export_string_translation=False)
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', export_string_translation=False)
+    is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
-    is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True)
+    is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True, export_string_translation=False)
     allocated_hours = fields.Float(string='Allocated Time')
     effective_hours = fields.Float(string='Time Spent', compute='_compute_remaining_hours', compute_sudo=True)
 
