@@ -21,7 +21,6 @@ class ProjectTaskType(models.Model):
 
     active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Name', required=True, translate=True)
-    description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=lambda self: self._get_default_project_ids(),

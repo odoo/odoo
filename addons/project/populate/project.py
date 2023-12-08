@@ -16,7 +16,6 @@ class ProjectStage(models.Model):
         return [
             ("name", populate.constant('stage_{counter}')),
             ("sequence", populate.randomize([False] + [i for i in range(1, 101)])),
-            ("description", populate.constant('project_stage_description_{counter}')),
             ("active", populate.randomize([True, False], [0.8, 0.2])),
             ("fold", populate.randomize([True, False], [0.9, 0.1]))
         ]

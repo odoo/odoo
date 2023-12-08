@@ -89,7 +89,6 @@
                 <kanban class="o_kanban_mobile" sample="1" default_group_by="project_ids">
                     <field name="name"/>
                     <field name="fold"/>
-                    <field name="description"/>
                     <field name="sequence" widget="handle"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -100,10 +99,6 @@
                                     </div>
                                 </div>
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.description.value">
-                                    <hr class="mt8 mb8"/>
-                                    <t t-esc="record.description.value"/>
-                                </t>
                             </div>
                         </t>
                     </templates>

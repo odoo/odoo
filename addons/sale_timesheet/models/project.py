@@ -39,9 +39,6 @@ class Project(models.Model):
         help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
              "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
              "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
-    billable_percentage = fields.Integer(
-        compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
-        help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
         domain="""[
@@ -131,21 +128,6 @@ class Project(models.Model):
             domain.insert(0, expression.NOT_OPERATOR)
         domain = expression.distribute_not(domain)
         return domain
-
-    @api.depends('analytic_account_id', 'timesheet_ids')
-    def _compute_billable_percentage(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group([('project_id', 'in', self.ids)], ['project_id', 'so_line'], ['unit_amount:sum'])
-        timesheets_by_project = defaultdict(list)
-        for project, so_line, unit_amount_sum in timesheets_read_group:
-            timesheets_by_project[project.id].append((unit_amount_sum, bool(so_line)))
-        for project in self:
-            timesheet_total = timesheet_billable = 0.0
-            for unit_amount, is_billable_timesheet in timesheets_by_project[project.id]:
-                timesheet_total += unit_amount
-                if is_billable_timesheet:
-                    timesheet_billable += unit_amount
-            billable_percentage = timesheet_billable / timesheet_total * 100 if timesheet_total > 0 else 0
-            project.billable_percentage = round(billable_percentage)
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
