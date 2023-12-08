@@ -5,6 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
+const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
@@ -429,10 +430,10 @@ patch(PosOrder.prototype, {
         if (program.is_nominative && !this.get_partner()) {
             return false;
         }
-        if (program.date_from && program.date_from > new Date()) {
+        if (program.date_from && program.date_from.startOf("day") > DateTime.now()) {
             return false;
         }
-        if (program.date_to && program.date_to < new Date()) {
+        if (program.date_to && program.date_to.endOf("day") < DateTime.now()) {
             return false;
         }
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
