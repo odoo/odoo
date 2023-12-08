@@ -28,5 +28,7 @@ class ReportProductLabel(models.AbstractModel):
             for product, barcodes_qtys in data.get('custom_barcodes').items():
                 quantity_by_product[Product.browse(int(product))] += (barcodes_qtys)
         data['quantity'] = quantity_by_product
+        layout_wizard = self.env['product.label.layout'].browse(data.get('layout_wizard'))
+        data['pricelist'] = layout_wizard.pricelist_id
 
         return data
