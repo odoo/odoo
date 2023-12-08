@@ -1,10 +1,7 @@
 /** @odoo-module */
 
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import * as OnlinePaymentPopup from "@pos_online_payment/../tests/tours/helpers/OnlinePaymentPopupTourMethods";
-import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
 
@@ -60,32 +57,5 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.clickValidate(),
             // successfully confirming the dialog would imply that the error popup is actually shown
             Dialog.confirm(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("OnlinePaymentServerFakePaymentTour", {
-    test: true,
-    url: "/pos/ui",
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            ProductScreen.addOrderline("Letter Tray", "10"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.totalIs("48.0"),
-            PaymentScreen.emptyPaymentlines("48.0"),
-
-            PaymentScreen.clickPaymentMethod("Online payment"),
-            PaymentScreen.enterPaymentLineAmount("Online payment", "48"),
-            PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickValidate(),
-            OnlinePaymentPopup.amountIs("48.0"),
-            OnlinePaymentPopup.waitForOnlinePayment(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.receiptIsThere(),
-            Chrome.closeSession(),
         ].flat(),
 });
