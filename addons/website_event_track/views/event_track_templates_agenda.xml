@@ -60,7 +60,7 @@
 <!-- Agenda Main Display -->
 <template id="agenda_main" name="Tracks: Main Display">
     <!-- No tracks -->
-    <div class="col-12" t-if="not tracks_by_days">
+    <div class="col-12" t-if="not track_count_by_days">
         <div class="h2 mb-3">No track found.</div>
         <div t-if="search_key" class="alert alert-info text-center">
             <p class="m-0">We did not find any track matching your <strong t-esc="search_key"/> search.</p>
@@ -85,21 +85,22 @@
                         t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
             </div>
-            <small class="float-right text-muted align-self-end"><t t-esc="tracks_by_days[day]"/> tracks</small>
+            <small class="float-right text-muted align-self-end"><t t-esc="track_count_by_days[day]"/> tracks</small>
         </div>
         <hr class="mt-2 pb-1 mb-1"/>
 
-        <t t-set="locations" t-value="locations_by_days[day]"/>
+        <t t-set="event_tracks" t-value="tracks_by_days[day]"/>
         <!-- Day Agenda -->
         <div class="o_we_online_agenda">
         <table id="table_search" class="table table-sm border-0 h-100">
             <!--Header-->
             <tr>
                 <th class="border-0 bg-white position-sticky"/>
-                <t t-foreach="locations" t-as="location">
-                    <th t-if="location" class="active text-center">
-                        <span t-esc="location and location.name or 'Unknown'"/>
+                <t t-foreach="event_tracks" t-as="event_track">
+                    <th t-if="event_track.location_id" class="active text-center">
+                        <span t-esc="event_track.location_id.name or 'Unknown'"/>
                     </th>
+                    <th t-else="" class="active"/>
                 </t>
             </tr>
 
@@ -114,24 +115,24 @@
                         <b t-if="is_round_hour" t-esc="time_slots[day][time_slot]['formatted_time']"/>
                     </td>
 
-                    <t t-foreach="locations" t-as="location">
-                        <t t-set="tracks" t-value="time_slots[day][time_slot].get(location, {})"/>
+                    <t t-foreach="event_tracks" t-as="event_track">
+                        <t t-set="tracks" t-value="time_slots[day][time_slot].get(event_track, {})"/>
                         <t t-if="tracks">
                             <t t-foreach="tracks" t-as="track">
                                 <t t-set="_classes"
                                     t-value="'text-center %s %s %s' % (
                                         'event_color_%s' % (track.color) if track.color else 'bg-100',
                                         'event_track h-100' if track else '',
-                                        'o_location_size_%d' % len(locations),
+                                        'o_location_size_%d' % len(event_tracks),
                                     )"/>
-                                <t t-if="track.location_id and track.location_id == location">
+                                <t t-if="track == event_track">
                                     <td t-att-rowspan="tracks[track]['rowspan']"
                                         t-att-class="_classes">
                                         <t t-call="website_event_track.agenda_main_track"/>
                                     </td>
                                 </t>
                                 <t t-else="">
-                                    <td t-att-colspan="len(locations)-1"
+                                    <td t-att-colspan="len(event_tracks)-1"
                                         t-att-rowspan="tracks[track]['rowspan']"
                                         t-att-class="_classes">
                                         <t t-call="website_event_track.agenda_main_track"/>
@@ -140,9 +141,9 @@
                                 <t t-set="used_cells" t-value="used_cells + tracks[track]['occupied_cells']"/>
                             </t>
                         </t>
-                        <t t-elif="location and (time_slot, location) not in used_cells">
+                        <t t-elif="event_track and (time_slot, event_track) not in used_cells">
                             <td t-att-rowspan="1"
-                                t-att-class="'o_location_size_%s %s' % (len(locations),
+                                t-att-class="'o_location_size_%s %s' % (len(event_tracks),
                                     'o_we_agenda_time_slot_half' if is_half_hour else
                                     'o_we_agenda_time_slot_main' if is_round_hour else
                                     ''
