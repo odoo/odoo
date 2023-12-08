@@ -215,6 +215,21 @@ class ProcurementGroup(models.Model):
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)
+                    # Remove from product_description_variants in procurement values
+                    # any description that does not apply to the actual component
+                    if values.get("product_description_variants"):
+                        # FIXME: Consider lang
+                        kit_product_description_variants_list = values.get("product_description_variants").lstrip("\n").split("\n")
+                        valid_product_ptavs = bom_line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+                        product_description_variant_list = [
+                            kpdvl
+                            for kpdvl in kit_product_description_variants_list
+                            if kpdvl.split(":")[0] in [
+                                vpptavs.split(":")[0]
+                                for vpptavs in valid_product_ptavs.mapped("display_name")
+                                ]
+                        ]
+                        values["product_description_variants"] = "\n\n%s" % "\n".join(product_description_variant_list)
                     component_qty, procurement_uom = bom_line_uom._adjust_uom_quantities(bom_line_data['qty'], quant_uom)
                     procurements_without_kit.append(self.env['procurement.group'].Procurement(
                         bom_line.product_id, component_qty, procurement_uom,
