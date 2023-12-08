@@ -60,6 +60,7 @@ from .tools import (
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
     partition, populate, Query, ReversedIterable, split_every, unique, SQL,
+    pycompat,
 )
 from .tools.lru import LRU
 from .tools.translate import _, _lt
@@ -2923,6 +2924,124 @@ class BaseModel(metaclass=MetaModel):
 
         # if the key is not present in the dict, fallback to false instead of none
         return SQL("COALESCE(%s, 'false')", sql_property)
+
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+        """ Return an :class:`SQL` object that represents the domain condition
+        given by the triple ``(fname, operator, value)`` with the given table
+        alias, and in the context of the given query.
+        """
+        # sanity checks - should never fail
+        assert operator in (expression.TERM_OPERATORS + ('inselect', 'not inselect')), \
+            f"Invalid operator {operator!r} in domain term {(fname, operator, value)!r}"
+        assert fname in self._fields, \
+            f"Invalid field {fname!r} in domain term {(fname, operator, value)!r}"
+        assert not isinstance(value, BaseModel), \
+            f"Invalid value {value!r} in domain term {(fname, operator, value)!r}"
+
+        if operator == '=?':
+            if value is False or value is None:
+                # '=?' is a short-circuit that makes the term TRUE if value is None or False
+                return SQL("TRUE")
+            else:
+                # '=?' behaves like '=' in other cases
+                return self._condition_to_sql(alias, fname, '=', value, query)
+
+        sql_field = self._field_to_sql(alias, fname, query)
+
+        if operator == 'inselect':
+            if not isinstance(value, SQL):
+                subquery, subparams = value
+                value = SQL(subquery, *subparams)
+            return SQL("(%s IN (%s))", sql_field, value)
+
+        if operator == 'not inselect':
+            if not isinstance(value, SQL):
+                subquery, subparams = value
+                value = SQL(subquery, *subparams)
+            return SQL("(%s NOT IN (%s))", sql_field, value)
+
+        field = self._fields[fname]
+        sql_operator = expression.SQL_OPERATORS[operator]
+
+        if operator in ('in', 'not in'):
+            # Two cases: value is a boolean or a list. The boolean case is an
+            # abuse and handled for backward compatibility.
+            if isinstance(value, bool):
+                _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", (fname, operator, value))
+                if (operator == 'in' and value) or (operator == 'not in' and not value):
+                    return SQL("(%s IS NOT NULL)", sql_field)
+                else:
+                    return SQL("(%s IS NULL)", sql_field)
+
+            elif isinstance(value, SQL):
+                return SQL("(%s %s %s)", sql_field, sql_operator, value)
+
+            elif isinstance(value, Query):
+                return SQL("(%s %s %s)", sql_field, sql_operator, value.subselect())
+
+            elif isinstance(value, (list, tuple)):
+                if field.type == "boolean":
+                    params = [it for it in (True, False) if it in value]
+                    check_null = False in value
+                else:
+                    params = [it for it in value if it is not False and it is not None]
+                    check_null = len(params) < len(value)
+
+                if params:
+                    if fname != 'id':
+                        params = [field.convert_to_column(p, self, validate=False) for p in params]
+                    sql = SQL("(%s %s %s)", sql_field, sql_operator, tuple(params))
+                else:
+                    # The case for (fname, 'in', []) or (fname, 'not in', []).
+                    sql = SQL("FALSE") if operator == 'in' else SQL("TRUE")
+
+                if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
+                    sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+                elif operator == 'not in' and check_null:
+                    sql = SQL("(%s AND %s IS NOT NULL)", sql, sql_field)  # needed only for TRUE
+                return sql
+
+            else:  # Must not happen
+                raise ValueError(f"Invalid domain term {(fname, operator, value)!r}")
+
+        if field.type == 'boolean' and operator in ('=', '!=') and isinstance(value, bool):
+            value = (not value) if operator in expression.NEGATIVE_TERM_OPERATORS else value
+            if value:
+                return SQL("(%s = TRUE)", sql_field)
+            else:
+                return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
+
+        if operator == '=' and (value is False or value is None):
+            return SQL("%s IS NULL", sql_field)
+
+        if operator == '!=' and (value is False or value is None):
+            return SQL("%s IS NOT NULL", sql_field)
+
+        # general case
+        need_wildcard = operator in expression.WILDCARD_OPERATORS
+
+        if isinstance(value, SQL):
+            sql_value = value
+        elif need_wildcard:
+            sql_value = SQL("%s", f"%{pycompat.to_text(value)}%")
+        else:
+            sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
+
+        sql_left = sql_field
+        if operator.endswith('like'):
+            sql_left = SQL("%s::text", sql_field)
+        if operator.endswith('ilike'):
+            sql_left = self.env.registry.unaccent(sql_left)
+            sql_value = self.env.registry.unaccent(sql_value)
+
+        if need_wildcard and not value:
+            return SQL("%s IS NULL", sql_field) if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
+
+        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
+        if value and operator in expression.NEGATIVE_TERM_OPERATORS:
+            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+
+        return sql
 
     @api.model
     def get_property_definition(self, full_name):
