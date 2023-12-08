@@ -137,7 +137,7 @@ ol {
 
 /* Checklist */
 ul {
-    .o_checklist {
+    &.o_checklist {
         > li {
             list-style: none;
             position: relative;
@@ -163,6 +163,13 @@ ul {
             opacity: 1;
         }
     }
+}
+
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
 }
 
 // Wkhtmltopdf doesn't handle flexbox properly, both the content
