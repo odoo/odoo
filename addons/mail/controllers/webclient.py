@@ -8,8 +8,10 @@ from odoo.http import request
 
 class WebclientController(http.Controller):
     @http.route("/mail/init_messaging", methods=["POST"], type="json", auth="public")
-    def mail_init_messaging(self):
+    def mail_init_messaging(self, context=None):
         if not request.env.user.sudo()._is_public():
+            if context:
+                request.update_context(allowed_company_ids=context.get('allowed_company_ids'))
             return request.env.user.sudo(request.env.user.has_group("base.group_portal"))._init_messaging()
         guest = request.env["mail.guest"]._get_guest_from_request(request)
         if guest:
