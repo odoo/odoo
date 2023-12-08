@@ -41,6 +41,9 @@ function factory(dependencies) {
             device.start();
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',
+                params: {
+                    context: this.env.session.user_context,
+                },
             }, { shadow: true }));
             await this.async(() => this._init(data));
             if (this.messaging.autofetchPartnerImStatus) {
