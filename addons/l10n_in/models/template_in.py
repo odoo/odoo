@@ -38,3 +38,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'igst_purchase_18',
             },
         }
+
+    @template('in', 'account.cash.rounding')
+    def _get_in_account_cash_rounding(self):
+        return {
+            'l10n_in.cash_rounding_in_half_up': {
+                'profit_account_id': 'p213202',
+                'loss_account_id': 'p213201',
+            }
+        }
