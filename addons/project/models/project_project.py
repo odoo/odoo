@@ -22,36 +22,6 @@ class Project(models.Model):
     _rating_satisfaction_days = 30  # takes 30 days by default
     _systray_view = 'activity'
 
-    def _compute_attached_docs_count(self):
-        docs_count = {}
-        if self.ids:
-            self.env.cr.execute(
-                """
-                WITH docs AS (
-                     SELECT res_id as id, count(*) as count
-                       FROM ir_attachment
-                      WHERE res_model = 'project.project'
-                        AND res_id IN %(project_ids)s
-                   GROUP BY res_id
-
-                  UNION ALL
-
-                     SELECT t.project_id as id, count(*) as count
-                       FROM ir_attachment a
-                       JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
-                      WHERE t.project_id IN %(project_ids)s
-                   GROUP BY t.project_id
-                )
-                SELECT id, sum(count)
-                  FROM docs
-              GROUP BY id
-                """,
-                {"project_ids": tuple(self.ids)}
-            )
-            docs_count = dict(self.env.cr.fetchall())
-        for project in self:
-            project.doc_count = docs_count.get(project.id, 0)
-
     def _compute_task_count(self):
         project_and_state_counts = self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
@@ -161,7 +131,6 @@ class Project(models.Model):
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
     privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning')
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message')
-    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
@@ -177,7 +146,6 @@ class Project(models.Model):
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
     rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
-    allow_rating = fields.Boolean('Allow Customer Ratings', compute="_compute_allow_rating", default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
         [('stage', 'when reaching a given stage'),
          ('periodic', 'on a periodic basis')
@@ -257,10 +225,6 @@ class Project(models.Model):
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
             project.access_warning = _(
                 "This project is currently restricted to \"Invited internal users\". The project's visibility will be changed to \"invited portal users and all internal users (public)\" in order to make it accessible to the recipients.")
-
-    @api.depends_context('uid')
-    def _compute_allow_rating(self):
-        self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
     @api.depends('analytic_account_id.company_id')
     def _compute_company_id(self):
