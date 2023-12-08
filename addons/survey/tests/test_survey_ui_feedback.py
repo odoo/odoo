@@ -193,7 +193,10 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         }), (0, 0, {
                             'value': 'Answer 2',
                             'sequence': 2,
-                        }),
+                        }), (0, 0, {
+                            'value': 'Answer 3',
+                            'sequence': 3,
+                        })
                     ],
                     'constr_mandatory': True,
                 }), (0, 0, {
@@ -226,21 +229,36 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     ],
                     'is_conditional': True,
                     'constr_mandatory': True,
-                }),
+                }), (0, 0, {
+                    'title': 'Q4',
+                    'sequence': 4,
+                    'question_type': 'numerical_box',
+                    'is_conditional': True,
+                    'constr_mandatory': True,
+                }), (0, 0, {
+                    'title': 'Q5',
+                    'sequence': 5,
+                    'question_type': 'numerical_box',
+                    'is_conditional': True,
+                })
             ]
         })
 
-        q1 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q1')
-        q1_a1 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
-        q2 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q2')
-        q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
-        q3 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q3')
+        q1, q2, q3, q4, q5 = survey_with_triggers.question_and_page_ids
+        q1_a1, q1_a2, __ = q1.suggested_answer_ids
+        q2_a1 = q2.suggested_answer_ids[0]
 
         q2.triggering_question_id = q1
         q2.triggering_answer_id = q1_a1
 
         q3.triggering_question_id = q2
         q3.triggering_answer_id = q2_a1
+
+        q4.triggering_question_id = q1
+        q4.triggering_answer_id = q1_a2
+
+        q5.triggering_question_id = q1
+        q5.triggering_answer_id = q1_a2
 
         access_token = survey_with_triggers.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_chained_conditional_questions')
