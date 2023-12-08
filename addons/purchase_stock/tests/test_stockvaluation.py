@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 import odoo
-from odoo import fields
+from odoo import fields, exceptions
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -2775,3 +2775,34 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move2.quantity_done = 2
         picking2.button_validate()
         self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
+
+    def test_pdiff_date_usererror(self):
+        """
+        Test pdiff operations complete without errors in case we don't have
+        the bill date. A UserError is raised as usual.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'taxes_id': False,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 1.0
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        with self.assertRaises(exceptions.UserError):
+            bill.action_post()
