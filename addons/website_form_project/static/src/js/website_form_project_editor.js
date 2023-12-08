@@ -11,7 +11,8 @@ FormEditorRegistry.add('create_task', {
         string: _t('Task Title'),
     }, {
         type: 'email',
-        modelRequired: true,
+        custom: true,
+        required: true,
         fillWith: 'email',
         name: 'email_from',
         string: _t('Your Email'),
