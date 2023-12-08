@@ -16,16 +16,20 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
     }, {
         content: 'Answer Q2 with Answer 1',
         trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 1")',
+        extra_trigger: 'div.js_question-wrapper:contains("Q4")',
     }, {
         content: 'Answer Q3 with Answer 1',
         trigger: 'div.js_question-wrapper:contains("Q3") label:contains("Answer 1")',
     }, {
-        content: 'Answer Q1 with Answer 3',  // This should hide Q2 but not Q3.
+        content: 'Answer Q1 with Answer 3',  // This should hide Q2 and Q4 but not Q3.
         trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 3")',
     }, {
         content: 'Check that Q2 was hidden',
         trigger: 'div.js_question-wrapper:contains("Q3")',
-        run : () => expectHiddenQuestion("Q2"),
+        run : () => {
+            expectHiddenQuestion("Q2");
+            expectHiddenQuestion("Q4");
+        },
     }, {
         content: 'Answer Q3 with Answer 2',
         trigger: 'div.js_question-wrapper:contains("Q3") label:contains("Answer 2")',
@@ -38,14 +42,18 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
         run : () => {
             expectHiddenQuestion("Q2", "Q2's trigger is gone.");
             expectHiddenQuestion("Q3", "No reason to show it now.");
+            expectHiddenQuestion("Q4", "No reason to show it now.");
         },
     }, {
         content: 'Answer Q1 with Answer 3',  // This shows Q3.
         trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 3")',
     }, {
-        content: 'Check that a question (Q2) is hidden',
+        content: 'Check that questions Q2 and Q4 are hidden',
         trigger: 'div.js_question-wrapper:contains("Q1")',
-        run : () => expectHiddenQuestion("Q2", "Q2 should stay hidden."),
+        run : () => {
+            expectHiddenQuestion("Q2", "Q2 should stay hidden.");
+            expectHiddenQuestion("Q4", "Q4 should stay hidden.");
+        },
     }, {
         content: 'Answer Q3 with Answer 2',
         trigger: 'div.js_question-wrapper:contains("Q3") label:contains("Answer 2")',
@@ -58,6 +66,7 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
         run : () => {
             expectHiddenQuestion("Q2", "Q2's trigger is gone, again.");
             expectHiddenQuestion("Q3", "As Q2's gone, so should this one.");
+            expectHiddenQuestion("Q4", "No reason to show it now.");
         },
     }, {
         content: 'Click Submit and finish the survey',
