@@ -107,17 +107,14 @@ class TestSaleStockInvoices(TestSaleCommon):
         lot = self.env['stock.lot'].create({
             'name': 'LOT0001',
             'product_id': self.product_by_lot.id,
-            'company_id': self.env.company.id,
         })
         self.usn01 = self.env['stock.lot'].create({
             'name': 'USN0001',
             'product_id': self.product_by_usn.id,
-            'company_id': self.env.company.id,
         })
         self.usn02 = self.env['stock.lot'].create({
             'name': 'USN0002',
             'product_id': self.product_by_usn.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 10, lot_id=lot)
         self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=self.usn01)
@@ -273,7 +270,6 @@ class TestSaleStockInvoices(TestSaleCommon):
         lot02, lot03 = self.env['stock.lot'].create([{
             'name': name,
             'product_id': self.product_by_lot.id,
-            'company_id': self.env.company.id,
         } for name in ['LOT0002', 'LOT0003']])
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 8, lot_id=lot02)
         self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 2, lot_id=lot03)

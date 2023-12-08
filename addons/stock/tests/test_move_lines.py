@@ -30,7 +30,6 @@ class StockMoveLine(TestStockCommon):
         cls.lot = cls.env['stock.lot'].create({
             'product_id': cls.product.id,
             'name': 'Lot 1',
-            'company_id': cls.env.company.id,
         })
         cls.partner = cls.env['res.partner'].create({
             'name': 'The Owner',

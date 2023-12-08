@@ -153,7 +153,6 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant'].create({
             'product_id': self.product_lot.id,
@@ -452,7 +451,6 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
 
         # add one tracked, one untracked
@@ -530,7 +528,6 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         quantity, in_date = self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1)
         self.assertEqual(quantity, 1)
@@ -543,12 +540,10 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         in_date_lot1 = datetime.now()
         in_date_lot2 = datetime.now() - timedelta(days=5)
@@ -568,12 +563,10 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         in_date_lot1 = datetime.now()
         in_date_lot2 = datetime.now() - timedelta(days=5)
@@ -593,7 +586,6 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
-            'company_id': self.env.company.id,
         })
 
         from odoo.fields import Datetime
@@ -634,12 +626,10 @@ class StockQuant(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         in_date = datetime.now()
         # Add a product from lot1 in stock_location/subloc3
@@ -803,12 +793,10 @@ class StockQuant(TransactionCase):
         sn1 = self.env['stock.lot'].create({
             'name': 'sn1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
         self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 1.0, lot_id=lot1)

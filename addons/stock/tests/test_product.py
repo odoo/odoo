@@ -236,7 +236,6 @@ class TestVirtualAvailable(TestStockCommon):
         self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': product01.id,
-            'company_id': self.env.company.id,
         })
 
         product_attribute = self.env['product.attribute'].create({

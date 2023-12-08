@@ -215,7 +215,7 @@ class StockMove(models.Model):
             lots = lines.pack_lot_ids.filtered(lambda l: l.lot_name and l.product_id.id in moves_product_ids)
             lots_data = set(lots.mapped(lambda l: (l.product_id.id, l.lot_name)))
             existing_lots = self.env['stock.lot'].search([
-                ('company_id', '=', moves[0].picking_type_id.company_id.id),
+                '|', ('company_id', '=', False), ('company_id', '=', moves[0].picking_type_id.company_id.id),
                 ('product_id', 'in', lines.product_id.ids),
                 ('name', 'in', lots.mapped('lot_name')),
             ])

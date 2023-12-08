@@ -24,7 +24,6 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
         cls.lot = cls.env['stock.lot'].create({
             'name': 'LOT0001',
             'product_id': cls.product_by_lot.id,
-            'company_id': cls.env.company.id,
         })
         cls.env['stock.quant']._update_available_quantity(cls.product_by_lot, cls.stock_location, 10, lot_id=cls.lot)
 

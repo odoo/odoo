@@ -70,7 +70,6 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
                 while qty > 0:
                     lot = self.env['stock.lot'].create({
                         'product_id': raw_materials[i].id,
-                        'company_id': self.env.company.id,
                     })
                     self.env['stock.quant'].with_context(inventory_mode=True).create({
                         'product_id': raw_materials[i].id,
@@ -83,7 +82,6 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
                 for _ in range(total_quantity):
                     lot = self.env['stock.lot'].create({
                         'product_id': raw_materials[i].id,
-                        'company_id': self.env.company.id,
                     })
                     self.env['stock.quant'].with_context(inventory_mode=True).create({
                         'product_id': raw_materials[i].id,

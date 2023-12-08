@@ -865,13 +865,12 @@ Please change the quantity done or the rounding precision of your unit of measur
                 lot_id = self.env['stock.lot'].search([
                     ('product_id', '=', self.product_id.id),
                     ('name', '=', lot_text),
-                    ('company_id', '=', self.company_id.id),
+                    '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
                 ])
                 if not lot_id:
                     lot_id = self.env['stock.lot'].create({
                         'product_id': self.product_id.id,
                         'name': lot_text,
-                        'company_id': self.company_id.id,
                     })
                 move_line_vals['lot_id'] = lot_id.id
             move_lines_vals.append(move_line_vals)
@@ -887,7 +886,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 return text[len(prefix):]
             return text
         for key in context:
-            if key.startswith('default_'):
+            # Default company_id is set for the parent move, but we need to let the lot compute its own company.
+            if key.startswith('default_') and key != 'default_company_id':
                 default_vals[remove_prefix(key, 'default_')] = context[key]
 
         vals_list = []
@@ -1125,19 +1125,21 @@ Please change the quantity done or the rounding precision of your unit of measur
         quantity += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.product_uom)
         self.update({'quantity': quantity})
 
-        quants = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
-                                                 ('lot_id', 'in', self.lot_ids.ids),
-                                                 ('quantity', '!=', 0),
-                                                 ('location_id', '!=', self.location_id.id),# Exclude the source location
-                                                 '|', ('location_id.usage', '=', 'customer'),
-                                                      '&', ('company_id', '=', self.company_id.id),
-                                                           ('location_id.usage', 'in', ('internal', 'transit'))])
+        base_location = self.picking_id.location_id or self.location_id
+        quants = self.env['stock.quant'].sudo().search([
+            ('product_id', '=', self.product_id.id),
+            ('lot_id', 'in', self.lot_ids.ids),
+            ('quantity', '!=', 0),
+            ('location_id.usage', 'in', ('internal', 'transit', 'customer')),
+            ('location_id', 'not any', [('location_id', 'child_of', base_location.id)])
+        ])
+
         if quants:
             sn_to_location = ""
             for quant in quants:
                 sn_to_location += _("\n(%s) exists in location %s", quant.lot_id.display_name, quant.location_id.display_name)
             return {
-                'warning': {'title': _('Warning'), 'message': _('Existing Serial numbers. Please correct the serial numbers encoded:') + sn_to_location}
+                'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded:') + sn_to_location}
             }
 
     @api.onchange('product_uom')
