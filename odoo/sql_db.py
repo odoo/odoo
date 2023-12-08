@@ -48,6 +48,21 @@ real_time = time.time.__call__  # ensure we have a non patched time for query ti
 re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 
+
+def categorize_query(decoded_query):
+    res_into = re_into.search(decoded_query)
+    # prioritize `insert` over `select` so `select` subqueries are not
+    # considered when inside a `insert`
+    if res_into:
+        return 'into', res_into.group(1)
+
+    res_from = re_from.search(decoded_query)
+    if res_from:
+        return 'from', res_from.group(1)
+
+    return 'other', None
+
+
 sql_counter = 0
 
 MAX_IDLE_TIMEOUT = 60 * 10
@@ -73,10 +88,9 @@ class Savepoint:
     """
     def __init__(self, cr):
         self.name = str(uuid.uuid1())
-        self._name = SQL.identifier(self.name)
         self._cr = cr
         self.closed = False
-        cr.execute(SQL('SAVEPOINT %s', self._name))
+        cr.execute('SAVEPOINT "%s"' % self.name)
 
     def __enter__(self):
         return self
@@ -89,12 +103,12 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
-        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT %s', self._name))
+        self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
 
     def _close(self, rollback):
         if rollback:
             self.rollback()
-        self._cr.execute(SQL('RELEASE SAVEPOINT %s', self._name))
+        self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
         self.closed = True
 
 
@@ -255,7 +269,6 @@ class Cursor(BaseCursor):
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
         self.sql_log_count = 0
-        self._sql_table_tracking = False
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
@@ -353,23 +366,17 @@ class Cursor(BaseCursor):
             hook(self, query, params, start, delay)
 
         # advanced stats
-        if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
-            delay *= 1E6
-
-            decoded_query = self._obj.query.decode()
-            res_into = re_into.search(decoded_query)
-            # prioritize `insert` over `select` so `select` subqueries are not
-            # considered when inside a `insert`
-            if res_into:
-                self.sql_into_log.setdefault(res_into.group(1), [0, 0])
-                self.sql_into_log[res_into.group(1)][0] += 1
-                self.sql_into_log[res_into.group(1)][1] += delay
-            else:
-                res_from = re_from.search(decoded_query)
-                if res_from:
-                    self.sql_from_log.setdefault(res_from.group(1), [0, 0])
-                    self.sql_from_log[res_from.group(1)][0] += 1
-                    self.sql_from_log[res_from.group(1)][1] += delay
+        if _logger.isEnabledFor(logging.DEBUG):
+            query_type, table = categorize_query(self._obj.query.decode())
+            log_target = None
+            if query_type == 'into':
+                log_target = self.sql_into_log
+            elif query_type == 'from':
+                log_target = self.sql_from_log
+            if log_target:
+                stats = log_target.setdefault(table, [0, 0])
+                stats[0] += 1
+                stats[1] += delay * 1E6
         return res
 
     def execute_values(self, query, argslist, template=None, page_size=100, fetch=False):
@@ -423,15 +430,6 @@ class Cursor(BaseCursor):
             yield
         finally:
             _logger.setLevel(level)
-
-    @contextmanager
-    def _enable_table_tracking(self):
-        old = self._sql_table_tracking
-        self._sql_table_tracking = True
-        try:
-            yield
-        finally:
-            self._sql_table_tracking = old
 
     def close(self):
         if not self.closed:
@@ -513,12 +511,12 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
         |  test cursor           | queries on actual cursor                          |
         +========================+===================================================+
-        |``cr = TestCursor(...)``| SAVEPOINT test_cursor_N                           |
+        |``cr = TestCursor(...)``|                                                   |
         +------------------------+---------------------------------------------------+
-        | ``cr.execute(query)``  | query                                             |
+        | ``cr.execute(query)``  | SAVEPOINT test_cursor_N (if not savepoint)        |
+        |                        | query                                             |
         +------------------------+---------------------------------------------------+
-        |  ``cr.commit()``       | RELEASE SAVEPOINT test_cursor_N                   |
-        |                        | SAVEPOINT test_cursor_N (lazy)                    |
+        |  ``cr.commit()``       | RELEASE SAVEPOINT test_cursor_N (if savepoint)    |
         +------------------------+---------------------------------------------------+
         |  ``cr.rollback()``     | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)|
         +------------------------+---------------------------------------------------+
@@ -538,12 +536,18 @@ class TestCursor(BaseCursor):
         self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit, the savepoint is created lazily
-        self._savepoint = self._cursor.savepoint(flush=False)
+        self._savepoint = None
+
+    def _check_savepoint(self):
+        if not self._savepoint:
+            # we use self._cursor._obj for the savepoint to avoid having the
+            # savepoint queries in the query counts, profiler, ...
+            # Those queries are tests artefacts and should be invisible.
+            self._savepoint = Savepoint(self._cursor._obj)
 
     def execute(self, *args, **kwargs):
-        if not self._savepoint:
-            self._savepoint = self._cursor.savepoint(flush=False)
-
+        assert not self._closed, "Cannot use a closed cursor"
+        self._check_savepoint()
         return self._cursor.execute(*args, **kwargs)
 
     def close(self):
