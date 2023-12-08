@@ -310,7 +310,7 @@ def distribute_not(domain):
     Because we don't use SQL semantic for processing a 'left not in right'
     query (i.e. our 'not in' is not simply translated to a SQL 'not in'),
     it means that a '! left in right' can not be simply processed
-    by __leaf_to_sql by first emitting code for 'left in right' then wrapping
+    by model._condition_to_sql by first emitting code for 'left in right' then wrapping
     the result with 'not (...)', as it would result in a 'not in' at the SQL
     level.
 
@@ -975,8 +975,11 @@ class expression(object):
                     push_result(SQL("(%s OR %s)", pop_result(), pop_result()))
                 continue
 
-            if is_boolean(leaf):
-                push_result(self.__leaf_to_sql(leaf, model, alias))
+            if leaf == TRUE_LEAF:
+                push_result(SQL("TRUE"))
+                continue
+            if leaf == FALSE_LEAF:
+                push_result(SQL("FALSE"))
                 continue
 
             # Get working variables
@@ -1334,8 +1337,8 @@ class expression(object):
                         push((left, 'in', res_ids), model, alias)
 
                 else:
-                    # right == [] or right == False and all other cases are handled by __leaf_to_sql()
-                    push_result(self.__leaf_to_sql(leaf, model, alias))
+                    # right == [] or right == False and all other cases are handled by _condition_to_sql()
+                    push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
             # -------------------------------------------------
             # BINARY FIELDS STORED IN ATTACHMENT
@@ -1377,7 +1380,7 @@ class expression(object):
                             right = datetime.combine(right, time.min)
                         push((left, operator, right), model, alias)
                     else:
-                        push_result(self.__leaf_to_sql(leaf, model, alias))
+                        push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
                 elif field.translate and isinstance(right, str) and left == field.name:
                     model_raw_trans = model.with_context(prefetch_langs=True)
@@ -1454,7 +1457,7 @@ class expression(object):
                     push_result(sql)
 
                 else:
-                    push_result(self.__leaf_to_sql(leaf, model, alias))
+                    push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
         # ----------------------------------------
         # END OF PARSING FULL DOMAIN
@@ -1463,121 +1466,3 @@ class expression(object):
 
         [self.result] = result_stack
         self.query.add_where(self.result)
-
-    def __leaf_to_sql(self, leaf: tuple, model: BaseModel, alias: str) -> SQL:
-        left, operator, right = leaf
-
-        # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
-            "Invalid operator %r in domain term %r" % (operator, leaf)
-        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
-            "Invalid field %r in domain term %r" % (left, leaf)
-        assert not isinstance(right, BaseModel), \
-            "Invalid value %r in domain term %r" % (right, leaf)
-
-        if leaf == TRUE_LEAF:
-            return SQL("TRUE")
-
-        if leaf == FALSE_LEAF:
-            return SQL("FALSE")
-
-        field = model._fields[left]
-        sql_field = model._field_to_sql(alias, left, self.query)
-
-        if operator == 'inselect':
-            subquery, subparams = right
-            return SQL("(%s IN (%s))", sql_field, SQL(subquery, *subparams))
-
-        if operator == 'not inselect':
-            subquery, subparams = right
-            return SQL("(%s NOT IN (%s))", sql_field, SQL(subquery, *subparams))
-
-        if operator == '=?':
-            if right is False or right is None:
-                # '=?' is a short-circuit that makes the term TRUE if right is None or False
-                return SQL("TRUE")
-            else:
-                # '=?' behaves like '=' in other cases
-                return self.__leaf_to_sql((left, '=', right), model, alias)
-
-        sql_operator = SQL_OPERATORS[operator]
-
-        if operator in ('in', 'not in'):
-            # Two cases: right is a boolean or a list. The boolean case is an
-            # abuse and handled for backward compatibility.
-            if isinstance(right, bool):
-                _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (leaf,))
-                if (operator == 'in' and right) or (operator == 'not in' and not right):
-                    return SQL("(%s IS NOT NULL)", sql_field)
-                else:
-                    return SQL("(%s IS NULL)", sql_field)
-
-            elif isinstance(right, SQL):
-                return SQL("(%s %s %s)", sql_field, sql_operator, right)
-
-            elif isinstance(right, Query):
-                return SQL("(%s %s %s)", sql_field, sql_operator, right.subselect())
-
-            elif isinstance(right, (list, tuple)):
-                if field.type == "boolean":
-                    params = [it for it in (True, False) if it in right]
-                    check_null = False in right
-                else:
-                    params = [it for it in right if it is not False and it is not None]
-                    check_null = len(params) < len(right)
-
-                if params:
-                    if left != 'id':
-                        params = [field.convert_to_column(p, model, validate=False) for p in params]
-                    sql = SQL("(%s %s %s)", sql_field, sql_operator, tuple(params))
-                else:
-                    # The case for (left, 'in', []) or (left, 'not in', []).
-                    sql = SQL("FALSE") if operator == 'in' else SQL("TRUE")
-
-                if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                    sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-                elif operator == 'not in' and check_null:
-                    sql = SQL("(%s AND %s IS NOT NULL)", sql, sql_field)  # needed only for TRUE
-                return sql
-
-            else:  # Must not happen
-                raise ValueError(f"Invalid domain term {leaf!r}")
-
-        if field.type == 'boolean' and operator in ('=', '!=') and isinstance(right, bool):
-            value = (not right) if operator in NEGATIVE_TERM_OPERATORS else right
-            if value:
-                return SQL("(%s = TRUE)", sql_field)
-            else:
-                return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
-
-        if operator == '=' and (right is False or right is None):
-            return SQL("%s IS NULL", sql_field)
-
-        if operator == '!=' and (right is False or right is None):
-            return SQL("%s IS NOT NULL", sql_field)
-
-        # general case
-        need_wildcard = operator in WILDCARD_OPERATORS
-
-        if isinstance(right, SQL):
-            sql_right = right
-        elif need_wildcard:
-            sql_right = SQL("%s", f"%{pycompat.to_text(right)}%")
-        else:
-            sql_right = SQL("%s", field.convert_to_column(right, model, validate=False))
-
-        sql_left = sql_field
-        if operator.endswith('like'):
-            sql_left = SQL("%s::text", sql_field)
-        if operator.endswith('ilike'):
-            sql_left = self._unaccent(sql_left)
-            sql_right = self._unaccent(sql_right)
-
-        if need_wildcard and not right:
-            return SQL("%s IS NULL", sql_field) if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE")
-
-        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_right)
-        if right and operator in NEGATIVE_TERM_OPERATORS:
-            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-
-        return sql
