@@ -44,7 +44,7 @@ export class Messaging {
     }
 
     get initMessagingParams() {
-        return {};
+        return { allowed_company_ids: this.env.services.company?.activeCompanyIds };
     }
 
     /**
