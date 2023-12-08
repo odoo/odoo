@@ -19,7 +19,7 @@ class ProjectTaskType(models.Model):
     def _default_user_id(self):
         return 'default_project_id' not in self.env.context and self.env.uid
 
-    active = fields.Boolean('Active', default=True)
+    active = fields.Boolean('Active', default=True, export_string_translation=False)
     name = fields.Char(string='Name', required=True, translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
@@ -43,7 +43,7 @@ class ProjectTaskType(models.Model):
         help="Automatically modify the state when the customer replies to the feedback for this stage.\n"
             " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
-    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
+    disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning', export_string_translation=False)
 
     user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
 

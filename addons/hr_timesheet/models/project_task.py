@@ -29,21 +29,20 @@ class Task(models.Model):
     _inherit = "project.task"
 
     project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False)]")
-    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True, recursive=True)
+    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True, recursive=True, export_string_translation=False)
     allow_timesheets = fields.Boolean(
         "Allow timesheets",
         compute='_compute_allow_timesheets', search='_search_allow_timesheets',
-        compute_sudo=True, readonly=True,
-        help="Timesheets can be logged on this task.")
+        compute_sudo=True, readonly=True, export_string_translation=False)
     remaining_hours = fields.Float("Time Remaining", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
-    remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
+    remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage', export_string_translation=False)
     effective_hours = fields.Float("Time Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
     total_hours_spent = fields.Float("Total Time Spent", compute='_compute_total_hours_spent', store=True, help="Time spent on this task and its sub-tasks (and their own sub-tasks).")
-    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, aggregator="avg")
-    overtime = fields.Float(compute='_compute_progress_hours', store=True)
+    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, aggregator="avg", export_string_translation=False)
+    overtime = fields.Float(compute='_compute_progress_hours', store=True, export_string_translation=False)
     subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
-    timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
-    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
+    timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets', export_string_translation=False)
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days(), export_string_translation=False)
     display_name = fields.Char(help="""Use these keywords in the title to set new tasks:\n
         30h Allocate 30 hours to the task
         #tags Set tags on the task
