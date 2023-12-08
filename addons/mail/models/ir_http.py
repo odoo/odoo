@@ -13,7 +13,10 @@ class IrHttp(models.AbstractModel):
         """Override to add the current user data (partner or guest) if applicable."""
         result = super().session_info()
         store = Store()
-        self.env["res.users"]._init_store_data(store)
+        ResUsers = self.env["res.users"]
+        if cids := request.httprequest.cookies.get("cids", False):
+            ResUsers = self.with_context(allowed_company_ids=[int(cid) for cid in cids.split("-")]).env["res.users"]
+        ResUsers._init_store_data(store)
         result["storeData"] = store.get_result()
         guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
