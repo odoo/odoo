@@ -412,6 +412,7 @@ class MicrosoftSync(models.AbstractModel):
 
     def _impersonate_user(self, user_id):
         """ Impersonate a user (mainly the event organizer) to be able to call the Outlook API with its token """
+        # This method is obsolete, as it has been replaced by the `_get_event_user_m` method, which gets the user who will make the request.
         return user_id.with_user(user_id)
 
     @after_commit
@@ -423,7 +424,8 @@ class MicrosoftSync(models.AbstractModel):
         'self' won't exist when this method will be really called due to @after_commit decorator.
         """
         microsoft_service = self._get_microsoft_service()
-        with microsoft_calendar_token(self._impersonate_user(user_id).sudo()) as token:
+        sender_user = self._get_event_user_m(user_id)
+        with microsoft_calendar_token(sender_user.sudo()) as token:
             if token:
                 microsoft_service.delete(event_id, token=token, timeout=timeout)
 
@@ -437,7 +439,8 @@ class MicrosoftSync(models.AbstractModel):
         due to @after_commit decorator.
         """
         microsoft_service = self._get_microsoft_service()
-        with microsoft_calendar_token(self._impersonate_user(user_id).sudo()) as token:
+        sender_user = self._get_event_user_m(user_id)
+        with microsoft_calendar_token(sender_user.sudo()) as token:
             if token:
                 self._ensure_attendees_have_email()
                 res = microsoft_service.patch(event_id, values, token=token, timeout=timeout)
@@ -457,10 +460,7 @@ class MicrosoftSync(models.AbstractModel):
         if not values:
             return
         microsoft_service = self._get_microsoft_service()
-        # Insert using 'self.user_id' if synced with Outlook, otherwise use 'self.env.user'.
-        sender_user = self.env.user
-        if self.user_id and self.with_user(self.user_id)._check_microsoft_sync_status():
-            sender_user = self.user_id
+        sender_user = self._get_event_user_m()
         with microsoft_calendar_token(sender_user.sudo()) as token:
             if token:
                 self._ensure_attendees_have_email()
@@ -559,3 +559,11 @@ class MicrosoftSync(models.AbstractModel):
             time_offset = timedelta(minutes=5)
             domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
         return domain
+
+    def _get_event_user_m(self, user_id=None):
+        """ Return the correct user to send the request to Microsoft.
+        It's possible that a user creates an event and sets another user as the organizer. Using self.env.user will
+        cause some issues, and it might not be possible to use this user for sending the request, so this method gets
+        the appropriate user accordingly.
+        """
+        raise NotImplementedError()
