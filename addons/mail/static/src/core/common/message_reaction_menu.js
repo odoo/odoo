@@ -24,7 +24,7 @@ export class MessageReactionMenu extends Component {
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.state = useState({
-            reaction: this.props.message.reactions[0],
+            reaction: this.props.message.reaction[0],
         });
         useExternalListener(document, "keydown", this.onKeydown);
         onExternalClick("root", () => this.props.close());
