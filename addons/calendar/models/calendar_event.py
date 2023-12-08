@@ -24,7 +24,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 )
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import html2plaintext, is_html_empty, single_email_re
+from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1390,7 +1390,7 @@ class Meeting(models.Model):
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting._get_customer_summary()
-            description = meeting._get_customer_description()
+            description = html2plaintext(meeting._get_customer_description())
             if description:
                 event.add('description').value = description
             if meeting.location:
@@ -1429,8 +1429,8 @@ class Meeting(models.Model):
         return result
 
     def _get_customer_description(self):
-        """:return (str): The description to include in calendar exports"""
-        return html2plaintext(self.description) if self.description else ''
+        """:return (html): Sanitized HTML description for customer to include in calendar exports"""
+        return html_sanitize(self.description) if not is_html_empty(self.description) else ''
 
     def _get_customer_summary(self):
         """:return (str): The summary to include in calendar exports"""
