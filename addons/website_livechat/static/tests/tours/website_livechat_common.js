@@ -107,7 +107,7 @@ var feedbackStep = [{
     run: "text ;-) This was really helpful. Thanks ;-)!"
 }, {
     content: "Send the feedback",
-    trigger: "input[type='button'].o_rating_submit_button",
+    trigger: "button[type='button'].o_rating_submit_button",
 }, {
     content: "Check if feedback has been sent",
     trigger: "div.o_thread_window_header.feedback_sent",
