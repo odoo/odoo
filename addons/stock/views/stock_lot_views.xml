@@ -146,7 +146,8 @@
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_production_lot_kanban')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
-        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
+        <field name="context">{'search_default_group_by_product': 1, 'display_complete': True}</field>
+        <field name="domain">['|', ('location_id', '=', False), ('location_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a lot/serial number
@@ -167,6 +168,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
         <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>
+        <field name="domain">['|', ('location_id', '=', False), ('location_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a lot/serial number

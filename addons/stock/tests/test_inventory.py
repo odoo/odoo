@@ -66,7 +66,6 @@ class TestInventory(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
@@ -98,7 +97,6 @@ class TestInventory(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
@@ -126,7 +124,6 @@ class TestInventory(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
         self.env['stock.quant'].create({
             'location_id': self.stock_location.id,

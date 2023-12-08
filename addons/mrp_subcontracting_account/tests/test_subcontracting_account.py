@@ -301,7 +301,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         lot_comp2 = self.env['stock.lot'].create({
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
-            'company_id': self.env.company.id,
         })
         serials_finished = []
         serials_comp1 = []
@@ -309,12 +308,10 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             serials_finished.append(self.env['stock.lot'].create({
                 'name': 'serial_fin_%s' % i,
                 'product_id': self.finished.id,
-                'company_id': self.env.company.id,
             }))
             serials_comp1.append(self.env['stock.lot'].create({
                 'name': 'serials_comp1_%s' % i,
                 'product_id': self.comp1.id,
-                'company_id': self.env.company.id,
             }))
 
         for i in range(todo_nb):
@@ -354,7 +351,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         lot01, lot02 = self.env['stock.lot'].create([{
             'name': "Lot of %s" % product.name,
             'product_id': product.id,
-            'company_id': self.env.company.id,
         } for product in (self.comp1, self.comp2)])
 
         receipt_form = Form(self.env['stock.picking'])

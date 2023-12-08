@@ -272,7 +272,6 @@ class TestEditableQuant(TransactionCase):
         sn1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_tracked_sn.id,
-            'company_id': self.env.company.id,
         })
 
         self.Quant.create({

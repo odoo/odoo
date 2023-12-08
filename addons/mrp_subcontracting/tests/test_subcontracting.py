@@ -749,7 +749,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         finished_lots = self.env['stock.lot'].create([{
             'name': 'lot_%s' % number,
             'product_id': self.finished.id,
-            'company_id': self.env.company.id,
         } for number in range(3)])
 
         with Form(self.env['stock.picking']) as picking_form:
@@ -784,7 +783,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         new_lot = self.env['stock.lot'].create({
             'name': 'lot_alter',
             'product_id': self.finished.id,
-            'company_id': self.env.company.id,
         })
         action = picking_receipt.move_ids.action_show_details()
         self.assertEqual(action['name'], 'Detailed Operations', "The subcontract record components wizard shouldn't be available now.")
@@ -1003,12 +1001,10 @@ class TestSubcontractingTracking(TransactionCase):
         lot_id = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.finished_product.id,
-            'company_id': self.env.company.id,
         })
         serial_id = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.comp1_sn.id,
-            'company_id': self.env.company.id,
         })
 
         action = picking_receipt.action_record_components()
@@ -1112,7 +1108,6 @@ class TestSubcontractingTracking(TransactionCase):
         lot_comp2 = self.env['stock.lot'].create({
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
-            'company_id': self.env.company.id,
         })
         serials_finished = []
         serials_comp1 = []
@@ -1120,12 +1115,10 @@ class TestSubcontractingTracking(TransactionCase):
             serials_finished.append(self.env['stock.lot'].create({
                 'name': 'serial_fin_%s' % i,
                 'product_id': self.finished_product.id,
-                'company_id': self.env.company.id,
             }))
             serials_comp1.append(self.env['stock.lot'].create({
                 'name': 'serials_comp1_%s' % i,
                 'product_id': self.comp1_sn.id,
-                'company_id': self.env.company.id,
             }))
 
         for i in range(todo_nb):
@@ -1187,7 +1180,6 @@ class TestSubcontractingTracking(TransactionCase):
         finished_lot, component_lot = self.env['stock.lot'].create([{
             'name': 'lot_%s' % product.name,
             'product_id': product.id,
-            'company_id': self.env.company.id,
         } for product in [finished_product, component]])
 
         self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb, lot_id=component_lot)
@@ -1259,7 +1251,6 @@ class TestSubcontractingTracking(TransactionCase):
         finished_serials = self.env['stock.lot'].create([{
             'name': 'sn_%s' % str(i),
             'product_id': finished_product.id,
-            'company_id': self.env.company.id,
         } for i in range(todo_nb)])
 
         self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb)
@@ -1375,27 +1366,22 @@ class TestSubcontractingPortal(TransactionCase):
         lot1 = self.env['stock.lot'].with_user(self.portal_user).create({
             'name': 'lot1',
             'product_id': self.finished_product.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].with_user(self.portal_user).create({
             'name': 'lot2',
             'product_id': self.finished_product.id,
-            'company_id': self.env.company.id,
         })
         serial1 = self.env['stock.lot'].with_user(self.portal_user).create({
             'name': 'lot1',
             'product_id': self.comp1_sn.id,
-            'company_id': self.env.company.id,
         })
         serial2 = self.env['stock.lot'].with_user(self.portal_user).create({
             'name': 'lot2',
             'product_id': self.comp1_sn.id,
-            'company_id': self.env.company.id,
         })
         serial3 = self.env['stock.lot'].with_user(self.portal_user).create({
             'name': 'lot3',
             'product_id': self.comp1_sn.id,
-            'company_id': self.env.company.id,
         })
         action = picking_receipt.with_user(self.portal_user).with_context({'is_subcontracting_portal': 1}).move_ids.action_show_details()
         mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])

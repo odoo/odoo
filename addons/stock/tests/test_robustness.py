@@ -172,13 +172,11 @@ class TestRobustness(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': product1.id,
-            'company_id': self.env.company.id,
 
         })
         lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': product2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(product1, self.stock_location, 1, lot_id=lot1)
@@ -234,7 +232,6 @@ class TestRobustness(TransactionCase):
         lotA = self.env['stock.lot'].create({
             'name': 'lotA',
             'product_id': productA.id,
-            'company_id': self.env.company.id,
 
         })
         self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 5, lot_id=lotA)

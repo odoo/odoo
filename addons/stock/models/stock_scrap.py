@@ -94,11 +94,11 @@ class StockScrap(models.Model):
     @api.onchange('lot_id')
     def _onchange_serial_number(self):
         if self.product_id.tracking == 'serial' and self.lot_id:
-            message, recommended_location = self.env['stock.quant']._check_serial_number(self.product_id,
-                                                                                         self.lot_id,
-                                                                                         self.company_id,
-                                                                                         self.location_id,
-                                                                                         self.picking_id.location_dest_id)
+            message, recommended_location = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
+                                                                                                self.lot_id,
+                                                                                                self.company_id,
+                                                                                                self.location_id,
+                                                                                                self.picking_id.location_dest_id)
             if message:
                 if recommended_location:
                     self.location_id = recommended_location

@@ -158,12 +158,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
         lot2 = self.env['stock.lot'].create({
             'name': '1002',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -476,7 +474,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot = self.env['stock.lot'].create({
             'name': 'SuperLot',
             'product_id': tracked_product.id,
-            'company_id': self.env.company.id,
         })
         qty = 2
         self.env['stock.quant']._update_available_quantity(tracked_product, shelf1_location, qty, lot_id=lot)
@@ -1038,7 +1035,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         tracked_product_2_lot = self.env['stock.lot'].create({
             'name': '80085',
             'product_id': tracked_product_2.id,
-            'company_id': self.env.company.id,
         })
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -1472,7 +1468,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1, owner_id=self.partner1)
