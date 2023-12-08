@@ -16,6 +16,7 @@ let nextId = -1;
 const mutex = new Mutex();
 const updateRewardsMutex = new Mutex();
 const pointsForProgramsCountedRules = {};
+const { DateTime } = luxon;
 
 export function loyaltyIdsGenerator() {
     return nextId--;
@@ -206,6 +207,16 @@ patch(PosStore.prototype, {
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
+            const date_order = DateTime.fromSQL(order.date_order);
+            if (
+                rule.program_id.date_from &&
+                date_order < rule.program_id.date_from.startOf("day")
+            ) {
+                return _t("That promo code program is not yet valid.");
+            }
+            if (rule.program_id.date_to && date_order > rule.program_id.date_to.endOf("day")) {
+                return _t("That promo code program is expired.");
+            }
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
                 program_pricelists.length > 0 &&
@@ -556,10 +567,10 @@ patch(PosStore.prototype, {
 
         for (const program of this.models["loyalty.program"].getAll()) {
             if (program.date_to) {
-                program.date_to = new Date(program.date_to);
+                program.date_to = DateTime.fromISO(program.date_to);
             }
             if (program.date_from) {
-                program.date_from = new Date(program.date_from);
+                program.date_from = DateTime.fromISO(program.date_from);
             }
         }
     },
