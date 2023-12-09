@@ -22,7 +22,7 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from pypdf import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -30,9 +30,9 @@ from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 try:
-    from PyPDF2.errors import PdfReadError
+    from pypdf.errors import PdfReadError
 except ImportError:
-    from PyPDF2.utils import PdfReadError
+    from pypdf.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -332,7 +332,7 @@ class IrActionsReport(models.Model):
             return {}
         base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
-        root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
+        root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
@@ -752,7 +752,7 @@ class IrActionsReport(models.Model):
             if reader.numPages == len(res_ids_wo_stream):
                 for i in range(reader.numPages):
                     attachment_writer = PdfFileWriter()
-                    attachment_writer.addPage(reader.getPage(i))
+                    attachment_writer.addPage(reader.pages[i])
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids[i]]['stream'] = stream
@@ -794,7 +794,7 @@ class IrActionsReport(models.Model):
                         to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                         attachment_writer = PdfFileWriter()
                         for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
+                            attachment_writer.addPage(reader.pages[j])
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids[i]]['stream'] = stream
