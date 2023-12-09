@@ -36,3 +36,9 @@ class L10nLatamDocumentType(models.Model):
 
     def _is_doc_type_vendor(self):
         return self.code == '46'
+
+    def _is_doc_type_export(self):
+        return self.code in ['110', '111', '112'] and self.country_id.code == 'CL'
+
+    def _is_doc_type_electronic_ticket(self):
+        return self.code in ['39', '41'] and self.country_id.code == 'CL'
