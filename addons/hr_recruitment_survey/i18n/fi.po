@@ -7,7 +7,6 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Iipponen <erno@web-veistamo.fi>, 2023
-# Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
@@ -53,6 +52,28 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hyvä <t t-out=\"object.partner_id.name or 'applicant'\">[hakijan nimi]</t><br><br>\n"
+"       <t>\n"
+"            Olet edennyt rekrytointiprosessin läpi, ja haluaisimme sinun vastaavan joihinkin kysymyksiin.\n"
+"       </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    Aloita kirjallinen haastattelu\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"       <t t-if=\"object.deadline\">\n"
+"            Vastaa haastatteluun <t t-out=\"format_date(object.deadline)\">[määräpäivä]</t>.<br><br>\n"
+"       </t>\n"
+"       <t>\n"
+"            Toivotamme sinulle onnea! Kiitos etukäteen osallistumisestanne.\n"
+"       </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -83,7 +104,7 @@ msgstr "Hakija"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Hakija: Haastattelu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -93,7 +114,7 @@ msgid ""
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
 "Valitse tähän työtehtävään liittyvä haastattelulomake. Voit tulostaa ja "
-"täyttää sen kaikkien tehtävään pyrkivien hakijoiden osalta."
+"täyttää sen kaikkien tehtävään pyrkivien hakijoiden osalta"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -108,7 +129,7 @@ msgstr "Koulutus"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Mistä yliopistosta valmistuit tai aiot valmistua?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -151,7 +172,7 @@ msgstr "Haastattelulomake"
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Haastattelulomake: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -191,7 +212,7 @@ msgstr "Toimiston sijainti"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Osallistu {{ object.survey_id.display_name }} haastatteluun"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -221,7 +242,7 @@ msgstr ""
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Ilmoita hakijan nimi."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -248,7 +269,7 @@ msgstr "Työhakemuksen lomake"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Vastaukset"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -258,14 +279,14 @@ msgstr "Katso haastatteluraportti"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Lähetä haastattelu"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Send an interview"
-msgstr ""
+msgstr "Lähetä haastattelu"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -317,17 +338,17 @@ msgstr "Oliko työntekijä suosittanut sinua?"
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "Mitkä ovat tärkeimmät tietosi hakemastasi työstä?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Mikä on sinulle tärkeää?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Mistä maasta olet kotoisin?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4

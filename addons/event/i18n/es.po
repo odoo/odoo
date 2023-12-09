@@ -53,14 +53,14 @@ msgstr "%(event_name)s (agotado)"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Inscripción #%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Inscripción para %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -99,11 +99,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'Pase - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Pase - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -111,6 +113,8 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Entrada de página completa - %s - %s' % ((object.event_id.name or "
+"'Evento').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -246,6 +250,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Comparta un cuestionario con los asistentes una vez que acabe una contribución</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -382,11 +388,14 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Inscripción\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "<span class=\"o_stat_text\">Registration Desk</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mostrador de registro</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -399,6 +408,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
 "                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"state != 'done'\">Asistido</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Cancelado</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -1088,7 +1099,7 @@ msgstr "Agrega una descripción de la entrada para tus clientes."
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 plegable"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
@@ -1196,6 +1207,8 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"Todos los correos electrónicos que se envíen a los asistentes se traducirán "
+"a este idioma."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1228,7 +1241,7 @@ msgstr "Respuestas"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "Aplique el cambio."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1345,17 +1358,17 @@ msgstr "Insignia"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Fondo del pase"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "Dimensión del pase"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "Pase de ejemplo"
 
 #. module: event
 #. odoo-python
@@ -1524,7 +1537,7 @@ msgstr "Índice de Colores"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Come see us live, we hope to meet you!"
-msgstr ""
+msgstr "Venga a vernos en vivo, ¡esperamos conocerle!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1815,12 +1828,13 @@ msgstr "Plantillas de correo electrónico"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "Habilitar lectura de códigos de barras"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
 msgstr ""
+"Habilitar o deshabilitar la funcionalidad de código de barras de eventos."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -2433,6 +2447,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
+"¡Si no sabe nada de Hockey, esta es una grandiosa introducción a este maravilloso deporte, pues será capaz de ver el proceso de entrenamiento y también tendrá tiempo de \n"
+"                platicar con jugadores y entrenadores experimentados una vez que el torneo termine!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -2461,7 +2477,7 @@ msgstr "En progreso"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Inserte Google Maps dinámico en sus plantillas de correo electrónico"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2533,7 +2549,7 @@ msgstr "Juan Pérez"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "¡Acompáñenos en la carrera de globos más grande de todos los tiempos!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2703,7 +2719,7 @@ msgstr "Correo enviado"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "Gestione y publique un horario con contribuciones"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -2957,6 +2973,8 @@ msgstr "Venta de entradas en línea"
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
 msgstr ""
+"Abrir el selector de rangos de fecha. Elija una fecha de inicio para su "
+"evento"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3071,7 +3089,7 @@ msgstr "Venga <b>por lo menos</b> 30 minutos antes del inicio del evento."
 #: code:addons/event/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "Introduzca un secreto base64 válido"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3220,7 +3238,7 @@ msgstr "Correos de inscripciones"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "Propiedades de la inscripción"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -3305,7 +3323,7 @@ msgstr "Usuario responsable"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Entrada en página completa, HTML responsivo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -3714,6 +3732,7 @@ msgstr ""
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
 msgstr ""
+"La plantilla que se referencia debe provenir del modelo %(model_name)s ."
 
 #. module: event
 #. odoo-python
@@ -3762,6 +3781,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"¡Este es el lugar perfecto para pasar un lindo día con su familia. "
+"Garantizamos que se ira con hermosos recuerdos para toda la vida!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3828,7 +3849,7 @@ msgstr "Tipo de entrada"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "Tipo de entrada"
 
 #. module: event
 #. odoo-javascript

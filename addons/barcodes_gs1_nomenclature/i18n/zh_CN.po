@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
-msgstr "阿尔法-数字名称"
+msgstr "字母数字名称"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
@@ -50,7 +51,7 @@ msgstr "条码规则"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
 msgid "Best before Date"
-msgstr "在此日期前食用"
+msgstr "在此日期前最佳"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
@@ -108,14 +109,14 @@ msgstr "如果为真，使用AI的最后一位数字来确定第一个小数的�
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr "无效条形码：无法格式化为日期"
+msgstr "条形码无效：无法格式化为日期"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr "无效的条形码：检查数字不正确"
+msgstr "条形码无效：检查数字不正确"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -179,8 +180,8 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"GS1内容类型定义了规则将把条形码处理成什么样的数据。        * 日期：条形码将被转换为Odoo日期时间； * "
-"测量：条形码的值与特定的UoM有关； * 数字标识符：遵循特定编码的固定长度的条形码； * 阿尔法-数字名称：可变长度的条形码。"
+"GS1 内容类型定义了规则将条形码处理为何种数据： * 日期：条形码将转换为 Odoo 日期； * 测量：条形码的值与特定的 UoM 相关； * "
+"数字标识符：按照特定编码的固定长度条形码； * 字母数字名称：长度可变的条形码。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -198,9 +199,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
-"规则模式\"%s\"是无效的，它需要两组。\n"
-"\t- 第一组是应用标识符（通常是2到4位）。\n"
-"\t- 第二组用来捕捉数值。"
+"规则模式\"%s\"无效，它需要两组。\n"
+"\t- 第一组是应用标识符（通常为 2 到 4 位数字）。\n"
+"\t- 第二组捕捉值。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -212,8 +213,8 @@ msgid ""
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
 "条码规则\"%s\"模式有问题。\n"
-"如果这个规则使用十进制，请检查它不能得到除数字以外的任何其他数字作为应用标识符的最后一个字符。\n"
-"还要检查可能的匹配值是否只能是数字，否则该值就不能被铸成一个度量。"
+"如果该规则使用十进制，请检查应用程序标识符的最后一个字符是否为数字。\n"
+"还要检查可能匹配的值只能是数字，否则该值不能被转换为度量值。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -221,7 +222,7 @@ msgstr ""
 msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
-msgstr "这种命名法使用GS1规范，只有GS1-128编码规则被接受为这种命名法。"
+msgstr "此命名规范采用 GS1 规范，只接受 GS1-128 编码规则。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -242,7 +243,7 @@ msgstr "这个条形码不能被部分或完全解析。"
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr "这条规则只应用于特殊编码的条形编码"
+msgstr "这条规则只应用于特殊编码的条形码"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type

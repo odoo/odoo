@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgid ""
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                要登录，请在下面输入刚刚通过电子邮件发送的六位数认证码，以便"
+"                如需登录，请输入刚刚通过电子邮件发送的六位数认证码，以"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -215,7 +216,7 @@ msgstr "发送电邮"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr "设置：2Fa 新登录"
+msgstr "设置：2FA 新登录"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -238,7 +239,7 @@ msgstr "用户"
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "校验失败，请再次检查6位验证码"
+msgstr "验证失败，请再次核对 6 位数代码"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -246,7 +247,7 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
-"我们强烈建议使用认证器应用程序启用双因素认证，以帮助保护您的账户。\n"
+"我们强烈建议使用 Authenticator 应用程序启用双因素认证，以保护您的账户安全。\n"
 "               <br/>"
 
 #. module: auth_totp_mail_enforce
@@ -254,14 +255,14 @@ msgstr ""
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr "您的账户发送的认证邮件达到了上限"
+msgstr "您的帐户已达到发送验证邮件的上限"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr "您的账户达到了代码验证的上限"
+msgstr "您的账户已达到代码验证的上限"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
