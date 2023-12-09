@@ -16,7 +16,7 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
 
         $("timeago.timeago").toArray().forEach((el) => {
             var datetime = $(el).attr('datetime');
-            var datetimeObj = deserializeDateTime(datetime);
+            var datetimeObj = deserializeDateTime(datetime).toJSDate();
             // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
             // then return fix formate string else timeago
             var displayStr = '';
