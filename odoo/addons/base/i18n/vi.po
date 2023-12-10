@@ -20,7 +20,7 @@
 # Vo Thanh Thuy, 2021
 # Vũ Văn Phát <aloha050992@gmail.com>, 2021
 # Thin Tran <trvathin@gmail.com>, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -13436,6 +13436,12 @@ msgid "Compute"
 msgstr "Tính toán"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr "Tính toán điểm số và chỉ định khách hàng tiềm năng tự động"
@@ -15845,6 +15851,18 @@ msgstr "Lỗi"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Thông báo lỗi được trả về khi ràng buộc bị vi phạm."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Lỗi khi phân tích cú pháp chế độ xem:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18911,6 +18929,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Tham số 'group by' không hợp lệ"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Biểu thức không hợp lệ khi phân tích cú pháp xpath %r"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Định dạng JSON không hợp lệ trong trường Giá trị mặc định."
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19368,7 +19398,7 @@ msgstr "LGPL Version 3"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
 msgid "Lithuania - Accounting Reports"
-msgstr ""
+msgstr "Lithuania - Báo cáo kế toán"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -26996,6 +27026,14 @@ msgstr "Giao hàng của bạn thông qua Fedex và theo dõi chúng trực tuy�
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Giao hàng của bạn thông qua UPS và theo dõi chúng trực tuyến"
 
@@ -29756,6 +29794,11 @@ msgstr "UNSPSC mã sản phẩm"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Vận chuyển UPS"
 
@@ -31333,6 +31376,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Bạn không thể vô hiệu tài khoản mà bạn hiện tại đang đăng nhập."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -31353,6 +31402,12 @@ msgstr "Bạn không thể xóa ngôn ngữ mà người dùng đang sử dụng
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "Bạn không thể trộn một liên hệ với hồ sơ cha của liên hệ này."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
