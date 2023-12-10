@@ -7,7 +7,7 @@
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
 # Lucia Pacheco, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # marcescu, 2023
 # Rafael Blasco <rblasco@moduon.team>, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
@@ -61,14 +61,14 @@ msgstr "%(event_name)s (agotado)"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Inscripción #%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Inscripción para %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -109,6 +109,8 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Entrada de página completa - %s - %s' % ((object.event_id.name or "
+"'Evento').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -229,6 +231,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Comparta un cuestionario con los asistentes una vez que acabe una contribución</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -942,7 +946,7 @@ msgstr "Anunciado"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "Aplique el cambio."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2380,7 +2384,7 @@ msgstr "Adjuntos principales"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "Gestione y publique un horario con contribuciones"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -2620,6 +2624,8 @@ msgstr "Venta de entradas en línea"
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
 msgstr ""
+"Abrir el selector de rangos de fecha. Elija una fecha de inicio para su "
+"evento"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3256,6 +3262,7 @@ msgstr ""
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
 msgstr ""
+"La plantilla que se referencia debe provenir del modelo %(model_name)s ."
 
 #. module: event
 #. odoo-python
