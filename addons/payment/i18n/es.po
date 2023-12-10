@@ -86,7 +86,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Publicado</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -192,6 +192,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
+"Se inició una transacción con referencia %(ref)s con el fin de guardar un "
+"nuevo método de pago (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -201,6 +203,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
+"Se inició una transacción con referencia %(ref)s que utiliza el método de "
+"pago %(token)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -745,7 +749,7 @@ msgstr "Habilitado"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Enterprise"
-msgstr ""
+msgstr "Enterprise"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -1265,7 +1269,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Asistente de captura de pagos "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1370,7 +1374,7 @@ msgstr "Transacciones de pago vinculadas al token"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr ""
+msgstr "Detalles de pago guardados el %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1421,19 +1425,19 @@ msgstr "Por favor, elija solamente una opción de pago."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set a positive amount."
-msgstr ""
+msgstr "Establezca un importe positivo."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount lower than %s."
-msgstr ""
+msgstr "Establezca un importe menor que %s."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr ""
+msgstr "Cambie a la empresa"
 
 #. module: payment
 #. odoo-javascript
@@ -1544,7 +1548,7 @@ msgstr "Modelo de documento relacionado"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__require_currency
 msgid "Require Currency"
-msgstr ""
+msgstr "Se requiere moneda"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
@@ -1572,11 +1576,12 @@ msgstr "Guardando tu método de pago, por favor espera..."
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
+"Seleccione sus países. Deje vacío para estar disponible en todas partes."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
+msgstr "Seleccione las monedas. Déjelo en blanco para no restringir ninguna. "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1698,12 +1703,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "Admitir captura parcial"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr ""
+msgstr "Métodos de pago admitidos"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1932,7 +1937,7 @@ msgstr "No hay transacciones por mostrar"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr ""
+msgstr "Aún no hay un token creado."
 
 #. module: payment
 #. odoo-python
@@ -1962,6 +1967,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Controla si los clientes pueden guardar sus métodos de pago como tokens de pago.\n"
+"Un token de pago es un enlace anónimo a los detalles de pago guardados en la\n"
+"base de datos del proveedor de pago, lo que permite al cliente volver a usarlo en una futura compra."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -1970,6 +1978,9 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
+"Determina si los clientes pueden utilizar métodos de pago rápido. El pago "
+"rápido permite que los clientes paguen con Google Pay y Apple Pay y su "
+"información de dirección se obtenga al momento del pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
@@ -2180,6 +2191,8 @@ msgstr "Si se debe crear un token de pago al posprocesar la transacción"
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
 msgstr ""
+"Si cada uno de los proveedores de las transacciones admite la captura "
+"parcial. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2383,7 +2396,7 @@ msgstr "C.P."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "danger"
-msgstr ""
+msgstr "peligro"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status

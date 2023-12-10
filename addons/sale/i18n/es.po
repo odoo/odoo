@@ -3,16 +3,17 @@
 # 	* sale
 # 
 # Translators:
+# Jolien De Paepe, 2023
 # Fernanda Alvarez, 2023
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
-# Jolien De Paepe, 2023
 # Wil Odoo, 2023
 # Richard Mouthier <rmo@odoo.com>, 2023
 # Ana Sanjuán, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Margot Prewitt, 2023
 # Lucia Pacheco, 2023
+# Youssef Bashandy, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -626,7 +627,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'presupuesto' if object.state in ('draft', 'sent') else 'pedido'\"></t>\n"
 "        Hola,\n"
 "        <br><br>\n"
 "        Su\n"
@@ -974,7 +975,7 @@ msgstr "<strong>Fecha de presupuesto:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>Comercial:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2718,7 +2719,7 @@ msgstr "Bloqueado"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "No puede modificar las órdenes bloqueadas."
 
 #. module: sale
 #. odoo-javascript
@@ -3053,7 +3054,7 @@ msgstr "Confirmación en línea"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Solo se consideran los anticipos confirmados."
 
 #. module: sale
 #. odoo-python
@@ -3226,7 +3227,7 @@ msgstr "Pedidos para aumentar las ventas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4415,7 +4416,7 @@ msgstr "Categorías"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr ""
+msgstr "Impuesto del 15 %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
@@ -4539,6 +4540,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"La orden de venta %(order)s vinculada a la cuenta analítica %(account)s está"
+" cancelada. No puede registrar un gasto en una orden de venta cancelada."
 
 #. module: sale
 #. odoo-python
@@ -4549,6 +4552,9 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"La orden de venta %(order)s vinculada a la cuenta analítica %(account)s está"
+" bloqueada. No puede registrar un gasto en una orden bloqueada, cree una "
+"nueva orden vinculada a esta cuenta analítica."
 
 #. module: sale
 #. odoo-python
@@ -4558,6 +4564,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"Debe validar la orden de venta %(order)s vinculada a la cuenta analítica "
+"%(account)s antes de registrar gastos."
 
 #. module: sale
 #. odoo-python
@@ -4570,6 +4578,7 @@ msgstr "El token de acceso es inválido."
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
 msgstr ""
+"El importe a facturar = Total de la orden de ventas - Anticipos confirmados."
 
 #. module: sale
 #. odoo-python
@@ -4585,7 +4594,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "El importe fijo que se facturará por adelantado."
 
 #. module: sale
 #. odoo-python
@@ -4633,11 +4642,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"La nueva factura deducirá las facturas en borrador vinculadas a esta orden "
+"de venta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "La orden no está en un estado que requiere el pago del cliente."
 
 #. module: sale
 #. odoo-python
@@ -4662,12 +4673,12 @@ msgstr "La referencia de pago de este pedido de venta."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "El pago también debe transmitirse con amor"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "El porcentaje del importe a facturar por adelantado."
 
 #. module: sale
 #. odoo-python
@@ -4972,12 +4983,12 @@ msgstr "Tipo de actividad de excepción registrada."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Escriba para encontrar un cliente..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Escriba para encontrar un producto..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups

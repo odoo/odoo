@@ -52,6 +52,13 @@ msgstr ""
 "                                    </span>"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "A purchase journal must be used to receive Peppol documents."
+msgstr "Phải sử dụng sổ nhật ký mua hàng để nhận chứng từ Peppol."
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr "Tài khoản người dùng proxy EDI"
@@ -79,6 +86,17 @@ msgid ""
 "Can't cancel an active registration. Please request a migration instead."
 msgstr ""
 "Không thể hủy đăng ký đang hoạt động. Thay vào đó, hãy yêu cầu di chuyển."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Can't cancel an active registration. Please request a migration or "
+"deregister instead."
+msgstr ""
+"Không thể hủy đăng ký đang hoạt động. Thay vào đó, hãy yêu cầu di chuyển "
+"hoặc huỷ đăng ký."
 
 #. module: account_peppol
 #. odoo-python
@@ -548,7 +566,7 @@ msgstr "Gửi qua PEPPOL"
 msgid ""
 "Start sending and receiving documents via Peppol as soon as your "
 "registration is complete."
-msgstr ""
+msgstr "Bắt đầu gửi và nhận chứng từ qua Peppol ngay khi đăng ký hoàn tất."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
