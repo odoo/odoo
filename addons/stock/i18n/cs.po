@@ -157,7 +157,7 @@ msgstr "'Dodací list - %s - %s' % (object.partner_id.name or '', object.name)"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'inventář - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -315,6 +315,37 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dobrý den ${object.partner_id.name},<br/><br/>\n"
+"        S radostí Vám oznamujeme, že Vaše objednávka byla odeslána.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Váš odkaz pro sledování je\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"       Další podrobnosti naleznete v příloze objednávky doručení.<br/><br/>\n"
+"        Děkujeme,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -1001,6 +1032,9 @@ msgid ""
 "            Manual inventory adjustments can also be performed and pre-filled with\n"
 "            suggested counted quantity."
 msgstr ""
+"Skener čárových kódů lze aktivovat prostřednictvím nastavení\n"
+"            inventáře. Ruční úpravy zásob lze také provést a předvyplnit navrhovaným\n"
+"            počítaným množstvím."
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
@@ -1378,7 +1412,7 @@ msgstr "Obsah"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Continue Inventory"
-msgstr ""
+msgstr "Pokračovat v zásobách"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
@@ -1445,7 +1479,7 @@ msgstr "Počet listů"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Counted"
-msgstr ""
+msgstr "Počítané"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__prefill_counted_quantity
@@ -1767,12 +1801,12 @@ msgstr "Předvolená výstupní trasa na sledování"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__counted
 msgid "Default to stock on hand"
-msgstr ""
+msgstr "Výchozí zásoby k dispozici"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__zero
 msgid "Default to zero"
-msgstr ""
+msgstr "Výchozí je nula"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__product_uom_id
@@ -1845,7 +1879,7 @@ msgstr "Datum upozornění na zpoždění"
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Delay on"
-msgstr ""
+msgstr "Prodlení na"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -2061,7 +2095,7 @@ msgstr "Rozdíl"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Difference different than zero"
-msgstr ""
+msgstr "Rozdíl jiný než nula"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_form_edit_view
@@ -2246,7 +2280,7 @@ msgstr "E-mail odeslaný zákazníkovi po dokončení objednávky."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Prázdné sklady"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -2317,6 +2351,7 @@ msgstr ""
 #, python-format
 msgid "Existing Serial number (%s). Please correct the serial number encoded."
 msgstr ""
+"Stávající sériové číslo (%s). Opravte prosím zakódované sériové číslo."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -2324,6 +2359,7 @@ msgstr ""
 msgid ""
 "Existing Serial numbers (%s). Please correct the serial numbers encoded."
 msgstr ""
+"Stávající sériová čísla (%s). Opravte prosím zakódovaná sériová čísla."
 
 #. module: stock
 #. openerp-web
@@ -2351,7 +2387,7 @@ msgstr "Očekávané doručení"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Expected Receipt"
-msgstr ""
+msgstr "Očekávaná účtenka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -2678,7 +2714,7 @@ msgstr "Seskupit podle..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_move_lines
 msgid "Has Move Lines"
-msgstr ""
+msgstr "Má položky pohybů"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -2946,6 +2982,8 @@ msgid ""
 "If you cancel this inventory adjustment, all its inventory adjustment lines "
 "will be lost. Are you sure you want to discard it ?"
 msgstr ""
+"Pokud tuto úpravu zásob zrušíte, všechny její položky úpravy zásob budou "
+"ztraceny. Opravdu ji chcete zahodit?"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -3001,7 +3039,7 @@ msgstr "Zahrnout vyčerpané produkty"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__exhausted
 msgid "Include also products with quantity of 0"
-msgstr ""
+msgstr "Zahrňte také produkty s množstvím 0"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -3191,7 +3229,7 @@ msgstr "Řádek inventáře"
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Řádky inventáře"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -3252,7 +3290,7 @@ msgstr "Inventář ke dni"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "Je upravitelné"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_is_follower
@@ -3322,6 +3360,8 @@ msgid ""
 "stock.The correction could unreserve some operations with problematics "
 "products."
 msgstr ""
+"Není možné odrezervovat více produktům %s, než máte na skladě. Oprava by "
+"mohla zrušit rezervaci některých operací s problematickými produkty."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3330,12 +3370,14 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock. "
 "Contact an administrator."
 msgstr ""
+"Není možné zrušit rezervaci více produktům %s, než máte na skladě. "
+"Kontaktujte administrátora."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Try our automated action to fix it"
-msgstr ""
+msgstr "Zkuste naše automatické akce k opravě"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3350,7 +3392,7 @@ msgstr "Data JSON pro widget popover"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__json_lead_days_popover
 msgid "Json Lead Days Popover"
-msgstr ""
+msgstr "Vyskakovací okno Dodací dny Json"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule____last_update
@@ -3491,7 +3533,7 @@ msgstr "Naposled upraveno"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr ""
+msgstr "Poslední datum, kdy bylo vypočítané množství k dispozici."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -3682,7 +3724,7 @@ msgstr "Produktové / Seriové  číslo (ZPL)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr ""
+msgstr "Inventura šarží/sériových čísel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
@@ -3808,7 +3850,7 @@ msgstr "Ruční doplňování"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__0
 msgid "Manually or based on automatic scheduler"
-msgstr ""
+msgstr "Ručně nebo na základě automatického plánovače"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4391,7 +4433,7 @@ msgstr "Typ výstupu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Outdated Theoretical Quantities"
-msgstr ""
+msgstr "Zastaralé teoretické množství"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
@@ -4623,7 +4665,7 @@ msgstr "Adresa kontaktu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Date"
-msgstr ""
+msgstr "Fyzická inventura podle datumu"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -4753,7 +4795,7 @@ msgstr "Tisk"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Print Count Sheet"
-msgstr ""
+msgstr "Vytisknout počet listů"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -4858,7 +4900,7 @@ msgstr "Dostupnost produktu"
 #: model:ir.actions.report,name:stock.label_barcode_product_product
 #: model:ir.actions.report,name:stock.label_barcode_product_template
 msgid "Product Barcode (ZPL)"
-msgstr ""
+msgstr "Čárový kód produktu (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__categ_ids
@@ -5288,7 +5330,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__outdated
 msgid "Quantity outdated"
-msgstr ""
+msgstr "Zastaralé množství"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reserved_availability
@@ -5311,7 +5353,7 @@ msgstr "Množství nelze vytvořit pro spotřební materiál nebo služby."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr ""
+msgstr "Poměr naskladnění doobjednávek"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_late
@@ -5402,7 +5444,7 @@ msgstr "Obdržené množ."
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr ""
+msgstr "Přepočítejte množství k dispozici na skladě"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -5440,7 +5482,7 @@ msgstr "Značka dokumentu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Refresh quantity"
-msgstr ""
+msgstr "Obnovit množství"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -5886,7 +5928,7 @@ msgstr "Hledat inventář"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Vyhledat řádky inventáře"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -6012,7 +6054,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_reset_product_qty
 msgid "Set counted quantities to 0"
-msgstr ""
+msgstr "Nastaveno počítané množství na 0"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6131,7 +6173,7 @@ msgstr "Zobrazit operace"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
 msgid "Show Resupply"
-msgstr ""
+msgstr "Zobrazit doplnění zásob"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -6265,7 +6307,7 @@ msgstr "Označeno hvězdičkou"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr ""
+msgstr "Začátek inventáře"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -6474,7 +6516,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
 msgid "Store to"
-msgstr ""
+msgstr "Uskladnit do"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__supplied_wh_id
@@ -6530,7 +6572,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__is_editable
 msgid "Technical field to restrict editing."
-msgstr ""
+msgstr "Technické pole pro omezené úpravy."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__internal_transit_location_id
@@ -6691,7 +6733,7 @@ msgstr "Předpokládané zásoby na"
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr ""
+msgstr "Zásoby byly ověřeny"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -6702,7 +6744,7 @@ msgstr "Název skladu musí být pro každou společnost jedinečný!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr ""
+msgstr "Počet generovaných sériových čísel musí být větší než nula."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6842,6 +6884,8 @@ msgid ""
 "There is already one inventory adjustment line for this product, you should "
 "rather modify this one instead of creating a new one."
 msgstr ""
+"Pro tento produkt již existuje jedna položka úpravy zásob, měli byste raději"
+" upravit tuto, než vytvořit novou."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7429,7 +7473,7 @@ msgstr "Zrušit rezervaci"
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Unsupported search on %s outside of an Inventory Adjustment"
-msgstr ""
+msgstr "Nepodporované vyhledávání %s mimo úpravu inventury"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7604,6 +7648,7 @@ msgstr "Čekající přesuny"
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Want to speed up your inventory counts? Try our Barcode app"
 msgstr ""
+"Chcete urychlit počítání zásob? Vyzkoušejte naši aplikaci čárových kódů"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -7635,7 +7680,7 @@ msgstr "Nastavení skladu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
-msgstr ""
+msgstr "Počet skladů"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
@@ -8008,6 +8053,8 @@ msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
 msgstr ""
+"Nemůžete ověřit inventář '%s', možná byl tento inventář již ověřen nebo není"
+" připraven."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8104,6 +8151,8 @@ msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
 msgstr ""
+"Nemůžete nastavit záporné množství produktu v řádku zásob:\n"
+"\t%s - qty: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8284,6 +8333,8 @@ msgid ""
 "You tried to create a record who already exists.<br/>This last one has been "
 "modified instead."
 msgstr ""
+"Pokusili jste se vytvořit záznam, který již existuje.<br/>Místo toho byl "
+"změněn stávající."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -8311,7 +8362,7 @@ msgstr "_Zrušit"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "below the minimum inventory of"
-msgstr ""
+msgstr "pod minimálním inventářem"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
@@ -8394,4 +8445,4 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
+msgstr "mělo by být doplněno k dosažení maxima"
