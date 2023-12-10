@@ -6,7 +6,7 @@
 # Patricia Lorenzo Bartolomé, 2023
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # oihane <oihanecruce@gmail.com>, 2023
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
@@ -215,7 +215,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">A producir</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -281,6 +281,9 @@ msgid ""
 "modify the quantities of components to consume for this manufacturing "
 "order.</span>"
 msgstr ""
+"<span class=\"text-muted\">La modificación de la cantidad a producir también"
+" cambiará las cantidades de los componentes que se emplearán para generar "
+"esta orden de fabricación.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -1286,6 +1289,11 @@ msgid ""
 "                                                       Also note that "
 "purchase security lead times will be added when appropriate."
 msgstr ""
+"Calcule los días necesarios para reabastecer todos los componentes de la "
+"LdM, ya sea comprando o fabricando los componentes y/o subensamblajes."
+"                                                       También tenga en "
+"cuenta que los plazos de garantía de compra se agregarán cuando sea "
+"adecuado."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1625,6 +1633,8 @@ msgstr "Fecha por mes"
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"La fecha prevista para terminar la producción o la fecha real de cierre de "
+"producción."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1632,11 +1642,13 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Fecha prevista de inicio de la producción o fecha de inicio efectivo de la "
+"producción."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date: Last 365 Days"
-msgstr ""
+msgstr "Fecha: los últimos 365 días"
 
 #. module: mrp
 #. odoo-javascript
@@ -4642,7 +4654,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr ""
+msgstr "Mostrar „Producir todo“"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4999,17 +5011,21 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Technical field for workcenter views"
-msgstr ""
+msgstr "Campo técnico para las vistas de los centros de trabajo "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
+"Campo técnico para comprobar si se puede mostrar el botón de todos los "
+"productos "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
 msgstr ""
+"Campo técnico para comprobar si se puede mostrar el botón de todos los "
+"productos "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5240,7 +5256,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "There is no defined calendar on workcenter %s."
-msgstr ""
+msgstr "No hay un calendario definido en el centro de trabajo %s."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -5687,6 +5703,9 @@ msgid ""
 "Unlock to adjust component demand during production, or consumed quantities "
 "once the manufacturing order is done."
 msgstr ""
+"Desbloquee para ajustar la demanda de componentes durante la producción o "
+"las cantidades consumidas una vez que la orden de fabricación esté terminada"
+" "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default
@@ -5738,6 +5757,9 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
+"Utilice las Ordenes de Fabricación para fabricar productos terminados "
+"utilizando componentes. Por ejemplo, 1 mesa = 4 patas de mesa + 1 cubierta "
+"de mesa "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
