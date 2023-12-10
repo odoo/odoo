@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -641,7 +641,7 @@ msgstr "Movimenti prodotto (riga movimento di magazzino)"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Put in Pack"
-msgstr "Crea collo"
+msgstr "Confeziona"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -681,9 +681,9 @@ msgid ""
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
 "Data programmata per i trasferimenti da elaborare.\n"
-"- Se impostata manualmente, la data programmata per tutti i trasferimenti nel batch si aggiornerà automaticamente a questa data.\n"
-"- Se non viene modificata manualmente e i trasferimenti vengono aggiunti/rimossi/aggiornati, questa sarà la loro prima data pianificata\n"
-"ma questa data programmata non sarà impostata per tutti i trasferimenti nel lotto."
+"              - Se impostata in modo manuale, la data programmata per tutti i trasferimenti raggruppati viene aggiornata a questa data in modo automatico.\n"
+"              - Se non viene cambiata manualmente e i trasferimenti sono aggiunti/rimossi/aggiornati, corrisponde alla loro prima data utile programmata.\n"
+"                Non viene però impostata per tutti i trasferimenti raggruppati."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -811,10 +811,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"L'obiettivo del trasferimento in batch è quello di raggruppare le operazioni che possono\n"
-"o devono essere effettuate insieme al fine di aumentarne l'efficienza.\n"
-"Può anche essere utile per assegnare compiti (una persona = un lotto) o\n"
-"ottimizzare la gestione del tempo delle operazioni (compiti da svolgere entro le ore 13:00)."
+"L'obiettivo del trasferimento raggruppato è quello di raggruppare operazioni\n"
+"            che possono (devono) essere effettuate insieme per incrementare la loro efficienza.\n"
+"            Può anche essere utile per assegnare incarichi (una persona = un raggruppamento) o\n"
+"            per aiutare nella gestione dei tempi delle operazioni (compiti da svolgere alle 13.00)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -900,7 +900,7 @@ msgstr "Tipo di attività eccezione sul record."
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
-msgstr "Convalida"
+msgstr "Valida"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_warehouse
@@ -953,7 +953,7 @@ msgstr "Non è possibile cancellare i trasferimenti raggruppati completati."
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Raggruppare alcuni prelievi."
+msgstr "Assegnare qualche prelievo al raggruppamento."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new

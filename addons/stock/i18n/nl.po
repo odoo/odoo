@@ -7473,13 +7473,6 @@ msgid "Sequence return"
 msgstr "Reeks retour"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Volgnummers %s bestaan reeds."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Serienummers"
@@ -8735,6 +8728,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Dit rapport kan niet tegelijkertijd worden gebruikt voor gedaan en niet "
 "gedaan %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Het voorvoegsel van deze reeks wordt reeds gebruikt door een andere "
+"bewerkingstype. Het wordt aanbevolen om een uniek voorvoegsel te selecteren "
+"om problemen en/of herhaalde referentiewaarden te voorkomen of om de "
+"bestaande referentiereeks toe te wijzen aan dit type bewerking."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

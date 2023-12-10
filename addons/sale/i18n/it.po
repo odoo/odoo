@@ -31,7 +31,7 @@ msgstr "Dati prelevati"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# Ordini di vendita"
+msgstr "N. ordini di vendita"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -850,8 +850,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
-"<strong>Non è stata trovata un'opzione di pagamento adatta.</strong><br/>\n"
-"Se credi che si tratti di un errore, contatta l'amministratore del sito."
+"<strong>Impossibile trovare un'opzione idonea per il pagamento.</strong><br/>\n"
+"                                        Nel caso si tratti di un errore, contattare l'amministratore del sito web."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1482,7 +1482,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Creazione fatture, registrazione pagamenti e conversazioni con i clienti."
+"Crea fatture, registra pagamenti e tieni traccia delle comunicazioni con i "
+"clienti."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1519,7 +1520,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr "Carte di credito e di debito (tramite Stripe)"
+msgstr "Carta di credito/debito (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1964,7 +1965,7 @@ msgstr "Valori aggiuntivi"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr "Riga extra con %s"
+msgstr "Riga aggiuntiva con %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -2874,10 +2875,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Lingua di traduzione opzionale (codice ISO) da selezionare quando si invia "
-"un'email. Se non impostato, verrà usata la versione inglese. Di solito "
-"dovrebbe essere un'espressione segnaposto che fornisce la lingua "
-"appropriata, ad esempio {{ object.partner_id.lang }}."
+"Lingua di traduzione opzionale (codice ISO) da selezionare quando viene "
+"inviata una e-mail. Se non impostata, viene usata la versione inglese. "
+"Normalmente dovrebbe essere un'espressione segnaposto che fornisce la lingua"
+" appropriata, es. {{ object.partner_id.lang }}."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3196,7 +3197,7 @@ msgstr "Categoria prodotto"
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
 msgid "Product Packaging"
-msgstr "Imballaggio prodotti"
+msgstr "Imballaggio prodotto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
@@ -3278,7 +3279,7 @@ msgstr "Q.tà ordinata"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Quantità da consegnare"
+msgstr "Q.tà da consegnare"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -4113,7 +4114,7 @@ msgstr "Somma totale"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr "Somma del totale non tassato"
+msgstr "Somma totale imponibile"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4189,7 +4190,7 @@ msgstr "Termini e condizioni"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr "Termini e condizioni"
+msgstr "Termini e condizioni:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
