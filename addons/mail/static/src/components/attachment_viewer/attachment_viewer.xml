@@ -31,6 +31,12 @@
                             <span>Download</span>
                         </t>
                     </div>
+                    <div t-if="isDeletable" class="o_AttachmentViewer_buttonDelete o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 cursor-pointer" t-on-click="attachmentViewer.onClickDelete" role="button" title="Delete">
+                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-trash fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > messaging.device.sizeClasses.MD }" role="img"/>
+                        <t t-if="messaging.device.sizeClass > messaging.device.sizeClasses.MD">
+                            <span>Delete</span>
+                        </t>
+                    </div>
                     <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonClose d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" t-on-click="attachmentViewer.onClickClose" role="button" title="Close (Esc)" aria-label="Close">
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>

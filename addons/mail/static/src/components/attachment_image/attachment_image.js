@@ -13,6 +13,12 @@ export class AttachmentImage extends Component {
         return this.props.record;
     }
 
+    onImageLoad(ev) {
+        const image = ev.target;
+        if (image && image.height <= 30) {
+            this.attachmentImage.update({ isSmallImg: true });
+        }
+    }
 }
 
 Object.assign(AttachmentImage, {

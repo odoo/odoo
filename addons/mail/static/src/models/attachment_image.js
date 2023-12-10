@@ -131,5 +131,11 @@ registerModel({
             },
             required: true,
         }),
+        /**
+         * Determine if the image is a small-sized image.
+         */
+        isSmallImg: attr({
+            default: false,
+        })
     },
 });

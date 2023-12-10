@@ -82,6 +82,16 @@ export class AttachmentViewer extends Component {
         return this.props.record;
     }
 
+    /**
+     * @returns {Boolean}
+     */
+    get isDeletable() {
+        const attachmentList = this.attachmentViewer.attachmentList;
+        if (attachmentList) {
+            return attachmentList.selectedAttachment.isDeletable;
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

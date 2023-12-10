@@ -63,6 +63,16 @@ registerModel({
             this.attachmentViewerViewable.download();
         },
         /**
+         * Called when clicking on delete icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDelete(ev) {
+            ev.stopPropagation();
+            this.attachmentViewerViewable.remove();
+            this.close();
+        },
+        /**
          * Called when clicking on the header. Stop propagation of event to prevent
          * closing the dialog.
          *

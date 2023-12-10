@@ -75,6 +75,11 @@ class IrAttachment(models.Model):
         res_list = []
         for attachment in self:
             res = {
+                'author': {
+                    'id': attachment.create_uid.id,
+                    'name': attachment.create_uid.name,
+                    'partnerId': attachment.create_uid.partner_id.id,
+                },
                 'checksum': attachment.checksum,
                 'id': attachment.id,
                 'filename': attachment.name,
