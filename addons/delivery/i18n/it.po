@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,9 @@ msgstr ""
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
-msgstr "Test Ambiente"
+msgstr ""
+"<span class=\"o_warning_text\">Ambiente di</span>\n"
+"                                    <span class=\"o_stat_text\">prova</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -63,7 +66,7 @@ msgstr "<span class=\"text-danger\">Nessun debug</span>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Richieste debug</span>"
+msgstr "<span class=\"text-success\">Richieste di debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -71,8 +74,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"text-success\">Ambiente</span>\n"
-"                                    <span class=\"o_stat_text\">di produzione</span>"
+"<span class=\"text-success\">Ambiente di</span>\n"
+"                                    <span class=\"o_stat_text\">produzione</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -178,7 +181,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "In archivio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -219,12 +222,12 @@ msgstr "Vettore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "Codice Vettore"
+msgstr "Codice vettore"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr "Scegliere il metodo di consegna della merce"
+msgstr "Scegliere il metodo di consegna delle merci"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -267,7 +270,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
@@ -282,7 +285,7 @@ msgstr "Cliente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr "Registrazione richieste"
+msgstr "Registrazione debug"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -293,7 +296,7 @@ msgstr "Metodo di consegna predefinito utilizzato negli ordini di vendita."
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr "Definire un nuovo metodo di consegna"
+msgstr "Definisci un nuovo metodo di consegna"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -314,7 +317,7 @@ msgstr "Costo di consegna"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr "Messaggio per la consegna"
+msgstr "Messaggio di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -327,12 +330,12 @@ msgstr "Metodo di consegna"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Procedura di selezione imballaggio di consegna"
+msgstr "Procedura selezione collo di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr "Tipo di pacchetto di consegna"
+msgstr "Tipologia collo di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -342,12 +345,12 @@ msgstr "Prezzo di consegna"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "Regole per le tariffe di consegna"
+msgstr "Regole prezzo di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr "Prodotto «Consegna»"
+msgstr "Prodotto consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
@@ -403,7 +406,7 @@ msgstr "Nome visualizzato"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Elenco link tracciabilità"
+msgstr "Visualizza link tracciabilità"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -412,9 +415,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Ogni vettore (es. UPS) può avere diversi metodi di consegna \n"
-"                (es. UPS Express, UPS Standard) con un insieme di tariffe legate\n"
-"                a ogni metodo."
+"Ciascun vettore (es. UPS) può avere più di un metodo di consegna \n"
+"                (es. UPS Express, UPS Standard) con una serie di regole tariffarie assegnate\n"
+"                a ciascun metodo."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -485,7 +488,7 @@ msgstr "Gratuito se ordine con importo maggiore di"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr "Genera etichetta di reso"
+msgstr "Generare etichetta di reso"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -528,7 +531,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr "Aggiungere altri corrieri"
+msgstr "Installa altri corrieri"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -582,7 +585,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr "Registrare le richieste per facilitare la risoluzione errori"
+msgstr "Registrazione delle richieste per facilitare il debug"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -619,8 +622,8 @@ msgstr "Nessuna integrazione con il vettore"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Impossibile calcolare le spese di consegna ordine, nessuna regola tariffaria"
-" corrisponde."
+"Impossibile calcolare i costi di consegna, nessuna regola sul prezzo "
+"corrisponde all'ordine."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -632,7 +635,7 @@ msgstr "Spese di consegna normali"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -659,7 +662,7 @@ msgstr "Dettagli collo"
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "Collo troppo pesante!"
+msgstr "Collo troppo pesante."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -682,12 +685,12 @@ msgstr "Prezzo"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "Regole tariffarie"
+msgstr "Regole sul prezzo"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Definizione prezzi"
+msgstr "Tariffazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -708,7 +711,7 @@ msgstr "Movimenti prodotto (riga movimento di magazzino)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
-msgstr "Q.tà Prodotto"
+msgstr "Q.tà prodotto"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
@@ -721,7 +724,7 @@ msgstr "Modello prodotto"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr "Fornitore"
+msgstr "Corriere"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
@@ -778,7 +781,7 @@ msgstr "Salva"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Inviare al mittente"
+msgstr "Invia al mittente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -795,7 +798,7 @@ msgstr "Prodotto servizio"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Impostare a «True» se le credenziali sono certificate per la produzione."
+"Impostare a vero se le credenziali sono certificate per la produzione."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -851,7 +854,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "Condizioni"
+msgstr "Stati/Province"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -910,14 +913,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Il peso del collo è maggiore del massimo consentito per questo tipo di "
-"imballaggio. Selezionare un altro tipo di imballaggio."
+"Il peso del collo è superiore al massimo autorizzato per la tipologia. "
+"Selezionare un altro tipo di collo."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr "Regole di consegna non corrispondenti."
+msgstr "Le regole di consegna non corrispondono."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -926,14 +929,14 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Questo metodo consente il calcolo automatico delle spese di consegna,\n"
+"Questo metodo consente il calcolo automatico del prezzo di consegna,\n"
 "                secondo le impostazioni dell'ordine di vendita (basato sul\n"
-"                preventivo) o della fattura (basato sui buoni di consegna)."
+"                preventivo) o della fattura (basato sugli ordini di consegna)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr "Questa percentuale verrà aggiunta al prezzo di spedizione."
+msgstr "Questa percentuale viene aggiunta al prezzo di spedizione."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
@@ -947,10 +950,10 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
-"Peso totale dei pacchi e dei prodotti non contenuti in un pacco. I pacchi in"
-" cui non è specificato il peso della spedizione avranno come valore "
-"predefinito il peso totale dei loro prodotti. Questo è il peso utilizzato "
-"per calcolare il costo della spedizione."
+"Peso totale dei colli e dei prodotti non contenuti in un collo. I colli "
+"senza peso di spedizione ricevono, come valore predefinito, il peso totale "
+"dei loro prodotti. È il peso utilizzato per calcolare il costo della "
+"spedizione."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
@@ -970,17 +973,17 @@ msgstr "Peso totale dei prodotti presenti nel prelievo."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "Indirizzi codici tracciabilità"
+msgstr "URL tracciabilità"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Tracciare"
+msgstr "Tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "Codice tracciabilità"
+msgstr "Riferimento tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
@@ -990,12 +993,12 @@ msgstr "URL tracciabilità"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
-msgstr "Tracking:"
+msgstr "Tracciabilità:"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Trasferisci"
+msgstr "Trasferimento"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
@@ -1054,7 +1057,7 @@ msgstr "Peso x Volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr "Peso per la spedizione"
+msgstr "Peso per spedizione"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1066,7 +1069,7 @@ msgstr "Peso per spedizione"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Etichetta unità di misura del peso"
+msgstr "Etichetta unità di misura peso"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:0
@@ -1085,7 +1088,9 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr "Ci sono link di tracciatura multipli, sono disponibili nelle voci."
+msgstr ""
+"Sono presenti più link di tracciabilità, sono disponibili nel registro "
+"comunicazioni."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -1094,8 +1099,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento"
-" al sito web del corriere."
+"Impossibile tracciare l'ordine, nel metodo di consegna manca il "
+"reindirizzamento al sito web del corriere."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

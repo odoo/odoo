@@ -25,9 +25,9 @@
 # CristianCruzParra, 2022
 # jabiri7, 2022
 # Guspy12, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # martioodo hola, 2023
 # Josep Anton Belchi, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Josep Anton Belchi, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17337,6 +17337,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Error en analitzar la vista:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20678,6 +20681,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Paràmetre 'group by' no vàlid"
+
+#. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Expressió no vàlida analitzant el xpath %r"
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -29795,6 +29804,17 @@ msgstr "Enviar els enviaments a través de Fedex i rastreja'ls en línia"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+"Aquesta és la integració anterior amb UPS que ja no té suport. Si us plau, "
+"instal·leu el nou mòdul \"Enviament UPS\" i desinstal·leu aquest tan aviat "
+"com sigui possible. Aquesta integració deixarà de funcionar el 2024."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr ""
 "Envieu els vostres enviaments a través d'UPS i feu-ne un seguiment en línia"
@@ -32813,6 +32833,11 @@ msgstr "UNSPSC Codis de producte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr "Enviament UPS (en desús)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Enviament UPS"
 
@@ -34568,6 +34593,7 @@ msgstr ""
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
 msgstr ""
+"No podeu canviar el nom dels paràmetres de configuració amb les claus %s"
 
 #. module: base
 #: code:addons/models.py:0
