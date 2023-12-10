@@ -7280,13 +7280,6 @@ msgid "Sequence return"
 msgstr "순서 반환"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "해당하는 %s 순서가 이미 존재합니다."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "일련번호"
@@ -8467,6 +8460,17 @@ msgstr "이 레코드는 이미 존재합니다."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "이 보고서는 %s 항목을 동시에 완료 및 미완료로 사용할 수 없습니다. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

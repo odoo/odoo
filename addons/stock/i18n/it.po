@@ -7,8 +7,8 @@
 # Martin Trigaux, 2022
 # francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Sebastiano Picchi, 2023
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -840,7 +840,7 @@ msgstr "Icona tipo di attività"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
-msgstr "Aggiungi un Prodotto"
+msgstr "Aggiungi prodotto"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -2740,7 +2740,7 @@ msgstr "Visualizza contenuto collo"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__disposable
 msgid "Disposable Box"
-msgstr "Scatola usa e getta"
+msgstr "Scatola monouso"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -2946,7 +2946,7 @@ msgstr "Atteso"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Expected Delivery:"
-msgstr "Consegna prevista:"
+msgstr "Consegna attesa:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -4732,7 +4732,7 @@ msgstr "Peso massimo deve essere positivo"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_positive_max_weight
 msgid "Max weight should be a positive number."
-msgstr "Il peso massimo deve essere un numero positivo."
+msgstr "Peso massimo deve essere un numero positivo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before_priority
@@ -6204,7 +6204,7 @@ msgstr "Modello prodotto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr "Modello del prodotto"
+msgstr "Mod. prodotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -7483,13 +7483,6 @@ msgid "Sequence return"
 msgstr "Sequenza reso"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Le sequenze %s esistono già."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Numeri di serie"
@@ -8748,6 +8741,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Questo report non può essere utilizzato allo stesso tempo %s per fatti e non"
 " fatti"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Questo prefisso di sequenza è già in uso per un altro tipo di operazione. Ti"
+" consigliamo di scegliere un prefisso unico per evitare problemi e/o valori "
+"di riferimento ripetuti oppure assegnare la sequenza di riferimento "
+"esistente a questo tipo di operazione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-" %s -> Tuotteen UoM on %s (%s) - Siirrä UoM on %s (%s) "
+" %s -> Tuotteen mittayksikkö on %s (%s) - Siirron mittayksikkö on %s (%s) "
 
 #. module: stock
 #. odoo-python
@@ -7444,13 +7444,6 @@ msgid "Sequence return"
 msgstr "Jakson palautus"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Jaksot %s ovat jo olemassa."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Sarjanumerot"
@@ -8694,6 +8687,17 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Tätä raporttia ei voi käyttää samaan aikaan, kun on tehty ja kun ei ole "
 "tehty %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10088,6 +10092,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Olet käsittelemässä vähemmän tuotteita kuin alkuperäinen tarve on."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sinulla on varastossa tuote tai tuotteita, joiden erän tai sarjanumeron seuranta on käytössä.\n"
+"Ota seuranta pois käytöstä kaikista tuotteista ennen tämän asetuksen poistamista käytöstä."
 
 #. module: stock
 #. odoo-python

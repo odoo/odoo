@@ -7,7 +7,7 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # María Florencia Frigieri Parma, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Sergio Del Castillo Baranda, 2023
 # Carlos Gómez, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
@@ -3569,6 +3569,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"Si esta casilla está marcada, Odoo mostrará automáticamente el informe de "
+"recepción (si hay movimientos a lo que asignar) al asignar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -4092,7 +4094,7 @@ msgstr "JSON de plazo de días"
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
-msgstr ""
+msgstr "Ventana emergente de JSON"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
@@ -5294,7 +5296,7 @@ msgstr "A mano:"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "Uno por número de lote o de serie"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
@@ -5964,12 +5966,12 @@ msgstr "Imprimir"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "Imprimir un código de barras GS1 para números de serie y de lote"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "Imprimir códigos de barra GS1 para números de serie y de lote"
 
 #. module: stock
 #. odoo-javascript
@@ -6536,7 +6538,7 @@ msgstr "Cantidad reservada"
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "Quantity available too low"
-msgstr ""
+msgstr "Cantidad disponible demasiado baja"
 
 #. module: stock
 #. odoo-python
@@ -6897,7 +6899,7 @@ msgstr "Reposición"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
 msgid "Replenishment Info"
-msgstr ""
+msgstr "Información de reabastecimiento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
@@ -7352,7 +7354,7 @@ msgstr "Búsqueda de desecho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Select Route"
-msgstr ""
+msgstr "Seleccionar ruta"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -7485,13 +7487,6 @@ msgstr "Secuencia de albarán"
 #, python-format
 msgid "Sequence return"
 msgstr "Secuencia de devolución"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Las secuencias %s ya existen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -7855,7 +7850,7 @@ msgstr "Ubicación de origen"
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_usage
 msgid "Source Location Type"
-msgstr ""
+msgstr "Tipo de ubicación de origen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -7882,7 +7877,7 @@ msgstr "Destacado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Starred Products"
-msgstr ""
+msgstr "Productos destacados"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8752,6 +8747,17 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_production
 msgid ""
@@ -8878,7 +8884,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Incoming"
-msgstr ""
+msgstr "Total entrante"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -8889,7 +8895,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Outgoing"
-msgstr ""
+msgstr "Total saliente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -9474,7 +9480,7 @@ msgstr "Dominio de Almacén"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Warehouse Location"
-msgstr ""
+msgstr "Ubicación del almacén"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -9552,7 +9558,7 @@ msgstr "Alerta"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
-msgstr ""
+msgstr "Advertencia de número de serie duplicado"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__warning_message
@@ -9609,12 +9615,12 @@ msgstr "Peso"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr ""
+msgstr "Peso del tipo de paquete"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Unidad de peso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9629,7 +9635,7 @@ msgstr "Producto Pesado"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
 msgid "Wh Replenishment Option"
-msgstr ""
+msgstr "Opción de reabastecimiento de almacén"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__warehouse_selectable
@@ -9730,7 +9736,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 msgid "When ticked, carrier of shipment will be propagated."
-msgstr ""
+msgstr "Cuando se selecciona, se propagará el transportista de envío."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_cancel
@@ -9749,6 +9755,10 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
+"Al validar un traslado:\n"
+" * Preguntar: se le pide a los usuarios elegir si desean crear una orden parcial para los productos restantes\n"
+" * Siempre: se crea una orden parcial para los productos restantes de forma automática\n"
+" * Nunca: se cancelan los productos restantes"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -9917,7 +9927,7 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid "You can only enter positive quantities."
-msgstr ""
+msgstr "Solo puede ingresar cantidades positivas."
 
 #. module: stock
 #. odoo-python
@@ -9935,6 +9945,8 @@ msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse"
 " by company"
 msgstr ""
+"No puede desactivar las ubicaciones múltiples si tiene más de un almacén por"
+" empresa"
 
 #. module: stock
 #. odoo-python
@@ -10065,6 +10077,8 @@ msgid ""
 "You cannot set a location as a scrap location when it assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"No puede establecer una ubicación como ubicación de desecho cuando se asignó"
+" como una ubicación de destino para una operación de tipo de fabricación."
 
 #. module: stock
 #. odoo-python
@@ -10074,6 +10088,8 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
+"No puede establecer una ubicación de desecho como una ubicación de destino "
+"para una operación de tipo de fabricación."
 
 #. module: stock
 #. odoo-python
@@ -10208,6 +10224,8 @@ msgstr "Sólo puede devolver un albarán a la vez."
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
 msgstr ""
+"Tal vez quiera actualizar las ubicaciones de las operaciones de este "
+"traslado"
 
 #. module: stock
 #. odoo-python
@@ -10286,6 +10304,8 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
+"Intentó crear un registro que ya existe. El registro existente se modificó "
+"en su lugar."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10304,6 +10324,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Su comida ha sido entregada.\n"
+"¡Disfrute de su comida!"
 
 #. module: stock
 #. odoo-python

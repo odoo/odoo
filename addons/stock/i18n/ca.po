@@ -24,7 +24,7 @@
 # Ivan Espinola, 2023
 # martioodo hola, 2023
 # Josep Anton Belchi, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Albert Parera, 2023
 # 
 msgid ""
@@ -7440,13 +7440,6 @@ msgid "Sequence return"
 msgstr "Torna a la seqüència"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Números de sèrie"
@@ -8702,6 +8695,17 @@ msgstr "Aquest registre ja existeix."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "Aquest informe no es pot utilitzar per a fet i no fet %s alhora"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10118,6 +10122,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Ha processat menys productes que la demanda inicial."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
 
 #. module: stock
 #. odoo-python
