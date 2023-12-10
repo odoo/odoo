@@ -52,9 +52,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Přesun (%s není vyvážený.\n"
-"Součet debetů se rovná %s a součet kreditů %s.\n"
-"Možná budete chtít zadat výchozí účet v deníku \"%s, aby se každý přesun automaticky vyrovnal."
+"Záznam (%s není vybalancovaný.\n"
+"Součet má dáti se rovná %s a součet dal se rovná %s.\n"
+"Možná bude potřeba zadat výchozí účet na deníku \"%s, aby se každý záznam automaticky vybalancoval."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -73,8 +73,12 @@ msgstr ""
 "\n"
 "- Skupina daní: Daň je soubor dílčích daní.\n"
 "- Pevná: Výše daně zůstává stejná nezávisle na ceně.\n"
-"- Procentní z ceny: Výše daně je procento z ceny:\n"
-"např"
+"- Procento z ceny: Výše daně je % z ceny:\n"
+"například 100 * (1 + 10%) = 110 (bez zahrnutí v ceně)\n"
+"například 110 / (1 + 10%) = 100 (se zahrnutím v ceně)\n"
+"Daň zahrnuta v ceně: Částka daně je zahrnuta v celkové ceně:\n"
+"například 180 / (1 - 10%) = 200 (bez zahrnutí v ceně)\n"
+"například 200 * (1 - 10%) = 180 (se zahrnutím v ceně)"
 
 #. module: account
 #. odoo-python
