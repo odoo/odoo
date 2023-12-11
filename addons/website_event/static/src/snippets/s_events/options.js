@@ -13,7 +13,7 @@ const dynamicSnippetEventOptions = dynamicSnippetOptions.extend({
     },
 
     _setOptionsDefaultValues() {
-        this._setOptionValue('numberOfRecords', 4);
+        this._setOptionValue('numberOfRecords', 3);
         this._super.apply(this, arguments);
     },
 
