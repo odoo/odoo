@@ -9,7 +9,7 @@ patch(ChatWindowService.prototype, {
         if (
             this.ui.isSmall &&
             !this.store.discuss.isActive &&
-            (!chatWindow.thread || ["chat", "channel", "group"].includes(chatWindow.thread?.type))
+            (!chatWindow.thread || chatWindow.thread?.type !== "livechat")
         ) {
             // If we are in mobile and discuss is not open, it means the
             // chat window was opened from the messaging menu. In that

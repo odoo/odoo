@@ -39,9 +39,6 @@ export class ChannelMemberList extends Component {
         if (member.persona.type === "guest") {
             return false;
         }
-        if (member.thread.accessWithoutMembership) {
-            return false;
-        }
         return true;
     }
 
