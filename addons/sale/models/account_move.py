@@ -59,20 +59,21 @@ class AccountMove(models.Model):
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
     def action_post(self):
-        #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
+        # inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        down_payment_lines = self.line_ids.filtered('is_downpayment')
-        for line in down_payment_lines:
-            if not any(sol.display_type for sol in line.sale_line_ids):
-                line.sale_line_ids._compute_name()
 
-            if any(order.locked for order in line.sale_line_ids.order_id):
-                # We cannot change lines content on locked SO, changes on invoices are not
-                # forwarded to the SO if the SO is locked.
-                continue
+        # We cannot change lines content on locked SO, changes on invoices are not forwarded to the SO if the SO is locked
+        downpayment_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type and not l.order_id.locked)
+        other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
+        real_invoices = set(other_so_lines.invoice_lines.move_id)
+        for so_dpl in downpayment_lines:
+            so_dpl.price_unit = sum(
+                l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+                for l in so_dpl.invoice_lines
+                if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
+            )
+            so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
 
-            line.sale_line_ids.tax_id = line.tax_ids
-            line.sale_line_ids.price_unit = line.price_unit
         return res
 
     def button_draft(self):
