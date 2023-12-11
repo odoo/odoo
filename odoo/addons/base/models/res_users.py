@@ -591,11 +591,16 @@ class Users(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super(Users, self).create(vals_list)
+        setting_vals = []
         for user in users:
+            if not user.res_users_settings_ids and user.has_group('base.group_user'):
+                setting_vals.append({'user_id': user.id})
             # if partner is global we keep it that way
             if user.partner_id.company_id:
                 user.partner_id.company_id = user.company_id
             user.partner_id.active = user.active
+        if setting_vals:
+            self.env['res.users.settings'].sudo().create(setting_vals)
         return users
 
     def write(self, values):
