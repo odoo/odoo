@@ -155,7 +155,7 @@ export class TicketScreen extends Component {
         }
         if (order && (await this._onBeforeDeleteOrder(order))) {
             if (Object.keys(order.lastOrderPrepaChange).length > 0) {
-                await this.pos.sendOrderInPreparation(order, true);
+                await this.pos.sendOrderInPreparationUpdateLastChange(order, true);
             }
             if (order === this.pos.get_order()) {
                 this._selectNextOrder(order);
