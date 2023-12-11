@@ -29,36 +29,7 @@ def CONTENT_MAXAGE():
     return http.STATIC_CACHE_LONG
 
 
-MOMENTJS_LANG_CODES_MAP = {
-    "sr_RS": "sr_cyrl",
-    "sr@latin": "sr"
-}
-
-
 class WebClient(http.Controller):
-
-    @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
-    def load_locale(self, lang):
-        lang = MOMENTJS_LANG_CODES_MAP.get(lang, lang)
-        magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
-        for code in magic_file_finding:
-            try:
-                return http.Response(
-                    werkzeug.wsgi.wrap_file(
-                        request.httprequest.environ,
-                        file_open(f'web/static/lib/moment/locale/{code}.js', 'rb')
-                    ),
-                    content_type='application/javascript; charset=utf-8',
-                    headers=[('Cache-Control', f'max-age={http.STATIC_CACHE}')],
-                    direct_passthrough=True,
-                )
-            except IOError:
-                _logger.debug("No moment locale for code %s", code)
-
-        return request.make_response("", headers=[
-            ('Content-Type', 'application/javascript'),
-            ('Cache-Control', f'max-age={http.STATIC_CACHE}'),
-        ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods=None):
