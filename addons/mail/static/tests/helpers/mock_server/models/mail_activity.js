@@ -72,6 +72,19 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
      */
     _mockMailActivityActionDone(ids) {
         const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
+        for (const activity of activities) {
+            if (activity.res_model && activity.res_id) {
+                const relatedRecord = this.getRecords(activity.res_model, [
+                    ["id", "=", activity.res_id],
+                ])[0];
+                relatedRecord.activity_summary = false;
+                relatedRecord.activity_state = false;
+                relatedRecord.activity_type_id = false;
+                relatedRecord.activity_ids = relatedRecord.activity_ids.filter(
+                    (id) => id !== activity.id
+                );
+            }
+        }
         this.mockUnlink("mail.activity", [activities.map((activity) => activity.id)]);
     },
     /**
