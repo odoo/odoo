@@ -51,6 +51,7 @@
                         <field name="visibility"/>
                         <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
                         <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
+                        <field name="is_new_page_template" widget="boolean_toggle"/>
                     </group>
                 </page>
             </notebook>
