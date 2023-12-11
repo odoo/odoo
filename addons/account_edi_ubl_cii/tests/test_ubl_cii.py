@@ -106,6 +106,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
         On the second attempt, we expect that second tax to be retrieved.
         """
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
         if not hasattr(self.env["account.move.line"], '_predict_specific_tax'):
             self.skipTest("The predictive bill module isn't install and thus prediction with edi can't be tested.")
         # create 2 new taxes for the test seperatly to ensure the first gets the smaller id
