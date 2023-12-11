@@ -36,7 +36,7 @@ class PosSession(models.Model):
             },
             'loyalty.card': {
                 'domain': lambda data: [('program_id', 'in', [program["id"] for program in data["loyalty.program"]])],
-                'fields': ['partner_id', 'code', 'points', 'program_id'],
+                'fields': ['partner_id', 'code', 'points', 'program_id', 'expiration_date'],
             },
         })
 
