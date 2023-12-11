@@ -32,6 +32,7 @@ class Page(models.Model):
     is_in_menu = fields.Boolean(compute='_compute_website_menu', inverse='_inverse_website_menu')
     is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
 
     # Page options
     header_overlay = fields.Boolean()

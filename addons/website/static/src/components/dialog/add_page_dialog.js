@@ -238,13 +238,17 @@ export class AddPageTemplatePreview extends Component {
         for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview")) {
             previewEl.remove();
         }
-        this.env.addPage(wrapEl.innerHTML);
+        this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name));
     }
 }
 
 export class AddPageTemplatePreviews extends Component {
     static template = "website.AddPageTemplatePreviews";
     static props = {
+        isCustom: {
+            type: Boolean,
+            optional: true,
+        },
         templates: {
             type: Array,
             element: Object,
@@ -389,7 +393,7 @@ export class AddPageDialog extends Component {
         this.lastTabName = "";
 
         useSubEnv({
-            addPage: sectionsArch => this.addPage(sectionsArch),
+            addPage: (sectionsArch, name) => this.addPage(sectionsArch, name),
             getCssLinkEls: () => this.getCssLinkEls(),
         });
     }
@@ -398,7 +402,7 @@ export class AddPageDialog extends Component {
         this.lastTabName = name;
     }
 
-    async addPage(sectionsArch) {
+    async addPage(sectionsArch, name) {
         const props = this.props;
         this.dialogs.add(AddPageConfirmDialog, {
             onAddPage: () => {
@@ -407,7 +411,7 @@ export class AddPageDialog extends Component {
             },
             websiteId: this.props.websiteId,
             sectionsArch: sectionsArch,
-            name: this.lastTabName,
+            name: name || this.lastTabName,
         });
     }
 
