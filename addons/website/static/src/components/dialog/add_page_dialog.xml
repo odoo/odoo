@@ -35,6 +35,12 @@
     </t>
 </t>
 
+<t t-name="website.AddPageTemplatePreviewDynamicMessage">
+    <section class="o_new_page_snippet_preview container h2">
+        <div class="alert alert-info" t-out="message"/>
+    </section>
+</t>
+
 <t t-name="website.AddPageTemplatePreview">
     <t t-call="website.AddPageTemplatePreviewWrapper">
         <iframe class="border-0 pe-none transition-base" t-ref="iframe" src="about:blank"/>
@@ -55,6 +61,7 @@
                         <AddPageTemplateBlank t-if="template[1].isBlank" firstRow="template_first"/>
                         <AddPageTemplatePreview t-else="" template="template[1]" firstRow="template_first"
                             animationDelay="(column_index * 500) + (template_index * 350)"
+                            isCustom="this.props.isCustom"
                         />
                     </t>
                     <t t-if="column[1].length === 0">
