@@ -4,13 +4,13 @@
 from datetime import datetime, timedelta
 
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTests
+from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
 
 
 @tagged('website_visitor')
-class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
+class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTestsCommon):
 
     def setUp(self):
         super(TestWebsiteVisitor, self).setUp()

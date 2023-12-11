@@ -3,13 +3,13 @@
 
 from datetime import datetime, timedelta
 
-from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTests
+from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests import tagged
 
 
 @tagged('website_visitor')
-class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTests):
+class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTestsCommon):
 
     def test_clean_inactive_visitors_event_track(self):
         """ Visitors that have wishlisted tracks should not be deleted even if not connected
