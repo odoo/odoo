@@ -158,6 +158,15 @@ const LinkTools = Link.extend({
         return this.$('we-checkbox[name="is_new_window"]').closest('we-row');
     },
     /**
+     * Returns the label of a link element.
+     *
+     * @param {HTMLElement} linkEl
+     * @returns {string}
+     */
+    _getLinkLabel(linkEl) {
+        return linkEl.innerText.trim().replaceAll("\u200B", "");
+    },
+    /**
      * @override
      */
     _getLinkOptions: function () {
@@ -408,7 +417,7 @@ const LinkTools = Link.extend({
      * @private
      */
     _updateLabelInput() {
-        this.el.querySelector('#o_link_dialog_label_input').value = this.linkEl.innerText;
+        this.el.querySelector('#o_link_dialog_label_input').value = this._getLinkLabel(this.linkEl);
     },
 
     //--------------------------------------------------------------------------
@@ -511,7 +520,7 @@ const LinkTools = Link.extend({
             return;
         }
         const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
-        const content = this._link.innerText.trim().replaceAll('\u200B', '');
+        const content = this._getLinkLabel(this._link);
         if (content === previousUrl || content === protocolLessPrevUrl) {
             const newUrl = this.el.querySelector('input[name="url"]').value;
             const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
