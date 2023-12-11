@@ -140,6 +140,7 @@ class HrEmployeePrivate(models.Model):
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
     private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
+    related_partners_count = fields.Integer(compute="_compute_related_partners_count")
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False)
 
@@ -186,6 +187,32 @@ class HrEmployeePrivate(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+
+    def _get_partner_count_depends(self):
+        return ['user_id']
+
+    @api.depends(lambda self: self._get_partner_count_depends())
+    def _compute_related_partners_count(self):
+        self.related_partners_count = len(self._get_related_partners())
+
+    def _get_related_partners(self):
+        return self.work_contact_id | self.user_id.partner_id
+
+    def action_related_contacts(self):
+        related_partners = self._get_related_partners()
+        action = {
+            'name': _("Related Contacts"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'view_mode': 'form',
+        }
+        if len(related_partners) > 1:
+            action['view_mode'] = 'kanban,tree,form'
+            action['domain'] = [('id', 'in', related_partners.ids)]
+            return action
+        else:
+            action['res_id'] = related_partners.id
+        return action
 
     def action_create_user(self):
         self.ensure_one()
