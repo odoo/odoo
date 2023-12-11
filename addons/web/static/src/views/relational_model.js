@@ -3555,7 +3555,7 @@ export class RelationalModel extends Model {
             },
         };
         const state = this.root
-            ? Object.assign(this.root.exportState(), { offset: 0 })
+            ? Object.assign(this.root.exportState(), { offset: params.offset || 0 })
             : this.initialRootState;
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
         await this.keepLast.add(newRoot.load({ values: params.values }));
