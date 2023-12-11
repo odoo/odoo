@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime
 from markupsafe import Markup
-from functools import partial
+from functools import partial, lru_cache
 from itertools import groupby
 from collections import defaultdict
 from markupsafe import escape
@@ -344,8 +344,18 @@ class PosOrder(models.Model):
 
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
+        @lru_cache
+        def get_rate(from_currency, to_currency, company, date):
+            return self.env['res.currency']._get_conversion_rate(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                company=company,
+                date=date,
+            )
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            # date_order is a datetime, but the rates are looked up on a date basis,
+            # therefor converting the date_order to a date helps with sharing entries in the lru_cache
+            order.currency_rate = get_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order.date())
 
     @api.depends('lines.is_total_cost_computed')
     def _compute_is_total_cost_computed(self):
