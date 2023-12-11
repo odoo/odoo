@@ -18,6 +18,9 @@ This module correct some behaviors when both module are installed.
         'point_of_sale._assets_pos': [
             'pos_sale_loyalty/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'pos_sale_loyalty/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
