@@ -376,7 +376,7 @@
                     </div>
                 </div>
             </div>
-            <div t-else="" t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
+            <div t-else="" t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user and channel.user_id else ''}"
                 t-att-data-channel-id="channel.id">
                 Private Course
                 <div t-if="is_public_user">
