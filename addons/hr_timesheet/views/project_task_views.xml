@@ -66,7 +66,7 @@
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6 d-flex">
-                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
+                                                <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
