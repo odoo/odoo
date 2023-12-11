@@ -8,7 +8,7 @@ import { registry } from '@web/core/registry';
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
-import { loadJS, templates } from '@web/core/assets';
+import { templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { _t } from "@web/core/l10n/translation";
@@ -24,8 +24,6 @@ function getLang() {
     return (html.getAttribute('lang') || 'en_US').replace('-', '_');
 }
 const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
-// momentjs don't have config for en_US, so avoid useless RPC
-var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
 
 
 /**
@@ -54,16 +52,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         this._super.apply(this, arguments);
         this.env = env;
         this.publicWidgets = [];
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        // TODO would be even greater to wait for localeDef only when necessary
-        return Promise.all([
-            this._super.apply(this, arguments),
-            localeDef
-        ]);
     },
     /**
      * @override
