@@ -27,10 +27,10 @@ class MockVisitor(common.BaseCase):
 
 
 @tagged('-at_install', 'post_install', 'website_visitor')
-class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
+class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
     def setUp(self):
-        super(WebsiteVisitorTests, self).setUp()
+        super().setUp()
 
         self.website = self.env['website'].search([
             ('company_id', '=', self.env.user.company_id.id)
@@ -127,6 +127,64 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         well as Visitor._merge_visitor() ). """
         self.assertFalse(visitor.exists(), "The anonymous visitor should be deleted")
         self.assertTrue(visitor.website_track_ids < main_visitor.website_track_ids)
+
+    def _test_unlink_old_visitors(self, inactive_visitors, active_visitors):
+        """ This method will test that the visitors are correctly deleted when inactive.
+
+        - inactive_visitors: all visitors that should be unlinked by the CRON
+          '_cron_unlink_old_visitors'
+        - active_visitors: all visitors that should NOT be cleaned because they are either active
+          or have some important data linked to them (partner, ...) and we want to keep them.
+
+        We use this method as a private tool so that sub-module can also test the cleaning of visitors
+        based on their own sets of conditions. """
+
+        WebsiteVisitor = self.env['website.visitor']
+
+        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
+
+        # ensure we keep a single query by correct usage of "not inselect"
+        # (+1 query to fetch the 'ir.config_parameter')
+        with self.assertQueryCount(2):
+            WebsiteVisitor.search(WebsiteVisitor._inactive_visitors_domain())
+
+        inactive_visitor_ids = inactive_visitors.ids
+        active_visitor_ids = active_visitors.ids
+
+        WebsiteVisitor._cron_unlink_old_visitors()
+        if inactive_visitor_ids:
+            # all inactive visitors should be deleted
+            self.assertFalse(bool(WebsiteVisitor.search([('id', 'in', inactive_visitor_ids)])))
+        if active_visitor_ids:
+            # all active visitors should be kept
+            self.assertEqual(active_visitors, WebsiteVisitor.search([('id', 'in', active_visitor_ids)]))
+
+    def _prepare_main_visitor_data(self):
+        return {
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'access_token': self.partner_admin.id,
+            'website_track_ids': [(0, 0, {
+                'page_id': self.tracked_page.id,
+                'url': self.tracked_page.url
+            })]
+        }
+
+    def _prepare_linked_visitor_data(self):
+        return {
+            'lang_id': self.env.ref('base.lang_en').id,
+            'country_id': self.env.ref('base.be').id,
+            'website_id': 1,
+            'access_token': '%032x' % random.randrange(16**32),
+            'website_track_ids': [(0, 0, {
+                'page_id': self.tracked_page_2.id,
+                'url': self.tracked_page_2.url
+            })]
+        }
+
+
+class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
 
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """
@@ -317,37 +375,6 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
 
         self._test_unlink_old_visitors(inactive_visitors, active_visitors)
 
-    def _test_unlink_old_visitors(self, inactive_visitors, active_visitors):
-        """ This method will test that the visitors are correctly deleted when inactive.
-
-        - inactive_visitors: all visitors that should be unlinked by the CRON
-          '_cron_unlink_old_visitors'
-        - active_visitors: all visitors that should NOT be cleaned because they are either active
-          or have some important data linked to them (partner, ...) and we want to keep them.
-
-        We use this method as a private tool so that sub-module can also test the cleaning of visitors
-        based on their own sets of conditions. """
-
-        WebsiteVisitor = self.env['website.visitor']
-
-        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
-
-        # ensure we keep a single query by correct usage of "not inselect"
-        # (+1 query to fetch the 'ir.config_parameter')
-        with self.assertQueryCount(2):
-            WebsiteVisitor.search(WebsiteVisitor._inactive_visitors_domain())
-
-        inactive_visitor_ids = inactive_visitors.ids
-        active_visitor_ids = active_visitors.ids
-
-        WebsiteVisitor._cron_unlink_old_visitors()
-        if inactive_visitor_ids:
-            # all inactive visitors should be deleted
-            self.assertFalse(bool(WebsiteVisitor.search([('id', 'in', inactive_visitor_ids)])))
-        if active_visitor_ids:
-            # all active visitors should be kept
-            self.assertEqual(active_visitors, WebsiteVisitor.search([('id', 'in', active_visitor_ids)]))
-
     def test_link_to_visitor(self):
         """ Visitors are 'linked' together when the user, previously not connected, authenticates
         and the system detects it already had a website.visitor for that partner_id.
@@ -368,30 +395,6 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         linked_visitor._merge_visitor(main_visitor)
 
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
-
-    def _prepare_main_visitor_data(self):
-        return {
-            'lang_id': self.env.ref('base.lang_en').id,
-            'country_id': self.env.ref('base.be').id,
-            'website_id': 1,
-            'access_token': self.partner_admin.id,
-            'website_track_ids': [(0, 0, {
-                'page_id': self.tracked_page.id,
-                'url': self.tracked_page.url
-            })]
-        }
-
-    def _prepare_linked_visitor_data(self):
-        return {
-            'lang_id': self.env.ref('base.lang_en').id,
-            'country_id': self.env.ref('base.be').id,
-            'website_id': 1,
-            'access_token': '%032x' % random.randrange(16**32),
-            'website_track_ids': [(0, 0, {
-                'page_id': self.tracked_page_2.id,
-                'url': self.tracked_page_2.url
-            })]
-        }
 
     def test_merge_partner_with_visitor_both(self):
         """ See :meth:`test_merge_partner_with_visitor_single` """
