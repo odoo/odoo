@@ -162,7 +162,7 @@ Model({
                 reloadFunc();
             }
             if (webRecord) {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             }
             if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
