@@ -358,15 +358,6 @@ export class Thread extends Record {
         return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
     }
 
-    get hasSelfAsMember() {
-        if (typeof this.accessWithoutMembership === "boolean") {
-            return !this.accessWithoutMembership;
-        }
-        return this.channelMembers.some((channelMember) =>
-            channelMember.persona?.eq(this._store.self)
-        );
-    }
-
     /** @type {import("models").Persona[]} */
     get correspondents() {
         return this.channelMembers
@@ -440,6 +431,12 @@ export class Thread extends Record {
 
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));
+    }
+
+    get hasSelfAsMember() {
+        return this.channelMembers.some((channelMember) =>
+            channelMember.persona?.eq(this._store.self)
+        );
     }
 
     get invitationLink() {

@@ -36,7 +36,7 @@ export class DiscussClientAction extends Component {
      *
      * @param {Props} props
      */
-    async restoreDiscussThread(props, options = {}) {
+    async restoreDiscussThread(props) {
         await this.messaging.isReady;
         if (this.store.inPublicPage) {
             return;
@@ -58,7 +58,7 @@ export class DiscussClientAction extends Component {
             activeThread = await this.threadService.fetchChannel(parseInt(id));
         }
         if (activeThread) {
-            if (activeThread.accessWithoutMembership && !options.allowReadonly) {
+            if (activeThread.accessWithoutMembership && !props.action.context.allowReadonly) {
                 this.threadService.setDiscussThread(this.store.discuss.inbox);
             } else if (!activeThread.eq(this.store.discuss.thread)) {
                 await this.threadService.pin(activeThread);

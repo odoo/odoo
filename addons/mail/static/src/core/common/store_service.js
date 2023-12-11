@@ -204,7 +204,6 @@ export class Store extends BaseStore {
 
     updateBusSubscription() {
         const channelIds = [];
-        let serverUpdated = false;
         const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
             const thread = this.Thread.records[id];
@@ -212,12 +211,11 @@ export class Store extends BaseStore {
                 channelIds.push(id);
                 if (thread.accessWithoutMembership) {
                     this.env.services["bus_service"].addChannel(id);
-                    serverUpdated = true;
                 }
             }
         }
         const channels = JSON.stringify(channelIds);
-        if (this.isMessagingReady && this.lastChannelSubscription !== channels && !serverUpdated) {
+        if (this.isMessagingReady && this.lastChannelSubscription !== channels) {
             this.env.services["bus_service"].forceUpdateChannels();
         }
         this.lastChannelSubscription = channels;

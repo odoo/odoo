@@ -13,7 +13,9 @@ patch(DiscussClientAction.prototype, {
     async restoreDiscussThread(props) {
         const menuId = this.props.action.params?.menu_id;
         const appData = this.menu.getCurrentApp() || this.menu.getMenu(menuId);
-        const fromLivechatMenu = appData?.xmlid === "im_livechat.menu_livechat_root";
-        await super.restoreDiscussThread(props, { allowReadonly: fromLivechatMenu });
+        if (appData?.xmlid === "im_livechat.menu_livechat_root") {
+            props.action.context.allowReadonly = true;
+        }
+        await super.restoreDiscussThread(props);
     },
 });
