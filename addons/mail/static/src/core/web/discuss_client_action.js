@@ -36,7 +36,7 @@ export class DiscussClientAction extends Component {
      *
      * @param {Props} props
      */
-    async restoreDiscussThread(props) {
+    async restoreDiscussThread(props, options = {}) {
         await this.messaging.isReady;
         if (this.store.inPublicPage) {
             return;
@@ -54,17 +54,16 @@ export class DiscussClientAction extends Component {
             model = "discuss.channel";
         }
         let activeThread = this.store.Thread.get({ model, id });
-        if (activeThread && activeThread.eq(this.store.discuss.thread)) {
-            return;
-        }
         if (!activeThread?.type && model === "discuss.channel") {
             activeThread = await this.threadService.fetchChannel(parseInt(id));
-            if (activeThread && !activeThread.is_pinned && !activeThread.hasNotSelfAsMember) {
-                await this.threadService.pin(activeThread);
-            }
         }
         if (activeThread) {
-            this.threadService.setDiscussThread(activeThread);
+            if (activeThread.accessWithoutMembership && !options.allowReadonly) {
+                this.threadService.setDiscussThread(this.store.discuss.inbox);
+            } else if (!activeThread.eq(this.store.discuss.thread)) {
+                await this.threadService.pin(activeThread);
+                this.threadService.setDiscussThread(activeThread);
+            }
         }
     }
 }

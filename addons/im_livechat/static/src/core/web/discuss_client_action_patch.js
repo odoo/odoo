@@ -11,12 +11,9 @@ patch(DiscussClientAction.prototype, {
     },
 
     async restoreDiscussThread(props) {
-        await super.restoreDiscussThread(props);
         const menuId = this.props.action.params?.menu_id;
         const appData = this.menu.getCurrentApp() || this.menu.getMenu(menuId);
         const fromLivechatMenu = appData?.xmlid === "im_livechat.menu_livechat_root";
-        if (this.store.discuss.thread?.hasNotSelfAsMember && !fromLivechatMenu) {
-            this.threadService.setDiscussThread(this.store.discuss.inbox);
-        }
+        await super.restoreDiscussThread(props, { allowReadonly: fromLivechatMenu });
     },
 });

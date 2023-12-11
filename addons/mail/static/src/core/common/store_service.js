@@ -210,7 +210,7 @@ export class Store extends BaseStore {
             const thread = this.Thread.records[id];
             if (thread.model === "discuss.channel") {
                 channelIds.push(id);
-                if (thread.hasNotSelfAsMember) {
+                if (thread.accessWithoutMembership) {
                     this.env.services["bus_service"].addChannel(id);
                     serverUpdated = true;
                 }

@@ -48,7 +48,7 @@ patch(Message.prototype, {
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
                     id: this.message.author.user.id,
-                    readonly: this.props.thread.hasNotSelfAsMember,
+                    readonly: this.props.thread.accessWithoutMembership,
                 });
             }
         }

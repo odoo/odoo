@@ -652,7 +652,7 @@ patch(MockServer.prototype, {
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
             );
-            res["hasNotSelfAsMember"] = !memberOfCurrentUser;
+            res["accessWithoutMembership"] = !memberOfCurrentUser;
             if (memberOfCurrentUser) {
                 Object.assign(res, {
                     is_minimized: memberOfCurrentUser.is_minimized,

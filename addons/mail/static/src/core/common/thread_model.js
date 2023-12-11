@@ -83,7 +83,7 @@ export class Thread extends Record {
                 "message_unread_counter",
                 "message_needaction_counter",
                 "name",
-                "hasNotSelfAsMember",
+                "accessWithoutMembership",
                 "seen_message_id",
                 "state",
                 "type",
@@ -359,8 +359,8 @@ export class Thread extends Record {
     }
 
     get hasSelfAsMember() {
-        if (typeof this.hasNotSelfAsMember === "boolean") {
-            return !this.hasNotSelfAsMember;
+        if (typeof this.accessWithoutMembership === "boolean") {
+            return !this.accessWithoutMembership;
         }
         return this.channelMembers.some((channelMember) =>
             channelMember.persona?.eq(this._store.self)

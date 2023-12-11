@@ -17,7 +17,7 @@ threadActionsRegistry
             return (
                 component.thread?.model === "discuss.channel" &&
                 !component.props.chatWindow &&
-                !component.thread?.hasNotSelfAsMember
+                !component.thread?.accessWithoutMembership
             );
         },
         setup(action) {
@@ -79,7 +79,7 @@ threadActionsRegistry
             return (
                 component.thread?.model === "discuss.channel" &&
                 (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
-                !component.thread?.hasNotSelfAsMember
+                !component.thread?.accessWithoutMembership
             );
         },
         panelOuterClass: "o-discuss-ChannelInvitation",
