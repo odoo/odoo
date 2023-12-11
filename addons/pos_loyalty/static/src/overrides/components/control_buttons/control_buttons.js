@@ -10,9 +10,11 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ControlButtons.prototype, {
     _getEWalletRewards(order) {
-        return order
-            .getClaimableRewards()
-            .filter(({ reward }) => reward.program_id.program_type == "ewallet");
+        const claimableRewards = order.getClaimableRewards();
+        return claimableRewards.filter((reward_line) => {
+            const coupon = this.pos.couponCache[reward_line.coupon_id];
+            return coupon && reward_line.reward.program_id.program_type == 'ewallet' && !coupon.isExpired();
+        });
     },
     _getEWalletPrograms() {
         return this.pos.models["loyalty.program"].filter((p) => p.program_type == "ewallet");
@@ -22,6 +24,13 @@ patch(ControlButtons.prototype, {
         const eWalletPrograms = this._getEWalletPrograms();
         const orderTotal = order.get_total_with_tax();
         const eWalletRewards = this._getEWalletRewards(order);
+        if (eWalletRewards.length === 0 && orderTotal >= 0) {
+            this.dialog.add(AlertDialog, {
+                title: _t('No valid eWallet found'),
+                body: _t('You either have not created an eWallet or all your eWallets have expired.'),
+            });
+            return;
+        }
         if (orderTotal < 0 && eWalletPrograms.length >= 1) {
             let selectedProgram = null;
             if (eWalletPrograms.length == 1) {
