@@ -50,7 +50,7 @@ Model({
                         reloadFunc();
                     }
                     if (webRecord) {
-                        webRecord.model.load({ resId: thread.id });
+                        webRecord.model.load({ offset: webRecord.model.root.offset });
                     }
                 });
             this.popoverViewOwner.delete();
