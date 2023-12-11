@@ -156,7 +156,7 @@ class UpgradeHook(object):
             return self
 
     def find_spec(self, fullname, path=None, target=None):
-        if re.match(r"^odoo.addons.base.maintenance.migrations\b", fullname):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", fullname):
             # We can't trigger a DeprecationWarning in this case.
             # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
             # the tests, and the common files (utility functions) still needs to import from the
