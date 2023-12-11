@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
@@ -117,4 +118,27 @@ registry
         }
     });
 
+//#endregion
+
+//#region ExpiredEWalletProgramTour
+
+registry
+    .category("web_tour.tours")
+    .add('ExpiredEWalletProgramTour', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer('AAAA');
+            ProductScreen.exec.addOrderline('Whiteboard Pen', '2', '6', '12.00');
+            PosLoyalty.check.eWalletButtonState({ highlighted: false });
+            PosLoyalty.do.clickEWalletButton();
+            ErrorPopup.check.isShown();
+            ErrorPopup.do.clickConfirm();
+            return getSteps();
+        }
+    });
 //#endregion
