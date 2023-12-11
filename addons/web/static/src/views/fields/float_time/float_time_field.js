@@ -4,13 +4,14 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "../formatters";
 import { parseFloatTime } from "../parsers";
-import { useInputField } from "../input_field_hook";
+import { useFieldInput } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { useNumpadDecimal } from "../numpad_decimal_hook";
-
+// import { useNumpadDecimal } from "../numpad_decimal_hook";
+import { Input } from "@web/core/input/input";
 import { Component } from "@odoo/owl";
 
 export class FloatTimeField extends Component {
+    static components = { Input };
     static template = "web.FloatTimeField";
     static props = {
         ...standardFieldProps,
@@ -23,12 +24,12 @@ export class FloatTimeField extends Component {
     };
 
     setup() {
-        useInputField({
-            getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+        this.fieldInput = useFieldInput({
+            name: this.props.name,
+            record: this.props.record,
             parse: (v) => parseFloatTime(v),
         });
-        useNumpadDecimal();
+        // useNumpadDecimal();
     }
 
     get formattedValue() {

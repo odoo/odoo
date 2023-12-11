@@ -4,13 +4,15 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatInteger } from "../formatters";
 import { parseInteger } from "../parsers";
-import { useInputField } from "../input_field_hook";
+import { useFieldInput } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { useNumpadDecimal } from "../numpad_decimal_hook";
+// import { useNumpadDecimal } from "../numpad_decimal_hook";
+import { Input } from "@web/core/input/input";
 
 import { Component, useState } from "@odoo/owl";
 
 export class IntegerField extends Component {
+    static components = { Input };
     static template = "web.IntegerField";
     static props = {
         ...standardFieldProps,
@@ -29,23 +31,18 @@ export class IntegerField extends Component {
     };
 
     setup() {
-        this.state = useState({
-            hasFocus: false,
-        });
-        useInputField({
-            getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+        this.state = useState({ hasFocus: false });
+
+        this.fieldInput = useFieldInput({
+            name: this.props.name,
+            record: this.props.record,
             parse: (v) => parseInteger(v),
         });
-        useNumpadDecimal();
+        // useNumpadDecimal();
     }
 
-    onFocusIn() {
-        this.state.hasFocus = true;
-    }
-
-    onFocusOut() {
-        this.state.hasFocus = false;
+    setFocus(value) {
+        this.state.hasFocus = value;
     }
 
     get formattedValue() {
@@ -53,7 +50,7 @@ export class IntegerField extends Component {
             !this.props.formatNumber ||
             (!this.props.readonly && this.props.inputType === "number")
         ) {
-            return this.value;
+            return `${this.value}`;
         }
         if (this.props.humanReadable && !this.state.hasFocus) {
             return formatInteger(this.value, {

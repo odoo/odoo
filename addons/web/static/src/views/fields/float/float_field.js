@@ -2,8 +2,8 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useInputField } from "../input_field_hook";
-import { useNumpadDecimal } from "../numpad_decimal_hook";
+import { useFieldInput } from "../input_field_hook";
+// import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
@@ -30,23 +30,18 @@ export class FloatField extends Component {
     };
 
     setup() {
-        this.state = useState({
-            hasFocus: false,
-        });
-        this.inputRef = useInputField({
-            getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+        this.state = useState({ hasFocus: false });
+
+        this.fieldInput = useFieldInput({
+            name: this.props.name,
+            record: this.props.record,
             parse: (v) => this.parse(v),
         });
-        useNumpadDecimal();
+        // useNumpadDecimal();
     }
 
-    onFocusIn() {
-        this.state.hasFocus = true;
-    }
-
-    onFocusOut() {
-        this.state.hasFocus = false;
+    setFocus(value) {
+        this.state.hasFocus = value;
     }
 
     parse(value) {
@@ -62,7 +57,7 @@ export class FloatField extends Component {
             !this.props.formatNumber ||
             (this.props.inputType === "number" && !this.props.readonly && this.value)
         ) {
-            return this.value;
+            return `${this.value}`;
         }
         if (this.props.humanReadable && !this.state.hasFocus) {
             return formatFloat(this.value, {

@@ -167,3 +167,79 @@ export function useInputField(params) {
 
     return inputRef;
 }
+
+export function useFieldInput({ name, record, parse }) {
+    let lastSetValue = record.data[name];
+    let currentValue = record.data[name];
+    let pendingUpdate = false;
+
+    const isDirty = () => currentValue !== lastSetValue;
+
+    const onInput = (value) => {
+        currentValue = value;
+        record.model.bus.trigger("FIELD_IS_DIRTY", isDirty());
+        if (!record.isValid) {
+            record.resetFieldValidity(name);
+        }
+    };
+
+    const onChange = async (value) => {
+        currentValue = value;
+        if (isDirty()) {
+            let isValid = true;
+            let parsedValue = value;
+            if (parse) {
+                try {
+                    parsedValue = parse(value);
+                } catch {
+                    record.setInvalidField(name);
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                pendingUpdate = true;
+                lastSetValue = value;
+                await record.update({ [name]: parsedValue });
+                pendingUpdate = false;
+                record.model.bus.trigger("FIELD_IS_DIRTY", isDirty());
+            }
+        }
+    };
+
+    const commitChanges = async (urgent) => {
+        if (isDirty() || (urgent && pendingUpdate)) {
+            let isValid = false;
+            let parsedValue = currentValue;
+            if (parse) {
+                try {
+                    parsedValue = parse(currentValue);
+                } catch {
+                    isValid = false;
+                    if (urgent) {
+                        return;
+                    } else {
+                        record.setInvalidField(name);
+                    }
+                }
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            if ((parsedValue || false) !== (record.data[name] || false)) {
+                lastSetValue = currentValue;
+                await record.update({ [name]: currentValue });
+                record.model.bus.trigger("FIELD_IS_DIRTY", false);
+            }
+        }
+    };
+
+    useBus(record.model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(record.model.bus, "NEED_LOCAL_CHANGES", (ev) =>
+        ev.detail.proms.push(commitChanges(false))
+    );
+
+    return { onInput, onChange };
+}
