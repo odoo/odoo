@@ -120,11 +120,18 @@ xmlrpc.client.Marshaller = OdooMarshaller
 # ==========================================================
 # RPC Controller
 # ==========================================================
+
+
+def _check_request():
+    if request.db:
+        request.env.cr.close()
+
 class RPC(Controller):
     """Handle RPC connections."""
 
     def _xmlrpc(self, service):
         """Common method to handle an XML-RPC request."""
+        _check_request()
         data = request.httprequest.get_data()
         params, method = xmlrpc.client.loads(data)
         result = dispatch_rpc(service, method, params)
@@ -137,6 +144,7 @@ class RPC(Controller):
         This entrypoint is historical and non-compliant, but kept for
         backwards-compatibility.
         """
+        _check_request()
         try:
             response = self._xmlrpc(service)
         except Exception as error:
@@ -146,6 +154,7 @@ class RPC(Controller):
     @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
+        _check_request()
         try:
             response = self._xmlrpc(service)
         except Exception as error:
@@ -155,4 +164,5 @@ class RPC(Controller):
     @route('/jsonrpc', type='json', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
+        _check_request()
         return dispatch_rpc(service, method, args)
