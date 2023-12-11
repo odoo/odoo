@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from functools import lru_cache
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
@@ -24,9 +25,19 @@ class PosOrder(models.Model):
 
     @api.depends('pricelist_id.currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
+        @lru_cache
+        def get_rate(from_currency, to_currency, company, date):
+            return self.env['res.currency']._get_conversion_rate(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                company=company,
+                date=date,
+            )
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
+            # date_order is a datetime, but the rates are looked up on a date basis,
+            # therefor converting the date_order to a date helps with sharing entries in the lru_cache
+            order.currency_rate = get_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order.date())
 
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
