@@ -11,7 +11,10 @@ export class SoLineField extends Many2OneField {
         const update = this.update;
         this.update = (value, params = {}) => {
             update(value, params);
-            if (value || this.updateOnEmpty) {
+            if ( // field is unset AND the old & new so_lines are different
+                !this.props.record.data.is_so_line_edited &&
+                this.props.value[0] != (value[0] && value[0].id)
+            ) {
                 this.props.record.update({ is_so_line_edited: true });
             }
         };
