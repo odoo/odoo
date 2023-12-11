@@ -6,7 +6,7 @@ import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
 
 export class PageDependencies extends Component {
@@ -48,7 +48,7 @@ export class PageDependencies extends Component {
             boundary: 'viewport',
             placement: 'right',
             trigger: 'focus',
-            content: renderToElement("website.PageDependencies.Tooltip", {
+            content: renderToFragment("website.PageDependencies.Tooltip", {
                 dependencies: this.state.dependencies,
             }),
         }).popover('toggle');
