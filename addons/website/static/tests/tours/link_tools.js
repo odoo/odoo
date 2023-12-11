@@ -361,5 +361,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
         run: () => {}, // This is a check.
     },
+    // 11. Check that ZWS is not added in the link label input.
+    clickOnImgStep,
+    {
+        content: "Click on contact us button",
+        trigger: "iframe a.btn[href='/contactus']",
+    },
+    {
+        content: "Verify that the link label input does not contain ZWS",
+        trigger: "#o_link_dialog_label_input:propValue('Contact Us')",
+        isCheck: true,
+    },
     ...wTourUtils.clickOnSave(),
 ]);
