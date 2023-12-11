@@ -230,7 +230,7 @@ class Groups(models.Model):
         result = self.get_external_id()
         missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
         if missings:
-            self.env['ir.model.data'].create(
+            self.env['ir.model.data'].sudo().create(
                 [
                     {
                         'name': name.split('.')[1],
