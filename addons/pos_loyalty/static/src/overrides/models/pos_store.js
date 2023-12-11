@@ -278,7 +278,7 @@ patch(PosStore.prototype, {
         const result = await this.data.searchRead(
             "loyalty.card",
             domain,
-            ["id", "points", "code", "partner_id", "program_id"],
+            ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
             { limit }
         );
         if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
@@ -296,7 +296,8 @@ patch(PosStore.prototype, {
                 dbCoupon.id,
                 dbCoupon.program_id?.id,
                 dbCoupon.partner_id?.id,
-                dbCoupon.points
+                dbCoupon.points,
+                dbCoupon.expiration_date
             );
             this.couponCache[coupon.id] = coupon;
             this.partnerId2CouponIds[coupon.partner_id] =
