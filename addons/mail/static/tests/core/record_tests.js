@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/record";
+import { BaseStore, OR, Record, makeStore, modelRegistry } from "@mail/core/common/record";
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -341,4 +341,99 @@ QUnit.test("Can insert with relation as id, using relation as data object", asyn
     assert.ok(store.User.get("John").settings.pushNotif);
     assert.ok(store.User.get("Paul"));
     assert.notOk(store.User.get("Paul").settings.pushNotif);
+});
+
+QUnit.test("Record can have many ids (1)", async (assert) => {
+    (class User extends Record {
+        static id = OR("name", "employeeId", "userId");
+        name;
+    }).register();
+    const store = await start();
+    const john = store.User.insert({ name: "John", employeeId: 10, userId: 200 });
+    const john1 = store.User.get({ name: "John" });
+    const john2 = store.User.get({ employeeId: 10 });
+    const john3 = store.User.get({ userId: 200 });
+    assert.ok(john.eq(john1));
+    assert.ok(john.eq(john2));
+    assert.ok(john.eq(john3));
+});
+
+QUnit.test("Record can have many ids (2)", async (assert) => {
+    (class User extends Record {
+        static id = ["name", ["id", "type"]];
+        name;
+        id;
+        type;
+    }).register();
+    const store = await start();
+    const john = store.User.insert({ name: "John", id: 100, type: "partner" });
+    const john1 = store.User.get({ name: "John" });
+    const john2 = store.User.get({ id: 100, type: "partner" });
+    assert.ok(john.eq(john1));
+    assert.ok(john.eq(john2));
+});
+
+QUnit.test("Record can have many ids (3)", async (assert) => {
+    (class User extends Record {
+        static id = ["name", "managerOfTeam"];
+        managerOfTeam = Record.one("Team");
+        name;
+        id;
+        type;
+    }).register();
+    (class Team extends Record {
+        static id = ["name"];
+        name;
+        manager = Record.one("User", { inverse: "managerOfTeam" });
+    }).register();
+    const store = await start();
+    const john = store.User.insert({ name: "John" });
+    const rd = store.Team.insert("R&D");
+    rd.manager = john;
+    const john1 = store.User.get({ name: "John" });
+    const john2 = store.User.get({ managerOfTeam: rd });
+    assert.ok(john.eq(john1));
+    assert.ok(john.eq(john2));
+});
+
+QUnit.test("Record can have many ids (4)", async (assert) => {
+    (class User extends Record {
+        static id = ["name", "managerOfTeam"];
+        managerOfTeam = Record.one("Team");
+        name;
+        id;
+        type;
+    }).register();
+    (class Team extends Record {
+        static id = ["name"];
+        name;
+        manager = Record.one("User", { inverse: "managerOfTeam" });
+    }).register();
+    const store = await start();
+    const john = store.User.insert({ name: "John", managerOfTeam: { name: "R&D" } });
+    const john1 = store.User.get({ name: "John" });
+    const john2 = store.User.get({ managerOfTeam: { name: "R&D" } });
+    assert.ok(john.eq(john1));
+    assert.ok(john.eq(john2));
+});
+
+QUnit.test("Record can have many ids (5)", async (assert) => {
+    (class User extends Record {
+        static id = ["name", "managerOfTeam"];
+        managerOfTeam = Record.one("Team");
+        name;
+        id;
+        type;
+    }).register();
+    (class Team extends Record {
+        static id = ["name"];
+        name;
+        manager = Record.one("User", { inverse: "managerOfTeam" });
+    }).register();
+    const store = await start();
+    const rd = store.Team.insert({ name: "R&D", manager: { name: "John" } });
+    const john1 = store.User.get({ name: "John" });
+    const john2 = store.User.get({ managerOfTeam: { name: "R&D" } });
+    assert.ok(rd.manager.eq(john1));
+    assert.ok(rd.manager.eq(john2));
 });

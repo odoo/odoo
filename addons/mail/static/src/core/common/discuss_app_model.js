@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Record } from "./record";
 
 export class DiscussApp extends Record {
+    static singleton = true;
     static new(data) {
         /** @type {import("models").DiscussApp} */
         const res = super.new(data);

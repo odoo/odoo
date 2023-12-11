@@ -24,17 +24,6 @@ export class Thread extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {string} localId
-     * @returns {string}
-     */
-    static localIdToActiveId(localId) {
-        if (!localId) {
-            return undefined;
-        }
-        // Transform "Thread,<model> AND <id>" to "<model>_<id>""
-        return localId.split(",").slice(1).join("_").replace(" AND ", "_");
-    }
     /** @returns {import("models").Thread|import("models").Thread[]} */
     static insert(data) {
         return super.insert(...arguments);

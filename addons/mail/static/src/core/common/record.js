@@ -366,8 +366,56 @@ export function makeStore(env) {
                 }
             },
         }[OgClass.name];
+        // Produce _id and objectIdFields
+        // For more structured object id mapping and re-shape on change of object id.
+        // Useful for support of multi-identification on records
+        if (Model.id === undefined) {
+            Model._id = [];
+            Model.objectIdFields = [];
+        } else if (typeof Model.id === "string") {
+            Model._id = [[Model.id]];
+            Model.objectIdFields = [Model.id];
+        } else if (Model.id[0] === AND_SYM) {
+            const fields = Model.id.slice(1);
+            Model._id = [[...fields]];
+            Model.objectIdFields = [...fields];
+        } else if (Model.id[0] === OR_SYM) {
+            const fields = Model.id.slice(1);
+            Model._id = [...fields.map((i) => [i])];
+            Model.objectIdFields = [...fields.map((i) => [i])];
+        } else {
+            const _id = [];
+            const objectIdFields = [];
+            // this is an array of string and AND expressions
+            for (const item of Model.id) {
+                if (typeof item === "string") {
+                    _id.push([item]);
+                    if (!objectIdFields.some((field) => field === item)) {
+                        objectIdFields.push(item);
+                    }
+                } else if (item[0] === AND_SYM) {
+                    const fields = item.slice(1);
+                    _id.push([...fields]);
+                    for (const f of fields) {
+                        if (!objectIdFields.some((field) => field === f)) {
+                            objectIdFields.push(f);
+                        }
+                    }
+                } else {
+                    _id.push([...item]);
+                    for (const f of item) {
+                        if (!objectIdFields.some((field) => field === f)) {
+                            objectIdFields.push(f);
+                        }
+                    }
+                }
+            }
+            Object.assign(Model, { _id, objectIdFields });
+        }
         Object.assign(Model, {
             Class,
+            NEXT_LOCAL_ID: markRaw({ value: 1 }),
+            objectIdToLocalId: markRaw({}),
             records: JSON.parse(JSON.stringify(OgClass.records)),
             _fields: {},
         });
@@ -426,7 +474,7 @@ export function makeStore(env) {
 class RecordUses {
     /**
      * Track the uses of a record. Each record contains a single `RecordUses`:
-     * - Key: localId of record that uses current record
+     * - Key: a localId of record that uses current record
      * - Value: Map where key is relational field name, and value is number
      *          of time current record is present in this relation.
      *
@@ -435,10 +483,18 @@ class RecordUses {
     data = markRaw(new Map());
     /** @param {RecordList} list */
     add(list) {
-        if (!this.data.has(list.owner.localId)) {
-            this.data.set(list.owner.localId, new Map());
+        let ownerLocalId;
+        for (const localId of list.owner.localIds) {
+            if (this.data.has(localId)) {
+                ownerLocalId = localId;
+                break;
+            }
         }
-        const use = this.data.get(list.owner.localId);
+        if (!ownerLocalId) {
+            ownerLocalId = list.owner.localId;
+            this.data.set(ownerLocalId, new Map());
+        }
+        const use = this.data.get(ownerLocalId);
         if (!use.get(list.name)) {
             use.set(list.name, 0);
         }
@@ -446,10 +502,17 @@ class RecordUses {
     }
     /** @param {RecordList} list */
     delete(list) {
-        if (!this.data.has(list.owner.localId)) {
+        let ownerLocalId;
+        for (const localId of list.owner.localIds) {
+            if (this.data.has(localId)) {
+                ownerLocalId = localId;
+                break;
+            }
+        }
+        if (!ownerLocalId) {
             return;
         }
-        const use = this.data.get(list.owner.localId);
+        const use = this.data.get(ownerLocalId);
         if (!use.get(list.name)) {
             return;
         }
@@ -582,8 +645,7 @@ class RecordList extends Array {
         fn?.(r3);
         if (!Record.isRecord(val)) {
             // was preinserted, fully insert now
-            const { targetModel } = this.fieldDefinition;
-            this.store[targetModel].insert(val);
+            r3.update(val);
         }
         return r3;
     }
@@ -670,7 +732,14 @@ class RecordList extends Array {
     }
     /** @param {R} record */
     indexOf(record) {
-        return this.data.indexOf(record?.localId);
+        let index = -1;
+        for (const localId of record?.localIds || []) {
+            index = this.data.indexOf(localId);
+            if (index !== -1) {
+                break;
+            }
+        }
+        return index;
     }
     /**
      * @param {number} [start]
@@ -931,6 +1000,21 @@ class RecordList extends Array {
  */
 
 export class Record {
+    static NEXT_LOCAL_ID = markRaw({ value: 1 });
+    /**
+     * A UUID/GUI of the current record manager. Useful to determine whether a local id comes from itself of others.
+     * Self local ids have easy access and do not change local identity (small exception with reconciliation, but
+     * the local ids persist until the record is fully deleted)
+     */
+    static SELF_ID = 0; //`${new Date().getTime()}:::${Math.random()}`;
+    static VERSION = 1;
+    /**
+     * Whether there's only at most 1 record of this model.
+     * Useful to simply insert on such record without having to define a dummy id and making sure it's the same value passed.
+     * `undefined` values are not elligible as non-local object id, and non-singleton models will refuse to insert a record
+     * without at least one non-local object id.
+     */
+    static singleton = false;
     /** @param {FieldDefinition} */
     static isAttr(definition) {
         return Boolean(definition?.[ATTR_SYM]);
@@ -940,8 +1024,44 @@ export class Record {
      * Useful to auto-markup html fields when this is set
      */
     static trusted = false;
+    /**
+     * Expression to define how records on the model are identified.
+     * Supported value:
+     * - string with single field name
+     * - non-nested AND/OR expressions with field names. see AND|OR functions
+     * - list with the above values except OR expression (each items are disjunctive, i.e. joined with OR)
+     *
+     * @type {string|AND|OR|Array<string|AND>}
+     */
     static id;
-    /** @type {Object<string, Record>} */
+    /**
+     * Normalized version of static id.
+     * Should not be defined by business code, as this is deduced from provided static id.
+     * It contains a list whose item are lists of string.
+     * 1st-level depth of listing is a "OR" between items, and 2nd-level depth of
+     * listing is an "AND" between items.
+     * This _id is simpler to navigate than static id which is a sort of Domain-Specific-Language.
+     * To avoid parsing it again and again, static _id is preferred for internal code.
+     *
+     * @type {Array<string[]>}
+     */
+    static _id;
+    /**
+     * List of fields that contribute to object ids.
+     * Should not be defined by business code, as this is deduced from provided static id.
+     * Useful to track when their value change on a record, to adapt object id that maps to
+     * this record... and maybe need to reconcile with another existing record that has the
+     * same identity!
+     *
+     * @type {string[]}
+     */
+    static objectIdFields = [];
+    /**
+     * in VERSION 0: key is legacy localId, e.g. "Persona, partner AND 3"
+     * in VERSION 1: key is the local objectId, basically ModelName{number}(SELF_ID), e.g. "Persona{200}(123456789)[1]"
+     *
+     * @type {Object<string, Record>}
+     */
     static records = {};
     /** @type {import("models").Store} */
     static store;
@@ -1062,7 +1182,12 @@ export class Record {
                             }
                         }
                     }
-                    delete record.Model.records[record.localId];
+                    for (const localId of record.localIds) {
+                        delete record.Model.records[localId];
+                    }
+                    for (const objectId of record.objectIds) {
+                        delete record.Model.objectIdToLocalId[objectId];
+                    }
                 }
             }
             while (selfRaw.FR_QUEUE.length > 0) {
@@ -1241,23 +1366,222 @@ export class Record {
         return [MANY_SYM, ONE_SYM, ATTR_SYM].includes(SYM);
     }
     static get(data) {
-        return this.records[this.localId(data)];
+        return this.records[this.dataToLocalId(data)];
     }
-    static modelFromLocalId(localId) {
-        return localId.split(",")[0];
+    /** @param {string} objectId */
+    static isSelfLocalId(objectId) {
+        const version = this.objectIdToVersion(objectId);
+        if (version === 0) {
+            return true;
+        }
+        try {
+            const startNumber = objectId.lastIndexOf("{");
+            const endNumber = objectId.lastIndexOf("}");
+            const isNumber = Number.isInteger(
+                Number(objectId.substring(startNumber + 1, endNumber))
+            );
+            const startSelfId = objectId.lastIndexOf("(");
+            const endSelfId = objectId.lastIndexOf(")");
+            const isSelf = objectId.substring(startSelfId + 1, endSelfId);
+            return isNumber && isSelf;
+        } catch {
+            return false;
+        }
+    }
+    /**
+     * Map any object id to the local id of a record.
+     * The record must be at least inserted once before having a local id.
+     *
+     * @type {Object<string, string>}
+     */
+    static objectIdToLocalId = markRaw({});
+    /** @returns {string} */
+    static objectIdToModel(objectId) {
+        const version = this.objectIdToVersion(objectId);
+        if (version === 0) {
+            // shape of object id example: Persona,partner AND 3
+            return objectId.split(",")[0];
+        }
+        // shape of object id: ModelName{field: value,field: value}[VERSION]
+        // local object id:    ModelName{number}(SELF_ID)[VERSION]
+        return objectId.substring(0, objectId.indexOf("{"));
+    }
+    /** @param {string} objectId */
+    static objectIdToVersion(objectId) {
+        // if objectId has a version, it's at the very end, e.g. "[1]" for VERSION 1
+        const versionStart = objectId?.lastIndexOf("[");
+        if (versionStart === -1) {
+            return 0;
+        }
+        return Number(objectId.substring(versionStart + 1));
+    }
+    /** Find the local id from data on current model (if exists) */
+    static dataToLocalId(data) {
+        const selfRaw = toRaw(this);
+        if (Record.VERSION === 0) {
+            return this.localId(data);
+        }
+        let localId;
+        if (selfRaw.singleton) {
+            return Object.keys(selfRaw.records)[0];
+        }
+        if (typeof data !== "object" || data === null) {
+            // special shorthand when record has a single single-id primitive.
+            // Note that this is not working on object field due to ambiguity
+            // on whether it targets this single-id or data are on self object.
+            const singleIds = selfRaw._id
+                .filter((item) => item.length === 1)
+                .map((item) => item[0]);
+            if (singleIds.length !== 1) {
+                throw new Error(`
+                    Model "${this.name}" has more than one single-id.
+                    Shorthand to get/insert records with non-object is only supported with a single single-id.
+                    Found singleIds: ${singleIds.map((item) => item[0]).join(",")}
+                `);
+            }
+            return this.dataToLocalId({ [singleIds[0]]: data });
+        }
+        for (let i = 0; i < selfRaw._id.length && !localId; i++) {
+            const expr = selfRaw._id[i];
+            if (expr.some((item) => !(item in data))) {
+                continue;
+            }
+            this._retrieveObjectIdsFromExpr(expr, data, {
+                earlyStop: () => localId,
+                onObjectId: (objectId) => {
+                    localId = selfRaw.objectIdToLocalId[objectId];
+                },
+            });
+        }
+        return localId;
+    }
+    /**
+     * Compute object ids of the record, without updating them.
+     * Useful to compare with old object ids and determine strategy to
+     * update them and/or reconcile records if needed.
+     *
+     * @param {Record} record
+     */
+    static recordToObjectIds(record) {
+        const selfRaw = toRaw(this);
+        const objectIds = [...record.localIds];
+        for (let i = 0; i < selfRaw._id.length; i++) {
+            const expr = selfRaw._id[i];
+            if (expr.some((item) => record[item] === undefined)) {
+                continue;
+            }
+            this._retrieveObjectIdsFromExpr(expr, record, {
+                onObjectId: (objectId) => {
+                    objectIds.push(objectId);
+                },
+            });
+        }
+        return objectIds;
+    }
+    /**
+     * @param {string[]} expr part of an AND expression in model ids. See static _id
+     * @param {Object|Record} data
+     * @param {Object} [param2={}]
+     * @param {() => boolean} [param2.earlyStop] if provided, truthy value means the retrieve
+     *   process should stop. Useful when using this function requires to only find a
+     *   single match.
+     * @param {(string) => void} [param2.onObjectId] if provided, called whenever an object id
+     *   has been retrieved by this function. Param is the currently retrieved object id.
+     */
+    static _retrieveObjectIdsFromExpr(expr, data, { earlyStop, onObjectId } = {}) {
+        const selfRaw = toRaw(this);
+        // Try each combination of potential objectId, using all localIds of relations
+        const fields = expr.map((item) => ({
+            name: item,
+            relation: Record.isRelation(selfRaw._fields[item]),
+        }));
+        const fieldToIndex = Object.fromEntries(
+            fields.filter((f) => f.relation).map((f, index) => [f.name, index])
+        );
+        const fcounts = fields.map((field) => (field.relation ? 0 : -1));
+        const iteration = { value: 0 };
+        const MAX_ITER = 1000;
+
+        const loop = function (index, ...fcounts2) {
+            /** @param {string} name */
+            const getRelatedRecord = function (name) {
+                if (Record.isRecord(data[name])) {
+                    return data[name];
+                } else if (Record.isCommand(data[name])) {
+                    const param2 = data[name]?.[0]?.at(-1);
+                    if (!param2) {
+                        return;
+                    } else if (Record.isRecord(param2)) {
+                        return param2;
+                    }
+                    const { targetModel } = selfRaw._fields[name];
+                    return selfRaw.store[targetModel].get(param2);
+                } else {
+                    const { targetModel } = selfRaw._fields[name];
+                    return selfRaw.store[targetModel].get(data[name]);
+                }
+            };
+            if (index >= fields.length) {
+                let ok = true;
+                const fieldVals = expr
+                    .map((item) => {
+                        if (Record.isRelation(selfRaw._fields[item])) {
+                            const i = fcounts2[fieldToIndex[item]];
+                            const relatedRecord = getRelatedRecord(item);
+                            if (!relatedRecord) {
+                                ok = false;
+                                return;
+                            }
+                            return `${item}: (${relatedRecord.localIds[i]})`;
+                        } else {
+                            return `${item}: ${data[item]}`;
+                        }
+                    })
+                    .join(", ");
+                if (!ok) {
+                    return;
+                }
+                const objectId = `${selfRaw.name}{${fieldVals}}[${Record.VERSION}]`;
+                onObjectId?.(objectId);
+                iteration.value++;
+                return;
+            }
+            const fieldName = fields[index].name;
+            if (!fields[index].relation) {
+                return loop(index + 1, ...fcounts2);
+            }
+            const relatedRecord = getRelatedRecord(fieldName);
+            if (!relatedRecord) {
+                return; // not a candidate
+            }
+            for (
+                let i = 0;
+                i < relatedRecord.localIds.length && !earlyStop?.() && iteration.value < MAX_ITER;
+                i++
+            ) {
+                loop(index + 1, ...fcounts2);
+            }
+        };
+        loop(0, ...fcounts);
+        if (iteration.value === MAX_ITER) {
+            throw new Error("Too many reconciled records with residual data");
+        }
     }
     static register() {
         modelRegistry.add(this.name, this);
     }
+    /** @deprecated */
     static localId(data) {
+        const selfRaw = toRaw(this);
         let idStr;
         if (typeof data === "object" && data !== null) {
-            idStr = this._localId(this.id, data);
+            idStr = selfRaw._localId(selfRaw.id, data);
         } else {
             idStr = data; // non-object data => single id
         }
-        return `${this.name},${idStr}`;
+        return `${selfRaw.name},${idStr}`;
     }
+    /** @deprecated */
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
             if (expr in this._fields) {
@@ -1371,27 +1695,69 @@ export class Record {
         return Record.MAKE_UPDATE(() => {
             const obj = new this.Class();
             obj.Model = this;
-            const ids = this._retrieveIdFromData(data);
-            for (const name in ids) {
-                if (
-                    ids[name] &&
-                    !Record.isRecord(ids[name]) &&
-                    !Record.isCommand(ids[name]) &&
-                    Record.isRelation(this._fields[name])
-                ) {
-                    // preinsert that record in relational field,
-                    // as it is required to make current local id
-                    ids[name] = this.store[this._fields[name].targetModel].preinsert(ids[name]);
+            let localId;
+            let record;
+            if (Record.VERSION === 0) {
+                const ids = this._retrieveIdFromData(data);
+                for (const name in ids) {
+                    if (
+                        ids[name] &&
+                        !Record.isRecord(ids[name]) &&
+                        !Record.isCommand(ids[name]) &&
+                        Record.isRelation(this._fields[name])
+                    ) {
+                        // preinsert that record in relational field,
+                        // as it is required to make current local id
+                        ids[name] = this.store[this._fields[name].targetModel].preinsert(ids[name]);
+                    }
                 }
+                localId = this.localId(ids);
+                record = Object.assign(obj, {
+                    localIds: [localId],
+                    objectIds: [localId],
+                    ...ids,
+                });
+            } else {
+                localId = `${this.name}{${this.NEXT_LOCAL_ID.value++}}(${Record.SELF_ID})[${
+                    Record.VERSION
+                }]`;
+                record = Object.assign(obj, {
+                    localIds: [localId],
+                    objectIds: [localId],
+                });
             }
-            let record = Object.assign(obj, {
-                localId: this.localId(ids),
-                ...ids,
-            });
             Object.assign(record, { _store: this.store });
             this.records[record.localId] = record;
             // return reactive version
             record = this.records[record.localId];
+            this.objectIdToLocalId[record.localId] = record.localId;
+            if (Record.VERSION !== 0) {
+                onChange(record, this.objectIdFields, () => {
+                    // 1. compute object ids
+                    const objectIds = this.recordToObjectIds(record);
+                    const oldObjectIds = record.objectIds.filter(
+                        (objectId) => !objectIds.includes(objectId)
+                    );
+                    const newObjectIds = objectIds.filter(
+                        (objectId) => !record.objectIds.includes(objectId)
+                    );
+                    // 2. old object ids => remove the mapping
+                    for (const oldOid of oldObjectIds) {
+                        record.objectIds = record.objectIds.filter((oid) => oid !== oldOid);
+                        delete this.objectIdToLocalId[oldOid];
+                    }
+                    // 3. new object ids
+                    for (const newOid of newObjectIds) {
+                        if (this.objectIdToLocalId[newOid]) {
+                            // RECONCILE... NOW!
+                            // TODO
+                            throw new Error("Unimplemented Record Reconcile Algorithm");
+                        }
+                        record.objectIds.push(newOid);
+                        this.objectIdToLocalId[newOid] = record.localId;
+                    }
+                });
+            }
             for (const field of Object.values(record._fields)) {
                 field.requestCompute?.();
                 field.requestSort?.();
@@ -1537,8 +1903,46 @@ export class Record {
      * @type {typeof Record}
      */
     Model;
-    /** @type {string} */
-    localId;
+    /**
+     * The referenced local id of the record.
+     *
+     * In VERSION 0: legacy format:
+     *    ModelName,OrderedExpressionEvaluationOfIdValues
+     *    e.g. "Persona,partner AND 3"
+     * In VERSION 1: local object id:
+     *    ModelName{number}(SELF_ID)[VERSION]
+     *    e.g. "Persona{20}(123456789)[1]"
+     *
+     * @type {string}
+     */
+    get localId() {
+        return this.localIds[0];
+    }
+    /**
+     * List of all local ids related to this record.
+     * Most of time records only have a single local id.
+     * Multiple local ids happen when 2 or more records happen
+     * to share same identity and they have being reconciled.
+     * Eventually record will keep a single local id, but to
+     * smooth transition a record can have temporarily many local
+     * ids.
+     *
+     * @type {string[]}
+     */
+    localIds = [];
+    get objectId() {
+        return this.localId;
+    }
+    /**
+     * List of object ids of the record.
+     * Object ids include local ids, and also all currently known way
+     * to identify this record. An object id is a stringified version
+     * of data that identify the record. A non-local object id matches
+     * an AND expression in static id.
+     *
+     * @type {string[]}
+     */
+    objectIds = [];
 
     constructor() {
         this.setup();
@@ -1547,13 +1951,31 @@ export class Record {
     setup() {}
 
     update(data) {
+        if (data === undefined) {
+            return;
+        }
         return Record.MAKE_UPDATE(() => {
             if (typeof data === "object" && data !== null) {
                 Object.assign(this, data);
             } else {
                 // update on single-id data
-                if (this.Model.id in toRaw(this).Model._fields) {
-                    this[this.Model.id] = data;
+                if (Record.VERSION === 0) {
+                    if (this.Model.id in toRaw(this).Model._fields) {
+                        this[this.Model.id] = data;
+                    }
+                } else {
+                    const selfRaw = toRaw(this);
+                    const singleIds = selfRaw.Model._id
+                        .filter((item) => item.length === 1)
+                        .map((item) => item[0]);
+                    if (singleIds.length !== 1) {
+                        throw new Error(`
+                            Model "${this.name}" has more than one single-id.
+                            Shorthand to get/insert records with non-object is only supported with a single single-id.
+                            Found singleIds: ${singleIds.map((item) => item[0]).join(",")}
+                        `);
+                    }
+                    this[singleIds[0]] = data;
                 }
             }
         });
@@ -1565,7 +1987,17 @@ export class Record {
 
     /** @param {Record} record */
     eq(record) {
-        return toRaw(this) === toRaw(record);
+        if (!record?.localId) {
+            return;
+        }
+        for (const thisLocalId of this.localIds || []) {
+            for (const recordLocalId of record.localIds || []) {
+                if (thisLocalId === recordLocalId) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** @param {Record} record */
@@ -1621,18 +2053,23 @@ export class Record {
 Record.register();
 
 export class BaseStore extends Record {
+    static singleton = true;
     /**
-     * @param {string} localId
+     * @param {string} objectId
      * @returns {Record}
      */
-    get(localId) {
-        if (typeof localId !== "string") {
+    get(objectId) {
+        if (typeof objectId !== "string") {
             return undefined;
         }
-        const modelName = Record.modelFromLocalId(localId);
+        const modelName = Record.objectIdToModel(objectId);
         if (modelName === "Store") {
             return this;
         }
-        return this[modelName].records[localId];
+        const /** @type {typeof Record} */ RawModel = toRaw(this)[modelName];
+        const localId = RawModel.objectIdToLocalId[objectId];
+        /** @type {typeof Record} */
+        const Model = this[modelName];
+        return Model.records[localId];
     }
 }
