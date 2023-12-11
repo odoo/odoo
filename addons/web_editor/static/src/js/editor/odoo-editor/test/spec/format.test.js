@@ -986,6 +986,13 @@ describe('setTagName', () => {
                 contentAfter: '<p>[before</p><h1 contenteditable="false">noneditable</h1><p>after]</p>',
             });
         });
+        it('should turn a heading 4 with class h5 into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<p class="text-uppercase">[abcd]</p>',
+            });
+        });
     });
     describe('to heading 1', () => {
         it('should turn a paragraph into a heading 1', async () => {
@@ -1029,6 +1036,13 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'h1'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><h1>[]a</h1></td><td><h1>b</h1></td><td><h1>c</h1></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
             });
         });
     });
@@ -1196,6 +1210,13 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><blockquote>[]a</blockquote></td><td><blockquote>b</blockquote></td><td><blockquote>c</blockquote></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<blockquote>[abcd]</blockquote>',
             });
         });
     });
