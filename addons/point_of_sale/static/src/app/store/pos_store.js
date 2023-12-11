@@ -1731,6 +1731,9 @@ export class PosStore extends Reactive {
                 console.warn("Failed in printing the changes in the order", e);
             }
         }
+    }
+    async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
+        await this.sendOrderInPreparation(order, cancelled);
         order.updateLastOrderChange();
     }
     closeScreen() {
