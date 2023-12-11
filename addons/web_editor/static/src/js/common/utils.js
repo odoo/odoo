@@ -462,6 +462,15 @@ function _shouldEditableMediaBeEditable(mediaEl) {
         && nonEditableAncestorRootEl.parentElement
         && nonEditableAncestorRootEl.parentElement.isContentEditable;
 }
+/**
+ * Returns the label of a link element.
+ *
+ * @param {HTMLElement} linkEl
+ * @returns {string}
+ */
+function _getLinkLabel(linkEl) {
+    return linkEl.innerText.trim().replaceAll("\u200B", "");
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -488,4 +497,5 @@ export default {
     addBackgroundImageAttributes: _addBackgroundImageAttributes,
     isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
+    getLinkLabel: _getLinkLabel,
 };

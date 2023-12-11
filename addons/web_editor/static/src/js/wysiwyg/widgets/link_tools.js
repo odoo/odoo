@@ -8,6 +8,7 @@ import {
     getColorClass,
     getNumericAndUnit,
     isColorGradient,
+    getLinkLabel,
 } from "web_editor.utils";
 import {
     onWillUpdateProps,
@@ -420,7 +421,7 @@ export class LinkTools extends Link {
      */
     _updateLabelInput() {
         if (this.$el) {
-            this.$el[0].querySelector('#o_link_dialog_label_input').value = this.linkEl.innerText;
+            this.$el[0].querySelector('#o_link_dialog_label_input').value = getLinkLabel(this.linkEl);
         }
     }
 
@@ -524,7 +525,7 @@ export class LinkTools extends Link {
             return;
         }
         const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
-        const content = this.linkEl.innerText.trim().replaceAll('\u200B', '');
+        const content = getLinkLabel(this.linkEl);
         if (content === previousUrl || content === protocolLessPrevUrl) {
             const newUrl = this.linkComponentWrapperRef.el.querySelector('input[name="url"]').value;
             const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
