@@ -32,6 +32,7 @@
         .o_page_template_preview {
             // Resize iframe:
             height: 300px;
+            min-height: 100px;
             padding: 0;
             overflow: hidden;
 
@@ -59,6 +60,10 @@
 
         .o_button_area {
             opacity: 0;
+            .o_page_name {
+                position: absolute;
+                bottom: 10px;
+            }
         }
 
         &:empty {

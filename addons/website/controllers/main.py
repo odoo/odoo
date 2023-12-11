@@ -660,6 +660,20 @@ class Website(Home):
                 'title': group_el.text,
                 'templates': [],
             }
+            if group_el.attrib['id'] == 'custom':
+                for page in request.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
+                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                        page.key,
+                    ))
+                    wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
+                    group['templates'].append({
+                        'key': page.key,
+                        'template': html.tostring(wrap_el),
+                        'name': page.name,
+                    })
+                group['is_custom'] = True
+                result.append(group)
+                continue
             for template in View.search([
                 ('mode', '=', 'primary'),
                 ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
