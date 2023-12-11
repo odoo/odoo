@@ -6,7 +6,7 @@
         <field name="model">account.move.send</field>
         <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
         <field name="arch" type="xml">
-            <form js_class="account_move_send_form">
+            <form>
                 <!-- Invisible fields -->
                 <field name="company_id" invisible="1"/>
                 <field name="move_ids" invisible="1"/>
