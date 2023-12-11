@@ -63,6 +63,8 @@ class PosOrder(models.Model):
         get_partner_id = lambda partner_id: partner_id and self.env['res.partner'].browse(partner_id).exists() and partner_id or False
         # Keys are stringified when using rpc
         coupon_data = {int(k): v for k, v in coupon_data.items()}
+
+        self._check_existing_loyalty_cards(coupon_data)
         # Map negative id to newly created ids.
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
@@ -144,6 +146,25 @@ class PosOrder(models.Model):
             )],
             'coupon_report': coupon_per_report,
         }
+
+    def _check_existing_loyalty_cards(self, coupon_data):
+        coupon_key_to_modify = []
+        for coupon_id, coupon_vals in coupon_data.items():
+            partner_id = coupon_vals.get('partner_id', False)
+            if partner_id:
+                partner_coupons = self.env['loyalty.card'].search(
+                    [('partner_id', '=', partner_id), ('program_type', '=', 'loyalty')])
+                existing_coupon_for_program = partner_coupons.filtered(lambda c: c.program_id.id == coupon_vals['program_id'])
+                if existing_coupon_for_program:
+                    coupon_vals['coupon_id'] = existing_coupon_for_program[0].id
+                    coupon_key_to_modify.append([coupon_id, existing_coupon_for_program[0].id])
+        for old_key, new_key in coupon_key_to_modify:
+            coupon_data[new_key] = coupon_data.pop(old_key)
+
+    def _get_fields_for_order_line(self):
+        fields = super(PosOrder, self)._get_fields_for_order_line()
+        fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
+        return fields
 
     def _add_mail_attachment(self, name, ticket):
         attachment = super()._add_mail_attachment(name, ticket)
