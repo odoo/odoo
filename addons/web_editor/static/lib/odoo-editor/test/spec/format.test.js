@@ -889,6 +889,13 @@ describe('setTagName', () => {
                 contentAfter: `<ul><li>[abcd]</li></ul>`
             });
         });
+        it('should add paragraph tag to normal text in list when text is deeply nested', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><div><h1>[abcd]</h1></div></li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<ul><li><div><p>[abcd]</p></div></li></ul>',
+            });
+        });
         it('should turn three table cells with heading 1 to table cells with paragraph', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>',
