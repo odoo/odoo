@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { loadBundle, loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -481,15 +481,6 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Widget
     //--------------------------------------------------------------------------
-
-    /**
-    * @override
-    */
-    willStart: function () {
-        var url = '/web/webclient/locale/' + (document.documentElement.getAttribute('lang') || 'en_US').replace('-', '_');
-        var localeReady = loadJS(url);
-        return Promise.all([this._super.apply(this, arguments), localeReady]);
-    },
 
     /**
     * @override
