@@ -1666,6 +1666,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
         self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
 
+        # Check that lines related to the pay_later payment method are not blocked
+        original_pay_later_line = original_customer_payment_entry[0]
+        reverser_pay_later_line = reverser_customer_payment_entry[1]
+        self.assertTrue(- original_pay_later_line.balance == reverser_pay_later_line.balance)
+        self.assertFalse(original_pay_later_line.blocked)
+        self.assertFalse(reverser_pay_later_line.blocked)
+
     def test_order_total_subtotal_account_line_values(self):
         self.tax1 = self.env['account.tax'].create({
             'name': 'Tax 1',
