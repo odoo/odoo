@@ -101,8 +101,10 @@ export class SelectMenu extends Component {
         });
         useEffect(
             () => {
-                const groups = [{ choices: this.props.choices }, ...this.props.groups];
-                this.filterOptions(this.state.searchValue, groups);
+                if (this.state.searchValue !== "") {
+                    const groups = [{ choices: this.props.choices }, ...this.props.groups];
+                    this.filterOptions(this.state.searchValue, groups);
+                }
             },
             () => [this.props.choices, this.props.groups]
         );
