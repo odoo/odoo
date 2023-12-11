@@ -96,13 +96,11 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         downpayment2 = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment2.create_invoices()
         self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
@@ -116,9 +114,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sol_prod_deliver.write({'qty_delivered': 2.0})
 
         # Let's do an invoice with refunds
-        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
-            'deposit_account_id': self.company_data['default_account_revenue'].id
-        })
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({})
         payment.create_invoices()
 
         self.assertEqual(len(self.sale_order.invoice_ids), 3, 'Invoice should be created for the SO')
@@ -142,7 +138,6 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'percentage',
             'amount': 10,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
@@ -183,13 +178,10 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         # Let's do the invoice
-        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
-            'deposit_account_id': self.company_data['default_account_revenue'].id
-        })
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({})
         payment.create_invoices()
         # Confirm all invoices
         for invoice in sale_order.invoice_ids:
@@ -223,7 +215,6 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         # Create invoice
         downpayment.create_invoices()
@@ -235,17 +226,10 @@ class TestSaleToInvoice(TestSaleCommon):
         """
         # Confirm the SO
         self.sale_order.action_confirm()
-        tax_downpayment = self.company_data['default_tax_sale'].copy({
-            'name': 'default price included',
-            'price_include': True,
-        })
         # Let's do an invoice for a deposit of 100
-        product_id = self.env.company.sale_down_payment_product_id
-        product_id.taxes_id = tax_downpayment.ids
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'percentage',
             'amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
         payment.create_invoices()
 
@@ -548,7 +532,6 @@ class TestSaleToInvoice(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(context_for_downpayment).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         self.assertEqual(so_for_downpayment.invoice_ids[0].company_id.id, so_company_id, "The company of the downpayment invoice should be the same as the one from the SO")

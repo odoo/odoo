@@ -22,7 +22,7 @@ class SaleOrderLine(models.Model):
 
     _sql_constraints = [
         ('accountable_required_fields',
-            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
+            "CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
             "Missing required fields on accountable sale order line."),
         ('non_accountable_null_fields',
             "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))",
@@ -313,7 +313,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if not line.product_id:
+            if not line.product_id and not line.is_downpayment:
                 continue
             lang = line.order_id._get_lang()
             if lang != self.env.lang:
@@ -349,7 +349,7 @@ class SaleOrderLine(models.Model):
           the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
         self.ensure_one()
-        return self.product_id.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
+        return (_('Down Payment ') if self.is_downpayment else self.product_id.get_product_multiline_description_sale()) + self._get_sale_order_line_multiline_description_variants()
 
     def _get_sale_order_line_multiline_description_variants(self):
         """When using no_variant attributes or is_custom values, the product

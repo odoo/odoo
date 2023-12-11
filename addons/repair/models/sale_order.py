@@ -66,15 +66,18 @@ class SaleOrderLine(models.Model):
         res.filtered(lambda line: line.state in ('sale', 'done'))._create_repair_order()
         return res
 
-    def write(self, vals_list):
-        old_product_uom_qty = {line.id: line.product_uom_qty for line in self}
-        res = super().write(vals_list)
-        for line in self:
-            if line.state in ('sale', 'done'):
-                if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) <= 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) > 0:
-                    self._create_repair_order()
-                if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) > 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) <= 0:
-                    self._cancel_repair_order()
+    def write(self, vals):
+        if 'product_uom_qty' in vals:
+            old_product_uom_qty = {line.id: line.product_uom_qty for line in self}
+            res = super().write(vals)
+            for line in self:
+                if line.state in ('sale', 'done'):
+                    if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) <= 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) > 0:
+                        self._create_repair_order()
+                    if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) > 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) <= 0:
+                        self._cancel_repair_order()
+        else:
+            res = super().write(vals)
         return res
 
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
