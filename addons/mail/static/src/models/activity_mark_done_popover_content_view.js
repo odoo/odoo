@@ -40,7 +40,6 @@ Model({
             const chatter = this.activityViewOwner && this.activityViewOwner.chatterOwner;
             const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
-            const thread = this.activity.thread;
             await this.activity.markAsDone({
                 feedback: this.feedbackTextareaRef.el.value,
             });
@@ -51,7 +50,7 @@ Model({
                 reloadFunc();
             }
             if (webRecord) {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             }
         },
         /**
@@ -61,7 +60,6 @@ Model({
             const chatter = this.activityViewOwner && this.activityViewOwner.chatterOwner;
             const reloadFunc = this.reloadFunc;
             const webRecord = this.webRecord;
-            const thread = this.activity.thread;
             const activityListViewOwner =
                 this.activityListViewItemOwner &&
                 this.activityListViewItemOwner.activityListViewOwner;
@@ -78,7 +76,7 @@ Model({
                 reloadFunc();
             }
             if (webRecord) {
-                webRecord.model.load({ resId: thread.id });
+                webRecord.model.load({ offset: webRecord.model.root.offset });
             }
         },
         /**
