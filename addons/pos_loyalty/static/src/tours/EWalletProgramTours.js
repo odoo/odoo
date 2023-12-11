@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
@@ -101,5 +102,23 @@ PosLoyalty.check.orderTotalIs("0.00");
 PosLoyalty.exec.finalizeOrder("Cash", "0");
 
 Tour.register("EWalletProgramTour2", { test: true, url: "/pos/web" }, getSteps());
+
+//#endregion
+
+//#region ExpiredEWalletProgramTour
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAAA');
+ProductScreen.exec.addOrderline('Whiteboard Pen', '2', '6', '12.00');
+PosLoyalty.check.eWalletButtonState({ highlighted: false });
+PosLoyalty.do.clickEWalletButton();
+ErrorPopup.check.isShown();
+ErrorPopup.do.clickConfirm();
+
+Tour.register('ExpiredEWalletProgramTour', { test: true, url: '/pos/web' }, getSteps());
 
 //#endregion
