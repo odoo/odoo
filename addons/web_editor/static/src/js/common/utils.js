@@ -475,6 +475,15 @@ function _isMobileView(targetEl) {
         targetEl.ownerDocument.documentElement.clientWidth;
     return clientWidth && clientWidth < mobileViewThreshold;
 }
+/**
+ * Returns the label of a link element.
+ *
+ * @param {HTMLElement} linkEl
+ * @returns {string}
+ */
+function _getLinkLabel(linkEl) {
+    return linkEl.innerText.trim().replaceAll("\u200B", "");
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -502,4 +511,5 @@ export default {
     isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
     isMobileView: _isMobileView,
+    getLinkLabel: _getLinkLabel,
 };
