@@ -51,7 +51,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             // to send in preparation it is automatically sent
             if (this.pos.orderPreparationCategories.size) {
                 try {
-                    await this.pos.sendOrderInPreparation(this.currentOrder);
+                    await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
                 } catch (error) {
                     Promise.reject(error);
                 }

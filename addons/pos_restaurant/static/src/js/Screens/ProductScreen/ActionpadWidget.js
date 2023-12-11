@@ -28,7 +28,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         if (!this.clicked) {
             this.clicked = true;
             try {
-                await this.pos.sendOrderInPreparation(this.currentOrder);
+                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
             } finally {
                 this.clicked = false;
             }

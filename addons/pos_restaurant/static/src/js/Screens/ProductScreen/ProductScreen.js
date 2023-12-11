@@ -37,7 +37,7 @@ patch(ProductScreen.prototype, "pos_restaurant.ProductScreen", {
         );
     },
     submitOrder() {
-        this.pos.sendOrderInPreparation(this.pos.get_order());
+        this.pos.sendOrderInPreparationUpdateLastChange(this.pos.get_order());
     },
     primaryPayButton() {
         return (
