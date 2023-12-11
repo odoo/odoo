@@ -289,5 +289,16 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             }
         }
     },
+    // 11. Check that ZWS is not added in the link label input.
+    clickOnImgStep,
+    {
+        content: "Click on contact us button",
+        trigger: "iframe a.btn[href='/contactus']",
+    },
+    {
+        content: "Verify that the link label input does not contain ZWS",
+        trigger: "#o_link_dialog_label_input:propValue('Contact Us')",
+        run: () => null, // It's a check.
+    },
     ...wTourUtils.clickOnSave(),
 ]);
