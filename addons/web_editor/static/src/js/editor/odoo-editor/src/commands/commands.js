@@ -337,6 +337,7 @@ export const editorCommands = {
                 if (inLI && tagName === "P") {
                     inLI.oToggleList(0);
                 } else {
+                    block.classList.remove('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
                     setTagName(block, tagName);
                 }
             } else {
