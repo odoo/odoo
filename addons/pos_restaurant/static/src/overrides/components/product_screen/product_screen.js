@@ -34,7 +34,7 @@ patch(ProductScreen.prototype, {
         return this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size;
     },
     submitOrder() {
-        this.pos.sendOrderInPreparation(this.pos.get_order());
+        this.pos.sendOrderInPreparationUpdateLastChange(this.pos.get_order());
     },
     get primaryReviewButton() {
         return (
