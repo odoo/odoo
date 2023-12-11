@@ -1735,6 +1735,9 @@ class Request:
 
         try:
             rule, args = ir_http._match(self.httprequest.path)
+            if rule.endpoint.routing['no_db']:
+                self.env.cr.close()
+                self.env = None
         except NotFound:
             self.params = self.get_http_params()
             response = ir_http._serve_fallback()
