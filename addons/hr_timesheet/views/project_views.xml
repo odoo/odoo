@@ -233,15 +233,15 @@
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
-                            <span class="o_td_label float-start">
+                            <span class="o_td_label float-start" attrs="{'invisible': [('planned_hours', '=', 0.0)]}">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
                                    attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1"/>

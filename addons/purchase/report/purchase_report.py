@@ -42,7 +42,7 @@ class PurchaseReport(models.Model):
         help="Amount of time between purchase approval and document creation date. Due to a hack needed to calculate this, \
               every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
     price_total = fields.Float('Total', readonly=True)
-    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg")
+    price_average = fields.Float('Average Cost', readonly=True, group_operator="avg", digits='Product Price')
     nbr_lines = fields.Integer('# of Lines', readonly=True)
     category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)

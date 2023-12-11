@@ -299,6 +299,7 @@ class AccountMove(models.Model):
         inverse='_inverse_partner_id',
         check_company=True,
         change_default=True,
+        index=True,
         ondelete='restrict',
     )
     commercial_partner_id = fields.Many2one(

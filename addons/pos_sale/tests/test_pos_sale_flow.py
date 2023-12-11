@@ -117,12 +117,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'type': 'product',
             'lst_price': 10.0,
+            'default_code': 'A001',
         })
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
             'type': 'product',
             'lst_price': 10.0,
+            'default_code': 'A002',
         })
         #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
