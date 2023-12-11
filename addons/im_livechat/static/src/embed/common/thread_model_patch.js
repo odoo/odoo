@@ -69,5 +69,6 @@ patch(Thread.prototype, {
         if (this.type === "livechat") {
             return this.operator.avatarUrl;
         }
+        return super.avatarUrl;
     },
 });
