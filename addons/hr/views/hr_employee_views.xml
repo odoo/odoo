@@ -352,6 +352,29 @@
             </field>
         </record>
 
+        <!-- This part of the view_employee_form is defined separately so that the
+        smartbutton can have lower priority and therefore be last in the list. -->
+        <record id="view_employee_form_smartbutton_inherited" model="ir.ui.view">
+            <field name="name">view.employee.form.smartbutton.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="view_employee_form"/>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="action_related_contacts"
+                        class="oe_stat_button"
+                        icon="fa-address-card-o"
+                        type="object"
+                        help="Related Contacts">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="related_partners_count"></field></span>
+                            <span class="o_stat_text">Contacts</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+
         <record id="hr_employee_view_activity" model="ir.ui.view">
             <field name="name">hr.employee.activity</field>
             <field name="model">hr.employee</field>

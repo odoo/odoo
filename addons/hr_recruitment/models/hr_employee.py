@@ -9,6 +9,13 @@ class HrEmployee(models.Model):
 
     applicant_id = fields.One2many('hr.applicant', 'emp_id', 'Applicant')
 
+    def _get_partner_count_depends(self):
+        return super()._get_partner_count_depends() + ['applicant_id']
+
+    def _get_related_partners(self):
+        partners = super()._get_related_partners()
+        return partners | self.sudo().applicant_id.partner_id
+
     @api.model_create_multi
     def create(self, vals_list):
         employees = super().create(vals_list)
