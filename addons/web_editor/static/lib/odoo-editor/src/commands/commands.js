@@ -45,6 +45,7 @@ import {
     getCursorDirection,
     firstLeaf,
     lastLeaf,
+    resetOuids,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -471,6 +472,26 @@ export const editorCommands = {
         // If the selection is collapsed, unlink the whole link:
         // `<a>a[]b</a>` => `a[]b`.
         getDeepRange(editor.editable, { sel, splitText: true, select: true });
+
+        const targetedNodes1 = getSelectedNodes(editor.editable);
+        const targetedNodesHasBlock = targetedNodes1.some(isBlock);
+        if (targetedNodesHasBlock) {
+            const links = new Set(targetedNodes1.map(node => closestElement(node, 'a')).filter(Boolean));
+            const nodeToReset = new Set([...links].map(link => link.parentElement));
+            if (links.size) {
+                const cr = preserveCursor(editor.document);
+                for (const link of links) {
+                    unwrapContents(link);
+                }
+                cr();
+            }
+            for (const parent of nodeToReset) {
+                resetOuids(parent);
+            }
+            return;
+        }
+        console.log(`targetedNodes1:`, targetedNodes1);
+
         if (!isCollapsed) {
             // If not, unlink only the part(s) of the link(s) that are selected:
             // `<a>a[b</a>c<a>d</a>e<a>f]g</a>` => `<a>a</a>[bcdef]<a>g</a>`.
@@ -478,13 +499,15 @@ export const editorCommands = {
             const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
             // Split the links around the selection.
             const [startLink, endLink] = [closestElement(anchorNode, 'a'), closestElement(focusNode, 'a')];
-            if (startLink) {
+            const startLinkHasBlock = startLink && descendants(startLink).some(isBlock);
+            if (startLinkHasBlock) {
                 anchorNode = splitAroundUntil(anchorNode, startLink);
                 anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
                 setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
             }
             // Only split the end link if it was not already done above.
-            if (endLink && endLink.isConnected) {
+            const endLinkHasBlock = endLink && endLink.isConnected && descendants(endLink).some(isBlock);
+            if (endLinkHasBlock) {
                 focusNode = splitAroundUntil(focusNode, endLink);
                 focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
                 setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
@@ -492,6 +515,7 @@ export const editorCommands = {
         }
         const targetedNodes = isCollapsed ? [sel.anchorNode] : getSelectedNodes(editor.editable);
         const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a));
+        const nodeToReset = new Set([...links].map(link => descendants(link)).flat());
         if (links.size) {
             const cr = preserveCursor(editor.document);
             for (const link of links) {
@@ -499,6 +523,10 @@ export const editorCommands = {
             }
             cr();
         }
+        for (const parent of nodeToReset) {
+            resetOuids(parent);
+        }
+        debugger
     },
 
     // List

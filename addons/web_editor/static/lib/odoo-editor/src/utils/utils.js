@@ -1902,6 +1902,16 @@ export function moveNodes(
     const firstNode = nodes.find(node => !!node.parentNode);
     return firstNode ? leftPos(firstNode) : [destinationEl, destinationOffset];
 }
+/**
+ * Remove ouid of a node and it's descendants in order to allow that tree
+ * to be moved into another parent.
+ */
+export function resetOuids(node) {
+    node.ouid = undefined;
+    for (const descendant of descendants(node)) {
+        descendant.ouid = undefined;
+    }
+}
 
 //------------------------------------------------------------------------------
 // Prepare / Save / Restore state utilities
