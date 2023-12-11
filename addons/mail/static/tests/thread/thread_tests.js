@@ -1026,3 +1026,37 @@ QUnit.test("Transient messages are added at the end of the thread", async (asser
     const lastMessage = document.querySelectorAll(".o-mail-Message")[1];
     assert.ok(lastMessage.innerText.includes("You are in channel #General"));
 });
+
+QUnit.test(
+    "Contact name of the lead should not change after sending mail",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["crm.lead"].create({
+            'name': 'Test lead22',
+            'contact_name': 'Test Partner22',
+            'email_from': 'test22@example.com',
+        });
+        const { env } = await start();
+
+        const leadBeforeMail = await this.env.services.orm.call('crm.lead', "search_read", [], {
+            domain: [["id", "=", channelId]],
+            fields: ["contact_name"],
+            limit: 1,
+        });
+
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "crm.lead",
+        });
+
+        const leadAfterMail = await this.env.services.orm.call('crm.lead', "search_read", [], {
+            domain: [["id", "=", channelId]],
+            fields: ["contact_name"],
+            limit: 1,
+        });
+
+        assert.strictEqual(leadBeforeMail[0]['contact_name'], leadAfterMail[0]['contact_name']);
+
+    }
+);

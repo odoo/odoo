@@ -912,7 +912,7 @@ export class ThreadService {
                 .map((recipient) => recipient.persona.id);
             recipientEmails = thread.suggestedRecipients
                 .filter((recipient) => recipient.checked && !recipient.persona)
-                .map((recipient) => recipient.email);
+                .map((recipient) => `${recipient.name} <${recipient.email}>`);
             partner_ids?.push(...recipientIds);
         }
         const tmpId = this.messageService.getNextTemporaryId();
