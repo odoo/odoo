@@ -1,7 +1,10 @@
 /** @odoo-module alias=wysiwyg.widgets.Link **/
 
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
-import {isColorGradient} from "web_editor.utils";
+import {
+    isColorGradient,
+    getLinkLabel,
+} from "web_editor.utils";
 import {
     Component,
     onWillStart,
@@ -516,7 +519,7 @@ export class Link extends Component {
                 $node = $node.parent();
             }
             const linkNode = this.$link[0] || this.state.range.cloneContents();
-            const linkText = linkNode.innerText;
+            const linkText = getLinkLabel(linkNode);
             this.state.originalText = linkText.replace(/[ \t\r\n]+/g, ' ');
             if (linkNode instanceof DocumentFragment) {
                 this.state.originalHTML = $('<fakeEl>').append(linkNode).html();
