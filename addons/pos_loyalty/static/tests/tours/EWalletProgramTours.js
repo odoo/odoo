@@ -104,3 +104,21 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
 });
 
 //#endregion
+
+registry
+    .category("web_tour.tours")
+    .add('ExpiredEWalletProgramTour', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAAA'),
+            ProductScreen.addOrderline('Whiteboard Pen', '2', '6', '12.00'),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
+            PosLoyalty.clickEWalletButton(),
+            Dialog.is({ title: "No valid eWallet found" }),
+            Dialog.confirm(),
+        ].flat(),
+});
