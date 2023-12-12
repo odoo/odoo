@@ -91,13 +91,9 @@ export class PosStore extends Reactive {
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(
-        env,
-        { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, dialog, printer }
-    ) {
+    async setup(env, { orm, number_buffer, hardware_proxy, barcode_reader, ui, dialog, printer }) {
         this.env = env;
         this.orm = orm;
-        this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
         this.ui = ui;
