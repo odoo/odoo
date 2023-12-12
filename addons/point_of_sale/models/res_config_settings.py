@@ -36,6 +36,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
     module_pos_six = fields.Boolean(string="Six Payment Terminal", help="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.")
     module_pos_paytm = fields.Boolean(string="PayTM Payment Terminal", help="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method.")
+    module_pos_alipay = fields.Boolean(string="Alipay QR Code Payment", help="The transactions are processed by Alipay. Set your Alipay credentials on the related payment method.")
     module_pos_preparation_display = fields.Boolean(string="Preparation Display", help="Show orders on the preparation display screen.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
