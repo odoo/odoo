@@ -135,7 +135,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 employees: kiosk_backend_info.employees,
                 departments: kiosk_backend_info.departments,
                 kioskMode: kiosk_backend_info.kiosk_mode,
-                barcodeSource: kiosk_backend_info.employees,
+                barcodeSource: kiosk_backend_info.barcode_source,
             },
         dev: env.debug,
         translateFn: _t,
