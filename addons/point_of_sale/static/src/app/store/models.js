@@ -506,7 +506,7 @@ export class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
         // Set the new values for modified lot lines.
         const lotLinesToRemove = [];
         for (const lotLine of this.pack_lot_lines) {
@@ -1077,16 +1077,18 @@ export class Orderline extends PosModel {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
     findAttribute(values) {
-        const listOfAttributes = Object.values(this.pos.attributes_by_ptal_id).filter(attribute => {
-            const attFound = attribute.values.filter(target => {
-                return Object.values(values).includes(target.id);
-            });
-            if (attFound.length > 0) {
-                attribute.valuesForOrderLine = attFound;
-                return true;
+        const listOfAttributes = Object.values(this.pos.attributes_by_ptal_id).filter(
+            (attribute) => {
+                const attFound = attribute.values.filter((target) => {
+                    return Object.values(values).includes(target.id);
+                });
+                if (attFound.length > 0) {
+                    attribute.valuesForOrderLine = attFound;
+                    return true;
+                }
+                return false;
             }
-            return false;
-        });
+        );
         return listOfAttributes;
     }
     getDisplayData() {
@@ -1105,8 +1107,12 @@ export class Orderline extends PosModel {
             internalNote: this.getNote(),
             comboParent: this.comboParent?.get_full_product_name(),
             pack_lot_lines: this.get_lot_lines(),
-            price_without_discount: this.env.utils.formatCurrency(this.getUnitDisplayPriceBeforeDiscount()),
-            attributes: this.attribute_value_ids ? this.findAttribute(this.attribute_value_ids) : false
+            price_without_discount: this.env.utils.formatCurrency(
+                this.getUnitDisplayPriceBeforeDiscount()
+            ),
+            attributes: this.attribute_value_ids
+                ? this.findAttribute(this.attribute_value_ids)
+                : [],
         };
     }
 }
@@ -1796,6 +1802,9 @@ export class Order extends PosModel {
     is_empty() {
         return this.orderlines.length === 0;
     }
+    get isBooked() {
+        return this.booked || !this.is_empty() || this.server_id;
+    }
     generate_unique_id() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
@@ -2081,7 +2090,10 @@ export class Order extends PosModel {
         }
 
         if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines({ ...options.draftPackLotLines, setQuantity: options.quantity === undefined });
+            this.selected_orderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
         }
 
         if (options.comboLines?.length) {
