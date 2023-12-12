@@ -2,6 +2,7 @@
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
+import { _t } from "@web/core/l10n/translation";
 
 export class OrderWidget extends Component {
     static template = "point_of_sale.OrderWidget";
@@ -19,5 +20,8 @@ export class OrderWidget extends Component {
                 ?.querySelector(".orderline.selected")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
         });
+    }
+    emptyCartText() {
+        return _t("Start adding products");
     }
 }

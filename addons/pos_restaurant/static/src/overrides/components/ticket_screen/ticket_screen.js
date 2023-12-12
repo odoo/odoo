@@ -52,6 +52,17 @@ patch(TicketScreen.prototype, {
         await this.pos.setTable(orderTable, order.uid);
         this.closeTicketScreen();
     },
+    async onDeleteOrder(order) {
+        const confirmed = await super.onDeleteOrder(...arguments);
+        if (
+            confirmed &&
+            this.pos.config.module_pos_restaurant &&
+            this.pos.table &&
+            !this.pos.orders.some((order) => order.tableId === this.pos.table.id)
+        ) {
+            return this.pos.showScreen("FloorScreen");
+        }
+    },
     get allowNewOrders() {
         return this.pos.config.module_pos_restaurant
             ? Boolean(this.pos.table)

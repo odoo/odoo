@@ -281,9 +281,14 @@ patch(PosStore.prototype, {
             Promise.reject(e);
         }
         this.table = null;
+        const order = this.get_order();
+        if (order && !order.isBooked) {
+            this.removeOrder(order);
+        }
         this.set_order(null);
     },
     setCurrentOrderToTransfer() {
+        this.selectedOrder.setBooked(true);
         this.orderToTransfer = this.selectedOrder;
     },
     async transferTable(table) {
@@ -329,5 +334,11 @@ patch(PosStore.prototype, {
             }
         }
         return super.updateModelsData(models_data);
+    },
+    async addProductToCurrentOrder(product, options = {}) {
+        if (this.config.module_pos_restaurant && !this.get_order().booked) {
+            this.get_order().setBooked(true);
+        }
+        return super.addProductToCurrentOrder(...arguments);
     },
 });
