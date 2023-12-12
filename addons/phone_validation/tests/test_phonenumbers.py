@@ -21,3 +21,26 @@ class TestPhonenumbers(BaseCase):
                 phone_validation.phone_format('0456998877', None, '32', force_format='E164'),
                 '+32456998877'
             )
+
+    def test_get_region_data_for_number(self):
+        for source, (exp_code, exp_national_number, exp_phone_code) in zip(
+            [
+                '+32456998877',  # all hail Philippe
+                '+1-613-555-0177',  # canada, same phone_code as US
+                '+1-202-555-0124',  # us, same phone_code as CA
+            ],
+            [
+                ('BE', '456998877', '32'),
+                ('CA', '6135550177', '1'),
+                ('US', '2025550124', '1'),
+            ],
+        ):
+            with self.subTest(source=source):
+                self.assertDictEqual(
+                    phone_validation.phone_get_region_data_for_number(source),
+                    {
+                        'code': exp_code,
+                        'national_number': exp_national_number,
+                        'phone_code': exp_phone_code,
+                    }
+                )
