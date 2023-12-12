@@ -2,6 +2,7 @@ declare module "services" {
     import { actionService } from "@web/webclient/actions/action_service";
     import { commandService } from "@web/core/commands/command_service";
     import { companyService } from "@web/webclient/company_service";
+    import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
     import { dialogService } from "@web/core/dialog/dialog_service";
     import { effectService } from "@web/core/effects/effect_service";
     import { fieldService } from "@web/core/field_service";
@@ -23,6 +24,7 @@ declare module "services" {
         action: ReturnType<typeof actionService.start>;
         command: ReturnType<typeof commandService.start>;
         company: ReturnType<typeof companyService.start>;
+        datetime_picker: ReturnType<typeof datetimePickerService.start>;
         dialog: ReturnType<typeof dialogService.start>;
         effect: ReturnType<typeof effectService.start>;
         field: ReturnType<typeof fieldService.start>;

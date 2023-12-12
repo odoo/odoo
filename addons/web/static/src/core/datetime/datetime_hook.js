@@ -4,6 +4,9 @@ import { onPatched, onWillRender, useEffect, useRef } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @param {import("./datetimepicker_service").DateTimePickerHookParams} hookParams
+ */
 export function useDateTimePicker(hookParams) {
     const datetimePicker = useService("datetime_picker");
     if (typeof hookParams.target === "string") {
