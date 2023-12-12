@@ -29,6 +29,7 @@ export function OR(...args) {
 }
 
 export function makeStore(env) {
+    Record.UPDATE = 0;
     let storeReady = false;
     const res = {
         // fake store for now, until it becomes a model
