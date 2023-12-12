@@ -276,7 +276,6 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                is_minimized: true,
                 partner_id: pyEnv.currentPartnerId,
             }),
         ],

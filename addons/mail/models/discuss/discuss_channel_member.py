@@ -29,8 +29,7 @@ class ChannelMember(models.Model):
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
-    fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
-    is_minimized = fields.Boolean("Conversation is minimized")
+    fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
         [("mentions", "Mentions Only"), ("no_notif", "Nothing")],
         "Customized Notifications",
