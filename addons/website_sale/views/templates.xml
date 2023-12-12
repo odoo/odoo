@@ -293,7 +293,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
