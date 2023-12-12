@@ -315,6 +315,12 @@ export class HtmlField extends Component {
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
         );
 
+        if (this.props.isCollaborative) {
+            this.wysiwyg.odooEditor.addEventListener("onExternalHistorySteps", () =>
+                this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this._isDirty())
+            );
+        }
+
         this.isRendered = true;
     }
     /**
