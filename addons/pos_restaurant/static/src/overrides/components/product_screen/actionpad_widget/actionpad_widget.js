@@ -53,7 +53,11 @@ patch(ActionpadWidget.prototype, {
             const category = this.pos.db.category_by_id[categoryId];
             if (category) {
                 if (!acc[category.id]) {
-                    acc[category.id] = { count: curr.quantity, name: category.name };
+                    acc[category.id] = {
+                        count: curr.quantity,
+                        name: category.name,
+                        id: category.id,
+                    };
                 } else {
                     acc[category.id].count += curr.quantity;
                 }

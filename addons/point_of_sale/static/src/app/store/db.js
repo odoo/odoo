@@ -711,7 +711,10 @@ export class PosDB {
         return savedOrders.filter(
             (order) =>
                 ids.includes(order.id) &&
-                (order.data.server_id || order.data.lines.length || order.data.statement_ids.length)
+                (order.data.server_id ||
+                    order.data.lines.length ||
+                    order.data.statement_ids.length ||
+                    order.data.booked)
         );
     }
     /**
