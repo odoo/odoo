@@ -588,6 +588,7 @@ class SaleOrder(models.Model):
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
+    @api.depends_context('lang')
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
