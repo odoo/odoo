@@ -159,6 +159,12 @@ export class ImageCrop extends Component {
         const offset = this.$media.offset();
         offset.left += parseInt(this.$media.css('padding-left'));
         offset.top += parseInt(this.$media.css('padding-right'));
+        const frameElement = this.$media[0].ownerDocument.defaultView.frameElement
+        if (frameElement) {
+            const frameRect = frameElement.getBoundingClientRect();
+            offset.left += frameRect.left;
+            offset.top += frameRect.top;
+        }
         $cropperWrapper[0].style.left = `${offset.left}px`;
         $cropperWrapper[0].style.top = `${offset.top}px`;
 

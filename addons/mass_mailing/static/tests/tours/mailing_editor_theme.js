@@ -24,7 +24,8 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'iframe html:has(#oe_snippets.d-none)',
+            trigger: 'html:has(#oe_snippets.d-none)',
+            extra_trigger: 'iframe html:not(:has(.o_mail_theme_selector_new))',
             run: () => null, // no click, just check
         },
         {
@@ -81,7 +82,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'iframe html:has(#oe_snippets.d-none)',
+            trigger: 'html:has(#oe_snippets.d-none)',
             run: () => null,
         },
         {

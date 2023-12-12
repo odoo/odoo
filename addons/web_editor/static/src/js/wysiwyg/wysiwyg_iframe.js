@@ -103,8 +103,6 @@ patch(Wysiwyg.prototype, {
                 $iframeTarget.html($targetClone.html());
                 self.$iframeBody = $iframeTarget;
                 $iframeTarget.attr("isMobile", isMobileOS());
-                const $utilsZone = $('<div class="iframe-utils-zone">');
-                self.$utilsZone = $utilsZone;
 
                 const $iframeWrapper = $('<div class="iframe-editor-wrapper odoo-editor">');
                 const $codeview = $('<textarea class="o_codeview d-none"/>');
@@ -112,15 +110,17 @@ patch(Wysiwyg.prototype, {
 
                 $iframeTarget.append($codeview);
                 $iframeTarget.append($iframeWrapper);
-                $iframeTarget.append($utilsZone);
                 $iframeWrapper.append(self.$editable);
 
                 self.options.toolbarHandler = $('#web_editor-top-edit', self.$iframe[0].contentWindow.document);
-                $iframeTarget.on('click', '.o_fullscreen_btn', function () {
+                self.$el.on('click', '.o_fullscreen_btn', function () {
                     $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
                     var full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
                     self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
                     $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
+                    if (self.env.onToggleFullscreen) {
+                        self.env.onToggleFullscreen();
+                    }
                 });
                 resolve();
             };
@@ -163,7 +163,8 @@ patch(Wysiwyg.prototype, {
 
     _insertSnippetMenu() {
         if (this.options.inIframe) {
-            return this.snippetsMenu.appendTo(this.$utilsZone);
+            this.el.classList.add("d-flex");
+            return this.snippetsMenu.appendTo(this.$el);
         } else {
             return super._insertSnippetMenu(...arguments);
         }
@@ -182,7 +183,6 @@ patch(Wysiwyg.prototype, {
         }
         return Promise.all(assetsPromises);
     },
-
     /**
      * Bind the blur event on the iframe so that it would not blur when using
      * the sidebar.

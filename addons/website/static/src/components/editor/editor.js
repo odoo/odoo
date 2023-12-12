@@ -88,6 +88,8 @@ export class WebsiteEditorComponent extends Component {
         }
         this.wysiwygOptions.invalidateSnippetCache = false;
         this.websiteService.unblockPreview();
+        document.body.classList.add("o_website_navbar_transition_hide");
+        setTimeout(() => document.body.classList.add("o_website_navbar_hide"), 400);
     }
     /**
      * Prepares the editor for reload. Copies the widget element tree
@@ -139,6 +141,8 @@ export class WebsiteEditorComponent extends Component {
             this.websiteService.unblockPreview();
         }
         this.websiteContext.snippetsLoaded = false;
+        document.body.classList.remove("o_website_navbar_hide");
+        setTimeout(() => document.body.classList.remove("o_website_navbar_transition_hide"));
         setTimeout(this.destroyAfterTransition.bind(this), 400);
     }
     /**

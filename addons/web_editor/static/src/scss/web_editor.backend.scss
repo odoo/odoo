@@ -59,6 +59,23 @@
     }
 }
 
+.editor_has_snippets.o_field_widgetTextHtml_fullscreen .o_field_mass_mailing_html.o_form_fullscreen_ancestor {
+
+    iframe {
+        width: calc(100% - #{$o-we-sidebar-width});
+    }
+    #oe_snippets {
+        position: fixed;
+        z-index: $zindex-modal-backdrop + 1 !important;
+    }
+}
+
+.editor_has_snippets {
+    .oe_snippet.o_draggable_dragging {
+        z-index: $zindex-modal + 1 !important;
+    }
+}
+
 .o_field_widgetTextHtml_fullscreen {
     .o_field_mass_mailing_html.o_form_fullscreen_ancestor iframe {
         position: absolute !important;
@@ -66,7 +83,6 @@
         right: 0 !important;
         top: 0 !important;
         bottom: 0 !important;
-        width: 100% !important;
         min-height: 100% !important;
         z-index: $zindex-modal-backdrop + 1 !important;
         border: 0;

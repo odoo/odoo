@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the 'Design' tab.",
-        trigger: 'iframe .o_we_customize_design_btn',
+        trigger: '.o_we_customize_design_btn',
     },
     {
         content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
@@ -29,24 +29,24 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the 'Design' tab.",
-        trigger: 'iframe .o_we_customize_design_btn',
+        trigger: '.o_we_customize_design_btn',
     },
     {
         content: "Verify that the customize panel is not empty.",
-        trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
+        trigger: '.o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
     {
         content: "Click on the style tab.",
-        trigger: 'iframe .o_we_customize_snippet_btn',
+        trigger: '.o_we_customize_snippet_btn',
     },
     {
         content: "Click on the 'Design' tab.",
-        trigger: 'iframe .o_we_customize_design_btn',
+        trigger: '.o_we_customize_design_btn',
     },
     {
         content: "Verify that the customize panel is not empty.",
-        trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
+        trigger: '.o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
     ...stepUtils.discardForm(),

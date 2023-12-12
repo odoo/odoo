@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the snippets menu is not hidden",
-        trigger: 'iframe #oe_snippets:not(.d-none)',
+        trigger: '#oe_snippets:not(.d-none)',
         run: () => null,
     },
     {
@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the toolbar is there",
-        trigger: 'iframe #oe_snippets .o_we_customize_panel #toolbar',
+        trigger: '#oe_snippets .o_we_customize_panel #toolbar',
         run: () => null,
     },
     ...stepUtils.discardForm(),

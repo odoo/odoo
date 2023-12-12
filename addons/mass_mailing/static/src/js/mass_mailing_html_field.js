@@ -131,7 +131,6 @@ export class MassMailingHtmlField extends HtmlField {
             const clonedBody = clonedHtmlNode.querySelector('body');
             const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
             clonedBody.replaceChildren(clonedIframeTarget);
-            clonedBody.querySelector('.iframe-utils-zone').remove();
             clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
             iframe.srcdoc = clonedHtmlNode.outerHTML;
             const iframePromise = new Promise((resolve) => {
@@ -201,10 +200,6 @@ export class MassMailingHtmlField extends HtmlField {
             // previewing an option)
             this.wysiwyg.snippetsMenu.$scrollable.css('overflow-y', 'scroll');
         }
-
-        // Remove the web editor menu to avoid flicker (we add it back at the
-        // end of the method)
-        this.wysiwyg.$iframeBody.find('.iframe-utils-zone').addClass('d-none');
 
         // Filter the fetched templates based on the current model
         const args = this.props.filterTemplates
@@ -346,14 +341,6 @@ export class MassMailingHtmlField extends HtmlField {
             value = this.wysiwyg.getValue();
         }
         let blankEditable = "<p><br></p>";
-        const editableAreaIsEmpty = value === "" || value === blankEditable;
-
-        if (editableAreaIsEmpty) {
-            // unfold to prevent toolbar from going over the menu
-            this.wysiwyg.setSnippetsMenuFolded(false);
-            $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
-        }
-
         $themeSelectorNew.on('click', '.dropdown-item', async (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -432,8 +419,21 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         this.wysiwyg.setSnippetsMenuFolded(uiUtils.isSmall() || (selectedTheme && selectedTheme.name === 'basic'));
+        const editableAreaIsEmpty = value === "" || value === blankEditable;
 
-        this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
+        if (editableAreaIsEmpty) {
+            // TODO: Refactor this code so that it is clear what we are doing.
+            // We actually hide the OdooEditor toolbar by calling
+            // `wysiwyg.setSnippetsMenuFolded`, but this has the side effect of
+            // showing the SnippetsMenu. Because the SnippetsMenu is now at
+            // the side of the iframe, it is no longer hidden by the
+            // theme-picker, so we manually hide it by calling
+            // `snippetsMenu.setFolded(true)`
+            this.wysiwyg.setSnippetsMenuFolded(false);
+            this.wysiwyg.snippetsMenu.setFolded(true);
+            $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
+        }
+
         if (this.env.mailingFilterTemplates && this.wysiwyg) {
             this._hideIrrelevantTemplates(this.props.record);
         }
