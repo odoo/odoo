@@ -35,6 +35,7 @@ class HolidaysType(models.Model):
     icon_id = fields.Many2one('ir.attachment', string='Cover Image', domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]")
     active = fields.Boolean('Active', default=True,
                             help="If the active field is set to false, it will allow you to hide the time off type without removing it.")
+    show_on_dashboard = fields.Boolean(default=True, help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
 
     # employee specific computed data
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
@@ -360,12 +361,15 @@ class HolidaysType(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def get_allocation_data_request(self, target_date=None):
-        leave_types = self.search([
+    def get_allocation_data_request(self, target_date=None, hidden_allocations=True):
+        domain = [
             '|',
             ('company_id', 'in', self.env.context.get('allowed_company_ids')),
             ('company_id', '=', False),
-        ])
+        ]
+        if not hidden_allocations:
+            domain.append(('show_on_dashboard', '=', True))
+        leave_types = self.search(domain)
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
             return leave_types.get_allocation_data(employee, target_date)[employee]

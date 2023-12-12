@@ -39,7 +39,7 @@ export class TimeOffDashboard extends Component {
         this.state.holidays = await this.orm.call(
             "hr.leave.type",
             "get_allocation_data_request",
-            [this.state.date],
+            [this.state.date, false],
             {
                 context: context,
             }
