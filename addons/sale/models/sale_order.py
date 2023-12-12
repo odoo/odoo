@@ -640,6 +640,7 @@ class SaleOrder(models.Model):
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
+    @api.depends_context('lang')
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
