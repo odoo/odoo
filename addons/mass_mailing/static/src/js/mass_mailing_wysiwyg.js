@@ -112,6 +112,16 @@ export class MassMailingWysiwyg extends Wysiwyg {
     /**
      * @override
      */
+    async _insertSnippetMenu() {
+        const res = await super._insertSnippetMenu();
+        // Hide the snippetsMenu at first, other code will handle
+        // if it should be shown or not.
+        this.snippetsMenu.setFolded(true);
+        return res;
+    }
+    /**
+     * @override
+     */
     _getPowerboxOptions() {
         const options = super._getPowerboxOptions();
         const {commands} = options;

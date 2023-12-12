@@ -1963,7 +1963,10 @@ var SnippetsMenu = Widget.extend({
         this.$document.on('click.snippets_menu', '*', this._onClick);
         // Needed as bootstrap stop the propagation of click events for dropdowns
         this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', this._onClick);
-
+        // Also listen for clicks inside iframes.
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.on('click.snippets_menu', '*', this._onClick);
+        }
         // Adapt overlay covering when the window is resized / content changes
         this.debouncedCoverUpdate = throttleForAnimation(() => {
             this.updateCurrentSnippetEditorOverlay();
@@ -3311,8 +3314,12 @@ var SnippetsMenu = Widget.extend({
 
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.$body[0].ownerDocument);
-        if (!$scrollingElement[0] || $scrollingElement.find('body.o_in_iframe').length) {
+        if (!$scrollingElement[0]) {
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
+        }
+        const oNotebook = this.ownerDocument.querySelector(".o_notebook:not(.o_fullscreen_ancestor)");
+        if (oNotebook) {
+            $scrollingElement = $(oNotebook);
         }
 
         const dragAndDropOptions = this.options.getDragAndDropOptions({
