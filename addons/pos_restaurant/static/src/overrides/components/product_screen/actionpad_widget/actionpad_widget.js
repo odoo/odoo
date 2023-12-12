@@ -55,7 +55,10 @@ patch(ActionpadWidget.prototype, {
             for (const category of categories) {
                 if (category) {
                     if (!acc[category.id]) {
-                        acc[category.id] = { count: curr.quantity, name: category.name };
+                        acc[category.id] = {
+                            count: curr.quantity,
+                            name: category.name,
+                        };
                     } else {
                         acc[category.id].count += curr.quantity;
                     }

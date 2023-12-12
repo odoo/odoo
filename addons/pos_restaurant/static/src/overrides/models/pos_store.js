@@ -285,6 +285,10 @@ patch(PosStore.prototype, {
             Promise.reject(e);
         }
         this.selectedTable = null;
+        const order = this.get_order();
+        if (order && !order.isBooked) {
+            this.removeOrder(order);
+        }
         this.set_order(null);
     },
     tableHasOrders(table) {
@@ -355,5 +359,11 @@ patch(PosStore.prototype, {
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
+    },
+    async addProductToCurrentOrder(product, options = {}) {
+        if (this.config.module_pos_restaurant && !this.get_order().booked) {
+            this.get_order().setBooked(true);
+        }
+        return super.addProductToCurrentOrder(...arguments);
     },
 });

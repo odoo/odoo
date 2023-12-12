@@ -14,7 +14,7 @@ export class CenteredIcon extends Component {
     static template = xml`
         <div t-attf-class="{{props.class}} d-flex flex-column align-items-center justify-content-center h-100 w-100  text-muted">
             <i t-attf-class="fa {{props.icon}}" role="img" />
-            <h3 t-if="props.text" t-esc="props.text" class="mt-2"/>
+            <h3 t-if="props.text" t-esc="props.text" class="w-75 mt-2 text-center"/>
         </div>
     `;
 }
