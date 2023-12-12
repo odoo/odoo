@@ -1179,9 +1179,11 @@ class PurchaseOrderLine(models.Model):
         # Reset date, price and quantity since _onchange_quantity will provide default values
         self.price_unit = self.product_qty = 0.0
 
-        self._product_id_change()
-
+        # Because we might only have sellers with min qty set, we want
+        # to suggest a quantity before _product_id_change is called, in order
+        # to be able to use _select_seller while overriding _product_id_change
         self._suggest_quantity()
+        self._product_id_change()
 
     def _product_id_change(self):
         if not self.product_id:
