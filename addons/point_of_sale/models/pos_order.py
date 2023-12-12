@@ -656,7 +656,7 @@ class PosOrder(models.Model):
                 product=line.product_id,
                 taxes=line.tax_ids_after_fiscal_position,
                 price_unit=line.price_unit,
-                quantity=sign * line.qty,
+                quantity=-line.qty,
                 discount=line.discount,
                 account=account,
                 is_refund=is_refund,
@@ -800,7 +800,11 @@ class PosOrder(models.Model):
                 move_lines.append(aml_values)
 
         # Make a move with all the lines.
-        reversal_entry = self.env['account.move'].with_context(default_journal_id=self.config_id.journal_id.id).create({
+        reversal_entry = self.env['account.move'].with_context(
+            default_journal_id=self.config_id.journal_id.id,
+            skip_invoice_sync=True,
+            skip_invoice_line_sync=True,
+        ).create({
             'journal_id': self.config_id.journal_id.id,
             'date': fields.Date.context_today(self),
             'ref': _('Reversal of POS closing entry %s for order %s from session %s', self.session_move_id.name, self.name, self.session_id.name),
