@@ -953,16 +953,6 @@ class Field(MetaField('DummyField', (object,), {})):
         record_value = self.convert_to_record(cache_value, record)
         return self.convert_to_read(record_value, record)
 
-    def convert_to_onchange(self, value, record, names):
-        """ Convert ``value`` from the record format to the format returned by
-        method :meth:`BaseModel.onchange`.
-
-        :param value:
-        :param record:
-        :param names: a tree of field names (for relational fields only)
-        """
-        return self.convert_to_read(value, record)
-
     def convert_to_export(self, value, record):
         """ Convert ``value`` from the record format to the export format. """
         if not value:
@@ -3103,10 +3093,6 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record):
         return value.display_name
 
-    def convert_to_onchange(self, value, record, names):
-        # if value is a new record, serialize its origin instead
-        return super().convert_to_onchange(value._origin, record, names)
-
     def write(self, records, value):
         # discard recomputation of self on records
         records.env.remove_to_compute(self, records)
@@ -3420,16 +3406,6 @@ class Properties(Field):
             return value
 
         return super().convert_to_write(value, record)
-
-    def convert_to_onchange(self, value, record, names):
-        # hack for method onchange(): we invalidate the cache before generating
-        # the diff, so the properties definition record is not available in
-        # cache; to get the right value, we retrieve the definition record from
-        # the onchange snapshot, and put it in the cache of record
-        snapshot = names.get('__snapshot')
-        if snapshot is not None:
-            record._cache[self.definition_record] = snapshot[self.definition_record].id or None
-        return super().convert_to_onchange(value, record, names)
 
     def _get_res_ids_per_model(self, records, values_list):
         """Read everything needed in batch for the given records.
