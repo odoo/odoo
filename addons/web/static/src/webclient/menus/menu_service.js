@@ -25,6 +25,23 @@ function makeFetchLoadMenus() {
 
 function makeMenus(env, menusData, fetchLoadMenus) {
     let currentAppId;
+    function _getMenu(menuId) {
+        return menusData[menuId];
+    }
+    function _updateURL(menuId) {
+        env.services.router.pushState({ menu_id: menuId }, { lock: true });
+    }
+    function _setCurrentMenu(menu, updateURL = true) {
+        menu = typeof menu === "number" ? _getMenu(menu) : menu;
+        if (menu && menu.appID !== currentAppId) {
+            currentAppId = menu.appID;
+            env.bus.trigger("MENUS:APP-CHANGED");
+            if (updateURL) {
+                _updateURL(menu.id);
+            }
+        }
+    }
+
     return {
         getAll() {
             return Object.values(menusData);
@@ -32,9 +49,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         getApps() {
             return this.getMenu("root").children.map((mid) => this.getMenu(mid));
         },
-        getMenu(menuID) {
-            return menusData[menuID];
-        },
+        getMenu: _getMenu,
         getCurrentApp() {
             if (!currentAppId) {
                 return;
@@ -56,18 +71,12 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             await env.services.action.doAction(menu.actionID, {
                 clearBreadcrumbs: true,
                 onActionReady: () => {
-                    this.setCurrentMenu(menu);
+                    _setCurrentMenu(menu, false);
                 },
             });
+            _updateURL(menu.id);
         },
-        setCurrentMenu(menu) {
-            menu = typeof menu === "number" ? this.getMenu(menu) : menu;
-            if (menu && menu.appID !== currentAppId) {
-                currentAppId = menu.appID;
-                env.bus.trigger("MENUS:APP-CHANGED");
-                env.services.router.pushState({ menu_id: menu.id }, { lock: true });
-            }
-        },
+        setCurrentMenu: (menu) => _setCurrentMenu(menu),
         async reload() {
             if (fetchLoadMenus) {
                 menusData = await fetchLoadMenus(true);
