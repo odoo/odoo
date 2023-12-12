@@ -41,6 +41,7 @@ patch(ControlButtons.prototype, {
     },
     clickTransferOrder() {
         this.pos.orderToTransfer = this.pos.selectedOrder;
+        this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
     },
 });

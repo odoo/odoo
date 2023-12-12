@@ -147,7 +147,7 @@ export class TicketScreen extends Component {
                 ),
             });
             if (!confirmed) {
-                return;
+                return false;
             }
         }
         if (order && (await this._onBeforeDeleteOrder(order))) {
@@ -169,6 +169,7 @@ export class TicketScreen extends Component {
         if (this.pos.isOpenOrderShareable()) {
             this.pos._removeOrdersFromServer();
         }
+        return true;
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
