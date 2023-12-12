@@ -485,6 +485,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_30_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
 
+    def test_31_website_edit_megamenu_big_icons_subtitles(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
 
