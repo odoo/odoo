@@ -49,8 +49,6 @@ import {
     fillEmpty,
     isEmptyBlock,
     getCursorDirection,
-    firstLeaf,
-    lastLeaf,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -326,7 +324,9 @@ export const editorCommands = {
             !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
             block.isContentEditable
         ));
-        const [startContainer, startOffset, endContainer, endOffset] = [firstLeaf(range.startContainer), range.startOffset, lastLeaf(range.endContainer), range.endOffset];
+        let { startContainer, startOffset, endContainer, endOffset } = range;
+        const startContainerChild = startContainer.firstChild;
+        const endContainerChild = endContainer.lastChild;
         for (const block of deepestSelectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
@@ -349,10 +349,17 @@ export const editorCommands = {
                 children.forEach(child => newBlock.appendChild(child));
             }
         }
+        const isContextBlock = container => ['TD', 'DIV', 'LI'].includes(container.nodeName);
+        if (!startContainer.isConnected || isContextBlock(startContainer)) {
+            startContainer = startContainerChild.parentNode;
+        }
+        if (!endContainer.isConnected || isContextBlock(endContainer)) {
+            endContainer = endContainerChild.parentNode;
+        }
         const newRange = new Range();
-        newRange.setStart(startContainer,startOffset);
-        newRange.setEnd(endContainer,endOffset);
-        getDeepRange(editor.editable, { range: newRange, select: true, });
+        newRange.setStart(startContainer, startOffset);
+        newRange.setEnd(endContainer, endOffset);
+        getDeepRange(editor.editable, { range: newRange, select: true });
         editor.historyStep();
     },
 
