@@ -62,7 +62,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -290,7 +290,7 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
         ],
     });
     await start({
@@ -319,7 +319,7 @@ QUnit.test(
         pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+                Command.create({ partner_id: pyEnv.currentPartnerId, fold_state: "open" }),
                 Command.create({ partner_id: partnerId }),
             ],
         });
@@ -338,7 +338,7 @@ QUnit.test(
         pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+                Command.create({ partner_id: pyEnv.currentPartnerId, fold_state: "open" }),
             ],
         });
         await start();
@@ -502,7 +502,6 @@ QUnit.test(
                         0,
                         {
                             fold_state: "open",
-                            is_minimized: true,
                             partner_id: pyEnv.currentPartnerId,
                         },
                     ],
@@ -516,7 +515,6 @@ QUnit.test(
                         0,
                         {
                             fold_state: "open",
-                            is_minimized: true,
                             partner_id: pyEnv.currentPartnerId,
                         },
                     ],
@@ -589,7 +587,6 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
@@ -603,7 +600,6 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
@@ -617,7 +613,6 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
@@ -665,7 +660,7 @@ QUnit.test(
                     0,
                     0,
                     {
-                        is_minimized: true,
+                        fold_state: "open",
                         is_pinned: false,
                         partner_id: pyEnv.currentPartnerId,
                     },
@@ -784,7 +779,6 @@ QUnit.test(
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
@@ -820,7 +814,6 @@ QUnit.test("chat window should remain folded when new message is received", asyn
                 0,
                 {
                     fold_state: "folded",
-                    is_minimized: true,
                     partner_id: pyEnv.currentPartnerId,
                 },
             ],
@@ -935,7 +928,6 @@ QUnit.test(
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
@@ -1110,7 +1102,6 @@ QUnit.test("Server-synced chat windows should not open at page load on mobile", 
         channel_member_ids: [
             Command.create({
                 fold_state: "open",
-                is_minimized: true,
                 partner_id: pyEnv.currentPartnerId,
             }),
         ],

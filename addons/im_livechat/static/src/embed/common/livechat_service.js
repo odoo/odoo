@@ -161,6 +161,7 @@ export class LivechatService {
         if (this.state === SESSION_STATE.PERSISTED) {
             return this.thread;
         }
+        const temporaryThread = this.thread;
         this.persistThreadPromise =
             this.persistThreadPromise ?? this.getOrCreateThread({ persist: true });
         try {
@@ -168,19 +169,19 @@ export class LivechatService {
         } finally {
             this.persistThreadPromise = null;
         }
-        const chatWindow = this.store.discuss.chatWindows.find(
-            (c) => c.thread.id === this.TEMPORARY_ID
-        );
-        if (chatWindow) {
-            chatWindow.thread?.delete();
-            if (!this.thread) {
-                await this.chatWindowService.close(chatWindow);
-                return;
-            }
-            chatWindow.thread = this.thread;
-            if (this.env.services["im_livechat.chatbot"].active) {
-                await this.env.services["im_livechat.chatbot"].postWelcomeSteps();
-            }
+        if (temporaryThread) {
+            const chatWindow = this.store.discuss.chatWindows.find(
+                (c) => c.thread?.id === temporaryThread.id
+            );
+            temporaryThread.delete();
+            this.env.services["mail.chat_window"].close(chatWindow);
+        }
+        if (!this.thread) {
+            return;
+        }
+        this.chatWindowService.open(this.thread);
+        if (this.env.services["im_livechat.chatbot"].active) {
+            await this.env.services["im_livechat.chatbot"].postWelcomeSteps();
         }
         return this.thread;
     }

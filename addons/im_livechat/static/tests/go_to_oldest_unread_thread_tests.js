@@ -97,7 +97,6 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
                 Command.create({
                     partner_id: pyEnv.currentPartnerId,
                     fold_state: "open",
-                    is_minimized: true,
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
@@ -111,7 +110,6 @@ QUnit.test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async (
                 Command.create({
                     partner_id: pyEnv.currentPartnerId,
                     fold_state: "folded",
-                    is_minimized: true,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
@@ -144,7 +142,7 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
             channel_member_ids: [
                 Command.create({
                     partner_id: pyEnv.currentPartnerId,
-                    is_minimized: true,
+                    fold_state: "open",
                 }),
                 Command.create({ guest_id: guestId_1 }),
             ],
@@ -157,7 +155,7 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
             channel_member_ids: [
                 Command.create({
                     partner_id: pyEnv.currentPartnerId,
-                    is_minimized: true,
+                    fold_state: "open",
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
@@ -169,7 +167,7 @@ QUnit.test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async (
         },
         {
             channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+                Command.create({ partner_id: pyEnv.currentPartnerId, fold_state: "open" }),
             ],
         },
     ]);

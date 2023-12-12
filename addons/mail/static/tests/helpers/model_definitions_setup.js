@@ -67,7 +67,9 @@ insertModelFields("discuss.channel", {
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
     channel_member_ids: {
         default() {
-            return [Command.create({ partner_id: this.pyEnv.currentPartnerId })];
+            return [
+                Command.create({ partner_id: this.pyEnv.currentPartnerId, fold_state: "closed" }),
+            ];
         },
     },
     channel_type: { default: "channel" },
@@ -80,7 +82,7 @@ insertModelFields("discuss.channel", {
     uuid: { default: () => uniqueId("discuss.channel_uuid-") },
 });
 insertModelFields("discuss.channel.member", {
-    fold_state: { default: "open" },
+    fold_state: { default: "closed" },
     is_pinned: { default: true },
     message_unread_counter: { default: 0 },
 });

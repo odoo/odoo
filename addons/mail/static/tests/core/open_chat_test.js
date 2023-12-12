@@ -50,7 +50,6 @@ QUnit.test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => 
             Command.create({
                 partner_id: pyEnv.currentPartnerId,
                 fold_state: "open",
-                is_minimized: true,
             }),
             Command.create({ partner_id: partnerId }),
         ],

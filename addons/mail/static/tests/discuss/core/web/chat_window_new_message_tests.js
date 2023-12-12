@@ -67,13 +67,13 @@ QUnit.test(
             {
                 name: "channel-1",
                 channel_member_ids: [
-                    Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
                 ],
             },
             {
                 name: "channel-2",
                 channel_member_ids: [
-                    Command.create({ is_minimized: false, partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ fold_state: "closed", partner_id: pyEnv.currentPartnerId }),
                 ],
             },
         ]);
@@ -118,7 +118,6 @@ QUnit.test(
                     0,
                     {
                         fold_state: "open",
-                        is_minimized: true,
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],

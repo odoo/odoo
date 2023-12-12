@@ -20,17 +20,17 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
     ]);
@@ -82,17 +82,17 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         },
     ]);

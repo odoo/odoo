@@ -808,9 +808,8 @@ class Channel(models.Model):
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
-                    info['state'] = member.fold_state or 'open'
+                    info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
-                    info['is_minimized'] = member.is_minimized
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
                     info['seen_message_id'] = member.seen_message_id.id
@@ -937,17 +936,13 @@ class Channel(models.Model):
         ])
         for session_state in self.env['discuss.channel.member'].search(domain):
             if not state:
-                state = session_state.fold_state
                 if session_state.fold_state == 'open':
                     state = 'folded'
                 else:
                     state = 'open'
-            is_minimized = bool(state != 'closed')
             vals = {}
             if session_state.fold_state != state:
                 vals['fold_state'] = state
-            if session_state.is_minimized != is_minimized:
-                vals['is_minimized'] = is_minimized
             if vals:
                 session_state.write(vals)
             target = session_state.partner_id or session_state.guest_id

@@ -508,11 +508,9 @@ patch(MockServer.prototype, {
                 : memberOfCurrentUser.fold_state === "open"
                 ? "folded"
                 : "open";
-            const vals = {
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
                 fold_state: foldState,
-                is_minimized: foldState !== "closed",
-            };
-            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
+            });
             const [partner, guest] = this._mockResPartner__getCurrentPersona();
             this.pyEnv["bus.bus"]._sendone(partner || guest, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
@@ -650,11 +648,10 @@ patch(MockServer.prototype, {
             );
             if (memberOfCurrentUser) {
                 Object.assign(res, {
-                    is_minimized: memberOfCurrentUser.is_minimized,
                     is_pinned: memberOfCurrentUser.is_pinned,
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
-                    state: memberOfCurrentUser.fold_state || "open",
+                    state: memberOfCurrentUser.fold_state || "closed",
                     seen_message_id: Array.isArray(memberOfCurrentUser.seen_message_id)
                         ? memberOfCurrentUser.seen_message_id[0]
                         : memberOfCurrentUser.seen_message_id,
