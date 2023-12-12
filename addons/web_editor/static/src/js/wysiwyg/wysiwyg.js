@@ -35,6 +35,8 @@ const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
+const getCursorDirection = OdooEditorLib.getCursorDirection;
+const DIRECTIONS = OdooEditorLib.DIRECTIONS;
 
 var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
@@ -1277,8 +1279,17 @@ const Wysiwyg = Widget.extend({
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    anchorNode = link;
-                    focusNode = link;
+                    const isDirectionRight = getCursorDirection(selection.anchorNode, 0, selection.focusNode, 0) === DIRECTIONS.RIGHT;
+                    if (
+                        closestElement(selection.anchorNode, 'a') === link &&
+                        closestElement(selection.focusNode, 'a') === link
+                    ) {
+                        [anchorNode, focusNode] = isDirectionRight
+                            ? [selection.anchorNode, selection.focusNode]
+                            : [selection.focusNode, selection.anchorNode];
+                    } else {
+                        [anchorNode, focusNode] = [link, link];
+                    }
                 }
                 if (!focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
