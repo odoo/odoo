@@ -192,13 +192,4 @@ options.registry.TableOfContentNavbar = options.Class.extend({
 
 options.registry.TableOfContentMainColumns = options.Class.extend({
     forceNoDeleteButton: true,
-
-    /**
-     * @override
-     */
-    start: function () {
-        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        leftPanelEl.querySelector('.oe_snippet_clone').classList.add('d-none'); // TODO improve the way to do that
-        return this._super.apply(this, arguments);
-    },
 });
