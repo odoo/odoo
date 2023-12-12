@@ -28,7 +28,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.type == 'product':
             return False
-        free_qty = self.env['website'].get_current_website()._get_product_available_qty(self)
+        free_qty = self.env['website'].get_current_website()._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
     def _website_show_quick_add(self):
