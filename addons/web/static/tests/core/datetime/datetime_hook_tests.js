@@ -147,4 +147,36 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         assert.strictEqual(pickerProps.value.toSQL().split(" ")[0], "2023-06-06");
     });
+
+    QUnit.test("value is not updated if it did not change", async (assert) => {
+        const getShortDate = (date) => date.toSQL().split(" ")[0];
+
+        let pickerProps;
+        const defaultPickerProps = {
+            value: DateTime.fromSQL("2023-06-06"),
+            type: "date",
+        };
+
+        const input = await mountInput(() => {
+            pickerProps = useDateTimePicker({
+                pickerProps: defaultPickerProps,
+                onApply: (value) => {
+                    assert.step(getShortDate(value));
+                },
+            }).state;
+        });
+
+        assert.strictEqual(input.value, "06/06/2023");
+        assert.strictEqual(getShortDate(pickerProps.value), "2023-06-06");
+
+        await editInput(input, null, "06/06/2023");
+
+        assert.strictEqual(getShortDate(pickerProps.value), "2023-06-06");
+        assert.verifySteps([]);
+
+        await editInput(input, null, "07/06/2023");
+
+        assert.strictEqual(getShortDate(pickerProps.value), "2023-06-07");
+        assert.verifySteps(["2023-06-07"]);
+    });
 });
