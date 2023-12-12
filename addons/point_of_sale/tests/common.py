@@ -370,13 +370,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.tax_tag_refund_base = create_tag('Refund Base tag')
         cls.tax_tag_refund_tax = create_tag('Refund Tax tag')
 
-        def create_tax(percentage, price_include=False):
+        def create_tax(percentage, price_include=False, include_base_amount=False):
             return cls.env['account.tax'].create({
                 'name': f'Tax {percentage}%',
                 'amount': percentage,
                 'price_include': price_include,
                 'amount_type': 'percent',
-                'include_base_amount': False,
+                'include_base_amount': include_base_amount,
                 'invoice_repartition_line_ids': [
                     (0, 0, {
                         'repartition_type': 'base',
@@ -434,6 +434,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         tax_fixed006 = create_tax_fixed(0.06, price_include=True)
         tax_fixed012 = create_tax_fixed(0.12, price_include=True)
         tax7 = create_tax(7, price_include=False)
+        tax7base = create_tax(7, price_include=False, include_base_amount=True)
+        tax10nobase = create_tax(10)
         tax10 = create_tax(10, price_include=True)
         tax21 = create_tax(21, price_include=True)
 
@@ -447,6 +449,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         return {
             'tax7': tax7,
+            'tax7base': tax7base,
+            'tax10nobase': tax10nobase,
             'tax10': tax10,
             'tax21': tax21,
             'tax_fixed006': tax_fixed006,
