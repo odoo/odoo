@@ -3530,6 +3530,77 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
     });
 
+    QUnit.test("quick create record and click Edit, name_create fails", async (assert) => {
+        Object.assign(serverData, {
+            views: {
+                "partner,false,kanban": `
+                    <kanban sample="1">
+                        <field name="product_id"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="name"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                "partner,false,search": "<search/>",
+                "partner,false,list": '<tree><field name="foo"/></tree>',
+                "partner,false,form": `<form>
+                    <field name="product_id"/>
+                    <field name="foo"/>
+                </form>`,
+            },
+        });
+
+        const webClient = await createWebClient({
+            serverData,
+            async mockRPC(route, args) {
+                if (args.method === "name_create") {
+                    throw makeErrorFromResponse({
+                        code: 200,
+                        message: "Odoo Server Error",
+                        data: {
+                            name: "odoo.exceptions.UserError",
+                            debug: "traceback",
+                            arguments: ["This is a user error"],
+                            context: {},
+                        },
+                    });
+                }
+            },
+        });
+
+        await doAction(webClient, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            context: {
+                group_by: ["product_id"],
+            },
+        });
+
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
+
+        await quickCreateRecord(0);
+        assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
+
+        await editQuickCreateInput("display_name", "test");
+        await editRecord();
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
+        assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
+
+        // specify a name and save
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "test");
+        await click(target, ".modal .o_form_button_save");
+        assert.containsNone(target, ".modal");
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
+        const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
+        assert.strictEqual(firstRecord.innerText, "test");
+        assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
+    });
+
     QUnit.test("quick create record is re-enabled after discard on failure", async (assert) => {
         serverData.views["partner,false,form"] = `
             <form>
