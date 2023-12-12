@@ -83,8 +83,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         await this.popup.add(ConfirmPopup, {
             title: _t("Payments Difference"),
             body: _t(
-                "The maximum difference allowed is %s.\n\
-                    Please contact your manager to accept the closing difference.",
+                "The maximum difference allowed is %s.\nPlease contact your manager to accept the closing difference.",
                 this.env.utils.formatCurrency(this.props.amount_authorized_diff)
             ),
             confirmText: _t("OK"),

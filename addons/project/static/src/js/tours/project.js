@@ -28,8 +28,7 @@ registry.category("web_tour.tours").add('project_tour', {
     width: 200,
 }, {
     trigger: '.o_project_name input',
-    content: markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\
-     of a product, of a team, of a construction site, etc.</i>')),
+    content: markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer, of a product, of a team, of a construction site, etc.</i>')),
     position: 'right',
 }, {
     trigger: '.o_open_tasks',
@@ -87,16 +86,13 @@ registry.category("web_tour.tours").add('project_tour', {
 }, {
     trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
     extra_trigger: '.o_form_project_tasks',
-    content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \
-    Add new people to the followers' list to make them aware of the main changes about this task.")),
+    content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
     width: 350,
     position: "bottom",
 }, {
     trigger: "button:contains(Log note)",
     extra_trigger: '.o_form_project_tasks',
-    content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \
-    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \
-    or # <b>mentions</b> to reach an entire team.")),
+    content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
     width: 350,
     position: "bottom"
 }, {
