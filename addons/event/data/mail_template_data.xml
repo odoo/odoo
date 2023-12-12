@@ -269,7 +269,7 @@
                     </div>
                     <t t-if="object.barcode"> 
                         <div style="margin-bottom: 5px;">
-                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" alt="QR Code"/>
+                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" width="100" height="100" alt="QR Code"/>
                         </div>
                     </t>
                     <t t-if="not object.company_id.uses_default_logo">
