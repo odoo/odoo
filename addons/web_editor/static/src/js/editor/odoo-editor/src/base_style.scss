@@ -8,7 +8,7 @@ li.oe-nested {
         padding: 0.5rem;
     }
 }
-$sizes: 'xs', 'sm', 'md', 'lg', 'xl', 'xxl';
+$sizes: '', 'xs-', 'sm-', 'md-', 'lg-', 'xl-', 'xxl-';
 .o_text_columns {
     max-width: 100% !important;
     padding: 0 !important;
@@ -17,10 +17,10 @@ $sizes: 'xs', 'sm', 'md', 'lg', 'xl', 'xxl';
     margin: 0 !important;
     @each $size in $sizes {
         @for $i from 1 through 12 {
-            & > .col-#{$size}-#{$i}:first-of-type {
+            & > .col-#{$size}#{$i}:first-of-type {
                 padding-left: 0;
             }
-            & > .col-#{$size}-#{$i}:last-of-type {
+            & > .col-#{$size}#{$i}:last-of-type {
                 padding-right: 0;
             }
         }
