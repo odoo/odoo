@@ -322,7 +322,6 @@ class Applicant(models.Model):
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
         if 'default_activity_date_deadline' in self.env.context:
             deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
-            category = self.env.ref('hr_recruitment.categ_meet_interview')
             for applicant in applicants:
                 partners = applicant.partner_id | applicant.user_id.partner_id | applicant.department_id.manager_id.user_id.partner_id
                 self.env['calendar.event'].sudo().with_context(default_applicant_id=applicant.id).create({
@@ -330,7 +329,6 @@ class Applicant(models.Model):
                     'partner_ids': [(6, 0, partners.ids)],
                     'user_id': self.env.uid,
                     'name': applicant.name,
-                    'categ_ids': [category.id],
                     'start': deadline,
                     'stop': deadline + relativedelta(minutes=30),
                 })
@@ -428,7 +426,6 @@ class Applicant(models.Model):
         else:
             partners |= self.user_id.partner_id
 
-        category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         # As we are redirected from the hr.applicant, calendar checks rules on "hr.applicant",
         # in order to decide whether to allow creation of a meeting.
@@ -440,7 +437,6 @@ class Applicant(models.Model):
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
-            'default_categ_ids': category and [category.id] or False,
             'attachment_ids': self.attachment_ids.ids
         }
         return res
