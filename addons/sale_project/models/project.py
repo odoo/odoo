@@ -10,7 +10,6 @@ from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import Query, SQL, OrderedSet
 
-from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
 class Project(models.Model):
@@ -93,7 +92,7 @@ class Project(models.Model):
 
     @api.depends('sale_order_id', 'task_ids.sale_order_id')
     def _compute_sale_order_count(self):
-        sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('state', 'not in', list(CLOSED_STATES))]})
+        sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]})
         for project in self:
             sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
             project.sale_order_line_count = len(sale_order_lines)
@@ -120,7 +119,7 @@ class Project(models.Model):
 
     def action_view_sols(self):
         self.ensure_one()
-        all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('state', 'not in', list(CLOSED_STATES))]})
+        all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]})
         action_window = {
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order.line',
@@ -149,7 +148,7 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'not in', list(CLOSED_STATES))]}).order_id
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
