@@ -41,14 +41,9 @@ export class Thread extends Record {
     }
     static new(data) {
         const thread = super.new(data);
-        Record.onChange(thread, ["is_minimized", "state"], () => {
-            if (
-                thread.is_minimized &&
-                thread.state !== "closed" &&
-                !this.store.env.services.ui.isSmall
-            ) {
+        Record.onChange(thread, ["state"], () => {
+            if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {
                 this.store.ChatWindow.insert({
-                    autofocus: 0,
                     folded: thread.state === "folded",
                     thread,
                 });
@@ -162,7 +157,6 @@ export class Thread extends Record {
             }
         },
     });
-    is_minimized = false;
     is_pinned = Record.attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {

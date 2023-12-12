@@ -100,7 +100,6 @@ class WebsiteVisitor(models.Model):
             ])
             channel_members.write({
                 'fold_state': 'open',
-                'is_minimized': True,
             })
             discuss_channels_info = discuss_channels._channel_info()
             notifications = []

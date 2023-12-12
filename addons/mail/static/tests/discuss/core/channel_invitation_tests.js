@@ -43,7 +43,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
     pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+            Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
         ],
         channel_type: "channel",
     });
