@@ -3172,7 +3172,8 @@ const SnippetOptionWidget = Widget.extend({
      */
     isTopFirstOption: false,
     /**
-     * Forces the target to not be possible to remove.
+     * Forces the target to not be possible to remove. It will also hide the
+     * clone button.
      *
      * @type {boolean}
      */
