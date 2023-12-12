@@ -4018,23 +4018,37 @@ export class OdooEditor extends EventTarget {
             if (!focusNode) {
                 return;
             }
-            // Find previous character.
-            let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
-            if (!previousCharacter) {
-                focusNode = previousLeaf(focusNode);
-                focusOffset = nodeSize(focusNode);
-                previousCharacter = focusNode.textContent[focusOffset - 1];
-            }
-            // Move selection if previous character is zero-width space
-            if (previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
-                focusOffset -= 1;
-                while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
-                    focusNode = nextLeaf(focusNode);
-                    focusOffset = focusNode && nodeSize(focusNode);
+            // If the selection is at the beginning of a code element at the
+            // start of its parent, make sure there's a zws before it, where the
+            // selection can then be set.
+            const codeElement = closestElement(anchorNode, 'code');
+            if (
+                codeElement?.classList.contains('o_inline_code') &&
+                !anchorOffset &&
+                (!codeElement.previousSibling || codeElement?.previousSibling.nodeType !== Node.TEXT_NODE ) &&
+                !isZWS(codeElement?.previousSibling)
+            ) {
+                codeElement.before(document.createTextNode('\u200B'));
+                setSelection(codeElement.previousSibling, 0);
+            } else {
+                // Find previous character.
+                let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+                if (!previousCharacter) {
+                    focusNode = previousLeaf(focusNode);
+                    focusOffset = nodeSize(focusNode);
+                    previousCharacter = focusNode.textContent[focusOffset - 1];
                 }
-                const startContainer = ev.shiftKey ? anchorNode : focusNode;
-                const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+                // Move selection if previous character is zero-width space
+                if (previousCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
+                    focusOffset -= 1;
+                    while (focusNode && (focusOffset < 0 || !focusNode.textContent[focusOffset])) {
+                        focusNode = nextLeaf(focusNode);
+                        focusOffset = focusNode && nodeSize(focusNode);
+                    }
+                    const startContainer = ev.shiftKey ? anchorNode : focusNode;
+                    const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
+                    setSelection(startContainer, startOffset, focusNode, focusOffset);
+                }
             }
         } else if (IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
             if (ev.shiftKey) {
@@ -4045,28 +4059,42 @@ export class OdooEditor extends EventTarget {
             if (!focusNode) {
                 return;
             }
-            // Find next character.
-            let nextCharacter = focusNode.textContent[focusOffset];
-            if (!nextCharacter) {
-                focusNode = nextLeaf(focusNode);
-                focusOffset = 0;
-                nextCharacter = focusNode.textContent[focusOffset];
-            }
-            // Move selection if next character is zero-width space
-            if (nextCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
-                focusOffset += 1;
-                let newFocusNode = focusNode;
-                while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
-                    newFocusNode = nextLeaf(newFocusNode);
+            // If the selection is at the ending of a code element at the
+            // end of its parent, make sure there's a zws after it, where the
+            // selection can then be set.
+            const codeElement = closestElement(anchorNode, 'code');
+            if (
+                codeElement?.classList.contains('o_inline_code') &&
+                anchorOffset === nodeSize(anchorNode) &&
+                (!codeElement?.nextSibling || codeElement?.nextSibling.nodeType !== Node.TEXT_NODE ) &&
+                !isZWS(codeElement?.nextSibling)
+            ) {
+                codeElement.after(document.createTextNode('\u200B'));
+                setSelection(codeElement.nextSibling, 1);
+            } else {
+                // Find next character.
+                let nextCharacter = focusNode.textContent[focusOffset];
+                if (!nextCharacter) {
+                    focusNode = nextLeaf(focusNode);
                     focusOffset = 0;
+                    nextCharacter = focusNode.textContent[focusOffset];
                 }
-                if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
-                    newFocusNode = focusNode; // Do not move selection to next block.
-                    focusOffset = nodeSize(focusNode);
+                // Move selection if next character is zero-width space
+                if (nextCharacter === '\u200B' && !focusNode.parentElement.hasAttribute('data-o-link-zws')) {
+                    focusOffset += 1;
+                    let newFocusNode = focusNode;
+                    while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
+                        newFocusNode = nextLeaf(newFocusNode);
+                        focusOffset = 0;
+                    }
+                    if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                        newFocusNode = focusNode; // Do not move selection to next block.
+                        focusOffset = nodeSize(focusNode);
+                    }
+                    const startContainer = ev.shiftKey ? anchorNode : newFocusNode;
+                    const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
+                    setSelection(startContainer, startOffset, newFocusNode, focusOffset);
                 }
-                const startContainer = ev.shiftKey ? anchorNode : newFocusNode;
-                const startOffset = ev.shiftKey ? anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
     }
