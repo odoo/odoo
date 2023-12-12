@@ -92,4 +92,82 @@ tour.register('edit_megamenu', {
         run: function () {}, // it's a check
     },
 ]);
+tour.register('edit_megamenu_big_icons_subtitles', {
+    test: true,
+    url: '/?enable_editor=1',
+}, [
+    // Add a megamenu item to the top menu.
+    {
+        content: "Click on a menu item",
+        trigger: '#top_menu .nav-item a',
+    },
+    {
+        content: "Click on 'Link' to open Link Dialog",
+        trigger: '.o_edit_menu_popover a.js_edit_menu',
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Mega Menu Item')",
+        extra_trigger: ".o_web_editor_dialog",
+        trigger: '.modal-body a.js_add_menu[data-type="mega"]',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        run: 'text Megaaaaa2!',
+    },
+    {
+        content: "Save the new menu item",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Save the changes to the menu",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check for the new mega menu",
+        trigger: '#top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
+        run: function () {}, // it's a check
+    },
+    // Edit a menu item
+    wTourUtils.clickOnEdit(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
+    toggleMegaMenu({extra_trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!")'}),
+    {
+        content: "Select the first menu link of the first column",
+        trigger: '.s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
+    },
+    wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
+    {
+        content: "Select Big Icons Subtitles mega menu",
+        trigger: '[data-select-label="Big Icons Subtitles"]',
+    },
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
+    {
+        content: "Select the h4 of first menu link of the first column",
+        trigger: '.s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child .media-body > h4',
+        run: function (actions) {
+            // Clicking on the h4 element first time leads to the selection of
+            // the entire a.nav-link, due to presence of `o_default_snippet_text` class
+            // hence, specify the selection on the h4 element
+            actions.click();
+            const range = document.createRange();
+            range.selectNodeContents(this.$anchor[0]);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        },
+    },
+    {
+        content: "Convert it to Bold",
+        trigger: '#oe_snippets #toolbar #bold',
+    },
+    ...wTourUtils.clickOnSave(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'a[data-action=edit]'}),
+    toggleMegaMenu(),
+    {
+        content: "The menu item should only convert selected text to Bold.",
+        trigger: '.s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child .media-body > :last-child:not(:has(strong))',
+        run: function () {}, // it's a check
+    },
+]);
 });
