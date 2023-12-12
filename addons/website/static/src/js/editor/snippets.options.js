@@ -3703,7 +3703,7 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
 });
 
 /**
- * Hides delete button for Mega Menu block.
+ * Hides delete and clone buttons for Mega Menu block.
  */
 options.registry.MegaMenuNoDelete = options.Class.extend({
     forceNoDeleteButton: true,
