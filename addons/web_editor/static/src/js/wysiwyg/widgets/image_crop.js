@@ -20,6 +20,7 @@ export class ImageCrop extends Component {
         activeOnStart: { type: Boolean, optional: true },
         media: { optional: true },
         mimetype: { type: String, optional: true },
+        sidebarCropButtons: { type: NodeList, optional: true },
     };
     static defaultProps = {
         activeOnStart: false,
@@ -34,6 +35,7 @@ export class ImageCrop extends Component {
     };
     state = useState({
         active: false,
+        showBtns: true,
     });
 
     elRef = useRef('el');
@@ -47,6 +49,10 @@ export class ImageCrop extends Component {
             this.mountedResolve = resolve;
         });
         this.notification = useService("notification");
+        this.listnerCallBack = (ev) => {
+            const targetButton = ev.target.closest('.WE-BUTTON, .o_we_user_value_widget.cropBtn');
+            targetButton && this._onCropOptionClick(targetButton.dataset);
+        };
         onMounted(async () => {
             const $el = $(this.elRef.el);
             this.$ = $el.find.bind($el);
@@ -55,6 +61,10 @@ export class ImageCrop extends Component {
             if (this.props.activeOnStart) {
                 this.state.active = true;
                 await this._show(this.props);
+            }
+            if (this.props.sidebarCropButtons?.length) {
+                this.state.showBtns = false;
+                this.props.sidebarCropButtons.forEach(btn => btn.addEventListener('click', this.listnerCallBack))
             }
             this.mountedResolve();
         });
@@ -65,6 +75,7 @@ export class ImageCrop extends Component {
             return this._show(newProps);
         });
         onWillDestroy(() => {
+            this.props.sidebarCropButtons?.forEach(btn => btn.removeEventListener("click", this.listnerCallBack))
             this._closeCropper();
         });
     }
@@ -238,7 +249,7 @@ export class ImageCrop extends Component {
      * @param {MouseEvent} ev
      */
     _onCropOptionClick(ev) {
-        const {action, value, scaleDirection} = ev.currentTarget.dataset;
+        const {action, value, scaleDirection} = ev.currentTarget ? ev.currentTarget.dataset : ev;
         switch (action) {
             case 'ratio':
                 this.$cropperImage.cropper('reset');
@@ -247,6 +258,7 @@ export class ImageCrop extends Component {
                 break;
             case 'zoom':
             case 'reset':
+                this.$cropperImage.cropper('setAspectRatio',0);
                 this.$cropperImage.cropper(action, value);
                 break;
             case 'rotate':

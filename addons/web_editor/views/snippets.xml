@@ -776,6 +776,49 @@
             <we-colorpicker data-color="true" data-color-name="c5"/>
         </we-row>
     </div>
+
+    <div class="o_snippet_crop" data-js="CropTools" data-selector="img">
+        <div class="o_crop_aspect_ratio">
+            <we-row string="Aspect Ratio">
+                    <we-button class="cropBtn" data-action="ratio" data-no-preview="true" data-value="0/0">Flexible</we-button>
+            </we-row>
+            <we-row string=" ">
+                    <we-button class="cropBtn" data-action="ratio" data-no-preview="true" data-value="16/9">16:9</we-button>
+                    <we-button class="cropBtn" data-action="ratio" data-no-preview="true" data-value="4/3">4:3</we-button>
+                    <we-button class="cropBtn" data-action="ratio" data-no-preview="true" data-value="1/1">1:1</we-button>
+                    <we-button class="cropBtn" data-action="ratio" data-no-preview="true" data-value="2/3">2:3</we-button>
+            </we-row>
+        </div>
+        <div class="o_crop_zoom">
+            <we-row string="Zoom">
+                <we-button class="fa fa-fw fa-search-plus cropBtn" data-action="zoom" data-no-preview="true" data-value="0.1" title="Zoom In"/>
+                <we-button class="fa fa-fw fa-search-minus cropBtn" data-action="zoom" data-no-preview="true" data-value="-0.1" title="Zoom Out"/>
+            </we-row>
+        </div>
+        <div class="o_crop_rotate">
+            <we-row string="Rotate">
+                <we-button class="fa fa-fw fa-rotate-left cropBtn" data-action="rotate" data-no-preview="true" data-value="-90" title="Rotate Left"/>
+                <we-button class="fa fa-fw fa-rotate-right cropBtn" data-action="rotate" data-no-preview="true" data-value="90" title="Rotate Right"/>
+            </we-row>
+        </div>
+        <div class="o_crop_flip">
+            <we-row string="Flip">
+                <we-button class="fa fa-fw fa-arrows-h cropBtn" data-action="flip" data-no-preview="true" data-scale-direction="scaleX" title="Flip-Horizontal"/>
+                <we-button class="fa fa-fw fa-arrows-v cropBtn" data-action="flip" data-no-preview="true" data-scale-direction="scaleY" title="Flip-Vertical"/>
+            </we-row>
+        </div>
+        <div class="o_crop_reset">
+            <we-row string="Reset">
+                <we-button class="cropBtn" data-action="reset" data-no-preview="true" title="Reset Image">Reset Image</we-button>
+            </we-row>
+        </div>
+        <div class="o_crop_actions">
+            <we-row string=" ">
+                <we-button class="btn o_we_bg_brand_primary cropBtn" data-action="apply" data-no-preview="true">Apply</we-button>
+                <we-button class="btn o_we_bg_danger cropBtn" data-action="discard" data-no-preview="true">Discard</we-button>
+            </we-row>
+        </div>
+    </div>
 </template>
 
 <!-- default block -->
