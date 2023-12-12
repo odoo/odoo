@@ -1904,7 +1904,7 @@ X[]
                         contentAfter: '<table><tbody><tr><td><p>[]<br></p></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>',
                     });
                 });
-                it('should delete a h1 insdie a nested list immediately after insertion', async () => {
+                it('should delete a h1 inside a nested list immediately after insertion', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li></ul>',
                         stepFunction: async editor => {
