@@ -85,6 +85,14 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
     tabs.push(tabTarget);
     const zIndexMainTab = 100000;
     let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
+    const onClickDropdownItem = (e) => {
+        const dropdownToggle = dropdownDiv.querySelector(".dropdown-toggle");
+        dropdownToggle.innerText = `Switch Tab (${e.target.innerText})`;
+        tabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
+        if (e.target.innerText !== "Qunit") {
+            tabTarget.style.zIndex = zIndexMainTab;
+        }
+    };
     if (!dropdownDiv) {
         tabTarget.style.zIndex = zIndexMainTab;
         dropdownDiv = document.createElement("div");
@@ -98,8 +106,11 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Switch Tab (${tabs.length})
             </button>
-            <ul class="dropdown-menu"></ul>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item">Qunit</a></li>
+            </ul>
         `;
+        dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
         rootTarget.appendChild(dropdownDiv);
     }
     const tabIndex = tabs.length;
@@ -108,14 +119,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
     li.appendChild(a);
     a.classList.add("dropdown-item");
     a.innerText = `Tab ${tabIndex}`;
-    browser.addEventListener("click", (ev) => {
-        const link = ev.target.closest(".dropdown-item");
-        if (a.isEqualNode(link)) {
-            tabs.forEach((tab) => (tab.style.zIndex = 0));
-            tabTarget.style.zIndex = zIndexMainTab;
-            dropdownDiv.querySelector(".dropdown-toggle").innerText = `Switch Tab (${tabIndex})`;
-        }
-    });
+    a.onclick = onClickDropdownItem;
     dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
 }
 
