@@ -2807,6 +2807,58 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
         self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
 
+    def test_replineshment_wizard_product(self):
+        """ Test the replenishment wizard functionality for product replenishment.
+        """
+        product_uom_qty = 50
+
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': product_uom_qty,
+            'warehouse_id': warehouse_1.id,
+        })
+        new_loc = self.env['stock.location'].create({
+            'name': 'New_location',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_locations').id,
+        })
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type',
+            'code': 'internal',
+            'sequence_code': 'NPT',
+            'default_location_src_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_dest_id': new_loc.id,
+            'warehouse_id': warehouse_1.id
+        })
+        route = self.env['stock.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'create a move to push location',
+                'location_src_id': self.env.ref('stock.stock_location_stock').id,
+                'location_dest_id': new_loc.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'transparent',
+                'picking_type_id': picking_type.id,
+            })],
+        })
+
+        replenish_wizard.route_id = route.id
+        genrated_picking = replenish_wizard.launch_replenishment()
+        links = genrated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        picking_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        last_picking_id = False
+        if picking_id and model_name:
+            last_picking_id = self.env[model_name[0]].browse(int(picking_id[0]))
+        self.assertTrue(last_picking_id, 'Picking not found')
+        move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
+        self.assertTrue(move_line, 'The product is not in the picking')
+        self.assertEqual(move_line[0].product_uom_qty, product_uom_qty, 'Quantities does not match')
+
     def test_push_rule_on_move_1(self):
         """ Create a route with a push rule, force it on a move, check that it is applied.
         """
