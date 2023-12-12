@@ -5742,18 +5742,30 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             this._swapMobileOrders(widgetValue, siblingEls);
         } else {
             switch (widgetValue) {
-                case "prev":
-                    this.$target[0].previousElementSibling.before(this.$target[0]);
+                case "prev": {
+                    // Consider only visible elements.
+                    let prevEl = this.$target[0].previousElementSibling;
+                    while (prevEl && window.getComputedStyle(prevEl).display === "none") {
+                        prevEl = prevEl.previousElementSibling;
+                    }
+                    prevEl?.insertAdjacentElement("beforebegin", this.$target[0]);
                     if (isNavItem) {
                         $tabPane.prev().before($tabPane);
                     }
                     break;
-                case "next":
-                    this.$target[0].nextElementSibling.after(this.$target[0]);
+                }
+                case "next": {
+                    // Consider only visible elements.
+                    let nextEl = this.$target[0].nextElementSibling;
+                    while (nextEl && window.getComputedStyle(nextEl).display === "none") {
+                        nextEl = nextEl.nextElementSibling;
+                    }
+                    nextEl?.insertAdjacentElement("afterend", this.$target[0]);
                     if (isNavItem) {
                         $tabPane.next().after($tabPane);
                     }
                     break;
+                }
             }
             if (mobileOrder) {
                 for (const el of siblingEls) {
@@ -5807,13 +5819,34 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             }
             // On mobile, items' reordering is independent from desktop inside
             // a snippet (left or right), not at a higher level (up or down).
-            if (moveLeftOrRight && isMobileView && this._getItemMobileOrder(this.$target[0])) {
-                const firstOrLast = widgetName === "move_left_opt" ? "0" :
-                    this.$target[0].parentElement.children.length - 1;
-                return !this.$target[0].classList.contains(`order-${firstOrLast}`);
+            if (moveLeftOrRight && isMobileView) {
+                const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+                if (targetMobileOrder) {
+                    const siblingEls = this.$target[0].parentElement.children;
+                    const orderModifier = widgetName === "move_left_opt" ? -1 : 1;
+                    let delta = 0;
+                    while (true) {
+                        delta += orderModifier;
+                        const nextOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
+                        const siblingEl = [...siblingEls].find(el => el.classList.contains(nextOrderClass));
+                        if (!siblingEl) {
+                            break;
+                        }
+                        if (window.getComputedStyle(siblingEl).display === "none") {
+                            continue;
+                        }
+                        return true;
+                    }
+                    return false;
+                }
             }
-            const firstOrLastChild = moveUpOrLeft ? ":first-child" : ":last-child";
-            return !this.$target.is(firstOrLastChild);
+            // Consider only visible elements.
+            const direction = moveUpOrLeft ? "previousElementSibling" : "nextElementSibling";
+            let siblingEl = this.$target[0][direction];
+            while (siblingEl && window.getComputedStyle(siblingEl).display === "none") {
+                siblingEl = siblingEl[direction];
+            }
+            return !!siblingEl;
         }
         return this._super(...arguments);
     },
@@ -5826,10 +5859,22 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     _swapMobileOrders(widgetValue, siblingEls) {
         const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
         const orderModifier = widgetValue === "prev" ? -1 : 1;
-        const newOrderClass = `order-${parseInt(targetMobileOrder[1]) + orderModifier}`;
-        const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
-        this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
-        comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
+        let delta = 0;
+        while (true) {
+            delta += orderModifier;
+            const newOrderClass = `order-${parseInt(targetMobileOrder[1]) + delta}`;
+            const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
+            // TODO In master: remove break.
+            if (!comparedEl) {
+                break;
+            }
+            if (window.getComputedStyle(comparedEl).display === "none") {
+                continue;
+            }
+            this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
+            comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
+            break;
+        }
     },
     /**
      * @returns {Boolean}
