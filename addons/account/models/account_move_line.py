@@ -1674,12 +1674,12 @@ class AccountMoveLine(models.Model):
             )
 
         def get_odoo_rate(vals, other_line=None):
+            if not is_payment(vals) and other_line and is_payment(other_line):
+                return get_accounting_rate(other_line)
             if vals.get('record') and vals['record'].move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = vals['record'].move_id.invoice_date
             else:
                 exchange_rate_date = vals['date']
-            if not is_payment(vals) and other_line and is_payment(other_line):
-                exchange_rate_date = other_line['date']
             return recon_currency._get_conversion_rate(company_currency, recon_currency, vals['company'], exchange_rate_date)
 
         def get_accounting_rate(vals):
