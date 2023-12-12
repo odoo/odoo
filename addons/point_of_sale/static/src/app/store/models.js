@@ -170,8 +170,28 @@ export class Product extends PosModel {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
         }
 
+<<<<<<< HEAD
         if (this.isConfigurable()) {
             const { confirmed, payload } = await this.openConfigurator({ initQuantity: quantity });
+||||||| parent of 62d3bf608bd5 (temp)
+        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
+            const attributes = this.attribute_line_ids
+                .map((id) => this.pos.attributes_by_ptal_id[id])
+                .filter((attr) => attr !== undefined);
+            const { confirmed, payload } = await this.env.services.popup.add(
+                ProductConfiguratorPopup,
+                {
+                    product: this,
+                    attributes: attributes,
+                    quantity: quantity,
+                }
+            );
+
+=======
+        if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
+            let { confirmed, payload } = await this._openProductConfiguratorPopup(quantity);
+
+>>>>>>> 62d3bf608bd5 (temp)
             if (confirmed) {
                 attribute_value_ids = payload.attribute_value_ids;
                 attribute_custom_values = payload.attribute_custom_values;
@@ -250,6 +270,40 @@ export class Product extends PosModel {
             price_extra,
             comboLines,
             attribute_value_ids,
+        };
+    }
+    async _openProductConfiguratorPopup(quantity) {
+        const attributes = this.attribute_line_ids
+            .map((id) => this.pos.attributes_by_ptal_id[id])
+            .filter((attr) => attr !== undefined);
+
+        // avoid opening the popup when each attribute has only one available option.
+        if (attributes.some((attribute) => attribute.values.length > 1 || attribute.values.some((value) => value.is_custom))) {
+            return await this.env.services.popup.add(
+                ProductConfiguratorPopup,
+                {
+                    product: this,
+                    attributes: attributes,
+                    quantity: quantity,
+                }
+            );
+        };
+
+        let selected_attributes = [];
+        let price_extra = 0.0;
+
+        attributes.forEach((attribute) => {
+            selected_attributes.push(attribute.values[0].name);
+            price_extra += attribute.values[0].price_extra;
+        });
+
+        return {
+            confirmed: true,
+            payload: {
+                selected_attributes,
+                price_extra,
+                quantity,
+            }
         };
     }
     isPricelistItemUsable(item, date) {
