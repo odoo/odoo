@@ -1737,7 +1737,16 @@ class Task(models.Model):
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
         if self.allow_subtasks:
-            default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
+            default_child_ids = []
+            should_copy_stage_id = bool(default.get('stage_id', False))
+            for child in self.child_ids:
+                subtask_default = {}
+                if has_default_name:
+                    subtask_default['name'] = child.name
+                if should_copy_stage_id:
+                    subtask_default['stage_id'] = child.stage_id.id
+                default_child_ids.append(child.copy(subtask_default).id)
+            default['child_ids'] = default_child_ids
         task_copy = super(Task, self).copy(default)
         if self.allow_task_dependencies:
             task_mapping = self.env.context.get('task_mapping')
