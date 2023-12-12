@@ -1508,6 +1508,9 @@ export class Order extends PosModel {
     is_empty() {
         return this.orderlines.length === 0;
     }
+    get isBooked() {
+        return this.booked || !this.is_empty() || this.server_id;
+    }
     generate_unique_id() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
