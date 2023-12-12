@@ -46,8 +46,8 @@
             <a class="s_events_event_cover" t-att-href="data['call_to_action_url']">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="record"/>
-                    <t t-set="_resize_height" t-value="256"/>
-                    <t t-set="_resize_width" t-value="256"/>
+                    <t t-set="_resize_height" t-value="512"/>
+                    <t t-set="_resize_width" t-value="512"/>
 
                     <div class="s_events_event_date position-absolute shadow-sm text-dark">
                         <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
