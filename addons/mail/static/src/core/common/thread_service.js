@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -249,12 +250,14 @@ export class ThreadService {
             // same for needaction messages, special case for mailbox:
             // kinda "fetch new/more" with needactions on many origin threads at once
             if (thread.eq(this.store.discuss.inbox)) {
-                for (const message of fetched) {
-                    const thread = message.originThread;
-                    if (message.notIn(thread.needactionMessages)) {
-                        thread.needactionMessages.unshift(message);
+                Record.MAKE_UPDATE(() => {
+                    for (const message of fetched) {
+                        const thread = message.originThread;
+                        if (thread && message.notIn(thread.needactionMessages)) {
+                            thread.needactionMessages.unshift(message);
+                        }
                     }
-                }
+                });
             } else {
                 const startNeedactionIndex =
                     after === undefined
@@ -323,13 +326,18 @@ export class ThreadService {
         }
         if (ids.length) {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
-            for (const preview of previews) {
-                const thread = this.store.Thread.get({ model: "discuss.channel", id: preview.id });
-                const message = this.store.Message.insert(preview.last_message, { html: true });
-                if (message.isNeedaction) {
-                    thread.needactionMessages.add(message);
+            Record.MAKE_UPDATE(() => {
+                for (const preview of previews) {
+                    const thread = this.store.Thread.get({
+                        model: "discuss.channel",
+                        id: preview.id,
+                    });
+                    const message = this.store.Message.insert(preview.last_message, { html: true });
+                    if (message.isNeedaction) {
+                        thread.needactionMessages.add(message);
+                    }
                 }
-            }
+            });
         }
     });
 
