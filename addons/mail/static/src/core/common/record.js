@@ -922,6 +922,9 @@ class RecordList extends Array {
             yield this.store.get(localId);
         }
     }
+    toJSON() {
+        return this.data.map((d) => d.localId);
+    }
 }
 
 /**
@@ -1876,15 +1879,79 @@ export class Record {
         return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
     }
 
+    _data = {
+        /** @type {Object<string, RecordField>} */
+        _fields: {},
+        __uses__: new RecordUses(),
+        /** @type {string[]} */
+        localIds: [],
+        /** @type {string[]} */
+        objectIds: [],
+    };
+    /**
+     * The referenced local id of the record.
+     *
+     * In VERSION 0: legacy format:
+     *    ModelName,OrderedExpressionEvaluationOfIdValues
+     *    e.g. "Persona,partner AND 3"
+     * In VERSION 1: local object id:
+     *    ModelName{number}(SELF_ID)[VERSION]
+     *    e.g. "Persona{20}(123456789)[1]"
+     *
+     * @type {string}
+     */
+    get localId() {
+        return this.localIds[0];
+    }
+    get objectId() {
+        return this.localId;
+    }
+    set localIds(newLocalIds) {
+        this._data.localIds = newLocalIds;
+    }
+    /**
+     * List of all local ids related to this record.
+     * Most of time records only have a single local id.
+     * Multiple local ids happen when 2 or more records happen
+     * to share same identity and they have being reconciled.
+     * Eventually record will keep a single local id, but to
+     * smooth transition a record can have temporarily many local
+     * ids.
+     */
+    get localIds() {
+        return this._data.localIds;
+    }
+    set objectIds(newObjectIds) {
+        this._data.objectIds = newObjectIds;
+    }
+    /**
+     * List of object ids of the record.
+     * Object ids include local ids, and also all currently known way
+     * to identify this record. An object id is a stringified version
+     * of data that identify the record. A non-local object id matches
+     * an AND expression in static id.
+     */
+    get objectIds() {
+        return this._data.objectIds;
+    }
+    set _fields(newFields) {
+        this._data._fields = newFields;
+    }
     /**
      * Raw relational values of the record, each of which contains object id(s)
      * rather than the record(s). This allows data in store and models being normalized,
      * which eases handling relations notably in when a record gets deleted.
-     *
-     * @type {Object<string, RecordField>}
      */
-    _fields = {};
-    __uses__ = new RecordUses();
+    get _fields() {
+        return this._data._fields;
+    }
+    set __uses__(newUses) {
+        this._data.__uses__ = newUses;
+    }
+    get __uses__() {
+        return this._data.__uses__;
+    }
+
     get _store() {
         return this.Model.store;
     }
@@ -1903,46 +1970,6 @@ export class Record {
      * @type {typeof Record}
      */
     Model;
-    /**
-     * The referenced local id of the record.
-     *
-     * In VERSION 0: legacy format:
-     *    ModelName,OrderedExpressionEvaluationOfIdValues
-     *    e.g. "Persona,partner AND 3"
-     * In VERSION 1: local object id:
-     *    ModelName{number}(SELF_ID)[VERSION]
-     *    e.g. "Persona{20}(123456789)[1]"
-     *
-     * @type {string}
-     */
-    get localId() {
-        return this.localIds[0];
-    }
-    /**
-     * List of all local ids related to this record.
-     * Most of time records only have a single local id.
-     * Multiple local ids happen when 2 or more records happen
-     * to share same identity and they have being reconciled.
-     * Eventually record will keep a single local id, but to
-     * smooth transition a record can have temporarily many local
-     * ids.
-     *
-     * @type {string[]}
-     */
-    localIds = [];
-    get objectId() {
-        return this.localId;
-    }
-    /**
-     * List of object ids of the record.
-     * Object ids include local ids, and also all currently known way
-     * to identify this record. An object id is a stringified version
-     * of data that identify the record. A non-local object id matches
-     * an AND expression in static id.
-     *
-     * @type {string[]}
-     */
-    objectIds = [];
 
     constructor() {
         this.setup();
