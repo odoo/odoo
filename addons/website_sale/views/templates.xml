@@ -2055,7 +2055,12 @@
                                             <hr class="w-100"/>
                                         </div>
                                         <a role="button" href="#" class="a-submit a-submit-disable a-submit-loading btn btn-primary w-100 w-md-auto order-1 order-md-3">
-                                            <t t-out="'Continue checkout' if mode == ('new', 'billing') else 'Save address'"/>
+                                            <t t-if="mode == ('new', 'billing')">
+                                                Continue checkout
+                                            </t>
+                                            <t t-else="">
+                                                Save address
+                                            </t>
                                             <i class="fw-light fa fa-angle-right ms-2"/>
                                         </a>
                                     </div>
