@@ -644,35 +644,73 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _onRemoveClick: function (ev) {
-        var self = this;
         ev.stopPropagation();
-        Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), {
-            confirm_callback: function () {
-                var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
-                var id = parseInt($a.data('id'), 10);
-                var attachment = _.findWhere(self.attachments, {id: id});
-                 return self._rpc({
-                    route: '/web_editor/attachment/remove',
-                    params: {
-                        ids: [id],
-                    },
-                }).then(function (prevented) {
-                    if (_.isEmpty(prevented)) {
-                        self.attachments = _.without(self.attachments, attachment);
-                        self.attachments.filter(at => at.original_id[0] === attachment.id).forEach(at => delete at.original_id);
-                        if (!self.attachments.length) {
-                            self._renderThumbnails(); //render the message and image if empty
-                        } else {
-                            $a.closest('.o_existing_attachment_cell').remove();
-                        }
-                        return;
-                    }
-                    self.$errorText.replaceWith(QWeb.render('wysiwyg.widgets.image.existing.error', {
-                        views: prevented[id],
-                        widget: self,
-                    }));
-                });
+        const dialogOptions = this._getRemoveDialogOptions(ev);
+        Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), dialogOptions);
+    },
+    _getRemoveDialogOptions(ev) {
+        const self = this;
+        return {
+            confirm_callback() {
+                self._removeAttachment(ev);
             }
+        };
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     * @param {Object} kwargs
+     * @param {Function} callback - action to take right after deleting the
+     * attachment from the DB (e.g. remove HTML elements using it).
+     * @returns {Promise}
+     */
+    _removeAttachment(ev, kwargs, callback) {
+        const self = this;
+        var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
+        var id = parseInt($a.data('id'), 10);
+        var attachment = _.findWhere(this.attachments, {id: id});
+        if (attachment.original_id) {
+            // The attachment is not the original file. Let's remove all its
+            // derivatives.
+            id = attachment.original_id[0];
+        }
+        const attachments = this.attachments.filter(attachment =>
+            id === parseInt(attachment.id) || id === parseInt(attachment.original_id[0])
+        );
+        const ids = attachments.map(att => att.id);
+        return this._rpc({
+            route: '/web_editor/attachment/remove',
+            params: {
+                ids,
+                ...kwargs,
+            },
+        }).then(function (prevented) {
+            if (_.isEmpty(prevented)) {
+                if (callback) {
+                    callback(attachments);
+                }
+                self.attachments = _.without(self.attachments, ...attachments);
+                if (!self.attachments.length) {
+                    self._renderThumbnails(); //render the message and image if empty
+                } else {
+                    const shownAttachments =  ev.currentTarget.closest(".o_we_existing_attachments");
+                    ids.forEach(id => {
+                        shownAttachments
+                            .querySelector(`.o_existing_attachment_cell[data-id='${id}']`)
+                            .remove();
+                    });
+                }
+                return;
+            }
+
+            const errorRender = QWeb.render('wysiwyg.widgets.image.existing.error', {
+                views: prevented[id],
+                widget: self,
+            }).trim();
+            self.$errorText[0].parentElement.replaceChild(
+                new DOMParser().parseFromString(errorRender, "text/html").activeElement,
+                self.$errorText[0]
+            );
         });
     },
     /**

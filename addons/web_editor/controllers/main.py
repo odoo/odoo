@@ -236,6 +236,8 @@ class Web_Editor(http.Controller):
 
             if views:
                 removal_blocked_by[attachment.id] = views.read(['name'])
+            elif kwargs['keep_on_website']:
+                attachment.res_id = -1
             else:
                 attachments_to_remove += attachment
         if attachments_to_remove:
