@@ -59,6 +59,21 @@ try:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
+    def phone_get_region_data_for_number(number):
+        try:
+            phone_obj = phone_parse(number, None)
+        except (phonenumbers.phonenumberutil.NumberParseException, UserError):
+            return {
+                'code': '',
+                'national_number': '',
+                'phone_code': '',
+            }
+        return {
+            'code': phonenumbers.phonenumberutil.region_code_for_number(phone_obj),
+            'national_number': str(phone_obj.national_number),
+            'phone_code': str(phone_obj.country_code),
+        }
+
 except ImportError:
 
     def phone_parse(number, country_code):
@@ -73,6 +88,13 @@ except ImportError:
             )
             _phonenumbers_lib_warning = True
         return number
+
+    def phone_get_region_code_for_number(number):
+        return {
+            'code': '',
+            'national_number': '',
+            'phone_code': '',
+        }
 
 
 def phone_sanitize_numbers(numbers, country_code, country_phone_code, force_format='E164'):
