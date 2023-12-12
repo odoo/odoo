@@ -1166,6 +1166,13 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><pre>[]a</pre></td><td><pre>b</pre></td><td><pre>c</pre></td></tr></tbody></table>',
             });
         });
+        it('should turn a paragraph into pre preserving the cursor position', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd<br>[]<br></p>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                contentAfter: '<pre>abcd<br>[]<br></pre>',
+            });
+        });
     });
     describe('to blockquote', () => {
         it('should turn a blockquote into a paragraph', async () => {
