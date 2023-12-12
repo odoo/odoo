@@ -1871,18 +1871,7 @@ export class Product extends PosModel {
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
         if (_.some(this.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id)) {
-            const attributes = _.map(
-                this.attribute_line_ids,
-                (id) => this.pos.attributes_by_ptal_id[id]
-            ).filter((attr) => attr !== undefined);
-            const { confirmed, payload } = await this.pos.env.services.popup.add(
-                ProductConfiguratorPopup,
-                {
-                    product: this,
-                    attributes: attributes,
-                }
-            );
-
+            let { confirmed, payload } = await this._openProductConfiguratorPopup();
             if (confirmed) {
                 description = payload.selected_attributes.join(", ");
                 price_extra += payload.price_extra;
@@ -1971,6 +1960,39 @@ export class Product extends PosModel {
         }
 
         return { draftPackLotLines, quantity: weight, description, price_extra };
+    }
+    async _openProductConfiguratorPopup() {
+        const attributes = _.map(
+            this.attribute_line_ids,
+            (id) => this.pos.attributes_by_ptal_id[id]
+        ).filter((attr) => attr !== undefined);
+
+        // avoid opening the popup when each attribute has only one available option.
+        if (_.some(attributes, (attribute) => attribute.values.length > 1 || _.some(attribute.values, (value) => value.is_custom))) {
+            return await this.pos.env.services.popup.add(
+                ProductConfiguratorPopup,
+                {
+                    product: this,
+                    attributes: attributes,
+                }
+            );
+        };
+
+        let selected_attributes = [];
+        let price_extra = 0.0;
+
+        attributes.forEach((attribute) => {
+            selected_attributes.push(attribute.values[0].name);
+            price_extra += attribute.values[0].price_extra;
+        });
+
+        return {
+            confirmed: true,
+            payload: {
+                selected_attributes,
+                price_extra,
+            }
+        };
     }
     isPricelistItemUsable(item, date) {
         return (
