@@ -3782,11 +3782,17 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<boolean>|boolean}
      */
     _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'move_up_opt' || widgetName === 'move_left_opt') {
-            return !this.$target.is(':first-child');
-        }
-        if (widgetName === 'move_down_opt' || widgetName === 'move_right_opt') {
-            return !this.$target.is(':last-child');
+        const moveUpOrLeft = widgetName === 'move_up_opt' || widgetName === 'move_left_opt';
+        const moveDownOrRight = widgetName === 'move_down_opt' || widgetName === 'move_right_opt';
+
+        if (moveUpOrLeft || moveDownOrRight) {
+            // Consider only visible elements.
+            const direction = moveUpOrLeft ? "previousElementSibling" : "nextElementSibling";
+            let siblingEl = this.$target[0][direction];
+            while (siblingEl && window.getComputedStyle(siblingEl).display === "none") {
+                siblingEl = siblingEl[direction];
+            }
+            return !!siblingEl;
         }
         return true;
     },
@@ -4833,18 +4839,30 @@ registry.SnippetMove = SnippetOptionWidget.extend({
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         switch (widgetValue) {
-            case 'prev':
-                this.$target.prev().before(this.$target);
+            case 'prev': {
+                // Consider only visible elements.
+                let prevEl = this.$target[0].previousElementSibling;
+                while (prevEl && window.getComputedStyle(prevEl).display === "none") {
+                    prevEl = prevEl.previousElementSibling;
+                }
+                prevEl && prevEl.insertAdjacentElement("beforebegin", this.$target[0]);
                 if (isNavItem) {
                     $tabPane.prev().before($tabPane);
                 }
                 break;
-            case 'next':
-                this.$target.next().after(this.$target);
+            }
+            case 'next': {
+                // Consider only visible elements.
+                let nextEl = this.$target[0].nextElementSibling;
+                while (nextEl && window.getComputedStyle(nextEl).display === "none") {
+                    nextEl = nextEl.nextElementSibling;
+                }
+                nextEl && nextEl.insertAdjacentElement("afterend", this.$target[0]);
                 if (isNavItem) {
                     $tabPane.next().after($tabPane);
                 }
                 break;
+            }
         }
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
