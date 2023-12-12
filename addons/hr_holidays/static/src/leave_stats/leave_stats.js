@@ -18,10 +18,10 @@ export class LeaveStatsComponent extends Component {
         this.state = useState({
             leaves: [],
             departmentLeaves: [],
-            multi_employee : false,
-            date : DateTime,
-            department : null,
-            employee : null,
+            multi_employee: false,
+            date: DateTime,
+            department: null,
+            employee: null,
             type: null,
         });
 
@@ -32,26 +32,35 @@ export class LeaveStatsComponent extends Component {
 
         onWillStart(async () => {
             await this.loadLeaves(this.state.date, this.state.employee);
-            await this.loadDepartmentLeaves(this.state.date, this.state.department, this.state.employee);
+            await this.loadDepartmentLeaves(
+                this.state.date,
+                this.state.department,
+                this.state.employee
+            );
         });
 
         useRecordObserver(async (record) => {
             const dateFrom = record.data.date_from || DateTime.now();
-            const dateChanged = this.state.date !== dateFrom;
+            const dateChanged = !this.state.date.equals(dateFrom);
             const employee = record.data.employee_id;
             const department = record.data.department_id;
             const multi_employee = record.data.multi_employee;
             const proms = [];
-            if (multi_employee || dateChanged || (employee && (this.state.employee && this.state.employee[0]) !== employee[0])) {
+            if (
+                multi_employee ||
+                dateChanged ||
+                (employee && (this.state.employee && this.state.employee[0]) !== employee[0])
+            ) {
                 proms.push(this.loadLeaves(dateFrom, employee));
             }
             if (
                 multi_employee ||
                 dateChanged ||
-                (department && (this.state.department && this.state.department[0]) !== department[0])
-                ) {
-                    proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
-                }
+                (department &&
+                    (this.state.department && this.state.department[0]) !== department[0])
+            ) {
+                proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
+            }
             this.state.multi_employee = multi_employee;
             this.state.holiday_type = record.data.holiday_type;
             await Promise.all(proms);
