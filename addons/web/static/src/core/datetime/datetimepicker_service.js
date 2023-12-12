@@ -76,8 +76,7 @@ export const datetimePickerService = {
                  * value has changed, and set other internal variables accordingly.
                  */
                 const apply = () => {
-                    const serializedValue = JSON.stringify(pickerProps.value);
-                    if (areDatesEqual(lastInitialProps?.value, serializedValue)) {
+                    if (areDatesEqual(lastInitialProps?.value, deepCopy(pickerProps.value))) {
                         return;
                     }
 
@@ -89,13 +88,13 @@ export const datetimePickerService = {
 
                 const computeBasePickerProps = () => {
                     const nextInitialProps = markValuesRaw(hookParams.pickerProps);
-                    const serializedProps = deepCopy(nextInitialProps);
+                    const propsCopy = deepCopy(nextInitialProps);
 
-                    if (lastInitialProps && arePropsEqual(lastInitialProps, serializedProps)) {
+                    if (lastInitialProps && arePropsEqual(lastInitialProps, propsCopy)) {
                         return;
                     }
 
-                    lastInitialProps = serializedProps;
+                    lastInitialProps = propsCopy;
                     inputsChanged = ensureArray(lastInitialProps.value).map(() => false);
 
                     for (const [key, value] of Object.entries(nextInitialProps)) {
