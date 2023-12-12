@@ -10,6 +10,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         super.setup();
         useSubEnv({
             onIframeUpdated: () => this._updateIframe(),
+            onToggleFullscreen: () => this._onToggleFullscreen(),
             mailingFilterTemplates: true,
         });
         const throttledOnResizeObserved = useThrottleForAnimation(() => {
@@ -53,7 +54,6 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         const $iframeDoc = $iframe.contents();
         const iframeTarget = $iframeDoc.find('#iframe_target');
         if (hasIframeChanged) {
-            $iframeDoc.find('body').on('click', '.o_fullscreen_btn', this._onToggleFullscreen.bind(this));
             if (iframeTarget[0]) {
                 this._resizeObserver.disconnect();
                 this._resizeObserver.observe(iframeTarget[0]);
@@ -75,23 +75,17 @@ export class MassMailingFullWidthViewController extends formView.Controller {
      * @private
      */
     _repositionMailingEditorSidebar() {
-        const windowHeight = $(window).height();
-        const $iframeDocument = this.$iframe.contents();
-        const $sidebar = $iframeDocument.find('#oe_snippets');
-        const isFullscreen =  this._isFullScreen();
-        if (isFullscreen) {
-            $sidebar.height(windowHeight);
-            this.$iframe.height(windowHeight);
+        // TODO: This should be refactored. The style of the SnippetsMenu should
+        // not be changed like this, instead, it should be changed via its
+        // methods (or through props in OWL)
+        const $sidebar = $('#oe_snippets');
+        if (!this._isFullScreen()) {
             $sidebar.css({
-                top: '',
-                bottom: '',
+                height: window.innerHeight - $('.o_content').offset().top,
             });
         } else {
-            const iframeTop = this.$iframe.offset().top;
             $sidebar.css({
                 height: '',
-                top: Math.max(0, $('.o_content').offset().top - iframeTop),
-                bottom: this.$iframe.height() - windowHeight + iframeTop,
             });
         }
     }
@@ -110,6 +104,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         const html = $iframeDoc.find('html').get(0);
         html.scrollTop = 0;
         html.classList.toggle('o_fullscreen', isFullscreen);
+        this.$iframe[0].style.width = isFullscreen ? "" : "100%";
         const wysiwyg = $iframeDoc.find('.note-editable').data('wysiwyg');
         if (wysiwyg && wysiwyg.snippetsMenu) {
             // Restore the appropriate scrollable depending on the mode.
@@ -146,7 +141,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         } else {
             const ref = $iframeDoc.find('#iframe_target')[0];
             if (ref) {
-                this.$iframe.css({
+                this.$iframe.parent().addBack().css({
                     height: this._isFullScreen()
                         ? $(window).height()
                         : Math.max(ref.scrollHeight, minHeight),
