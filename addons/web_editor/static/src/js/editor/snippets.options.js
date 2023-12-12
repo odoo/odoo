@@ -3892,8 +3892,13 @@ const SnippetOptionWidget = Widget.extend({
             if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
                 return false;
             }
-            const firstOrLastChild = moveUpOrLeft ? ':first-child' : ':last-child';
-            return !this.$target.is(firstOrLastChild);
+            // Consider only visible elements.
+            const direction = moveUpOrLeft ? "previousElementSibling" : "nextElementSibling";
+            let siblingEl = this.$target[0][direction];
+            while (siblingEl && window.getComputedStyle(siblingEl).display === "none") {
+                siblingEl = siblingEl[direction];
+            }
+            return !!siblingEl;
         }
         return true;
     },
@@ -5364,18 +5369,30 @@ registry.SnippetMove = SnippetOptionWidget.extend({
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         switch (widgetValue) {
-            case 'prev':
-                this.$target.prev().before(this.$target);
+            case 'prev': {
+                // Consider only visible elements.
+                let prevEl = this.$target[0].previousElementSibling;
+                while (prevEl && window.getComputedStyle(prevEl).display === "none") {
+                    prevEl = prevEl.previousElementSibling;
+                }
+                prevEl && prevEl.insertAdjacentElement("beforebegin", this.$target[0]);
                 if (isNavItem) {
                     $tabPane.prev().before($tabPane);
                 }
                 break;
-            case 'next':
-                this.$target.next().after(this.$target);
+            }
+            case 'next': {
+                // Consider only visible elements.
+                let nextEl = this.$target[0].nextElementSibling;
+                while (nextEl && window.getComputedStyle(nextEl).display === "none") {
+                    nextEl = nextEl.nextElementSibling;
+                }
+                nextEl && nextEl.insertAdjacentElement("afterend", this.$target[0]);
                 if (isNavItem) {
                     $tabPane.next().after($tabPane);
                 }
                 break;
+            }
         }
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
