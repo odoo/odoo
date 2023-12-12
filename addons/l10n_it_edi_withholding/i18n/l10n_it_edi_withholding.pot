@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-26 11:16+0000\n"
-"PO-Revision-Date: 2023-01-26 11:16+0000\n"
+"POT-Creation-Date: 2024-01-16 11:45+0000\n"
+"PO-Revision-Date: 2024-01-16 11:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,11 +61,6 @@ msgstr ""
 #. module: l10n_it_edi_withholding
 #: model:account.report.line,name:l10n_it_edi_withholding.enasarco_sale_tax_report_it_line
 msgid "ENASARCO Amount (Sales)"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model:account.tax.group,preceding_subtotal:l10n_it_edi_withholding.tax_group_enasarco
-msgid "ENASARCO Excluded"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
@@ -124,8 +119,10 @@ msgid "EPPI pension fund for industrial experts"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
-#: model:account.tax.group,name:l10n_it_edi_withholding.tax_group_enasarco
-msgid "Enasarco"
+#. odoo-python
+#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
+#, python-format
+msgid "Enasarco tax not found for line with description '%s'"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
@@ -136,14 +133,6 @@ msgstr ""
 #. module: l10n_it_edi_withholding
 #: model:ir.model.fields.selection,name:l10n_it_edi_withholding.selection__account_tax__l10n_it_pension_fund_type__tc22
 msgid "INPS national pension fund"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model:ir.model.fields,help:l10n_it_edi_withholding.field_account_tax_group__preceding_subtotal
-msgid ""
-"If set, this value will be used on documents as the label of a subtotal "
-"excluding this tax group before displaying it. If not set, the tax group "
-"will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
 
 #. module: l10n_it_edi_withholding
@@ -172,17 +161,11 @@ msgid "ONAOSI fund for sanitary orphans"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
-#: model:account.tax.group,name:l10n_it_edi_withholding.tax_group_pension_fund
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_bank_statement_line__l10n_it_amount_pension_fund_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_move__l10n_it_amount_pension_fund_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_payment__l10n_it_amount_pension_fund_signed
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.view_invoice_tree_l10n_it_edi_extended
 msgid "Pension Fund"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model:account.tax.group,preceding_subtotal:l10n_it_edi_withholding.tax_group_pension_fund
-msgid "Pension Fund Excluded"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
@@ -220,11 +203,6 @@ msgstr ""
 #. module: l10n_it_edi_withholding
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_tax__l10n_it_pension_fund_type
 msgid "Pension fund type (Italy)"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_tax_group__preceding_subtotal
-msgid "Preceding Subtotal"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
