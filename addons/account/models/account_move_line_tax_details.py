@@ -165,10 +165,6 @@ class AccountMoveLine(models.Model):
                     tax_rep.id = account_move_line.tax_repartition_line_id
                 JOIN account_tax tax ON
                     tax.id = account_move_line.tax_line_id
-                JOIN res_currency curr ON
-                    curr.id = account_move_line.currency_id
-                JOIN res_currency comp_curr ON
-                    comp_curr.id = account_move_line.company_currency_id
                 JOIN account_move_line_account_tax_rel tax_rel ON
                     tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
                 JOIN account_move move ON
@@ -194,6 +190,10 @@ class AccountMoveLine(models.Model):
                         OR base_line.analytic_distribution = account_move_line.analytic_distribution
                     )
                     {extra_query_base_tax_line_mapping}
+                JOIN res_currency curr ON
+                    curr.id = account_move_line.currency_id
+                JOIN res_currency comp_curr ON
+                    comp_curr.id = account_move_line.company_currency_id
                 LEFT JOIN affecting_base_tax_ids tax_line_tax_ids ON tax_line_tax_ids.id = account_move_line.id
                 JOIN affecting_base_tax_ids base_line_tax_ids ON base_line_tax_ids.id = base_line.id
                 WHERE account_move_line.tax_repartition_line_id IS NOT NULL
