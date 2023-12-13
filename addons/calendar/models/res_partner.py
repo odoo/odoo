@@ -41,18 +41,18 @@ class Partner(models.Model):
             meeting_data = self.env.cr.fetchall()
 
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
-            meetings = {p.id: set() for p in all_partners}
-            for m in meeting_data:
-                meetings[m[0]].add(m[1])
+            meetings = {}
+            for p_id, m_id, _ in meeting_data:
+                meetings.setdefault(p_id, set()).add(m_id)
 
             # Add the events linked to the children of the partner
-            for p in all_partners:
+            for p in self.browse(meetings.keys()):
                 partner = p
-                while partner:
-                    if partner in self:
-                        meetings[partner.id] |= meetings[p.id]
+                while partner.parent_id:
                     partner = partner.parent_id
-            return {p_id: list(meetings[p_id]) for p_id in self.ids}
+                    if partner in self:
+                        meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
+            return {p_id: list(meetings.get(p_id, set())) for p_id in self.ids}
         return {}
 
     def get_attendee_detail(self, meeting_ids):
