@@ -8,7 +8,7 @@ import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { loadBundle } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 
-const { toCartesian } = helpers;
+const { formatValue, isDefined, toCartesian } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -93,9 +93,14 @@ export async function freezeOdooData(model) {
  */
 function exportGlobalFiltersToSheet(model, data) {
     model.getters.exportSheetWithActiveFilters(data);
+    const locale = model.getters.getLocale();
     for (const filter of data.globalFilters) {
         const content = model.getters.getFilterDisplayValue(filter.label);
-        filter["value"] = content;
+        filter["value"] = content
+            .flat()
+            .filter(isDefined)
+            .map(({ value, format }) => formatValue(value, { format, locale }))
+            .join(", ");
     }
 }
 
