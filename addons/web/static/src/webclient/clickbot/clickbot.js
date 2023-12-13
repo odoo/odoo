@@ -14,6 +14,7 @@ const BLACKLISTED_MENUS = [
     "base.menu_third_party", // Open a new tab
     "event.menu_event_registration_desk", // there's no way to come back from this menu (tablet mode)
     "hr_attendance.menu_hr_attendance_kiosk_no_user_mode", // same here (tablet mode)
+    "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "account.menu_action_account_bank_journal_form", // Modal in an iFrame
 ];
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
@@ -244,6 +245,9 @@ async function getNextApp() {
     } else {
         await ensureAppsMenu();
         apps = document.querySelectorAll(".o_navbar_apps_menu .dropdown-item");
+    }
+    if (apps.length === 0) {
+        throw new Error("No app found, it's possible that we are not on the home menu/app menu");
     }
     const app = apps[appIndex];
     appIndex++;
