@@ -106,7 +106,7 @@ class AdyenController(http.Controller):
         # Check that the transaction details have not been altered. This allows preventing users
         # from validating transactions by paying less than agreed upon.
         if not payment_utils.check_access_token(
-            access_token, reference, converted_amount, partner_id
+            access_token, reference, converted_amount, currency_id, partner_id
         ):
             raise ValidationError("Adyen: " + _("Received tampered payment request data."))
 

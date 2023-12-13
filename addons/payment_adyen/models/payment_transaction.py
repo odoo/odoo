@@ -39,6 +39,7 @@ class PaymentTransaction(models.Model):
             'access_token': payment_utils.generate_access_token(
                 processing_values['reference'],
                 converted_amount,
+                self.currency_id.id,
                 processing_values['partner_id']
             )
         }
