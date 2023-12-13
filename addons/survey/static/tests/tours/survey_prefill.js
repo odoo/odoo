@@ -50,6 +50,9 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
         run: 'text Is the prefill working?',
     }, {
+        content: 'Answer How would you rate your experience on our website?',
+        trigger: 'div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4")',
+    }, {
         // Go back to previous page
         content: 'Click on the previous page name in the breadcrumb',
         trigger: 'ol.breadcrumb a:first',
@@ -142,6 +145,11 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
 
             const inputQ3 = queryOne('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea');
             if (inputQ3.value !== "Is the prefill working?") {
+                return;
+            }
+
+            const inputQ4 = queryOne('div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4") input');
+            if (!inputQ4.checked) {
                 return;
             }
 

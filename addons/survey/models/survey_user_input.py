@@ -286,7 +286,7 @@ class SurveyUserInput(models.Model):
         if old_answers and not overwrite_existing:
             raise UserError(_("This answer cannot be overwritten."))
 
-        if question.question_type in ['char_box', 'text_box', 'numerical_box', 'date', 'datetime']:
+        if question.question_type in ['char_box', 'text_box', 'scale', 'numerical_box', 'date', 'datetime']:
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
@@ -367,6 +367,8 @@ class SurveyUserInput(models.Model):
             vals['suggested_answer_id'] = int(answer)
         elif answer_type == 'numerical_box':
             vals['value_numerical_box'] = float(answer)
+        elif answer_type == 'scale':
+            vals['value_scale'] = int(answer)
         else:
             vals['value_%s' % answer_type] = answer
         return vals
@@ -716,11 +718,13 @@ class SurveyUserInputLine(models.Model):
         ('text_box', 'Free Text'),
         ('char_box', 'Text'),
         ('numerical_box', 'Number'),
+        ('scale', 'Number'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
         ('suggestion', 'Suggestion')], string='Answer Type')
     value_char_box = fields.Char('Text answer')
     value_numerical_box = fields.Float('Numerical answer')
+    value_scale = fields.Integer('Scale value')
     value_date = fields.Date('Date answer')
     value_datetime = fields.Datetime('Datetime answer')
     value_text_box = fields.Text('Free Text answer')
@@ -747,6 +751,8 @@ class SurveyUserInputLine(models.Model):
                 line.display_name = fields.Date.to_string(line.value_date)
             elif line.answer_type == 'datetime':
                 line.display_name = fields.Datetime.to_string(line.value_datetime)
+            elif line.answer_type == 'scale':
+                line.display_name = line.value_scale
             elif line.answer_type == 'suggestion':
                 if line.matrix_row_id:
                     line.display_name = f'{line.suggested_answer_id.value}: {line.matrix_row_id.value}'
@@ -762,9 +768,12 @@ class SurveyUserInputLine(models.Model):
             if (line.skipped == bool(line.answer_type)):
                 raise ValidationError(_('A question can either be skipped or answered, not both.'))
 
-            # allow 0 for numerical box
+            # allow 0 for numerical box and scale
             if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):
                 continue
+            if line.answer_type == 'scale' and line['value_scale'] == 0:
+                continue
+
             if line.answer_type == 'suggestion':
                 field_name = 'suggested_answer_id'
             elif line.answer_type:
@@ -801,11 +810,12 @@ class SurveyUserInputLine(models.Model):
 
     def _get_answer_matching_domain(self):
         self.ensure_one()
-        if self.answer_type in ('char_box', 'text_box', 'numerical_box', 'date', 'datetime'):
+        if self.answer_type in ('char_box', 'text_box', 'numerical_box', 'scale', 'date', 'datetime'):
             value_field = {
                 'char_box': 'value_char_box',
                 'text_box': 'value_text_box',
                 'numerical_box': 'value_numerical_box',
+                'scale': 'value_scale',
                 'date': 'value_date',
                 'datetime': 'value_datetime',
             }
@@ -813,6 +823,7 @@ class SurveyUserInputLine(models.Model):
                 'char_box': 'ilike',
                 'text_box': 'ilike',
                 'numerical_box': '=',
+                'scale': '=',
                 'date': '=',
                 'datetime': '=',
             }
@@ -905,6 +916,8 @@ class SurveyUserInputLine(models.Model):
             return self.value_text_box
         elif self.answer_type == 'numerical_box':
             return self.value_numerical_box
+        elif self.answer_type == 'scale':
+            return self.value_scale
         elif self.answer_type == 'date':
             return self.value_date
         elif self.answer_type == 'datetime':
