@@ -139,9 +139,6 @@ class TestUiSession(HttpCase):
                 (4, timed_scored_choice_answer_3.id)],
         })
 
-        # =======================
-        # PART 1 : CREATE SESSION
-        # =======================
         def action_open_session_manager_mock(self):
             """ Mock original method to ensure we are not using another tab
             as it creates issues with automated tours. """
@@ -152,9 +149,11 @@ class TestUiSession(HttpCase):
                 'url': '/survey/session/manage/%s' % self.access_token
             }
 
-        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
-            self.start_tour('/web', 'test_survey_session_create_tour', login='admin')
+        # =======================
+        # PART 1 : CREATE SESSION
+        # =======================
 
+        survey_session.action_start_session()
         # tricky part: we only take into account answers created after the session_start_time
         # the create_date of the answers we just saved is set to the beginning of the test.
         # but the session_start_time is set after that.
