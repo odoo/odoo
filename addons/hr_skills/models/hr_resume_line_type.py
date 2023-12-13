@@ -9,5 +9,5 @@ class ResumeLineType(models.Model):
     _description = "Type of a resume line"
     _order = "sequence"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
