@@ -14,9 +14,8 @@ class HrEmployee(models.Model):
         employees = super().create(vals_list)
         for employee in employees:
             if employee.applicant_id:
-                employee.applicant_id.message_post_with_source(
+                employee.applicant_id._message_log_with_view(
                     'hr_recruitment.applicant_hired_template',
-                    render_values={'applicant': employee.applicant_id},
-                    subtype_xmlid='hr_recruitment.mt_applicant_hired',
+                    render_values={'applicant': employee.applicant_id}
                 )
         return employees
