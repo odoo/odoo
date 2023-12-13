@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList" owl="1">
-        <div class="o-mail-AttachmentList overflow-y-auto d-flex flex-column mt-1"
+        <div class="o-mail-AttachmentList d-flex flex-column mt-1"
             t-att-class="{
                 'o-inComposer': env.inComposer,
                 'o-inChatWindow': env.inChatWindow,
@@ -31,7 +31,7 @@
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                         <i class="fa fa-spin fa-spinner"/>
                     </div>
-                    <div class="position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
+                    <div class="position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flex-wrap flex-column">
                         <div t-if="attachment.isDeletable"
                             class="btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
                             tabindex="0" aria-label="Remove" role="menuitem" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
