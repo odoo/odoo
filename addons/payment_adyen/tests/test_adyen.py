@@ -37,7 +37,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ):
             self.assertTrue(payment_utils.check_access_token(
-                processing_values['access_token'], self.reference, converted_amount, self.partner.id
+                processing_values['access_token'], self.reference, converted_amount, self.currency.id, self.partner.id
             ))
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
