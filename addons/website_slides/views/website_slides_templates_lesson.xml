@@ -253,7 +253,7 @@
                 </t>
             </span>
             <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
-                <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not previous_slide else ''} me-2"
+                <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not previous_slide else ''} me-2"
                     role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="oi oi-chevron-left me-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
@@ -281,20 +281,20 @@
                         <t t-set="channel" t-value="slide.channel_id"/>
                     </t>
                 </div>
-                <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not next_slide else ''}"
+                <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not next_slide else ''}"
                     role="button" t-att-aria-disabled="'disabled' if not next_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
                     <span class="d-none d-sm-inline-block">Next</span> <i class="oi oi-chevron-right ms-2"></i>
                 </a>
             </div>
             <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
-                <i class="fa fa-desktop me-2"/>
-                <span class="d-none d-sm-inline-block">Fullscreen</span>
+                <i class="fa fa-desktop me-xl-2 my-1"/>
+                <span class="d-none d-xl-inline-block">Fullscreen</span>
             </a>
              <a class="btn btn-light border ms-2 my-1" role="button" data-bs-toggle="modal"
                 t-att-data-bs-target="'#slideShareModal_%s' % slide.id">
-                <i class="fa fa-share-alt me-2"/>
-                <span class="d-none d-sm-inline-block">Share</span>
+                <i class="fa fa-share-alt me-xl-2 my-1"/>
+                <span class="d-none d-xl-inline-block">Share</span>
             </a>
         </div>
     </div>
