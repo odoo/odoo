@@ -66,3 +66,12 @@ class TestStockReplenish(TestStockCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard._values['date_planned'])
             wizard.route_id = route_delay
             self.assertEqual(fields.Datetime.from_string('2023-01-07 00:00:00'), wizard._values['date_planned'])
+
+    def test_replenish_no_routes(self):
+        product = self.env['product.template'].create({
+        'name': 'Brand new product',
+        'type': 'product',
+    })
+        self.assertEqual(len(product.route_ids), 0)
+        wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=product.id))
+        self.assertEqual(wizard._values['quantity'], 1)
