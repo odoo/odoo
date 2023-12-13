@@ -139,4 +139,11 @@ export class PartnerDetailsEdit extends Component {
             img.src = url;
         });
     }
+
+    isFieldCommercialAndPartnerIsChild(field) {
+        return (
+            this.pos.isChildPartner(this.props.partner) &&
+            this.pos.partner_commercial_fields.includes(field)
+        );
+    }
 }
