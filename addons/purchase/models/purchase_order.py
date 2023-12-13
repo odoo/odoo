@@ -830,6 +830,12 @@ class PurchaseOrder(models.Model):
         new_default_data = self.env['purchase.order.line']._get_product_catalog_lines_data()
         return {**default_data, **new_default_data}
 
+    def action_add_from_catalog(self):
+        res = super().action_add_from_catalog()
+        if res['context'].get('product_catalog_order_model') == 'purchase.order':
+            res['search_view_id'] = [self.env.ref('purchase.product_view_search_catalog').id, 'search']
+        return res
+
     def _get_action_add_from_catalog_extra_context(self):
         return {
             **super()._get_action_add_from_catalog_extra_context(),

@@ -16,6 +16,7 @@ from odoo import api, fields, models, _, Command
 from odoo.addons.base.models.decimal_precision import DecimalPrecision
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
+from odoo.osv import expression
 from odoo.tools import (
     date_utils,
     email_re,
@@ -62,7 +63,7 @@ EMPTY = object()
 
 class AccountMove(models.Model):
     _name = "account.move"
-    _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin']
+    _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin', 'product.catalog.mixin']
     _description = "Journal Entry"
     _order = 'date desc, name desc, invoice_date desc, id desc'
     _mail_post_access = 'read'
@@ -2047,6 +2048,112 @@ class AccountMove(models.Model):
                 if record.fiscal_position_id and impacted_countries != record.fiscal_position_id.country_id:
                     raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
+
+    # -------------------------------------------------------------------------
+    # CATALOG
+    # -------------------------------------------------------------------------
+    def action_add_from_catalog(self):
+        res = super().action_add_from_catalog()
+        if res['context'].get('product_catalog_order_model') == 'account.move':
+            res['search_view_id'] = [self.env.ref('account.product_view_search_catalog').id, 'search']
+        return res
+
+    def _get_action_add_from_catalog_extra_context(self):
+        res = super()._get_action_add_from_catalog_extra_context()
+        if self.is_purchase_document() and self.partner_id:
+            res['search_default_seller_ids'] = self.partner_id.name
+
+        res['product_catalog_currency_id'] = self.currency_id.id
+        res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
+        return res
+
+    def _get_product_catalog_domain(self):
+        if self.is_sale_document():
+            return expression.AND([super()._get_product_catalog_domain(), [('sale_ok', '=', True)]])
+        elif self.is_purchase_document():
+            return expression.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
+        else:  # In case of an entry
+            return super()._get_product_catalog_domain()
+
+    def _default_order_line_values(self):
+        default_data = super()._default_order_line_values()
+        new_default_data = self.env['account.move.line']._get_product_catalog_lines_data()
+        return {**default_data, **new_default_data}
+
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        return {product.id: self._get_product_price_and_data(product) for product in products}
+
+    def _get_product_price_and_data(self, product):
+        """
+            This function will return a dict containing the price of the product. If the product is a sale document then
+            we return the list price (which is the "Sales Price" in a product) otherwise we return the standard_price
+            (which is the "Cost" in a product).
+            In case of a purchase document, it's possible that we have special price for certain partner.
+            We will check the sellers set on the product and update the price and min_qty for it if needed.
+        """
+        self.ensure_one()
+        product_infos = {'price': product.list_price if self.is_sale_document() else product.standard_price}
+
+        # Check if there is a price and a minimum quantity for the order's vendor.
+        if self.is_purchase_document() and self.partner_id:
+            seller = product._select_seller(
+                partner_id=self.partner_id,
+                quantity=None,
+                date=self.invoice_date,
+                uom_id=product.uom_id,
+                ordered_by='min_qty',
+                params={'order_id': self}
+            )
+            if seller:
+                product_infos.update(
+                    price=seller.price,
+                    min_qty=seller.min_qty,
+                )
+        return product_infos
+
+    def _get_product_catalog_record_lines(self, product_ids):
+        grouped_lines = defaultdict(lambda: self.env['account.move.line'])
+        for line in self.line_ids:
+            if line.display_type == 'product' and line.product_id.id in product_ids:
+                grouped_lines[line.product_id] |= line
+        return grouped_lines
+
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        """ Update account_move_line information for a given product or create a
+        new one if none exists yet.
+        :param int product_id: The product, as a `product.product` id.
+        :param int quantity: The quantity selected in the catalog
+        :return: The unit price of the product, based on the pricelist of the
+                 sale order and the quantity selected.
+        :rtype: float
+        """
+        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
+        if move_line:
+            if quantity != 0:
+                move_line.quantity = quantity
+            elif self.state in {'draft', 'sent'}:
+                price_unit = self._get_product_price_and_data(move_line.product_id)['price']
+                # The catalog is designed to allow the user to select products quickly.
+                # Therefore, sometimes they may select the wrong product or decide to remove
+                # some of them from the quotation. The unlink is there for that reason.
+                move_line.unlink()
+                return price_unit
+            else:
+                move_line.quantity = 0
+        elif quantity > 0:
+            move_line = self.env['account.move.line'].create({
+                'move_id': self.id,
+                'quantity': quantity,
+                'product_id': product_id,
+            })
+        return move_line.price_unit
+
+    def _is_readonly(self):
+        """
+            Check if the move has been canceled or if the move has multiple invoice line
+        """
+        self.ensure_one()
+        return self.state == 'cancel' or len(self.invoice_line_ids) > 1
 
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT
