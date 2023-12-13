@@ -234,6 +234,9 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
+        if (this.state.thread.recipients.size === 0) {
+            return _t("No recipient");
+        }
         const recipients = [...this.state.thread.recipients].slice(0, 5).map(({ partner }) => {
             const text = partner.email ? partner.emailWithoutDomain : partner.name;
             return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
