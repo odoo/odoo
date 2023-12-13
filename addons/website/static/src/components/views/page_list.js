@@ -56,6 +56,9 @@ export class PageListController extends PageControllerMixin(listView.Controller)
                 callback: async () => this.togglePublished(false),
             };
         }
+        if (this.props.resModel === "website.page") {
+            menuItems.duplicate.isAvailable = () => false;
+        }
         return menuItems;
     }
 
