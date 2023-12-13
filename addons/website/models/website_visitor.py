@@ -258,11 +258,11 @@ class WebsiteVisitor(models.Model):
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
         """ Return the visitor as sudo from the request.
 
-        :param bool force_create: force a visitor creation if no visitor exists
+        :param force_create: force a visitor creation if no visitor exists
         :param force_track_values: an optional dict to create a track at the
             same time.
         :return: the website visitor if exists or forced, empty recordset
-                 otherwise.
+            otherwise.
         """
 
         # This function can be called in json with mobile app.
@@ -271,15 +271,13 @@ class WebsiteVisitor(models.Model):
         if not (request and request.env and request.env.uid):
             return None
 
-        Visitor = self.env['website.visitor'].sudo()
-        visitor = Visitor
         access_token = self._get_access_token()
 
         if force_create:
             visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
-            visitor = Visitor.browse(visitor_id)
-        else:
-            visitor = Visitor.search([('access_token', '=', access_token)])
+            return self.env['website.visitor'].sudo().browse(visitor_id)
+
+        visitor = self.env['website.visitor'].sudo().search([('access_token', '=', access_token)])
 
         if not force_create and not self.env.cr.readonly and visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
@@ -299,6 +297,7 @@ class WebsiteVisitor(models.Model):
         website_track_values = {'url': url}
         if website_page:
             website_track_values['page_id'] = website_page.id
+
         self._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
 
     def _add_tracking(self, domain, website_track_values):

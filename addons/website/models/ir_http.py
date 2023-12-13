@@ -160,7 +160,7 @@ class Http(models.AbstractModel):
             template = response.qcontext.get('response_template')
 
         view = template and request.env['website'].get_template(template)
-        if view and view.track:
+        if not request.env.cr.readonly and view and view.track:
             request.env['website.visitor']._handle_webpage_dispatch(website_page)
 
         return False

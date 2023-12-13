@@ -932,10 +932,11 @@ class Registry(Mapping):
         """ Test whether the registry is in 'test' mode. """
         return self.test_cr is not None
 
-    def enter_test_mode(self, cr):
+    def enter_test_mode(self, cr, test_readonly_enabled=True):
         """ Enter the 'test' mode, where one cursor serves several requests. """
         assert self.test_cr is None
         self.test_cr = cr
+        self.test_readonly_enabled = test_readonly_enabled
         self.test_lock = threading.RLock()
         assert Registry._saved_lock is None
         Registry._saved_lock = Registry._lock
@@ -945,7 +946,8 @@ class Registry(Mapping):
         """ Leave the test mode. """
         assert self.test_cr is not None
         self.test_cr = None
-        self.test_lock = None
+        del self.test_readonly_enabled
+        del self.test_lock
         assert Registry._saved_lock is not None
         Registry._lock = Registry._saved_lock
         Registry._saved_lock = None
@@ -956,7 +958,9 @@ class Registry(Mapping):
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock, readonly)
+            if readonly and not self.test_readonly_enabled:
+                _logger.info('Explicitly ignoring readonly flag when generating a cursor')
+            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
 
         connection = self._db
         if readonly and self._db_readonly is not None:

@@ -60,7 +60,7 @@ class WebsiteForm(form.WebsiteForm):
         is_lead_model = model.model == 'crm.lead'
         if is_lead_model:
             values_email_normalized = tools.email_normalize(values.get('email_from'))
-            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
             visitor_partner = visitor_sudo.partner_id
             if values_email_normalized and visitor_partner and visitor_partner.email_normalized == values_email_normalized:
                 # Here, 'phone' in values has already been formatted, see _handle_website_form.
