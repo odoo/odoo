@@ -8,12 +8,7 @@ import { PivotUIPlugin } from "./plugins/pivot_ui_plugin";
 
 import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "./pivot_actions";
 
-const {
-    coreTypes,
-    invalidateEvaluationCommands,
-    invalidateCFEvaluationCommands,
-    invalidateDependenciesCommands,
-} = spreadsheet;
+const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -34,16 +29,6 @@ invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
 invalidateEvaluationCommands.add("INSERT_PIVOT");
 invalidateEvaluationCommands.add("RENAME_ODOO_PIVOT");
-
-invalidateDependenciesCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
-invalidateDependenciesCommands.add("REMOVE_PIVOT");
-invalidateDependenciesCommands.add("INSERT_PIVOT");
-invalidateDependenciesCommands.add("RENAME_ODOO_PIVOT");
-
-invalidateCFEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
-invalidateCFEvaluationCommands.add("REMOVE_PIVOT");
-invalidateCFEvaluationCommands.add("INSERT_PIVOT");
-invalidateCFEvaluationCommands.add("RENAME_ODOO_PIVOT");
 
 cellMenuRegistry.add("pivot_see_records", {
     name: _t("See records"),

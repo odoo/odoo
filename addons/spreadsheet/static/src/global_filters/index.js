@@ -10,13 +10,7 @@ function identity(cmd) {
     return [cmd];
 }
 
-const {
-    coreTypes,
-    invalidateEvaluationCommands,
-    invalidateCFEvaluationCommands,
-    invalidateDependenciesCommands,
-    readonlyAllowedCommands,
-} = spreadsheet;
+const { coreTypes, invalidateEvaluationCommands, readonlyAllowedCommands } = spreadsheet;
 
 coreTypes.add("ADD_GLOBAL_FILTER");
 coreTypes.add("EDIT_GLOBAL_FILTER");
@@ -28,18 +22,6 @@ invalidateEvaluationCommands.add("EDIT_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("REMOVE_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
 invalidateEvaluationCommands.add("CLEAR_GLOBAL_FILTER_VALUE");
-
-invalidateDependenciesCommands.add("ADD_GLOBAL_FILTER");
-invalidateDependenciesCommands.add("EDIT_GLOBAL_FILTER");
-invalidateDependenciesCommands.add("REMOVE_GLOBAL_FILTER");
-invalidateDependenciesCommands.add("SET_GLOBAL_FILTER_VALUE");
-invalidateDependenciesCommands.add("CLEAR_GLOBAL_FILTER_VALUE");
-
-invalidateCFEvaluationCommands.add("ADD_GLOBAL_FILTER");
-invalidateCFEvaluationCommands.add("EDIT_GLOBAL_FILTER");
-invalidateCFEvaluationCommands.add("REMOVE_GLOBAL_FILTER");
-invalidateCFEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
-invalidateCFEvaluationCommands.add("CLEAR_GLOBAL_FILTER_VALUE");
 
 readonlyAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
