@@ -25,4 +25,12 @@ patch(Messaging.prototype, {
             settings: {},
         });
     },
+    get initMessagingParams() {
+        return {
+            ...super.initMessagingParams,
+            context: {
+                is_for_livechat: true,
+            },
+        };
+    },
 });

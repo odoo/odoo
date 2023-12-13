@@ -10,12 +10,14 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 class WebclientController(http.Controller):
     @http.route("/mail/init_messaging", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_init_messaging(self):
+    def mail_init_messaging(self, context=None):
+        if not context:
+            context = {}
         if not request.env.user._is_public():
-            return request.env.user.sudo(False)._init_messaging()
+            return request.env.user.sudo(False).with_context(**context)._init_messaging()
         guest = request.env["mail.guest"]._get_guest_from_context()
         if guest:
-            return guest._init_messaging()
+            return guest.with_context(**context)._init_messaging()
         raise NotFound()
 
     @http.route("/mail/load_message_failures", methods=["POST"], type="json", auth="user")

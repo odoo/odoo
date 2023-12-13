@@ -54,7 +54,7 @@ class ResUsers(models.Model):
             ]
         )
         return {
-            "Thread": channels._channel_info(),
+            "Thread": channels._filter_for_init_messaging()._channel_info(),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
             "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
