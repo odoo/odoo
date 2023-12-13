@@ -1668,7 +1668,24 @@ Please change the quantity done or the rounding precision of your unit of measur
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, quant_ids=quants, package_id=forced_package_id, strict=False)
+                    if force_qty.get(move.id):
+                        taken_quantity = 0
+                        for vals in force_qty[move.id]:
+                            taken_quantity += move._update_reserved_quantity(
+                                need,
+                                vals.get('location_id', move.location_id),
+                                quant_ids=vals.get('quant_ids', quants),
+                                lot_id=vals.get('lot_id'),
+                                package_id=vals.get('package_id', forced_package_id),
+                                owner_id=vals.get('owner_id'),
+                                strict=vals.get('strict')
+                            )
+                            if taken_quantity >= need:
+                                break
+                        if taken_quantity < need:
+                            taken_quantity += move._update_reserved_quantity(need - taken_quantity, move.location_id, quant_ids=quants, package_id=forced_package_id, strict=False)
+                    else:
+                        taken_quantity = move._update_reserved_quantity(need, move.location_id, quant_ids=quants, package_id=forced_package_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
