@@ -19,6 +19,10 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'name': 'Component',
             'type': 'consu',
         }])
+        self.vendor = self.env['res.partner'].create({
+            'name': 'Vendor',
+            'company_id': self.env.ref('base.main_company').id,
+        })
 
         self.bom_finished2 = self.env['mrp.bom'].create({
             'product_tmpl_id': self.finished2.product_tmpl_id.id,
@@ -277,3 +281,49 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             {'location_dest_id': stock_location_id.id, 'quantity_done': 10.0, 'state': 'done'},
             {'location_dest_id': subco_location_id.id, 'quantity_done': 1.0, 'state': 'done'},
         ])
+
+    def test_resupply_order_buy_mto(self):
+        """ Test a subcontract component can has resupply on order + buy + mto route"""
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp1 + self.comp2).write({
+             'route_ids': [
+                Command.link(resupply_sub_on_order_route.id),
+                Command.link(self.env.ref('purchase_stock.route_warehouse0_buy').id),
+                Command.link(mto_route.id)],
+             'seller_ids': [Command.create({
+                 'name': self.vendor.id,
+             })],
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': 1.0,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 50.0}
+            )],
+        })
+
+        po.button_confirm()
+        ressuply_pick = self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
+        self.assertEqual(len(ressuply_pick.move_lines), 2)
+        self.assertEqual(ressuply_pick.move_lines.mapped('product_id'), self.comp1 | self.comp2)
+
+        # should have create a purchase order for the components
+        comp_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(len(comp_po.order_line), 2)
+        self.assertEqual(comp_po.order_line.mapped('product_id'), self.comp1 | self.comp2)
+        # confirm the po should create stock moves linked to the resupply
+        comp_po.button_confirm()
+        comp_receipt = comp_po.picking_ids
+        self.assertEqual(comp_receipt.move_lines.move_dest_ids, ressuply_pick.move_lines)
+
+        # validate the comp receipt should reserve the resupply
+        self.assertEqual(ressuply_pick.state, 'waiting')
+        comp_receipt.move_lines.quantity_done = 1
+        comp_receipt.button_validate()
+        self.assertEqual(ressuply_pick.state, 'assigned')
