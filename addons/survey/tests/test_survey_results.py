@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo.addons.survey.controllers.main import Survey
 from odoo.addons.survey.tests import common
@@ -117,6 +118,40 @@ class TestSurveyResults(common.TestSurveyResultsCommon):
         post = {'filters': f'L,0,{self.answer_24.id}|L,0,{self.answer_pauline.id}'}
         expected_user_input_lines = self.user_input_2.user_input_line_ids
         self._check_results_and_query_count(post, expected_user_input_lines, 3)
+
+    def test_statistics_scale(self):
+        """ Test statistics of scale question. """
+        with MockRequest(self.env):
+            found_user_input_lines, _ = self.SurveyController._extract_filters_data(self.survey, {})
+        data = self.question_scale._prepare_statistics(found_user_input_lines)[0]
+        self.assertEqual(data['table_data'],
+                         [{'value': str(value),
+                           'suggested_answer': self.env['survey.question.answer'],
+                           'count': 1 if value in (5, 7) else 0}
+                          for value in range(11)])
+        self.assertEqual(json.loads(data['graph_data']),
+                         [{'key': self.question_scale.title,
+                           'values': [{'text': str(value),
+                                       'count': 1 if value in (5, 7) else 0}
+                                      for value in range(11)]}])
+        self.assertEqual(data['numerical_max'], 7)
+        self.assertEqual(data['numerical_min'], 5)
+        self.assertEqual(data['numerical_average'], 6)
+        # Test that a skipped value is not interpreted as a 0 value
+        self.scale_answer_line_2.write({
+            'value_scale': False,
+            'skipped': True,
+            'answer_type': False,
+        })
+        data = self.question_scale._prepare_statistics(found_user_input_lines)[0]
+        self.assertEqual(data['table_data'],
+                         [{'value': str(value),
+                           'suggested_answer': self.env['survey.question.answer'],
+                           'count': 1 if value == 5 else 0}
+                          for value in range(11)])
+        self.assertEqual(data['numerical_max'], 5)
+        self.assertEqual(data['numerical_min'], 5)
+        self.assertEqual(data['numerical_average'], 5)
 
     def _check_results_and_query_count(self, post, expected_user_input_lines, expected_query_count):
         """ Check that, depending on the URL filters, the _extract_filters_data method

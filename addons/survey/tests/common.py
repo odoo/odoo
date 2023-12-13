@@ -26,6 +26,7 @@ class SurveyCase(common.TransactionCase):
             'text_box': ('text_box', 'value_text_box'),
             'char_box': ('char_box', 'value_char_box'),
             'numerical_box': ('numerical_box', 'value_numerical_box'),
+            'scale': ('scale', 'value_scale'),  # similar to numerical_box
             'date': ('date', 'value_date'),
             'datetime': ('datetime', 'value_datetime'),
             'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
@@ -353,6 +354,12 @@ class TestSurveyCommon(SurveyCase):
             'sequence': 3,
             'question_type': 'numerical_box',
         })
+        cls.question_scale = cls.env['survey.question'].with_user(cls.survey_manager).create({
+            'title': 'Test Scale',
+            'survey_id': cls.survey.id,
+            'sequence': 40,
+            'question_type': 'scale',
+        })
 
 
 class TestSurveyResultsCommon(SurveyCase):
@@ -394,6 +401,9 @@ class TestSurveyResultsCommon(SurveyCase):
             labels=[{'value': 'Once a month'}, {'value': 'Once a week'}],
             labels_2=[{'value': 'Cactus'},
                         {'value': 'Ficus'}])
+        cls.question_scale = cls._add_question(
+            cls, None, 'How would you rate your experience on our website ?', 'scale', survey_id=cls.survey.id, sequence='7',
+        )
 
         # Question answers ids
         [cls.cat_id, cls.dog_id] = cls.question_sc.suggested_answer_ids.ids
@@ -413,6 +423,7 @@ class TestSurveyResultsCommon(SurveyCase):
         cls._add_answer_line(cls, cls.question_mx1, cls.user_input_1, cls.spring_id, **{'answer_value_row': cls.strawberries_row_id})
         cls._add_answer_line(cls, cls.question_mx2, cls.user_input_1, cls.once_a_month_id, **{'answer_value_row': cls.cactus_row_id})
         cls._add_answer_line(cls, cls.question_mx2, cls.user_input_1, cls.once_a_week_id, **{'answer_value_row': cls.ficus_row_id})
+        cls._add_answer_line(cls, cls.question_scale, cls.user_input_1, '5')
         cls.user_input_1.state = 'done'
 
         cls.user_input_2 = cls._add_answer(cls, cls.survey, cls.survey_manager.partner_id)
@@ -425,4 +436,5 @@ class TestSurveyResultsCommon(SurveyCase):
         cls._add_answer_line(cls, cls.question_mx1, cls.user_input_2, cls.spring_id, **{'answer_value_row': cls.strawberries_row_id})
         cls._add_answer_line(cls, cls.question_mx2, cls.user_input_2, cls.once_a_month_id, **{'answer_value_row': cls.cactus_row_id})
         cls._add_answer_line(cls, cls.question_mx2, cls.user_input_2, cls.once_a_month_id, **{'answer_value_row': cls.ficus_row_id})
+        cls.scale_answer_line_2 = cls._add_answer_line(cls, cls.question_scale, cls.user_input_1, '7')
         cls.user_input_2.state = 'done'

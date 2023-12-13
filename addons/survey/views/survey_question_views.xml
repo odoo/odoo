@@ -110,12 +110,35 @@
                                         <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                 </div>
+                                <!-- Scale -->
+                                <div invisible="question_type != 'scale'">
+                                    <span>Do you like it?</span><br/>
+                                    <div class="btn-group w-100" role="group" aria-label="Scale">
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">1</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">2</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">3</a>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                    </div>
+                                </div>
                             </div>
                         </group>
                     </group>
                     <notebook>
                         <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime']">
                             <group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min" placeholder="Scale Minimum Value (0 to 10)"/>
+                                    <field name="scale_max" placeholder="Scale Maximum Value (0 to 10)"/>
+                                </group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min_label" placeholder="Not likely at all"/>
+                                    <field name="scale_mid_label" placeholder="Neutral"/>
+                                    <field name="scale_max_label" placeholder="Extremely likely"/>
+                                </group>
                                 <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
                                     <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'numerical_box'"
@@ -151,7 +174,7 @@
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
-                                        column_invisible="parent.question_type == 'matrix'" required="not value"/>
+                                           column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
                                 </tree>
                             </field>
 
@@ -169,7 +192,7 @@
                         </page>
                         <page string="Options" name="options" invisible="is_page">
                             <group>
-                                <group string="Answers">
+                                <group string="Answers" invisible="question_type == 'scale'">
                                     <!-- Global validation setting -->
                                     <field name="validation_required"
                                            invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']"/>

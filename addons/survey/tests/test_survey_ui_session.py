@@ -68,6 +68,12 @@ class TestUiSession(HttpCase):
             'sequence': 4,
             'question_type': 'datetime',
         })
+        scale_question = self.env['survey.question'].create({
+            'survey_id': survey_session.id,
+            'title': 'Scale Question',
+            'sequence': 50,
+            'question_type': 'scale',
+        })
         simple_choice_answer_1 = self.env['survey.question.answer'].create({
             'value': 'First'
         })
@@ -80,7 +86,7 @@ class TestUiSession(HttpCase):
         simple_choice_question = self.env['survey.question'].create({
             'survey_id': survey_session.id,
             'title': 'Regular Simple Choice',
-            'sequence': 5,
+            'sequence': 60,
             'question_type': 'simple_choice',
             'suggested_answer_ids': [
                 (4, simple_choice_answer_1.id),
@@ -104,7 +110,7 @@ class TestUiSession(HttpCase):
         scored_choice_question = self.env['survey.question'].create({
             'survey_id': survey_session.id,
             'title': 'Scored Simple Choice',
-            'sequence': 6,
+            'sequence': 70,
             'question_type': 'simple_choice',
             'suggested_answer_ids': [
                 (4, scored_choice_answer_1.id),
@@ -129,7 +135,7 @@ class TestUiSession(HttpCase):
         timed_scored_choice_question = self.env['survey.question'].create({
             'survey_id': survey_session.id,
             'title': 'Timed Scored Multiple Choice',
-            'sequence': 6,
+            'sequence': 80,
             'question_type': 'multiple_choice',
             'is_time_limited': True,
             'time_limit': 1,
@@ -214,6 +220,9 @@ class TestUiSession(HttpCase):
             [timed_scored_choice_answer_1.id, timed_scored_choice_answer_2.id])
         attendee_3._save_lines(timed_scored_choice_question,
             [timed_scored_choice_answer_2.id])
+        attendee_1._save_lines(scale_question, '5')
+        attendee_2._save_lines(scale_question, '5')
+        attendee_3._save_lines(scale_question, '6')
 
         with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
             self.start_tour('/web', 'test_survey_session_manage_tour', login='admin')

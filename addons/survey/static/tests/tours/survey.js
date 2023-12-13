@@ -56,6 +56,9 @@ registry.category("web_tour.tours").add('test_survey', {
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
         run: 'text This is great. Really.',
     }, {
+        content: 'Answer How would you rate your experience on our website?',
+        trigger: 'div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4")',
+    }, {
         content: 'Click Submit and finish the survey',
         trigger: 'button[value="finish"]',
     },

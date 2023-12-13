@@ -124,6 +124,9 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                 question_answer_2 = self._add_answer_line(question, user_input,
                     question.suggested_answer_ids[0].id, **{'answer_value_row': question.matrix_row_ids[1].id})
                 self.assertEqual(question_answer_2.display_name, 'Column0: Row1')
+            elif question.question_type == 'scale':
+                question_answer = self._add_answer_line(question, user_input, '3')
+                self.assertEqual(question_answer.display_name, '3')
 
     @users('survey_manager')
     def test_answer_validation_mandatory(self):

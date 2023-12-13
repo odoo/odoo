@@ -75,6 +75,7 @@ class SurveyQuestion(models.Model):
         ('text_box', 'Multiple Lines Text Box'),
         ('char_box', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
+        ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
         ('matrix', 'Matrix')], string='Question Type',
@@ -108,6 +109,12 @@ class SurveyQuestion(models.Model):
     matrix_row_ids = fields.One2many(
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
+    # -- scale
+    scale_min = fields.Integer("Scale Minimum Value", default=0)
+    scale_max = fields.Integer("Scale Maximum Value", default=10)
+    scale_min_label = fields.Char("Scale Minimum Label", translate=True)
+    scale_mid_label = fields.Char("Scale Middle Label", translate=True)
+    scale_max_label = fields.Char("Scale Maximum Label", translate=True)
     # -- display & timing options
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
@@ -170,6 +177,8 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
+        ('scale', "CHECK (question_type != 'scale' OR (scale_min >= 0 AND scale_max <= 10 AND scale_min < scale_max))",
+            'The scale must be a growing non-empty range between 0 and 10 (inclusive)'),
     ]
 
     # -------------------------------------------------------------------------
@@ -426,6 +435,8 @@ class SurveyQuestion(models.Model):
                 return self._validate_choice(answer, comment)
             elif self.question_type == 'matrix':
                 return self._validate_matrix(answer)
+            elif self.question_type == 'scale':
+                return self._validate_scale(answer)
         return {}
 
     def _validate_char_box(self, answer):
@@ -494,6 +505,13 @@ class SurveyQuestion(models.Model):
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
+    def _validate_scale(self, answer):
+        if not self.survey_id.users_can_go_back \
+                and self.constr_mandatory \
+                and not answer:
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+        return {}
+
     def _index(self):
         """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
         created without ever moving records around, the sequence field can be set to 0 for all the questions.
@@ -554,6 +572,9 @@ class SurveyQuestion(models.Model):
             return table_data, [{'key': self.title, 'values': graph_data}]
         elif self.question_type == 'matrix':
             return self._get_stats_graph_data_matrix(user_input_lines)
+        elif self.question_type == 'scale':
+            table_data, graph_data = self._get_stats_data_scale(user_input_lines)
+            return table_data, [{'key': self.title, 'values': graph_data}]
         return [line for line in user_input_lines], []
 
     def _get_stats_data_answers(self, user_input_lines):
@@ -613,14 +634,38 @@ class SurveyQuestion(models.Model):
 
         return table_data, graph_data
 
+    def _get_stats_data_scale(self, user_input_lines):
+        suggested_answers = range(self.scale_min, self.scale_max + 1)
+        # Scale doesn't support comment as answer, so no extra value added
+
+        count_data = dict.fromkeys(suggested_answers, 0)
+        for line in user_input_lines:
+            if not line.skipped and line.value_scale in count_data:
+                count_data[line.value_scale] += 1
+
+        table_data = []
+        graph_data = []
+        for sug_answer in suggested_answers:
+            table_data.append({'value': str(sug_answer),
+                               'suggested_answer': self.env['survey.question.answer'],
+                               'count': count_data[sug_answer],
+                               })
+            graph_data.append({'text': str(sug_answer),
+                               'count': count_data[sug_answer]
+                               })
+
+        return table_data, graph_data
+
     def _get_stats_summary_data(self, user_input_lines):
         stats = {}
         if self.question_type in ['simple_choice', 'multiple_choice']:
             stats.update(self._get_stats_summary_data_choice(user_input_lines))
         elif self.question_type == 'numerical_box':
             stats.update(self._get_stats_summary_data_numerical(user_input_lines))
+        elif self.question_type == 'scale':
+            stats.update(self._get_stats_summary_data_numerical(user_input_lines, 'value_scale'))
 
-        if self.question_type in ['numerical_box', 'date', 'datetime']:
+        if self.question_type in ['numerical_box', 'date', 'datetime', 'scale']:
             stats.update(self._get_stats_summary_data_scored(user_input_lines))
         return stats
 
@@ -642,8 +687,8 @@ class SurveyQuestion(models.Model):
             'partial_inputs_count': len(partial_inputs),
         }
 
-    def _get_stats_summary_data_numerical(self, user_input_lines):
-        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped('value_numerical_box')
+    def _get_stats_summary_data_numerical(self, user_input_lines, fname='value_numerical_box'):
+        all_values = user_input_lines.filtered(lambda line: not line.skipped).mapped(fname)
         lines_sum = sum(all_values)
         return {
             'numerical_max': max(all_values, default=0),

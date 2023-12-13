@@ -101,9 +101,10 @@
                                             </t>
                                         </t>
                                         <t t-if="question.question_type == 'simple_choice'" t-call="survey.question_simple_choice"/>
+                                        <t t-if="question.question_type == 'scale'" t-call="survey.question_scale"/>
                                         <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
                                         <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
-                                        <t t-if="question.question_type in ['simple_choice', 'multiple_choice','matrix']">
+                                        <t t-if="question.question_type in ['simple_choice', 'multiple_choice', 'matrix', 'scale']">
                                             <t t-if="answer_lines">
                                                 <t t-if="answer_lines[0].skipped">
                                                     <div class="row g-0">
