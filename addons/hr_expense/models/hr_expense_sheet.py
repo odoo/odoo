@@ -464,6 +464,18 @@ class HrExpenseSheet(models.Model):
         sheets.activity_update()
         return sheets
 
+    def write(self, values):
+        res = super().write(values)
+        # Ensures there is no empty expense report in a state different from draft or cancel
+        if 'state' in values or 'expense_line_ids' in values or 'approval_state' in values:
+            for sheet in self.filtered(lambda sheet: not sheet.expense_line_ids):
+                if sheet.state in {'submit', 'approve', 'post', 'done'}:  # Empty expense report in a state different from draft or cancel
+                    if 'expense_line_ids' in values and not sheet.expense_line_ids:  # If you try to remove all expenses from the sheet
+                        raise UserError(_("You cannot remove all expenses from a submitted, approved or paid expense report."))
+                    else:  # If you try to submit, approve, post or pay an empty sheet
+                        raise UserError(_("This expense report is empty. You cannot submit or approve an empty expense report."))
+        return res
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
         for expense in self:
@@ -627,6 +639,9 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("Only HR Officers or the concerned employee can reset to draft."))
 
     def _check_can_create_move(self):
+        if any(not sheet.expense_line_ids for sheet in self):
+            raise UserError(_("You cannot create accounting entries for an expense report without expenses."))
+
         if any(sheet.state != 'approve' for sheet in self):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 

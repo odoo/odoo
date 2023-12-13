@@ -794,6 +794,87 @@ class TestExpenses(TestExpenseCommon):
 
         payment.write({'is_move_sent': True})
 
+    def test_corner_case_expense_reported_cannot_be_zero(self):
+        """
+        Test that the expenses are not submitted if the total amount is 0.0 nor able to be edited that way
+        unless unlinking it from the expense sheet.
+        """
+        expense = self.create_expense({'total_amount': 0.0, 'total_amount_currency': 0.0})
+
+        # CASE 1: FORBIDS Trying to submit an expense with a total_amount(_currency) of 0.0
+        with self.assertRaises(UserError):
+            expense.action_submit_expenses()
+
+        # CASE 2: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense is linked to a sheet
+        expense.total_amount_currency = 1000
+        expense_sheet = expense._create_sheets_from_expense()
+        with self.assertRaises(UserError):
+            expense.total_amount_currency = 0.0
+        with self.assertRaises(UserError):
+            expense.total_amount = 0.0
+
+        # CASE 3: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense sheet is approved
+        expense_sheet.action_approve_expense_sheets()
+        with self.assertRaises(UserError):
+            expense.total_amount_currency = 0.0
+        with self.assertRaises(UserError):
+            expense.total_amount = 0.0
+
+        # CASE 4: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense sheet is posted and the account move created
+        expense_sheet.action_sheet_move_create()
+        with self.assertRaises(UserError):
+            expense.total_amount_currency = 0.0
+        with self.assertRaises(UserError):
+            expense.total_amount = 0.0
+
+        # CASE 5: Should behave like CASE 2, the expense is still linked to a sheet after a reset to draft and shouldn't be updated
+        expense_sheet.action_reset_expense_sheets()
+        with self.assertRaises(UserError):
+            expense.total_amount_currency = 0.0
+        with self.assertRaises(UserError):
+            expense.total_amount = 0.0
+
+        # CASE 6: ALLOWS Changing the total_amount(_currency) to 0.0 when the expense is unlinked from its sheet
+        expense.sheet_id = False
+        expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0})
+
+        # CASE 7: FORBIDS Setting the amounts to 0 while setting the sheet_id
+        expense.write({'total_amount_currency': 1000.0, 'total_amount': 1000.0})
+        with self.assertRaises(UserError):
+            expense.write({'total_amount_currency': 0.0, 'sheet_id': expense_sheet.id})
+        with self.assertRaises(UserError):
+            expense.write({'total_amount': 0.0, 'sheet_id': expense_sheet.id})
+
+        # CASE 8: ALLOWS Setting the amounts to 0 while unlinking the expense sheet
+        expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0, 'sheet_id': False})
+
+    def test_corner_case_expense_prevent_empty_sheet_approval_actions(self):
+        """
+        Test that the expenses cannot not submitted, approved or posted if the sheet has no lines and that those lines cannot be removed
+        """
+
+        # CASE 1: FORBIDS Trying to submit an empty sheet
+        expense_sheet = self.create_expense_report({'expense_line_ids': []})
+        with self.assertRaises(UserError):
+            expense_sheet.action_submit_sheet()
+
+        # CASE 2: FORBIDS Trying to remove expense lines from a submitted expense sheet
+        expense = self.create_expense()
+        expense_sheet.expense_line_ids = expense.ids
+        expense_sheet.action_submit_sheet()
+        with self.assertRaises(UserError):
+            expense_sheet.expense_line_ids = [Command.clear()]
+
+        # CASE 3: FORBIDS Trying to remove expense lines from a submitted expense sheet
+        expense_sheet.action_approve_expense_sheets()
+        with self.assertRaises(UserError):
+            expense_sheet.expense_line_ids = [Command.clear()]
+
+        # CASE 4: FORBIDS Trying to remove expense lines from a posted expense sheet
+        expense_sheet.action_sheet_move_create()
+        with self.assertRaises(UserError):
+            expense_sheet.expense_line_ids = [Command.clear()]
+
     def test_expense_sheet_attachments_sync(self):
         """
         Test that the hr.expense.sheet attachments stay in sync with the attachments associated with the expense lines
@@ -887,25 +968,14 @@ class TestExpenses(TestExpenseCommon):
         Should raise a RedirectWarning when the selected employee in the sheet doesn't have a work email.
         """
         # Create two employees with no work email
-        employees = self.env["hr.employee"].create([
+        employee = self.env["hr.employee"].create([
             {
                 'name': "Test Employee1"
             },
-            {
-                'name': "Test Employee2"
-            }])
-        # Create two sheets with the above created employees
-        sheet = self.env["hr.expense.sheet"].create([
-            {
-                'company_id': self.env.company.id,
-                'employee_id': employees[0].id,
-                'name': 'test sheet1',
-            },
-            {
-                'company_id': self.env.company.id,
-                'employee_id': employees[1].id,
-                'name': 'test sheet2',
-            }])
+        ])
+        # Create an expense with the above created employees
+        expense = self.create_expense({'employee_id': employee.id})
+        sheet = expense._create_sheets_from_expense()
 
         sheet.action_submit_sheet()
         sheet.action_approve_expense_sheets()
