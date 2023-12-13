@@ -13,6 +13,9 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeServerError, MockServer } from "@web/../tests/helpers/mock_server";
+import { HierarchyModel } from "@web_hierarchy/hierarchy_model";
+
 
 let serverData, target;
 
@@ -605,6 +608,64 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
             ["Albert", "Georges", "JosephineAlbert"],
             "Georges should no longer have a manager"
+        );
+    });
+
+    QUnit.test("drag and drop record at an invalid position", async function (assert) {
+        assert.expect(8);
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views["hr.employee,false,hierarchy"].replace("<hierarchy>", "<hierarchy draggable='1'>");
+        patchWithCleanup(HierarchyModel.prototype, {
+            async updateParentId(node, parentResId = false) {
+                return this.orm.call(this.resModel, "custom_update_parent_id", [node.resId], {
+                    parent_id: parentResId,
+                });
+            },
+            async updateParentNode() {
+                try {
+                    await super.updateParentNode(...arguments);
+                } catch (error) {
+                    assert.strictEqual(error.data.message, "Prevented update parent");
+                }
+            }
+        });
+        patchWithCleanup(MockServer.prototype, {
+            async _performRPC(route, args) {
+                if (args.method === "custom_update_parent_id") {
+                    throw makeServerError({
+                        type: "ValidationError",
+                        description: "Prevented update parent",
+                    });
+                }
+                return super._performRPC(route, args);
+            }
+        });
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"],
+        );
+
+        const nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        const georgesNodeContainer = nodeContainers[1];
+        assert.strictEqual(georgesNodeContainer.querySelector(".o_hierarchy_node_content").textContent, "GeorgesAlbert");
+
+        await dragAndDrop(
+            georgesNodeContainer.querySelector(".o_hierarchy_node"),
+            ".o_hierarchy_row:first-child"
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"],
+            "The view should not have been modified since the position is invalid"
         );
     });
 
