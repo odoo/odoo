@@ -1023,6 +1023,20 @@ registry.anchorSlide = publicWidget.Widget.extend({
         if (!$anchor.length || !scrollValue) {
             return;
         }
+
+        const collapseMenuEl = this.el.closest('#top_menu_collapse');
+        if (collapseMenuEl && collapseMenuEl.classList.contains('show')) {
+            // Special case for anchors in collapse: clicking on those scrolls
+            // the page but doesn't close the menu. Two issues:
+            // 1. There is a visual glitch: the menu is jumping during the
+            //    scroll
+            // 2. The menu can actually cover the whole screen in mobile if the
+            //    menu are long enough. Then it behaves as if the click did
+            //    nothing since the page scrolled behind the menu but you didn't
+            //    see it and the menu remains open.
+            $(collapseMenuEl).collapse("hide");
+        }
+
         ev.preventDefault();
         this._scrollTo($anchor, scrollValue);
     },
