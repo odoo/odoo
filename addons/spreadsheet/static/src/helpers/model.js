@@ -5,7 +5,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { toCartesian } = helpers;
+const { formatValue, isDefined, toCartesian } = helpers;
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -82,9 +82,14 @@ export async function freezeOdooData(model) {
 
 function exportGlobalFiltersToSheet(model, data) {
     model.getters.exportSheetWithActiveFilters(data);
+    const locale = model.getters.getLocale();
     for (const filter of data.globalFilters) {
         const content = model.getters.getFilterDisplayValue(filter.label);
-        filter["value"] = content;
+        filter["value"] = content
+            .flat()
+            .filter(isDefined)
+            .map(({ value, format }) => formatValue(value, { format, locale }))
+            .join(", ");
     }
 }
 
