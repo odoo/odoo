@@ -77,6 +77,9 @@ class AccountEdiFormat(models.Model):
         result = "".join(matches)
         return result
 
+    def _l10n_in_is_global_discount(self, line):
+        return not line.tax_ids and line.price_subtotal < 0 or False
+
     def _check_move_configuration(self, move):
         if self.code != "in_einvoice_1_03":
             return super()._check_move_configuration(move)
@@ -86,7 +89,7 @@ class AccountEdiFormat(models.Model):
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_base_tags()
-        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
+        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
@@ -476,9 +479,12 @@ class AccountEdiFormat(models.Model):
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
+        global_discount_line = lines.filtered(self._l10n_in_is_global_discount)
+        lines -= global_discount_line
         tax_details_per_record = tax_details.get("tax_details_per_record")
         sign = invoice.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
+        global_discount_amount = sum(line.balance for line in global_discount_line) * sign * -1
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -498,7 +504,7 @@ class AccountEdiFormat(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount")),
+                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
                 "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
@@ -510,6 +516,7 @@ class AccountEdiFormat(models.Model):
                     tax_details_by_code.get("state_cess_amount", 0.00)
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
+                "Discount": self._l10n_in_round_value(global_discount_amount),
                 "RndOffAmt": self._l10n_in_round_value(
                     rounding_amount),
                 "TotInvVal": self._l10n_in_round_value(
