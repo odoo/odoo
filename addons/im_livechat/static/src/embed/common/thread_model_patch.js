@@ -30,32 +30,37 @@ patch(Thread, {
                     }
                 }
             );
-            if (this.env.services["im_livechat.chatbot"].isChatbotThread(thread)) {
-                thread.chatbotTypingMessage = {
-                    id: this.env.services["mail.message"].getNextTemporaryId(),
-                    author: thread.operator,
-                    originThread: thread,
-                };
-            } else {
-                thread.livechatWelcomeMessage = {
-                    id: this.env.services["mail.message"].getNextTemporaryId(),
-                    body: livechatService.options.default_message,
-                    author: thread.operator,
-                    originThread: thread,
-                };
-            }
         }
         return thread;
     },
 });
 
 patch(Thread.prototype, {
-    chatbotScriptId: null,
+    chatbot_script_id: null,
+    requested_by_operator: false,
 
     setup() {
         super.setup();
-        this.chatbotTypingMessage = Record.one("Message");
-        this.livechatWelcomeMessage = Record.one("Message");
+        this.chatbotTypingMessage = Record.one("Message", {
+            compute() {
+                if (this.isChatbotThread) {
+                    return { id: -0.1 - this.id, originThread: this, author: this.operator };
+                }
+            },
+        });
+        this.livechatWelcomeMessage = Record.one("Message", {
+            compute() {
+                if (this.hasWelcomeMessage) {
+                    const livechatService = this._store.env.services["im_livechat.livechat"];
+                    return {
+                        id: -0.2 - this.id,
+                        body: livechatService.options.default_message,
+                        originThread: this,
+                        author: this.operator,
+                    };
+                }
+            },
+        });
     },
 
     get isLastMessageFromCustomer() {
@@ -70,5 +75,13 @@ patch(Thread.prototype, {
             return this.operator.avatarUrl;
         }
         return super.avatarUrl;
+    },
+
+    get isChatbotThread() {
+        return Boolean(this.chatbot_script_id);
+    },
+
+    get hasWelcomeMessage() {
+        return this.type === "livechat" && !this.isChatbotThread && !this.requested_by_operator;
     },
 });

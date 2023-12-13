@@ -216,7 +216,7 @@ export class DiscussCoreCommon {
                 return;
             }
         }
-        if (!channel.is_pinned) {
+        if (!channel.is_pinned && this.store.self) {
             this.threadService.pin(channel);
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
