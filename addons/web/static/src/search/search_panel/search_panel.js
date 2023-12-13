@@ -49,6 +49,7 @@ export class SearchPanel extends Component {
             active: {},
             expanded: {},
             showMobileSearch: false,
+            sidebarExpanded: true,
         });
         this.root = useRef("root");
         this.scrollTop = 0;
@@ -208,6 +209,10 @@ export class SearchPanel extends Component {
         if (category.activeValueId !== value.id) {
             this.env.searchModel.toggleCategoryValue(category.id, value.id);
         }
+    }
+
+    toggleSidebar() {
+        this.state.sidebarExpanded = !this.state.sidebarExpanded;
     }
 
     /**
