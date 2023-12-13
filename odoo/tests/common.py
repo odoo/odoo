@@ -1675,7 +1675,7 @@ class HttpCase(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         if cls.registry_test_mode:
-            cls.registry.enter_test_mode(cls.cr)
+            cls.registry.enter_test_mode(cls.cr, not hasattr(cls, 'readonly_enabled') or cls.readonly_enabled)
             cls.addClassCleanup(cls.registry.leave_test_mode)
 
         ICP = cls.env['ir.config_parameter']

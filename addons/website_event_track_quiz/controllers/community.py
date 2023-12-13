@@ -55,7 +55,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
         return values
 
     def _get_leaderboard(self, event, searched_name=None):
-        current_visitor = request.env['website.visitor']._get_visitor_from_request(force_create=False)
+        current_visitor = request.env['website.visitor']._get_visitor_from_request()
         track_visitor_data = request.env['event.track.visitor'].sudo()._read_group(
             [('track_id', 'in', event.track_ids.ids),
              ('visitor_id', '!=', False),

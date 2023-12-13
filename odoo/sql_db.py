@@ -583,7 +583,7 @@ class TestCursor(BaseCursor):
         self.clear()
         self.prerollback.clear()
         self.postrollback.clear()
-        self.postcommit.clear()         # TestCursor ignores post-commit hooks
+        self.postcommit.clear()         # TestCursor ignores post-commit hooks by default
 
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
