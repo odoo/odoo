@@ -249,6 +249,7 @@ export class PosStore extends Reactive {
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
+        this.partner_commercial_fields = loadedData["partner_commercial_fields"];
         await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
     }
@@ -1959,6 +1960,10 @@ export class PosStore extends Reactive {
 
     doNotAllowRefundAndSales() {
         return false;
+    }
+
+    isChildPartner(partner) {
+        return partner.parent_name;
     }
 }
 

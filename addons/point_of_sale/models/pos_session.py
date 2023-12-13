@@ -1660,6 +1660,7 @@ class PosSession(models.Model):
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
+        loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
 
     @api.model
     def _pos_ui_models_to_load(self):
