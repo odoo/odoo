@@ -3033,7 +3033,7 @@ class AccountMove(models.Model):
 
             try:
                 if decoder and not success:
-                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
+                    with self.env.cr.savepoint(), self.with_context(disable_onchange_name_predictive=True)._get_edi_creation() as invoice:
                         # pylint: disable=not-callable
                         success = decoder(invoice, file_data, new)
                         if success:

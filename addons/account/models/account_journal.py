@@ -763,7 +763,6 @@ class AccountJournal(models.Model):
             all_invoices |= invoice
 
             invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
                 no_new_invoice=True,
             ).message_post(attachment_ids=attachment.ids)
 
