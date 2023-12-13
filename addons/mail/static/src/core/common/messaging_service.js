@@ -43,11 +43,15 @@ export class Messaging {
         };
     }
 
+    get initMessagingParams() {
+        return {};
+    }
+
     /**
      * Import data received from init_messaging
      */
     async initialize() {
-        await rpc("/mail/init_messaging", {}, { silent: true }).then(
+        await rpc("/mail/init_messaging", this.initMessagingParams, { silent: true }).then(
             this.initMessagingCallback.bind(this)
         );
     }
