@@ -23,8 +23,8 @@
 </t>
 
 <t t-name="stock.StockReportSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
-    <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="replace">
-        <t t-call="stock.StockReportSearchPanel.Regular"/>
+    <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+        <attribute name="t-call">stock.StockReportSearchPanel.Regular</attribute>
     </xpath>
 </t>
 

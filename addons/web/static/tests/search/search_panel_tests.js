@@ -3503,4 +3503,36 @@ QUnit.module("Search", (hooks) => {
             );
         }
     );
+
+    QUnit.test("search panel can be collapsed/expanded", async (assert) => {
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsOnce(target, ".o_search_panel");
+        assert.containsN(target, ".o_search_panel_section", 2);
+
+        await click(target.querySelector(".o_search_panel button"));
+        assert.containsNone(target, ".o_search_panel");
+        assert.containsOnce(target, ".o_search_panel_sidebar");
+        assert.strictEqual(target.querySelector(".o_search_panel_sidebar").textContent, " All ");
+
+        await click(target.querySelector(".o_search_panel_sidebar button"));
+        assert.containsOnce(target, ".o_search_panel");
+
+        await click(target.querySelectorAll(".o_search_panel_category_value header")[1]);
+        await click(target.querySelectorAll(".o_search_panel_filter_value input")[1]);
+
+        await click(target.querySelector(".o_search_panel button"));
+        assert.containsNone(target, ".o_search_panel");
+        assert.containsOnce(target, ".o_search_panel_sidebar");
+        assert.strictEqual(
+            target.querySelector(".o_search_panel_sidebar").textContent,
+            "asusteksilver"
+        );
+    });
 });

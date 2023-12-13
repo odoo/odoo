@@ -40,6 +40,15 @@
     }
 }
 
+.o_search_panel_sidebar {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    width: 3rem;
+    @include media-breakpoint-up(md) {
+        border-right: $border-width solid $border-color;
+    }
+}
+
 .o_mobile_search_content {
     --SearchPanel-width: 100%;
     --SearchPanel-fontSize: 1.1em;

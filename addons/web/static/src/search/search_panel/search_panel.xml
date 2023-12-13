@@ -6,15 +6,56 @@
         <t t-call="web.SearchPanel.Small" />
     </t>
     <t t-else="">
-        <t t-call="web.SearchPanel.Regular" />
+        <t t-if="state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
+        <t t-else="" t-call="web.SearchPanel.Sidebar" />
     </t>
 </t>
 
+<t t-name="web.SearchPanel.Sidebar">
+    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer" t-on-click="toggleSidebar">
+        <t t-set="categories" t-value="getCategorySelection()" />
+        <t t-set="filters" t-value="getFilterSelection()" />
+        <div class="d-flex">
+            <button class="btn btn-light btn-sm m-1 mb-2 p-2">
+                <i class="fa fa-fw fa-angle-double-right"/>
+            </button>
+            <div class="o_search_panel_current_selection text-truncate mx-auto">
+                <t t-if="!categories.length and !filters.length">
+                    All
+                </t>
+                <t t-else="">
+                    <t t-foreach="categories" t-as="category" t-key="category.id">
+                        <span class="o_search_panel_category mb-2">
+                            <i t-if="category.icon"
+                                t-attf-class="o_search_panel_section_icon fa {{ category.icon }} fa-rotate-90 mb-2"
+                                t-att-style="category.color and ('color: ' + category.color)"
+                            />
+                            <t t-esc="category.values.join('/')" />
+                        </span>
+                    </t>
+                    <t t-foreach="filters" t-as="filter" t-key="filter.id">
+                        <span class="o_search_panel_filter  mb-2">
+                            <i t-if="filter.icon"
+                                t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} fa-rotate-90 mb-2"
+                                t-att-style="filter.color and ('color: ' + filter.color)"
+                            />
+                            <t t-esc="filter.values.join(', ')" />
+                        </span>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
 <t t-name="web.SearchPanelContent">
-    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto"
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto position-relative"
          t-att-class="env.searchModel.searchPanelInfo.className"
          t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
          t-ref="root">
+        <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-index-1" t-on-click="toggleSidebar">
+            <i class="fa fa-fw fa-angle-double-left"/>
+        </button>
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn w-100 overflow-visible">
                 <div class="d-flex align-items-center me-2 ms-auto">All</div>
