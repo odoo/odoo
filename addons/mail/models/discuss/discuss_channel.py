@@ -733,6 +733,12 @@ class Channel(models.Model):
             self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
+    def _filter_for_init_messaging(self):
+        """Override to filter the channels that should be returned by the
+        init_messaging RPC.
+        """
+        return self
+
     def _channel_basic_info(self):
         self.ensure_one()
         return {
