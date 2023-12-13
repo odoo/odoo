@@ -1039,8 +1039,23 @@ registry.anchorSlide = publicWidget.Widget.extend({
         if (!$anchor.length || !scrollValue) {
             return;
         }
-        ev.preventDefault();
-        this._scrollTo($anchor, scrollValue);
+
+        const offcanvasEl = this.el.closest('.offcanvas.o_navbar_mobile');
+        if (offcanvasEl && offcanvasEl.classList.contains('show')) {
+            // Special case for anchors in offcanvas in mobile: we can't just
+            // _scrollTo() after preventDefault because preventDefault would
+            // prevent the offcanvas to be closed. The choice is then to close
+            // it ourselves manually and once it's fully closed, then start our
+            // own smooth scrolling.
+            ev.preventDefault();
+            Offcanvas.getInstance(offcanvasEl).hide();
+            offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
+                this._scrollTo($anchor, scrollValue);
+            });
+        } else {
+            ev.preventDefault();
+            this._scrollTo($anchor, scrollValue);
+        }
     },
 });
 
