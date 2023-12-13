@@ -25,8 +25,6 @@ class AccountMove(models.Model):
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 
-    l10n_ar_currency_rate = fields.Float(copy=False, readonly=True, string="Currency Rate")
-
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
         compute='_compute_l10n_ar_afip_concept', selection='_get_afip_invoice_concepts', string="AFIP Concept",
@@ -161,20 +159,6 @@ class AccountMove(models.Model):
         for rec in self:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
 
-    def _set_afip_rate(self):
-        """ We set the l10n_ar_currency_rate value with the accounting date. This should be done
-        after invoice has been posted in order to have the proper accounting date"""
-        for rec in self:
-            if rec.company_id.currency_id == rec.currency_id:
-                rec.l10n_ar_currency_rate = 1.0
-            elif not rec.l10n_ar_currency_rate:
-                rec.l10n_ar_currency_rate = self.env['res.currency']._get_conversion_rate(
-                    from_currency=rec.currency_id,
-                    to_currency=rec.company_id.currency_id,
-                    company=rec.company_id,
-                    date=rec.invoice_date,
-                )
-
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
         if self.company_id.account_fiscal_country_id.code == 'AR' and self.l10n_latam_use_documents and self.partner_id \
@@ -222,7 +206,6 @@ class AccountMove(models.Model):
 
         posted_ar_invoices = posted & ar_invoices
         posted_ar_invoices._set_afip_responsibility()
-        posted_ar_invoices._set_afip_rate()
         posted_ar_invoices._set_afip_service_dates()
         return posted
 
