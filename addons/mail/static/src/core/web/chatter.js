@@ -225,6 +225,9 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
+        if (this.state.thread?.recipients.length === 0) {
+            return _t("No recipient");
+        }
         const recipients = [...(this.state.thread?.recipients ?? [])]
             .slice(0, 5)
             .map(({ partner }) => {

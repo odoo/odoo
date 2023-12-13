@@ -72,10 +72,10 @@
                 </button>
             </div>
             <t t-if="state.composerType">
-                <t t-if="state.composerType === 'message' and state.thread.recipients.length > 0">
+                <t t-if="state.composerType === 'message'">
                     <div class="flex-shrink-0 px-3 pt-3 text-truncate small mb-2" style="margin-left:48px">
                         <span class="fw-bold">To:</span> <t t-out="toRecipientsText"/>
-                        <button class="o-mail-Chatter-recipientListButton btn btn-link badge rounded-pill border-0 p-1 ms-1" title="Show all recipients" t-on-click="onClickRecipientList">
+                        <button t-if="state.thread.recipients.length > 0" class="o-mail-Chatter-recipientListButton btn btn-link badge rounded-pill border-0 p-1 ms-1" title="Show all recipients" t-on-click="onClickRecipientList">
                             <i class="fa fa-caret-down"/>
                         </button>
                     </div>
