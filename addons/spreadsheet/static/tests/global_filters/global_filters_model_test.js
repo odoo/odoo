@@ -48,6 +48,7 @@ import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/globa
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { toRangeData } from "../utils/zones";
 import { PivotUIPlugin } from "@spreadsheet/pivot/index";
+import { getEvaluatedCell } from "../utils/getters";
 const { DateTime } = luxon;
 const { toZone } = helpers;
 
@@ -891,6 +892,85 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), ``);
     });
 
+    QUnit.test("ODOO.FILTER.VALUE date from/to without values", async function (assert) {
+        const model = await createModelWithDataSource();
+        setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        assert.equal(getEvaluatedCell(model, "A1").value, "");
+        assert.equal(getEvaluatedCell(model, "A2").value, "");
+    });
+
+    QUnit.test("ODOO.FILTER.VALUE date from/to with only from defined", async function (assert) {
+        const model = await createModelWithDataSource();
+        setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: {
+                from: "2020-01-01",
+            },
+        });
+        assert.equal(getEvaluatedCell(model, "A1").value, 43831);
+        assert.equal(getEvaluatedCell(model, "A1").format, "m/d/yyyy");
+        assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
+        assert.equal(getEvaluatedCell(model, "B1").value, "");
+    });
+
+    QUnit.test("ODOO.FILTER.VALUE date from/to with only to defined", async function (assert) {
+        const model = await createModelWithDataSource();
+        setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: {
+                to: "2020-01-01",
+            },
+        });
+        assert.equal(getEvaluatedCell(model, "A1").value, "");
+        assert.equal(getEvaluatedCell(model, "B1").value, 43831);
+        assert.equal(getEvaluatedCell(model, "B1").format, "m/d/yyyy");
+        assert.equal(getEvaluatedCell(model, "B1").formattedValue, "1/1/2020");
+    });
+
+    QUnit.test("ODOO.FILTER.VALUE date from/to with from and to defined", async function (assert) {
+        const model = await createModelWithDataSource();
+        setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: {
+                from: "2020-01-01",
+                to: "2021-01-01",
+            },
+        });
+        assert.equal(getEvaluatedCell(model, "A1").value, 43831);
+        assert.equal(getEvaluatedCell(model, "A1").format, "m/d/yyyy");
+        assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
+        assert.equal(getEvaluatedCell(model, "B1").value, 44197);
+        assert.equal(getEvaluatedCell(model, "B1").format, "m/d/yyyy");
+        assert.equal(getEvaluatedCell(model, "B1").formattedValue, "1/1/2021");
+    });
+
     QUnit.test("ODOO.FILTER.VALUE relation filter", async function (assert) {
         const model = await createModelWithDataSource({
             mockRPC: function (route, { method, args }) {
@@ -1362,7 +1442,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
         const [filter] = model.getters.getGlobalFilters();
         assert.strictEqual(
-            model.getters.getFilterDisplayValue(filter.label),
+            model.getters.getFilterDisplayValue(filter.label)[0][0].value,
             String(new Date().getFullYear())
         );
     });
@@ -1383,9 +1463,41 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(filterSheet.cells["B1"].content, "Value");
         assert.equal(
             filterSheet.cells["B2"].content,
-            model.getters.getFilterDisplayValue(filter.label)
+            model.getters.getFilterDisplayValue(filter.label)[0][0].value
         );
         model.exportXLSX(); // should not crash
+    });
+
+    QUnit.test("Export from/to global filters for excel", async function (assert) {
+        const model = await createModelWithDataSource();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: {
+                from: "2020-01-01",
+                to: "2021-01-01",
+            },
+        });
+        const [filter] = model.getters.getGlobalFilters();
+        const filterPlugin = model["handlers"].find(
+            (handler) => handler instanceof GlobalFiltersUIPlugin
+        );
+        const exportData = { styles: {}, formats: {}, sheets: [] };
+        filterPlugin.exportForExcel(exportData);
+        const filterSheet = exportData.sheets[0];
+        assert.equal(filterSheet.cells["A1"].content, "Filter");
+        assert.equal(filterSheet.cells["A2"].content, filter.label);
+        assert.equal(filterSheet.cells["B1"].content, "Value");
+        assert.equal(filterSheet.cells["B2"].content, 43831);
+        assert.equal(filterSheet.cells["C2"].content, 44197);
+        assert.equal(filterSheet.cells["B2"].format, 1);
+        assert.equal(filterSheet.cells["C2"].format, 1);
+        assert.strictEqual(exportData.formats[1], "m/d/yyyy");
     });
 
     QUnit.test("Date filter automatic default value for years filter", async function (assert) {
@@ -1498,7 +1610,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             rangeType: "relative",
         });
         assert.equal(
-            model.getters.getFilterDisplayValue(label),
+            model.getters.getFilterDisplayValue(label)[0][0].value,
             RELATIVE_DATE_RANGE_TYPES[1].description
         );
     });
