@@ -446,6 +446,14 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(sale_order.amount_total, 15.41, "")
 
+    def test_order_auto_lock_with_public_user(self):
+        public_user = self.env.ref('base.public_user')
+        self.sale_order.create_uid.groups_id += self.env.ref('sale.group_auto_done_setting')
+        self.sale_order.with_user(public_user.id).sudo().action_confirm()
+
+        self.assertFalse(public_user.has_group('sale.group_auto_done_setting'))
+        self.assertTrue(self.sale_order.locked)
+
     def test_draft_quotation_followers(self):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner1.id,
