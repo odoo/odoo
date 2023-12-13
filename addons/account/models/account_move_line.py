@@ -667,10 +667,12 @@ class AccountMoveLine(models.Model):
                 line.debit = line.balance if line.balance < 0.0 else 0.0
                 line.credit = -line.balance if line.balance > 0.0 else 0.0
 
-    @api.depends('currency_id', 'company_id', 'move_id.date')
+    @api.depends('currency_id', 'company_id', 'move_id.invoice_currency_rate', 'move_id.date')
     def _compute_currency_rate(self):
         for line in self:
-            if line.currency_id:
+            if line.move_id.is_invoice(include_receipts=True):
+                line.currency_rate = line.move_id.invoice_currency_rate
+            elif line.currency_id:
                 line.currency_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=line.company_currency_id,
                     to_currency=line.currency_id,
