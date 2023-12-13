@@ -46,7 +46,7 @@ class StockMove(models.Model):
         return self.sale_line_id.order_id or res
 
     def _get_sale_order_lines(self):
-        """ Return all possible sale order lines for one or multiple stock moves. """
+        """ Return all possible sale order lines for one stock move. """
         def _get_origin_moves(move):
             origin_moves = move.move_orig_ids
             if origin_moves:
@@ -59,6 +59,7 @@ class StockMove(models.Model):
                 destination_moves += _get_destination_moves(destination_moves)
             return destination_moves
 
+        self.ensure_one()
         return (self + _get_origin_moves(self) + _get_destination_moves(self)).sale_line_id
 
     def _assign_picking_post_process(self, new=False):
