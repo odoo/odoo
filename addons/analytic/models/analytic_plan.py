@@ -89,6 +89,8 @@ class AccountAnalyticPlan(models.Model):
         domain="[('company_id', '=', current_company_id)]",
     )
 
+    analytic_properties_definition = fields.PropertiesDefinition('Analytic Account Properties', copy=True)
+
     def _auto_init(self):
         super()._auto_init()
         def precommit():

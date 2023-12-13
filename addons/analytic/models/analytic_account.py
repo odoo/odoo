@@ -92,6 +92,8 @@ class AccountAnalyticAccount(models.Model):
         string="Currency",
     )
 
+    plan_properties = fields.Properties('Properties', definition='plan_id.analytic_properties_definition')
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         for company, accounts in groupby(self, lambda account: account.company_id):
