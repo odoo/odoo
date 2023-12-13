@@ -550,12 +550,36 @@ class HrExpense(models.Model):
     def write(self, vals):
         expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
+            # Check access rights on the sheet
             self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
+
+            # Store the previous sheet of the expenses to unlink the attachments later if needed
             for expense in self:
                 expense_to_previous_sheet[expense] = expense.sheet_id
+
+            # If the sheet_id is modified, we need to check that the expenses are not set to 0,
+            # unless it's to unlink the sheet
+            enforced_non_zero_expenses = self.env['hr.expense']
+            if vals.get('sheet_id'):  # If sheet is linked, we need to check all the newly linked expenses in self
+                enforced_non_zero_expenses = self
+        else:  # If sheet_id is not modified, we need to check all the expenses in self linked to a sheet
+            enforced_non_zero_expenses = self.filtered('sheet_id')
+
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
+
+        if enforced_non_zero_expenses:
+            error_msgs = []
+            if 'total_amount' in vals:
+                if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in enforced_non_zero_expenses):
+                    error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
+            if 'total_amount_currency' in vals:
+                if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in enforced_non_zero_expenses):
+                    error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
+            if error_msgs:
+                raise UserError("\n".join(error_msgs))
+
         res = super().write(vals)
 
         if 'employee_id' in vals:
@@ -701,10 +725,14 @@ class HrExpense(models.Model):
             raise UserError(_('You have no expense to report'))
         return expenses.action_submit_expenses()
 
-    def action_submit_expenses(self):
+    def _create_sheets_from_expense(self):
         if self.filtered(lambda expense: not expense.is_editable):
             raise UserError(_('You are not authorized to edit this expense.'))
         sheets = self.env['hr.expense.sheet'].create(self._get_default_expense_sheet_values())
+        return sheets
+
+    def action_submit_expenses(self):
+        sheets = self._create_sheets_from_expense()
         return {
             'name': _('New Expense Reports'),
             'type': 'ir.actions.act_window',
