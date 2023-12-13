@@ -222,6 +222,11 @@
             run: () => null,
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
+        {
+            content: "Ensure that the description has correctly been added on the field",
+            trigger: "iframe .s_website_form_field:contains('Test conditional visibility') .s_website_form_field_description",
+            isCheck: true,
+        },
 
         ...addExistingField('date', 'text', 'Test Date', true),
 
@@ -434,11 +439,11 @@
         {
             content: "Check that field B prefill text is set",
             trigger: `iframe ${triggerFieldByLabel("field B")}:has(input[value="prefilled"])`,
-            run: () => null, // it's a check
+            isCheck: true,
         }, {
             content: "Check that field A is visible",
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
-            run: () => null, // it's a check
+            isCheck: true,
         },
         // A) Check that if we edit again and save again the default value is
         // not deleted.
@@ -468,7 +473,7 @@
                 `:has(${triggerFieldByLabel("field A")}:not(:visible))` +
                 `:has(${triggerFieldByLabel("field B")}` +
                 `:has(input[value="prefilled"]):not(:visible))`,
-            run: () => null, // it's a check
+            isCheck: true,
         }, {
             content: "Type something in field C",
             trigger: `iframe ${triggerFieldByLabel("field C")} input`,
@@ -477,7 +482,7 @@
             content: "Check that fields A and B are visible",
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
                 `:has(${triggerFieldByLabel("field A")}:visible)`,
-            run: () => null, // it's a check
+            isCheck: true,
         },
 
         // Have field A's visibility tied to field B containing something,
@@ -506,7 +511,7 @@
             content: "Check that field B is visible, but field A is not",
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
                 `:has(${triggerFieldByLabel("field A")}:not(:visible))`,
-            run: () => null, // it's a check
+            isCheck: true,
         }, {
             content: "Insert 'peek-a-boo' in field B",
             trigger: `iframe ${triggerFieldByLabel("field B")} input`,
@@ -514,7 +519,7 @@
         }, {
             content: "Check that field A is visible",
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
-            run: () => null, // it's a check
+            isCheck: true,
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -533,6 +538,16 @@
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
         ...addCustomField("char", "text", "\\", false),
+
+        // Ensure that the description option is working as wanted.
+        ...addCustomField("char", "text", "Check description option", false),
+        wTourUtils.changeOption("WebsiteFieldEditor", "we-button[data-toggle-description] we-checkbox"),
+        {
+            content: "Ensure that the description has correctly been added on the field",
+            trigger: "iframe .s_website_form_field:contains('Check description option') .s_website_form_field_description",
+            isCheck: true,
+        },
+
         ...wTourUtils.clickOnSave(),
         {
             content: 'Verify that the recipient email has been saved',
