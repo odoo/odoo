@@ -1133,7 +1133,7 @@ const UnitUserValueWidget = UserValueWidget.extend({
         const activeValue = this._super(...arguments);
 
         const params = this._methodsParams;
-        if (!params.unit) {
+        if (!params.unit && !params.fakeUnit) {
             return activeValue;
         }
 
