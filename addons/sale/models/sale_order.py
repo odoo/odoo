@@ -821,7 +821,8 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        if self.env.user.has_group('sale.group_auto_done_setting'):
+
+        if self.create_uid.has_group('sale.group_auto_done_setting'):  # Public user can confirm SO
             self.action_done()
 
         return True
