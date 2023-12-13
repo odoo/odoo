@@ -98,3 +98,6 @@ class TestSnippets(HttpCase):
 
     def test_drag_and_drop_on_non_editable(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_drag_and_drop_on_non_editable', login='admin')
+
+    def test_public_widget_history(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_public_widget_history', login='admin')

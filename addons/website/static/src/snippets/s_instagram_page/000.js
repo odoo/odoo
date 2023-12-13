@@ -32,10 +32,10 @@ const InstagramPage = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
+        window.removeEventListener("message", this.__onMessage);
         const iframeEl = this.el.querySelector(".o_instagram_container iframe");
         if (iframeEl) {
             iframeEl.remove();
-            window.removeEventListener("message", this.__onMessage);
         }
         this._super.apply(this, arguments);
     },
@@ -73,16 +73,6 @@ const InstagramPage = publicWidget.Widget.extend({
      */
     _onMessage(ev) {
         const iframeEl = this.el.querySelector(".o_instagram_container iframe");
-        if (!iframeEl) {
-            // TODO: fix this case. We should never end up here. It happens when
-            // - Drop Instagram snippet
-            // - Undo
-            // - Drop a new Instagram snippet
-            // => The listener of the first one is still active because the
-            // public widget has not been destroyed.
-            window.removeEventListener("message", this.__onMessage);
-            return;
-        }
         if (ev.origin !== "https://www.instagram.com" || iframeEl.contentWindow !== ev.source) {
             // It's not a message from Instagram or it's a message from another
             // Instagram iframe.

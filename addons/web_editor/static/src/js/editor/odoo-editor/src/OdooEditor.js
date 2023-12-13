@@ -1531,11 +1531,13 @@ export class OdooEditor extends EventTarget {
                         const node = this.idFind(mutation.parentId);
                         node && node.append(nodeToRemove);
                     }
+                    this.dispatchEvent(new CustomEvent("historyAddedElement", {detail: nodeToRemove}));
                     break;
                 }
                 case 'add': {
                     const node = this.idFind(mutation.id);
                     if (node) {
+                        this.dispatchEvent(new CustomEvent("historyWillRemoveElement", {detail: node}));
                         node.remove();
                     }
                 }

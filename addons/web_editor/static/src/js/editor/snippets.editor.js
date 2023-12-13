@@ -2063,6 +2063,28 @@ var SnippetsMenu = Widget.extend({
         }, 500);
         this.options.wysiwyg.odooEditor.addEventListener('historyUndo', refreshSnippetEditors);
         this.options.wysiwyg.odooEditor.addEventListener('historyRedo', refreshSnippetEditors);
+        this.options.wysiwyg.odooEditor.addEventListener("historyAddedElement", (ev) => {
+            this._mutex.exec(() => {
+                // Start the widgets after an history undo/redo adds a block.
+                return new Promise((resolve, reject) => {
+                    this.trigger_up("widgets_start_request", {
+                        editableMode: true,
+                        $target: $(ev.detail),
+                        onSuccess: resolve,
+                        onFailure: reject,
+                    });
+                });
+            });
+        });
+        this.options.wysiwyg.odooEditor.addEventListener("historyWillRemoveElement", (ev) => {
+            this._mutex.exec(() => {
+                // Stop the widgets before an history undo/redo removes a block.
+                this.trigger_up("widgets_stop_request", {
+                    editableMode: true,
+                    $target: $(ev.detail),
+                });
+            });
+        });
 
         const $autoFocusEls = $('.o_we_snippet_autofocus');
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
