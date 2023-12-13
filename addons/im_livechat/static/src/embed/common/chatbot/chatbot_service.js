@@ -281,13 +281,6 @@ export class ChatBotService {
         }
     }
 
-    /**
-     * @param {import("models").Thread} thread
-     */
-    isChatbotThread(thread) {
-        return thread?.operator.id === this.chatbot?.partnerId;
-    }
-
     // =============================================================================
     // STATE MANAGEMENT
     // =============================================================================
@@ -351,7 +344,7 @@ export class ChatBotService {
     }
 
     get active() {
-        return this.available && this.isChatbotThread(this.livechatService.thread);
+        return this.available && this.livechatService.thread?.isChatbotThread;
     }
 
     get available() {
