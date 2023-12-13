@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
 
     def _prepare_sellers(self, params=False):
         sellers = super(ProductProduct, self)._prepare_sellers(params=params)
-        if params and params.get('order_id'):
+        if params and params.get('order_id') and params['order_id']._fields.get("requisition_id"):
             return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
             return sellers
