@@ -88,7 +88,7 @@ class ir_cron(models.Model):
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
-            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
+            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall, 'job_id': cron.id}).ir_actions_server_id.run()
             cron.lastcall = fields.Datetime.now()
         return True
 
@@ -297,7 +297,7 @@ class ir_cron(models.Model):
         with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
-            env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall})
+            env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall, 'job_id': job['id']})
             ir_cron = env[cls._name]
 
             # Use the user's timezone to compare and compute datetimes,
