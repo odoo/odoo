@@ -468,7 +468,7 @@ class IrActionsServer(models.Model):
         model = self.env[ir_model.model]
         sensible_default_fields = ['partner_id', 'user_id', 'user_ids', 'stage_id', 'state', 'active']
         for field_name in sensible_default_fields:
-            if field_name in model._fields:
+            if field_name in model._fields and not model._fields[field_name].readonly:
                 return field_name
         return ''
 
