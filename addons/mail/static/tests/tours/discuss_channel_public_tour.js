@@ -130,5 +130,24 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 await contains(".o-mail-AttachmentCard", { text: "extra.txt", count: 0 });
             },
         },
+        {
+            content: "Open search panel",
+            trigger: "button[title='Search Messages']",
+        },
+        {
+            content: "Search for the attachment name",
+            trigger: ".o_searchview_input",
+            run: "text text.txt",
+        },
+        {
+            content: "Trigger the search",
+            trigger: "button[aria-label='Search button']",
+        },
+        {
+            content: "Check that searched message contains the attachment",
+            trigger:
+                '.o-mail-SearchMessagesPanel .o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            run() {},
+        },
     ],
 });
