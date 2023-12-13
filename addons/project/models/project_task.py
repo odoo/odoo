@@ -990,7 +990,7 @@ class Task(models.Model):
             for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
                 task.write(vals)
         tasks._populate_missing_personal_stages()
-        self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
+        self._task_message_auto_subscribe_notify({task: (task.user_ids - self.env.user, self.env['res.users']) for task in tasks})
 
         # in case we were already in sudo, we don't check the rights.
         if is_portal_user and not was_in_sudo:
@@ -1208,7 +1208,7 @@ class Task(models.Model):
         elif 'project_id' in vals:
             self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
 
-        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
+        self._task_message_auto_subscribe_notify({task: (task.user_ids - old_user_ids[task] - self.env.user, old_user_ids[task] - task.user_ids - self.env.user) for task in self})
 
         if partner_ids:
             for task in self:
@@ -1362,7 +1362,7 @@ class Task(models.Model):
             )
 
     @api.model
-    def _task_message_auto_subscribe_notify(self, users_per_task):
+    def _task_message_auto_subscribe_notify(self, user_data_per_task):
         if self.env.context.get('mail_auto_subscribe_no_notify'):
             return
         # Utility method to send assignation notification upon writing/creation.
@@ -1370,15 +1370,13 @@ class Task(models.Model):
         if not template_id:
             return
         task_model_description = self.env['ir.model']._get(self._name).display_name
-        for task, users in users_per_task.items():
-            if not users:
-                continue
+        for task, (assigned_users, unassigned_users) in user_data_per_task.items():
             values = {
                 'object': task,
                 'model_description': task_model_description,
                 'access_link': task._notify_get_action_link('view'),
             }
-            for user in users:
+            for user in assigned_users:
                 values.update(assignee_name=user.sudo().name)
                 assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
                 assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
@@ -1391,6 +1389,33 @@ class Task(models.Model):
                     model_description=task_model_description,
                     mail_auto_delete=False,
                 )
+            if unassigned_users:
+                task._task_message_unsubscribe_notify(unassigned_users)
+
+    def _task_message_unsubscribe_notify(self, unassigned_users):
+        self.ensure_one()
+        unassigned_user_names = ', '.join(unassigned_users.mapped('name'))
+        subtype_id_unassigned = self.env['ir.model.data']._xmlid_to_res_id('project.mt_task_unassigned', raise_if_not_found=False)
+        followers_with_subtype = self.message_follower_ids.filtered(lambda follower: subtype_id_unassigned in follower.subtype_ids.ids)
+        if not followers_with_subtype:
+            return
+        values = {
+            'object': self,
+            'model_description': self.env['ir.model']._get(self._name).display_name,
+            'access_link': self._notify_get_action_link('view'),
+            'unassigned_user_names': unassigned_user_names,
+        }
+        unassignation_msg = self.env['ir.qweb']._render('project.project_message_user_unassigned', values, minimal_qcontext=True)
+        unassignation_msg = self.env['mail.render.mixin']._replace_local_links(unassignation_msg)
+        self.message_notify(
+            subject=_("%(unassignee_name)s have been unassigned from %(task_name)s", unassignee_name=unassigned_user_names, task_name=self.display_name),
+            body=unassignation_msg,
+            partner_ids=followers_with_subtype.partner_id.ids,
+            record_name=self.display_name,
+            email_layout_xmlid='mail.mail_notification_layout',
+            model_description=self.env['ir.model']._get(self._name).display_name,
+            mail_auto_delete=False,
+        )
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         if 'user_ids' not in updated_values:
