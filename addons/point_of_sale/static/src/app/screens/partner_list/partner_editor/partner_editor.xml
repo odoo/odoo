@@ -19,13 +19,20 @@
                     <t t-foreach="['Street', 'City', 'Zip', 'Email', 'Phone', 'Mobile', 'Barcode' ]" t-as="item" t-key="item">
                         <div class="partner-detail col">
                             <label class="form-label label" t-attf-for="{{item}}" t-esc="item"/>
-                            <input class="detail form-control" t-attf-id="{{item}}" t-attf-name="{{item}}" t-model="changes[item.toLowerCase()]" t-attf-placeholder="{{item}}" t-att-class="{'border-danger': missingFields.includes(item.toLowerCase())}" />
+                            <input
+                                class="detail form-control"
+                                t-attf-id="{{item}}"
+                                t-attf-name="{{item}}"
+                                t-model="changes[item.toLowerCase()]"
+                                t-attf-placeholder="{{item}}"
+                                t-att="{'disabled': isFieldCommercialAndPartnerIsChild(item)}"
+                                t-att-class="{'border-danger': missingFields.includes(item.toLowerCase())}" />
                         </div>
                     </t>
 
                     <div class="partner-detail col">
                         <label class="form-label label" for="state">State</label>
-                        <select class="detail form-select" id="state" name="state_id" t-model="changes.state_id" t-att-class="{'border-danger': missingFields.includes('state_id')}">
+                        <select class="detail form-select" id="state" name="state_id" t-model="changes.state_id" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('state_id')}" t-att-class="{'border-danger': missingFields.includes('state_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.states" t-as="state" t-key="state.id">
                                 <option t-if="changes.country_id == state.country_id[0]" t-att-value="state.id">
@@ -36,7 +43,7 @@
                     </div>
                     <div class="partner-detail col">
                         <label class="form-label label" for="country">Country</label>
-                        <select class="detail form-select" id="country" name="country_id" t-model="changes.country_id" t-att-class="{'border-danger': missingFields.includes('country_id')}">
+                        <select class="detail form-select" id="country" name="country_id" t-model="changes.country_id" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('country_id')}" t-att-class="{'border-danger': missingFields.includes('country_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id">
@@ -47,7 +54,7 @@
                     </div>
                     <div class="partner-detail col">
                         <label class="form-label label" for="language">Language</label>
-                        <select class="detail form-select" id="language" name="lang" t-model="changes.lang" t-att-class="{'border-danger': missingFields.includes('lang')}">
+                        <select class="detail form-select" id="language" name="lang" t-model="changes.lang" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('lang')}" t-att-class="{'border-danger': missingFields.includes('lang')}">
                             <t t-foreach="pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code" t-att-selected="changes.lang ? ((lang.code === changes.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
                                     <t t-esc="lang.name" />
@@ -57,7 +64,7 @@
                     </div>
                     <div t-if="pos.pricelists.length gt 1" class="partner-detail col">
                         <label class="form-label label" for="pricelist">Pricelist</label>
-                        <select class="detail form-select" id="pricelist" name="property_product_pricelist" t-model="changes.property_product_pricelist" t-att-class="{'border-danger': missingFields.includes('property_product_pricelist')}">
+                        <select class="detail form-select" id="pricelist" name="property_product_pricelist" t-model="changes.property_product_pricelist" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('property_product_pricelist')}" t-att-class="{'border-danger': missingFields.includes('property_product_pricelist')}">
                             <t t-foreach="pos.pricelists" t-as="pricelist" t-key="pricelist.id">
                                 <option t-att-value="pricelist.id" t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
@@ -67,7 +74,7 @@
                     </div>
                     <div class="partner-detail col">                                                           
                         <label class="form-label label" for="vat">Tax ID</label>                           
-                        <input class="detail vat form-control" id="vat" name="vat" t-model="changes.vat" t-att-class="{'border-danger': missingFields.includes('vat')}" />
+                        <input class="detail vat form-control" id="vat" name="vat" t-model="changes.vat" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('vat')}" t-att-class="{'border-danger': missingFields.includes('vat')}" />
                     </div>      
                 </div>
             </div>
