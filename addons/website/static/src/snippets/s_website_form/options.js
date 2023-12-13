@@ -175,12 +175,10 @@ const FormEditor = options.Class.extend({
         if (field.custom && !field.string) {
             params.field.string = field.name;
         }
-        if (field.type === "description") {
-            if (field.description) {
-                params.default_description = _t("Describe your field here.");
-            } else if (["email_cc", "email_to"].includes(field.name)) {
-                params.default_description = _t("Separate email addresses with a comma.");
-            }
+        if (field.description) {
+            params.default_description = _t("Describe your field here.");
+        } else if (["email_cc", "email_to"].includes(field.name)) {
+            params.default_description = _t("Separate email addresses with a comma.");
         }
         const template = document.createElement('template');
         template.content.append(renderToElement("website.form_field_" + field.type, params));
