@@ -35,7 +35,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
     "_"
 )}_im_livechat.odoo_version`;
 
-const TEMPORARY_ID = "livechat_temporary_thread";
+const TEMPORARY_ID = -1;
 const SESSION_COOKIE = "im_livechat_session";
 const OPERATOR_COOKIE = "im_livechat_previous_operator";
 const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
