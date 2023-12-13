@@ -683,6 +683,13 @@ class ResPartner(models.Model):
         if self.country_id.code == 'JP':
             return self.simple_vat_check('jp', vat)
 
+    def check_vat_id(self, vat):
+        """ Temporary Indonesian VAT validation to support the new format
+        introduced in January 2024."""
+        if len(vat) in (15, 16) and vat[0:15].isdigit() and vat[-1].isdigit():
+            return True
+        return False
+
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
         # may have a VATIN starting with "EU" instead of a country code.
