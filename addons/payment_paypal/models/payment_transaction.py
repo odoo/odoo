@@ -94,6 +94,13 @@ class PaymentTransaction(models.Model):
         if self.provider != 'paypal':
             return
 
+        amount = data.get('amt') or data.get('mc_gross')
+        currency_code = data.get('cc') or data.get('mc_currency')
+        assert amount and currency_code, 'PayPal: missing amount or currency'
+        assert self.currency_id.compare_amounts(float(amount), self.amount + self.fees) == 0, \
+            'PayPal: mismatching amounts'
+        assert currency_code == self.currency_id.name, 'PayPal: mismatching currency codes'
+
         txn_id = data.get('txn_id')
         txn_type = data.get('txn_type')
         if not all((txn_id, txn_type)):
