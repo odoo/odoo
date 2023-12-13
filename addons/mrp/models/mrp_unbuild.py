@@ -107,7 +107,7 @@ class MrpUnbuild(models.Model):
             if self.has_tracking == 'serial':
                 self.product_qty = 1
             else:
-                self.product_qty = self.mo_id.product_qty
+                self.product_qty = self.mo_id.qty_produced
 
 
     @api.onchange('product_id')
@@ -158,7 +158,7 @@ class MrpUnbuild(models.Model):
             self.env['stock.move.line'].create({
                 'move_id': finished_move.id,
                 'lot_id': self.lot_id.id,
-                'quantity': finished_move.product_uom_qty,
+                'quantity': self.product_qty,
                 'product_id': finished_move.product_id.id,
                 'product_uom_id': finished_move.product_uom.id,
                 'location_id': finished_move.location_id.id,
@@ -234,7 +234,7 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             if unbuild.mo_id:
                 raw_moves = unbuild.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
-                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
+                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.product_uom_id)
                 for raw_move in raw_moves:
                     moves += unbuild._generate_move_from_existing_move(raw_move, factor, raw_move.location_dest_id, self.location_dest_id)
             else:
