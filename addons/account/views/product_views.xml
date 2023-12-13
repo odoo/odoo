@@ -1,0 +1,13 @@
+<odoo>
+     <record id="product_view_search_catalog" model="ir.ui.view">
+         <field name="name">product.view.search.catalog.inherit.account</field>
+         <field name="model">product.product</field>
+         <field name="mode">primary</field>
+         <field name="inherit_id" ref="product.product_view_search_catalog"/>
+         <field name="arch" type="xml">
+             <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                 <field name="seller_ids" string="Vendor"/>
+             </xpath>
+         </field>
+     </record>
+</odoo>
