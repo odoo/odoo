@@ -721,7 +721,7 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                     <field name="stage_id" attrs="{'invisible': ['|', ('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
-                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('project_id', '!=', False), ('personal_stage_id', '=', False)]}"/>
+                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('project_id', '!=', False), ('personal_stage_id', '=', False)]}" options="{'no_open': True}"/>
                 </calendar>
             </field>
         </record>
