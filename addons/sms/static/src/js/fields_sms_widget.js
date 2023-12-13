@@ -44,11 +44,14 @@ var SmsWidget = FieldTextEmojis.extend({
         var def = this._super.apply(this, arguments);
 
         this._compute();
-        $('.o_sms_container').remove();
-        var $sms_container = $('<div class="o_sms_container"/>');
+        const $sms_container = $('<div class="o_sms_container"/>');
+        if (!document.contains($sms_container[0])) {
+            this.$el = this.$el.add($sms_container);
+        } else {
+            $sms_container.empty();
+        }
         $sms_container.append(this._renderSMSInfo());
         $sms_container.append(this._renderIAPButton());
-        this.$el = this.$el.add($sms_container);
 
         return def;
     },
