@@ -7,7 +7,7 @@ from itertools import groupby
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero, float_compare, html_sanitize
 from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
 
@@ -1641,6 +1641,16 @@ class PosSession(models.Model):
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
 
+        pos_config = loaded_data['pos.config']
+        receipt_header = pos_config.get('receipt_header')
+        receipt_footer = pos_config.get('receipt_footer')
+        pos_config['receipt_header_html'] = ''
+        pos_config['receipt_footer_html'] = ''
+        if receipt_header and self._is_html(receipt_header):
+            pos_config['receipt_header_html'] = html_sanitize(loaded_data['receipt_header'])
+        if receipt_footer and self._is_html(receipt_footer):
+            pos_config['receipt_footer_html'] = html_sanitize(loaded_data['receipt_footer'])
+
     @api.model
     def _pos_ui_models_to_load(self):
         models_to_load = [
@@ -2071,6 +2081,15 @@ class PosSession(models.Model):
             if product_id:
                 return {'product_id': [product_id[0]], 'packaging': packaging}
         return {}
+
+    @api.model
+    def _is_html(self, value):
+        """ Replicate the JS function in python 
+        function is_html(subreceipt){
+            return subreceipt ? (subreceipt.split('\n')[0].indexOf('<!DOCTYPE QWEB') >= 0) : false;
+        }
+        """
+        return value.split('\n')[0].startswith('<!DOCTYPE QWEB') if value else False
 
 
 class ProcurementGroup(models.Model):

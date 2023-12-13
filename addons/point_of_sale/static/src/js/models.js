@@ -2628,16 +2628,16 @@ class Order extends PosModel {
             pos_qr_code: this._get_qr_code_data(),
         };
 
-        if (is_html(this.pos.config.receipt_header)){
+        if (this.pos.config.receipt_header_html){
             receipt.header = '';
-            receipt.header_html = render_html(this.pos.config.receipt_header);
+            receipt.header_html = render_html(this.pos.config.receipt_header_html);
         } else {
             receipt.header = this.pos.config.receipt_header || '';
         }
 
-        if (is_html(this.pos.config.receipt_footer)){
+        if (this.pos.config.receipt_footer_html){
             receipt.footer = '';
-            receipt.footer_html = render_html(this.pos.config.receipt_footer);
+            receipt.footer_html = render_html(this.pos.config.receipt_footer_html);
         } else {
             receipt.footer = this.pos.config.receipt_footer || '';
         }
