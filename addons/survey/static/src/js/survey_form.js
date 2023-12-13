@@ -650,6 +650,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                         }
                     }
                     break;
+                case 'scale':
+                    if (questionRequired && !data[questionId]) {
+                        errors[questionId] = constrErrorMsg;
+                    }
+                    break;
                 case 'simple_choice_radio':
                 case 'multiple_choice':
                     if (questionRequired) {
@@ -720,6 +725,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             switch ($(this).data('questionType')) {
                 case 'text_box':
                 case 'char_box':
+                    params[this.name] = this.value;
+                    break;
                 case 'numerical_box':
                     params[this.name] = this.value;
                     break;
@@ -733,6 +740,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     params[this.name] = date ? serialize(date) : "";
                     break;
                 }
+                case 'scale':
                 case 'simple_choice_radio':
                 case 'multiple_choice':
                     params = self._prepareSubmitChoices(params, $(this), $(this).data('name'));
@@ -1195,6 +1203,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const answerWrapper = questionWrapper.querySelector('.o_survey_answer_wrapper');
         const questionType = questionWrapper.querySelector('[data-question-type]').dataset.questionType;
 
+        // Only questions supporting correct answer are present here (ex.: scale question doesn't support it)
         if (['numerical_box', 'date', 'datetime'].includes(questionType)) {
             const input = answerWrapper.querySelector('input');
             let isCorrect;

@@ -146,7 +146,17 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'sequence': 9,
                     'question_type': 'text_box',
                     'constr_mandatory': False,
-                })
+                }), (0, 0, {
+                    'title': 'How would you rate your experience on our website?',
+                    'sequence': 15,
+                    'question_type': 'scale',
+                    'scale_min': 1,
+                    'scale_max': 5,
+                    'scale_min_label': 'Bad experience',
+                    'scale_mid_label': 'Do the job',
+                    'scale_max_label': 'Very good experience',
+                    'constr_mandatory': True,
+                }),
             ],
         })
 

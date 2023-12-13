@@ -121,7 +121,7 @@ const checkAnswersCount = (chartData, expectedCount) => {
  * Break down of the main points:
  * - Open the 'session manager' (the session was already created by a previous tour)
  * - Display the nickname question, and move to the next one (as answers are not displayed)
- * - Check answers are correctly displayed for the 3 'simple' question types (text, date, datetime)
+ * - Check answers are correctly displayed for the 4 'simple' question types (text, date, datetime, integer (scale))
  * - Move to the choice question and check that answers are displayed
  *   (The check is rather complex, see 'getChartData' for details)
  * - If everything is correctly displayed, move to the next question
@@ -219,6 +219,18 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
 }, {
     trigger: 'h1',
     run: nextScreen
+}, {
+    trigger: 'h1:contains("Scale Question")',
+    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
+    run: () => {
+        checkAnswers(getChartData(), [
+            ...Array(5).fill({ value: 0, type: "regular" }),
+            { value: 2, type: "regular" }, // 2 votes for the scale value 5
+            { value: 1, type: "regular" }, // 1 vote for the scale value 6
+            ...Array(4).fill({ value: 0, type: "regular" }),
+        ]);
+        nextScreen();
+    }
 }, {
     trigger: 'h1:contains("Regular Simple Choice")',
     // Wait for answers' data to be fetched (see commit message).
