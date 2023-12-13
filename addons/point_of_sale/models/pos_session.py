@@ -1686,6 +1686,7 @@ class PosSession(models.Model):
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
         loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+        loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
 
     @api.model
     def _pos_ui_models_to_load(self):

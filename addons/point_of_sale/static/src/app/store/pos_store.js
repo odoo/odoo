@@ -285,6 +285,7 @@ export class PosStore extends Reactive {
         this.base_url = loadedData["base_url"];
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
         this.db.addProductIdsToNotDisplay(loadedData["pos_special_products_ids"]);
+        this.partner_commercial_fields = loadedData["partner_commercial_fields"];
         await this._loadPosPrinters(loadedData["pos.printer"]);
         this.open_orders_json = loadedData["open_orders"];
     }
@@ -1964,6 +1965,10 @@ export class PosStore extends Reactive {
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
         };
+    }
+
+    isChildPartner(partner) {
+        return partner.parent_name;
     }
 }
 
