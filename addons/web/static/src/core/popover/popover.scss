@@ -36,7 +36,7 @@
 	}
 
 	&.o-popover-top, &.o-popover-auto[x-placement^="top"] {
-		margin-bottom: 0.5rem;
+		margin-top: -0.5rem;
 	}
 
 	&.o-popover-right, &.o-popover-auto[x-placement^="right"] {
@@ -48,7 +48,7 @@
 	}
 
 	&.o-popover-left, &.o-popover-auto[x-placement^="left"] {
-		margin-right: 0.5rem;
+		margin-left: -0.5rem;
 	}
 
 	&.o-popover--ts .popover-arrow, &.o-popover--bs .popover-arrow {
@@ -65,14 +65,6 @@
 
 	&.o-popover--le .popover-arrow, &.o-popover--re .popover-arrow {
 		bottom: $popover-border-radius;
-	}
-
-	&.o-popover-no-arrow > .popover-arrow {
-		display: none;
-	}
-
-	&.o-popover-no-arrow {
-		border: 0px;
 	}
 }
 /*!rtl:end:ignore*/

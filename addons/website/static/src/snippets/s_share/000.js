@@ -59,7 +59,6 @@ const ShareWidget = publicWidget.Widget.extend({
 
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.title);
-        const media = encodeURIComponent(document.querySelector('meta[property="og:image"]').content);
 
         aEl.href = currentHref
             .replace(this.URL_REGEX, (match, a, b, c) => {
@@ -75,12 +74,22 @@ const ShareWidget = publicWidget.Widget.extend({
                     return `${a + title}%20${url + c}`;
                 }
                 return a + title + c;
-            })
-            .replace(this.MEDIA_REGEX, (match, a, b, c) => {
-                return a + media + c;
             });
+        const urlObject = new URL(aEl.href);
+        if (urlObject.searchParams.has("media")) {
+            const ogImageEl = document.querySelector("meta[property='og:image']");
+            // Some pages (/profile/user/ID) don't have an image to share.
+            if (ogImageEl) {
+                const media = encodeURIComponent(ogImageEl.content);
+                urlObject.searchParams.set("media", media);
+            } else {
+                // We don't delete the media parameter in the href in case
+                // there is media to share in the next sharer click.
+                urlObject.searchParams.delete("media");
+            }
+        }
 
-        window.open(aEl.href, aEl.target, 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+        window.open(urlObject.toString(), aEl.target, 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
     },
 });
 

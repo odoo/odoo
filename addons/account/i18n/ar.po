@@ -182,14 +182,14 @@ msgstr "%s - %s؛ %s مفوتر، %s تم تسليمه في %s كل "
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s الضرائب المستنثاة "
+msgstr "%s غير شامل الضريبة  "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s الضرائب المشمولة "
+msgstr "%s شامل الضريبة "
 
 #. module: account
 #. odoo-python
@@ -219,6 +219,13 @@ msgid ""
 msgstr ""
 "لقد وصل %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
 "حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s كشف الحساب %s "
 
 #. module: account
 #. odoo-python
@@ -2700,7 +2707,7 @@ msgstr "نموذج التوزيع التحليلي "
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "نماذج التوزيع التحليلية "
+msgstr "نماذج التوزيع التحليلي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
@@ -3621,6 +3628,7 @@ msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
 msgstr ""
+"لا يمكن إنشاء كود دفتر يومية غير مستخدم. يرجى تغيير اسم دفتر اليومية %s. "
 
 #. module: account
 #. odoo-python

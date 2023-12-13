@@ -33,7 +33,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Pengaturan\"/>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -42,6 +42,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook Valid\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -50,13 +53,16 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Outlook Valid\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "Error terjadi saat mengambil token akses. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -68,7 +74,7 @@ msgstr "Autentikasi denga"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "URL Autentikasi"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -83,6 +89,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Hubungkan akun Outlook Anda dengan proses Autentikasi OAuth.\n"
+"Secara default, hanya user dengan alamat email yang cocok akan dapat menggunakan server ini. Untuk memperpanjang penggunaannya, Anda harus menetapkan parameter sistem \"mail.default.from\". "
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -92,11 +100,13 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Hubungkan akun Outlook pribadi Anda menggunakan OAuth.\n"
+"Anda akan dialihkan ulang ke halaman login Outlook untuk menerima izinnya."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "Kembali ke server email Anda"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -106,7 +116,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID dari app Outlook Anda"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -121,13 +131,15 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Keamanan Koneksi Salah untuk server email Outlook %r. Mohon tetapkan menjadi"
+" \"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Apakah Kredensial Outlook Dikonfigurasi"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -137,65 +149,65 @@ msgstr "Email Server"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Microsoft Outlook Mixin"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "Hanya administrator yang dapat link server email Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Token Akses Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Timestamp Kadaluwarsa Token Akses Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Id Klien Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Klien Outlook Rahasia"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Autentikasi OAuth Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Token Refresh Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "Mohon konfigurasikan kredensial Outlook Anda."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Mohon masuk dengan akun Outlook Anda sebelum menggunakannya."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -206,6 +218,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"Mohon isi field \"Username\" dengan username Outlook/Office365 Anda (alamat "
+"email Anda). Ini harusnya merupakan akun yang sama dengan yang Anda gunakan "
+"untuk Token OAuthentication Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -215,18 +230,20 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Mohon biarkan kosong kolom password untuk server email Outlook %r. Proses "
+"OAuth tidak membutuhkannya"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid "Read More"
-msgstr ""
+msgstr "Lihat Lebih"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "SSL dibutuhkan untuk server %r."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -236,7 +253,7 @@ msgstr "Rahasia"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Secret dari app Outlook Anda"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -250,13 +267,15 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Setup kredensial API Outlook Anda di pengaturan umum untuk menghubungkan ke "
+"akun Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "URL untuk membuat kode otorisasi dari Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -266,10 +285,12 @@ msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
 msgstr ""
+"Server %r hanya dapat digunakan untuk alamat email pribadi Anda. Mohon isi "
+"kolom \"from_filter\" dengan %r."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "Error tidak diketahui."

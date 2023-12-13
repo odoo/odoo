@@ -224,6 +224,7 @@ class TestVirtualAvailable(TestStockCommon):
         calling `name_search` with a negative operator will exclude T from the
         result.
         """
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_variant').id)]})
         template = self.env['product.template'].create({
             'name': 'Super Product',
         })
@@ -317,3 +318,23 @@ class TestVirtualAvailable(TestStockCommon):
         ]:
             product_qty = self.product_3.with_context(warehouse=wh, location=loc).qty_available
             self.assertEqual(product_qty, expected)
+
+    def test_change_type_tracked_product(self):
+        product = self.env['product.template'].create({
+            'name': 'Brand new product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_form = Form(product)
+        product_form.detailed_type = 'service'
+        product = product_form.save()
+        self.assertEqual(product.tracking, 'none')
+
+        product.detailed_type = 'product'
+        product.tracking = 'serial'
+        self.assertEqual(product.tracking, 'serial')
+        # change the type from "product.product" form
+        product_form = Form(product.product_variant_id)
+        product_form.detailed_type = 'service'
+        product = product_form.save()
+        self.assertEqual(product.tracking, 'none')

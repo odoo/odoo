@@ -58,7 +58,7 @@ msgstr "Lanjutan"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "Izinkan pencocokkan dengan subfield"
 
 #. module: base_import
 #. openerp-web
@@ -88,21 +88,21 @@ msgstr "Impor Dasar"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Base Import Mapping"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Impor Batch"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Batas batch"
 
 #. module: base_import
 #. openerp-web
@@ -157,13 +157,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Tidak dapat mengambil URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "Buat value baru"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -305,11 +307,30 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Kesalahan Parsing Tanggal [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "Error selagi mengimpor record: Text Delimiter harusnya satu karakter."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Error selagi mengimpor record: semua baris harusnya memiliki ukuran yang "
+"sama, tapi baris judul memiliki %d entri sementara baris pertama memiliki "
+"%d. Anda mungkin harus merubah pemisah karakter."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Perkiraan waktu tersisa:"
 
 #. module: base_import
 #. openerp-web
@@ -323,7 +344,7 @@ msgstr "Segalanya tampak sah."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
-msgstr ""
+msgstr "File excel disarankan karena formatting otomatis."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -350,7 +371,7 @@ msgstr "File"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
-msgstr ""
+msgstr "Kolom File"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -367,7 +388,7 @@ msgstr "Tipe File"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Ukuran file melampaui konfigurasi maksimum (%s byte)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -379,7 +400,7 @@ msgstr "File yang dimeriksa dan/atau diimpor, biner (bukan base64)"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Menyelesaikan batch saat ini sebelum memberhentikan..."
 
 #. module: base_import
 #. openerp-web
@@ -393,7 +414,7 @@ msgstr "Untuk file CSV, Anda mungkin perlu memilih pemisah yang benar."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "Formatting"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -402,13 +423,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Menemukan data gambar yang tidak valid, gambar harus diimpor sebagai URL "
+"atau data base64-encode."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Pergi ke Tanya & Jawab Impor"
 
 #. module: base_import
 #. openerp-web
@@ -478,6 +501,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Ukuran gambar terlalu besar, gambar yang diimpor harus lebih kecil dari 42 "
+"juta pixel"
 
 #. module: base_import
 #. openerp-web
@@ -491,7 +516,7 @@ msgstr "Impor"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Tanya Jawab Impor"
 
 #. module: base_import
 #. openerp-web
@@ -504,7 +529,7 @@ msgstr "Impor File"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "File impor tidak memiliki konten atau corrupt"
 
 #. module: base_import
 #. openerp-web
@@ -518,7 +543,7 @@ msgstr "Tinjauan impor gagal karena:"
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
-msgstr ""
+msgstr "Impor recor"
 
 #. module: base_import
 #. openerp-web
@@ -529,26 +554,30 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Impor habis waktu. Mohon coba lagi. Bila Anda masih mengalami masalah ini, "
+"file mungkin terlalu besar untuk konfigurasi sistem, coba pisahkan file "
+"(impor lebih sedikit record untuk setiap file)."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
-msgstr ""
+msgstr "File yang Diimpor"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "Mengimpor"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Value cell tidak valid pada baris %(row)s, kolom %(col)s: %(cell_value)s"
 
 #. module: base_import
 #. openerp-web
@@ -632,7 +661,7 @@ msgstr "Memuat File"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "Muat file..."
 
 #. module: base_import
 #. openerp-web
@@ -647,7 +676,7 @@ msgstr "Model"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Lebih dari satu error terjadi"
 
 #. module: base_import
 #. openerp-web
@@ -670,7 +699,7 @@ msgstr "Butuh bantuan?"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Tidak ada Separator"
 
 #. module: base_import
 #. openerp-web
@@ -691,7 +720,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
-msgstr ""
+msgstr "Field Odoo"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -708,7 +737,7 @@ msgstr "Induk"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "Cegah impor"
 
 #. module: base_import
 #. openerp-web
@@ -749,14 +778,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Lihat kemungkinan value"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "Sheet Terpilih:"
 
 #. module: base_import
 #. openerp-web
@@ -784,35 +813,35 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "Tetapkan ke: False"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "Tetapkan ke: True"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "Tetapkan value sebagai kosong"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "Sheet:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "Lewati recor"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -831,28 +860,28 @@ msgstr "Spasi"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "Field Standar"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Mulai pada bari"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "Stop Impor"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Field yang Disarankan"
 
 #. module: base_import
 #. openerp-web
@@ -962,7 +991,7 @@ msgstr "Pemisah Teks:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "File memiliki error blocking (lihat di bawah)"
 
 #. module: base_import
 #. openerp-web
@@ -976,14 +1005,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "File kaan diimpor secara batch"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Kolom ini akan di-concat di field"
 
 #. module: base_import
 #. openerp-web
@@ -1011,7 +1040,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
-msgstr ""
+msgstr "Untuk mengimpor, pilih field..."
 
 #. module: base_import
 #. openerp-web
@@ -1054,21 +1083,21 @@ msgstr "Belum ada judul"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "Unggah File"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
-msgstr ""
+msgstr "Unggah file Excel atau CSV untuk mengimpor"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
-msgstr ""
+msgstr "Gunakan baris pertama sebagai header"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -1111,7 +1140,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Saat value tidak dapat dicocokkan:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1130,6 +1159,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Anda dapat mengetes atau memuat ulang file Anda sebelum melanjutkan impor."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1142,14 +1172,14 @@ msgstr "Anda harus mengkonfigurasi setidaknya satu kolom untuk diimpor"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "pada lebih dari satu baris"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "pada bari"
 
 #. module: base_import
 #. openerp-web
@@ -1164,7 +1194,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "di field"
 
 #. module: base_import
 #. openerp-web
@@ -1191,4 +1221,4 @@ msgstr "dari"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "kode error %s tidak diketahui"

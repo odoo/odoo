@@ -56,10 +56,17 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'line_ids.tax_ids')
     def _compute_need_kode_transaksi(self):
         for move in self:
-            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
+            # If there are no taxes at all on every line (0% taxes counts as having a tax) then we don't need a kode transaksi
+            move.l10n_id_need_kode_transaksi = (
+                move.partner_id.l10n_id_pkp
+                and not move.l10n_id_tax_number
+                and move.move_type == 'out_invoice'
+                and move.country_code == 'ID'
+                and move.line_ids.tax_ids
+            )
 
     @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
     def _constraint_kode_ppn(self):
@@ -129,6 +136,8 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
             if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
+                if not self.l10n_id_need_kode_transaksi:
+                    raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
         self._generate_efaktur(',')
@@ -143,6 +152,8 @@ class AccountMove(models.Model):
             _csv_row(LT_HEAD_LIST, delimiter),
             _csv_row(OF_HEAD_LIST, delimiter),
         )
+
+        idr = self.env.ref('base.IDR')
 
         for move in self.filtered(lambda m: m.state == 'posted'):
             eTax = move._prepare_etax()
@@ -173,7 +184,7 @@ class AccountMove(models.Model):
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
             eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
-            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
+            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0, rounding_method="DOWN"))  # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
@@ -196,7 +207,7 @@ class AccountMove(models.Model):
                 # *invoice_line_discount_m2m is discount price use for diskon's column
                 # *line.price_subtotal is subtotal price use for dpp's column
                 # *tax_line or free_tax_line is tax price use for ppn's column
-                free_tax_line = tax_line = bruto_total = total_discount = 0.0
+                free_tax_line = tax_line = 0.0
 
                 for tax in line.tax_ids:
                     if tax.amount > 0:
@@ -210,10 +221,10 @@ class AccountMove(models.Model):
                 line_dict = {
                     'KODE_OBJEK': line.product_id.default_code or '',
                     'NAMA': line.product_id.name or '',
-                    'HARGA_SATUAN': float_repr(float_round(invoice_line_unit_price, 0), 0),
+                    'HARGA_SATUAN': float_repr(idr.round(invoice_line_unit_price), idr.decimal_places),
                     'JUMLAH_BARANG': line.quantity,
-                    'HARGA_TOTAL': float_repr(float_round(invoice_line_total_price, 0), 0),
-                    'DPP': float_round(line.price_subtotal, 0),
+                    'HARGA_TOTAL': idr.round(invoice_line_total_price),
+                    'DPP': line.price_subtotal,
                     'product_id': line.product_id.id,
                 }
 
@@ -223,7 +234,7 @@ class AccountMove(models.Model):
 
                     line_dict.update({
                         'DISKON': float_round(invoice_line_total_price - line.price_subtotal, 0),
-                        'PPN': float_round(free_tax_line, 0),
+                        'PPN': free_tax_line,
                     })
                     free.append(line_dict)
                 elif line.price_subtotal != 0.0:
@@ -231,7 +242,7 @@ class AccountMove(models.Model):
 
                     line_dict.update({
                         'DISKON': float_round(invoice_line_discount_m2m, 0),
-                        'PPN': float_round(tax_line, 0),
+                        'PPN': tax_line,
                     })
                     sales.append(line_dict)
 
@@ -254,20 +265,57 @@ class AccountMove(models.Model):
                             if tax.amount > 0:
                                 tax_line += sale['DPP'] * (tax.amount / 100.0)
 
-                        sale['PPN'] = int(float_round(tax_line, 0))
+                        sale['PPN'] = tax_line
 
                         free.remove(f)
 
                 sub_total_before_adjustment += sale['DPP']
                 sub_total_ppn_before_adjustment += sale['PPN']
-                bruto_total += sale['DISKON']
-                total_discount += float_round(sale['DISKON'], 2)
 
-                # Change the values to string format after being used
                 sale.update({
-                    'DPP': float_repr(sale['DPP'], 0),
-                    'PPN': float_repr(sale['PPN'], 0),
+                    # Use the db currency rounding to float_round the DPP/PPN.
+                    # As we will correct them we need them to be close to the final result.
+                    'DPP': idr.round(sale['DPP']),
+                    'PPN': idr.round(sale['PPN']),
                     'DISKON': float_repr(sale['DISKON'], 0),
+                })
+
+
+            # The total of the base (DPP) and taxes (PPN) must be a integer, equal to the JUMLAH_DPP and JUMLAH_PPN
+            # To do so, we adjust the first line in order to achieve the correct total
+            if sales:
+                diff_dpp = idr.round(eTax['JUMLAH_DPP'] - sum([sale['DPP'] for sale in sales]))
+                total_sales_ppn = idr.round(eTax['JUMLAH_PPN'] - sum([sale['PPN'] for sale in sales]))
+                # We will add the differences to the first line for which adding the difference will not result in a negative value.
+                for sale in sales:
+                    if sale['DPP'] + diff_dpp >= 0 and sale['PPN'] + total_sales_ppn >= 0:
+                        sale['HARGA_TOTAL'] += diff_dpp
+                        sale['DPP'] += diff_dpp
+                        diff_dpp = 0
+                        sale['PPN'] += total_sales_ppn
+                        total_sales_ppn = 0
+                        break
+
+                # We couldn't adjust everything in a single line as their values is too low.
+                # So we will instead slit the adjustment in multiple lines.
+                if diff_dpp or total_sales_ppn:
+                    for sale in sales:
+                        # DPP
+                        sale_dpp = sale['DPP']
+                        sale["DPP"] = max(0, sale["DPP"] + diff_dpp)
+                        diff_dpp -= (sale["DPP"] - sale_dpp)
+                        sale['HARGA_TOTAL'] = sale["DPP"]
+                        # PPN
+                        sale_ppn = sale['PPN']
+                        sale["PPN"] = max(0, sale["PPN"] + total_sales_ppn)
+                        total_sales_ppn -= (sale["PPN"] - sale_ppn)
+
+            # Values now being corrected, we can format them for the CSV
+            for sale in sales:
+                sale.update({
+                    'HARGA_TOTAL': float_repr(sale['HARGA_TOTAL'], idr.decimal_places),
+                    'DPP': float_repr(sale['DPP'], idr.decimal_places),
+                    'PPN': float_repr(sale['PPN'], idr.decimal_places),
                 })
 
             output_head += _csv_row(fk_values_list, delimiter)

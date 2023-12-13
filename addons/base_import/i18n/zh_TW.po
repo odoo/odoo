@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Tony Ng, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -299,6 +299,22 @@ msgstr "編碼:"
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "日期語法錯誤 [%s:L%d]: %s"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "匯入記錄時出錯： 文本分隔符應為單字符。"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr "匯入記錄時出錯：所有行應大小相同，但標題行有%d條目，而第一行有%d。您可能需要更改分隔符。"
 
 #. module: base_import
 #. openerp-web
@@ -640,7 +656,7 @@ msgstr "模型"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "發生多個錯誤"
 
 #. module: base_import
 #. openerp-web

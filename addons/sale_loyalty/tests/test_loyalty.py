@@ -33,10 +33,17 @@ class TestLoyalty(TestSaleCouponCommon):
                 'trigger': 'auto',
                 'applies_on': 'both',
                 'rule_ids': [(0, 0, {
-                    'reward_point_mode': 'money',
-                    'reward_point_amount': 10,
+                    'reward_point_mode': 'unit',
+                    'reward_point_amount': 1,
+                    'product_ids': [self.product_a.id],
                 })],
-                'reward_ids': [(0, 0, {})],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 1.5,
+                    'discount_mode': 'per_point',
+                    'discount_applicability': 'order',
+                    'required_points': 3,
+                })],
             },
             {
                 'name': 'eWallet Program',
@@ -58,7 +65,7 @@ class TestLoyalty(TestSaleCouponCommon):
         claimable_rewards = order._get_claimable_rewards()
         # Should be empty since we do not have any coupon created yet
         self.assertFalse(claimable_rewards, "No program should be applicable")
-        _, ewallet_coupon = self.env['loyalty.card'].create([
+        loyalty_card, ewallet_coupon = self.env['loyalty.card'].create([
             {
                 'program_id': loyalty_program.id,
                 'partner_id': self.partner_a.id,
@@ -79,6 +86,13 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(len(claimable_rewards), 1, "The ewallet program should not be applicable since the card has no points.")
+        vals = order._get_reward_values_discount(loyalty_program.reward_ids[0], loyalty_card)
+        self.assertEqual(
+            vals[0]['points_cost'] % loyalty_program.reward_ids.required_points,
+            0,
+            "Can only use a whole number of required points",
+        )
+        self.assertEqual(vals[0]['points_cost'], 9, "Use maximum available points for the reward")
         ewallet_coupon.points = 50
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
@@ -339,3 +353,80 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, coupon_program)
         self.assertEqual(float_compare(order.amount_total, 218.7, precision_rounding=3), 0, "300 * 0.9 * 0.9 * 0.9 = 218.7")
+
+    def test_specific_promotion_on_free_product(self):
+
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [],
+        })
+
+        promotion_program = self.env['loyalty.program'].create([{
+            'name': 'Promotion Program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10.0,
+                'discount_applicability': 'specific',
+                'discount_product_ids': [product_A.id],
+                'required_points': 1,
+            })],
+        }])
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_A.id,
+                }),
+                Command.create({
+                    'product_id': product_A.id,
+                    'discount': 100,
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, promotion_program)
+        self.assertEqual(order.amount_total, 90)
+
+    def test_gift_card_program_without_product(self):
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [],
+        })
+
+        giftcard_program = self.env['loyalty.program'].create([{
+            'name': 'Gift Card Program',
+            'program_type': 'gift_card',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+            })],
+        }])
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_A.id,
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, giftcard_program)
+
+        self.assertEqual(giftcard_program.coupon_count, 0)

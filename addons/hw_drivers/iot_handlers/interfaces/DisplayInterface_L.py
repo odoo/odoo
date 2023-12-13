@@ -15,7 +15,7 @@ class DisplayInterface(Interface):
         display_devices = {}
         displays = subprocess.check_output(['tvservice', '-l']).decode()
         x_screen = 0
-        for match in finditer('Display Number (\d), type HDMI (\d)', displays):
+        for match in finditer(r'Display Number (\d), type HDMI (\d)', displays):
             display_id, hdmi_id = match.groups()
             tvservice_output = subprocess.check_output(['tvservice', '-nv', display_id]).decode().strip()
             if tvservice_output:

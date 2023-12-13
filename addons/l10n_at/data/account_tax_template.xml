@@ -5,22 +5,24 @@
         <!-- Vorlagen: Verkauf (Umsatzsteuer) -->
         <!-- Lieferungen, sonstige Leistungen und Eigenverbrauch +000,+001,-021 -->
         <!-- Umsätze, für die die Steuerschuld gemäß § 19 Abs. 1 zweiter
-            Satz sowie gemäß § 19 Abs. 1a, 1b, 1c, 1d und 1e (Umsätze ab 01.07.2010)
+            Satz sowie gemäß § 19 Abs. 1a, 1b,
+            1c, 1d und 1e (Umsätze ab 01.07.2010)
             auf den Leistungsempfänger übergegangen ist. -->
         <record id="account_tax_template_sales_rev_charge_0_code021" model="account.tax.template">
-            <field name="name">UST_021 Steuerschuld betrifft Leistungsempfänger</field>
-            <field name="description">USt. 0%</field>
+            <field name="name">UST_021 § 19 Abs. 1 zweiter Satz (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">sale</field>
             <field eval="0.0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
-                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -31,7 +33,184 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1a" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1a (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1b" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1b (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1c" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1c (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1d" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1d (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1e" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1e (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="active" eval="False"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3_tag')],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -44,13 +223,14 @@
         <!-- Ausfuhrlieferungen (§ 6 Abs. 1 Z 1 iVm § 7) -->
         <record id="account_tax_template_sales_non_eu_0_code011" model="account.tax.template">
             <field name="name">UST_011 Export 0%</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">300</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -71,19 +251,18 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- Lohnveredelungen (§ 6 Abs. 1 Z 1 iVm § 8) -->
         <record id="account_tax_template_sales_non_eu_0_code012" model="account.tax.template">
             <field name="name">UST_012 Lohnveredelung 0%</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -104,21 +283,20 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- § 6 Abs. 1 Z 2 bis 6 sowie § 23 Abs. 5 (Seeschifffahrt, Luftfahrt,
             grenzüberschreitende Personenbeförderung, Diplomaten, Reisevorleistungen
             im Drittlandsgebiet usw.) -->
         <record id="account_tax_template_sales_non_eu_0_code015" model="account.tax.template">
             <field name="name">UST_015 Export 0% (§ 6 Abs. 1 Z 2 bis 6)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">300</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -139,19 +317,20 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- Innergemeinschaftliche Lieferungen ohne Fahrzeuglieferungen
             (Art. 6 Abs. 1) -->
         <record id="account_tax_template_sales_eu_0_code017" model="account.tax.template">
             <field name="name">UST_017 IGL 0% (ohne Art. 6 Abs. 1)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -172,19 +351,19 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- EU Fahrzeuglieferungen (Art. 6 Abs. 1) -->
         <record id="account_tax_template_sales_eu_0_code018" model="account.tax.template">
             <field name="name">UST_018 IGL 0% (Art. 6 Abs. 1)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -205,19 +384,18 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- § 6 Abs. 1 Z 9 lit. a (Grundstücksumsätze) -->
         <record id="account_tax_template_sales_0_code019" model="account.tax.template">
             <field name="name">UST_019 Grundstücksumsätze 0% (§ 6 Abs. 1 Z 9 lit. a)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -238,19 +416,18 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- § 6 Abs. 1 Z 27 (Kleinunternehmer) -->
         <record id="account_tax_template_sales_0_code016" model="account.tax.template">
             <field name="name">UST_016 Kleinunternehmer 0% (§ 6 Abs. 1 Z 27)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -271,20 +448,19 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- § 6 Abs. 1 Z 1, 7-8, 10-26, 28 (übrige steuerfreie Umsätze ohne
             Vorsteuerabzug) -->
         <record id="account_tax_template_sales_0_code020" model="account.tax.template">
             <field name="name">UST_020 Übrige steuerfreie Umsätze 0%</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -305,19 +481,19 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- zu versteuernder Umsatz +022, +029, +006, +037, +052, +007 -->
         <!-- Soll-Umsatzsteuern (=normale Umsatzsteuer) -->
         <record id="account_tax_template_sales_20_code022" model="account.tax.template">
             <field name="name">UST_022 Normalsteuersatz 20%</field>
-            <field name="description">USt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
-            <field name="sequence">100</field>
+            <field name="sequence">50</field>
             <field name="type_tax_use">sale</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -340,17 +516,17 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_14_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_sales_20_katalog022" model="account.tax.template">
             <field name="name">UST_022 Normalsteuersatz 20% (Sonstige Leistungen)</field>
-            <field name="description">USt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -373,17 +549,17 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_14_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_sales_10_code029" model="account.tax.template">
             <field name="name">UST_029 ermäßigter Steuersatz 10%</field>
-            <field name="description">USt. 10%</field>
+            <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -406,17 +582,17 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_15_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         <record id="account_tax_template_sales_13_code006" model="account.tax.template">
             <field name="name">UST_006 ermäßigter Steuersatz 13%</field>
-            <field name="description">USt. 13%</field>
+            <field name="description">13%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="13" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_13"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -439,19 +615,18 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_16_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_13"/>
         </record>
         <!-- 19% für Gemeinden Jungholz und Mittelberg -->
         <record id="account_tax_template_sales_19_code037" model="account.tax.template">
             <field name="name">UST_037 Steuersatz 19%</field>
-            <field name="description">USt. 19%</field>
+            <field name="description">19%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="19" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -479,14 +654,14 @@
             Betriebe -->
         <record id="account_tax_template_sales_add10_code052" model="account.tax.template">
             <field name="name">UST_052 Zusatzsteuersatz 10% (LWB/FWB)</field>
-            <field name="description">USt. 10%</field>
+            <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -512,7 +687,7 @@
         </record>
         <record id="account_tax_template_sales_add7_code007" model="account.tax.template">
             <field name="name">UST_007 Zusatzsteuersatz 7% (LWB/FWB)</field>
-            <field name="description">USt. 7%</field>
+            <field name="description">7%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
@@ -547,13 +722,14 @@
             +052, +007 -->
         <record id="account_tax_template_sales_self_20_code022" model="account.tax.template">
             <field name="name">UST_022 Normalsteuersatz 20% (Eigenverbrauch)</field>
-            <field name="description">USt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -576,17 +752,17 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_14_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_sales_self_10_code029" model="account.tax.template">
             <field name="name">UST_029 ermäßigter Steuersatz 10% (Eigenverbrauch)</field>
-            <field name="description">USt. 10%</field>
+            <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -609,18 +785,17 @@
                   'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_15_tax_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         <record id="account_tax_template_sales_self_19_code037" model="account.tax.template">
             <field name="name">UST_037 Steuersatz 19% (Eigenverbrauch) </field>
-            <field name="description">USt. 19%</field>
+            <field name="description">19%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="19" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -646,14 +821,14 @@
         </record>
         <record id="account_tax_template_sales_self_add10_code052" model="account.tax.template">
             <field name="name">UST_052 Zusatzsteuersatz 10% (LWB/FWB - Eigenverbrauch)</field>
-            <field name="description">USt. 10%</field>
+            <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -679,14 +854,13 @@
         </record>
         <record id="account_tax_template_sales_self_add7_code007" model="account.tax.template">
             <field name="name">UST_007 Zusatzsteuersatz 7% (LWB/FWB - Eigenverbrauch)</field>
-            <field name="description">USt. 7%</field>
+            <field name="description">7%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
             <field eval="7" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="price_include" eval="0" />
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -715,14 +889,14 @@
             Art. 7 Abs. 4 -->
         <record id="account_tax_template_purchase_tax_invoiced_accepted_code056" model="account.tax.template">
             <field name="name">UST_056 Tax invoiced accepted (§ 11 Abs. 12 und 14, § 16 Abs. 2 sowie gemäß Art. 7 Abs. 4)</field>
-            <field name="description">USt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -743,18 +917,17 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_20_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_sales_eu_0_services" model="account.tax.template">
             <field name="name">UST_EU Dienstleistung (Sonstige Leistungen) 0%</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -773,18 +946,17 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="account_tax_template_sales_non_eu_0_services" model="account.tax.template">
             <field name="name">UST_NON_EU Dienstleistung (Drittstaaten) 0%</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">300</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -803,20 +975,19 @@
                   'account_id': ref('chart_at_template_3505'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <!-- Innergemeinschaftlicher Erwerb (Erwerbssteuer) 070 abzgl. 071 -->
         <!-- Davon steuerfrei gemäß Art. 6 Abs. 2 (IGE-UST) -->
         <record id="account_tax_template_purchase_eu_0_code071" model="account.tax.template">
             <field name="name">UST_071 IGE 0% (Art. 6 Abs. 2)</field>
-            <field name="description">USt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -847,6 +1018,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">20</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -881,7 +1053,6 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="account_tax_template_purchase_eu_10" model="account.tax.template">
             <field name="name">IGE 10%</field>
@@ -892,6 +1063,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -926,7 +1098,6 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="account_tax_template_purchase_eu_13" model="account.tax.template">
             <field name="name">IGE 13%</field>
@@ -937,6 +1108,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">13</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -971,7 +1143,6 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="account_tax_template_purchase_eu_19" model="account.tax.template">
             <field name="name">IGE 19%</field>
@@ -983,6 +1154,7 @@
             <field name="active" eval="False"/>
             <field name="amount">19</field>
             <field name="amount_type">group</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1016,7 +1188,13 @@
                 }),
             ]"/>
         </record>
-        <!-- Reverse Charge (§ 19 Abs. 1a - Bauleistungen) -->
+
+        <!--    § 19 Abs. 1a
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge (§ 19 Abs. 1a - Bauleistungen)
+        -->
         <record id="account_tax_template_purchase_rev_charge_1a" model="account.tax.template">
             <field name="name">Reverse Charge 20% (§ 19 Abs. 1a - Bauleistungen)</field>
             <field name="description">RC 20% § 19 Abs. 1a</field>
@@ -1026,6 +1204,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">20</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1058,11 +1237,22 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_6_tag')],
                 }),
             ]"/>
-            <field name="price_include" eval="0"/>
         </record>
-        <!-- Reverse Charge gemäß § 19 Abs. 1b (Sicherungseigentum, Vorbehaltseigentum  und Grundstücke im Zwangsversteigerungsverfahren) -->
+
+        <!--    § 19 Abs. 1b
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1b (Sicherungseigentum, Vorbehaltseigentum  und
+                Grundstücke im Zwangsversteigerungsverfahren)
+
+                a) sicherungsübereigneter Gegenstände durch den Sicherungsgeber an den Sicherungsnehmer,
+                b) des Vorbehaltskäufers an den Vorbehaltseigentümer im Falle der vorangegangenen Übertragung des vorbehaltenen Eigentums und
+                c) von Grundstücken im Zwangsversteigerungsverfahren durch den Verpflichteten an den Ersteher
+        -->
         <record id="account_tax_template_purchase_rev_charge_1b" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1b - Sicherungseigentum)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1b - Sicherungseigentum, Vorbehaltseigentum  und
+                Grundstücke im Zwangsversteigerungsverfahren))</field>
             <field name="description">RC 20% § 19 Abs. 1b</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">550</field>
@@ -1070,6 +1260,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">20</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1102,11 +1293,75 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_7_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
-        <!-- Reverse Charge gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c sowie  gemäß Art. 25 Abs. 5 -->
+
+        <!--    § 19 Abs. 1 zweiter Satz
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Art. 25 Abs. 5 (Dreiecksgeschäft)
+                https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10004929
+                https://www.jusline.at/gesetz/ustg-anhang/paragraf/artikel25
+
+                Reverse Charge gemäß § 19 Abs. 1 zweiter Satz, sowie  gemäß Art. 25 Abs. 5 (Dreiecksgeschäft)
+        -->
+        <record id="account_tax_template_purchase_rev_charge_19_2_25_5" model="account.tax.template">
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1 zweiter Satz - Sonstige Leistungen, Art. 25 Abs. 5 - Dreiecksgeschäft</field>
+            <field name="description">RC 20% §19 Sonstige Leistungen, Dreiecksgeschäft</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">550</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="0"/>
+            <field name="amount">20</field>
+            <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_21_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_5_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'minus_report_expression_ids':  [ref('tax_report_line_l10n_at_tva_line_4_21_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'minus_report_expression_ids':  [ref('tax_report_line_l10n_at_tva_line_5_5_tag')],
+                }),
+            ]"/>
+        </record>
+
+        <!--    § 19 Abs. 1c
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1c
+                Bei der Lieferung von Gas über ein Erdgasnetz im Gebiet der Gemeinschaft oder
+                jedes an ein solches Netz angeschlossene Netz, von Elektrizität oder
+                von Wärme oder Kälte über Wärme- oder Kältenetze, wenn sich der Ort dieser Lieferung nach § 3 Abs. 13 oder 14 bestimmt und
+                der liefernde Unternehmer im Inland weder sein Unternehmen betreibt noch eine an der Lieferung beteiligte Betriebsstätte hat,
+                wird die Steuer vom Empfänger der Lieferung geschuldet, wenn er im Inland für Zwecke der Umsatzsteuer erfasst ist.
+        -->
         <record id="account_tax_template_purchase_rev_charge_1c" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1c - Sonstige Leistungen)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1c - Gas, Strom, Wärme, Kälte)</field>
             <field name="description">RC 20% § 19 Abs. 1c</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">550</field>
@@ -1114,6 +1369,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">20</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1146,14 +1402,19 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_5_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
-        <!-- Reverse Charge gemäß § 19 Abs. 1d (Schrott und Abfallstoffe, Verordnung
-            BGBl. II Nr. 129/2007; Videospielkonsolen, Laptops, Tablet-Computer, Gas
-            und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold,
-            Verordnung BGBl. II Nr. 369/2013) -->
+
+        <!--    § 19 Abs. 1d
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1d (Schrott und Abfallstoffe, Verordnung
+                BGBl. II Nr. 129/2007; Videospielkonsolen, Laptops, Tablet-Computer, Gas
+                und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold,
+                Verordnung BGBl. II Nr. 369/2013)
+        -->
         <record id="account_tax_template_purchase_rev_charge_1d" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1d - Schrott und Abfallstoffe)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1d - Schrott und Abfallstoffe, Spielekonsolen, Laptops, Tablet-Computer >= EUR 5.000,-, Gas und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold)</field>
             <field name="description">RC 20% § 19 Abs. 1d</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">550</field>
@@ -1161,6 +1422,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">20</field>
             <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1193,7 +1455,63 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_8_tag')],
                 }),
             ]"/>
+        </record>
+
+        <!--    § 19 Abs. 1e
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1e
+                a)  der Übertragung von Treibhausgasemissionszertifikaten im Sinne des Art. 3 der Richtlinie 2003/87/EG
+                    über ein System für den Handel mit Treibhausgasemissionszertifikaten in der Gemeinschaft und
+                    zur Änderung der Richtlinie 96/61/EG des Rates, ABl. Nr. L 275 vom 25.10.2003 S. 32, und bei
+                    der Übertragung von anderen Einheiten, die genutzt werden können, um den Auflagen dieser Richtlinie nachzukommen,
+                b)  der Lieferung von Mobilfunkgeräten (Unterpositionen 8517 12 00 und 8517 18 00 der Kombinierten Nomenklatur)
+                    und integrierten Schaltkreisen (Unterpositionen 8542 31 90, 8473 30 20, 8473 30 80 und 8471 50 00 der Kombinierten Nomenklatur),
+                    wenn das in der Rechnung ausgewiesene Entgelt mindestens 5 000 Euro beträgt.
+        -->
+        <record id="account_tax_template_purchase_rev_charge_1e" model="account.tax.template">
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1e - Treibhausgasemissionszertifikaten, Mobilfunkgeräte >= EUR 5.000,-)</field>
+            <field name="description">RC 20% § 19 Abs. 1e</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">550</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="0"/>
+            <field name="amount">20</field>
+            <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_24_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_8_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'minus_report_expression_ids':  [ref('tax_report_line_l10n_at_tva_line_4_24_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'minus_report_expression_ids':  [ref('tax_report_line_l10n_at_tva_line_5_8_tag')],
+                }),
+            ]"/>
         </record>
         <record id="account_tax_template_purchase_eu_xx_code076" model="account.tax.template">
             <field name="name">Erwerbe gemäß Art. 3 Abs. 8 zweiter Satz, die im Mitgliedstaat des Bestimmungslandes besteuert worden sind (IGE-UST)</field>
@@ -1204,7 +1522,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1266,13 +1584,14 @@
             -089, !-064, +062, -063, -067! -->
         <record id="account_tax_template_purchase_20_code060" model="account.tax.template">
             <field name="name">VST_060 Normalsteuersatz 20%</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
-            <field name="sequence">400</field>
+            <field name="sequence">50</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1293,17 +1612,17 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_purchase_20_misc_code060" model="account.tax.template">
             <field name="name">VST_060 sonstige Leistungen 20%</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1324,17 +1643,17 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         <record id="account_tax_template_purchase_10_code060" model="account.tax.template">
             <field name="name">VST_060 ermäßigter Steuersatz 10%</field>
-            <field name="description">VSt. 10%</field>
+            <field name="description">10%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1355,17 +1674,17 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         <record id="account_tax_template_purchase_13_code060" model="account.tax.template">
             <field name="name">VST_060 ermäßigter Steuersatz 13%</field>
-            <field name="description">VSt. 13%</field>
+            <field name="description">13%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="13" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_13"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1386,18 +1705,17 @@
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_13"/>
         </record>
         <record id="account_tax_template_purchase_19_code060" model="account.tax.template">
             <field name="name">VST_060 Jungholz und Mittelberg 19%</field>
-            <field name="description">VSt. 19%</field>
+            <field name="description">19%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="19" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1421,14 +1739,14 @@
         </record>
         <record id="account_tax_template_purchase_12_code060" model="account.tax.template">
             <field name="name">VST_060 Weineinkauf 12% (LWB)</field>
-            <field name="description">VSt. 12%</field>
+            <field name="description">12%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="12" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_12"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1450,81 +1768,35 @@
                 }),
             ]"/>
         </record>
-        <!-- Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§
-            12 Abs. 1 Z 2 lit. a) -->
+        <!-- Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§12 Abs. 1 Z 2 lit. a) -->
         <record id="account_tax_template_purchase_xx_code061" model="account.tax.template">
             <field name="name">VST_061 entrichtete EUst (§ 12 Abs. 1 Z 2 lit. a)</field>
-            <field name="description">VSt. 20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
-            <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'repartition_type': 'tax',
-                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_2_tag')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'repartition_type': 'tax',
-                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_2_tag')],
-                }),
-            ]"/>
         </record>
         <!-- Vorsteuern betreffend die geschuldete, auf dem Abgabenkonto
             verbuchte Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. b) -->
         <record id="account_tax_template_purchase_xx_code083" model="account.tax.template">
             <field name="name">VST_083 verbuchte EUst. (§ 12 Abs. 1 Z 2 lit. b)</field>
-            <field name="description">VSt. 20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">none</field>
-            <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="price_include" eval="0"/>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'repartition_type': 'tax',
-                  'account_id': ref('chart_at_template_2515'),
-                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_3_tag')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'repartition_type': 'tax',
-                  'account_id': ref('chart_at_template_3515'),
-                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_3_tag')],
-                }),
-            ]"/>
         </record>
         <!-- Berichtigungen -063, -067, -090 ! -->
         <!-- Berichtigung gemäß § 12 Abs. 10 und 11 -->
         <record id="account_tax_template_purchase_correct_code063" model="account.tax.template">
             <field name="name">VST_063 (§12 Abs. 10 und 11 - Berichtigung)</field>
-            <field name="description">VSt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field eval="0.00" name="amount"/>
             <field name="sequence">400</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1547,14 +1819,14 @@
         <!-- Berichtigung gemäß § 16 -->
         <record id="account_tax_template_purchase_correct_code067" model="account.tax.template">
             <field name="name">VST_067 (§ 16 - Berichtigung)</field>
-            <field name="description">VSt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field eval="0.00" name="amount"/>
             <field name="sequence">400</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1579,7 +1851,7 @@
         <!-- Sonstige Berichtigungen -->
         <record id="account_tax_template_purchase_correct_code090" model="account.tax.template">
             <field name="name">VST_090 (Sonstige Berichtigungen)</field>
-            <field name="description">VSt. 0%</field>
+            <field name="description">0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field eval="0.00" name="amount"/>
             <field name="sequence">600</field>
@@ -1612,14 +1884,14 @@
         <!-- Vorsteuern betreffend KFZ nach EKR 063, 064, 732-733 und 744-747 -->
         <record id="account_tax_template_purchase_cars_buildings_code027" model="account.tax.template">
             <field name="name">VST_027 betreffend KFZ nach EKR 063, 064, 732-733 und 744-747</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1642,14 +1914,14 @@
         <!-- Vorsteuern betreffend Gebäude nach EKR 030-037 und 070, 071 -->
         <record id="account_tax_template_purchase_cars_buildings_code028" model="account.tax.template">
             <field name="name">VST_028 betreffend Gebäude nach EKR 030-037 und 070, 071</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field eval="20" name="amount"/>
             <field name="sequence">400</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1679,7 +1951,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1705,14 +1977,14 @@
             des Bestimmungslandes besteuert worden sind (IGE-VST) -->
         <record id="account_tax_template_purchase_eu_xx_vst_076" model="account.tax.template">
             <field name="name">VST_076 IGE (im Bestimmungsland besteuert)</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">500</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
@@ -1738,14 +2010,14 @@
             Abs. 2 im Inland als besteuert gelten (IGE-VST) -->
         <record id="account_tax_template_purchase_eu_xx_vst_077" model="account.tax.template">
             <field name="name">VST_077 IGE (im Inland besteuert)</field>
-            <field name="description">VSt. 20%</field>
+            <field name="description">20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">500</field>
             <field name="type_tax_use">purchase</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
-            <field name="active" eval="False"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',

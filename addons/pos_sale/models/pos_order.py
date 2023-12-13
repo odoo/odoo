@@ -128,7 +128,7 @@ class PosOrderLine(models.Model):
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
         return result
 
-    def _order_line_fields(self, line, session_id):
+    def _order_line_fields(self, line, session_id=None):
         result = super()._order_line_fields(line, session_id)
         vals = result[2]
         if vals.get('sale_order_origin_id', False):

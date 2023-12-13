@@ -58,7 +58,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             env['ir.model.data'].search([('module', '=', module), ('name', '=', name)]).unlink()
 
         def _avoid_name_conflict(company, template):
-            conflict_taxes = env['account.tax'].search([
+            conflict_taxes = env['account.tax'].with_context(active_test=False).search([
                 ('name', '=', template.name), ('company_id', '=', company.id),
                 ('type_tax_use', '=', template.type_tax_use), ('tax_scope', '=', template.tax_scope)
             ])

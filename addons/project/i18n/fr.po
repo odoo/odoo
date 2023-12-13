@@ -1222,8 +1222,8 @@ msgid ""
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 "Modifiez automatiquement le statut Kanban lorsque le client fait un commentaire sur cette étape.\n"
-" * Un bon retour de la part du client change le statut Kanban en 'prêt pour l'étape suivante' (boule verte).\n"
-" * Un retour neutre ou un mauvais retour change le statut Kanban en 'bloqué' (boule rouge).\n"
+" * Un bon feedback de la part du client change le statut Kanban en 'prêt pour l'étape suivante' (boule verte).\n"
+" * Un feedback neutre ou un mauvais retour change le statut Kanban en 'bloqué' (boule rouge).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1489,7 +1489,7 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Recueillez un retour de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
+"Recueillez un feedback de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
 "Évaluation lors du changement d'étape : un email sera envoyé automatiquement quand la tâche atteint l'étape pour laquelle le modèle d'email d'évaluation est défini.\n"
 "Évaluation périodique : un email sera envoyé automatiquement à intervalles réguliers tant que la tâche se situe à l'étape pour laquelle le modèle d'email d'évaluation est défini."
 
@@ -1818,7 +1818,7 @@ msgid ""
 "      communicate on the task directly. Your managers decide which feedback is accepted"
 msgstr ""
 "Les clients proposent des feedbacks par email ; Odoo crée automatiquement des tâches et vous pouvez\n"
-" communiquer directement sur la tâche. Vos managers décident quels retours sont acceptés"
+" communiquer directement sur la tâche. Vos managers décident quel feedback est accepté"
 
 #. module: project
 #. odoo-python
@@ -2483,7 +2483,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr "Obtenez des retours client"
+msgstr "Obtenez un feedback des clients"
 
 #. module: project
 #. odoo-python
@@ -3616,6 +3616,11 @@ msgstr "Date de la prochaine récurrence"
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
 msgstr "Prochaines récurrences"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Aucun client"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -4982,8 +4987,9 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
-"Définissez ce modèle sur une étape de projet pour demander un retour de vos "
-"clients. Activez la fonctionnalité \"Évaluation du client\" sur le projet"
+"Définissez ce modèle sur une étape de projet pour demander un feedback de "
+"vos clients. Activez la fonctionnalité \"Évaluation du client\" sur le "
+"projet"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -6402,8 +6408,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
-"et quels retours sont\n"
-"      déplacés vers l'étape \"Refusé\"."
+"et quel feedback est\n"
+"      déplacé vers l'étape \"Refusé\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

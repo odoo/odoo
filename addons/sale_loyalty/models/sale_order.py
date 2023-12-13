@@ -138,7 +138,7 @@ class SaleOrder(models.Model):
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [{
-            'name': _("Free Product - %(product)s", product=product.name),
+            'name': _("Free Product - %(product)s", product=product.with_context(display_default_code=False).display_name),
             'product_id': product.id,
             'discount': 100,
             'product_uom_qty': reward.reward_product_qty * claimable_count,
@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
         order_lines = self.order_line - self._get_no_effect_on_threshold_lines()
         remaining_amount_per_line = defaultdict(int)
         for line in order_lines:
-            if not line.product_uom_qty or not line.price_unit:
+            if not line.product_uom_qty or not line.price_total:
                 continue
             remaining_amount_per_line[line] = line.price_total
             domain = reward._get_discount_product_domain()
@@ -317,8 +317,12 @@ class SaleOrder(models.Model):
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
+            points = self._get_real_points_for_coupon(coupon)
+            if not reward.program_id.is_payment_program:
+                # Rewards cannot be partially offered to customers
+                points = points // reward.required_points * reward.required_points
             max_discount = min(max_discount,
-                reward.currency_id._convert(reward.discount * self._get_real_points_for_coupon(coupon),
+                reward.currency_id._convert(reward.discount * points,
                     self.currency_id, self.company_id, fields.Date.today()))
         elif reward.discount_mode == 'per_order':
             max_discount = min(max_discount,
@@ -524,8 +528,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
-        self = self.with_context(lang=self.partner_id.lang)
-        reward = reward.with_context(lang=self.partner_id.lang)
+        self = self.with_context(lang=self._get_lang())
+        reward = reward.with_context(lang=self._get_lang())
         if reward.reward_type == 'discount':
             return self._get_reward_values_discount(reward, coupon, **kwargs)
         elif reward.reward_type == 'product':
@@ -840,6 +844,8 @@ class SaleOrder(models.Model):
                 if rule_amount > (rule.minimum_amount_tax_mode == 'incl' and (untaxed_amount + tax_amount) or untaxed_amount):
                     continue
                 minimum_amount_matched = True
+                if not products_per_rule.get(rule):
+                    continue
                 rule_products = products_per_rule[rule]
                 ordered_rule_products_qty = sum(products_qties[product] for product in rule_products)
                 if ordered_rule_products_qty < rule.minimum_qty or not rule_products:

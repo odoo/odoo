@@ -292,7 +292,7 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
         for tx in self:
-            tx._send_refund_request(amount_to_refund)
+            tx._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 

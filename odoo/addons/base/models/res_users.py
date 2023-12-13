@@ -758,6 +758,10 @@ class Users(models.Model):
         return [('login', '=', login)]
 
     @api.model
+    def _get_email_domain(self, email):
+        return [('email', '=', email)]
+
+    @api.model
     def _get_login_order(self):
         return self._order
 

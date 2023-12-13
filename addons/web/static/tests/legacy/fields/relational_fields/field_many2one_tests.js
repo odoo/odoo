@@ -2109,8 +2109,7 @@ QUnit.module('Legacy fields', {}, function () {
             await testUtils.dom.click(form.$('.o_external_button'));
             await testUtils.dom.click($('button:contains("Just do it !")'));
             assert.verifySteps(['action']);
-            await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
-            assert.verifySteps([]); // the second button is disabled, it can't be clicked
+            assert.ok($('button:contains("Just don\'t do it !")').get(0).disabled);
 
             await testUtils.dom.click($('.modal .btn-secondary:contains(Discard)'));
             await testUtils.dom.click(form.$('.o_external_button'));

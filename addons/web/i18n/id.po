@@ -327,7 +327,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">Pajak 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -360,6 +360,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"<span>Faktur</span>\n"
+"                           <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -417,7 +419,7 @@ msgstr "<strong>Total</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
-msgstr ""
+msgstr "<strong>Jumlah Sebelum Pajak</strong>"
 
 #. module: web
 #. odoo-javascript
@@ -1189,7 +1191,6 @@ msgstr "Panggilan"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1610,7 +1611,6 @@ msgstr "Negara"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1646,6 +1646,13 @@ msgstr "Buat \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Buat %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr "Buat <strong>%s</strong> sebagai %s baru?"
 
 #. module: web
 #. odoo-javascript
@@ -1936,7 +1943,7 @@ msgstr "Alat pengembang"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "Mata uang yang berbeda tidak dapat diagregat"
 
 #. module: web
 #. odoo-javascript
@@ -2810,6 +2817,13 @@ msgstr "Field tidak sesuai:"
 #, python-format
 msgid "Invalid fields: "
 msgstr "Kolom-kolom invalid:"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr "Model tidak valid: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3789,6 +3803,13 @@ msgstr "Buka Tampilan"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "Buka developer tool"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Open:"
@@ -4077,6 +4098,8 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2023/00003</span></b>"
 msgstr ""
+"Mohon gunakan referensi berikut untuk pembayaran Anda : <b><span>\n"
+"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4427,7 +4450,7 @@ msgstr "Hubungan:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Tabel relasional"
 
 #. module: web
 #. odoo-javascript
@@ -6047,6 +6070,8 @@ msgstr "Anda mungkin tidak percaya, <br /> tetapi aplikasi masih memuat..."
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
 msgstr ""
+"Anda harus bisa mengedit induk terlebih dahulu untuk menambahkan tag "
+"properti"
 
 #. module: web
 #. odoo-javascript
@@ -6055,6 +6080,8 @@ msgstr ""
 #, python-format
 msgid "You need to be able to edit parent first to configure property fields"
 msgstr ""
+"Anda harus bisa mengedit induk terlebih dahulu untuk mengonfigurasi field "
+"properti"
 
 #. module: web
 #. odoo-javascript
@@ -6193,7 +6220,6 @@ msgstr "valid untuk pembaruan ini."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "seperti baru"
@@ -6583,6 +6609,13 @@ msgstr "ms"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr "tab baru"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6745,13 +6778,6 @@ msgstr "set"
 #, python-format
 msgid "set (true)"
 msgstr "set (benar)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript

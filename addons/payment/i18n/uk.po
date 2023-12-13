@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -319,11 +319,6 @@ msgid "Bank"
 msgstr "Банк"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Банківський рахунок"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Назва банку"
@@ -445,11 +440,6 @@ msgstr "Код"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Колір"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Зв'язок"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -762,14 +752,10 @@ msgid "Full Only"
 msgstr "Лише повний"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Створити посилання платежу"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Створити посилання платежу продажів"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1350,16 +1336,6 @@ msgstr "Оберіть лише одну опцію оплати."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Встановіть суму менше, ніж %s."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Будь-ласка, використовуйте наступні дані переказу"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "Будь-ласка, використовуйте ім'я замовлення як посилання на зв'язок."
 
 #. module: payment
 #. odoo-javascript
@@ -2082,9 +2058,10 @@ msgstr "Банківський переказ"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
 msgstr ""
-"Ви не можете видалити провайдера платежу %s; натомість архівуйте його."
 
 #. module: payment
 #. odoo-python
@@ -2198,6 +2175,7 @@ msgstr "Ваш платіж отримано, але його потрібно �
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

@@ -273,7 +273,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr "+ %d Tage(e)"
+msgstr "+ %d Tag(e)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -1356,7 +1356,7 @@ msgstr ""
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
-msgstr "Kabel-Management-Box"
+msgstr "Kabelverwaltungsbox"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1834,7 +1834,7 @@ msgid ""
 "button to handle the reservation manually."
 msgstr ""
 "Konnte nicht alle gewünschten Produkte reservieren. Bitte benutzen Sie die "
-"Schaltfläche „Als zu erledigen markieren“, um die Reservierung manuell zu "
+"Schaltfläche „Als To-do markieren“, um die Reservierung manuell zu "
 "bearbeiten."
 
 #. module: stock
@@ -2177,7 +2177,7 @@ msgstr "Datumsverarbeitung"
 msgid "Date Promise to the customer on the top level document (SO/PO)"
 msgstr ""
 "Dem Kunden versprochenes Datum auf Auftragsdokument "
-"(Verkauf-/Einkaufsauftrag)"
+"(Verkaufsauftrag/Bestellung)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -3850,17 +3850,19 @@ msgstr "Ungültiger linker Domain-Operand %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Ungültiger Domain-Operator %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Ungültiger rechter Domain-Operand %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Ungültiger rechter Bereichsoperand „%s“. Er muss vom Typ "
+"Ganzzahl/Gleitkommazahl sein."
 
 #. module: stock
 #. odoo-python
@@ -4728,7 +4730,7 @@ msgstr "März"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Als zu erledigen markieren"
+msgstr "Als To-do markieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -5066,7 +5068,7 @@ msgstr "Keine %s ausgewählt oder ein Lieferauftrag ausgewählt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Keine Lieferrückstände"
+msgstr "Kein Lieferrückstand"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -5626,7 +5628,7 @@ msgstr "Verpackungstyp"
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
 msgstr ""
-"Ware verpacken, Ware in die Ausgabe schicken und dann ausliefern (3 "
+"Waren verpacken, Waren ins Ausgangslager senden und dann liefern (3 "
 "Schritte)"
 
 #. module: stock
@@ -6721,12 +6723,13 @@ msgstr "Produkte direkt erhalten (1 Schritt)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr "Wareneingang und dann Lager (2 Schritte)"
+msgstr "Waren im Eingangslager erhalten und dann Bestand (2 Schritte)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive goods in input, then quality and then stock (3 steps)"
-msgstr "Wareneingang, dann Qualität und dann Lager (3 Schritte)"
+msgstr ""
+"Waren im Eingangslager erhalten, dann Qualität und dann Bestand (3 Schritte)"
 
 #. module: stock
 #. odoo-python
@@ -7148,7 +7151,7 @@ msgstr "Route"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_company_id
 msgid "Route Company"
-msgstr "Route des Unternehmen"
+msgstr "Route des Unternehmens"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -7416,7 +7419,7 @@ msgstr "E-Mail versenden"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr "Waren in der Ausgabe versenden und dann liefern (2 Schritte)"
+msgstr "Waren ins Ausgangslager senden und dann liefern (2 Schritte)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
@@ -7500,13 +7503,6 @@ msgstr "Sequenz Kommissionierung"
 #, python-format
 msgid "Sequence return"
 msgstr "Sequenz Retoure"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Sequenzen %s bestehen bereits."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -7594,7 +7590,7 @@ msgstr "Verfallsdaten auf Los- und Seriennummern festlegen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "Eigentümer für gelagerte Produkte festlegen"
+msgstr "Legen Sie Eigentümer für gelagerte Produkte fest"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7717,7 +7713,7 @@ msgstr "Los-Text anzeigen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "„Als zu erledigen markieren“ anzeigen"
+msgstr "„Als To-do markieren“ anzeigen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8150,7 +8146,7 @@ msgstr "Lagerkategorie"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
-msgstr "Lagerkategorie Kapazität"
+msgstr "Kapazität der Lagerkategorie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -8240,8 +8236,8 @@ msgid ""
 "Technical field used to compute whether the button \"Mark as Todo\" should "
 "be displayed."
 msgstr ""
-"Technisches Feld, mit dem berechnet wird, ob die Schaltfläche „Als zu "
-"erledigen markieren“ angezeigt werden soll."
+"Technisches Feld, mit dem berechnet wird, ob die Schaltfläche „Als To-do "
+"markieren“ angezeigt werden soll."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_validate
@@ -8783,6 +8779,21 @@ msgstr ""
 "verwendet werden."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Dieses Sequenzpräfix wird bereits von einer anderen Vorgangsart verwendet. "
+"Es wird empfohlen, ein eindeutiges Präfix zu wählen, um Probleme und/oder "
+"wiederholte Referenzwerte zu vermeiden, oder die vorhandene Referenzfolge "
+"dieser Vorgangsart zuzuweisen."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_production
 msgid ""
@@ -8866,7 +8877,7 @@ msgstr "Zu zählen"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
-msgstr "Zu erledigen"
+msgstr "To-do"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
@@ -10215,6 +10226,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Sie haben weniger Produkte verarbeitet als ursprünglich angefragt:"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sie haben Produkte auf Lager, für die die Nachverfolgung der Los-/Seriennummer aktiviert ist. \n"
+"Schalten Sie die Nachverfolgung bei allen Produkten aus, bevor Sie diese Einstellung deaktivieren."
 
 #. module: stock
 #. odoo-python

@@ -472,12 +472,39 @@ class PosGlobalState extends PosModel {
                 }
             }
         }
+        if(!missingProductIds.size) return;
         const products = await this.env.services.rpc({
             model: 'pos.session',
             method: 'get_pos_ui_product_product_by_params',
             args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
         });
+        await this._loadMissingPricelistItems(products);
         this._loadProductProduct(products);
+    }
+    async _loadMissingPricelistItems(products) {
+        if(!products.length) return;
+        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
+        const product_ids = products.map(product => product.id);
+
+        const pricelistItems = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_product_pricelist_item_by_product',
+            args: [odoo.pos_session_id, product_tmpl_ids, product_ids],
+        });
+
+        // Merge the loaded pricelist items with the existing pricelists
+        // Prioritizing the addition of newly loaded pricelist items to the start of the existing pricelists.
+        // This ensures that the order reflects the desired priority of items in the pricelistItems array.
+        // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
+        // for reference check order of the Product Pricelist Item model
+        for (const pricelist of this.pricelists) {
+            const itemIds = new Set(pricelist.items.map(item => item.id));
+
+            const _pricelistItems = pricelistItems.filter(item => {
+                return item.pricelist_id[0] === pricelist.id && !itemIds.has(item.id);
+            });
+            pricelist.items = [..._pricelistItems, ...pricelist.items];
+        }
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
@@ -517,6 +544,7 @@ class PosGlobalState extends PosModel {
                     limit: this.config.limited_products_amount,
                 }],
             }, { shadow: true });
+            await this._loadMissingPricelistItems(products);
             this._loadProductProduct(products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -759,6 +787,40 @@ class PosGlobalState extends PosModel {
                 productImages
             });
         });
+    }
+
+    // To be used in the context of closing the POS
+    // Saves the order locally and try to send it to the backend.
+    // If there is an error show a popup and ask to continue the closing or not
+    // return a successful promise on sync or if user decides to contine else reject
+    async push_orders_with_closing_popup (order, opts) {
+        try {
+            return await this.push_orders(order, opts);
+        } catch (error) {
+            console.warn(error);
+            const reason = this.env.pos.failed
+                ? this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to configuration errors. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  )
+                : this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to internet connection issues. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  );
+            const { confirmed } =  await Gui.showPopup('ConfirmPopup', {
+                title: this.env._t('Offline Orders'),
+                body: reason,
+                confirmText: this.env._t('Close anyway'),
+                cancelText: this.env._t('Do not close'),
+            });
+            return confirmed ? Promise.resolve(true) : Promise.reject();
+        }
     }
 
     // saves the order locally and try to send it to the backend.
@@ -1387,6 +1449,7 @@ class PosGlobalState extends PosModel {
             method: 'get_pos_ui_product_product_by_params',
             args: [odoo.pos_session_id, {domain: [['id', 'in', ids]]}],
         });
+        await this._loadMissingPricelistItems(product);
         this._loadProductProduct(product);
     }
     doNotAllowRefundAndSales() {
@@ -1646,7 +1709,7 @@ class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
         // Set the new values for modified lot lines.
         let lotLinesToRemove = [];
         for (let lotLine of this.pack_lot_lines) {
@@ -1674,7 +1737,7 @@ class Orderline extends PosModel {
         }
 
         // Set the quantity of the line based on number of pack lots.
-        if(!this.product.to_weight){
+        if(!this.product.to_weight && setQuantity){
             this.set_quantity_by_lot();
         }
     }
@@ -2144,7 +2207,7 @@ class Orderline extends PosModel {
         };
     }
     display_discount_policy(){
-        return this.order.pricelist.discount_policy;
+        return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
     compute_fixed_price (price) {
         return this.pos.computePriceAfterFp(price, this.get_taxes());
@@ -2558,7 +2621,7 @@ class Order extends PosModel {
                 return paymentline.export_for_printing();
             });
         let partner = this.partner;
-        let cashier = this.pos.get_cashier();
+        let cashier = this.cashier;
         let company = this.pos.company;
         let date    = new Date();
 
@@ -2864,7 +2927,7 @@ class Order extends PosModel {
         }
 
         if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines(options.draftPackLotLines);
+            this.selected_orderline.setPackLotLines({ ...options.draftPackLotLines, setQuantity: options.quantity === undefined });
         }
     }
     set_orderline_options(orderline, options) {

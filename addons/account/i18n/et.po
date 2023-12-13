@@ -27,6 +27,7 @@
 # Birgit Vijar, 2023
 # Leaanika Randmets, 2023
 # Martin Trigaux, 2023
+# Katrin Kampura, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Katrin Kampura, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,6 +224,13 @@ msgstr "%s pole talletatud väli"
 msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
 msgstr ""
 
 #. module: account
@@ -4762,6 +4770,7 @@ msgstr "Valuutad"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -5458,6 +5467,8 @@ msgstr "Digitaliseerimine"
 msgid ""
 "Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
 msgstr ""
+"Digitaliseeri oma PDF või skanneeritud dokumendid tekstituvastuse ja "
+"tehisintellektiga"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
@@ -14887,7 +14898,6 @@ msgstr "Tänased tegevused"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -14988,6 +14998,7 @@ msgid "Total amount you have to pay to this vendor."
 msgstr "Kogu summa, mida peate maksma sellele tarnijale."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
 msgstr "Kokku valuutas"

@@ -1217,7 +1217,7 @@ var BasicModel = AbstractModel.extend({
                             record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
                                     resolve(changedFields);
                                 });
                             } else {
@@ -2106,7 +2106,8 @@ var BasicModel = AbstractModel.extend({
             case 'CREATE':
                 var createOptions = _.extend({
                     context: command.context,
-                    position: command.position
+                    position: command.position,
+                    allowWarning: command.allowWarning,
                 }, options || {});
                 createOptions.viewType = fieldInfo.mode;
 

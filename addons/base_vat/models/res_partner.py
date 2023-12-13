@@ -31,6 +31,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
+    'br': 'either 11 digits for CPF or 14 digits for CNPJ',
     'ch': 'CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA',  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
     'co': 'CO213123432-1 or CO213.123.432-1',
@@ -47,7 +48,7 @@ _ref_vat = {
     'fr': 'FR23334175221',
     'gb': 'GB123456782 or XI123456782',
     'gr': 'GR12345670',
-    'hu': 'HU12345676',
+    'hu': 'HU12345676 or 12345678-1-11 or 8071592153',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'in': "12AAAAA1234AAZA",
@@ -81,6 +82,7 @@ _ref_vat = {
 
 _region_specific_vat_codes = {
     'xi',
+    't',
 }
 
 
@@ -90,7 +92,14 @@ class ResPartner(models.Model):
     vies_failed_message = fields.Char('Technical field display a message to the user if the VIES check fails.', store=False)
 
     def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        '''
+        Splits the VAT Number to get the country code in a first place and the code itself in a second place.
+        This has to be done because some countries' code are one character long instead of two (i.e. "T" for Japan)
+        '''
+        if len(vat) > 1 and vat[1].isalpha():
+            vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        else:
+            vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '')
         return vat_country, vat_number
 
     @api.model
@@ -105,10 +114,6 @@ class ResPartner(models.Model):
         check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
-            if country_code.upper() == 'EU':
-                # Foreign companies that trade with non-enterprises in the EU
-                # may have a VATIN starting with "EU" instead of a country code.
-                return True
             country_code = _eu_country_vat_inverse.get(country_code, country_code)
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
@@ -193,25 +198,17 @@ class ResPartner(models.Model):
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
-        """ Checks a VAT number syntactically to ensure its validity upon saving.
-        A first check is made by using the first two characters of the VAT as
-        the country code. If it fails, a second one is made using default_country instead.
-
-        :param vat_number: a string with the VAT number to check.
-        :param default_country: a res.country object
-        :param partner_is_company: True if the partner is a company, else False.
-            .. deprecated:: 16.0
-                Will be removed in 16.2
-
-        :return: The country code (in lower case) of the country the VAT number
-                 was validated for, if it was validated. False if it could not be validated
-                 against the provided or guessed country. None if no country was available
-                 for the check, and no conclusion could be made with certainty.
-        """
+        # OVERRIDE account
         check_result = None
 
         # First check with country code as prefix of the TIN
         vat_country_code, vat_number_split = self._split_vat(vat_number)
+
+        if vat_country_code == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
+            # Foreign companies that trade with non-enterprises in the EU
+            # may have a VATIN starting with "EU" instead of a country code.
+            return True
+
         vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())], limit=1)
         if not vat_has_legit_country_code:
             vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
@@ -263,7 +260,7 @@ class ResPartner(models.Model):
             company = self.env.company
 
         vat_label = _("VAT")
-        if country_code and company.country_id and country_code == company.country_id.code.lower():
+        if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
@@ -295,6 +292,25 @@ class ResPartner(models.Model):
         if len(number) == 10 and self.__check_vat_al_re.match(number):
             return True
         return False
+
+    __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
+    __check_tin_hu_companies_re = re.compile(r'^\d{8}-[1-5]-\d{2}$')
+
+    def check_vat_hu(self, vat):
+        """
+            Check Hungary VAT number that can be for example 'HU12345676 or 'xxxxxxxx-y-zz' or '8xxxxxxxxy'
+            - For xxxxxxxx-y-zz, 'x' can be any number, 'y' is a number between 1 and 5 depending on the person and the 'zz'
+              is used for region code.
+            - 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
+        """
+        companies = self.__check_tin_hu_companies_re.match(vat)
+        if companies:
+            return True
+        individual = self.__check_tin_hu_individual_re.match(vat)
+        if individual:
+            return True
+        # Check the vat number
+        return stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
@@ -705,6 +721,76 @@ class ResPartner(models.Model):
         '''
         check_func = stdnum.util.get_cc_module('nz', 'ird').is_valid
         return check_func(vat)
+
+    def check_vat_t(self, vat):
+        if self.country_id.code == 'JP':
+            return self.simple_vat_check('jp', vat)
+
+    def check_vat_br(self, vat):
+        '''
+        Example of a Brazilian CNPJ number: 76.634.583/0001-74.
+        The 13th digit is the check digit of the previous 12 digits.
+        The check digit is calculated by multiplying the first 12 digits by weights and calculate modulo 11 of the result.
+        The 14th digit is the check digit of the previous 13 digits. Calculated the same way.
+        Both remainders are appended to the first 12 digits.
+        '''
+        if not vat:
+            return False
+
+        def _calculate_mod_11(check, weights):
+            result = (sum([i * j for (i, j) in zip(check, weights)])) % 11
+            if result <= 1:
+                return 0
+            return 11 - result
+
+        def _is_valid_cnpj(vat_clean):
+            weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+            vat_check = vat_clean[:12]
+            vat_check.append(_calculate_mod_11(vat_check, weights[1:]))
+            vat_check.append(_calculate_mod_11(vat_check, weights))
+            return vat_check == vat_clean
+
+        def _is_valid_cpf(vat_clean):
+            total_sum = 0
+
+            # If the CPF list contains all zeros, it's not valid
+            if vat_clean == [0] * 11:
+                return False
+
+            # Calculate the sum for the first verification digit
+            for i in range(1, 10):
+                total_sum = total_sum + vat_clean[i - 1] * (11 - i)
+            remainder = (total_sum * 10) % 11
+
+            # If the remainder is 10 or 11, set it to 0
+            if remainder in (10, 11):
+                remainder = 0
+
+            # Check the first verification digit
+            if remainder != vat_clean[9]:
+                return False
+            total_sum = 0
+
+            # Calculate the sum for the second verification digit
+            for i in range(1, 11):
+                total_sum = total_sum + vat_clean[i - 1] * (12 - i)
+            remainder = (total_sum * 10) % 11
+
+            # If the remainder is 10 or 11, set it to 0
+            if remainder in (10, 11):
+                remainder = 0
+
+            # Check the second verification digit
+            if remainder != vat_clean[10]:
+                return False
+
+            return True
+
+        vat_clean = [int(digit) for digit in re.sub("[^0-9]", "", vat)]
+        return (
+            len(vat_clean) == 14 and _is_valid_cnpj(vat_clean)
+            or len(vat_clean) == 11 and _is_valid_cpf(vat_clean)
+        )
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -405,7 +406,7 @@ msgstr "Keine Verkaufsauftragsposition"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr "Nichtabrechenbar"
+msgstr "Nicht abrechenbar"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -426,6 +427,13 @@ msgid ""
 msgstr ""
 "Bei der Auftragsbestätigung kann dieses Produkt ein Projekt und/oder eine Aufgabe erzeugen. Anhand dieser können Sie die von Ihnen verkaufte Dienstleistung verfolgen. \n"
 "„Im Projekt des Verkaufsauftrags“: Verwendet das konfigurierte Projekt des Verkaufsauftrags, falls definiert, oder erstellt ein neues Projekt auf der Grundlage der ausgewählten Vorlage."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Vorgang nicht unterstützt"
 
 #. module: sale_project
 #. odoo-python

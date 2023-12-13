@@ -24,15 +24,20 @@ class ProductTemplate(models.Model):
     service_upsell_threshold = fields.Float('Threshold', default=1, help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
     service_upsell_threshold_ratio = fields.Char(compute='_compute_service_upsell_threshold_ratio')
 
-    @api.depends('uom_id')
+    @api.depends('uom_id', 'company_id')
     def _compute_service_upsell_threshold_ratio(self):
         product_uom_hour = self.env.ref('uom.product_uom_hour')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        company_uom = self.env.company.timesheet_encode_uom_id
         for record in self:
-            if not record.uom_id or product_uom_hour.factor == record.uom_id.factor:
+            if not record.uom_id or record.uom_id != uom_unit or\
+               product_uom_hour.factor == record.uom_id.factor or\
+               record.uom_id.category_id not in [product_uom_hour.category_id, uom_unit.category_id]:
                 record.service_upsell_threshold_ratio = False
                 continue
-            if product_uom_hour.factor != record.uom_id.factor:
-                record.service_upsell_threshold_ratio = f"(1 {record.uom_id.name} = {product_uom_hour.factor / record.uom_id.factor:.2f} Hours)"
+            else:
+                timesheet_encode_uom = record.company_id.timesheet_encode_uom_id or company_uom
+                record.service_upsell_threshold_ratio = f'(1 {record.uom_id.name} = {timesheet_encode_uom.factor / product_uom_hour.factor:.2f} {timesheet_encode_uom.name})'
 
     def _compute_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')

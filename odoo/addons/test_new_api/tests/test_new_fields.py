@@ -9,6 +9,7 @@ from collections import OrderedDict
 from datetime import date, datetime, time
 import io
 from PIL import Image
+from unittest.mock import patch
 import psycopg2
 
 from odoo import models, fields, Command
@@ -503,6 +504,42 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(foo.display_name, 'foo(bar())')
         baz = foo.create({'name': 'baz', 'parent_id': bar.id})
         self.assertEqual(foo.display_name, 'foo(bar(baz()))')
+
+    def test_12_recursive_unlink(self):
+        order = self.env['test_new_api.recursive.order'].create({'value': 42})
+        line = self.env['test_new_api.recursive.line'].create({'order_id': order.id})
+        task = self.env['test_new_api.recursive.task'].create({'value': 42})
+        self.assertEqual(task.line_id, line)
+        self.assertEqual(line.task_ids, task)
+        self.assertTrue(line.task_number)
+
+        # Before deleting order, the following are marked to recompute:
+        #  - task.line_id (recursive, depends on task.line_id.order_id.value)
+        #  - line.task_number (implicitely depends on line.task_ids.line_id)
+        #
+        # If task.line_id is ever recomputed in order to mark line.task_number,
+        # its recomputed value will be lost in the cache invalidation, and
+        # there will be nothing left to write in the database afterwards!  This
+        # makes the call to unlink() crash in that case.
+        #
+        order.unlink()
+
+    def test_12_recursive_context_dependent(self):
+        a = self.env['test_new_api.recursive'].create({'name': 'A'})
+        b = self.env['test_new_api.recursive'].create({'name': 'B', 'parent': a.id})
+        c = self.env['test_new_api.recursive'].create({'name': 'C', 'parent': b.id})
+        d = self.env['test_new_api.recursive'].create({'name': 'D', 'parent': c.id})
+        self.assertEqual(a.context_dependent_name, 'A')
+        self.assertEqual(b.context_dependent_name, 'A / B')
+        self.assertEqual(c.context_dependent_name, 'A / B / C')
+        self.assertEqual(d.context_dependent_name, 'A / B / C / D')
+
+        # now let's swith to another context to update the dependency
+        a.with_context(bozo=42).name = 'A1'
+        self.assertEqual(a.context_dependent_name, 'A1')
+        self.assertEqual(b.context_dependent_name, 'A1 / B')
+        self.assertEqual(c.context_dependent_name, 'A1 / B / C')
+        self.assertEqual(d.context_dependent_name, 'A1 / B / C / D')
 
     def test_12_cascade(self):
         """ test computed field depending on computed field """
@@ -2147,6 +2184,16 @@ class TestFields(TransactionCaseWithUserDemo):
             [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_51_search_many2one_ordered(self):
+        """ test search on many2one ordered by id """
+        with self.assertQueries(['''
+            SELECT "test_new_api_message".id FROM "test_new_api_message"
+            WHERE ("test_new_api_message"."active" = %s)
+            ORDER BY  "test_new_api_message"."discussion"
+        ''']):
+            self.env['test_new_api.message'].search([], order='discussion')
+
+
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2320,9 +2367,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_85_binary_guess_zip(self):
         from odoo.addons.base.tests.test_mimetypes import ZIP
         # Regular ZIP files can be uploaded by non-admin users
-        self.env['test_new_api.binary_svg'].with_user(
-            self.env.ref('base.user_demo'),
-        ).create({
+        self.env['test_new_api.binary_svg'].with_user(self.user_demo).create({
             'name': 'Test without attachment',
             'image_wo_attachment': base64.b64decode(ZIP),
         })
@@ -2330,9 +2375,7 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_86_text_base64_guess_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
         with self.assertRaises(UserError) as e:
-            self.env['test_new_api.binary_svg'].with_user(
-                self.env.ref('base.user_demo'),
-            ).create({
+            self.env['test_new_api.binary_svg'].with_user(self.user_demo).create({
                 'name': 'Test without attachment',
                 'image_wo_attachment': SVG.decode("utf-8"),
             })
@@ -2705,7 +2748,7 @@ class TestFields(TransactionCaseWithUserDemo):
         })
 
         # unlink the line, and check the recomputation of move.quantity
-        user = self.env.ref('base.user_demo')
+        user = self.user_demo
         line.with_user(user).unlink()
         self.assertEqual(move.quantity, 0)
 
@@ -3170,6 +3213,52 @@ class TestHtmlField(common.TransactionCase):
         record.with_user(internal_user).write(write_vals)
         self.assertEqual(record.comment5, '',
                          "should be sanitized (not in groups)")
+
+    @patch('odoo.fields.html_sanitize', return_value='<p>comment</p>')
+    def test_onchange_sanitize(self, patch):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment2.sanitize)
+
+        record = self.env['test_new_api.mixed'].create({
+            'comment2': '<p>comment</p>',
+        })
+
+        # in a perfect world this should be 1, but at the moment the value is
+        # sanitized more than once during creation of the record
+        self.assertEqual(patch.call_count, 2)
+
+        # new value needs to be validated, so it is sanitized once more
+        record.comment2 = '<p>comment</p>'
+        self.assertEqual(patch.call_count, 3)
+
+        # the value is already sanitized for flushing
+        record.flush_recordset()
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db does not need to be sanitized
+        record.invalidate_recordset()
+        record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db during an onchange does not need to be sanitized
+        new_record = record.new(origin=record)
+        new_record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+    def test_read_sanitize_overridable(self):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment5.sanitize_overridable)
+
+        internal_user = self.env['res.users'].create({
+            'name': 'test internal user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        record = self.env['test_new_api.mixed'].with_user(internal_user).create({
+            'comment5': '<p>comment</p>',
+        })
+        self.assertEqual(record.comment5, '<p>comment</p>')
+        new_record = record.new(origin=record)
+        # this field access was causing an infinite loop in HTML sanitization
+        self.assertEqual(new_record.comment5, '<p>comment</p>')
 
 
 class TestMagicFields(common.TransactionCase):
@@ -3915,6 +4004,24 @@ class TestComputeQueries(common.TransactionCase):
         self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', False])
         self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
         self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
+
+    def test_partial_compute_batching(self):
+        """ Create several 'new' records and check that the partial compute
+        method is called only once.
+        """
+        order = self.env['test_new_api.order'].new({
+            'line_ids': [Command.create({'reward': False})] * 100,
+        })
+
+        OrderLine = self.env.registry['test_new_api.order.line']
+        with patch.object(
+            OrderLine,
+            '_compute_has_been_rewarded',
+            side_effect=OrderLine._compute_has_been_rewarded,
+            autospec=True,
+        ) as patch_compute:
+            order.line_ids.mapped('has_been_rewarded')
+            self.assertEqual(patch_compute.call_count, 1)
 
 
 class test_shared_cache(TransactionCaseWithUserDemo):

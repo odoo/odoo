@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr ""
+msgstr "IoTボックスに接続されたプリンタを使用"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -74,7 +74,7 @@ msgstr "新しいレストランフロアを追加"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
-msgstr ""
+msgstr "新規レストランオーダプリンタを追加"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -151,7 +151,7 @@ msgstr "テーブルの内部識別"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
 msgid "An internal identification of the printer"
-msgstr ""
+msgstr "プリンタの内部識別"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -248,6 +248,13 @@ msgstr "青"
 #, python-format
 msgid "CANCELLED"
 msgstr "キャンセル済"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash %s"
+msgstr "現金 %s"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -389,7 +396,7 @@ msgstr "POSでの請求書の分割を有効にします。"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
-msgstr ""
+msgstr "オーダ変更の印刷に失敗しました"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -575,7 +582,7 @@ msgstr "最終更新日"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "オーダの最終印刷ステイタス"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -642,7 +649,7 @@ msgstr "NEW"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NOTE"
-msgstr ""
+msgstr "メモ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -739,7 +746,7 @@ msgstr "オーダプリンタは、レストランやバーにて、ウェイタ
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
 msgid "POS Printer"
-msgstr ""
+msgstr "POSプリンタ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -813,7 +820,7 @@ msgstr "Pos Iface 伝票分割"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "POSはオーダプリンタです"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management

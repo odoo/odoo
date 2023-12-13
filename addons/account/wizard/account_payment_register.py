@@ -492,15 +492,19 @@ class AccountPaymentRegister(models.TransientModel):
             ), False
         elif self.source_currency_id == comp_curr and self.currency_id != comp_curr:
             # Company currency on source line but a foreign currency one on the opposite line.
-            return abs(sum(
-                comp_curr._convert(
+            residual_amount = 0.0
+            for aml in batch_result['lines']:
+                if not aml.move_id.payment_id and not aml.move_id.statement_line_id:
+                    conversion_date = self.payment_date
+                else:
+                    conversion_date = aml.date
+                residual_amount += comp_curr._convert(
                     aml.amount_residual,
                     self.currency_id,
                     self.company_id,
-                    aml.date,
+                    conversion_date,
                 )
-                for aml in batch_result['lines']
-            )), False
+            return abs(residual_amount), False
         else:
             # Foreign currency on payment different than the one set on the journal entries.
             return comp_curr._convert(

@@ -64,6 +64,7 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean('This batch is a wave')
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
 
     @api.depends('state', 'show_validate',
                  'picking_ids.show_set_qty_button',
@@ -78,6 +79,11 @@ class StockPickingBatch(models.Model):
                 batch.show_set_qty_button = True
             elif any(p.show_clear_qty_button for p in self.picking_ids):
                 batch.show_clear_qty_button = True
+
+    @api.depends('picking_type_id')
+    def _compute_show_lots_text(self):
+        for batch in self:
+            batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
@@ -267,16 +273,7 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            picking_move_lines = self.move_line_ids
-
-            move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-                and not ml.result_package_id
-            )
-            if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            move_line_ids = self.picking_ids[0]._package_move_lines()
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:

@@ -100,10 +100,20 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100,200", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100,200", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100,200", "2022")`);
+
+        // with spaces
+        setCellContent(model, "B1", `=ODOO.CREDIT("100 , 200", "2022")`);
+        setCellContent(model, "B2", `=ODOO.DEBIT("100 , 200", "2022")`);
+        setCellContent(model, "B3", `=ODOO.BALANCE("100 , 200", "2022")`);
+
         await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "A1"), 26);
         assert.equal(getCellValue(model, "A2"), 142);
         assert.equal(getCellValue(model, "A3"), 116);
+
+        assert.equal(getCellValue(model, "B1"), 26);
+        assert.equal(getCellValue(model, "B2"), 142);
+        assert.equal(getCellValue(model, "B3"), 116);
         assert.verifySteps(["spreadsheet_fetch_debit_credit"]);
     });
 

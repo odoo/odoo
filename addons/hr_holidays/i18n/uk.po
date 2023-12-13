@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2023-09-15 09:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -676,8 +677,8 @@ msgstr "<span class=\"text-muted\">з </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">до </span>"
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2122,8 +2123,8 @@ msgid "Hour to"
 msgstr "Година до"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -2795,6 +2796,12 @@ msgstr "Немає перевірки"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model_terms:ir.actions.server,help:hr_holidays.act_hr_employee_holiday_request
+msgid "No data to display"
+msgstr "Немає даних для відображення"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
 msgstr "Ще немає даних!"
@@ -3007,6 +3014,13 @@ msgid "Open"
 msgstr "Відкрито"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операція не підтримується"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
@@ -3089,8 +3103,18 @@ msgid "Public"
 msgstr "Публічний"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr "Офіційний вихідний"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
 msgid "Public Holidays"
 msgstr "Офіційні вихідні"
 
@@ -3478,14 +3502,20 @@ msgstr ""
 "Заплановано: майбутні дії."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
 msgid "Stress Day"
 msgstr "Стресовий день"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
 msgid "Stress Days"
 msgstr "Стресові дні"
 
@@ -3873,6 +3903,8 @@ msgstr ""
 "                Запит співробітників призначається керівникам відпусток (напр., дні відновлення)."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -4130,6 +4162,13 @@ msgstr "Відпустка тренування"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
 msgid "Transferred to the next year"
 msgstr "Перенесено на наступний рік"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4624,8 +4663,8 @@ msgid "day(s)"
 msgstr "день(дні)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4652,8 +4691,8 @@ msgstr ""
 "напр., Тип відпустки (Від початку підтвердження до кіня / без обмежень)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

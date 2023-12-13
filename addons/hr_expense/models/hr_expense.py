@@ -497,6 +497,8 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             raise UserError(_("You cannot report expenses for different employees in the same report."))
         if any(not expense.product_id for expense in expenses_with_amount):
             raise UserError(_("You can not create report without category."))
+        if len(self.company_id) != 1:
+            raise UserError(_("You cannot report expenses for different companies in the same report."))
 
         # Check if two reports should be created
         own_expenses = expenses_with_amount.filtered(lambda x: x.payment_mode == 'own_account')
@@ -907,7 +909,7 @@ class HrExpenseSheet(models.Model):
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True)
     payment_state = fields.Selection(
-        selection=lambda self: self.env["account.move"]._fields["payment_state"].selection,
+        lambda self: self.env["account.move"]._fields["payment_state"]._description_selection(self.env),
         string="Payment Status",
         store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())

@@ -261,15 +261,21 @@ class WebsiteSaleDelivery(WebsiteSale):
         values['shipping_address_update_route'] = self._express_checkout_shipping_route
         return values
 
-    def _get_shop_payment_values(self, order, **kwargs):
-        values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
+    def _get_shop_payment_errors(self, order):
+        errors = super()._get_shop_payment_errors(order)
         has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
 
         if not order._get_delivery_methods() and has_storable_products:
-            values['errors'].append(
-                (_('Sorry, we are unable to ship your order'),
-                 _('No shipping method is available for your current order and shipping address. '
-                   'Please contact us for more information.')))
+            errors.append((
+                _('Sorry, we are unable to ship your order'),
+                _('No shipping method is available for your current order and shipping address. '
+                   'Please contact us for more information.'),
+            ))
+        return errors
+
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
+        has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
 
         if has_storable_products:
             if order.carrier_id and not order.delivery_rating_success:

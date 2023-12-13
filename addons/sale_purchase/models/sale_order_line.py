@@ -182,6 +182,10 @@ class SaleOrderLine(models.Model):
         if product.description_purchase:
             name += '\n' + product.description_purchase
 
+        line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
+        if line_description:
+            name += line_description
+
         return {
             'name': name,
             'product_qty': purchase_qty_uom,

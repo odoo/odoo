@@ -306,7 +306,7 @@ Many2OneField.supportedTypes = ["many2one"];
 Many2OneField.extractProps = ({ attrs, field }) => {
     const noOpen = Boolean(attrs.options.no_open);
     const noCreate = Boolean(attrs.options.no_create);
-    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
+    const canCreate = noCreate ? false : attrs.can_create && Boolean(JSON.parse(attrs.can_create));
     const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);

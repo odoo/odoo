@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# 徐 文郁, 2022
+# 徐 文郁 (info@ro-cd.com), 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -248,7 +248,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"所有进货库存移动的对应会计分录将过帐在此帐户中，除非有特定的计价科目\n"
+"所有进货库存移动的对应日记账项目将过帐在此帐户中，除非有特定的计价科目\n"
 "                设置在源库位。这是此类别中所有产品的默认值。也可以直接设置每个产品。"
 
 #. module: stock_account
@@ -405,12 +405,12 @@ msgstr "日记账"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "会计分录"
+msgstr "日记账项目"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -939,7 +939,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存计价时，所有出货库存凭证的对应会计分录将在此帐户中过帐，\n"
+"在进行自动库存计价时，所有出货库存凭证的对应日记账项目将在此帐户中过帐，\n"
 "               除非在目的地设置了特定的计价帐户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 
@@ -1039,3 +1039,10 @@ msgstr "由于"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
 msgstr "位置"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid ""
+"'The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""

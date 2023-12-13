@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgstr "<b>警告 最終チェックインは12時間以上前です</b><br/>も
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -87,7 +88,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Extra Hours</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">時間外</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -95,6 +96,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
 "me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -102,6 +105,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -127,7 +132,7 @@ msgstr "<span>時間 </span>"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Activate the count of employees' extra hours."
-msgstr ""
+msgstr "従業員の時間労働カウントを有効化します。"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -135,6 +140,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"ここで従業員を選択し、チェックイン/チェックアウトを実行できるように、何名かの従業員を追加します。\n"
+"従業員を作成するには、従業員メニューに移動します。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
@@ -163,7 +170,7 @@ msgstr "従業員のために、時間外労働が控除されない時間（就
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 msgid "Amount of extra hours"
-msgstr ""
+msgstr "時間外労働時間数"
 
 #. module: hr_attendance
 #. openerp-web
@@ -197,7 +204,7 @@ msgstr "勤怠分析"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr ""
+msgstr "出勤キオスク遅延"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
@@ -208,20 +215,20 @@ msgstr "出勤モード"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
 msgid "Attendance Overtime"
-msgstr ""
+msgstr "出勤残業"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_report
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
 msgid "Attendance Statistics"
-msgstr ""
+msgstr "出勤分析"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr ""
+msgstr "出勤ステータス"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -304,7 +311,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check IN"
-msgstr ""
+msgstr "出勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -326,7 +333,7 @@ msgstr "チェックイン / チェックアウト"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check OUT"
-msgstr ""
+msgstr "退勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -412,14 +419,14 @@ msgstr "時間外労働のカウント"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Count of Extra Hours"
-msgstr ""
+msgstr "時間外労働時間数"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Count of extra hours is considered from this date. Potential extra hours "
 "prior to this date are not considered."
-msgstr ""
+msgstr "時間外労働のカウントはこの日から考慮されます。それ以前の時間外労働は考慮されません。"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -477,7 +484,7 @@ msgstr "表示時間"
 #, python-format
 msgid ""
 "Do not have access, user cannot edit the attendances that are not his own."
-msgstr ""
+msgstr "アクセス権がない場合、ユーザは自分以外の出席を編集することはできません。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -543,13 +550,13 @@ msgstr "時間外労働"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra Hours (Real)"
-msgstr ""
+msgstr "時間外労働(実際)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
 msgid "Extra Hours Starting Date"
-msgstr ""
+msgstr "時間外労働開始日時"
 
 #. module: hr_attendance
 #. openerp-web
@@ -561,7 +568,7 @@ msgstr "今日の超過労働時間："
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra-hours including the threshold duration"
-msgstr ""
+msgstr "しきい値期間を含む時間外労働"
 
 #. module: hr_attendance
 #. openerp-web
@@ -638,7 +645,7 @@ msgstr "グループ化"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 msgid "HR Attendance Search"
-msgstr ""
+msgstr "HR出勤検索"
 
 #. module: hr_attendance
 #. openerp-web
@@ -678,19 +685,19 @@ msgstr "時間"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr ""
+msgstr "先月の勤務時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr ""
+msgstr "先月の勤務時間表示"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr ""
+msgstr "今日の勤務時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
@@ -740,7 +747,7 @@ msgstr "キオスクモード"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "最終出勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
@@ -795,13 +802,13 @@ msgstr "出勤記録は見つかりませんでした"
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
-msgstr ""
+msgstr "表示する出勤レコードはありません"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr ""
+msgstr "バッジID '%(barcode)s'に一致する従業員はいません。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -867,7 +874,7 @@ msgstr "スキャナー"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr ""
+msgstr "従業員詳細フォーム(HR設定タブより)でPINコードを設定"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -910,7 +917,7 @@ msgstr "早起きは三文の得"
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+msgstr "ユーザはキオスクモードを開き、従業員PINを検証することができます。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -932,7 +939,7 @@ msgstr "ユーザは会社の画面で手動でチェックインおよびチェ
 msgid ""
 "To activate Kiosk mode without pin code, you must have access right as an "
 "Officer or above in the Attendance app. Please contact your administrator."
-msgstr ""
+msgstr "ピンコードなしでキオスクモードを有効にするには、勤怠アプリで役員以上のアクセス権を持っている必要があります。管理者にお問い合わせ下さい。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -961,7 +968,7 @@ msgstr "従業員に有利な許容時間"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "合計残業時間"
 
 #. module: hr_attendance
 #. openerp-web
@@ -1054,7 +1061,7 @@ msgstr "勤怠を複製することはできません。"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "Your attendance records will be displayed here."
-msgstr ""
+msgstr "あなたの勤怠レコードはここに表示されます。"
 
 #. module: hr_attendance
 #. openerp-web

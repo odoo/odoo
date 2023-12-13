@@ -104,6 +104,8 @@ class ProductTemplate(models.Model):
 
     def _get_website_accessory_product(self):
         domain = self.env['website'].sale_product_domain()
+        if not self.env.user._is_internal():
+            domain = expression.AND([domain, [('is_published', '=', True)]])
         return self.accessory_product_ids.filtered_domain(domain)
 
     def _get_website_alternative_product(self):
@@ -272,13 +274,6 @@ class ProductTemplate(models.Model):
                 combination_info['price_extra'], product_taxes, taxes, company_id, pricelist,
                 product, partner
             )
-            base_unit_price = product._get_base_unit_price(list_price)
-            if pricelist.currency_id != product.currency_id:
-                base_unit_price = pricelist.currency_id._convert(
-                    base_unit_price,
-                    pricelist.currency_id,
-                    company_id,
-                    fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
 
@@ -289,7 +284,7 @@ class ProductTemplate(models.Model):
 
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
+                base_unit_price=product._get_base_unit_price(list_price),
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,

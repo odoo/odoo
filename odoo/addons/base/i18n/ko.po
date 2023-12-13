@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Linkup <link-up@naver.com>, 2022
-# JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Sarah Park, 2023
+# JH CHOI <hwangtog@gmail.com>, 2023
 # Daye Jeong, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7727,6 +7728,8 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"비영리 국제 교육 및 과학 기관으로, 세 개의 학과 (항공 및 항공 우주, 환경 및 응용 유체 역학, 터보 기계 추진)를 운영하고 "
+"있습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -8086,7 +8089,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Accounting, Taxes, Budgets, Assets..."
-msgstr ""
+msgstr "회계, 세금, 예산, 자산..."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_fleet
@@ -8929,7 +8932,7 @@ msgstr "안도라"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 msgid "Android & iPhone"
-msgstr ""
+msgstr "안드로이드 & 아이폰"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -12101,6 +12104,8 @@ msgid ""
 "processes in order to make our customers more productive, responsive and "
 "profitable."
 msgstr ""
+"Deco Addict는 고객의 생산성과 즉각적인 대응력을 높이고 수익성을 향상시키기 위해 인사 및 공급망 프로세스를 설계, 개발, "
+"통합하고 지원합니다."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -15877,6 +15882,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "'그룹별' 매개 변수가 잘못되었습니다."
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "xpath %r 구문 분석에 잘못된 표현식이 있습니다."
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -16032,6 +16043,16 @@ msgstr "잘못된 유형"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "%s의 값이 잘못되었습니다. %s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
+"잘못된 값 %s.%s: %s가 범위를 벗어났습니다. (정수는 -2,147,483,648에서 2,147,483,647 사이여야 함.)"
 
 #. module: base
 #. odoo-python
@@ -22697,7 +22718,7 @@ msgstr "품질"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control
 msgid "Quality Alerts, Control Points"
-msgstr ""
+msgstr "품질 경고, 관리점"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql_count
@@ -24002,7 +24023,7 @@ msgstr "온라인 판매 이벤트 티켓"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
 msgid "Sell on eBay easily"
-msgstr ""
+msgstr "손쉽게 이베이에서 판매"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
@@ -24056,6 +24077,19 @@ msgstr "마지막 재고가 이동하면 문자 메시지 보내기"
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
 msgstr "프로젝트/작업 단계 이동 시 문자 메시지 발송"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "UPS를 통한 물품 운송 및 온라인 물류 정보 추적"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -26633,7 +26667,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
 msgid "Track time & costs"
-msgstr ""
+msgstr "시간 및 비용 추적"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -26849,6 +26883,16 @@ msgstr "유형 :"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - 치외법권 조직 및 기관 업무"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS 배송"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
@@ -27916,7 +27960,7 @@ msgstr "웹사이트 - 결제 승인"
 #: model:ir.module.module,shortdesc:base.module_website_payment_paypal
 #: model:ir.module.module,summary:base.module_website_payment_paypal
 msgid "Website - Payment Paypal"
-msgstr ""
+msgstr "웹사이트 - 페이팔 결제"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
@@ -29090,17 +29134,17 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
-msgstr ""
+msgstr "pos_sale_loyalty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_margin
 msgid "pos_sale_margin"
-msgstr ""
+msgstr "pos_sale_margin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_product_configurator
 msgid "pos_sale_product_configurator"
-msgstr ""
+msgstr "pos_sale_product_configurator"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties
@@ -29259,7 +29303,7 @@ msgstr "O"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay
 msgid "website_sale_delivery_mondialrelay"
-msgstr ""
+msgstr "website_sale_delivery_mondialrelay"
 
 #. module: base
 #. odoo-python

@@ -129,7 +129,7 @@ class PurchaseRequisition(models.Model):
             self.write({'state': 'in_progress'})
         # Set the sequence number regarding the requisition type
         if self.name == 'New':
-            self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+            self.name = self.env['ir.sequence'].with_company(self.company_id).next_by_code('purchase.requisition.blanket.order')
 
     def action_open(self):
         self.write({'state': 'open'})

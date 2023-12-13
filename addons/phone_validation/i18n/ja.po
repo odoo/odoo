@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
-msgstr ""
+msgstr "番号を修正して再試行して下さい。"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -54,7 +54,7 @@ msgstr "アーカイブ済"
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr ""
+msgstr "本当にこの電話番号のブラックリストを解除しますか？"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -99,6 +99,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
+"ポータルアカウント %(portal_user_name)s の削除、 %(user_name)s "
+"(#%(user_id)s)による、によってブロックされています。"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -187,7 +189,7 @@ msgstr "サニタイズされた電話番号がブラックリストに登録さ
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr ""
+msgstr "不可能な番号 %s: おそらく桁数が無効です。"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -211,14 +213,14 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr ""
+msgstr "無効な番号%s: おそらく局番が間違っています。"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
-msgstr ""
+msgstr "モデル%sの最初の電話フィールドが無効です"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
@@ -266,12 +268,12 @@ msgstr "メッセージ"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "電話フィールドの定義がありません。"
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
 msgid "Number already exists"
-msgstr ""
+msgstr "番号はすでに存在します"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
@@ -300,7 +302,7 @@ msgstr "配信エラーのメッセージ数"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "番号はE164フォーマットである必要があります"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
@@ -342,7 +344,7 @@ msgstr "電話/携帯電話"
 #, python-format
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr ""
+msgstr "電話番号/携帯電話番号を検索する場合は、少なくとも3文字以上を入力して下さい。"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -353,7 +355,7 @@ msgstr "理由"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "ブラックリストから電話番号を削除する"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -364,7 +366,7 @@ msgstr "サニタイズされた数"
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr ""
+msgstr "解析不可能%(phone)s : %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -385,4 +387,4 @@ msgstr "ユーザ"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "phone_blacklist_removal"

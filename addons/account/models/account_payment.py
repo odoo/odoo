@@ -191,12 +191,12 @@ class AccountPayment(models.Model):
 
     def _get_valid_liquidity_accounts(self):
         return (
-            self.journal_id.default_account_id,
-            self.payment_method_line_id.payment_account_id,
-            self.journal_id.company_id.account_journal_payment_debit_account_id,
-            self.journal_id.company_id.account_journal_payment_credit_account_id,
-            self.journal_id.inbound_payment_method_line_ids.payment_account_id,
-            self.journal_id.outbound_payment_method_line_ids.payment_account_id,
+            self.journal_id.default_account_id |
+            self.payment_method_line_id.payment_account_id |
+            self.journal_id.company_id.account_journal_payment_debit_account_id |
+            self.journal_id.company_id.account_journal_payment_credit_account_id |
+            self.journal_id.inbound_payment_method_line_ids.payment_account_id |
+            self.journal_id.outbound_payment_method_line_ids.payment_account_id
         )
 
     def _get_aml_default_display_map(self):
@@ -1000,15 +1000,15 @@ class AccountPayment(models.Model):
             'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(self.reconciled_statement_lines_ids) == 1:
+        if len(self.reconciled_statement_line_ids) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': self.reconciled_statement_lines_ids.id,
+                'res_id': self.reconciled_statement_line_ids.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', self.reconciled_statement_lines_ids.ids)],
+                'domain': [('id', 'in', self.reconciled_statement_line_ids.ids)],
             })
         return action
 

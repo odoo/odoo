@@ -14,20 +14,37 @@
 # Martin Trigaux, 2023
 # Tadej Lupšina <tadej@hbs.si>, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
+# Neun Pro, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 08:47+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tomaž Jug <tomaz@editor.si>, 2023\n"
+"Last-Translator: Neun Pro, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -417,7 +434,7 @@ msgstr "Aktivnosti"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Activity Exception Decoration"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -427,7 +444,7 @@ msgstr "Stanje aktivnosti"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Activity Type Icon"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -982,6 +999,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Cannot close the session when offline."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Cannot modify a tip"
 msgstr ""
 
 #. module: point_of_sale
@@ -1736,10 +1760,19 @@ msgid "Customer Screen Warning"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
 msgstr ""
 
 #. module: point_of_sale
@@ -2062,6 +2095,13 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Dokumentacija"
@@ -2297,6 +2337,13 @@ msgstr "Končana uvozna naročila"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Davčno območje"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -2554,7 +2601,7 @@ msgstr "Ikona"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icon to indicate an exception activity."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -3288,7 +3335,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "My Activity Deadline"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3533,7 +3580,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Number of messages requiring action"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
@@ -3636,6 +3683,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
 
 #. module: point_of_sale
@@ -4408,6 +4463,8 @@ msgid "Point Of Sale"
 msgstr "Prodajna točka"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4421,6 +4478,7 @@ msgstr "Prodajna točka"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Prodajna točka"
 
@@ -6169,6 +6227,15 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -6205,7 +6272,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\r\n"
+"\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
 
@@ -7220,14 +7287,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
 msgstr ""
 
 #. module: point_of_sale

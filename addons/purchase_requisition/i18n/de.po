@@ -137,17 +137,17 @@ msgstr "Vertragsart"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
 msgid "Alternative POs"
-msgstr "Alternative Einkaufsaufträge"
+msgstr "Alternative Bestellungen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
 msgid "Alternative Po Count"
-msgstr "Anzahl alternativer Einkaufsaufträge"
+msgstr "Anzahl alternativer Bestellungen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternative Purchase Order"
-msgstr "Alternativer Einkaufsauftrag"
+msgstr "Alternative Bestellung"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -248,7 +248,7 @@ msgstr "Auswählen"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr "Einen Lieferanten für alternative Einkaufsaufträge auswählen"
+msgstr "Einen Lieferanten für alternative Bestellungen auswählen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -505,18 +505,18 @@ msgid ""
 "we cannot recreate that in this case."
 msgstr ""
 "Wenn der ausgewählte Lieferant oder eines der Produkte im ursprünglichen "
-"Einkaufsauftrag eine blockierende Warnung enthält, verhindern wir die "
-"Erstellung eines alternativen Einkaufsauftrags. Der Grund dafür ist, dass "
-"diese Felder normalerweise mit einer w/Warnmeldung in der Formularansicht "
-"gelöscht werden, aber das können wir in diesem Fall nicht nachstellen."
+"Bestellung eine blockierende Warnung enthält, verhindern wir die Erstellung "
+"einer alternativen Bestellung. Der Grund dafür ist, dass diese Felder "
+"normalerweise mit einer w/Warnmeldung in der Formularansicht gelöscht "
+"werden, aber das können wir in diesem Fall nicht nachstellen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
-"Wenn diese Option aktiviert ist, werden die Produktmengen des ursprünglichen"
-" Einkaufsauftrags kopiert."
+"Wenn diese Option aktiviert ist, werden die Produktmengen der ursprünglichen"
+" Bestellung kopiert."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -695,17 +695,17 @@ msgstr "Bestelldatum"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "Origin Po"
-msgstr "Ursprünglicher Einkaufsauftrag"
+msgstr "Ursprüngliche Bestellung"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr "Andere potenzielle Einkaufsaufträge für Einkaufsprodukte"
+msgstr "Andere potenzielle Bestellungen für Einkaufsprodukte"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr "Zu bestätigende Einkaufsaufträge"
+msgstr "Zu bestätigende Bestellungen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -766,22 +766,22 @@ msgstr "Einkaufsgruppen"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Einkaufsauftrag"
+msgstr "Bestellung"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Einkaufsauftragszeile"
+msgstr "Bestellzeile"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Purchase Order Lines"
-msgstr "Einkaufsauftragszeilen"
+msgstr "Bestellzeilen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
 msgid "Purchase Orders"
-msgstr "Einkaufsaufträge"
+msgstr "Bestellungen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -903,9 +903,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Nur eine Angebotsanfrage auswählen (exklusiv): Wenn ein Einkaufsauftrag bestätigt wird, wird der verbleibende Einkaufsauftrag storniert.\n"
+"Nur eine Angebotsanfrage auswählen (exklusiv): Wenn eine Bestellung bestätigt wird, wird die andere Bestellung storniert.\n"
 "\n"
-"Mehrere Angebotsanfragen auswählen (nicht-exklusiv): erlaubt mehrere Einkaufsaufträge. Bei Bestätigung eines Einkaufsauftrag werden die übrigen Einkaufsaufträge nicht storniert."
+"Mehrere Angebotsanfragen auswählen (nicht-exklusiv): erlaubt mehrere Bestellungen. Bei Bestätigung einer Bestellung werden die anderen Bestellungen nicht storniert."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -996,7 +996,7 @@ msgstr "Lieferantenpreisliste"
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
 msgstr ""
-"Technisches Modell zur Gruppierung von Einkaufsaufträgen für Ausschreibungen"
+"Technisches Modell zur Gruppierung von Bestellungen für Ausschreibungen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1014,8 +1014,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
 msgstr ""
-"Der ursprüngliche Einkaufsauftrag, für den dieser alternative "
-"Einkaufsauftrag erstellt wird."
+"Die ursprüngliche Bestellung, für die diese alternative Bestellung erstellt "
+"wird."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1147,7 +1147,7 @@ msgstr "Website-Nachrichten"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Website-Kommunikationsverlauf"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
@@ -1155,21 +1155,20 @@ msgid ""
 "Whether or not this purchase order is linked to another purchase order as an"
 " alternative."
 msgstr ""
-"Ob dieser Einkaufsauftrag mit einem anderen Einkaufsauftrag als Alternative "
-"verknüpft ist oder nicht."
+"Ob diese Bestellung mit einer anderen Bestellung als Alternative verknüpft "
+"ist oder nicht."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
 msgstr ""
-"Assistent für den Fall, dass der Einkaufsauftrag offene alternative "
+"Assistent für den Fall, dass die Bestellung offene alternative "
 "Angebotsanfragen hat"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
 msgid "Wizard to preset values for alternative PO"
-msgstr ""
-"Assistent zum Voreinstellen von Werten für alternative Einkaufsaufträge"
+msgstr "Assistent zum Voreinstellen von Werten für alternative Bestellungen"
 
 #. module: purchase_requisition
 #. odoo-python

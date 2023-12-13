@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,41 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    เรียน <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"    <p>มีคนพยายามลงชื่อเข้าใช้บัญชีของคุณด้วยอุปกรณ์ใหม่</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">N/A</t>\n"
+"        <li>สถานที่: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"        <li>อุปกรณ์: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"        <li>เบราว์เซอร์: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"        <li>ที่อยู่ IP: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"    </ul>\n"
+"    <p>หากเป็นคุณ โปรดป้อนรหัสต่อไปนี้เพื่อเข้าสู่ระบบให้เสร็จสมบูรณ์:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"    </div>\n"
+"    <small>โปรดทราบว่ารหัสนี้จะหมดอายุภายใน <t t-out=\"หมดอายุ\"></t></small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        หากคุณไม่ได้เข้าสู่ระบบนี้\n"
+"        คุณควรเปลี่ยนรหัสผ่านทันทีเพื่อความปลอดภัยของบัญชี\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        เราขอแนะนำอย่างยิ่งให้เปิดใช้งานการตรวจสอบสิทธิ์แบบ two-factor โดยใช้แอปตรวจสอบความถูกต้องเพื่อช่วยรักษาความปลอดภัยให้กับบัญชีของคุณ\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            เปิดใช้งานการตรวจสอบสิทธิ์แบบ two-factor ของฉัน\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -189,7 +225,7 @@ msgstr "ส่งอีเมล"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "การตั้งค่า: 2Fa เข้าสู่ระบบใหม่"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log

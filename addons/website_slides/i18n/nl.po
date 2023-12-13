@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # Dylan Kiss, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Wil Odoo, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -2523,7 +2524,7 @@ msgstr "Vind-ik-niet-leuks"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Display"
-msgstr "Tonen"
+msgstr "Weergave"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__display_name
@@ -2791,7 +2792,7 @@ msgstr "Registratie bericht"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Enroll Policy"
-msgstr "Inschrijving policy"
+msgstr "Inschrijvingsbeleid"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
@@ -2913,7 +2914,7 @@ msgid ""
 "able to drop building blocks on your page and edit them."
 msgstr ""
 "Maak eerst je les en bewerk deze vervolgens met de websitebouwer. Je kunt "
-"bouwstenen op je pagina plaatsen en deze bewerken."
+"bouwblokken op je pagina plaatsen en deze bewerken."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3114,7 +3115,7 @@ msgstr "Groep"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__name
@@ -5104,7 +5105,7 @@ msgstr "Verkoop toegang tot je cursussen op je website en houd omzet bij."
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
 msgid "Sell on eCommerce"
-msgstr "Verkoop via eCommerce"
+msgstr "Verkoop via E-commerce"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -5720,6 +5721,17 @@ msgstr "De stem moet 1, 0 of -1 zijn."
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
+msgid ""
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
+msgstr ""
+"De videolink om hier in te voeren kan worden verkregen via de knop 'Link "
+"delen' in de Vimeo-interface."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
 msgstr ""
 "Ga vervolgens naar de bestandsrechten en stel deze in als \"Iedereen met de "
@@ -5983,6 +5995,20 @@ msgid "Unknown error, try again."
 msgstr "Onbekende fout, probeer het opnieuw."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr "Niet vermeld"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
+msgstr "Niet vermeld (betalend account)"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -6110,7 +6136,7 @@ msgstr "Bekijk"
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
-msgstr "Bekijk alle"
+msgstr "Alles weergeven"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -6275,7 +6301,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr "Wat doet"
+msgstr "Wat betekent"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
@@ -6859,7 +6885,7 @@ msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
-"gemeen? De privacy-instelling van Vimeo \"Privé\" betekent dat het een video is die alleen kan worden bekeken door de gebruikers met de link ernaartoe.\n"
+"? De privacy-instelling van Vimeo \"Privé\" betekent dat het een video is die alleen kan worden bekeken door de gebruikers met de link ernaartoe.\n"
 "                                    Je video zal nooit verschijnen in de zoekresultaten en ook niet op je kanaal."
 
 #. module: website_slides
@@ -6867,13 +6893,24 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"                                    Your video will never come up in the search results nor on your channel."
+msgstr ""
+"? De privacy-instelling \"Niet vermeld\" van Vimeo betekent dat het een video is die alleen kan worden bekeken door de gebruikers die over de link beschikken.\n"
+"                                    Je video zal nooit verschijnen in de zoekresultaten en ook niet op je kanaal."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
 "means? The YouTube \"unlisted\" means it is a video which can be viewed only"
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
-"betekent? De \"niet-vermeld\" betekenis van YouTube is een video die alleen "
-"kan worden bekeken door de gebruikers die de link ernaar hebben. Je video "
-"komt nooit voor in de zoekresultaten of op je kanaal."
+"? De \"niet-vermeld\" betekenis van YouTube is een video die alleen kan "
+"worden bekeken door de gebruikers die de link ernaar hebben. Je video komt "
+"nooit voor in de zoekresultaten of op je kanaal."
 
 #. module: website_slides
 #. odoo-javascript

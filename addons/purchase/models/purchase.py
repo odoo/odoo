@@ -347,7 +347,10 @@ class PurchaseOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
-        return super(PurchaseOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
+        return super(PurchaseOrder, self.with_context(
+            mail_post_autofollow=self.env.context.get('mail_post_autofollow', True),
+            lang=self.partner_id.lang,
+        )).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Tweak 'view document' button for portal customers, calling directly
@@ -1169,7 +1172,8 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        # TODO: Remove when onchanges are replaced with computes
+        if not self.product_id or (self.env.context.get('origin_po_id') and self.product_qty):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1183,9 +1187,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        # TODO: Remove when onchanges are replaced with computes
-        if not (self.env.context.get('origin_po_id') and self.product_uom and self.product_id.uom_id.category_id == self.product_uom_category_id):
-            self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=self.partner_id.id,
@@ -1246,7 +1248,7 @@ class PurchaseOrderLine(models.Model):
                     line.taxes_id,
                     line.company_id,
                 )
-                price_unit = line.product_id.currency_id._convert(
+                price_unit = line.product_id.cost_currency_id._convert(
                     price_unit,
                     line.currency_id,
                     line.company_id,
@@ -1277,9 +1279,12 @@ class PurchaseOrderLine(models.Model):
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
-            # suggest biggest suitable packaging
+            # suggest biggest suitable packaging matching the PO's company
             if line.product_id and line.product_qty and line.product_uom:
-                line.product_packaging_id = line.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(line.product_qty, line.product_uom) or line.product_packaging_id
+                suggested_packaging = line.product_id.packaging_ids\
+                        .filtered(lambda p: p.purchase and (p.product_id.company_id <= p.company_id <= line.company_id))\
+                        ._find_suitable_product_packaging(line.product_qty, line.product_uom)
+                line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
@@ -1410,10 +1415,11 @@ class PurchaseOrderLine(models.Model):
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
+        today = fields.Date.today()
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=uom_po_qty,
-            date=max(po.date_order and po.date_order.date(), fields.Date.today()),
+            date=po.date_order and max(po.date_order.date(), today) or today,
             uom_id=product_id.uom_po_id)
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id.id == company_id.id)

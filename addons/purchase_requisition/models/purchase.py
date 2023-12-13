@@ -59,7 +59,7 @@ class PurchaseOrder(models.Model):
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
+        self.payment_term_id = payment_term.id
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
         if not self.origin or requisition.name not in self.origin.split(', '):
@@ -235,10 +235,10 @@ class PurchaseOrder(models.Model):
                 current_price_subtotal = product_to_best_price_line[line.product_id][0].price_subtotal
                 current_price_unit = product_to_best_price_unit[line.product_id][0].price_unit
                 if multiple_currencies:
-                    price_subtotal *= line.order_id.currency_rate
-                    price_unit *= line.order_id.currency_rate
-                    current_price_subtotal *= product_to_best_price_line[line.product_id][0].order_id.currency_rate
-                    current_price_unit *= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
+                    price_subtotal /= line.order_id.currency_rate
+                    price_unit /= line.order_id.currency_rate
+                    current_price_subtotal /= product_to_best_price_line[line.product_id][0].order_id.currency_rate
+                    current_price_unit /= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
 
                 if current_price_subtotal > price_subtotal:
                     product_to_best_price_line[line.product_id] = line

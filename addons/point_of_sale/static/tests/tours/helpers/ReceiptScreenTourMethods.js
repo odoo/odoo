@@ -98,6 +98,15 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
+        trackingMethodIsLot() {
+            return [
+                {
+                    content: `tracking method is Lot`,
+                    trigger: `li:contains("Lot Number")`,
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {

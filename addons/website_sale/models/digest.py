@@ -23,7 +23,10 @@ class Digest(models.Model):
                 ('website_id', '!=', False),
                 ('company_id', '=', company.id)
             ])
-            record.kpi_website_sale_total_value = sum(confirmed_website_sales.mapped('amount_total'))
+            record.kpi_website_sale_total_value = sum(
+                sale.currency_id._convert(sale.amount_total, company.currency_id, company, sale.date_order)
+                for sale in confirmed_website_sales
+            )
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)

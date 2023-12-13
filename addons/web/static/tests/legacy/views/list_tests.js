@@ -7617,7 +7617,7 @@ QUnit.module('LegacyViews', {
     });
 
     QUnit.test('multiple clicks on Add do not create invalid rows', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.foo.onchanges = {
             m2o: function () {},
@@ -7643,9 +7643,9 @@ QUnit.module('LegacyViews', {
         assert.containsN(list, '.o_data_row', 4,
             "should contain 4 records");
 
-        // click on Add twice, and delay the onchange
+        // click on Add and delay the onchange (check that the button is correctly disabled)
         testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
-        testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        assert.ok(list.$buttons.find('.o_list_button_add').get(0).disabled);
 
         prom.resolve();
         await testUtils.nextTick();

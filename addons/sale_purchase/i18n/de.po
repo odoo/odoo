@@ -56,14 +56,14 @@ msgid ""
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
 "                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Es gibt aktive Einkaufsaufträge im Zusammenhang mit diesem Verkaufsauftrag, die nicht automatisch storniert werden! <br/>\n"
+"                    Es gibt aktive Bestellungen im Zusammenhang mit diesem Verkaufsauftrag, die nicht automatisch storniert werden! <br/>\n"
 "                </span>\n"
 "            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Ausnahme(n) bei Einkaufsaufträgen:"
+msgstr "Ausnahme(n) bei Bestellungen:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -104,7 +104,7 @@ msgstr "Manuelle Aktionen können erforderlich sein."
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr "Anzahl generierter Einkaufsaufträge"
+msgstr "Anzahl generierter Bestellungen"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
@@ -152,23 +152,23 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Einkaufsauftrag"
+msgstr "Bestellung"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
 msgid "Purchase Order Alert"
-msgstr "Einkaufsauftragsalarm"
+msgstr "Bestellalarm"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Einkaufsauftragszeile"
+msgstr "Bestellzeile"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr "Einkaufsauftrag generiert aus %s"
+msgstr "Bestellung generiert aus %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -233,8 +233,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
-"Sie verringern die bestellte Menge! Vergessen Sie nicht, den Einkaufsauftrag"
-" bei Bedarf manuell zu aktualisieren."
+"Sie verringern die bestellte Menge! Vergessen Sie nicht, die Bestellung bei "
+"Bedarf manuell zu aktualisieren."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

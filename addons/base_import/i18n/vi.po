@@ -309,6 +309,25 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Lỗi xử lý Ngày [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Lỗi khi nhập tập dữ liệu: tất cả các dòng phải có cùng kích thước, nhưng "
+"dòng tiêu đề có mục %d trong khi dòng đầu tiên có %d. Bạn có thể cần phải "
+"thay đổi ký tự phân cách."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format

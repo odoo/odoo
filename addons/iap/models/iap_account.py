@@ -22,6 +22,15 @@ class IapAccount(models.Model):
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
     company_ids = fields.Many2many('res.company')
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        accounts = super().create(vals_list)
+        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+            # Disable new accounts on a neutralized database
+            for account in accounts:
+                account.account_token = f"{account.account_token.split('+')[0]}+disabled"
+        return accounts
+
     @api.model
     def get(self, service_name, force_create=True):
         domain = [
@@ -92,9 +101,27 @@ class IapAccount(models.Model):
         """ Called only by res settings """
         route = '/iap/services'
         endpoint = iap_tools.iap_get_endpoint(self.env)
-        d = {'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')}
+        all_accounts = self.search([
+            '|',
+            ('company_ids', '=', self.env.company.id),
+            ('company_ids', '=', False),
+        ])
 
-        return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(d))
+        global_account_per_service = {
+            account.service_name: account.account_token
+            for account in all_accounts.filtered(lambda acc: not acc.company_ids)
+        }
+        company_account_per_service = {
+            account.service_name: account.account_token
+            for account in all_accounts.filtered(lambda acc: acc.company_ids)
+        }
+
+        # Prioritize company specific accounts over global accounts
+        account_per_service = {**global_account_per_service, **company_account_per_service}
+
+        parameters = {'tokens': list(account_per_service.values())}
+
+        return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(parameters))
 
     @api.model
     def get_config_account_url(self):

@@ -2616,8 +2616,7 @@ QUnit.module("Fields", (hooks) => {
         await click(buttons[0]);
         assert.verifySteps(["action"]);
 
-        await click(buttons[1]);
-        assert.verifySteps([]); // the second button is disabled, it can't be clicked
+        assert.ok(buttons[1].disabled); // the second button is disabled, it can't be clicked
 
         def.resolve();
         await nextTick();
@@ -3204,6 +3203,30 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
+        await editInput(target, ".o_field_many2one input", "new partner");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+
+        assert.containsNone(target, ".modal", "should not display the create modal");
+        assert.strictEqual(
+            target.querySelector(".o_field_many2one input").value,
+            "",
+            "many2one value should cleared on focusout if many2one is no_create"
+        );
+    });
+
+    QUnit.test("no_create option on a many2one when can_create is absent", async function (assert) {
+        serverData.models.partner.fields.product_id.readonly = true;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" options="{'no_create': 1}" readonly="0" />
+                    </sheet>
+                </form>`,
+        });
         await editInput(target, ".o_field_many2one input", "new partner");
         await triggerEvent(target, ".o_field_many2one input", "blur");
 

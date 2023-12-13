@@ -1,3 +1,7 @@
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from pytz import UTC
+
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
 
@@ -302,3 +306,103 @@ class TestMicrosoftEvent(TestCommon):
 
         self.assertNotIn(self.simple_event, synced_events)
         self.assertIn(self.simple_event, not_synced_events)
+
+    def test_microsoft_event_readonly(self):
+        event = MicrosoftEvent()
+        with self.assertRaises(TypeError):
+            event._events['foo'] = 'bar'
+        with self.assertRaises(AttributeError):
+            event._events.update({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            dict.update(event._events, {'foo': 'bar'})
+
+    def test_performance_check(self):
+        # Test what happens when microsoft returns a lot of data
+        # This test does not aim to check what we do with the data but it ensure that we are able to process it.
+        # Other tests take care of how we update odoo records with the api result.
+
+        start_date = datetime(2023, 9, 25, 17, 25)
+        record_count = 10000
+        single_event_data = [{
+            '@odata.type': '#microsoft.graph.event',
+            '@odata.etag': f'W/"AAAAAA{x}"',
+            'type': 'singleInstance',
+            'createdDateTime': (start_date + relativedelta(minutes=x)).isoformat(),
+            'lastModifiedDateTime': (datetime.now().astimezone(UTC) + relativedelta(days=3)).isoformat(),
+            'changeKey': f'ZS2uEVAVyU6BMZ3m6cH{x}mtgAADI/Dig==',
+            'categories': [],
+            'originalStartTimeZone': 'Romance Standard Time',
+            'originalEndTimeZone': 'Romance Standard Time',
+            'id': f'AA{x}',
+            'subject': f"Subject of {x}",
+            'bodyPreview': f"Body of {x}",
+            'start': {'dateTime': (start_date + relativedelta(minutes=x)).isoformat(), 'timeZone': 'UTC'},
+            'end': {'dateTime': (start_date + relativedelta(minutes=x)).isoformat(), 'timeZone': 'UTC'},
+            'isOrganizer': True,
+            'organizer': {'emailAddress': {'name': f'outlook_{x}@outlook.com', 'address': f'outlook_{x}@outlook.com'}},
+        } for x in range(record_count)]
+
+        events = MicrosoftEvent(single_event_data)
+        mapped = events._load_odoo_ids_from_db(self.env)
+        self.assertFalse(mapped, "No odoo record should correspond to the microsoft values")
+
+        recurring_event_data = [{
+            '@odata.type': '#microsoft.graph.event',
+            '@odata.etag': f'W/"{x}IaZKQ=="',
+            'createdDateTime': (start_date + relativedelta(minutes=(2*x))).isoformat(),
+            'lastModifiedDateTime': (datetime.now().astimezone(UTC) + relativedelta(days=3)).isoformat(),
+            'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ==',
+            'categories': [],
+            'originalStartTimeZone': 'Romance Standard Time',
+            'originalEndTimeZone': 'Romance Standard Time',
+            'iCalUId': f'XX{x}',
+            'id': f'AAA{x}',
+            'reminderMinutesBeforeStart': 15,
+            'isReminderOn': True,
+            'hasAttachments': False,
+            'subject': f'My recurrent event {x}',
+            'bodyPreview': '', 'importance':
+            'normal', 'sensitivity': 'normal',
+            'isAllDay': False, 'isCancelled': False,
+            'isOrganizer': True, 'IsRoomRequested': False,
+            'AutoRoomBookingStatus': 'None',
+            'responseRequested': True,
+            'seriesMasterId': None,
+            'showAs': 'busy',
+            'type': 'seriesMaster',
+            'webLink': f'https://outlook.live.com/owa/?itemid={x}&exvsurl=1&path=/calendar/item',
+            'onlineMeetingUrl': None,
+            'isOnlineMeeting': False,
+            'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True,
+            'IsDraft': False,
+            'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'},
+            'body': {'contentType': 'html', 'content': ''},
+            'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'},
+            'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'},
+            'location': {'displayName': '',
+                         'locationType': 'default',
+                         'uniqueIdType': 'unknown',
+                         'address': {},
+                         'coordinates': {}},
+            'locations': [],
+            'recurrence': {'pattern':
+                               {'type': 'daily',
+                                'interval': 1,
+                                'month': 0,
+                                'dayOfMonth': 0,
+                                'firstDayOfWeek': 'sunday',
+                                'index': 'first'},
+                                'range': {'type': 'endDate',
+                                          'startDate': '2020-05-03',
+                                          'endDate': '2020-05-05',
+                                          'recurrenceTimeZone': 'Romance Standard Time',
+                                          'numberOfOccurrences': 0}
+                           },
+            'attendees': [],
+            'organizer': {'emailAddress': {'name': f'outlook_{x}@outlook.com',
+                                           'address': f'outlook_{x}@outlook.com'}}
+            } for x in range(record_count)]
+
+        recurrences = MicrosoftEvent(recurring_event_data)
+        mapped = recurrences._load_odoo_ids_from_db(self.env)
+        self.assertFalse(mapped, "No odoo record should correspond to the microsoft values")

@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+from markupsafe import Markup
+
 from odoo import api, models, _
+from odoo.addons.website.tools import add_form_signature
 
 
 class Contact(models.AbstractModel):
@@ -16,3 +20,20 @@ class Contact(models.AbstractModel):
             badges=dict(type='boolean', string=_('Display the badges'))
         )
         return options
+
+
+class HTML(models.AbstractModel):
+    _inherit = 'ir.qweb.field.html'
+
+    @api.model
+    def value_to_html(self, value, options):
+        res = super().value_to_html(value, options)
+
+        if res and '<form' in res:  # Efficient check
+            # The usage of `fromstring`, `HTMLParser`, `tostring` and `Markup`
+            # is replicating what is done in the `super()` implementation.
+            body = etree.fromstring("<body>%s</body>" % res, etree.HTMLParser())[0]
+            add_form_signature(body, self.sudo().env)
+            res = Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
+
+        return res

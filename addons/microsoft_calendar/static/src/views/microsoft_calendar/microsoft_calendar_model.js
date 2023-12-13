@@ -2,6 +2,7 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 patch(AttendeeCalendarModel, "microsoft_calendar_microsoft_calendar_model", {
     services: [...AttendeeCalendarModel.services, "rpc"],
@@ -40,12 +41,18 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
 
     async syncMicrosoftCalendar(silent = false) {
         this.microsoftPendingSync = true;
+        const request = {
+            model: this.resModel,
+            fromurl: window.location.href,
+        }
+        // Check if this.data.range is not null before adding rangeStart and rangeEnd.
+        if (this.data && this.data.range) {
+            request.rangeStart = serializeDateTime(this.data.range.start);
+            request.rangeEnd = serializeDateTime(this.data.range.end);
+        }
         const result = await this.rpc(
             "/microsoft_calendar/sync_data",
-            {
-                model: this.resModel,
-                fromurl: window.location.href
-            },
+            request,
             {
                 silent,
             },

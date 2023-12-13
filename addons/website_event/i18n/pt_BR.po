@@ -8,6 +8,7 @@
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2022
 # Martin Trigaux, 2022
 # Layna Nascimento, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-07 08:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -569,7 +570,7 @@ msgstr "Marcadores do evento"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Template"
-msgstr "Modelo de Event"
+msgstr "Modelo de evento"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -1092,6 +1093,13 @@ msgstr "Modelos"
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
 msgstr "A URL completa para acessar o documento através do site."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr "O site deve ser da mesma empresa que o evento."
 
 #. module: website_event
 #. odoo-python

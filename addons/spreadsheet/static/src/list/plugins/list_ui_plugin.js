@@ -37,6 +37,11 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;
+            case "REMOVE_ODOO_LIST":
+                if (cmd.listId === this.selectedListId) {
+                    this.selectedListId = undefined;
+                }
+                break;
             case "REFRESH_ODOO_LIST":
                 this._refreshOdooList(cmd.listId);
                 break;
@@ -62,6 +67,9 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
                     )
                 ) {
                     this._addDomains();
+                }
+                if (!this.getters.getListIds().length) {
+                    this.selectedListId = undefined;
                 }
                 break;
         }

@@ -190,6 +190,27 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 }
             ];
         }
+        clickLotIcon() {
+            return [
+                {
+                    content: 'click lot icon',
+                    trigger: '.line-lot-icon',
+                },
+            ];
+        }
+        enterLotNumber(number) {
+            return [
+                {
+                    content: 'enter lot number',
+                    trigger: '.list-line-input:first()',
+                    run: 'text ' + number,
+                },
+                {
+                    content: 'click validate lot number',
+                    trigger: '.popup .button.confirm',
+                }
+            ];
+        }
     }
 
     class Check {
@@ -315,6 +336,29 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: `discount original price is shown`,
                     trigger: `s:contains('${original_price}')`,
                     run: function () {},
+                },
+            ];
+        }
+        checkFirstLotNumber(number) {
+            return [
+                {
+                    content: 'Check lot number',
+                    trigger: `.list-line-input:propValue('${number}')`,
+                    run: () => {}, // it's a check
+                },
+            ];
+        }
+        checkOrderlinesNumber(number) {
+            return [
+                {
+                    content: `check orderlines number`,
+                    trigger: `.order .orderlines .orderline`,
+                    run: () => {
+                        const orderline_amount = $('.order .orderlines .orderline').length;
+                        if (orderline_amount !== number) {
+                            throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
+                        }
+                    },
                 },
             ];
         }

@@ -29,13 +29,26 @@ class AccountEdiFormat(models.Model):
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _get_l10n_in_base_tags(self):
+        return (
+           self.env.ref('l10n_in.tax_tag_base_sgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_igst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cess').ids
+           + self.env.ref('l10n_in.tax_tag_zero_rated').ids
+           + self.env.ref("l10n_in.tax_tag_exempt").ids
+           + self.env.ref("l10n_in.tax_tag_nil_rated").ids
+           + self.env.ref("l10n_in.tax_tag_non_gst_supplies").ids
+        )
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'in_einvoice_1_03':
             return super()._get_move_applicability(move)
-
-        if move.is_sale_document() and move.country_code == 'IN' and move.l10n_in_gst_treatment in (
+        all_base_tags = self._get_l10n_in_base_tags()
+        is_under_gst = any(move_line_tag.id in all_base_tags for move_line_tag in move.line_ids.tax_tag_ids)
+        if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (
             "regular",
             "composition",
             "overseas",
@@ -70,6 +83,7 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
+        all_base_tags = self._get_l10n_in_base_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
@@ -78,6 +92,9 @@ class AccountEdiFormat(models.Model):
                                   "Please create a credit note instead."))
             if line.display_type == 'product' and line.discount < 0:
                 error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+            if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
+                error_message.append(_(
+                    """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
@@ -91,8 +108,7 @@ class AccountEdiFormat(models.Model):
         return error_message
 
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
-        base_url = "https://iap-sandbox.odoo.com/iap/1/credit" if not company.sudo().l10n_in_edi_production_env else ""
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=base_url)
+        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
             _("Please buy more credits and retry: "),
@@ -217,24 +233,26 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
-            message.append(_("\n- Street required min 3 and max 100 characters"))
+            message.append(_("- Street required min 3 and max 100 characters"))
         if partner.street2 and not re.match("^.{3,100}$", partner.street2):
-            message.append(_("\n- Street2 should be min 3 and max 100 characters"))
+            message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
-            message.append(_("\n- City required min 3 and max 100 characters"))
+            message.append(_("- City required min 3 and max 100 characters"))
         if not re.match("^.{3,50}$", partner.state_id.name or ""):
-            message.append(_("\n- State required min 3 and max 50 characters"))
+            message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
-            message.append(_("\n- Zip code required 6 digits"))
+            message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
             self._l10n_in_edi_extract_digits(partner.phone)
         ):
-            message.append(_("\n- Mobile number should be minimum 10 or maximum 12 digits"))
+            message.append(_("- Mobile number should be minimum 10 or maximum 12 digits"))
         if partner.email and (
             not re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
             or not re.match("^.{6,100}$", partner.email)
         ):
-            message.append(_("\n- Email address should be valid and not more then 100 characters"))
+            message.append(_("- Email address should be valid and not more then 100 characters"))
+        if message:
+            message.insert(0, "%s" %(partner.display_name))
         return message
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):

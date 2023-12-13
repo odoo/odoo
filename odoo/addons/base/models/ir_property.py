@@ -111,12 +111,7 @@ class Property(models.Model):
         # we're writing a res_id=False on any record
         default_set = False
         if self._ids:
-            self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id IS NULL)', [self._ids])
-            default_set = self.env.cr.rowcount == 1 or any(
-                v.get('res_id') is False
-                for v in values
-            )
+            default_set = values.get('res_id') is False or any(not p.res_id for p in self)
         r = super(Property, self).write(self._update_values(values))
         if default_set:
             # DLE P44: test `test_27_company_dependent`
@@ -139,13 +134,7 @@ class Property(models.Model):
         return r
 
     def unlink(self):
-        default_deleted = False
-        if self._ids:
-            self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s)',
-                [self._ids]
-            )
-            default_deleted = self.env.cr.rowcount == 1
+        default_deleted = any(not p.res_id for p in self)
         r = super().unlink()
         if default_deleted:
             self.clear_caches()
@@ -265,7 +254,7 @@ class Property(models.Model):
 
         field = self.env[model]._fields[name]
         field_id = self.env['ir.model.fields']._get(model, name).id
-        company_id = self.env.company.id
+        company_id = self.env.company.id or None
 
         if field.type == 'many2one':
             comodel = self.env[field.comodel_name]
@@ -304,6 +293,7 @@ class Property(models.Model):
             return dict.fromkeys(ids, False)
 
         # retrieve values
+        self.flush_model()
         cr = self.env.cr
         result = {}
         refs = {"%s,%s" % (model, id) for id in ids}

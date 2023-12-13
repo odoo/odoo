@@ -251,3 +251,14 @@ class TestHolidaysOvertime(TransactionCase):
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
         self.assertFalse(leave.overtime_id.exists())
+
+    def test_public_leave_overtime(self):
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'Public Holiday',
+            'date_from': datetime(2022, 5, 5, 6),
+            'date_to': datetime(2022, 5, 5, 18),
+            'time_type': 'leave',
+        }])
+
+        self.new_attendance(check_in=datetime(2022, 5, 5, 8), check_out=datetime(2022, 5, 5, 16))
+        self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')

@@ -217,10 +217,17 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # To this purpose, we will ensure that only the public_pricelist is available for the default_website.
         public_pricelist = self.env.ref('product.list0')
         default_website = self.env.ref('website.default_website')
+        website_2 = self.env.ref('website.website2', raise_if_not_found=False)
+        if not website_2:
+            website_2 = self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
         self.env['product.pricelist'].search([
             ('id', '!=', public_pricelist.id),
             ('website_id', 'in', [False, default_website.id])]
-        ).website_id = self.env.ref('website.website2')
+        ).website_id = website_2
         public_pricelist.currency_id = self.env.company.currency_id
 
         self.start_tour("/", 'shop_zoom', login="admin")

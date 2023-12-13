@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,8 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr "Si è verificato un errore durante il recupero dell' Access Token. %s"
+msgstr ""
+"Si è verificato un errore durante il recupero del token di accesso. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -108,7 +109,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr "Torna al tuo mail server"
+msgstr "Ritorna al server di posta"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -133,15 +134,15 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
-"Sicurezza di connessione non corretta per il server di posta di Outlook %r. "
-"Impostala su \"TLS (STARTTLS)\"."
+"Sicurezza connessione non corretta per il server di posta Outlook %r, "
+"impostarla su \"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr "Sono configurate le credenziali Outlook?"
+msgstr "Sono configurate le credenziali Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -151,38 +152,38 @@ msgstr "Server di posta"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr "Microsoft Outlook Mixin"
+msgstr "Mixin Outlook di Microsoft"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr "Solo un amministratore può collegare un mail server di Outlook."
+msgstr "Solo un amministratore può collegare un server di posta Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr "Outlook Access Token"
+msgstr "Token di accesso Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr "Timestamp di scadenza del token di accesso di Outlook"
+msgstr "Marca temporale scadenza token di accesso Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr "Outlook ID client"
+msgstr "ID client Odoo"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr "Outlook segreto client"
+msgstr "Chiave privata Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
@@ -195,14 +196,14 @@ msgstr "Autenticazione OAuth Outlook"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr "Outlook Refresh Token"
+msgstr "Token di aggiornamento Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr "Configura le credenziali Outlook, per favore."
+msgstr "Configurare le credenziali Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -232,8 +233,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
-"Lascia il campo della password vuoto per il mail server di Outlook %r. Il "
-"processo OAuth non la richiede"
+"Lasciare vuoto il campo della password per il server di posta Outlook %r. Il"
+" processo OAuth non la richiede."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form

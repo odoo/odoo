@@ -6,8 +6,10 @@
 # Vo Thanh Thuy, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # fanha99 <fanha99@hotmail.com>, 2023
-# Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Trịnh Ngọc Hưng, 2023
+# Nancy Momoland <thanh.np2502@gmail.com>, 2023
+# Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -752,6 +754,17 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        Mẫu Hệ thống tài khoản (COA) dành cho Kế toán của Latvia.\n"
+"        Phân hệ này cũng bao gồm:\n"
+"        * Nhóm thuế,\n"
+"        * Các loại thuế phổ biến nhất của Latvia,\n"
+"        * Vị trí tài chính,\n"
+"        * Danh sách ngân hàng Latvia.\n"
+"\n"
+"tác giả là Allegro IT (truy cập để biết thêm thông tin https://www.allegro.lv)\n"
+"đồng tác giả là Chick.Farm (truy cập để biết thêm thông tin https://www.myacc.cloud)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -912,6 +925,9 @@ msgid ""
 "        Mozambican Accounting localization\n"
 "    "
 msgstr ""
+"\n"
+"        Bản địa hóa kế toán Mozambique\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -7137,6 +7153,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: hàm ghi nhật ký để ghi lại thông "
+"tin gỡ lỗi trong bảng <code>ir.logging</code> "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9349,7 +9367,7 @@ msgstr "Úc"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
-msgstr ""
+msgstr "Úc - Kế toán"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -12212,6 +12230,9 @@ msgid ""
 "                Chain processes in order to make our customers more productive,\n"
 "                responsive and profitable."
 msgstr ""
+"Deco Addict thiết kế, phát triển, tích hợp cũng như hỗ trợ các quy trình Nhân sự và Chuỗi\n"
+"                  cung ứng nhằm giúp khách hàng của chúng tôi làm việc hiệu quả hơn,\n"
+"                  phản ứng nhanh hơn và sinh lời nhiều hơn."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -12221,6 +12242,9 @@ msgid ""
 "processes in order to make our customers more productive, responsive and "
 "profitable."
 msgstr ""
+"Deco Addict thiết kế, phát triển, tích hợp cũng như hỗ trợ các quy trình "
+"Nhân sự và Chuỗi cung ứng nhằm giúp khách hàng của chúng tôi làm việc hiệu "
+"quả hơn, phản ứng nhanh hơn và sinh lời nhiều hơn."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -12230,6 +12254,9 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Deco Addict tích hợp ERP cho các công ty toàn cầu và hỗ trợ PME\n"
+"                bằng phần mềm Nguồn mở để quản lý doanh nghiệp của họ.\n"
+"                Các chuyên viên tư vấn của chúng tôi là chuyên gia trong các lĩnh vực sau:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -13222,6 +13249,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Lỗi khi phân tích cú pháp chế độ xem:\n"
+"\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -13266,7 +13296,7 @@ msgstr "Estonia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ee
 msgid "Estonia - Accounting"
-msgstr ""
+msgstr "Estonia - Kế toán"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -15334,7 +15364,7 @@ msgstr "Hồ sơ IR"
 #. module: base
 #: model:res.country,vat_label:base.nz
 msgid "IRD/GST"
-msgstr ""
+msgstr "IRD/GST"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
@@ -15793,7 +15823,7 @@ msgstr "Ấn Độ - Hóa đơn Điện tử"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_edi_ewaybill
 msgid "Indian - E-waybill"
-msgstr ""
+msgstr "Ấn độ - Vận đơn điện tử"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -16110,10 +16140,16 @@ msgid "Invalid 'group by' parameter"
 msgstr "Tham số 'nhóm theo' không hợp lệ"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Biểu thức không hợp lệ khi phân tích cú pháp xpath %r"
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "Định dạng JSON không hợp lệ trong trường Giá trị mặc định."
 
 #. module: base
 #: code:addons/models.py:0
@@ -16273,6 +16309,15 @@ msgstr "Giá trị không hợp lệ cho %s.%s: %s"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid view %(name)s definition in %(file)s"
@@ -16297,7 +16342,7 @@ msgstr "Tồn kho"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Inventory and Warehouse management"
-msgstr ""
+msgstr "Quản lý Tồn kho và Kho hàng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_price_diff
@@ -16461,7 +16506,7 @@ msgstr "Ý - Hóa đơn Điện tử"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_withholding
 msgid "Italy - E-invoicing (Withholding)"
-msgstr ""
+msgstr "Ý - Hóa đơn điện tử (Khấu trừ)"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -17000,7 +17045,7 @@ msgstr "Latvia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr ""
+msgstr "Latvia - Kế toán"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -17801,7 +17846,7 @@ msgstr "Gửi sms hàng loạt theo đơn đặt hàng"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Materials Management"
-msgstr ""
+msgstr "Quản lý nguyên liệu"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -18324,7 +18369,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_module_category_form
 #: model_terms:ir.ui.view,arch_db:base.view_module_category_tree
 msgid "Module Category"
-msgstr "Loại module"
+msgstr "Loại mô-đun"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -18335,17 +18380,17 @@ msgstr "Thông tin Module"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Module Name"
-msgstr "Tên module"
+msgstr "Tên mô-đun"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
 msgid "Module Reference Report (base)"
-msgstr "Báo cáo tham chiếu module (cơ sở)"
+msgstr "Báo cáo tham chiếu mô-đun (cơ sở)"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr "Gỡ cài đặt Module"
+msgstr "Gỡ cài đặt Mô-đun"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -18360,17 +18405,17 @@ msgstr "Kết quả cập nhật modun"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr "Cài đặt Module nâng cấp"
+msgstr "Module Upgrade Install"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
-msgstr "Phụ thuộc của module"
+msgstr "Phụ thuộc của mô-đun"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
-msgstr "Loại trừ module"
+msgstr "Loại trừ mô-đun"
 
 #. module: base
 #. odoo-python
@@ -18464,7 +18509,7 @@ msgstr "Mozambique"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mz
 msgid "Mozambique - Accounting"
-msgstr ""
+msgstr "Mozambique - Kế toán"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -18895,7 +18940,7 @@ msgid ""
 msgstr ""
 "Các tiện ích thử nghiệm không tầm thường có thể yêu cầu mô hình & tất cả\n"
 "    \n"
-"Module này ở đây rất hữu ích để xác thực rằng họ đang làm những gì họ đang làm\n"
+"Mô-đun này ở đây rất hữu ích để xác thực rằng họ đang làm những gì họ đang làm\n"
 "phải làm\n"
 "    "
 
@@ -18986,7 +19031,7 @@ msgstr "Thông báo cho người dùng khi có sản phẩm trở lại kho"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_nr
 msgid "Number of Apps"
-msgstr "Số lượng module"
+msgstr "Số lượng phân hệ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__numbercall
@@ -21115,7 +21160,7 @@ msgid ""
 "One or more of the selected modules have already been uninstalled, if you "
 "believe this to be an error, you may try again later or contact support."
 msgstr ""
-"Một hoặc nhiều module được chọn đã được gỡ cài đặt, nếu bạn cho rằng đây là "
+"Một hoặc nhiều mô-đun được chọn đã được gỡ cài đặt, nếu bạn cho rằng đây là "
 "lỗi, bạn có thể thử lại sau hoặc liên hệ với bộ phận hỗ trợ."
 
 #. module: base
@@ -21132,7 +21177,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale
 msgid "Online Event Booth Sale"
-msgstr "Gian hang bán vé sự kiện trực tuyến"
+msgstr "Gian hàng bán vé sự kiện trực tuyến"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth
@@ -21354,7 +21399,7 @@ msgstr "Tùy chọn"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
 msgid "Order"
-msgstr "Lệnh"
+msgstr "Đơn"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -21680,7 +21725,7 @@ msgstr "Tổ chức và lập kế hoạch dự án của bạn"
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Organize your work with memos"
-msgstr "Sắp xếp công việc của bạn với tập dữ liệu nhớ"
+msgstr "Sắp xếp công việc của bạn với bản ghi nhớ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -21825,7 +21870,7 @@ msgstr "Tên xuất ra %r đã được dùng 2 lần."
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
 #: model:ir.model.fields,field_description:base.field_base_language_install__overwrite
 msgid "Overwrite Existing Terms"
-msgstr "Ghi đè lên thuật ngữ đã có"
+msgstr "Ghi đè lên từ đã dịch"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -22068,7 +22113,7 @@ msgstr "Đối tác đang hoạt động"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
-msgstr "Module đối tác cho trang web"
+msgstr "Mô-đun đối tác cho trang web"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
@@ -22524,7 +22569,7 @@ msgstr "Tiền tố"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__prefix
 msgid "Prefix value of the record for the sequence"
-msgstr "Giá trị tiền tố cho tập dữ liệu để làm thứ tự"
+msgstr "Giá trị tiền tố cho bản ghi để làm thứ tự"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
@@ -22929,8 +22974,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"Cung cấp trường được sử dụng để liên kết tập dữ liệu mới được tạo trên tập "
-"dữ liệu được sử dụng bởi hành động máy chủ."
+"Cung cấp trường được sử dụng để liên kết bản ghi mới được tạo trên bản ghi "
+"được sử dụng bởi hành động máy chủ."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
@@ -23230,7 +23275,7 @@ msgstr "Trường Qweb qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr "trường Qweb many2many"
+msgstr "Qweb trường many2many"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -23341,8 +23386,8 @@ msgid ""
 "Record cannot be modified right now: This cron task is currently being "
 "executed and may not be modified Please try again in a few minutes"
 msgstr ""
-"Không thể sửa đổi ban ghi ngay bây giờ: Tác vụ định kỳ này hiện đang được "
-"thực thi và có thể không được sửa đổi. Vui lòng thử lại sau vài phút"
+"Record cannot be modified right now: This cron task is currently being "
+"executed and may not be modified Please try again in a few minutes"
 
 #. module: base
 #. odoo-python
@@ -23354,7 +23399,7 @@ msgstr "Dữ liệu không tồn tại hoặc đã bị xóa."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Record rules"
-msgstr "Quy tắc tập dữ liệu"
+msgstr "Quy tắc bản ghi"
 
 #. module: base
 #. odoo-python
@@ -23409,7 +23454,7 @@ msgstr "Đã tìm thấy đệ quy trong các hành động của máy chủ con
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__reference
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Reference"
-msgstr "Mã phiếu"
+msgstr "Tham chiếu"
 
 #. module: base
 #. odoo-python
@@ -23889,8 +23934,8 @@ msgid ""
 "SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
 "desc\""
 msgstr ""
-"Biểu thức SQL để sắp xếp các tập dữ liệu trong mô hình; ví dụ. \"x_sequence "
-"asc, id desc\""
+"Biểu thức SQL để sắp xếp các bản ghi trong mô hình; ví dụ. \"x_sequence asc,"
+" id desc\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
@@ -24257,7 +24302,7 @@ msgstr "Tìm các dữ liệu bị trùng lặp dựa trên dữ liệu"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Search modules"
-msgstr "Tìm kiếm Module"
+msgstr "Tìm kiếm Mô-đun"
 
 #. module: base
 #. odoo-python
@@ -24455,6 +24500,19 @@ msgstr "Gửi tin nhắn văn bản trong bước dịch chuyển tồn kho cu�
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
 msgstr "Gửi tin nhắn văn bản khi có thay đổi giai đoạn dự án/nhiệm vụ"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Gửi hàng của bạn qua UPS và theo dõi chúng trực tuyến"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -25128,7 +25186,7 @@ msgstr "Sri Lanka"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
 msgid "Standard"
-msgstr "Tiêu chuẩn"
+msgstr "Standard"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -25149,7 +25207,7 @@ msgstr "Bắt đầu cấu hình"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Trạng thái"
+msgstr "Tỉnh/TP"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -25303,7 +25361,7 @@ msgstr "Hậu tố"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__suffix
 msgid "Suffix value of the record for the sequence"
-msgstr "Giá trị hậu tố số thứ tự của tập dữ liệu"
+msgstr "Giá trị hậu tố số thứ tự của bản ghi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
@@ -25400,7 +25458,7 @@ msgstr "Syria"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "System Parameter"
-msgstr "Tham số Hệ thống"
+msgstr "System Parameter"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -25835,6 +25893,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Mã số thuế. Các giá trị ở đây sẽ được xác thực dựa trên định dạng quốc gia. "
+"Bạn có thể sử dụng dấu '/' để chỉ một đối tác không phải chịu thuế."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -26599,7 +26659,7 @@ msgstr "Tài khoản này có thể được sử dụng cho các khoản thanh 
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "This column contains module data and cannot be removed!"
-msgstr "Cột này chứa dữ liệu module và không thể bị xóa!"
+msgstr "Cột này chứa dữ liệu mô-đun và không thể bị xóa!"
 
 #. module: base
 #. odoo-python
@@ -26624,7 +26684,7 @@ msgstr "Trường này giống như trường `arch` không có bản dịch"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
 msgid "This field is used to set/get locales for user"
-msgstr "Trường này được sử dụng để cài / lấy tọa độ cho người dùng"
+msgstr "This field is used to set/get locales for user"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch
@@ -26673,10 +26733,10 @@ msgid ""
 " and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
-"Trường chức năng này tính toán danh sách theo thứ tự của chế độ xem sẽ được "
-"bật khi hiển thị kết quả của một hành động, chế độ xem liên kết, chế độ xem "
-"và chế độ xem tham chiếu. Kết quả được trả về dưới dạng danh sách các cặp "
-"được sắp xếp theo thứ tự (view_id,view_mode)."
+"This function field computes the ordered list of views that should be "
+"enabled when displaying the result of an action, federating view mode, views"
+" and reference view. The result is returned as an ordered list of pairs "
+"(view_id,view_mode)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_din5008
@@ -26690,9 +26750,9 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
-"Đây là tên tệp của tệp đính kèm được sử dụng để lưu trữ kết quả in. Để trống"
-" để không lưu báo cáo đã in. Bạn có thể sử dụng biểu thức python với các "
-"biến đối tượng và thời gian."
+"This is the filename of the attachment used to store the printing result. "
+"Keep empty to not save the printed reports. You can use a python expression "
+"with the object and time variables."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__print_report_name
@@ -26734,7 +26794,7 @@ msgid ""
 "This module adds the OdooBot state and notifications in the user form "
 "modified by hr."
 msgstr ""
-"Module này thêm trạng thái OdooBot và các thông báo trong biểu mẫu người "
+"Mô-đun này thêm trạng thái OdooBot và các thông báo trong biểu mẫu người "
 "dùng được sửa đổi theo giờ."
 
 #. module: base
@@ -26837,7 +26897,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment_payulatam
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "This module is deprecated."
-msgstr "Module này không được dùng nữa."
+msgstr "Mô-đun này không được dùng nữa."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_survey
@@ -26845,7 +26905,7 @@ msgid ""
 "This module lets you use the full power of certifications within your "
 "courses."
 msgstr ""
-"Module này cho phép bạn sử dụng toàn bộ chứng chỉ trong các khóa học của "
+"Mô-đun này cho phép bạn sử dụng toàn bộ chứng chỉ trong các khóa học của "
 "mình."
 
 #. module: base
@@ -26946,7 +27006,7 @@ msgstr "Timor-Leste"
 #: model:ir.model.fields,field_description:base.field_res_partner_title__name
 #: model:ir.model.fields,field_description:base.field_res_users__title
 msgid "Title"
-msgstr "Tiêu đề"
+msgstr "Danh xưng"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
@@ -27052,7 +27112,7 @@ msgstr "Lề trên (mm)"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__count
 msgid "Total number of records in this model"
-msgstr "Tổng số tập dữ liệu trong model này"
+msgstr "Tổng số bản ghi trong model này"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
@@ -27325,6 +27385,16 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - HOẠT ĐỘNG CỦA CÁC TỔ CHỨC, CƠ QUAN BÊN NGOÀI"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "Giao hàng UPS"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -27465,7 +27535,7 @@ msgstr "Xóa cài đặt"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr "Module chưa cài đặt"
+msgstr "Mô-đun chưa cài đặt"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstallable
@@ -27687,7 +27757,7 @@ msgstr "Nâng cấp"
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
 msgid "Upgrade Module"
-msgstr "Nâng cấp module"
+msgstr "Nâng cấp mô-đun"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -28217,7 +28287,7 @@ msgstr "Chế độ Xem"
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_name
 msgid "View Name"
-msgstr "Tên biểu mẫu"
+msgstr "View Name"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
@@ -28233,7 +28303,7 @@ msgstr "Dạng hiển thị"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr "Xem chế độ kế thừa"
+msgstr "View inheritance mode"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
@@ -28363,10 +28433,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
-"Chúng tôi là một công ty tư vấn chiến lược và tư vấn công nghệ, sáng tạo các"
-" giải pháp nâng cao giá trị thông qua việc sử dụng phần mềm tiên tiến cho "
-"khách hàng trên toàn thế giới. Tại Lumber Inc, chúng tôi kết hợp kinh nghiệm"
-" vận hành..."
+"Chúng tôi là công ty tư vấn chiến lược và tư vấn công nghệ, tạo ra các giải "
+"pháp nâng cao giá trị thông qua việc sử dụng phần mềm tiên tiến cho khách "
+"hàng trên toàn thế giới. Tại Lumber Inc, chúng tôi mang đến kinh nghiệm vận "
+"hành kết hợp..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -28471,7 +28541,7 @@ msgstr "Nhóm thư trang web"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
 msgid "Website Module for Mail"
-msgstr "Module trang web cho thư"
+msgstr "Website Module for Mail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_modules
@@ -28506,7 +28576,7 @@ msgstr "Kiểm thử Trang web"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_website
 msgid "Website Test, mainly for module install/uninstall tests"
-msgstr "Kiểm tra trang web, chủ yếu để kiểm tra cài đặt /gỡ cài đặt module"
+msgstr "Kiểm tra trang web, chủ yếu để kiểm tra cài đặt /gỡ cài đặt mô-đun"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
@@ -28586,7 +28656,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
 msgid "Whether the value is copied when duplicating a record."
-msgstr "Giá trị của trường có được sao chép khi nhân bản tập dữ liệu không."
+msgstr "Giá trị của trường có được sao chép khi nhân bản bản ghi không."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__store
@@ -28616,11 +28686,11 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
-"Trong khi gán số thứ tự cho một tập dữ liệu, việc triển khai trình tự 'không"
-" khoảng trống' đảm bảo rằng mỗi số thứ tự trước đó đã được gán sẵn. Mặc dù "
-"việc triển khai trình tự này sẽ không bỏ qua bất kỳ số thứ tự nào khi gán, "
-"nhưng vẫn có thể có khoảng trống trong trình tự nếu các tập dữ liệu bị xóa. "
-"Việc triển khai 'no gap' chậm hơn so với tiêu chuẩn."
+"While assigning a sequence number to a record, the 'no gap' sequence "
+"implementation ensures that each previous sequence number has been assigned "
+"already. While this sequence implementation will not skip any sequence "
+"number upon assignment, there can still be gaps in the sequence if records "
+"are deleted. The 'no gap' implementation is slower than the standard one."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -28682,7 +28752,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr "Quản lý các mục công việc"
+msgstr "Hạng mục công việc"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
@@ -28791,7 +28861,7 @@ msgstr ""
 #, python-format
 msgid "You are trying to install incompatible modules in category \"%s\":"
 msgstr ""
-"Bạn đang cố gắng cài đặt các module không tương thích trong danh mục \"%s\":"
+"Bạn đang cố gắng cài đặt các mô-đun không tương thích trong danh mục \"%s\":"
 
 #. module: base
 #. odoo-python
@@ -29688,7 +29758,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install
 msgid "test installation of data module"
-msgstr "thử nghiệm cài đặt module dữ liệu"
+msgstr "thử nghiệm cài đặt mô-đun dữ liệu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -29698,7 +29768,7 @@ msgstr "kiểm thử mimetypes-guessing"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module
 msgid "test module to test data only modules"
-msgstr "kiểm tra module để kiểm tra dữ liệu chỉ module"
+msgstr "kiểm tra mô-đun để kiểm tra dữ liệu chỉ mô-đun"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights

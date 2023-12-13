@@ -316,6 +316,7 @@ class ProductProduct(models.Model):
     def unlink(self):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
+        self.packaging_ids.unlink()
         for product in self:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
@@ -698,6 +699,9 @@ class ProductProduct(models.Model):
                                                           and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
         (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
         return result
+
+    def get_contextual_price(self):
+        return self._get_contextual_price()
 
     def _get_contextual_price(self):
         self.ensure_one()

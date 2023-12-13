@@ -326,14 +326,14 @@ class PosConfig(models.Model):
     @api.constrains('limited_partners_amount', 'limited_partners_loading')
     def _check_limited_partners(self):
         for rec in self:
-            if rec.limited_partners_loading and not self.limited_partners_amount:
+            if rec.limited_partners_loading and not rec.limited_partners_amount:
                 raise ValidationError(
                     _("Number of partners loaded can not be 0"))
 
     @api.constrains('limited_products_amount', 'limited_products_loading')
     def _check_limited_products(self):
         for rec in self:
-            if rec.limited_products_loading and not self.limited_products_amount:
+            if rec.limited_products_loading and not rec.limited_products_amount:
                 raise ValidationError(
                     _("Number of product loaded can not be 0"))
 
@@ -579,8 +579,16 @@ class PosConfig(models.Model):
         for pos_config in self:
             if pos_config.payment_method_ids or pos_config.has_active_session:
                 continue
-            cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-            bank_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'cash'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
+            ], limit=1)
+            bank_journal = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'bank'),
+                ('currency_id', 'in', [pos_config.currency_id.id, False]),
+            ], limit=1)
             payment_methods = self.env['pos.payment.method']
             if cash_journal:
                 payment_methods |= payment_methods.create({
@@ -609,7 +617,7 @@ class PosConfig(models.Model):
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
                     'type': 'general',
-                    'name': 'Point of Sale',
+                    'name': _('Point of Sale'),
                     'code': 'POSS',
                     'company_id': company.id,
                     'sequence': 20

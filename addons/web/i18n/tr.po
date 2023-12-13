@@ -27,9 +27,9 @@
 # ismail eski <ismaileski@gmail.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
 # Melih Melik Sonmez, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Melih Melik Sonmez, 2023\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1210,7 +1210,6 @@ msgstr "Ara"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1629,7 +1628,6 @@ msgstr "Ülke"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1665,6 +1663,13 @@ msgstr "Oluştur \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Oluştur %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2832,6 +2837,13 @@ msgid "Invalid fields: "
 msgstr "Geçersiz alanlar: "
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -3805,6 +3817,13 @@ msgstr "Sadece sen"
 #, python-format
 msgid "Open View"
 msgstr "Görünüm Aç"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5306,7 +5325,7 @@ msgstr "Dosyanızı yüklerken bir problem oluştu."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "This database is neutralized."
-msgstr "Bu veri tabanı etkisiz hale getirilmiştir."
+msgstr "Bu veritabanı test amaçlı oluşturulmuştur."
 
 #. module: web
 #. odoo-javascript
@@ -6213,7 +6232,6 @@ msgstr "bu güncelleme için geçerlidir."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "yeni olarak"
@@ -6603,6 +6621,13 @@ msgstr "mili saniye"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6765,13 +6790,6 @@ msgstr "ayarla"
 #, python-format
 msgid "set (true)"
 msgstr "ayarla (doğru)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript

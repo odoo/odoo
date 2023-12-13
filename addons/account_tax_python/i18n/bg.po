@@ -6,6 +6,7 @@
 # Nikola Iliev, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Turhan Aydin <taydin@unionproject.eu>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023\n"
+"Last-Translator: Turhan Aydin <taydin@unionproject.eu>, 2023\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Група на данъците: Данъкът е съвкупност от подданъци.\n"
+"- Фиксиран: Сумата на данъка остава постоянна, независимо от цената.\n"
+"- Процент от цената: Сумата на данъка е % от цената:\n"
+"например 100 * (1 + 10%) = 110 (не включва цената)\n"
+"например 110 / (1 + 10%) = 100 (включва цената)\n"
+"- Процент от цената с включен данък: Сумата на данъка е деление на цената:\n"
+"например 180 / (1 - 10%) = 200 (не включва цената)\n"
+"например 200 * (1 - 10%) = 180 (включва цената)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -141,3 +151,13 @@ msgstr "Данъчна изчислителна система"
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Шаблон за данъци"
+
+#. module: account_tax_python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""

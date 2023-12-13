@@ -18,7 +18,7 @@ export class YearPicker extends DatePicker {
     /**
      * @override
      */
-    bootstrapDateTimePicker(commandOrParams) {
+    bootstrapDateTimePicker(commandOrParams, ...commandArgs) {
         if (typeof commandOrParams === "object") {
             const widgetParent = window.$(this.rootRef.el);
             commandOrParams = { ...commandOrParams, widgetParent };

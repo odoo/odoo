@@ -7,10 +7,10 @@
 # sharkutz <sharkutz4life@yahoo.com>, 2022
 # Claudia Baisan, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
 # Hongu Cosmin <cosmin513@gmail.com>, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2023
 # Martin Trigaux, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11299,6 +11299,16 @@ msgstr "Mesaj de eroare returnat atunci când constrângerea este încălcată."
 
 #. module: base
 #. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -14071,7 +14081,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametrul  'group by' e invalid"
 
 #. module: base
-#. odoo-python
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -14225,6 +14246,15 @@ msgstr "Tip invalid"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Valoare invalidă pentru %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -21333,6 +21363,19 @@ msgid "Send text messages when project/task stage move"
 msgstr "Trimiteți mesaje text la mutarea etapei proiectului/sarcinii"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Trimiteți expedierile prin UPS și urmăriți-le online"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Trimiteți-vă sondajele sau partajați-le în direct."
@@ -22027,7 +22070,6 @@ msgstr "Începe configurare"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -22070,6 +22112,7 @@ msgstr "Județe"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "Stare"
@@ -24163,6 +24206,16 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -24232,6 +24285,13 @@ msgstr ""
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
 "Nu a putut fi găsit Wkhtmltopdf în acest sistem. PDF-ul nu poate fi creat."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -25626,6 +25686,15 @@ msgid "You can not create recursive tags."
 msgstr "Nu puteți crea etichete recursive."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "Nu pot exista doi utilizatori cu acelasi nume de autentificare !"
@@ -25791,6 +25860,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -25820,6 +25896,13 @@ msgid ""
 msgstr ""
 "Nu puteți reduce numărul de zecimale ale unei monede deja utilizate într-o "
 "înregistrare contabilă."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

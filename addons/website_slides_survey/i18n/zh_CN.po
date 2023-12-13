@@ -8,6 +8,7 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +58,20 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的<t t-out=\"object.partner_id.name or 'participant' or ''\">参加者</t><br><br>\n"
+"        很遗憾，您未能通过认证，不再是课程成员： <t t-out=\"object.slide_partner_id.channel_id.name or ''\">园艺基础</t>。<br><br>\n"
+"        不要犹豫，再次报名！\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                立即报名\n"
+"            </a>\n"
+"        </div>\n"
+"        感谢您的参与。\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -564,7 +579,7 @@ msgstr "测试认证"
 #: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
 #: model_terms:survey.survey,description:website_slides_survey.furniture_certification
 msgid "Test your furniture knowledge!"
-msgstr ""
+msgstr "测试您的家具知识！"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview

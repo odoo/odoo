@@ -12,8 +12,8 @@
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # aleksandar ivanov, 2023
-# Martin Trigaux, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -476,11 +476,6 @@ msgid "Contract Expiration Date"
 msgstr "Дата на изтичане на договор"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract Information"
-msgstr ""
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Contract Start Date"
 msgstr "Начална дата на договор"
@@ -513,6 +508,7 @@ msgstr "Договори"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__amount
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost"
 msgstr "Цена"
 
@@ -653,6 +649,11 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
@@ -671,11 +672,6 @@ msgid ""
 msgstr ""
 "Дата, на която изтича обхвата на договора (стандартно една година след "
 "началната дата)"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
@@ -827,6 +823,7 @@ msgid "Employee Car"
 msgstr "Автомобил на служител"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_log_services.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -866,7 +863,7 @@ msgid "Entry into service tax"
 msgstr "Запис в данък върху услугите"
 
 #. module: fleet
-#. openerp-web
+#. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 #, python-format
 msgid ""
@@ -942,7 +939,6 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
-#: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
 msgstr ""
 
@@ -1132,11 +1128,8 @@ msgstr "Ако е отметнато, новите съобщения ще из�
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ако е отметнато, някои съобщения имат грешка при доставката."
 
@@ -1144,11 +1137,6 @@ msgstr "Ако е отметнато, някои съобщения имат г�
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
 msgstr "Подмяна на запалителна бобина"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
@@ -1159,7 +1147,6 @@ msgstr "В процес"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__service_ids
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Included Services"
 msgstr "Включени услуги"
 
@@ -1170,6 +1157,7 @@ msgid "Incoming"
 msgstr "Входящ"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Information"
 msgstr "Информация"
@@ -1178,11 +1166,6 @@ msgstr "Информация"
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
 msgstr "Подмяна уплътнението на всмукателния колектор"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Invoice Date"
-msgstr "Дата на фактура"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
@@ -1467,13 +1450,6 @@ msgid "New Request"
 msgstr "Нова заявка"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr ""
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
@@ -1505,6 +1481,7 @@ msgid "No"
 msgstr "Не"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No Plate"
@@ -1516,6 +1493,7 @@ msgid "No data for analysis"
 msgstr ""
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No plate"
@@ -1766,6 +1744,11 @@ msgid "Registered"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "Дата на регистрация"
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Rent (Excluding VAT)"
 msgstr "Наемане (без ДДС)"
@@ -1846,13 +1829,6 @@ msgstr "Подмяна на ротор"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
 msgstr "Работещ"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS грешка при доставка"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1947,6 +1923,7 @@ msgid "Spark Plug Replacement"
 msgstr "Подмяна на запалителни свещи"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Specify the End date of %s"
@@ -2023,8 +2000,8 @@ msgstr "Име на маркер"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Маркер с това име вече съществува!"
+msgid "Tag name already exists!"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -2205,6 +2182,7 @@ msgstr "Единица"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
 #: model:ir.ui.menu,name:fleet.fleet_vehicles_configuration
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2229,7 +2207,6 @@ msgid "Vehicle Description"
 msgstr ""
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vehicle Information"
 msgstr ""
@@ -2263,6 +2240,7 @@ msgid "Vehicle Type"
 msgstr ""
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -2332,20 +2310,6 @@ msgid "Wave"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website Messages"
-msgstr "Съобщения в уебсайт"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website communication history"
-msgstr "История на комуникацията на уебсайт"
-
-#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
 msgstr "Седмично"
@@ -2374,11 +2338,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
 msgstr "Впишете тук цялата информация, свързана с този договор"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
-msgid "Write here all supplementary information relative to this contract"
-msgstr "Впишете тук цялата допълнителна информация, свързана с този договор"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form

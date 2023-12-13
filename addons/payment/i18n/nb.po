@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Mads Søndergaard, 2022
+# Martin Trigaux, 2022
 # Jorunn D. Newth, 2022
 # Marius Stedjan <marius@stedjan.com>, 2022
 # Henning Fyllingsnes, 2022
-# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Henning Fyllingsnes, 2022\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -309,11 +309,6 @@ msgid "Bank"
 msgstr "Bank"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Bankkonto"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Banknavn"
@@ -432,11 +427,6 @@ msgstr "Kode"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Farge"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Kommunikasjon"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -749,14 +739,10 @@ msgid "Full Only"
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Generer link til betaling"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Generer betalingslink"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1330,16 +1316,6 @@ msgstr ""
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Sett et beløp mindre enn %s."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Vennligst bruk følgende overføringsdetaljer"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "Vær vennlig å bruke ordrenavn som kommunikasjonsreferanse."
 
 #. module: payment
 #. odoo-javascript
@@ -2019,6 +1995,15 @@ msgstr "Bankoverføring"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
 msgid "You cannot publish a disabled provider."
 msgstr ""
 
@@ -2125,6 +2110,7 @@ msgstr "Din betaling er mottatt, men må bekreftes manuelt."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

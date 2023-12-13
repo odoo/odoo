@@ -8,6 +8,7 @@
 # Jordan D. (Joda), 2023
 # Rémi CAZENAVE, 2023
 # Martin Trigaux, 2023
+# Ali Hassan Youssef, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -506,7 +507,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'devis' if object.state in ('draft', 'sent') else 'commande'\"></t>\n"
 "        Bonjour,\n"
 "        <br><br>\n"
 "        Votre\n"
@@ -584,7 +585,7 @@ msgstr "<i class=\"fa fa-comment\"/> Contactez-nous pour un nouveau devis."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "<i class=\"fa fa-comment\"/> Feedback"
+msgstr "<i class=\"fa fa-comment\"/> Commentaires"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -790,7 +791,7 @@ msgstr "<span>Signature</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr "<span>Taxes</span>"
+msgstr "<span>TVA</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4809,7 +4810,7 @@ msgstr "Avertissement pour %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr "Avertissement sur les bons de commande"
+msgstr "Avertissement sur les commandes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button

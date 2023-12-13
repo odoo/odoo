@@ -3640,17 +3640,17 @@ msgstr "កម្មសិទ្ធគ្មានសុពលភាពសល់
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "កម្មសិទ្ធគ្មានសុពលភាពប្រតិបត្តិការ%s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "ប្រតិបត្តិការដែនមិនត្រឹមត្រូវ%s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -7189,6 +7189,13 @@ msgid "Sequence return"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr ""
@@ -9566,7 +9573,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
 
 #. module: stock

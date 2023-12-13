@@ -270,6 +270,14 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.is_quantity_done_editable = False
+            elif not move.picking_id.immediate_transfer and move.picking_id.state == 'draft':
+                move.is_quantity_done_editable = False
+            elif move.picking_id.is_locked and move.state in ('done', 'cancel'):
+                move.is_quantity_done_editable = False
+            elif move.show_details_visible:
+                move.is_quantity_done_editable = False
+            elif move.show_operations:
+                move.is_quantity_done_editable = False
             else:
                 move.is_quantity_done_editable = True
 
@@ -367,6 +375,9 @@ class StockMove(models.Model):
                     continue
                 ml.qty_done -= qty_ml_dec
                 quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
+                if not ml.exists():
+                    # If decreasing the move line qty_done to 0 let it to be unlinked (i.e. for immediate transfers)
+                    continue
                 # Unreserve
                 if (not move.picking_id.immediate_transfer and move.reserved_availability < move.product_uom_qty):
                     continue
@@ -856,6 +867,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
+        if moves_to_unreserve and self.env.context.get('unreserve_parent'):
+            self.env['stock.move'].browse(moves_to_unreserve._rollup_move_origs())._do_unreserve()
         return True
 
     def _generate_serial_numbers(self, next_serial_count=False):
@@ -963,7 +976,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             for __, g in groupby(candidate_moves, key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g)
                 # Merge all positive moves together
-                if len(moves) > 1:
+                if len(moves) > 1 and any(m in self for m in moves):
                     # link all move lines to record 0 (the one we will keep).
                     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
                     # merge move data
@@ -971,8 +984,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # update merged moves dicts
                     moves_to_unlink |= moves[1:]
                     merged_moves |= moves[0]
-                # Add the now single positive move to its limited key record
-                moves_by_neg_key[neg_key(moves[0])] |= moves[0]
+                    moves = moves[0]
+                for m in moves:
+                    moves_by_neg_key[neg_key(m)] |= m
 
         for neg_move in neg_qty_moves:
             # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
@@ -1006,7 +1020,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves_to_unlink.sudo().unlink()
 
         if moves_to_cancel:
-            moves_to_cancel._action_cancel()
+            moves_to_cancel.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))._action_cancel()
 
         return (self | merged_moves) - moves_to_unlink
 
@@ -1761,7 +1775,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 precision_rounding=rounding,
                 rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
-            extra_move = self.copy(default=extra_move_vals).with_context(avoid_putaway_rules=True)
+            self = self.with_context(avoid_putaway_rules=True, extra_move_mode=True)
+            extra_move = self.copy(default=extra_move_vals)
 
             merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
 
@@ -2125,6 +2140,15 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
+
+    def _rollup_move_origs(self, seen=False):
+        if not seen:
+            seen = OrderedSet()
+        for dst in self.move_orig_ids:
+            if dst.id not in seen and dst.state not in ('done', 'cancel'):
+                seen.add(dst.id)
+                dst._rollup_move_origs(seen)
+        return seen
 
     def _rollup_move_dests(self, seen):
         for dst in self.move_dest_ids:

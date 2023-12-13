@@ -3,7 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _lt } from "@web/core/l10n/translation";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -97,6 +97,7 @@ export class CommandPalette extends Component {
         }
 
         this.keyId = 1;
+        this.race = new Race();
         this.keepLast = new KeepLast();
         this._sessionId = CommandPalette.lastSessionId++;
         this.DefaultCommandItem = DefaultCommandItem;
@@ -170,7 +171,7 @@ export class CommandPalette extends Component {
 
         const { namespace, searchValue } = this.processSearchValue(config.searchValue || "");
         this.switchNamespace(namespace);
-        await this.search(searchValue);
+        await this.race.add(this.search(searchValue));
     }
 
     /**

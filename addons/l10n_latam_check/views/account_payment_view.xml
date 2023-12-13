@@ -1,9 +1,32 @@
 <odoo>
 
+    <!-- Own checks search view -->
     <record model="ir.ui.view" id="view_account_payment_search">
         <field name="name">account.check.search</field>
         <field name="model">account.payment</field>
         <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Third party checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">22</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
@@ -21,8 +44,11 @@
             </filter>
             <filter name="journal" position="after">
                 <filter name="groupby_third_party_check_current_journal"
-                    string="Third party check Current Journal"
+                    string="Current Journal"
                     context="{'group_by': 'l10n_latam_check_current_journal_id'}"/>
+            </filter>
+            <filter name="unmatched" position="attributes">
+                <attribute name="invisible">1</attribute>
             </filter>
             <filter name="groupby_date" position="after">
                 <filter string="Check Cash-In Date"
@@ -56,6 +82,7 @@
                         [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if is_internal_transfer else
                         [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]"
+                    context="{'search_view_ref': 'l10n_latam_check.view_account_payment_third_party_checks_search'}"
                     options="{'no_create': True}"
                 />
             </field>
@@ -198,7 +225,7 @@
         <field name="res_model">account.payment</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_third_party_check_tree"/>
-        <field name="search_view_id" ref="view_account_payment_search"/>
+        <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_party_checks')]</field>
         <field name="context">{'search_default_checks_on_hand': 1}</field>
     </record>

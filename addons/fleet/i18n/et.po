@@ -6,7 +6,6 @@
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Aveli Kannel <aveli@avalah.ee>, 2022
 # Marek Pontus, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
@@ -17,9 +16,10 @@
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Leaanika Randmets, 2022
 # JanaAvalah, 2023
 # Anna, 2023
+# Algo Kärp <algokarp@gmail.com>, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -482,11 +482,6 @@ msgid "Contract Expiration Date"
 msgstr "Lepingu aegumiskuupäev"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract Information"
-msgstr "Lepingu informatsioon"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Contract Start Date"
 msgstr "Lepingu alguskuupäev"
@@ -519,6 +514,7 @@ msgstr "Lepingud"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__amount
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost"
 msgstr "Kulu"
 
@@ -659,6 +655,11 @@ msgid "Date"
 msgstr "Kuupäev"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
@@ -674,11 +675,6 @@ msgstr ""
 msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
 msgstr ""
 
 #. module: fleet
@@ -829,6 +825,7 @@ msgid "Employee Car"
 msgstr "Töötaja auto"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_log_services.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -866,7 +863,7 @@ msgid "Entry into service tax"
 msgstr ""
 
 #. module: fleet
-#. openerp-web
+#. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 #, python-format
 msgid ""
@@ -942,7 +939,6 @@ msgstr "Sõiduvahendi teenuse tüüp"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
-#: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
 msgstr ""
 
@@ -1132,11 +1128,8 @@ msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
 
@@ -1144,11 +1137,6 @@ msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr "Immatrikulatsiooni kuupäev"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
@@ -1159,7 +1147,6 @@ msgstr "Töös"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__service_ids
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Included Services"
 msgstr "sisalduvad teenused"
 
@@ -1170,6 +1157,7 @@ msgid "Incoming"
 msgstr "Sisenev"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Information"
 msgstr "Informatsioon"
@@ -1178,11 +1166,6 @@ msgstr "Informatsioon"
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
 msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Invoice Date"
-msgstr "Arve kuupäev"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
@@ -1465,13 +1448,6 @@ msgid "New Request"
 msgstr "Uued taotlused"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Järgmine tegevus kalendris"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
@@ -1503,6 +1479,7 @@ msgid "No"
 msgstr "Ei"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No Plate"
@@ -1514,6 +1491,7 @@ msgid "No data for analysis"
 msgstr "Andmed analüüsiks puuduvad"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No plate"
@@ -1763,6 +1741,11 @@ msgid "Registered"
 msgstr "Registreeritud"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "Registreerimise kuupäev"
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Rent (Excluding VAT)"
 msgstr "Tent (koos KM-iga)"
@@ -1843,13 +1826,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
 msgstr "Töös"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Sõnumi kohaletoimetamise veateade"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1943,6 +1919,7 @@ msgid "Spark Plug Replacement"
 msgstr ""
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Specify the End date of %s"
@@ -2019,8 +1996,8 @@ msgstr "Sildi nimi"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Sildi nimi on juba olemas!"
+msgid "Tag name already exists!"
+msgstr "Sildi nimi on juba loodud!"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -2199,6 +2176,7 @@ msgstr "Ühik"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
 #: model:ir.ui.menu,name:fleet.fleet_vehicles_configuration
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2223,7 +2201,6 @@ msgid "Vehicle Description"
 msgstr "Sõiduki kirjeldus"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vehicle Information"
 msgstr "Sõiduki informatsioon"
@@ -2257,6 +2234,7 @@ msgid "Vehicle Type"
 msgstr "Sõiduki tüüp"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -2326,20 +2304,6 @@ msgid "Wave"
 msgstr "Laine"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website Messages"
-msgstr "Veebilehe sõnumid"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website communication history"
-msgstr "Veebilehe suhtluse ajalugu"
-
-#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
 msgstr "Iganädalane"
@@ -2367,11 +2331,6 @@ msgstr "koos mudelitega"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
-msgid "Write here all supplementary information relative to this contract"
 msgstr ""
 
 #. module: fleet

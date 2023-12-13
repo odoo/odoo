@@ -155,7 +155,15 @@ export function makeMockFetch(mockRPC) {
             status = 500;
         }
         const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });
-        return new Response(blob, { status });
+        const response = new Response(blob, { status });
+        // Mock some functions of the Response API to make them almost synchronous (micro-tick level)
+        // as their native implementation is async (tick level), which can lead to undeterministic
+        // errors as it breaks the hypothesis that calling nextTick after fetching data is enough
+        // to see the result rendered in the DOM.
+        response.json = () => Promise.resolve(JSON.parse(JSON.stringify(res || {})));
+        response.text = () => Promise.resolve(String(res || {}));
+        response.blob = () => Promise.resolve(blob);
+        return response;
     };
 }
 

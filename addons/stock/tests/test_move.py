@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import TransactionCase
 
 
@@ -12,8 +12,20 @@ class StockMove(TransactionCase):
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
-        cls.env.user.write({'groups_id': [(4, group_stock_multi_locations.id, 0)]})
+        group_production_lot = cls.env.ref('stock.group_production_lot')
+        cls.env.user.write({'groups_id': [
+            (4, group_stock_multi_locations.id),
+            (4, group_production_lot.id)
+        ]})
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        if not cls.stock_location.child_ids:
+            cls.stock_location.create([{
+                'name': 'Shelf 1',
+                'location_id': cls.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': cls.stock_location.id,
+            }])
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
@@ -2010,6 +2022,21 @@ class StockMove(TransactionCase):
         move_partial.product_uom_qty = 3.0
         move_partial._action_assign()
         self.assertEqual(move_partial.state, 'assigned')
+
+    def test_product_tree_views(self):
+        """Test to make sure that there are no ACLs errors in users with basic permissions."""
+        self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 3.0)
+        user = new_test_user(self.env, login="test-basic-user")
+        product_view = Form(
+            self.env["product.product"].with_user(user).browse(self.product.id),
+            view="product.product_product_tree_view",
+        )
+        self.assertEqual(product_view.name, self.product.name)
+        template_view = Form(
+            self.env["product.template"].with_user(user).browse(self.product.product_tmpl_id.id),
+            view="product.product_template_tree_view",
+        )
+        self.assertEqual(template_view.name, self.product.product_tmpl_id.name)
 
     def test_availability_9(self):
         """ Test the assignment mechanism when the product quantity is increase
@@ -4167,7 +4194,7 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location, lot_id=lot1, package_id=package1), 1.0)
 
-        move1.move_line_ids.write({'lot_id': lot2.id})
+        move1.move_line_ids.write({'lot_id': lot2})
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_lot, self.stock_location, lot_id=lot1), 0.0)
@@ -6087,3 +6114,43 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(len(receipt.move_line_ids), 1)
         self.assertEqual(receipt.move_line_ids.qty_done, 1)
+
+    def test_skip_putaway_if_dest_loc_set_by_user(self):
+        """
+        Suppose the putaway rules and storage categories enabled. On the
+        detailed operations, the user adds a new line, set a specific
+        destination location and then the done quantity. In such cases, since
+        the user has defined himself the destination location, we should not try
+        to apply any putaway rule that would override his choice.
+        """
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+
+        child_location = self.stock_location.child_ids[0]
+        in_type = self.env.ref('stock.picking_type_in')
+
+        in_type.show_operations = True
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': in_type.id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        receipt.action_confirm()
+
+        with Form(receipt) as receipt_form:
+            with receipt_form.move_line_nosuggest_ids.new() as line:
+                line.product_id = self.product
+                line.location_dest_id = child_location
+                line.qty_done = 2
+
+        self.assertRecordValues(receipt.move_ids.move_line_ids[-1], [
+            {'location_dest_id': child_location.id, 'product_id': self.product.id, 'qty_done': 2},
+        ])

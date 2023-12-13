@@ -123,6 +123,18 @@ class AccountInvoiceSend(models.TransientModel):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
                 self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
+            for invoice in self.invoice_ids:
+                prioritary_attachments = False
+                if self.composition_mode == 'comment':
+                    # With a single invoice we take the attachment directly from the composer
+                    prioritary_attachments = self.attachment_ids.filtered(lambda x: x.mimetype.endswith('pdf')).sorted('id')
+                elif self.composition_mode == 'mass_mail':
+                    # In mass mail mode we need to look for attachment in the invoice record
+                    prioritary_attachments = invoice.attachment_ids.filtered(lambda x: x.mimetype.endswith('pdf'))
+                if prioritary_attachments:
+                    main_attachment = prioritary_attachments[0]
+                    invoice.with_context(tracking_disable=True).sudo().write({'message_main_attachment_id': main_attachment.id})
+
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""

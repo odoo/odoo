@@ -319,6 +319,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return sel.rangeCount && [...this.getEditableArea()].some(el => el.contains(sel.anchorNode));
     },
 
+    /**
+     * The goal here is to disable parents editors for `s_popup` snippets
+     * since they should not display their parents options.
+     * TODO: Update in master to set the `o_no_parent_editor` class in the
+     * snippet's XML.
+     *
+     * @override
+     */
+    _allowParentsEditors($snippet) {
+        return this._super(...arguments) && !$snippet[0].classList.contains("s_popup");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

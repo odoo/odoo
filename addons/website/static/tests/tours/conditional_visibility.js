@@ -59,6 +59,11 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
     run: 'click',
 },
 {
+    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items .o_we_m2o_search input',
+    content: 'Search for Email',
+    run: 'text Email',
+},
+{
     trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items [data-add-record="Email"]',
     content: 'click on Email',
     run: 'click',

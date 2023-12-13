@@ -21,6 +21,7 @@ export class OdooLineChart extends OdooChart {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
+        this.cumulative = definition.cumulative;
     }
 
     getDefinition() {
@@ -28,6 +29,7 @@ export class OdooLineChart extends OdooChart {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
             stacked: this.stacked,
+            cumulative: this.cumulative,
         };
     }
 }
@@ -48,13 +50,21 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const chartJsConfig = getLineConfiguration(chart, labels);
     const colors = new ChartColors();
-    for (const [index, { label, data }] of datasets.entries()) {
+    for (let [index, { label, data }] of datasets.entries()) {
         const color = colors.next();
         const backgroundRGBA = colorToRGBA(color);
         if (chart.stacked) {
             // use the transparency of Odoo to keep consistency
             backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
         }
+        if (chart.cumulative) {
+            let accumulator = 0;
+            data = data.map((value) => {
+                accumulator += value;
+                return accumulator;
+            });
+        }
+
         const backgroundColor = rgbaToHex(backgroundRGBA);
         const dataset = {
             label,

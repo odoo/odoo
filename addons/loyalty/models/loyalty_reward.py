@@ -166,9 +166,9 @@ class LoyaltyReward(models.Model):
                 if len(products) == 0:
                     reward_string = _('Free Product')
                 elif len(products) == 1:
-                    reward_string = _('Free Product - %s', reward.reward_product_id.name)
+                    reward_string = _('Free Product - %s', reward.reward_product_id.with_context(display_default_code=False).display_name)
                 else:
-                    reward_string = _('Free Product - [%s]', ', '.join(products.mapped('name')))
+                    reward_string = _('Free Product - [%s]', ', '.join(products.with_context(display_default_code=False).mapped('display_name')))
             elif reward.reward_type == 'discount':
                 format_string = '%(amount)g %(symbol)s'
                 if reward.currency_id.position == 'before':
@@ -187,7 +187,7 @@ class LoyaltyReward(models.Model):
                 elif reward.discount_applicability == 'specific':
                     product_available = self.env['product.product'].search(reward._get_discount_product_domain(), limit=2)
                     if len(product_available) == 1:
-                        reward_string += product_available.name
+                        reward_string += product_available.with_context(display_default_code=False).display_name
                     else:
                         reward_string += _('specific products')
                 if reward.discount_max_amount:

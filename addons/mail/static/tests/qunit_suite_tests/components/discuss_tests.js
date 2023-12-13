@@ -9,7 +9,8 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { destroy } from '@web/../tests/helpers/utils';
+import { destroy, patchWithCleanup } from '@web/../tests/helpers/utils';
+import { contains, focus, scroll } from "@web/../tests/utils";
 
 import { makeTestPromise, file } from 'web.test_utils';
 
@@ -1631,134 +1632,69 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     );
 });
 
-QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
+QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
     // this test requires several messages so that the last message is not
     // visible. This is necessary in order to display 'new messages' and not
     // remove from DOM right away from seeing last message.
     // AKU TODO: thread specific test
-    assert.expect(6);
-
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Foreigner partner" });
-    const resUsersId1 = pyEnv['res.users'].create({
+    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+    const userId = pyEnv["res.users"].create({
         name: "Foreigner user",
-        partner_id: resPartnerId1,
+        partner_id: partnerId,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({ uuid: 'randomuuid' });
+    const channelId = pyEnv["mail.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: partnerId }],
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+        ],
+        uuid: 'randomuuid',
+    });
     let lastMessageId;
     for (let i = 1; i <= 25; i++) {
-        lastMessageId = pyEnv['mail.message'].create({
+        lastMessageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: 'mail.channel',
-            res_id: mailChannelId1,
+            model: "mail.channel",
+            res_id: channelId,
         });
     }
-    const [mailChannelMemberId] = pyEnv['mail.channel.member'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.member'].write([mailChannelMemberId], { seen_message_id: lastMessageId });
-    const { afterEvent, messaging, openDiscuss } = await start({
+    const [memberId] = pyEnv["mail.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["mail.channel.member"].write([memberId], { seen_message_id: lastMessageId });
+    const { messaging, openDiscuss } = await start({
         discuss: {
             params: {
-                default_active_id: `mail.channel_${mailChannelId1}`,
+                default_active_id: `mail.channel_${channelId}`,
             },
         },
     });
-    await afterEvent({
-        eventName: 'o-component-message-list-scrolled',
-        func: openDiscuss,
-        message: "should wait until channel scrolled to its last message initially",
-        predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-            return (
-                thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId1 &&
-                isScrolledToBottom(messageList)
-            );
-        },
-    });
-    assert.containsN(
-        document.body,
-        '.o_MessageList_message',
-        25,
-        "should have 25 messages"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "should not display 'new messages' separator"
-    );
-    // scroll to top
-    await afterEvent({
-        eventName: 'o-component-message-list-scrolled',
-        func: () => {
-            document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
-        },
-        message: "should wait until channel scrolled to top",
-        predicate: ({ scrollTop, thread }) => {
-            return (
-                thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId1 &&
-                scrollTop === 0
-            );
-        },
-    });
+    await openDiscuss();
+    await contains(".o_Message", { count: 25 });
+    await contains(".o_MessageList_separatorNewMessages hr + span", { count: 0, text: "New messages" });
+    await contains(".o_Discuss_content .o_MessageList", { scroll: "bottom" });
+    await scroll(".o_Discuss_content .o_MessageList", 0);
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
-    await afterNextRender(async () => messaging.rpc({
+    messaging.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
-                mockedUserId: resUsersId1,
+                mockedUserId: userId,
             },
             message_content: "hu",
             uuid: 'randomuuid',
         },
-    }));
-
-    assert.containsN(
-        document.body,
-        '.o_MessageList_message',
-        26,
-        "should have 26 messages"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "should display 'new messages' separator"
-    );
-    await afterEvent({
-        eventName: 'o-component-message-list-scrolled',
-        func: () => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-            messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
-        },
-        message: "should wait until channel scrolled to bottom",
-        predicate: ({ scrollTop, thread }) => {
-            const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-            return (
-                thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId1 &&
-                isScrolledToBottom(messageList)
-            );
-        },
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "should still display 'new messages' separator as composer is not focused"
-    );
-
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerTextInput_textarea').focus()
-    );
-    assert.containsNone(
-        document.body,
-        '.o_MessageList_separatorNewMessages',
-        "should no longer display 'new messages' separator (message seen)"
-    );
+    })
+    await contains(".o_Message", { count: 26 });
+    await contains(".o_MessageList_separatorNewMessages hr + span", { text: "New messages" });
+    await scroll(".o_Discuss_content .o_MessageList", "bottom");
+    await contains(".o_MessageList_separatorNewMessages hr + span", { text: "New messages" });
+    await focus(".o_ComposerTextInput_textarea");
+    await contains(".o_MessageList_separatorNewMessages hr + span", { count: 0, text: "New messages" });
 });
 
 QUnit.test('restore thread scroll position', async function (assert) {
@@ -3351,7 +3287,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
 });
 
 QUnit.test('receive new chat message: out of odoo focus (notification, channel)', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: 'chat' });
@@ -3361,10 +3297,11 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
-        assert.step('set_title_part');
-        assert.strictEqual(payload.part, '_chat');
-        assert.strictEqual(payload.title, "1 Message");
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            assert.step('set_title_part');
+            assert.strictEqual(parts._chat, '1 Message');
+        },
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -3383,7 +3320,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 });
 
 QUnit.test('receive new chat message: out of odoo focus (notification, chat)', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ channel_type: "chat" });
@@ -3393,10 +3330,11 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
-        assert.step('set_title_part');
-        assert.strictEqual(payload.part, '_chat');
-        assert.strictEqual(payload.title, "1 Message");
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            assert.step('set_title_part');
+            assert.strictEqual(parts._chat, '1 Message');
+        },
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -3415,7 +3353,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 });
 
 QUnit.test('receive new chat messages: out of odoo focus (tab title)', async function (assert) {
-    assert.expect(12);
+    assert.expect(9);
 
     let step = 0;
     const pyEnv = await startServer();
@@ -3429,19 +3367,20 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         },
     });
     await openDiscuss();
-    env.bus.on('set_title_part', null, payload => {
-        step++;
-        assert.step('set_title_part');
-        assert.strictEqual(payload.part, '_chat');
-        if (step === 1) {
-            assert.strictEqual(payload.title, "1 Message");
-        }
-        if (step === 2) {
-            assert.strictEqual(payload.title, "2 Messages");
-        }
-        if (step === 3) {
-            assert.strictEqual(payload.title, "3 Messages");
-        }
+    patchWithCleanup(env.services["title"], {
+        setParts(parts) {
+            step++;
+            assert.step('set_title_part');
+            if (step === 1) {
+                assert.strictEqual(parts._chat, "1 Message");
+            }
+            if (step === 2) {
+                assert.strictEqual(parts._chat, "2 Messages");
+            }
+            if (step === 3) {
+                assert.strictEqual(parts._chat, "3 Messages");
+            }
+        },
     });
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];

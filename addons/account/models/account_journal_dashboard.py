@@ -98,13 +98,15 @@ class account_journal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
     def _query_has_sequence_holes(self):
+        self.env['res.company'].flush_model(['fiscalyear_lock_date'])
+        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'sequence_number', 'state'])
         self.env.cr.execute("""
             SELECT move.journal_id,
                    move.sequence_prefix
               FROM account_move move
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
-               AND move.state = 'posted'
+               AND (move.state = 'posted' OR (move.state = 'draft' AND move.sequence_prefix IS NOT NULL))
                AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
@@ -441,7 +443,7 @@ class account_journal(models.Model):
             to_check = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': to_check.get('journal_id_count', 0),
-                'to_check_balance': to_check.get('amount_total_signed', 0),
+                'to_check_balance': currency.format(to_check.get('amount_total_signed', 0)),
                 'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
@@ -468,10 +470,11 @@ class account_journal(models.Model):
             )
         }
         for journal in general_journals:
+            currency = journal.currency_id or journal.company_id.currency_id
             vals = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': vals.get('__count', 0),
-                'to_check_balance': vals.get('amount_total_signed', 0),
+                'to_check_balance': currency.format(vals.get('amount_total_signed', 0)),
             })
 
     def _get_open_bills_to_pay_query(self):
@@ -553,6 +556,7 @@ class account_journal(models.Model):
                               AND move.state != 'cancel'
                               AND move.journal_id = journal.id
                               AND stl.internal_index >= COALESCE(statement.first_line_index, '')
+                            LIMIT 1
                    ) without_statement ON TRUE
              WHERE journal.id = ANY(%s)
         """, [(self.ids)])

@@ -8,17 +8,16 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # lasch a <bmail440@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# lynnliuying <lynn.liu1971@gmail.com>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # Martin Trigaux, 2022
 # Simon S, 2022
 # Robin Calvin, 2022
 # Stephen Schmidt <stephen.schmidt@linserv.se>, 2023
 # Lasse L, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +139,7 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "Omräkning av enheter kan endast ske om de tillhör samma kategori. "
-"Omräkningen baseras på angiven ratio."
+"Omräkningen baseras på ett givet förhållande."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -193,8 +192,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
-"Designa era offertmallar med hjälp av byggblock<br/>\n"
-"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Varning: denna inställning kommer att installera Website-appen.</em>"
+"Skapa dina offertmallar med hjälp av byggblock<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Varning: detta val kommer att installera appen Website.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -231,7 +230,8 @@ msgstr "Visningstyp"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Saknar åtkomsträttighet, skippa det här för kundens sammanställnings epost"
+"Saknar åtkomsträttighet, hoppa över denna data för användarens sammanställda"
+" utskick"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -272,8 +272,8 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
-"Om den inte kontrolleras, kommer den att låta dig dölja citatmallen utan att"
-" ta bort den."
+"Om den inte kontrolleras kommer den att låta dig dölja citatmallen utan att "
+"ta bort den."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -362,7 +362,7 @@ msgstr "Alternativa produkter"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
 msgid "Optional Products Lines"
-msgstr "Tilläggsproduktrader"
+msgstr "Tilläggsproduktsrader"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -392,7 +392,7 @@ msgstr "Antal"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Quantity:"
-msgstr "Antal"
+msgstr "Antal:"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
@@ -465,7 +465,7 @@ msgid ""
 "automatically."
 msgstr ""
 "Begär en elektronisk signatur för att bekräfta ordern för automatisk "
-"orderbekräftelse"
+"orderbekräftelse."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -539,7 +539,7 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"Kämpar du med en komplex produktkatalog? Prova Produktkonfiguratorn ör att "
+"Kämpar du med en komplex produktkatalog? Prova Produktkonfiguratorn för att "
 "hjälpa försäljningen att konfigurera en produkt med olika alternativ: "
 "färger, storlek, kapacitet, etc. Gör inmatning av försäljningsordrar enklare"
 " och felfri."
@@ -569,8 +569,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Denna e-postmall kommer att skickas vid bekräftelse.\n"
-"Lämna blank utan åtgärd."
+"Denna e-postmall kommer att skickas vid bekräftelse. Lämna blank utan "
+"åtgärd."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -585,7 +585,7 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr "Tips: Odoo stöder konfigurerbara produkter"
+msgstr "Tips: Odoo stödjer konfigurerbara produkter"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
@@ -624,7 +624,7 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Använd mallar för att skapa polerade, professionella offertförslag inom minuter.\n"
+"Använd mallar för att skapa fina, professionella offertförslag inom minuter.\n"
 "Skicka dessa offertförslag via e-post och låt dina kunder signera online.\n"
 "Använd korsförsäljning och rabatter för att driva och öka dina försäljningar."
 

@@ -1189,13 +1189,6 @@
           <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5I')])]" />
         </record>
-        <record id="chart_at_template_5800" model="account.account.template">
-          <field name="name">Skontoerträge auf Materialaufwand</field>
-          <field name="code">5800</field>
-          <field name="reconcile" eval="False"/>
-          <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="account_type">expense</field>
-        </record>
         <record id="chart_at_template_5810" model="account.account.template">
           <field name="name">Skontoerträge auf sonstige bezogene Herstellungsleistungen</field>
           <field name="code">5810</field>

@@ -18,6 +18,7 @@ K.S.A. POS Localization
             'web/static/lib/zxing-library/zxing-library.js',
             'l10n_sa_pos/static/src/js/models.js',
             'l10n_sa_pos/static/src/xml/OrderReceipt.xml',
+            'l10n_sa_pos/static/src/css/pos_receipt.css',
         ]
     },
     'auto_install': True,

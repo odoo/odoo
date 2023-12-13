@@ -11,6 +11,7 @@
 # Samkhann Seang <seangsamkhann@gmail.com>, 2023
 # Sengtha Chay <sengtha@gmail.com>, 2023
 # Lux Sok <sok.lux@gmail.com>, 2023
+# Sok Reach, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2023\n"
+"Last-Translator: Sok Reach, 2023\n"
 "Language-Team: Khmer (https://app.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,17 +64,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr ""
+msgstr "# វិក័យប័ត្រផ្សះផ្សា"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# វិក្កយបត្រដែលបានផ្សះផ្សា"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr ""
+msgstr "# បន្ទាត់សេចក្តីថ្លែងការណ៍ផ្សះផ្សា"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -196,6 +197,13 @@ msgstr ""
 msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
 msgstr ""
 
 #. module: account
@@ -929,7 +937,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span>Draft</span>"
-msgstr ""
+msgstr "<span>សេចក្តីព្រាង</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -3368,6 +3376,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "មិនអាចបង្កើតកូដគណនីដែលមិនប្រើ។"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12737,7 +12754,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
+msgid "Switch into invoice/credit note"
 msgstr ""
 
 #. module: account
@@ -13341,13 +13358,6 @@ msgstr ""
 msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
 msgstr ""
 
 #. module: account
@@ -16184,6 +16194,13 @@ msgid ""
 "reconciliations are still pending."
 msgstr ""
 "អ្នកមិនអាចប្តូរគណនីដើម្បីទប់ស្កាត់ការសម្របសម្រួលប្រសិនបើការសម្របសម្រួលផ្នែកខ្លះត្រូវបានកំពុងរង់ចាំ។"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #. odoo-python

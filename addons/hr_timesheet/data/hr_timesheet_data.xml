@@ -5,6 +5,8 @@
         <field name="timesheet_widget">float_toggle</field>
     </record>
 
+    <function model="account.analytic.line" name="_ensure_uom_hours"/>
+
     <record id="uom.product_uom_hour" model="uom.uom">
         <field name="timesheet_widget">float_time</field>
     </record>

@@ -347,8 +347,6 @@ class ResPartnerBank(models.Model):
                # see https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/iso11649.py
 
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
-        if qr_method == 'sct_qr' and debtor_partner.country_id.code == 'CH' and self.journal_id.country_code == 'CH':
-            return False
         if qr_method == 'ch_qr':
             error_messages = [_("The QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':

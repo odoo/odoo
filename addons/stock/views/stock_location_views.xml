@@ -207,7 +207,7 @@
                             <div class="o_row">
                                 <field name="warehouse_selectable" class="oe_inline" nolabel="1"/>
                                 <field name="warehouse_domain_ids" invisible="1"/>
-                                <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
+                                <field name="warehouse_ids" widget="many2many_tags" class="o_field_highlighted" placeholder="e.g. Central Warehouse" nolabel="1"
                                        attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                             </div>
                         </group>

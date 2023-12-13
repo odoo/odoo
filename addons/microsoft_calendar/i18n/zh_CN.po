@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,6 +153,35 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar."
+msgstr "由于 Outlook 日历的限制，递归更新必须直接在 Outlook 日历中完成。"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+msgstr ""
+"由于 Outlook 日历的限制，递归更新必须直接在 Outlook 日历中完成。\n"
+"如果在 Outlook 日历中未显示该递归，则必须在 Odoo 日历中删除该递归，然后在 Outlook 日历中重新创建。"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrent events must be created "
+"directly in Outlook Calendar."
+msgstr "由于 Outlook 日历的限制，必须直接在 Outlook 日历中创建经常性事件。"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "事件重复规则"
@@ -169,6 +199,15 @@ msgstr ""
 "%s"
 
 #. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"For having a different organizer in your event, it is necessary that the "
+"organizer have its Odoo Calendar synced with Outlook Calendar."
+msgstr "要在活动中使用不同的组织者，组织者必须将 Odoo 日历与 Outlook 日历同步。"
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
 msgid "ID"
 msgstr "ID"
@@ -179,6 +218,15 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr "如果启用字段设为false，它将允许您隐藏提醒信息而不需要删除它。"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"It is necessary adding the proposed organizer as attendee before saving the "
+"event."
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update

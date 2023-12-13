@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2023-06-15 10:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: alenafairy, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -62,23 +62,25 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets"
 " linked to the AA of the project, rounded to the unit."
 msgstr ""
+"% табелей, которые подлежат оплате по отношению к общему количеству табелей,"
+" связанных с аналитическим счетом проекта, с округлением до единицы."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr ""
+msgstr "%(amount)s%(label)s будут добавлены к новому заказу на продажу."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", for a revenue of"
-msgstr ""
+msgstr ", при выручке"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", leading to a"
-msgstr ""
+msgstr ", приводящий к"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -98,37 +100,37 @@ msgstr "<span class=\"o_form_label\">Выставления счета по вр
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "Зарегистрировано"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr ""
+msgstr "<strong>К оплате:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr ""
+msgstr "<strong>Счета:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr ""
+msgstr "<strong>Заказ на продажу:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>To invoice:</strong>"
-msgstr ""
+msgstr "<strong>К оплате:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Доходность</u>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Sold</u>"
-msgstr ""
+msgstr "<u>Продано</u>"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -153,10 +155,9 @@ msgstr ""
 "- Складские перемещения: количество заполняют на складе при отгрузке\n"
 
 #. module: sale_timesheet
-#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr ""
+msgstr "Послепродажное обслуживание"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -212,7 +213,7 @@ msgstr "Необходимо заполнить хотя одну строку."
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid "Based on Timesheets"
-msgstr ""
+msgstr "На основе табелей"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
@@ -227,7 +228,7 @@ msgstr "Оплачиваемые часы"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
 msgid "Billable Percentage"
-msgstr ""
+msgstr "Оплачиваемый процент"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -242,19 +243,19 @@ msgstr "оплачиваемый тип"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed Manually"
-msgstr ""
+msgstr "Расчет вручную"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "Расчет по фиксированной ставке"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_fixed
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "Расчет по фиксированной ставке"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_milestones
@@ -262,7 +263,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Milestones"
-msgstr ""
+msgstr "Расчет по вехам"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
@@ -270,7 +271,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Расчет по табелям"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -285,7 +286,7 @@ msgstr "Тип выставления счета"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "По типу расчета"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -322,7 +323,7 @@ msgstr "Конфигурационные настройки"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr ""
+msgstr "Настройте сервисы"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -356,8 +357,8 @@ msgid "Create SO from project"
 msgstr "Создайте заказ на продажу из проекта"
 
 #. module: sale_timesheet
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -429,7 +430,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Remaining)"
-msgstr ""
+msgstr "дней осталось)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -439,7 +440,7 @@ msgstr "Услуга по умолчанию"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
 msgid "Display Create Order"
-msgstr ""
+msgstr "Показать Создать заказ"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
@@ -468,7 +469,7 @@ msgstr "Сотрудник"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Ставка сотрудника"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -488,7 +489,7 @@ msgstr "Фиксированная стоимость услуг"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Furniture Delivery (Manual)"
-msgstr ""
+msgstr "Доставка мебели (вручную)"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -510,17 +511,17 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
-msgstr ""
+msgstr "Отображается предупреждение о повышении цены"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "Имеет множественное решение"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Почасовая стоимость"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
@@ -548,7 +549,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr ""
+msgstr "Инфо счет"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -566,7 +567,7 @@ msgstr "Акт"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Invoice Policy"
-msgstr ""
+msgstr "Политика актирования"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -576,6 +577,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
 msgstr ""
+"Акт на основе табелей (количество выполненных работ) по проектам или "
+"задачам, которые вы создадите позже."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -635,7 +638,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
 msgid "Is Cost Manually Changed"
-msgstr ""
+msgstr "Стоимость изменяется вручную"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -645,7 +648,7 @@ msgstr "Чистая карта проекта"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr ""
+msgstr "Позиция в заказе изменяется вручную"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -714,10 +717,13 @@ msgid "Margin"
 msgstr "Наценка"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "материалы"
 
@@ -744,17 +750,17 @@ msgstr "Как нет заказов на продажу"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order Item"
-msgstr ""
+msgstr "Позиция заказа не обнаружена"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 msgid "No activities found"
-msgstr ""
+msgstr "Действий не обнаружено"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "Не найдено ни одного действия. Давайте начнем работу!"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -771,7 +777,7 @@ msgstr "Задача без оплаты"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
-msgstr ""
+msgstr "Расчету не подлежит"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
@@ -781,17 +787,17 @@ msgstr "Не оплачиваемые часы"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
-msgstr ""
+msgstr "Количество затраченных часов, умноженное на цену за час/день."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Number of hours/days linked to a SOL."
-msgstr ""
+msgstr "Количество часов/дней, связанных с SOL."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Number of hours/days not linked to a SOL."
-msgstr ""
+msgstr "Количество часов/дней, не связанных с SOL."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
@@ -810,6 +816,8 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Только неоплаченные табели (и подтвержденные, если требуется) за этот период"
+" будут подлежать оплате."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -936,7 +944,7 @@ msgstr "Проект, для которого мы создаем заказ н�
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr ""
+msgstr "Ставка проекта"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
@@ -959,18 +967,18 @@ msgstr "Оставшиеся"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Days on SO"
-msgstr ""
+msgstr "Оставшиеся дни на заказ"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Days on SO:"
-msgstr ""
+msgstr "Осталось дней на заказ:"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
 msgid "Remaining Hours Available"
-msgstr ""
+msgstr "Доступно оставшихся часов"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
@@ -978,28 +986,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Hours on SO"
-msgstr ""
+msgstr "Оставшиеся часы на заказ"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
-msgstr ""
+msgstr "Оставшиеся часы на заказ:"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Remaining)"
-msgstr ""
+msgstr "осталось)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
+"Проверьте свои табели по расчетному типу и убедитесь в том, что ваше время "
+"является оплачиваемым."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr ""
+msgstr "Аналитический счет заказа на продажу"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1070,28 +1080,28 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Заказ на продажу, с которым связана задача."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Поиск в счете"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Искать в заказах на продажу"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Искать в позиции заказа на продажу"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1119,7 +1129,7 @@ msgstr "Услуга"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "Выручка от услуг"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
@@ -1130,7 +1140,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Сервис по табелю"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1188,6 +1198,8 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
+"Продукт %s необходим для модуля Табели и не может быть ни заархивирован, ни "
+"удален."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1205,14 +1217,14 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "The cost of the project is now at"
-msgstr ""
+msgstr "Стоимость проекта составляет"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr ""
+msgstr "Проект уже имеет заказ на продажу."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1258,6 +1270,8 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
+"Эта оплата перекрывает почасовую оплату труда сотрудника, установленную по "
+"умолчанию в его HR-настройках."
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1278,7 +1292,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold
 msgid "Threshold"
-msgstr ""
+msgstr "Порог"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -1298,7 +1312,7 @@ msgstr "Табель"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "Стоимость табеля"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1327,7 +1341,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "Общая длительность табеля"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1363,60 +1377,60 @@ msgstr "Табели"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
-msgstr ""
+msgstr "Табели (расчет вручную)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Milestones)"
-msgstr ""
+msgstr "Табели (расчет по вехам)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Timesheets)"
-msgstr ""
+msgstr "Табели (расчет по табелям)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Табели (фиксированный расчет)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
-msgstr ""
+msgstr "Табели (не подлежат расчету)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "Анализ табеля"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "Отчет по анализу табеля"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr ""
+msgstr "Период табеля"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
-msgstr ""
+msgstr "Табели по типу расчета"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "Табели для"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1445,7 +1459,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr ""
+msgstr "Табели, которые учитываются при оплате труда"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1475,6 +1489,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
+"Общая длительность записи, которая представлена в единице времени и "
+"округлена но целого значения."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1494,6 +1510,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
+"Отслеживайте рабочее время по проектам каждый день и выставляйте счета за "
+"это время своим клиентам."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1511,18 +1529,20 @@ msgstr "Цена за единицу элемента заказ на прода
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
-msgstr ""
+msgstr "Значение не существует в типе ценообразования"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
 msgid "View Timesheets"
-msgstr ""
+msgstr "Посмотреть табели"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
 msgstr ""
+"Предупредите продавца о возможности повышения цены, если объем выполненной "
+"работы превышает норму"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
@@ -1579,6 +1599,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"Невозможно связать оплачиваемый проект с позицией в заказе, полученной из "
+"расходов или счета поставщика."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1588,20 +1610,22 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"Невозможно связать оплачиваемый  проект с позицией в заказе, которая не "
+"является услугой."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr ""
+msgstr "Невозможно изменить табели, по которым уже выставлены счета."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr ""
+msgstr "Невозможно удалить табель, по которому уже был выставлен счет."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1628,7 +1652,7 @@ msgstr "часы"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "margin ("
-msgstr ""
+msgstr "маржа ("
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form

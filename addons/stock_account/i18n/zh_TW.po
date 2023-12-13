@@ -34,7 +34,7 @@ msgstr " 產品成本從 %(previous)s 更新為 %(new_cost)s。"
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [記賬至 %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -60,6 +60,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">將負值加至賬目，以記錄產品價值下降</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -79,7 +81,7 @@ msgstr "<span>數量</span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr "<span>SN/LN</span>"
+msgstr "<span>序號/批次</span>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -198,7 +200,7 @@ msgstr "更改您的成本方法是一個重要的更改, 將影響您的庫存�
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "選擇一個日期，以獲得當日的估值"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -351,7 +353,7 @@ msgstr "分組方式⋯"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr ""
+msgstr "有剩餘數量"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -392,7 +394,7 @@ msgstr "發票資料行"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "使用發票貨幣更正發票金額"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -478,7 +480,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
-msgstr ""
+msgstr "已移動數量"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
@@ -493,7 +495,7 @@ msgstr "按數量計算的新值"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Open Valuation Layer"
-msgstr ""
+msgstr "開啟估值層"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -539,7 +541,7 @@ msgstr "產品模板"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: stock_account
 #. odoo-python
@@ -716,7 +718,7 @@ msgstr "庫存估值層"
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
-msgstr ""
+msgstr "技術欄位，用於正確顯示目前所選公司的貨幣，該貨幣對應產品估值層的總計價值"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -787,17 +789,17 @@ msgstr "移動名細處於不一致的狀態:它們不屬於同一個來源或�
 msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
-msgstr ""
+msgstr "沒有估值層。當出現影響庫存估值的產品移動時，會建立估值層。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Quantity"
-msgstr ""
+msgstr "總計剩餘數量"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "總計剩餘價值"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -877,7 +879,7 @@ msgstr "估值"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "計價貨幣"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -890,7 +892,7 @@ msgstr "庫存計價報告"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
 msgid "Valuation at Date"
-msgstr ""
+msgstr "指定日期的估值"
 
 #. module: stock_account
 #. odoo-python
@@ -909,7 +911,7 @@ msgstr "值"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr ""
+msgstr "手上數量的價值："
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -1037,3 +1039,10 @@ msgstr "為"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
 msgstr "位置"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid ""
+"'The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""

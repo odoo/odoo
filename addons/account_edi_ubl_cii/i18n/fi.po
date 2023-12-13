@@ -91,6 +91,14 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "Ehdollinen käteis-/maksualennus"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -154,6 +162,12 @@ msgstr "Kullakin laskurivillä saa olla vain yksi vero."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "Jokaisella laskurivillä on oltava tuote tai etiketti."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -233,6 +247,7 @@ msgstr "Sähköistä osoitejärjestelmää (EAS) ei löytynyt osoitteelle %s."
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
+"Riville ei löydy bruttohintaa, nettohintaa, eikä rivin välisummaa xml:ssä"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -337,6 +352,17 @@ msgstr "Kenttä %s vaaditaan kentässä %s."
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "Kenttä \"Sanitized Account Number\" vaaditaan vastaanottajapankissa."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"Lasku sisältää rivejä, joiden yksikköhinta on negatiivinen. Tämä ei ole "
+"sallittua. Voit halutessasi asettaa määräksi negatiivisen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

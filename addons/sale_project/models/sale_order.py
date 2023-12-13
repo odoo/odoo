@@ -3,14 +3,14 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.tools.safe_eval import safe_eval
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
@@ -36,11 +36,44 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_product_milestone = order.order_line.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
 
+    def _search_tasks_ids(self, operator, value):
+        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
+        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
+        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
+        if not (is_name_search or is_id_eq_search or is_id_in_search):
+            raise NotImplementedError(_('Operation not supported'))
+
+        if is_name_search:
+            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
+        elif is_id_eq_search:
+            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
+        else:  # is_id_in_search
+            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
+
+        tasks = self.env['project.task'].browse(tasks_ids)
+        return [('id', 'in', tasks.sale_order_id.ids)]
+
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
+        tasks_per_so = self.env['project.task']._read_group(
+            domain=['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            fields=['sale_order_id', 'ids:array_agg(id)'],
+            groupby=['sale_order_id'],
+        )
+        so_to_tasks_and_count = {}
+        for group in tasks_per_so:
+            if group['sale_order_id']:
+                so_to_tasks_and_count[group['sale_order_id'][0]] = {'task_ids': group['ids'], 'count': group['sale_order_id_count']}
+            else:
+                # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
+                for task in self.env['project.task'].browse(group['ids']):
+                    so_to_tasks_item = so_to_tasks_and_count.setdefault(task.sale_line_id.order_id.id, {'task_ids': [], 'count': 0})
+                    so_to_tasks_item['task_ids'].append(task.id)
+                    so_to_tasks_item['count'] += 1
+
         for order in self:
-            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
-            order.tasks_count = len(order.tasks_ids)
+            order.tasks_ids = [Command.set(so_to_tasks_and_count.get(order.id, {}).get('task_ids', []))]
+            order.tasks_count = so_to_tasks_and_count.get(order.id, {}).get('count', 0)
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
@@ -97,7 +130,6 @@ class SaleOrder(models.Model):
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
             action = self.with_context(active_id=task_projects.id).env['ir.actions.actions']._for_xml_id(
                 'project.act_project_project_2_project_task_all')
-            action['domain'] = [('id', 'in', self.tasks_ids.ids)]
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
@@ -113,6 +145,7 @@ class SaleOrder(models.Model):
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
         # filter on the task of the current SO
+        action['domain'] = [('id', 'in', self.tasks_ids.ids)]
         action.setdefault('context', {})
         action['context'].update({'search_default_sale_order_id': self.id})
         return action
@@ -123,12 +156,12 @@ class SaleOrder(models.Model):
         view_kanban_id = self.env.ref('project.view_project_kanban').id
         action = {
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.project_ids.ids)],
+            'domain': [('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
             'view_mode': 'kanban,form',
             'name': _('Projects'),
             'res_model': 'project.project',
         }
-        if len(self.project_ids) == 1:
+        if len(self.with_context(active_test=False).project_ids) == 1:
             action.update({'views': [(view_form_id, 'form')], 'res_id': self.project_ids.id})
         else:
             action['views'] = [(view_kanban_id, 'kanban'), (view_form_id, 'form')]

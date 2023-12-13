@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: odooers ir, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -312,11 +312,6 @@ msgid "Bank"
 msgstr "بانک"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "حساب بانکی"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "نام بانک"
@@ -435,11 +430,6 @@ msgstr "کد"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "رنگ"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "عطف"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -752,14 +742,10 @@ msgid "Full Only"
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr ""
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "تولید لینک پرداخت فروش"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1332,16 +1318,6 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr ""
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
 msgstr ""
 
 #. module: payment
@@ -1985,7 +1961,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "ما در حال پردازش پرداخت شما هستیم، لطفا صبر کنید..."
 
 #. module: payment
 #. odoo-javascript
@@ -2022,7 +1998,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
 msgstr ""
 
 #. module: payment
@@ -2135,6 +2113,7 @@ msgstr "پرداخت شما دریافت شده است اما باید به صو
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

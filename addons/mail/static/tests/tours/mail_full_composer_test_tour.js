@@ -4,6 +4,7 @@ import {
     createFile,
     inputFiles,
 } from 'web.test_utils_file';
+import { contains } from '@web/../tests/utils';
 
 import tour from 'web_tour.tour';
 
@@ -16,8 +17,16 @@ import tour from 'web_tour.tour';
 tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     test: true,
 }, [{
+    content: "Wait for the chatter to be fully loaded",
+    trigger: ".o_Chatter",
+    async run() {
+        await contains(".o_Message", { count: 1 });
+        document.body.setAttribute("data-found-message", 1);
+    },
+}, {
     content: "Click on Send Message",
     trigger: '.o_ChatterTopbar_buttonSendMessage',
+    extra_trigger: 'body[data-found-message=1]',
 }, {
     content: "Write something in composer",
     trigger: '.o_ComposerTextInput_textarea',
@@ -51,9 +60,9 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '[name="subject"] input',
     run() {
         const subjectValue = document.querySelector('[name="subject"] input').value;
-        if (subjectValue !== "Re: Test User") {
+        if (subjectValue !== "Re: Jane") {
             console.error(
-                `Full composer should have "Re: Test User" in subject input (actual: ${subjectValue})`
+                `Full composer should have "Re: Jane" in subject input (actual: ${subjectValue})`
             );
         }
     },

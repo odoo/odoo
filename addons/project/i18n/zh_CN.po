@@ -416,6 +416,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>您好，<br>\n"
+"    很高兴告诉您，我们已成功完成了“<strong t-out=\"object.name or ''\">翻修</strong>”项目。 \n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">收到此电子邮件，表示您的项目已被移至<b t-out=\"object.stage_id.name or ''\">“完成”</b>阶段。</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -433,6 +443,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>您好，<br>\n"
+"    感谢您的查询。<br> \n"
+"    如果您有任何问题，请告诉我们。\n"
+"    <br><br>\n"
+"    谢谢\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2979,7 +3001,7 @@ msgstr "留下评论"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "让我们来创建您的第一个<b>阶段</b>。"
 
 #. module: project
 #. odoo-javascript
@@ -3001,7 +3023,7 @@ msgstr "让我们创建您的第一个<b>任务</b>。"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "让我们来创建您的第二个<b>阶段</b>。"
 
 #. module: project
 #. odoo-javascript
@@ -3426,6 +3448,11 @@ msgstr "下一个循环日期"
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
 msgstr "下一个循环"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "无客户"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

@@ -92,7 +92,7 @@ class AddonManifestPatched(TransactionCase):
         }
 
         self.patch(self.env.registry, '_init_modules', self.installed_modules)
-        self.patch(odoo.modules.module, 'get_manifest', Mock(side_effect=lambda module: self.manifests.get(module, {})))
+        self.patch(odoo.modules.module, '_get_manifest_cached', Mock(side_effect=lambda module: self.manifests.get(module, {})))
 
 
 class FileTouchable(AddonManifestPatched):

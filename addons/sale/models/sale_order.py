@@ -873,7 +873,7 @@ class SaleOrder(models.Model):
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom':
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'wire_transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
         self.write({'state': 'done'})
@@ -1221,7 +1221,10 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-        return super(SaleOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
+        return super(SaleOrder, self.with_context(
+            mail_post_autofollow=self.env.context.get('mail_post_autofollow', True),
+            lang=self.partner_id.lang,
+        )).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
@@ -1499,3 +1502,13 @@ class SaleOrder(models.Model):
         # Override for correct taxcloud computation
         # when using coupon and delivery
         return True
+
+    #=== TOOLING ===#
+
+    def _get_lang(self):
+        self.ensure_one()
+
+        if self.partner_id.lang and not self.partner_id.is_public:
+            return self.partner_id.lang
+
+        return self.env.lang

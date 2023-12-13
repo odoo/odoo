@@ -408,6 +408,44 @@ QUnit.module('favorite filter widget', (hooks) => {
             "should not have option to remove filter because mailing domain is changed");
     });
 
+    QUnit.test('filter widget does not raise traceback when losing focus with unexpected domain format', async (assert) => {
+        assert.expect(4);
+
+        await makeView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 2,
+            serverData,
+            arch: `<form>
+                    <field name="display_name"/>
+                    <field name="subject"/>
+                    <field name="mailing_domain"/>
+                    <field name="mailing_model_name" invisible="1"/>
+                    <field name="mailing_model_id"/>
+                    <field name="mailing_filter_count"/>
+                    <field name="mailing_filter_domain" invisible="1"/>
+                    <field name="mailing_filter_id"
+                        widget="mailing_filter"
+                        options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
+                </form>`,
+        });
+
+        // Initial state of icons with no filter
+        assert.isVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
+            "should have option to save filter if no filter is set");
+        assert.isNotVisible(fixture.querySelector('.o_mass_mailing_remove_filter'));
+
+        // Set incorrect domain format
+        await testUtils.editInput(fixture, "#mailing_domain", "[");
+        // Wait to lose the focus
+        await testUtils.nextTick();
+
+        assert.isNotVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
+            "should not have option to save filter if domain format is incorrect");
+        assert.isNotVisible(fixture.querySelector('.o_mass_mailing_remove_filter'),
+            "should still not be visible");
+    });
+
     QUnit.test('filter widget works in edit and readonly', async (assert) => {
         assert.expect(4);
 

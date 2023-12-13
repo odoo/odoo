@@ -7,7 +7,6 @@
 # Susanna Pujol, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # Denys Sarapulov, 2022
-# Jonatan Gk, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Pere Martínez, 2022
@@ -20,19 +19,20 @@
 # Martin Trigaux, 2022
 # jabiri7, 2022
 # Ivan Espinola, 2023
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Josep Anton Belchi, 2023
 # martioodo hola, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Albert Parera, 2023
+# Jonatan Gk, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2023-09-15 09:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Albert Parera, 2023\n"
+"Last-Translator: Manel Fernandez Ramirez <manelfera@outlook.com>, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -696,8 +696,8 @@ msgstr "<span class=\"text-muted\">de</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">fins </span>"
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1353,7 +1353,7 @@ msgstr "Per etiqueta de l'empleat/da"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Approver"
-msgstr "Per l'aprenent del treballador"
+msgstr "Per l'aprovador de l'empleat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
@@ -1372,7 +1372,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Per temps fora de l'oficina"
+msgstr "Pel responsable d'absències"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
@@ -2146,8 +2146,8 @@ msgid "Hour to"
 msgstr "Hora fins"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -2822,6 +2822,12 @@ msgstr "Sense validació"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model_terms:ir.actions.server,help:hr_holidays.act_hr_employee_holiday_request
+msgid "No data to display"
+msgstr "Sense dades per mostrar"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
 msgstr "Encara no hi han dades!"
@@ -3042,6 +3048,13 @@ msgid "Open"
 msgstr "Oberts"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operació no implementada"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
@@ -3124,8 +3137,18 @@ msgid "Public"
 msgstr "Públic"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
 msgid "Public Holidays"
 msgstr "Festius públics"
 
@@ -3514,14 +3537,20 @@ msgstr ""
 "Planificat: Activitats futures."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
 msgid "Stress Day"
 msgstr "Dia de l'Estress"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
 msgid "Stress Days"
 msgstr "Dies de l'estrès"
 
@@ -3908,6 +3937,8 @@ msgstr ""
 "                Els empleats sol·liciten assignacions per a l'Oficial Time Off (p. ex. dies de recuperació)."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -4166,6 +4197,13 @@ msgstr "Temps personal en formació"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
 msgid "Transferred to the next year"
 msgstr "Transferit a l'any següent"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4661,8 +4699,8 @@ msgid "day(s)"
 msgstr "dia(es)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4690,8 +4728,8 @@ msgstr ""
 "validesa / sense límit)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

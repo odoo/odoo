@@ -3,7 +3,7 @@
     <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
             <t t-if="receipt.is_gcc_country and !receipt.is_settlement">
-                <img t-if="receipt.qr_code" id="qrcode" t-att-src="receipt.qr_code" class="pos-receipt-logo"/>
+                <img t-if="receipt.qr_code" id="qrcode" t-att-src="receipt.qr_code" class="pos-receipt-qrcode"/>
                 <br/>
             </t>
         </xpath>

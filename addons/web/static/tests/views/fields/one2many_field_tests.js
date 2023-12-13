@@ -31,6 +31,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
 
 let serverData;
 let target;
@@ -394,6 +395,57 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_field_many2one input");
     });
+
+    QUnit.test(
+        "clicking twice on a record in a one2many will open it once",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                <form>
+                    <field name="turtle_foo"/>
+                </form>`,
+            };
+
+            const def = makeDeferred();
+            let firstRead = true;
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+                async mockRPC(route, { method, model, kwargs }) {
+                    if (method === "read" && model === "turtle") {
+                        assert.step("read turtle");
+                        if (!firstRead) {
+                            await def;
+                        }
+                        firstRead = false;
+                    }
+                },
+            });
+            await click(target, ".o_data_cell");
+            await click(target, ".o_data_cell");
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".modal");
+
+            await click(target, ".modal .btn-close");
+            assert.containsNone(target, ".modal");
+
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, ".modal");
+
+            assert.verifySteps(["read turtle", "read turtle"]);
+        }
+    );
 
     QUnit.test("resequence a x2m in a form view dialog from another x2m", async function (assert) {
         await makeView({
@@ -12870,6 +12922,68 @@ QUnit.module("Fields", (hooks) => {
         onchangeGetPromise.resolve();
         await nextTick();
 
+        assert.containsN(target, ".o_data_row", 2);
+    });
+
+    QUnit.test("customise X2manyField without passing onClose to openRecord", async (assert) => {
+        class CustomX2manyField extends X2ManyField {
+            setup() {
+                super.setup();
+
+                const { saveRecord, updateRecord } = useX2ManyCrud(
+                    () => this.list,
+                    this.isMany2Many
+                );
+
+                const openRecord = useOpenX2ManyRecord({
+                    resModel: this.list.resModel,
+                    activeField: this.activeField,
+                    activeActions: this.activeActions,
+                    getList: () => this.list,
+                    saveRecord,
+                    updateRecord,
+                    withParentId: this.activeField.widget !== "many2many",
+                });
+                this._openRecord = openRecord;
+            }
+        }
+        registry.category("fields").add("custom_x2many", CustomX2manyField);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" widget="custom_x2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsN(target, ".o_data_row", 0);
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .btn-close");
+        assert.containsNone(target, ".modal");
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.containsOnce(target, ".modal");
+
+        await editInput(target, ".modal [name='display_name'] input", "gold");
+        await click(target, ".modal .o_form_button_save_new");
+        assert.containsOnce(target, ".modal");
+
+        await editInput(target, ".modal [name='display_name'] input", "silver");
+        await click(target, ".modal .o_form_button_save");
+        assert.containsNone(target, ".modal");
         assert.containsN(target, ".o_data_row", 2);
     });
 });

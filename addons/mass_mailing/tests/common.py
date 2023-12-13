@@ -87,7 +87,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         ])
         debug_info = '\n'.join(
             (
-                f'Trace: to {t.email} - state {t.trace_status}'
+                f'Trace: to {t.email} - state {t.trace_status} - res_id {t.res_id}'
                 for t in traces
             )
         )
@@ -131,6 +131,8 @@ class MassMailCase(MailCase, MockLinkTracker):
 
                 # mail.mail specific values to check
                 fields_values = {'mailing_id': mailing}
+                if recipient_info.get('mail_values'):
+                    fields_values.update(recipient_info['mail_values'])
                 if 'failure_reason' in recipient_info:
                     fields_values['failure_reason'] = recipient_info['failure_reason']
                 if 'email_to_mail' in recipient_info:
@@ -190,7 +192,9 @@ class MassMailCase(MailCase, MockLinkTracker):
         :param record: record which should bounce;
         :param bounce_base_values: optional values given to routing;
         """
-        trace = mailing.mailing_trace_ids.filtered(lambda t: t.model == record._name and t.res_id == record.id)
+        trace = mailing.mailing_trace_ids.filtered(
+            lambda t: t.model == record._name and t.res_id == record.id
+        )
 
         parsed_bounce_values = {
             'email_from': 'some.email@external.example.com',  # TDE check: email_from -> trace email ?
@@ -206,10 +210,20 @@ class MassMailCase(MailCase, MockLinkTracker):
             'bounced_msg_id': [trace.message_id],
         })
         self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
+        return trace
 
     def gateway_mail_click(self, mailing, record, click_label):
-        """ Simulate a click on a sent email. """
-        trace = mailing.mailing_trace_ids.filtered(lambda t: t.model == record._name and t.res_id == record.id)
+        """ Simulate a click on a sent email.
+
+        :param mailing: a ``mailing.mailing`` record on which we find a trace
+          to click;
+        :param record: record which should click;
+        :param click_label: label of link on which we should click;
+        """
+        trace = mailing.mailing_trace_ids.filtered(
+            lambda t: t.model == record._name and t.res_id == record.id
+        )
+
         email = self._find_sent_mail_wemail(trace.email)
         self.assertTrue(bool(email))
         for (_url_href, link_url, _dummy, label) in re.findall(tools.HTML_TAG_URL_REGEX, email['body']):
@@ -228,6 +242,22 @@ class MassMailCase(MailCase, MockLinkTracker):
                 break
         else:
             raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
+        return trace
+
+    def gateway_mail_open(self, mailing, record):
+        """ Simulate opening an email through blank.gif icon access. As we
+        don't want to use the whole Http layer just for that we will just
+        call 'set_opened()' on trace, until having a better option.
+
+        :param mailing: a ``mailing.mailing`` record on which we find a trace
+          to open;
+        :param record: record which should open;
+        """
+        trace = mailing.mailing_trace_ids.filtered(
+            lambda t: t.model == record._name and t.res_id == record.id
+        )
+        trace.set_opened()
+        return trace
 
     @classmethod
     def _create_bounce_trace(cls, mailing, records, dt=None):
@@ -266,20 +296,6 @@ class MassMailCase(MailCase, MockLinkTracker):
             ])
         return traces
 
-
-class MassMailCommon(MailCommon, MassMailCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(MassMailCommon, cls).setUpClass()
-
-        cls.user_marketing = mail_new_test_user(
-            cls.env, login='user_marketing',
-            groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
-            name='Martial Marketing', signature='--\nMartial')
-
-        cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
-
     @classmethod
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
@@ -313,3 +329,19 @@ class MassMailCommon(MailCommon, MassMailCase):
                 for i in range(contacts_nbr)
             ],
         })
+
+
+class MassMailCommon(MailCommon, MassMailCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(MassMailCommon, cls).setUpClass()
+
+        cls.user_marketing = mail_new_test_user(
+            cls.env, login='user_marketing',
+            groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
+            name='Martial Marketing', signature='--\nMartial')
+
+        cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
+
+        cls.env.flush_all()

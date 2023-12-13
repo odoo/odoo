@@ -4,8 +4,7 @@ odoo.define('pos_sale_product_configurator.models', function (require) {
     const { Gui } = require('point_of_sale.Gui');
     var { Order } = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
-    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service')
-    const { identifyError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
 
 
     const PosSaleProductConfiguratorOrder = (Order) => class PosSaleProductConfiguratorOrder extends Order {
@@ -28,7 +27,7 @@ odoo.define('pos_sale_product_configurator.models', function (require) {
                         const info = await this.pos.getProductInfo(product, quantity);
                         Gui.showPopup('ProductInfoPopup', { info: info , product: product });
                     } catch (e) {
-                        if (identifyError(e) instanceof ConnectionLostError||ConnectionAbortedError) {
+                        if (isConnectionError(e)) {
                             Gui.showPopup('OfflineErrorPopup', {
                                 title: this.env._t('Network Error'),
                                 body: this.env._t('Cannot access product information screen if offline.'),

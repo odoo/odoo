@@ -6,6 +6,7 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1521,7 +1522,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Ajouter des modèles d'emails à des produits pour envoyer des confirmations de facture\n"
+"Ajouter des modèles d'email à des produits pour envoyer des confirmations de facture\n"
 "=====================================================================================\n"
 "\n"
 "Ce module lie les produits à un modèle pour envoyer des informations détaillées et des outils aux clients.\n"
@@ -16187,6 +16188,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Paramètre invalide pour 'group by'"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Expression invalide lors de l'analyse de xpath %r"
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -16346,6 +16353,17 @@ msgstr "Type invalide"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Valeur invalide pour %s.%s: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
+"Valeur invalide pour %s.%s : %s est hors limites (les nombres entiers "
+"doivent être compris entre -2,147,483,648 et 2,147,483,647)"
 
 #. module: base
 #. odoo-python
@@ -17658,7 +17676,7 @@ msgstr ""
 "-----------------------------------\n"
 "\n"
 "Suivez les candidats dans votre processus de recrutement grâce à la vue kanban. Gagnez \n"
-"du temps en automatisant certaines communications grâce à des modèles d'emails.\n"
+"du temps en automatisant certaines communications grâce à des modèles d'email.\n"
 "\n"
 "Les documents tels que les CV et les lettres de motivation sont indexés automatiquement,\n"
 "vous permettant de rechercher facilement des compétences spécifiques et de constituer une base de\n"
@@ -19677,7 +19695,7 @@ msgstr ""
 "Publiez des offres d'emploi et gardez une trace de chaque candidature reçue. Suivez les candidats\n"
 " dans votre processus de recrutement grâce à la vue kanban intelligente.\n"
 "\n"
-"Gagnez du temps en automatisant certaines communications avec des modèles d'emails. Les CV \n"
+"Gagnez du temps en automatisant certaines communications avec des modèles d'email. Les CV \n"
 "sont indexés automatiquement, ce qui vous permet de retrouver facilement des profils spécifiques.\n"
 "\n"
 "Réseau social d'entreprise\n"
@@ -20029,7 +20047,7 @@ msgstr ""
 "\n"
 "Sélectionnez quelques documents (par exemple, pistes, tickets d'assistance, fournisseurs, candidats,\n"
 "…)\n"
-"et envoyez des emails à leurs contacts en un seul clic, en réutilisant les modèles d'emails\n"
+"et envoyez des emails à leurs contacts en un seul clic, en réutilisant les modèles d'email\n"
 "existants.\n"
 "\n"
 "Faire le suivi des réponses\n"
@@ -24575,6 +24593,22 @@ msgid "Send text messages when project/task stage move"
 msgstr "Envoyez un SMS lorsqu'un projet ou une tâche change d'étape"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+"Il s'agit de l'ancienne intégration avec UPS qui n'est plus prise en charge."
+" Veuillez installer le nouveau module \"Expédition UPS\" et désinstaller "
+"celui-ci dès que possible. Cette intégration cessera de fonctionner en 2024."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Faites vos expéditions via UPS et suivez-les en ligne"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Envoyez vos sondages ou partagez-les en direct."
@@ -27475,6 +27509,16 @@ msgstr "Type :"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - ACTIVITÉS DES ORGANISMES ET ORGANISMES EXTRATERRITORIAUX"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr "Expédition UPS (ancien)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "Expédition UPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

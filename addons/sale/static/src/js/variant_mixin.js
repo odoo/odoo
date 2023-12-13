@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var ajax = require('web.ajax');
+var session = require('web.session');
 var _t = core._t;
 
 var VariantMixin = {
@@ -76,6 +77,7 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': session.user_context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
@@ -95,6 +97,7 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': session.user_context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
             this._onChangeCombination(ev, $parent, combinationData);

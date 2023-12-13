@@ -60,8 +60,8 @@ class FleetVehicle(models.Model):
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
     next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
-    acquisition_date = fields.Date('Immatriculation Date', required=False,
-        default=fields.Date.today, help='Date when the vehicle has been immatriculated')
+    acquisition_date = fields.Date('Registration Date', required=False,
+        default=fields.Date.today, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
     color = fields.Char(help='Color of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
@@ -88,7 +88,7 @@ class FleetVehicle(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
     power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields', store=True, readonly=False, tracking=True)
-    co2_standard = fields.Char(compute='_compute_model_fields', store=True, readonly=False)
+    co2_standard = fields.Char('CO2 Standard', compute='_compute_model_fields', store=True, readonly=False)
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_model_fields', store=True, readonly=False)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
@@ -270,14 +270,22 @@ class FleetVehicle(models.Model):
         res.append(('id', search_operator, res_ids))
         return res
 
+    def _clean_vals_internal_user(self, vals):
+        # Fleet administrator may not have rights to write on partner
+        # related fields when the driver_id is a res.user.
+        # This trick is used to prevent access right error.
+        su_vals = {}
+        if self.env.su:
+            return su_vals
+        if 'plan_to_change_car' in vals:
+            su_vals['plan_to_change_car'] = vals.pop('plan_to_change_car')
+        if 'plan_to_change_bike' in vals:
+            su_vals['plan_to_change_bike'] = vals.pop('plan_to_change_bike')
+        return su_vals
+
     @api.model_create_multi
     def create(self, vals_list):
-        # Fleet administrator may not have rights to create the plan_to_change_car
-        # value when the driver_id is a res.user.
-        # This trick is used to prevent access right error.
-        ptc_values = [
-            'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')} for vals in vals_list
-        ]
+        ptc_values = [self._clean_vals_internal_user(vals) for vals in vals_list]
         vehicles = super().create(vals_list)
         for vehicle, vals, ptc_value in zip(vehicles, vals_list, ptc_values):
             if ptc_value:
@@ -320,6 +328,9 @@ class FleetVehicle(models.Model):
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
             self.env['fleet.vehicle.log.services'].search([('vehicle_id', 'in', self.ids)]).active = False
 
+        su_vals = self._clean_vals_internal_user(vals)
+        if su_vals:
+            self.sudo().write(su_vals)
         res = super(FleetVehicle, self).write(vals)
         return res
 

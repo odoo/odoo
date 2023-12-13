@@ -197,6 +197,8 @@ class TestFormatLangDate(TransactionCase):
         date_date = date_datetime.date()
         date_str = '2017-01-31'
         time_part = datetime.time(16, 30, 22)
+        t_medium = 'h:mm:ss a'
+        medium = f'MMM d, YYYY, {t_medium}'
 
         self.assertEqual(misc.format_date(self.env, date_datetime), '01/31/2017')
         self.assertEqual(misc.format_date(self.env, date_date), '01/31/2017')
@@ -205,16 +207,16 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, False), '')
         self.assertEqual(misc.format_date(self.env, None), '')
 
-        self.assertEqual(misc.format_datetime(self.env, date_datetime), 'Jan 31, 2017, 1:00:00 PM')
-        self.assertEqual(misc.format_datetime(self.env, datetime_str), 'Jan 31, 2017, 1:00:00 PM')
-        self.assertEqual(misc.format_datetime(self.env, ''), '')
-        self.assertEqual(misc.format_datetime(self.env, False), '')
-        self.assertEqual(misc.format_datetime(self.env, None), '')
+        self.assertEqual(misc.format_datetime(self.env, date_datetime, dt_format=medium), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, datetime_str, dt_format=medium), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, '', dt_format=medium), '')
+        self.assertEqual(misc.format_datetime(self.env, False, dt_format=medium), '')
+        self.assertEqual(misc.format_datetime(self.env, None, dt_format=medium), '')
 
-        self.assertEqual(misc.format_time(self.env, time_part), '4:30:22 PM')
-        self.assertEqual(misc.format_time(self.env, ''), '')
-        self.assertEqual(misc.format_time(self.env, False), '')
-        self.assertEqual(misc.format_time(self.env, None), '')
+        self.assertEqual(misc.format_time(self.env, time_part, time_format=t_medium), '4:30:22 PM')
+        self.assertEqual(misc.format_time(self.env, '', time_format=t_medium), '')
+        self.assertEqual(misc.format_time(self.env, False, time_format=t_medium), '')
+        self.assertEqual(misc.format_time(self.env, None, time_format=t_medium), '')
 
     def test_01_code_and_format(self):
         date_str = '2017-01-31'
@@ -246,35 +248,37 @@ class TestFormatLangDate(TransactionCase):
         self.assertNotEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='America/New_York'), datetime_us_str)
 
         # Change language, timezone and format
-        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='dd/MM/YYYY HH:mm'), '31/01/2017 05:33')
         self.assertEqual(misc.format_datetime(lang.with_context(lang='en_US').env, datetime_str, tz='Europe/Brussels', dt_format='MMM d, y'), 'Jan 31, 2017')
 
         # Check given `lang_code` overwites context lang
-        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
-        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
+        fmt_fr = 'dd MMMM YYYY à HH:mm:ss Z'
+        fmt_us = "MMMM dd, YYYY 'at' hh:mm:ss a Z"
+        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format=fmt_fr, lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format=fmt_us, lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
 
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
         time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('US/Eastern'))  # 4:30 PM timezoned
 
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part), '16:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm:ss'), '16:30:22')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
 
         # Check format in different languages
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm'), '16:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm'), '\u4e0b\u53484:30')
 
         # Check timezoned time part
-        self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='HH:mm:ss Z'), '16:30:22 -0504')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
 
         #Check timezone conversion in format_time
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='long'), '11:33:00 +0100')
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='long'), '05:33:00 HNE')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='HH:mm:ss Z'), '11:33:00 +0100')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='HH:mm:ss Z'), '05:33:00 -0500')
 
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
-        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm', lang_code='fr_FR'), 'PM4:30')
 
     def test_02_tz(self):
         self.env.user.tz = 'Europe/Brussels'
@@ -469,3 +473,14 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCannotRead(__file__, ValueError, filter_ext=('.png',))
         # file doesnt exist but has wrong extension
         self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
+
+
+class TestDictTools(BaseCase):
+    def test_readonly_dict(self):
+        d = misc.ReadonlyDict({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            d['baz'] = 'xyz'
+        with self.assertRaises(AttributeError):
+            d.update({'baz': 'xyz'})
+        with self.assertRaises(TypeError):
+            dict.update(d, {'baz': 'xyz'})

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.tests import Form, tagged
 
@@ -317,3 +318,42 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self._apply_promo_code(order, loyalty_card.code)
         # Check if there is an error in the sequence
         # via `_apply_program_reward` in `apply_promo_code` method
+
+    def test_nothing_delivered_nothing_to_invoice(self):
+        program = self.env['loyalty.program'].create({
+            'name': '10% reduction on all orders',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'rule_ids': [Command.create({
+                'minimum_amount': 50,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Test product',
+            'type': 'product',
+            'list_price': 200.0,
+            'invoice_policy': 'delivery',
+        })
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': product.id,
+            'order_id': order.id,
+        })
+        self._auto_rewards(order, program)
+        self.assertNotEqual(order.reward_amount, 0)
+        self.assertEqual(order.invoice_status, 'no')
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.carrier.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+        order.action_confirm()
+        self.assertEqual(order.delivery_set, True)
+        self.assertEqual(order.invoice_status, 'no')

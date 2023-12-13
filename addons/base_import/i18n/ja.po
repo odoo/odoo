@@ -90,7 +90,7 @@ msgstr "基本インポート時のマッピング"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "一括インポート"
 
 #. module: base_import
 #. openerp-web
@@ -300,11 +300,29 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "日付の処理エラー [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "レコードのインポート中にエラーが発生しました： テキストの区切り文字は1文字でなければなりません。"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"レコードをインポート中にエラーが発生しました: "
+"全ての列は同じサイズである必要がありますが、タイトル列は%dエントリを持っており、最初の列は%dを持っています。セパレータ文字を変更する必要があるかもしれません。"
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "見込残時間:"
 
 #. module: base_import
 #. openerp-web
@@ -374,7 +392,7 @@ msgstr "ファイルのチェック と/または インポート。 バイナ�
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "中断する前に現在のバッチを最終処理しています..."
 
 #. module: base_import
 #. openerp-web
@@ -450,6 +468,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"ファイルにカラム名が含まれている場合\n"
+"　　　Odoo はフィールドに関連するカラムを自動認識します。\n"
+"　　　この機能により、カラムが多いファイルのインポートでも簡単に\n"
+"　　　作業ができます。"
 
 #. module: base_import
 #. openerp-web
@@ -466,7 +488,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
+msgstr "画像サイズが大きすます、アップロードされた画像は4200万ピクセル未満である必要があります。"
 
 #. module: base_import
 #. openerp-web
@@ -493,7 +515,7 @@ msgstr "ファイルのインポート"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "インポートファイルにコンテンツがないか、破損しています。"
 
 #. module: base_import
 #. openerp-web
@@ -533,7 +555,7 @@ msgstr "インポートファイル"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "インポート中"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -623,7 +645,7 @@ msgstr "ファイル読込"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "ファイルロード中..."
 
 #. module: base_import
 #. openerp-web
@@ -638,7 +660,7 @@ msgstr "モデル"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "複数のエラーが発生しました"
 
 #. module: base_import
 #. openerp-web
@@ -775,14 +797,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "以下に設定: FALSE"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "以下に設定: TRUE"
 
 #. module: base_import
 #. openerp-web
@@ -796,7 +818,7 @@ msgstr "空白の値をセット"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "シート:"
 
 #. module: base_import
 #. openerp-web
@@ -836,7 +858,7 @@ msgstr "何行目から"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "インポートを中止"
 
 #. module: base_import
 #. openerp-web
@@ -967,14 +989,14 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "ファイルはバッチごとにインポートされます"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "このカラムはフィールド内で連結されます"
 
 #. module: base_import
 #. openerp-web

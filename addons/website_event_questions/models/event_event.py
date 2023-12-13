@@ -32,7 +32,7 @@ class EventEvent(models.Model):
 
         When synchronizing questions:
 
-          * lines that no answer are removed;
+          * lines with no registered answers are removed;
           * type lines are added;
         """
         if self._origin.question_ids:
@@ -52,18 +52,8 @@ class EventEvent(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.question_ids:
-                command += [
-                    (0, 0, {
-                        'title': question.title,
-                        'question_type': question.question_type,
-                        'sequence': question.sequence,
-                        'once_per_order': question.once_per_order,
-                        'is_mandatory_answer': question.is_mandatory_answer,
-                        'answer_ids': [(0, 0, {
-                            'name': answer.name,
-                            'sequence': answer.sequence
-                        }) for answer in question.answer_ids],
-                    }) for question in event.event_type_id.question_ids
-                ]
             event.question_ids = command
+
+            # copy questions so changes in the event don't affect the event type
+            for question in event.event_type_id.question_ids:
+                event.question_ids += question.copy({'event_type_id': False})

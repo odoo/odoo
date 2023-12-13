@@ -320,7 +320,12 @@ class AccountEdiFormat(models.Model):
         refund_sign = (1 if values['is_refund'] else -1)
         invoice_lines = []
         for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
-            discount = line.balance / (1 - line.discount / 100) * line.discount / 100
+            if line.discount == 100.0:
+                gross_price_subtotal = line.price_unit * line.quantity
+            else:
+                gross_price_subtotal = line.price_subtotal / (1 - line.discount / 100.0)
+            discount = (gross_price_subtotal - line.price_subtotal) * refund_sign
+
             if not any([t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]):
                 total = line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
             else:

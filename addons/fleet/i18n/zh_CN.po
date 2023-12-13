@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Wil Odoo, 2023
 # Chloe Wang, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -287,6 +288,11 @@ msgid "CO2 Emissions g/km"
 msgstr "二氧化碳排放量 克/公里"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+msgid "CO2 Standard"
+msgstr "CO2 标准"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "车辆的CO2排放量"
@@ -399,7 +405,6 @@ msgid "Closed"
 msgstr "已关闭"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Co2 Standard"
 msgstr "Co2标准"
@@ -469,11 +474,6 @@ msgid "Contract Expiration Date"
 msgstr "合同到期日期"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract Information"
-msgstr "合同信息"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Contract Start Date"
 msgstr "合同开始日期"
@@ -506,6 +506,7 @@ msgstr "合同"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__amount
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost"
 msgstr "成本"
 
@@ -630,7 +631,7 @@ msgstr "当前驾驶员"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
-msgstr "交通工具当前状态"
+msgstr "交通工具当前省/州"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
@@ -644,6 +645,11 @@ msgstr "每天"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__date
 msgid "Date"
 msgstr "日期"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr "车辆注册日期"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
@@ -662,11 +668,6 @@ msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
 msgstr "合同到期日期（默认为合同开始日期一年之后的日期）"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
-msgstr "车辆注册日期"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
@@ -818,6 +819,7 @@ msgid "Employee Car"
 msgstr "员工车辆"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_log_services.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -855,7 +857,7 @@ msgid "Entry into service tax"
 msgstr "输入服务税"
 
 #. module: fleet
-#. openerp-web
+#. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 #, python-format
 msgid ""
@@ -931,7 +933,6 @@ msgstr "车辆服务类型"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
-#: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
 msgstr "车队：根据支出频率生成合同成本"
 
@@ -1121,11 +1122,8 @@ msgstr "确认后, 出现提示消息."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
@@ -1133,11 +1131,6 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
 msgstr "点火线圈更换"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr "注册日期"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
@@ -1148,7 +1141,6 @@ msgstr "进行中"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__service_ids
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Included Services"
 msgstr "包括服务"
 
@@ -1159,6 +1151,7 @@ msgid "Incoming"
 msgstr "进"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Information"
 msgstr "信息"
@@ -1167,11 +1160,6 @@ msgstr "信息"
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
 msgstr "更换进气管垫圈"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Invoice Date"
-msgstr "结算日期"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
@@ -1457,13 +1445,6 @@ msgid "New Request"
 msgstr "新的请求"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一个活动日历事件"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
@@ -1495,6 +1476,7 @@ msgid "No"
 msgstr "否"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No Plate"
@@ -1506,6 +1488,7 @@ msgid "No data for analysis"
 msgstr "无分析数据"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "No plate"
@@ -1755,6 +1738,11 @@ msgid "Registered"
 msgstr "已注册"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "活动日期"
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Rent (Excluding VAT)"
 msgstr "租金（不含增值税）"
@@ -1835,13 +1823,6 @@ msgstr "更换转子"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
 msgstr "运行中"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_sms_error
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "短信息发送错误"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1934,6 +1915,7 @@ msgid "Spark Plug Replacement"
 msgstr "更换火花塞"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Specify the End date of %s"
@@ -1963,7 +1945,7 @@ msgstr "更换启动器"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
-msgstr "状态"
+msgstr "省/州"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
@@ -2010,8 +1992,8 @@ msgstr "标签名"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "标签名称已存在!"
+msgid "Tag name already exists!"
+msgstr "标签名称已存在！"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -2192,6 +2174,7 @@ msgstr "单位"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
 #: model:ir.ui.menu,name:fleet.fleet_vehicles_configuration
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2216,7 +2199,6 @@ msgid "Vehicle Description"
 msgstr "车辆描述"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vehicle Information"
 msgstr "车辆信息"
@@ -2250,6 +2232,7 @@ msgid "Vehicle Type"
 msgstr "车辆类型"
 
 #. module: fleet
+#. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -2319,20 +2302,6 @@ msgid "Wave"
 msgstr "波次"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__website_message_ids
-msgid "Website communication history"
-msgstr "网上沟通记录"
-
-#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
 msgstr "每周"
@@ -2361,11 +2330,6 @@ msgstr "模型"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
 msgstr "在此输入与合同相关的其他信息"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
-msgid "Write here all supplementary information relative to this contract"
-msgstr "在此输入与合同相关的其他补充信息"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form

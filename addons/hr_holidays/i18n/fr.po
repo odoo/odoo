@@ -6,13 +6,14 @@
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2023-09-15 09:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -664,22 +665,22 @@ msgstr "<span class=\"o_stat_text\">Congés</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">From</span>"
-msgstr "<span class=\"text-muted\">De</span>"
+msgstr "<span class=\"text-muted\">Du</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr "<span class=\"text-muted\">À</span>"
+msgstr "<span class=\"text-muted\">Au</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from </span>"
-msgstr "<span class=\"text-muted\">de </span>"
+msgstr "<span class=\"text-muted\">du </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">jusqu'à </span>"
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr "<span class=\"text-muted\"> au </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2130,8 +2131,8 @@ msgid "Hour to"
 msgstr "Heure à"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -2803,6 +2804,12 @@ msgstr "Pas de validation"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model_terms:ir.actions.server,help:hr_holidays.act_hr_employee_holiday_request
+msgid "No data to display"
+msgstr "Aucune donnée à afficher"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
 msgstr "Pas encore de données !"
@@ -3021,6 +3028,13 @@ msgid "Open"
 msgstr "Ouvrir"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Opération non prise en charge"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
@@ -3103,8 +3117,18 @@ msgid "Public"
 msgstr "Public"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr "Jour férié"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
 msgid "Public Holidays"
 msgstr "Congés publics"
 
@@ -3495,14 +3519,20 @@ msgstr ""
 "Planifiée : activités futures"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
 msgid "Stress Day"
 msgstr "Jour de pression"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
 msgid "Stress Days"
 msgstr "Jours de pression"
 
@@ -3896,6 +3926,8 @@ msgstr ""
 "                Les employés demandent l'allocation des congés aux gestionnaires de congé (par ex. jours de récupération)."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -4156,6 +4188,15 @@ msgstr "Congé éducation"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
 msgid "Transferred to the next year"
 msgstr "Transféré(s) à l'année suivante"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Essayez d'ajouter quelques enregistrements ou veillez à ce qu'il n'y a pas "
+"de filtre actif dans la barre de recherche."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4653,8 +4694,8 @@ msgid "day(s)"
 msgstr "jour(s)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4682,8 +4723,8 @@ msgstr ""
 " de limite)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

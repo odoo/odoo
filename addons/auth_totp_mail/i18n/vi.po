@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Thi Huong Nguyen, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,22 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> đã yêu cầu bạn kích hoạt xác thực hai yếu tố để bảo vệ tài khoản của bạn.<br><br>\n"
+"        Xác thực hai yếu tố (\"2FA\") là một hệ thống xác thực kép.\n"
+"        Bước đầu tiên được thực hiện với mật khẩu của bạn và bước thứ hai với mã bạn nhận được từ một ứng dụng dành riêng cho thiết bị di động.\n"
+"        Các ứng dụng phổ biến bao gồm Authy, Google Authenticator hoặc Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Kích hoạt xác thực hai yếu tố của tôi\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #. odoo-python

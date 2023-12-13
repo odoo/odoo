@@ -168,12 +168,12 @@ msgstr "購買積分。"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "可取消"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "可重新發送"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -206,6 +206,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"選擇簡訊發送方式：\n"
+"簡訊：群發簡訊\n"
+"發佈為訊息：在文件記錄為訊息\n"
+"發佈為備註：群發簡訊，附有存檔"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -290,7 +294,7 @@ msgstr "單據關注者"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
 msgid "Document ID"
-msgstr "文件ID"
+msgstr "文件識別碼"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
@@ -353,7 +357,7 @@ msgstr "用於存儲已清理電話號碼的欄位。説明加快搜索和比較
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
 msgid ""
 "File from where the template originates. Used to reset broken template."
-msgstr ""
+msgstr "範本來自的來源檔案。用於重設損壞的範本。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
@@ -700,12 +704,12 @@ msgstr "電話/手機"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "Post as Message"
-msgstr ""
+msgstr "發佈為訊息"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Post as Note"
-msgstr ""
+msgstr "發佈為備註"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -746,7 +750,7 @@ msgstr "收件人"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 msgid "Recipient Name"
-msgstr ""
+msgstr "收件人名稱"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
@@ -1005,13 +1009,13 @@ msgstr "發送一條簡訊"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "傳送為"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "傳送為（SMS 短訊）"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1101,7 +1105,7 @@ msgstr "模板"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
 msgid "Template Filename"
-msgstr ""
+msgstr "範本檔案名稱"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
@@ -1151,7 +1155,7 @@ msgstr "此電話號碼已列入簡訊營銷黑名單。點擊取消黑名單。
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 msgid "Try Again"
-msgstr ""
+msgstr "再試"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1173,6 +1177,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"伺服器操作類型。可使用以下的值：\n"
+"- 「執行 Python 程式碼」：將執行的一段 Python 程式碼\n"
+"- 「建立新記錄」：使用新的值建立新記錄\n"
+"- 「更新記錄」：更新記錄的值\n"
+"- 「執行多個操作」：定義一個操作以觸發多個其他伺服器操作\n"
+"- 「發送電郵」：張貼訊息、備註或發送電子郵件（聊天應用程式）\n"
+"- 「加入關注者」：將關注者加至記錄（聊天應用程式）\n"
+"- 「建立下一活動」：建立一個活動（聊天應用程式）\n"
+"- 「發送 SMS 簡訊」：發送 SMS 文字短訊，將其記錄在文件上（短訊應用程式）"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc

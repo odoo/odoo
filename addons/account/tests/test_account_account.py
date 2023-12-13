@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import psycopg2
+from freezegun import freeze_time
 
 
 @tagged('post_install', '-at_install')
@@ -342,3 +344,39 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # saving a form without a code should not be possible
         with self.assertRaises(AssertionError):
             account_form.save()
+
+    @freeze_time('2023-09-30')
+    def test_generate_account_suggestions(self):
+        """
+            Test the generation of account suggestions for a partner.
+
+            - Creates: partner and a account move of that partner.
+            - Checks if the most frequent account for the partner matches created account (with recent move).
+            - Sets the account as deprecated and checks that it no longer appears in the suggestions.
+
+            * since tested function takes into account last 2 years, we use freeze_time
+        """
+        partner = self.env['res.partner'].create({'name': 'partner_test_generate_account_suggestions'})
+        account = self.company_data['default_account_revenue']
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2023-09-30',
+            'line_ids': [Command.create({'price_unit': 100, 'account_id': account.id})]
+        })
+
+        results_1 = self.env['account.account']._get_most_frequent_accounts_for_partner(
+            company_id=self.env.company.id,
+            partner_id=partner.id,
+            move_type="out_invoice"
+        )
+        self.assertEqual(account.id, results_1[0], "Account with most account_moves should be listed first")
+
+        account.deprecated = True
+        account.flush_recordset(['deprecated'])
+        results_2 = self.env['account.account']._get_most_frequent_accounts_for_partner(
+            company_id=self.env.company.id,
+            partner_id=partner.id,
+            move_type="out_invoice"
+        )
+        self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")

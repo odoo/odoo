@@ -7,12 +7,12 @@
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
 # Kovács Tibor <kovika@gmail.com>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Tamás Dombos, 2022
 # Martin Trigaux, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # krnkris, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # gezza <geza.nagy@oregional.hu>, 2023
+# Tamás Dombos, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-26 14:21+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
+"Last-Translator: Tamás Dombos, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,7 +204,7 @@ msgstr "Összes költség jelentés"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 msgid "All Reports"
-msgstr ""
+msgstr "Összes költségelszámolás"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -217,7 +217,7 @@ msgstr "Esedékes összeg"
 #: code:addons/hr_expense/static/src/mixins/document_upload.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "Hiba történt a feltöltés alatt"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -290,7 +290,7 @@ msgstr "Jóváhagy"
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Approve Report"
-msgstr ""
+msgstr "Költségelszámolás elfogadása"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
@@ -640,7 +640,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 #, python-format
 msgid "Duplicate Expense"
-msgstr ""
+msgstr "Költség duplikálása"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -706,7 +706,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Expense Approver"
-msgstr ""
+msgstr "Költség jóváhagyója"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -1698,7 +1698,7 @@ msgstr "Leolvas"
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "to report"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -2009,13 +2009,13 @@ msgstr "Végösszeg"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Company Currency"
-msgstr ""
+msgstr "Összesen vállalati péznemben"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "Összesen devizában"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
@@ -2259,6 +2259,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
 
@@ -2327,28 +2333,28 @@ msgstr "pl.: debreceni utazás"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "elutasítva"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "fizetendő"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "jelentendő"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "jóváhagyás alatt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2363,4 +2369,3 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
-"A költségelszámolás feladásához a munkavállaló magáncíme szükséges. Kérjük, adja hozzá a munkavállalói űrlaphoz."

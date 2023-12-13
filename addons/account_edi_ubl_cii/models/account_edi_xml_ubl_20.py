@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
-from odoo.osv import expression
 from odoo.tools import html2plaintext, cleanup_xml_node
 from lxml import etree
 from collections import defaultdict
@@ -211,24 +210,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:        An invoice line.
         :param taxes_vals:  The tax details for the current invoice line.
         :return:            A python dictionary.
-
         """
         product = line.product_id
         taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
         description = line.name and line.name.replace('\n', ', ')
-
         return {
-            # Simple description about what you are selling.
             'description': description,
-
-            # The name of the item.
-            'name': product.name,
-
-            # Identifier of the product.
+            'name': product.name or description,
             'sellers_item_identification_vals': {'id': product.code},
-
-            # The main tax applied. Only one is allowed.
             'classified_tax_category_vals': tax_category_vals_list,
         }
 
@@ -583,11 +573,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        vat = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID')
-        phone = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone')
-        mail = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail')
-        name = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name')
-        country_code = _find_value(f'//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode')
+        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID', tree)
+        phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
+        mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
+        name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
+        country_code = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
         self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
@@ -683,10 +673,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _import_fill_invoice_line_form(self, journal, tree, invoice, invoice_line, qty_factor):
         logs = []
 
-        # Product
-        product = self._import_retrieve_info_from_map(
-            tree,
-            self._import_retrieve_product_map(journal),
+        # Product.
+        name = self._find_value('./cac:Item/cbc:Name', tree)
+        product = self.env['account.edi.format']._retrieve_product(
+            default_code=self._find_value('./cac:Item/cac:SellersItemIdentification/cbc:ID', tree),
+            name=name,
+            barcode=self._find_value("./cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID='0160']", tree),
         )
         if product is not None:
             invoice_line.product_id = product
@@ -721,7 +713,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
-                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
         return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
 
     def _correct_invoice_tax_amount(self, tree, invoice):
@@ -764,74 +756,3 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
             return ('in_refund', 'out_refund'), 1
         return None, None
-
-    def _import_retrieve_partner_map(self, company, move_type='purchase'):
-        role = "Customer" if move_type == 'sale' else "Supplier"
-
-        def with_vat(tree, extra_domain):
-            vat_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}CompanyID')
-            vat = None if vat_node is None else vat_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_vat(vat, extra_domain)
-
-        def with_phone_mail(tree, extra_domain):
-            phone_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Telephone')
-            mail_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}ElectronicMail')
-
-            phone = None if phone_node is None else phone_node.text
-            mail = None if mail_node is None else mail_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
-
-        def with_name(tree, extra_domain):
-            name_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Name')
-            name = None if name_node is None else name_node.text
-            return self.env['account.edi.format']._retrieve_partner_with_name(name, extra_domain)
-
-        return {
-            10: lambda tree: with_vat(tree, [('company_id', '=', company.id)]),
-            20: lambda tree: with_vat(tree, []),
-            30: lambda tree: with_phone_mail(tree, [('company_id', '=', company.id)]),
-            40: lambda tree: with_phone_mail(tree, []),
-            50: lambda tree: with_name(tree, [('company_id', '=', company.id)]),
-            60: lambda tree: with_name(tree, []),
-        }
-
-    def _import_retrieve_product_map(self, company):
-
-        def with_code_barcode(tree, extra_domain):
-            domains = []
-
-            default_code_node = tree.find('./{*}Item/{*}SellersItemIdentification/{*}ID')
-            if default_code_node is not None:
-                domains.append([('default_code', '=', default_code_node.text)])
-
-            barcode_node = tree.find("./{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID='0160']")
-            if barcode_node is not None:
-                domains.append([('barcode', '=', barcode_node.text)])
-
-            if not domains:
-                return None
-
-            return self.env['product.product'].search(extra_domain + expression.OR(domains), limit=1)
-
-        def with_name(tree, extra_domain):
-            name_node = tree.find('./{*}Item/{*}Name')
-
-            if name_node is None:
-                return None
-
-            return self.env['product.product'].search(extra_domain + [('name', 'ilike', name_node.text)], limit=1)
-
-        return {
-            10: lambda tree: with_code_barcode(tree, [('company_id', '=', company.id)]),
-            20: lambda tree: with_code_barcode(tree, []),
-            30: lambda tree: with_name(tree, [('company_id', '=', company.id)]),
-            40: lambda tree: with_name(tree, []),
-        }
-
-    def _import_retrieve_info_from_map(self, tree, import_method_map):
-        for key in sorted(import_method_map.keys()):
-            record = import_method_map[key](tree)
-            if record:
-                return record
-
-        return None

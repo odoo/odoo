@@ -286,7 +286,7 @@
                             </group>
                             <group name="tags" string="Tags">
                                 <field name="product_tag_ids" string="Product Template Tags" widget="many2many_tags" readonly="1" options="{'no_open': True, 'color_field': 'color'}"/>
-                                <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                                <field name="additional_product_tag_ids" widget="many2many_tags" options="{'no_open': True, 'color_field': 'color'}"/>
                             </group>
                         </group>
                         <group>
@@ -388,10 +388,10 @@
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
-                    <attribute name="options">{'no_open': true}</attribute>
+                    <attribute name="options">{'no_open': true, 'color_field': 'color'}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
-                    <field name="additional_product_tag_ids" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                    <field name="additional_product_tag_ids" options="{'no_open': true, 'color_field': 'color'}"/>
                 </field>
             </field>
         </record>

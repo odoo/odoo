@@ -12,6 +12,7 @@ import {
     toggleCheckList,
     toggleOrderedList,
     toggleUnorderedList,
+    triggerEvent,
     unformat,
 } from '../utils.js';
 
@@ -54,7 +55,7 @@ describe('List', () => {
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
                             stepFunction: toggleUnorderedList,
                             contentAfter:
-                                '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
+                                '<ul><li><b>ab</b> <i>cd</i> ef[]gh</li></ul>',
                         });
                     });
                     it('should turn an empty paragraph of multiple table cells into a list', async () => {
@@ -146,7 +147,7 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             stepFunction: toggleUnorderedList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn nested list items into paragraphs', async () => {
@@ -295,7 +296,7 @@ describe('List', () => {
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
                             stepFunction: toggleOrderedList,
                             contentAfter:
-                                '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
+                                '<ol><li><b>ab</b> <i>cd</i> ef[]gh</li></ol>',
                         });
                     });
                     it('should turn an empty paragraph of multiple table cells into a list', async () => {
@@ -387,7 +388,7 @@ describe('List', () => {
                                 '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
                             stepFunction: toggleOrderedList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn an list of multiple table cells into a empty paragraph', async () => {
@@ -491,7 +492,7 @@ describe('List', () => {
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             contentAfter:
-                                '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
+                                '<ul class="o_checklist"><li><b>ab</b> <i>cd</i> ef[]gh</li></ul>',
                         });
                     });
                     it('should turn a paragraph between 2 checklist into a checklist item', async () => {
@@ -709,7 +710,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             stepFunction: toggleCheckList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn nested list items into paragraphs', async () => {
@@ -7439,6 +7440,105 @@ describe('List', () => {
                 </ol>`),
                 });
             });
+            it('should indent unordered list inside a table cell', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li>abc</li>
+                                            <li>def[]</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab' }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li>def[]</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                });
+            });
+            it('should indent checklist inside a table cell', async() => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul class="o_checklist">
+                                            <li>abc</li>
+                                            <li>def[]</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab' }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul class="o_checklist">
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li>def[]</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                });
+            });
         });
         describe('with selection', () => {
             it('should indent the first element of a list', async () => {
@@ -7853,6 +7953,55 @@ describe('List', () => {
                     <p>after]</p>`),
                 });
             });
+            it('should indent ordered list inside a table cell', async() => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ol>
+                                            <li>abc</li>
+                                            <li>[def]</li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab' }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ol>
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li>[def]</li>
+                                                </ol>
+                                            </li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                });
+            });
         });
     });
     describe('outdent', () => {
@@ -7988,6 +8137,105 @@ describe('List', () => {
                             </li>
                             <li>[]c</li>
                         </ul>`),
+                });
+            });
+            it('should outdent unordered list inside a table cell', async() => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li>def[]</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>abc</li>
+                                            <li>def[]</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                });
+            });
+            it('should outdent checklist inside a table cell', async() => {
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ul class="o_checklist">
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ul class="o_checklist">
+                                                    <li>def[]</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ul class="o_checklist">
+                                            <li>abc</li>
+                                            <li>def[]</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
                 });
             });
         });
@@ -8180,6 +8428,55 @@ describe('List', () => {
                         <li>a</li>
                     </ul>
                     <p>after]</p>`),
+                });
+            });
+            it('should outdent a ordered list inside a table cell', async() => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ol>
+                                            <li>abc</li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li>[def]</li>
+                                                </ol>
+                                            </li>
+                                        </ol>
+                                        </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+                    stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                    contentAfter: unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ghi
+                                    </td>
+                                    <td>
+                                        <ol>
+                                            <li>abc</li>
+                                            <li>[def]</li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        jkl
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
                 });
             });
         });

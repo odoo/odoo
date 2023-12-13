@@ -87,6 +87,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         ev.preventDefault();
 
         var $clipboardBtn = this.$('.o_survey_session_copy');
+        $clipboardBtn.tooltip('dispose');
 
         $clipboardBtn.popover({
             placement: 'right',
@@ -108,7 +109,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             clipboard.destroy();
             $clipboardBtn.popover('show');
             _.delay(function () {
-                $clipboardBtn.popover('hide');
+                $clipboardBtn.popover('dispose');
             }, 800);
         });
 

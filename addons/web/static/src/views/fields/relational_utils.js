@@ -564,7 +564,7 @@ X2ManyFieldDialog.props = {
     save: Function,
     title: String,
     delete: { optional: true },
-    deleteButtonLabel: {optional: true},
+    deleteButtonLabel: { optional: true },
     config: Object,
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
@@ -652,8 +652,9 @@ export function useOpenX2ManyRecord({
                 views: { form },
             });
             const { delete: canDelete, onDelete } = activeActions;
-            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;            
-            deleteButtonLabel = activeActions.type === 'one2many' ? env._t('Delete') : env._t('Remove');
+            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;
+            deleteButtonLabel =
+                activeActions.type === "one2many" ? env._t("Delete") : env._t("Remove");
         } else {
             const recordParams = {
                 context: makeContext([list.context, context]),
@@ -702,7 +703,32 @@ export function useOpenX2ManyRecord({
             { onClose }
         );
     }
-    return openRecord;
+
+    let recordIsOpen = false;
+    return (params) => {
+        if (recordIsOpen) {
+            return;
+        }
+        recordIsOpen = true;
+
+        const onClose = params.onClose;
+        params = {
+            ...params,
+            onClose: (...args) => {
+                recordIsOpen = false;
+                if (onClose) {
+                    return onClose(...args);
+                }
+            },
+        };
+
+        try {
+            return openRecord(params);
+        } catch (e) {
+            recordIsOpen = false;
+            throw e;
+        }
+    };
 }
 
 export function useX2ManyCrud(getList, isMany2Many) {
@@ -716,7 +742,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
                 resIds = [...currentIds, ...object];
             } else if (object.resId) {
                 if (object.isDirty) {
-                   await object.save();
+                    await object.save();
                 }
                 resIds = [...currentIds, object.resId];
             } else {

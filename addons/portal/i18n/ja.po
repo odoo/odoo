@@ -27,7 +27,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" アクションを検証して下さい。"
 
 #. module: portal
 #. odoo-javascript
@@ -39,7 +39,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
-msgstr ""
+msgstr "1. パスワードを入力して、このアカウントの所有者であることを確認します。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -47,6 +47,8 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. 以下の方法でアカウントを削除することを確認します:\n"
+"                                        ログインをコピーする("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -80,7 +82,7 @@ msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> ログアウ�
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> アプリ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -105,7 +107,7 @@ msgstr "<option value=\"\">国...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">選択...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -114,21 +116,23 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">会社名やVAT番号の変更は、一度発行された書類ではできません。<br/> "
+"この操作については、直接お問い合わせ下さい。</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">以下でフィルタ:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">以下でグループ化:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">以下でソート:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -218,7 +222,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "APIキー説明"
 
 #. module: portal
 #. odoo-javascript
@@ -250,7 +254,7 @@ msgstr "アカウントセキュリティ"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr ""
+msgstr "アカウントが削除されました！"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -282,7 +286,7 @@ msgstr "以下に追加"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
+msgstr "既に登録されています。"
 
 #. module: portal
 #. odoo-python
@@ -294,7 +298,7 @@ msgstr "添付ファイルごとにアクセストークンを提供する必要
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "本当にこれを実行しますか？"
 
 #. module: portal
 #. odoo-javascript
@@ -480,7 +484,7 @@ msgstr "削除"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "アカウントを削除"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -507,6 +511,11 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"アカウントを無効にし、以後のログインを防ぎます。<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            このアクションは取り消すことができません。\n"
+"                                        </b>"
 
 #. module: portal
 #. odoo-javascript
@@ -550,7 +559,7 @@ msgstr "Eメール"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "Eメールアドレスはすでに他のユーザに取られています"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -607,6 +616,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"これが新しいAPIキーです。RPCアクセスにはパスワードの代わりにこれを使用して下さい。\n"
+"　　　　インタラクティブな使用にはログインが必要です。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -625,7 +636,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "重要:"
 
 #. module: portal
 #. odoo-javascript
@@ -654,7 +665,7 @@ msgstr "無効"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "無効なEメールアドレス"
 
 #. module: portal
 #. odoo-python
@@ -678,17 +689,17 @@ msgstr "招待メッセージ"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "ユーザアカウントを作成するための連絡先への招待Eメール"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "内部か"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "ポータルか"
 
 #. module: portal
 #. odoo-javascript
@@ -698,6 +709,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"この記述が明確で完全であることが非常に\n"
+"　　　　重要です、"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -723,7 +736,7 @@ msgstr "最終更新日"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "最新の認証"
 
 #. module: portal
 #. odoo-javascript
@@ -761,7 +774,7 @@ msgstr "モデル%(model_name)s は%(field_name)sフィールドが無いため�
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "複数会社のレポートはサポートされていません。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -800,7 +813,7 @@ msgstr "次"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "表示するドキュメントがありません。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -817,7 +830,7 @@ msgstr "Odooロゴ"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "内部かつポータルユーザのみAPIキーを作成することができます"
 
 #. module: portal
 #. odoo-javascript
@@ -864,7 +877,7 @@ msgstr "あなた自身のアカウントであることを確認するために
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Portal Access Management"
-msgstr ""
+msgstr "ポータルアクセス管理"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -921,7 +934,7 @@ msgstr " %sに公開済"
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
-msgstr ""
+msgstr "今後決して連絡を受けないようにブロックリストにEメールと電話番号を記載する"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -931,7 +944,7 @@ msgstr "Qweb"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "再招待"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -956,7 +969,7 @@ msgstr "関連ドキュメントモデル"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "アクセスの取消"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1027,7 +1040,7 @@ msgstr "サインイン"
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
-msgstr ""
+msgstr "入力必須項目があります。必ずメッセージをご記入下さい。"
 
 #. module: portal
 #. odoo-python
@@ -1094,14 +1107,14 @@ msgstr "添付ファイルが存在しないか、添付ファイルにアクセ
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "連絡先 \"%s\"は有効なEメールを持っていません。"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "連絡先 \"%s\" は既存のユーザと同じEメールを持っています。"
 
 #. module: portal
 #. odoo-python
@@ -1116,7 +1129,7 @@ msgstr "ドキュメントが存在しないか、ドキュメントにアクセ
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "このキーは後で取り出すことはできず、以下を提供します:"
 
 #. module: portal
 #. odoo-python
@@ -1138,14 +1151,14 @@ msgstr "入力した古いパスワードが間違っています。パスワー
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "取引先\"%s\"は既にポータルアクセス権を持っています。"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "取引先 \"%s\" はポータルアクセス権がない、または内部です。"
 
 #. module: portal
 #. odoo-python
@@ -1154,7 +1167,7 @@ msgstr ""
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
-msgstr ""
+msgstr "ポータルユーザに電子メールを送信するためのテンプレート \"ポータル: 新規ユーザ\"が見つかりません。"
 
 #. module: portal
 #. odoo-javascript
@@ -1180,13 +1193,13 @@ msgstr "こちらは顧客ポータルのプレビューです。"
 msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
-msgstr ""
+msgstr "この取引先は内部ユーザにリンクされており、既にポータルへのアクセス権を持っています。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
-msgstr ""
+msgstr "このテキストは、新規ポータルユーザに送信されるEメールの最後に記載されます。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1221,7 +1234,7 @@ msgstr "有効"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "有効なEメールアドレス"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1341,7 +1354,7 @@ msgstr "キーを書き留めてください"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "パスワードが間違っています。"
 
 #. module: portal
 #. odoo-python
@@ -1373,19 +1386,19 @@ msgstr "すべきです"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "以下を入力して\""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "まず、取引先 \"%s\"にポータルアクセスを許可する必要があります。"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "あなたのアカウント {{ object.user_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1423,7 +1436,7 @@ msgstr "コメント"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "完全アクセス"
 
 #. module: portal
 #. odoo-javascript
@@ -1433,6 +1446,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"それは、一度作成された\n"
+"　　　　キーを識別する唯一の方法となります。"
 
 #. module: portal
 #. odoo-javascript
@@ -1463,4 +1478,4 @@ msgstr "コメントを投稿"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "をユーザアカウントに追加する場合は、それを安全に保管することが非常に重要です。"

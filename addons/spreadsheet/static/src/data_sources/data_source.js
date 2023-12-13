@@ -82,7 +82,7 @@ export class LoadableDataSource {
     _assertDataIsLoaded() {
         if (!this._isFullyLoaded) {
             this.load();
-            throw new LoadingDataError();
+            throw LOADING_ERROR;
         }
         if (!this._isValid) {
             throw new Error(this._loadErrorMessage);
@@ -97,3 +97,5 @@ export class LoadableDataSource {
      */
     async _load() {}
 }
+
+const LOADING_ERROR = new LoadingDataError();

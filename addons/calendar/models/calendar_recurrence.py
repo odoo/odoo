@@ -177,13 +177,15 @@ class RecurrenceRule(models.Model):
         'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'day', 'weekday')
     def _compute_rrule(self):
         for recurrence in self:
-            recurrence.rrule = recurrence._rrule_serialize()
+            current_rule = recurrence._rrule_serialize()
+            if recurrence.rrule != current_rule:
+                recurrence.write({'rrule': current_rule})
 
     def _inverse_rrule(self):
         for recurrence in self:
             if recurrence.rrule:
                 values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
-                recurrence.write(values)
+                recurrence.with_context(dont_notify=True).write(values)
 
     def _reconcile_events(self, ranges):
         """

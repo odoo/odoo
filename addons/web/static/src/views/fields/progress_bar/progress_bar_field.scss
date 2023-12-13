@@ -4,6 +4,13 @@
         height: 15px;
         border: 1px solid $o-gray-300;
         background-color: $o-view-background-color;
+
+        > div {
+            background-color: $o-brand-primary;
+            &.o_progress_exceed {
+                background-color: $o-gray-700;
+            }
+        }
     }
 
     .o_progressbar_value input {
@@ -28,6 +35,7 @@
     .o_progressbar {
         // Force progress bars to respect table's layout
         display: table-row;
+        justify-content: end;
     }
 }
 

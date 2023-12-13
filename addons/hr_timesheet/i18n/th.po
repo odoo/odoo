@@ -241,6 +241,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"บัญชีการวิเคราะห์ที่เชื่อมโยงโปรเจกต์นี้ งาน และระบบบันทึกเวลาของโปรเจกต์นี้\n"
+"ติดตามต้นทุนและรายได้ของโปรเจกต์ของคุณโดยการตั้งค่าบัญชีการวิเคราะห์นี้ในเอกสารที่เกี่ยวข้องของคุณ (เช่น ใบสั่งขาย ใบแจ้งหนี้ ใบสั่งซื้อ ใบเรียกเก็บเงินของผู้ขาย ค่าใช้จ่าย และอื่นๆ)\n"
+"บัญชีการวิเคราะห์นี้สามารถเปลี่ยนแปลงได้ในแต่ละงานแยกกันหากจำเป็น\n"
+"จำเป็นต้องมีบัญชีการวิเคราะห์เพื่อใช้ระบบบันทึกเวลา"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -360,7 +364,7 @@ msgstr "ค่าโปรเจกต์เริ่มต้นสำหรั
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
-msgstr ""
+msgstr "กำหนด 'ต้นทุนรายชั่วโมง' ของพนักงานเพื่อติดตามต้นทุนเวลาของพวกเขา"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -526,7 +530,7 @@ msgstr "โปรเจกต์เบื้องต้น"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "ผู้ดำเนินการที่ไม่ถูกต้อง: %s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -534,7 +538,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "ค่าไม่ถูกต้อง: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
@@ -817,7 +821,7 @@ msgstr "ชั่วโมงที่เหลือ"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours_percentage
 msgid "Remaining Hours Percentage"
-msgstr ""
+msgstr "เปอร์เซ็นต์ชั่วโมงที่เหลืออยู่"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -1175,12 +1179,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "การวิเคราะห์ระบบบันทึกเวลา"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "รายงานการวิเคราะห์ระบบบันทึกเวลา"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form

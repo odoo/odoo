@@ -14,7 +14,7 @@ import uuid
 from collections import defaultdict
 from PIL import Image
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import config, human_size, ImageProcess, str2bool, consteq
 from odoo.tools.mimetypes import guess_mimetype
@@ -115,6 +115,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _file_read(self, fname):
+        assert isinstance(self, IrAttachment)
         full_path = self._full_path(fname)
         try:
             with open(full_path, 'rb') as f:
@@ -125,6 +126,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _file_write(self, bin_value, checksum):
+        assert isinstance(self, IrAttachment)
         fname, full_path = self._get_path(bin_value, checksum)
         if not os.path.exists(full_path):
             try:
@@ -143,6 +145,7 @@ class IrAttachment(models.Model):
 
     def _mark_for_gc(self, fname):
         """ Add ``fname`` in a checklist for the filestore garbage collection. """
+        assert isinstance(self, IrAttachment)
         fname = re.sub('[.]', '', fname).strip('/\\')
         # we use a spooldir: add an empty file in the subdirectory 'checklist'
         full_path = os.path.join(self._full_path('checklist'), fname)
@@ -156,6 +159,7 @@ class IrAttachment(models.Model):
     @api.autovacuum
     def _gc_file_store(self):
         """ Perform the garbage collection of the filestore. """
+        assert isinstance(self, IrAttachment)
         if self._storage() != 'file':
             return
 
@@ -715,3 +719,14 @@ class IrAttachment(models.Model):
     def _get_serve_attachment(self, url, extra_domain=None, order=None):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         return self.search(domain, order=order, limit=1)
+
+    @api.model
+    def regenerate_assets_bundles(self):
+        self.search([
+            ('public', '=', True),
+            ("url", "=like", "/web/assets/%"),
+            ('res_model', '=', 'ir.ui.view'),
+            ('res_id', '=', 0),
+            ('create_uid', '=', SUPERUSER_ID),
+        ]).unlink()
+        self.clear_caches()

@@ -8,14 +8,15 @@
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "เพิ่มปุ่ม"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "เพิ่มบันทึกภายในในรายการใบสั่งสำหรับห้องครัว"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -122,7 +123,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "อนุญาตให้แยกบิล"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -132,7 +133,7 @@ msgstr "อนุญาตบันทึกย่อภายในแบบก
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "อนุญาตให้พิมพ์ใบเสร็จรับเงินก่อนการชำระเงิน"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -233,7 +234,7 @@ msgstr "แบ่งบิล"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "การกระทำที่ถูกบล็อก"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -256,8 +257,15 @@ msgstr "ยกเลิกแล้ว"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
-msgid "Cash Bar"
+msgid "Cash %s"
 msgstr ""
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "เงินสดของบาร์"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -376,7 +384,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "การพิมพ์ใบเสร็จรับเงินล่วงหน้า"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -434,7 +442,7 @@ msgstr "ชั้นและโต๊ะ"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "แผนที่ของชั้นและโต๊ะ"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -582,7 +590,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "สถานะการพิมพ์ครั้งสุดท้ายของคำสั่งซื้อ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -807,22 +815,22 @@ msgstr "เซสชั่นการขายหน้าร้าน"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "หมายเหตุรายการคำสั่งซื้อของ Pos Iface"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "POS Iface พิมพ์บิล"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Pos Iface แยกบิล"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "Pos คือเครื่องพิมพ์คำสั่งซื้อ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
@@ -832,7 +840,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Pos ตั้งค่าทิปหลังการชำระเงิน"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1148,7 +1156,7 @@ msgstr "จำนวนลูกค้าที่ได้รับบริก
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "สีพื้นหลังของพื้นที่ในรูปแบบที่เข้ากันได้กับ HTML"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1326,7 +1334,7 @@ msgstr "คำสั่งที่ยังไม่ได้ซิงค์"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1377,7 +1385,7 @@ msgstr "สีเหลือง"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "คุณไม่สามารถใส่ตัวเลขที่เกิน %s ได้"
 
 #. module: pos_restaurant
 #. odoo-python

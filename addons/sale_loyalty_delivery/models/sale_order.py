@@ -14,6 +14,11 @@ class SaleOrder(models.Model):
             line.reward_id.reward_type == 'shipping')
         return lines + super()._get_no_effect_on_threshold_lines()
 
+    def _get_lines_impacting_invoice_status(self):
+        return super()._get_lines_impacting_invoice_status().filtered(
+            lambda line: not line.is_reward_line
+        )
+
     def _get_reward_values_free_shipping(self, reward, coupon, **kwargs):
         delivery_line = self.order_line.filtered(lambda l: l.is_delivery)
         taxes = delivery_line.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
@@ -37,8 +42,8 @@ class SaleOrder(models.Model):
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
         if reward.reward_type == 'shipping':
-            self = self.with_context(lang=self.partner_id.lang)
-            reward = reward.with_context(lang=self.partner_id.lang)
+            self = self.with_context(lang=self._get_lang())
+            reward = reward.with_context(lang=self._get_lang())
             return self._get_reward_values_free_shipping(reward, coupon, **kwargs)
         return super()._get_reward_line_values(reward, coupon, **kwargs)
 

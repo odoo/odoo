@@ -28,8 +28,8 @@
 # Martin Trigaux, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
 # Konsta Aavaranta, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3193,7 +3193,7 @@ msgstr "Puutarhanhoito kotona"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
-msgstr "Miten rakentaa KORKEALAATUINEN ruokapöytä VÄHILLÄ TYÖKALUILLA?"
+msgstr "Miten rakentaa KORKEALAATUINEN ruokapöytä VÄHILLÄ TYÖKALUILLA"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3407,6 +3407,8 @@ msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses "
 "%(course_names)s first"
 msgstr ""
+"Sähköpostien lähettäminen on ei onnistu. Valitse ensin \"Jaa malli\" "
+"kursseille %(course_names)s"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -3637,12 +3639,13 @@ msgstr "Karma"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr "Pisteet, jotka vaaditaan lisätäkseen kommentti tämän kurssin diaan."
+msgstr ""
+"Pisteet, jotka vaaditaan, jotta tämän kurssin diaan voi lisätä kommentteja"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr "Pisteet, jotka vaaditaan lisätäkseen arvio tästä kurssista."
+msgstr "Pisteet, jotka vaaditaan arvion lisäämiseen tähän kurssiin"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
@@ -5721,6 +5724,17 @@ msgstr "Äänestyksen on oltava 1, 0 tai -1."
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
+msgid ""
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
+msgstr ""
+"Tähän syötettävä videolinkki saadaan käyttämällä Vimeon käyttöliittymän Jaa "
+"linkki -painiketta."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
 msgstr ""
 "Mene sitten tiedostojen käyttöoikeuksiin ja aseta sen arvoksi \"Kuka "
@@ -5979,6 +5993,20 @@ msgstr "Tuntematon virhe"
 #, python-format
 msgid "Unknown error, try again."
 msgstr "Tuntematon virhe, yritä uudelleen."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr "Ei listatut"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
+msgstr "Listaamaton (maksullinen tili)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -6859,6 +6887,17 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"                                    Your video will never come up in the search results nor on your channel."
+msgstr ""
+"tarkoittaa? Vimeon \"Unlisted\"-yksityisyysasetus tarkoittaa, että videota voivat katsoa vain käyttäjät, joilla on siihen linkki.\n"
+"                                    Videosi ei koskaan tule esiin hakutuloksissa eikä kanavallasi."
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""

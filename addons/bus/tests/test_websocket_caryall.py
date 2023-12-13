@@ -238,17 +238,6 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(notifications[0]['message']['type'], 'notif_type')
             self.assertEqual(notifications[0]['message']['payload'], 'another_message')
 
-    def test_opening_websocket_connection_during_tests(self):
-        # During tests, browsers can't open websocket connections.
-        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36']
-        with self.assertRaises(WebSocketBadStatusException) as error_catcher:
-            self.websocket_connect(header=headers)
-        self.assertEqual(error_catcher.exception.status_code, 503)
-
-        # But ChromeHeadless still can.
-        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/102.0.0.0 Safari/537.36']
-        self.websocket_connect()
-
     def test_subscribe_higher_last_notification_id(self):
         subscribe_done_event = Event()
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0

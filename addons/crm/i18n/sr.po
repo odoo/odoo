@@ -227,6 +227,8 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> na </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -371,6 +373,12 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
+"Odličan savet za povećanje efikasnosti prodaje je da uvek definišete "
+"sledeći korak za svaku priliku. Da biste upravljali tekućim aktivnostima, "
+"kliknite na bilo koji status trake napretka da biste filtrirali mogućnosti "
+"na osnovu statusa njihovih narednih aktivnosti. Kliknite na sivu oblast "
+"trake napretka da biste videli sve mogućnosti koje nemaju sledeću "
+"aktivnost."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -414,7 +422,7 @@ msgstr "Analiza aktivnosti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
-msgstr ""
+msgstr "Cilj za obavljene aktivnosti "
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -659,7 +667,7 @@ msgstr "Automatsko dodeljivanje jedinice intervala"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_run_datetime
 msgid "Auto Assignment Next Execution Date"
-msgstr ""
+msgstr "Automatsko dodeljivanje Sledeći datum izvršenja"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -669,7 +677,7 @@ msgstr "Automatizovana verovatno"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_max
 msgid "Average Leads Capacity (on 30 days)"
-msgstr ""
+msgstr "Prosečan kapacitet potencijalnih klijenata (za 30 dana)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -696,7 +704,7 @@ msgstr "Boom! Timski rekord za prethodnih 30 dana."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Odbijen"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
@@ -928,7 +936,7 @@ msgstr "Kontakt:"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__name
 msgid "Conversion Action"
-msgstr ""
+msgstr "Akcija konverzije"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_conversion
@@ -1011,7 +1019,7 @@ msgstr "Brojač"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Brojač broja odbijenih e-poruka za ovaj kontakt"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__country_id
@@ -1257,6 +1265,9 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
+"Da li ste znali da možete da pretvorite listu mogućnosti u prikaz mape, "
+"koristeći ikonu mape u gornjem desnom uglu? Mnogo ekrana u Odoo-u može se "
+"pretvoriti u mapu: zadaci, kontakti, nalozi za isporuku itd."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1325,6 +1336,8 @@ msgstr "npr. Mesečno"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
+"Lako postavite očekivane datume zatvaranja i pregledajte svoje tokove "
+"prihoda."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1347,7 +1360,7 @@ msgstr "Email Alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr ""
+msgstr "Kvalitet e-pošte"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1367,12 +1380,12 @@ msgstr "Email:"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
 msgid "Email: Welcome Demo"
-msgstr ""
+msgstr "E-pošta: Dobrodošli Demo"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "Automatski obogatite sve kontakte"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
@@ -1572,14 +1585,14 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr ""
+msgstr "Dajte svom timu uslove da premeste priliku u ovu fazu."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0 code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
-msgstr ""
+msgstr "Bravo! Čestitam na prvom dogovoru."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1665,6 +1678,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Ako je postavljeno, ovaj prodajni tim će se koristiti za prodaju i zadatke "
+"povezane sa ovim partnerom"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -2580,7 +2595,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtevaju akciju"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter

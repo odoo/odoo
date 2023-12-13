@@ -32,8 +32,8 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2684,9 +2684,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
-"Jos tämä vaihe on käytössä, se näytetään taitettuna projektisi Kanban-"
-"näkymässä. Projektit, jotka ovat taitetussa vaiheessa, katsotaan "
-"suljetuiksi."
+"Jos käytössä, tämä vaihe näytetään taitettuna projektisi Kanban-näkymässä. "
+"Projektit, jotka ovat taitetussa vaiheessa, katsotaan suljetuiksi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
@@ -2695,6 +2694,9 @@ msgid ""
 "your tasks. Tasks in a folded stage are considered as closed (not applicable"
 " to personal stages)."
 msgstr ""
+"Jos tämä vaihe on käytössä, se näytetään taitettuna tehtävien Kanban-"
+"näkymässä. Taitetussa vaiheessa olevat tehtävät katsotaan suljetuiksi (ei "
+"koske henkilökohtaisia vaiheita)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -3175,7 +3177,7 @@ msgstr "Kirjoita kommentti"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Luodaan ensimmäinen <b>vaihe</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3197,7 +3199,7 @@ msgstr "Luodaan ensimmäinen <b>tehtävä</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "Luodaan toinen <b>vaihe</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3628,7 +3630,12 @@ msgstr "Seuraava toistumispäivä"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
-msgstr "Seuraava Valuutat"
+msgstr "Seuraava toistuvuus"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Ei asiakasta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

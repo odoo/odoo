@@ -26,6 +26,7 @@ from odoo.tools import (
     formatLang,
     frozendict,
     get_lang,
+    groupby,
     is_html_empty,
     sql
 )
@@ -298,6 +299,7 @@ class AccountMove(models.Model):
         inverse='_inverse_partner_id',
         check_company=True,
         change_default=True,
+        index=True,
         ondelete='restrict',
     )
     commercial_partner_id = fields.Many2one(
@@ -1266,7 +1268,7 @@ class AccountMove(models.Model):
                 invoice.show_discount_details = False
                 invoice.show_payment_term_details = False
 
-    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
     def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.display_name
@@ -1310,11 +1312,11 @@ class AccountMove(models.Model):
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
-        for record in self:
-            if record.fiscal_position_id.foreign_vat:
-                record.tax_country_id = record.fiscal_position_id.country_id
-            else:
-                record.tax_country_id = record.company_id.account_fiscal_country_id
+        foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
+        for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id.country_id
+        for company_id, record_group in groupby((self-foreign_vat_records), key=lambda r: r.company_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = company_id.account_fiscal_country_id
 
     @api.depends('tax_country_id')
     def _compute_tax_country_code(self):
@@ -2642,6 +2644,7 @@ class AccountMove(models.Model):
                WHERE
                    account.company_id = %s
                    AND account.deprecated = FALSE
+                   AND aml.display_type = 'product'
                       {where_internal_group}
                GROUP BY account.id, account.code, aml.id
                ) AS foo
@@ -2649,7 +2652,7 @@ class AccountMove(models.Model):
             ORDER BY COUNT(foo.id) DESC, foo.code
             LIMIT 1
         """, [partner_id, company_id])
-        return self._cr.fetchone()
+        return self._cr.fetchone() or (None, None, None)
 
     def _get_quick_edit_suggestions(self):
         """

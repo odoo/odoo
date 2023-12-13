@@ -1123,7 +1123,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ])
 
     def test_register_payment_invoice_comp_curr_payment_foreign_curr(self):
-        # Invoice of 400 USD (equivalent to 1200 Gol in 2016).
+        # Invoice of 600 USD (equivalent to 1200 Gol in 2017).
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'date': '2016-01-01',
@@ -1132,7 +1132,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'currency_id': self.company_data['currency'].id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'price_unit': 400.0,
+                'price_unit': 600.0,
                 'tax_ids': [],
             })],
         })

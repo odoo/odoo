@@ -81,7 +81,7 @@ class StockLot(models.Model):
         for lot in alert_lots:
             lot.activity_schedule(
                 'product_expiry.mail_activity_type_alert_date_reached',
-                user_id=lot.product_id.responsible_id.id or SUPERUSER_ID,
+                user_id=lot.product_id.with_company(lot.company_id).responsible_id.id or lot.product_id.responsible_id.id or SUPERUSER_ID,
                 note=_("The alert date has been reached for this lot/serial number")
             )
         alert_lots.write({

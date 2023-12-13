@@ -3682,17 +3682,17 @@ msgstr "無効なドメイン左オペランド%s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "無効なドメイン演算子%s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "無効なドメイン右オペランド%s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr "無効なドメイン右オペランド '%s'。整数/浮動型である必要があります。"
 
 #. module: stock
 #. odoo-python
@@ -7246,13 +7246,6 @@ msgid "Sequence return"
 msgstr ""
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "付番%sはすでに存在します"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "シリアルナンバー"
@@ -8385,7 +8378,7 @@ msgstr ""
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
-msgstr ""
+msgstr "このプロダクトの会社は、他の会社に属するものがある限り変更できません。"
 
 #. module: stock
 #. odoo-python
@@ -8415,6 +8408,17 @@ msgstr "このレコードはすでに存在します。"
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "このレポートは同時に完了および未完了%s用に使用することはできません。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9732,6 +9736,17 @@ msgstr "<i>完了</i>数が記録されていません。<i>適用</i>を押す�
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "初期要求より少ない数量を処理しています。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"ロット/シリアル番号の追跡が有効になっている在庫プロダクトがあります。\n"
+"この設定をオフにする前に、全てのプロダクトの追跡をオフにして下さい。"
 
 #. module: stock
 #. odoo-python

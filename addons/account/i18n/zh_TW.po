@@ -219,6 +219,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s 結單 %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -3525,7 +3532,7 @@ msgstr "不能建立未使用的科目代碼."
 msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
-msgstr ""
+msgstr "無法生成未使用的日記賬代碼。請更改日記賬名稱%s。"
 
 #. module: account
 #. odoo-python
@@ -7671,7 +7678,7 @@ msgstr "應收憑單日期"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_filter_type_domain
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_filter_type_domain
 msgid "Invoice Filter Type Domain"
-msgstr "應收憑單篩選類型域"
+msgstr "發票篩選類型範圍"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_has_outstanding
@@ -10252,7 +10259,7 @@ msgstr "上級表模板"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
 msgid "Parent Line"
-msgstr "上級明細"
+msgstr "母項資料行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
@@ -11062,7 +11069,7 @@ msgstr "產品數量"
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -16400,7 +16407,7 @@ msgstr "您應該在公司設定中設定'匯率虧損科目'，以自動管理�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
-msgstr "您應該更新此文件以反映您的 T&amp;C."
+msgstr "你應該更新此文件，以反映你的條款及細則。"
 
 #. module: account
 #. odoo-python

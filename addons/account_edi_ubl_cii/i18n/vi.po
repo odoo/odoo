@@ -3,16 +3,17 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
 msgid "42"
-msgstr ""
+msgstr "42"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -46,9 +47,16 @@ msgid ""
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "Đã phát hiện khoản thanh toán %s."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr ""
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -56,24 +64,32 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr ""
+msgstr "Điều 226 mục 11 đến 15 Chỉ thị 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
-msgstr ""
+msgstr "Yêu cầu ít nhất một trong các trường sau %s trên %s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
 msgid "BIS3 DE (XRechnung)"
-msgstr ""
+msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr "Các chức năng chung cho tài liệu EDI: tạo dữ liệu, ràng buộc,..."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -92,14 +108,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr ""
+msgstr "Không thể truy xuất thuế: %s %% cho dòng '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
-msgstr ""
+msgstr "Không thể truy xuất đơn vị tính cho dòng có nhãn '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -118,7 +134,7 @@ msgstr "Đặt cọc"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
 msgid "E-FFF (BE)"
-msgstr ""
+msgstr "E-FFF (BE)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_format
@@ -128,21 +144,21 @@ msgstr "Định dạng EDI"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "EN 16931"
-msgstr ""
+msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
+msgstr "Mỗi dòng hoá đơn có một và chỉ một loại thuế."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr ""
+msgstr "Mỗi dòng hoá đơn nên có ít một loại thuế."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_mail_template
@@ -163,12 +179,12 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
-msgstr ""
+msgstr "Xuất ra ngoài EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/XRechnung CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -179,6 +195,8 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
+"Đối với việc cung cấp trong cộng đồng, phải bao gồm ngày giao hàng thực tế "
+"hoặc kỳ lập hóa đơn."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -186,18 +204,19 @@ msgstr ""
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
 msgstr ""
+"Đối với việc cung cấp trong cộng đồng, phải bao gồm địa chỉ giao hàng."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr ""
+msgstr "Cung cấp trong cộng đồng"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Invoice generated by Odoo"
-msgstr ""
+msgstr "Hoá đơn được tạo bởi Odoo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -211,8 +230,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
+"Không tìm thấy tổng giá, giá ròng cũng như thành tiền của dòng cho dòng "
+"trong xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -224,28 +246,28 @@ msgstr "Odoo"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, low"
-msgstr ""
+msgstr "GTGT đầu ra, thuế suất giảm, thấp"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, middle"
-msgstr ""
+msgstr "GTGT đầu ra, thuế suất giảm, trung bình"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, raw fish"
-msgstr ""
+msgstr "Thuế GTGT đầu ra, thuế suất giảm, cá sống"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, regular rate"
-msgstr ""
+msgstr "Thuế GTGT đầu ra, thuế suất thông thường"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -255,19 +277,19 @@ msgstr "Báo cáo hành động"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
-msgstr ""
+msgstr "SI-UBL 2.0 (NLCIUS)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "Thuế '%s' không hợp lệ: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -277,6 +299,8 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
+"Mã số thuế GTGT của nhà cung cấp dường như không hợp lệ. Nó phải có dạng: "
+"NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -284,7 +308,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr ""
+msgstr "Tiền tệ '%s' không hoạt động."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -299,14 +323,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "Yêu cầu phần tử %s trên %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
-msgstr ""
+msgstr "Yêu cầu trường %s trên %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -315,6 +339,7 @@ msgstr ""
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
+"Yêu cầu trường 'Số tài khoản đã xác nhận' đối với Ngân hàng người nhận."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -324,7 +349,7 @@ msgstr ""
 msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
-msgstr ""
+msgstr "Hóa đơn đã được chuyển đổi thành giấy báo có và số lượng đã được đảo."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -341,7 +366,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr ""
+msgstr "Nhà cung cấp %s phải có mã số doanh nghiệp của Bronnoysund."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -353,17 +378,17 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_21
 msgid "UBL 2.1"
-msgstr ""
+msgstr "UBL 2.1"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -373,6 +398,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
+"Khi áp dụng Thuế gián thu chung của Quần đảo Canary (IGIC), thuế suất trên "
+"mỗi dòng hóa đơn phải lớn hơn 0."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -383,11 +410,14 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
 msgstr ""
+"Bạn nên đặt ít nhất một khoản thuế trên mỗi dòng hóa đơn. [BR-CO-04]-Mỗi "
+"dòng hóa đơn (BG-25) sẽ được phân loại bằng mã danh mục thuế GTGT của mặt "
+"hàng được lập hóa đơn (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
-msgstr ""
+msgstr "factur-x.xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
@@ -397,9 +427,9 @@ msgstr "sai"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "fx"
-msgstr ""
+msgstr "fx"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"

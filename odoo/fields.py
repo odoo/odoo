@@ -1195,7 +1195,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
             elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
-                value = self.convert_to_cache(record._origin[self.name], record)
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
                 env.cache.set(record, self, value)
 
             elif self.compute:
@@ -1209,14 +1209,18 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    try:
-                        value = env.cache.get(record, self)
-                    except CacheMiss:
+                        recs = record
+
+                    missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                    if missing_recs_ids:
+                        missing_recs = record.browse(missing_recs_ids)
                         if self.readonly and not self.store:
-                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
-                        # fallback to null value if compute gives nothing
-                        value = self.convert_to_cache(False, record, validate=False)
-                        env.cache.set(record, self, value)
+                            raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
+                        # fallback to null value if compute gives nothing, do it for every unset record
+                        false_value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.update(missing_recs, self, itertools.repeat(false_value))
+
+                    value = env.cache.get(record, self)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -1533,8 +1537,6 @@ class Float(Field):
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
-        if not validate:
-            return value
         digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
@@ -1681,7 +1683,7 @@ class _String(Field):
         return func(term)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        cache_value = self.convert_to_cache(value, record)
+        cache_value = self.convert_to_cache(value, record, validate)
         if cache_value is None:
             return None
         if callable(self.translate):
@@ -1971,7 +1973,7 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return super().convert_to_column(self._convert(value, record, True), record, values, validate)
+        return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
         return self._convert(value, record, validate)

@@ -11,6 +11,7 @@ import threading
 import time
 from email.utils import getaddresses
 from urllib.parse import urlparse
+import html as htmllib
 
 import idna
 import markupsafe
@@ -201,6 +202,9 @@ def html_normalize(src, filter_callback=None):
     try:
         src = src.replace('--!>', '-->')
         src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
+        # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
+        # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+        src = re.sub(r'</?o:.*?>', '', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
@@ -338,6 +342,7 @@ def html_to_inner_content(html):
     processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
     processed = re.sub(HTML_TAGS_REGEX, '', processed)
     processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = htmllib.unescape(processed)
     processed = processed.strip()
     return processed
 
@@ -549,13 +554,25 @@ def email_split_tuples(text):
 
     if not text:
         return []
-    return list(map(_parse_based_on_spaces, [
+
+    # found valid pairs, filtering out failed parsing
+    valid_pairs = [
         (addr[0], addr[1]) for addr in getaddresses([text])
         # getaddresses() returns '' when email parsing fails, and
         # sometimes returns emails without at least '@'. The '@'
         # is strictly required in RFC2822's `addr-spec`.
         if addr[1] and '@' in addr[1]
-    ]))
+    ]
+    # corner case: returning '@gmail.com'-like email (see test_email_split)
+    if any(pair[1].startswith('@') for pair in valid_pairs):
+        filtered = [
+            found_email for found_email in email_re.findall(text)
+            if found_email and not found_email.startswith('@')
+        ]
+        if filtered:
+            valid_pairs = [('', found_email) for found_email in filtered]
+
+    return list(map(_parse_based_on_spaces, valid_pairs))
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """

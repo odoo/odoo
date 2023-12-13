@@ -41,6 +41,7 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
+import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
 
@@ -2780,7 +2781,9 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>
             `,
         });
-        const colorClass = Array.from(findEvent(target, 1).classList).find(className => className.startsWith("o_calendar_color_"));
+        const colorClass = Array.from(findEvent(target, 1).classList).find((className) =>
+            className.startsWith("o_calendar_color_")
+        );
         assert.notOk(isNaN(Number(colorClass.split("_").at(-1))));
         await clickEvent(target, 1);
         assert.hasClass(target.querySelector(".o_cw_popover"), colorClass);
@@ -4238,7 +4241,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Monday week start week mode`, async (assert) => {
-        assert.expect(3);
+        assert.expect(4);
 
         patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
         // the week start depends on the locale
@@ -4276,10 +4279,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             "Sun 15",
             "The last day of the week should be Sunday the 15th"
         );
+        assert.strictEqual(
+            target.querySelector(".fc-head .fc-week-number").textContent,
+            "Week 37",
+            "The number of the week should be correct"
+        );
     });
 
     QUnit.test(`Saturday week start week mode`, async (assert) => {
-        assert.expect(3);
+        assert.expect(4);
 
         patchDate(2019, 8, 12, 8, 0, 0); // 2019-09-12 08:00:00
 
@@ -4317,6 +4325,118 @@ QUnit.module("Views", ({ beforeEach }) => {
             dayHeaders[dayHeaders.length - 1].textContent,
             "Fri 13",
             "The last day of the week should be Friday the 13th"
+        );
+        assert.strictEqual(
+            target.querySelector(".fc-head .fc-week-number").textContent,
+            "Week 36",
+            "The number of the week should be correct"
+        );
+    });
+
+    QUnit.test(`Monday week start year mode`, async (assert) => {
+        assert.expect(4);
+
+        patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
+        // the week start depends on the locale
+        patchWithCleanup(localization, { weekStart: 1 });
+
+        patchWithCleanup(CalendarYearRenderer.prototype, {
+            get options() {
+                return { ...this._super(), weekNumbers: true };
+            },
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="year" />
+            `,
+            mockRPC(route, { method, model, kwargs }) {
+                if (model === "event" && method === "search_read") {
+                    assert.deepEqual(
+                        kwargs.domain,
+                        [
+                            ["start", "<=", "2019-12-31 22:59:59"],
+                            ["stop", ">=", "2018-12-31 23:00:00"],
+                        ],
+                        "The domain to search events in should be correct"
+                    );
+                }
+            },
+        });
+
+        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        assert.strictEqual(
+            weekDays[0].textContent,
+            "9",
+            "The first day of the week should be Monday the 9th"
+        );
+        assert.strictEqual(
+            weekDays[weekDays.length - 1].textContent,
+            "15",
+            "The last day of the week should be Sunday the 15th"
+        );
+        assert.strictEqual(
+            weekRow.querySelector(".fc-week-number").textContent,
+            "37",
+            "The number of the week should be correct"
+        );
+    });
+
+    QUnit.test(`Sunday week start year mode`, async (assert) => {
+        assert.expect(4);
+
+        patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
+        // the week start depends on the locale
+        // the localization presents a python-like 1 to 7 weekStart value
+        patchWithCleanup(localization, { weekStart: 7 });
+
+        patchWithCleanup(CalendarYearRenderer.prototype, {
+            get options() {
+                return { ...this._super(), weekNumbers: true };
+            },
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="year" />
+            `,
+            mockRPC(route, { method, model, kwargs }) {
+                if (model === "event" && method === "search_read") {
+                    assert.deepEqual(
+                        kwargs.domain,
+                        [
+                            ["start", "<=", "2019-12-31 22:59:59"],
+                            ["stop", ">=", "2018-12-31 23:00:00"],
+                        ],
+                        "The domain to search events in should be correct"
+                    );
+                }
+            },
+        });
+
+        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        assert.strictEqual(
+            weekDays[0].textContent,
+            "15",
+            "The first day of the week should be Sunday the 15th"
+        );
+        assert.strictEqual(
+            weekDays[weekDays.length - 1].textContent,
+            "21",
+            "The last day of the week should be Saturday the 21st"
+        );
+        assert.strictEqual(
+            weekRow.querySelector(".fc-week-number").textContent,
+            "38",
+            "The number of the week should be correct"
         );
     });
 

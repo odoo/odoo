@@ -3,19 +3,20 @@
 # 	* payment
 # 
 # Translators:
+# Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Lucia Pacheco, 2022
-# Martin Trigaux, 2022
 # Fernanda Alvarez, 2023
+# Alfonso González, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"POT-Creation-Date: 2023-11-07 12:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Alfonso González, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -322,11 +323,6 @@ msgid "Bank"
 msgstr "Banco"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Cuenta bancaria"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Nombre del banco"
@@ -448,11 +444,6 @@ msgstr "Código"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Color"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Comunicación"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -765,14 +756,10 @@ msgid "Full Only"
 msgstr "Completos solamente"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Generar enlace de pago"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Generar enlace de pago de ventas"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1355,16 +1342,6 @@ msgstr "Elija solamente una opción de pago."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Establezca una cantidad menor a %s."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Utilice la siguiente información de transferencia"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "Utilice el nombre de la orden como referencia de comunicación."
 
 #. module: payment
 #. odoo-javascript
@@ -2088,8 +2065,12 @@ msgstr "Transferencia bancaria"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You cannot delete the payment provider %s; archive it instead."
-msgstr "No puede eliminar al proveedor de pago %s; archívelo."
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+"No puede eliminar un proveedor de pago %s; deshabilite o desinstalar en su "
+"defecto."
 
 #. module: payment
 #. odoo-python
@@ -2202,6 +2183,7 @@ msgstr "Se ha recibido su pago pero se debe confirmar manualmente."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

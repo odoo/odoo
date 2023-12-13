@@ -7,9 +7,9 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Martin Trigaux, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
@@ -106,6 +106,11 @@ msgstr "Ristiriitainen"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
 msgstr "Konfliktit"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -241,6 +246,11 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Ei näytettävää dataa"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
 msgstr "Huomautus: Vahvistettuja työmerkintöjä ei voi muuttaa."
@@ -301,6 +311,15 @@ msgstr "Vapaa-ajan vaihtoehdot"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "Päättyy"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Yritä lisätä joitakin tietueita tai varmista, että hakupalkissa ei ole "
+"aktiivista suodatinta."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search

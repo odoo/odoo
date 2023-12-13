@@ -5,9 +5,9 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Odoo - Paolo Gatti (pgi), 2023
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgstr "Annullamento della cancellazione EDI"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
 msgid "Cancelled"
-msgstr "Annullata"
+msgstr "Annullato"
 
 #. module: account_edi
 #. odoo-python
@@ -177,7 +177,7 @@ msgstr "Livello errore EDI"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr "Contenuto Edi"
+msgstr "Contenuto EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -278,7 +278,7 @@ msgstr "Nome formato"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move ?"
-msgstr "Quanti EDI sono in errore per questa azione?"
+msgstr "Numero errori EDI a causa di questo movimento"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -301,7 +301,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Configurazione della fattura non valida:\n"
+"Configurazione fattura non valida:\n"
 "\n"
 "%s"
 
@@ -395,7 +395,7 @@ msgstr "Invio di fatture XML/EDI"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__sent
 msgid "Sent"
-msgstr "Invio effettuato"
+msgstr "Inviato"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
@@ -508,8 +508,8 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
-"Non si può scollegare un allegato che consiste in un documento EDI inviato "
-"al governo."
+"Impossibile rimuovere il collegamento a un documento EDI allegato inviato a "
+"un'agenzia governativa."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

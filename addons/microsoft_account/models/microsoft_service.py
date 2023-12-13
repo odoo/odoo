@@ -16,6 +16,7 @@ TIMEOUT = 20
 
 DEFAULT_MICROSOFT_AUTH_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 DEFAULT_MICROSOFT_TOKEN_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+DEFAULT_MICROSOFT_GRAPH_ENDPOINT = 'https://graph.microsoft.com'
 
 RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
@@ -88,7 +89,6 @@ class MicrosoftService(models.AbstractModel):
             'state': json.dumps(state),
             'scope': scope,
             'redirect_uri': base_url + '/microsoft_account/authentication',
-            'prompt': 'consent',
             'access_type': 'offline'
         })
         return "%s?%s" % (self._get_auth_endpoint(), encoded_params)
@@ -124,7 +124,7 @@ class MicrosoftService(models.AbstractModel):
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
     @api.model
-    def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://graph.microsoft.com", timeout=TIMEOUT):
+    def _do_request(self, uri, params=None, headers=None, method='POST', preuri=DEFAULT_MICROSOFT_GRAPH_ENDPOINT, timeout=TIMEOUT):
         """ Execute the request to Microsoft API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
             :param uri : the url to contact
             :param params : dict or already encoded parameters for the request to make
@@ -136,6 +136,10 @@ class MicrosoftService(models.AbstractModel):
             params = {}
         if headers is None:
             headers = {}
+
+        assert urls.url_parse(preuri + uri).host in [
+            urls.url_parse(url).host for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
+        ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))
 
@@ -151,7 +155,7 @@ class MicrosoftService(models.AbstractModel):
             status = res.status_code
 
             if int(status) in RESOURCE_NOT_FOUND_STATUSES:
-                response = False
+                response = {}
             else:
                 # Some answers return empty content
                 response = res.content and res.json() or {}
@@ -163,7 +167,7 @@ class MicrosoftService(models.AbstractModel):
         except requests.HTTPError as error:
             if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code
-                response = ""
+                response = {}
             else:
                 _logger.exception("Bad microsoft request : %s !", error.response.content)
                 raise error

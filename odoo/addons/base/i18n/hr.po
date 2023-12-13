@@ -21,11 +21,13 @@
 # Tina Milas, 2022
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Matej Mijoč, 2022
-# Bole <bole@dajmi5.com>, 2023
 # Martin Trigaux, 2023
 # Vladimir Vrgoč, 2023
+# Matija Gudlin, 2023
+# Bole <bole@dajmi5.com>, 2023
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2023
+# Carlo Štefanac, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Vladimir Vrgoč, 2023\n"
+"Last-Translator: Carlo Štefanac, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4767,7 +4769,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr ""
+msgstr "jeste li sigurni da želite izraditi novog?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -5550,6 +5552,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Company "
 "Registry</span></span> already exists ("
 msgstr ""
+"Kontakt s istim <span><span class=\"o_vat_label\">OIB-om / PDV "
+"brojem</span></span> već postoji ("
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -6454,6 +6458,8 @@ msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
 msgstr ""
+"Svi naši ugovorni odnosi bit će regulirani isključivo zakonom Sjedinjenih "
+"Država."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -7494,6 +7500,7 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Tekst u nastavku služi kao prijedlog i Odoo S.A. ne preuzima odgovornost"
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -13538,6 +13545,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Neispravan 'grupiraj po' parametar"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -13694,6 +13707,15 @@ msgstr "Neispravan tip"
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid value for %s.%s: %s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
 msgstr ""
 
 #. module: base
@@ -20002,7 +20024,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "STANDARDNI UVJETI PRODAJE"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -20519,6 +20541,19 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Otpremite vaše pakete preko UPS-a i pratite ih online."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -22560,7 +22595,7 @@ msgstr "Ovaj prozor"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
 msgid "This account can be used for outgoing payments"
-msgstr ""
+msgstr "Ovaj račun se može koristiti za odlazna plaćanja"
 
 #. module: base
 #. odoo-python
@@ -23233,6 +23268,16 @@ msgstr "Vrsta:"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS otprema"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

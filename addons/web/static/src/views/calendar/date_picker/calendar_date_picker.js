@@ -28,7 +28,7 @@ export class CalendarDatePicker extends Component {
         const last = weekdays.pop();
         return {
             dayNamesMin: [last, ...weekdays],
-            firstDay: (this.props.model.firstDayOfWeek || 0) % 7,
+            firstDay: this.props.model.firstDayOfWeek,
             monthNames: Info.months("short"),
             onSelect: this.onDateSelected.bind(this),
             showOtherMonths: true,

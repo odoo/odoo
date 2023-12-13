@@ -12,8 +12,8 @@
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Mathias Landgraf <mathias.landgraf@ironcad4d.de>, 2023
+# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -218,6 +218,13 @@ msgid ""
 msgstr ""
 "%s hat einen ungültigen Status in Bezug auf die zugehörige Kontoauszugszeile erreicht.\n"
 "Um konsistent zu sein, muss die Journalbuchung immer genau eine Zwischenzeile enthalten."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Kontoauszug %s"
 
 #. module: account
 #. odoo-python
@@ -4944,6 +4951,7 @@ msgstr "Währungen"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -5226,7 +5234,7 @@ msgstr "Dashboard"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr "Unveränderbarkeitsprüfung von Daten"
+msgstr "Unveränderlichkeitsprüfung von Daten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9019,9 +9027,7 @@ msgstr "Leer lassen, um den Vertriebsmitarbeiter der Rechnung zuzuordnen."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
-"Leer lassen, um das Standardkonto für ausstehende Zahlungen/Eingänge zu "
-"verwenden"
+msgstr "Leer lassen, um das Standardkonto für offene Rechnungen zu verwenden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -10576,14 +10582,14 @@ msgstr "Konten für ausstehende Eingänge"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding credits"
-msgstr "Ausstehende Verbindlichkeiten"
+msgstr "Ausstehendes Haben"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
-msgstr "Ausstehende Verbindlichkeiten"
+msgstr "Ausstehendes Soll"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11043,7 +11049,7 @@ msgstr "Zahlungsbedingungen: Am Ende des Folgemonats"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Zahlungsbedindungen: Sofortige Zahlung"
+msgstr "Zahlungsbedingungen: Sofortige Zahlung"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -11152,9 +11158,10 @@ msgid ""
 "Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
 " country (%s) or the localization's country (%s)."
 msgstr ""
-"Bitte prüfen Sie das Steuerland des Unternehmen %s. (Einstellungen > "
+"Bitte prüfen Sie das Steuerland des Unternehmens %s. (Einstellungen > "
 "Buchhaltung > Steuerland) Steuern können nur aktualisiert werden, wenn sie "
-"im Steuerland des Unternehmen (%s) oder im Land der Lokalisierung (%s) sind."
+"im Steuerland des Unternehmens (%s) oder im Land der Lokalisierung (%s) "
+"sind."
 
 #. module: account
 #. odoo-python
@@ -11340,7 +11347,7 @@ msgstr "Präfix der Kontocodes"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company__bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr "Prefix des Bankkontos"
+msgstr "Präfix der Bankkonten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__cash_account_code_prefix
@@ -12287,7 +12294,7 @@ msgstr "Verkaufsbeleg"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Sales"
-msgstr "Verkäufe"
+msgstr "Verkauf"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
@@ -13560,7 +13567,7 @@ msgstr "Vorlage für Steueraufteilungszeile"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Steuererklärung Sperrdatum"
+msgstr "Sperrdatum für Steuererklärung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -14100,7 +14107,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr "Die Kontenplanvorlage des Unternehmen (wenn verwendet)"
+msgstr "Die Kontenplanvorlage des Unternehmens (wenn verwendet)"
 
 #. module: account
 #. odoo-python
@@ -15054,7 +15061,7 @@ msgid ""
 "journal."
 msgstr ""
 "Für dieses Journal gibt es noch keine Journalbuchung, die für die "
-"Unveränderbarkeit von Daten gekennzeichnet ist."
+"Unveränderlichkeit von Daten gekennzeichnet ist."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -15375,8 +15382,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Diese Zahlungsbedingung wird anstelle der Standardbedingung für "
-"Einkaufsaufträge und Lieferantenrechnungen verwendet"
+"Diese Zahlungsbedingung wird anstelle der Standardbedingung für Bestellungen"
+" und Lieferantenrechnungen verwendet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -15505,7 +15512,6 @@ msgstr "Heutige Aktivitäten"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -15606,6 +15612,7 @@ msgid "Total amount you have to pay to this vendor."
 msgstr "Gesamtbetrag der offenen Zahlungen an diesen Lieferant."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
 msgstr "Gesamt in Währung"
@@ -17046,7 +17053,7 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
-"Sie können die Werte, die die Unveränderbarkeit der Buchhaltung "
+"Sie können die Werte, die die Unveränderlichkeit der Buchhaltung "
 "sicherstellen, nicht überschreiben."
 
 #. module: account
@@ -17567,12 +17574,12 @@ msgstr "eine dieser Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "ausstehende Verbindlichkeiten"
+msgstr "ausstehendes Haben"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "ausstehende Forderungen"
+msgstr "ausstehendes Soll"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

@@ -109,11 +109,13 @@ tour.register('project_tour', {
     position: "bottom",
     run: "click",
 }, {
-    trigger: ".o_field_widget[name='user_ids'] input",
+    trigger: ".o_field_widget[name='user_ids']",
     extra_trigger: '.o_form_project_tasks',
     content: _t("Assign a responsible to your task"),
     position: "right",
-    run: "text a"
+    run() {
+        document.querySelector('.o_field_widget[name="user_ids"] input').click();
+    }
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,

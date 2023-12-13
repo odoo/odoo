@@ -22,6 +22,7 @@ const ImageCropWidget = Widget.extend({
     init(parent, media, options = {}) {
         this._super(...arguments);
         this.media = media;
+        this.parent = parent;
         this.$media = $(media);
         // Needed for editors in iframes.
         this.document = media.ownerDocument;
@@ -50,6 +51,8 @@ const ImageCropWidget = Widget.extend({
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;
             this.originalId = this.media.dataset.originalId;
+            const sel = this.parent.odooEditor && this.parent.odooEditor.document.getSelection();
+            sel && sel.removeAllRanges();
             return;
         }
         // Couldn't find an attachment: not croppable.
@@ -86,9 +89,11 @@ const ImageCropWidget = Widget.extend({
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
+        this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
         this.document.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+        this.document.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
         return _super(...arguments);
     },
     /**
@@ -98,6 +103,7 @@ const ImageCropWidget = Widget.extend({
         if (this.$cropperImage) {
             this.$cropperImage.cropper('destroy');
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+            this.document.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
@@ -229,6 +235,16 @@ const ImageCropWidget = Widget.extend({
         await new Promise(res => setTimeout(res, 0));
         this._resetCropBox();
     },
+    /**
+     * Save crop if user hits enter.
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onDocumentKeydown(ev) {
+        if(ev.key === 'Enter') {
+            return this._save();
+        }
+    }
 });
 
 return ImageCropWidget;

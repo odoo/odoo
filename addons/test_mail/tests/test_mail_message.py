@@ -160,6 +160,7 @@ class TestMessageValues(TestMailCommon):
                          'Reply-To: use only email when formataddr > 78 chars')
 
         # name + company_name would make it blow up: keep record_name in formatting
+        self.company_admin.name = "Company name being about 33 chars"
         test_record.write({'name': 'Name that would be more than 78 with company name'})
         msg = self.env['mail.message'].create({
             'model': test_record._name,

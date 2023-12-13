@@ -23,7 +23,10 @@ from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorate
+try:
+    from decorator import decoratorx as decorator
+except ImportError:
+    from decorator import decorator
 
 from .exceptions import AccessError, CacheMiss
 from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
@@ -381,6 +384,7 @@ def model(method):
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
+@decorator
 def _model_create_single(create, self, arg):
     # 'create' expects a dict and returns a record
     if isinstance(arg, Mapping):
@@ -398,11 +402,12 @@ def model_create_single(method):
             records = model.create([vals, ...])
     """
     _create_logger.warning("The model %s is not overriding the create method in batch", method.__module__)
-    wrapper = decorate(method, _model_create_single)
+    wrapper = _model_create_single(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
 
+@decorator
 def _model_create_multi(create, self, arg):
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
@@ -418,7 +423,7 @@ def model_create_multi(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_multi)
+    wrapper = _model_create_multi(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
@@ -1160,10 +1165,17 @@ class Cache(object):
             if name != 'id' and record.id in self._get_field_cache(record, field):
                 yield field
 
-    def get_records(self, model, field):
-        """ Return the records of ``model`` that have a value for ``field``. """
-        field_cache = self._get_field_cache(model, field)
-        return model.browse(field_cache)
+    def get_records(self, model, field, all_contexts=False):
+        """ Return the records of ``model`` that have a value for ``field``.
+        By default the method checks for values in the current context of ``model``.
+        But when ``all_contexts`` is true, it checks for values *in all contexts*.
+        """
+        if all_contexts and model.pool.field_depends_context[field]:
+            field_cache = self._data.get(field, EMPTY_DICT)
+            ids = OrderedSet(id_ for sub_cache in field_cache.values() for id_ in sub_cache)
+        else:
+            ids = self._get_field_cache(model, field)
+        return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """

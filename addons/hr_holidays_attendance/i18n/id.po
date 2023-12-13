@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s jam tersedia"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -41,7 +41,7 @@ msgstr "Perusahaan"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Hitung Jam Tambahan"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -55,7 +55,7 @@ msgstr "Hari"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Kurangi Jam Tambahan"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -67,13 +67,13 @@ msgstr "Buang"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
-msgstr ""
+msgstr "Jam Tambaha"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Jam Tambahan Tersisa"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -85,13 +85,13 @@ msgstr "Jam"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "Absensi Lembur HR"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Permintaan Alokasi Baru"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
@@ -99,17 +99,19 @@ msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
 msgstr ""
+"Setelah cuti untuk tipe ini disetujui, jam tambahan di absensi akan "
+"dikurangi."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Overtime Deductible"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "Permintaan Lembur"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -122,26 +124,29 @@ msgstr "Simpan"
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
 msgstr ""
+"Karyawan tidak memiliki jam tambahan yang mencukupi untuk memperpanjang "
+"alokasi ini."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
+"Karyawan ini tidak memiliki jam tambahan untuk memperpanjang cuti ini."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
-msgstr ""
+msgstr "Karyawan tidak memiliki jam tambahan untuk meminta alokasi ini."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
-msgstr ""
+msgstr "Karyawan tidak memiliki jam tambahan untuk meminta cuti ini."
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -149,6 +154,7 @@ msgstr ""
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
 msgstr ""
+"Karyawan tidak memiliki jam lembur yang mencukupi untuk meminta cuti ini."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -158,7 +164,7 @@ msgstr "Cuti"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr ""
+msgstr "Alokasi Cuti"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
@@ -169,7 +175,7 @@ msgstr "Tipe Cuti"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Jam Lembur Total"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_users
@@ -182,3 +188,4 @@ msgstr "Pengguna"
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
 msgstr ""
+"Anda tidak memiliki jam tambahan yang mencukupi untuk meminta cuti ini"

@@ -6,7 +6,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2022
 # Martin Trigaux, 2022
-# Niyas Raphy, 2022
+# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -129,7 +129,7 @@ msgstr "الوصف"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr "عرض المبيعات ترتيب"
+msgstr "عرض أمر البيع "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -254,7 +254,7 @@ msgstr ""
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
-msgstr "قم بإصدار فاتورة بالمراحل الرئيسية الخاصة بك عند الوصول إليها."
+msgstr "قم بإصدار فواتير لمؤشرات التقدم الخاصة بك عند الوصول إليها. "
 
 #. module: sale_project
 #. odoo-python
@@ -419,6 +419,13 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "العملية غير مدعومة "
+
+#. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
@@ -479,7 +486,7 @@ msgstr "مؤشر تقدم المشروع "
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr "معالم المشروع"
+msgstr "مؤشرات تقدم المشروع "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -514,7 +521,7 @@ msgstr "الكمية"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr "تم بلوغ المعالم"
+msgstr "مؤشرات التقدم المحققة "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -537,7 +544,7 @@ msgstr "المبيعات"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr "المبيعات & الفواتير"
+msgstr "المبيعات والفوترة "
 
 #. module: sale_project
 #. odoo-python

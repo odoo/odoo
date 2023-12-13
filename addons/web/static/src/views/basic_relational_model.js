@@ -660,6 +660,7 @@ export class Record extends DataPoint {
         const saveOptions = {
             reload: !options.noReload,
             savePoint: options.savePoint,
+            viewType: this.__viewType,
         };
         try {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);
@@ -926,7 +927,12 @@ export class StaticList extends DataPoint {
     /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
     async addNew(params) {
         const position = params.position;
-        const operation = { context: [params.context], operation: "CREATE", position };
+        const operation = {
+            context: [params.context],
+            operation: "CREATE",
+            position,
+            allowWarning: params.allowWarning,
+        };
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
         await this.__syncParent(operation);

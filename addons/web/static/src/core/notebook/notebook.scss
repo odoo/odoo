@@ -48,6 +48,10 @@
     }
 
     &.vertical {
+        .o_notebook_headers {
+            overflow-x: visible;
+        }
+
         .nav {
             width: max-content;
             border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin

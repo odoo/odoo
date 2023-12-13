@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
@@ -331,7 +332,7 @@ msgstr "Є послугою"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
 msgid "Journal Item"
-msgstr "Запис у журналі"
+msgstr "Елемент журналу"
 
 #. module: sale_project
 #. odoo-javascript
@@ -420,6 +421,13 @@ msgid ""
 msgstr ""
 "Під час підтвердження замовлення на продаж цей товар може генерувати проект та/або завдання. З них ви можете відстежувати продану послугу.\n"
 "         'У проекті замовлення на продаж': Буде використовуватися налаштований проект замовлення на продаж, якщо визначено або резервно скопійовано на створення нового проекту на основі вибраного шаблону."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операція не підтримується"
 
 #. module: sale_project
 #. odoo-python

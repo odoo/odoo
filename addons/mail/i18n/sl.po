@@ -15,6 +15,8 @@
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
+# Neun Pro, 2023
+# Katja Deržič, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tomaž Jug <tomaz@editor.si>, 2023\n"
+"Last-Translator: Katja Deržič, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1098,7 +1100,7 @@ msgstr "Aktivnost"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Activity Exception Decoration"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -1129,7 +1131,7 @@ msgstr "Tip aktivnosti"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Activity Type Icon"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -1955,7 +1957,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Ponovno pošiljanje?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2699,7 +2701,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Custom Bounced Message"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2793,7 +2795,7 @@ msgstr "Rok:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "Deadline: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -2832,7 +2834,7 @@ msgstr "Prikaži privzeti način"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
 msgid "Default Note"
-msgstr ""
+msgstr "Privzeta opomba"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -2842,7 +2844,7 @@ msgstr "Privzeti povzetek"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
 msgid "Default User"
-msgstr ""
+msgstr "Privzeti uporabnik"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_defaults
@@ -3440,7 +3442,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -4346,7 +4348,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icon to indicate an exception activity."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
@@ -4435,6 +4437,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -6120,7 +6124,7 @@ msgstr "Izklop zvoka"
 #: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "My Activity Deadline"
 
 #. module: mail
 #. odoo-javascript
@@ -6430,7 +6434,7 @@ msgstr "Ni prenosa"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalized Email"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__state__draft
@@ -6540,7 +6544,7 @@ msgstr "Število napak"
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Number of messages requiring action"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -7034,6 +7038,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7195,6 +7202,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -8217,12 +8228,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Pošlji kot"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Send email"
 
 #. module: mail
 #. odoo-javascript
@@ -8692,7 +8703,7 @@ msgstr "Podtipi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "Predlagaj"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
@@ -9167,7 +9178,7 @@ msgstr "To dejanje bo poslalo e-poštno sporočilo."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr ""
+msgstr "This email is blacklisted for mass mailings. Click to unblacklist."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -9187,6 +9198,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
+"This field is used to search on email address as the primary email field can"
+" contain more than strictly an email address."
 
 #. module: mail
 #. odoo-javascript
@@ -9453,7 +9466,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Poskusi znova"
 
 #. module: mail
 #. odoo-javascript

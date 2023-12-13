@@ -3,8 +3,8 @@
 # 	* base_automation
 # 
 # Translators:
-# Tony Ng, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,7 +134,7 @@ msgstr "根據時間條件"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "更新domain前"
+msgstr "更新網域前"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -171,6 +171,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"選擇簡訊發送方式：\n"
+"簡訊：群發簡訊\n"
+"發佈為訊息：在文件記錄為訊息\n"
+"發佈為備註：群發簡訊，附有存檔"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -180,6 +184,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"選擇電郵傳送方式：\n"
+"電子郵件：直接發送電郵\n"
+"發佈為訊息：在文件上發佈，並通知關注者\n"
+"發佈為備註：在文件記錄備註"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -203,6 +211,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"觸發日期之後延遲多久才執行操作。\n"
+"        若想在觸發日期之前執行操作，可以輸入負數，\n"
+"        例如在會議開始前 15 分鐘發送提醒。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -453,12 +464,12 @@ msgstr "簡訊範本"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "傳送為"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "傳送為（SMS 短訊）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -490,7 +501,7 @@ msgstr "建立一個新的自動化系統"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "訂閱收件人"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -520,7 +531,7 @@ msgstr "這個 \"%(trigger_value)s\" %(trigger_label)s 只能與 \"%(state_value
 msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
-msgstr ""
+msgstr "只會在這些欄位其中任何一項有更新時，才會觸發該操作。如果留空，則監視所有欄位。"
 
 #. module: base_automation
 #. openerp-web
@@ -567,6 +578,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"伺服器操作類型。可使用以下的值：\n"
+"- 「執行 Python 程式碼」：將執行的一段 Python 程式碼\n"
+"- 「建立新記錄」：使用新的值建立新記錄\n"
+"- 「更新記錄」：更新記錄的值\n"
+"- 「執行多個操作」：定義一個操作以觸發多個其他伺服器操作\n"
+"- 「發送電郵」：張貼訊息、備註或發送電子郵件（聊天應用程式）\n"
+"- 「加入關注者」：將關注者加至記錄（聊天應用程式）\n"
+"- 「建立下一活動」：建立一個活動（聊天應用程式）\n"
+"- 「發送 SMS 簡訊」：發送 SMS 文字短訊，將其記錄在文件上（短訊應用程式）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -650,6 +670,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"應在何時觸發該條件。\n"
+"                如果存在，將由排期程式檢查。如果留空，將在建立和更新時檢查。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

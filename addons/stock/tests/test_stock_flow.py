@@ -11,6 +11,7 @@ class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         decimal_product_uom = cls.env.ref('product.decimal_product_uom')
         decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
@@ -2480,29 +2481,6 @@ class TestStockFlow(TestStockCommon):
         pickings.button_validate()
         self.assertTrue(all(pickings.mapped(lambda p: p.state == 'done')), "Pickings should be set as done")
 
-    def test_pickings_on_duplicated_operation_types(self):
-        """ Ensure we can create pickings on duplicated operation types without collision in names
-            Steps:
-            - Create a picking on an operation type
-            - Duplicate the operation type
-            - Create another picking on the duplicated operation type
-        """
-        self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
-        })
-        duplicated_picking_type = self.env['stock.picking.type'].browse(self.picking_type_in).copy()
-        picking_2 = self.PickingObj.create({
-            'picking_type_id': duplicated_picking_type.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
-        })
-        # trigger SQL constraints
-        self.PickingObj.flush_model()
-        self.assertEqual(self.PickingObj.search_count([('name', '=', picking_2.name)]), 1)
-
-
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
@@ -2543,3 +2521,36 @@ class TestStockFlowPostInstall(TestStockCommon):
         delivery.button_validate()
 
         self.assertEqual(sn.last_delivery_partner_id, partner)
+
+    def test_several_sm_with_same_product_and_backorders(self):
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        move01, move02 = self.env['stock.move'].create([{
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'description_picking': desc,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        } for desc in ['Lorem', 'Ipsum']])
+
+        picking.action_confirm()
+
+        move01.quantity_done = 12
+        move02.quantity_done = 8
+
+        res = picking.button_validate()
+        self.assertIsInstance(res, dict)
+        self.assertEqual(res.get('res_model'), 'stock.backorder.confirmation')
+
+        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.move_ids.product_uom_qty, 2)
+        self.assertEqual(backorder.move_ids.description_picking, 'Ipsum')

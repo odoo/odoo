@@ -5,7 +5,6 @@
 # Translators:
 # laznikd <laznik@mentis.si>, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
-# Tadej Lupšina <tadej@hbs.si>, 2022
 # Vida Potočnik <vida.potocnik@mentis.si>, 2022
 # matjaz k <matjaz@mentis.si>, 2022
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
@@ -13,14 +12,16 @@
 # Martin Trigaux, 2023
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
+# Neun Pro, 2023
+# Tadej Lupšina <tadej@hbs.si>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2023-09-15 09:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Tomaž Jug <tomaz@editor.si>, 2023\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -659,8 +660,8 @@ msgstr "<span class=\"text-muted\">od </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">do </span>"
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -838,7 +839,7 @@ msgstr "Aktivnosti"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Activity Exception Decoration"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_state
@@ -850,7 +851,7 @@ msgstr "Stanje aktivnosti"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Activity Type Icon"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -2068,8 +2069,8 @@ msgid "Hour to"
 msgstr "Ura do"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -2112,7 +2113,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icon to indicate an exception activity."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -2596,7 +2597,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "My Activity Deadline"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
@@ -2691,7 +2692,7 @@ msgstr "Nova odsotnost"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Next Activity Calendar Event"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -2725,6 +2726,12 @@ msgstr "Brez validacije"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model_terms:ir.actions.server,help:hr_holidays.act_hr_employee_holiday_request
+msgid "No data to display"
+msgstr "Ni podatkov za prikaz"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
 msgstr "Podatkov še ni!"
@@ -2821,7 +2828,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Number of messages requiring action"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2929,6 +2936,13 @@ msgid "Open"
 msgstr "Odprto"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
@@ -3011,8 +3025,18 @@ msgid "Public"
 msgstr "Javno"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
 msgid "Public Holidays"
 msgstr ""
 
@@ -3392,14 +3416,20 @@ msgstr ""
 "Planirano: Bodoče aktivnosti."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
 msgid "Stress Day"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
 msgid "Stress Days"
 msgstr ""
 
@@ -3745,6 +3775,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
@@ -3992,6 +4024,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
 msgid "Transferred to the next year"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
 msgstr ""
 
 #. module: hr_holidays
@@ -4458,8 +4497,8 @@ msgid "day(s)"
 msgstr "dan(dni)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4485,8 +4524,8 @@ msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

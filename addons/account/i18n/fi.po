@@ -36,11 +36,11 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Konsta Aavaranta, 2023
 # Joakim Weckman, 2023
 # Martin Trigaux, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
@@ -246,6 +246,13 @@ msgid ""
 msgstr ""
 "%s päätyi virheelliseen tilaan. Tämän sai aikaiseksi asiaan liittyvä tilioterivi.\n"
 "Tietoeheyden vaatimusten vuoksi päiväkirjamerkinnässä voi olla vain yksi suspense-rivi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Tiliote %s"
 
 #. module: account
 #. odoo-python
@@ -4932,6 +4939,7 @@ msgstr "Valuutat"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -12770,7 +12778,7 @@ msgstr "Asetukset"
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
 msgid "Setup"
-msgstr "Asettaa"
+msgstr "Asetukset"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -15352,7 +15360,6 @@ msgstr "Tämän päivän toimenpiteet"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -15453,6 +15460,7 @@ msgid "Total amount you have to pay to this vendor."
 msgstr "Kokonaismäärä, joka sinun on maksettava tälle myyjälle."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
 msgstr "Yhteensä valuutassa"

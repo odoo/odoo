@@ -156,7 +156,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip',
+    'value_label', 'data-tooltip', 'data-editor-message',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -1589,6 +1589,8 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
+        cr.execute("SELECT code FROM res_lang WHERE active = 't'")
+        languages = {l[0] for l in cr.fetchall()}
         query = f"""
             SELECT t.res_id, m."{field.name}", t.value, t.noupdate
               FROM t
@@ -1603,6 +1605,11 @@ def _get_translation_upgrade_queries(cr, field):
                       JOIN "{Model._table}" m ON t.res_id = m.id
                       JOIN website w ON m.website_id = w.id
                       JOIN res_lang l ON w.default_lang_id = l.id
+                    UNION
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, 'en_US'
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                     WHERE m.website_id IS NULL
                 """
         cr.execute(f"""
             WITH t0 AS (
@@ -1641,7 +1648,13 @@ def _get_translation_upgrade_queries(cr, field):
             if "en_US" not in new_values:
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
             if extra and extra[0] not in new_values:
-                new_values[extra[0]] = new_values["en_US"]
+                new_values[extra[0]] = field.translate(lambda v: None, src_value)
+            elif not extra:
+                missing_languages = languages - set(translations)
+                if missing_languages:
+                    src_value = field.translate(lambda v: None, src_value)
+                    for lang in sorted(missing_languages):
+                        new_values[lang] = src_value
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 

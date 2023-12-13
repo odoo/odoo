@@ -12,6 +12,7 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Ped Sansiri, 2023
 # Rasareeyar Lappiam, 2023
 # 
 msgid ""
@@ -791,7 +792,7 @@ msgstr "ท่ามกลาง"
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #, python-format
 msgid "An error occured while uploading."
-msgstr ""
+msgstr "เกิดข้อผิดพลาดขณะอัปโหลด"
 
 #. module: web
 #. odoo-javascript
@@ -1124,7 +1125,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "Bytes"
-msgstr ""
+msgstr "ไบต์"
 
 #. module: web
 #. odoo-javascript
@@ -1178,7 +1179,6 @@ msgstr "โทร"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1597,7 +1597,6 @@ msgstr "ประเทศ"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1632,6 +1631,13 @@ msgstr "สร้าง \"<strong>%s</strong>\""
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create %s"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
 msgstr ""
 
 #. module: web
@@ -2173,7 +2179,7 @@ msgstr "แก้ไขการบันทึก"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr ""
+msgstr "แก้ไข: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2799,6 +2805,13 @@ msgid "Invalid fields: "
 msgstr ""
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -3410,7 +3423,7 @@ msgstr "ไม่"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "No Access"
-msgstr ""
+msgstr "ไม่มีการเข้าถึง"
 
 #. module: web
 #. odoo-javascript
@@ -3769,6 +3782,13 @@ msgstr "คุณเท่านั้น"
 #, python-format
 msgid "Open View"
 msgstr "เปิดมุมมอง"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5065,7 +5085,7 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr ""
+msgstr "อยู่ที่นี่"
 
 #. module: web
 #. odoo-javascript
@@ -5179,6 +5199,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ "
+"คุณสามารถใช้ '/' เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
 
 #. module: web
 #. odoo-python
@@ -5984,7 +6006,7 @@ msgstr ""
 #: code:addons/web/controllers/binary.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "คุณไม่ได้รับอนุญาตให้อัปโหลดไฟล์แนบที่นี่"
 
 #. module: web
 #. odoo-javascript
@@ -6167,7 +6189,6 @@ msgstr "ถูกต้องสำหรับการอัปเดตนี
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "เหมือนใหม่"
@@ -6530,7 +6551,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.js:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "นาที"
 
 #. module: web
 #. odoo-javascript
@@ -6554,6 +6575,13 @@ msgstr "เพิ่มเติม"
 #, python-format
 msgid "ms"
 msgstr "ms"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6719,13 +6747,6 @@ msgstr "ตั้งค่า"
 #, python-format
 msgid "set (true)"
 msgstr "ตั้งค่า (จริง)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript

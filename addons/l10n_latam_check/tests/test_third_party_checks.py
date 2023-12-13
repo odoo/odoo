@@ -8,13 +8,13 @@ from odoo.tests.common import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestThirdChecks(L10nLatamCheckTest):
 
-    def create_third_party_check(self, journal=False):
+    def create_third_party_check(self, journal=False, check_number='00000001'):
         if not journal:
             journal = self.third_party_check_journal
         vals = {
             'partner_id': self.partner_a.id,
             'amount': 1,
-            'check_number': '00000001',
+            'check_number': check_number,
             'payment_type': 'inbound',
             'journal_id': journal.id,
             'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
@@ -65,7 +65,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         delivery.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on delivery')
         # check dont delivery twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         # Check Return / Rejection
@@ -97,7 +97,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont claim twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
@@ -147,7 +147,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
@@ -170,3 +170,14 @@ class TestThirdChecks(L10nLatamCheckTest):
         check2 = self.create_third_party_check(journal=self.rejected_check_journal)
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='account.payment', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
+
+    def test_check_number_is_number(self):
+        """
+        Ensure 'check_number' field only allows numbers
+        """
+        self.create_third_party_check(check_number='2147483647')
+
+        with self.assertRaises(ValidationError) as context:
+            self.create_third_party_check(check_number='absdfdf')
+
+        self.assertTrue("Check numbers can only consist of digits" in context.exception.args[0])

@@ -212,3 +212,13 @@ class ResPartnerBank(models.Model):
             msg = _("Bank Account %s with number %s deleted", account._get_html_link(title=f"#{account.id}"), account.acc_number)
             account.partner_id._message_log(body=msg)
         return super().unlink()
+
+    def default_get(self, fields_list):
+        if 'acc_number' not in fields_list:
+            return super().default_get(fields_list)
+
+        # When create & edit, `name` could be used to pass (in the context) the
+        # value input by the user. However, we want to set the default value of
+        # `acc_number` variable instead.
+        default_acc_number = self._context.get('default_acc_number', False) or self._context.get('default_name', False)
+        return super(ResPartnerBank, self.with_context(default_acc_number=default_acc_number)).default_get(fields_list)

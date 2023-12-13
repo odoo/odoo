@@ -2017,6 +2017,18 @@ msgid "There are no expense reports to approve."
 msgstr "Il n'y a aucun rapport de notes de frais à approuver."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
+"Des dépenses non comptabilisées sont liées à cette catégorie. La mise à jour"
+" du coût de la catégorie modifiera les montants des dépenses. Assurez-vous "
+"que c'est bien ce que vous voulez faire."
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -2338,6 +2350,14 @@ msgstr "Vous ne pouvez pas refuser vos propres notes de frais"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+"Vous ne pouvez pas déclarer des notes de frais de différentes sociétés dans "
+"le même rapport."
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."

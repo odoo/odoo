@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: Cuti"
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -40,6 +40,15 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"Cuti tidak dapat ditetapkan di lebih dari satu kontrak dengan jadwal kerja yang berbeda.\n"
+"\n"
+"Silakan buat satu cuti untuk setiap kontrak.\n"
+"\n"
+"Cuti:\n"
+"%s\n"
+"\n"
+"Kontrak:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -49,12 +58,12 @@ msgstr "Kontrak Karyawan"
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr ""
+msgstr "Entri Kerja HR"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr ""
+msgstr "Tipe Entri Kerja HR"
 
 #. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
@@ -86,6 +95,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"Tidak ada karyawan yang ditetapkan pada cuti. Mohon pastikan Anda masuk di "
+"perusahaan yang benar."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
@@ -102,9 +113,9 @@ msgstr "Tipe Cuti"
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
 msgid "Work Entry Type"
-msgstr ""
+msgstr "Tipe Entri Kerja"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "Entri kerja digunakan di payslip."

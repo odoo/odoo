@@ -34,7 +34,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Pengaturan\"/>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -43,6 +43,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Gmail Valid\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -51,6 +54,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Gmail Valid\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token
@@ -64,20 +70,20 @@ msgstr "Token Akses"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Timestamp Kadaluwarsa Token Akses"
 
 #. module: google_gmail
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "Error terjadi pada proses autentikasi."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "Error terjadi saat mengambil token akses."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -103,6 +109,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"Hubungkan akun Gmail Anda dengan proses OAuth Authentication. \n"
+"Anda akan dialihkan ulang ke halaman login Gmail di mana Anda harus menerima izin."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -111,27 +119,29 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Hubungkan akun Gmail Anda dengan proses OAuth Authentication.  \n"
+"Secara default, hanya user dengan alamat email yang cocok yang akan dapat menggunakan server ini. Untuk memperpanjang penggunaannya, Anda harus menetapkan parameter sistem \"mail.default.from\"."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "ID Klien Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmail Client Secret"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail OAuth Authentication"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail Mixin"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -141,7 +151,7 @@ msgstr "ID"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "ID dari app Google Anda"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -155,6 +165,8 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Keamanan Koneksi Salah untuk server email Gmail %r. Mohon tetapkan menjadi "
+"\"TLS (STARTTLS)\"."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -165,13 +177,13 @@ msgstr "Email Server"
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "Hanya administrator yang dapat menghubungkan server email Gmail."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "Mohon konfigurasikan credential Gmail Anda."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -181,6 +193,9 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"Mohon isi field \"Username\" dengan username Gmail Anda (alamat email Anda)."
+" Ini harusnya merupakan akun yang sama dengan yang Anda gunakan untuk Token "
+"Gmail OAuthentication."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -189,11 +204,13 @@ msgid ""
 "Please leave the password field empty for Gmail mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Mohon biarkan kosong field password untuk server email Gmail %r. Proses "
+"OAuth tidak membutuhkannya"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Read More"
-msgstr ""
+msgstr "Lihat Lebih"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_refresh_token
@@ -210,7 +227,7 @@ msgstr "Rahasia"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Secret dari app Google Anda"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
@@ -224,6 +241,8 @@ msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
 msgstr ""
+"Setup kredensial Gmail API Anda di pengaturan umum untuk menghubungkan akun "
+"Gmail Anda."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -239,6 +258,8 @@ msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
 msgstr ""
+"Server %r hanya dapat digunakan untuk alamat email pribadi Anda. Mohon isi "
+"kolom \"from_filter\" dengan %r."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

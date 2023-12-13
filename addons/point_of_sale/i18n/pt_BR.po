@@ -13,17 +13,18 @@
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # Diego Sayron, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2023
 # Wil Odoo, 2023
 # Layna Nascimento, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 13:48+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr "- abertura"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid " REFUND"
-msgstr "DEVOLUÇÃO"
+msgstr "REEMBOLSO"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -146,7 +147,9 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
-msgstr "Como gerir preços com taxas embutidas"
+msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>Como gerenciar preços com impostos "
+"inclusos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -227,7 +230,7 @@ msgstr "<span class=\"o_form_label\">Diários Padrões</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Multi Employees per Session</span>"
-msgstr "<span class=\"o_form_label\">Vários funcionários por sessão</span>"
+msgstr "<span class=\"o_form_label\">Múltiplos funcionários por sessão</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1330,12 +1333,12 @@ msgstr "Fechar"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
 #, python-format
 msgid "Close Session"
-msgstr "Fechar caixa"
+msgstr "Fechar sessão"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr "Encerrar Sessão & Lançar Entradas"
+msgstr "Fechar sessão e fazer lançamentos"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
@@ -1807,8 +1810,8 @@ msgid "Customer Screen Warning"
 msgstr "Aviso de tela do cliente"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -4014,8 +4017,8 @@ msgstr ""
 " pedido."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4171,8 +4174,8 @@ msgid "Pay Order"
 msgstr "Pagamento do Pedido"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4580,6 +4583,8 @@ msgid "Point Of Sale"
 msgstr "Ponto de Venda"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4593,6 +4598,7 @@ msgstr "Ponto de Venda"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Ponto de Venda"
 
@@ -5233,7 +5239,7 @@ msgstr "Atualizar exibição"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #, python-format
 msgid "Refund"
-msgstr "Devolução"
+msgstr "Reembolso"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -6229,7 +6235,7 @@ msgstr "Preço sem impostos"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
 msgid "Tax-Included Price"
-msgstr "Preço com imposto incluso"
+msgstr "Preço com impostos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
@@ -6253,7 +6259,7 @@ msgstr "Impostos a aplicar"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Taxes:"
-msgstr "Taxa"
+msgstr "Impostos:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7539,16 +7545,6 @@ msgstr "Não é possível fechar o PDV quando as ordens ainda estão em rascunho
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
 "Você não pode criar uma sessão antes da data de bloqueio da contabilidade."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
-"Não é possível excluir uma linha de extrato bancário vinculada à sessão do "
-"ponto de venda."
 
 #. module: point_of_sale
 #. odoo-python

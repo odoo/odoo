@@ -80,7 +80,7 @@ class ResourceCalendarLeaves(models.Model):
         """
         work_hours_data = self._work_time_per_day()
         employees_groups = self.env['hr.employee']._read_group(
-            [('resource_calendar_id', 'in', self.calendar_id.ids)],
+            [('resource_calendar_id', 'in', self.calendar_id.ids), ('company_id', 'in', self.env.companies.ids)],
             ['resource_calendar_id', 'ids:array_agg(id)'],
             ['resource_calendar_id'])
         mapped_employee = {

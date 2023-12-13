@@ -591,11 +591,13 @@ class StockMove(models.Model):
                     cost = -1 * cost
                     am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
             elif self._is_dropshipped_returned():
-                if cost > 0:
+                if cost > 0 and self.location_dest_id._should_be_valued():
                     am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+                elif cost > 0:
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
                 else:
                     cost = -1 * cost
-                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
 
         return am_vals
 

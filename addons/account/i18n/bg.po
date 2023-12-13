@@ -22,6 +22,8 @@
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Nikola Iliev, 2023
+# Turhan Aydin <taydin@unionproject.eu>, 2023
+# Ivaylo Ivanov <bulgarian@ultralang.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Nikola Iliev, 2023\n"
+"Last-Translator: Ivaylo Ivanov <bulgarian@ultralang.com>, 2023\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +65,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Група на данъците: Данъкът е съвкупност от подданъци.\n"
+"- Фиксиран: Сумата на данъка остава постоянна, независимо от цената.\n"
+"- Процент от цената: Сумата на данъка е % от цената:\n"
+"например 100 * (1 + 10%) = 110 (не включва цената)\n"
+"например 110 / (1 + 10%) = 100 (включва цената)\n"
+"- Процент от цената с включен данък: Сумата на данъка е деление на цената:\n"
+"например 180 / (1 - 10%) = 200 (не включва цената)\n"
+"например 200 * (1 - 10%) = 180 (включва цената)"
 
 #. module: account
 #. odoo-python
@@ -74,17 +85,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr ""
+msgstr "# Равнени Фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Равнени Фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr ""
+msgstr "# Равнени Редове на Извлечение"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -213,6 +224,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -232,7 +250,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(копие)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -310,17 +328,17 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Payment"
-msgstr "1 Плащане"
+msgstr "1 плащане"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15 Дни"
+msgstr "15 дни"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr "2 Месеца"
+msgstr "2 месеца"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
@@ -330,12 +348,12 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr "21 Дни"
+msgstr "21 дни"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr "30 Дни"
+msgstr "30 дни"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
@@ -355,7 +373,7 @@ msgstr "30% Сега, Баланс 60 Дни"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr "45 Дни"
+msgstr "45 дни"
 
 #. module: account
 #. odoo-python
@@ -3460,6 +3478,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Cannot generate an unused account code."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12834,7 +12861,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
+msgid "Switch into invoice/credit note"
 msgstr ""
 
 #. module: account
@@ -13438,13 +13465,6 @@ msgstr ""
 msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
 msgstr ""
 
 #. module: account
@@ -16282,6 +16302,13 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
 msgstr ""
 
 #. module: account

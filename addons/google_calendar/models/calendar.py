@@ -8,6 +8,7 @@ from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 
+from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
 class Meeting(models.Model):
     _name = 'calendar.event'
@@ -47,6 +48,31 @@ class Meeting(models.Model):
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+
+    @api.model
+    def _check_values_to_sync(self, values):
+        """ Return True if values being updated intersects with Google synced values and False otherwise. """
+        synced_fields = self._get_google_synced_fields()
+        values_to_sync = any(key in synced_fields for key in values)
+        return values_to_sync
+
+    @api.model
+    def _get_update_future_events_values(self):
+        """ Add parameters for updating events within the _update_future_events function scope. """
+        update_future_events_values = super()._get_update_future_events_values()
+        return {**update_future_events_values, 'need_sync': False}
+
+    @api.model
+    def _get_remove_sync_id_values(self):
+        """ Add parameters for removing event synchronization while updating the events in super class. """
+        remove_sync_id_values = super()._get_remove_sync_id_values()
+        return {**remove_sync_id_values, 'google_id': False}
+
+    @api.model
+    def _get_archive_values(self):
+        """ Return the parameters for archiving events. Do not synchronize events after archiving. """
+        archive_values = super()._get_archive_values()
+        return {**archive_values, 'need_sync': False}
 
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')
@@ -121,8 +147,10 @@ class Meeting(models.Model):
             if stop < start:
                 stop = parse(google_event.end.get('date'))
             values['allday'] = True
-        values['start'] = start
-        values['stop'] = stop
+        if related_event['start'] != start:
+            values['start'] = start
+        if related_event['stop'] != stop:
+            values['stop'] = stop
         return values
 
     @api.model
@@ -139,7 +167,8 @@ class Meeting(models.Model):
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
-            existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
+            event = google_event.get_odoo_event(self.env)
+            existing_attendees = event.attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
         partners = self._get_sync_partner(emails)
         for attendee in zip(emails, partners, google_attendees):
@@ -208,6 +237,18 @@ class Meeting(models.Model):
                     )
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
+
+    def action_mass_archive(self, recurrence_update_setting):
+        """ Delete recurrence in Odoo if in 'all_events' or in 'future_events' edge case, triggering one mail. """
+        self.ensure_one()
+        google_service = GoogleCalendarService(self.env['google.service'])
+        archive_future_events = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
+        if recurrence_update_setting == 'all_events' or archive_future_events:
+            self.recurrence_id.with_context(is_recurrence=True)._google_delete(google_service, self.recurrence_id.google_id)
+            # Increase performance handling 'future_events' edge case as it was an 'all_events' update.
+            if archive_future_events:
+                recurrence_update_setting = 'all_events'
+        super(Meeting, self).action_mass_archive(recurrence_update_setting)
 
     def _google_values(self):
         if self.allday:

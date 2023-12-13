@@ -412,3 +412,10 @@ class TestAccessRightsPrivateTask(TestAccessRights):
     def test_project_user_cannot_unlink_private_task_of_another_user(self):
         with self.assertRaises(AccessError):
             self.private_task.with_user(self.env.user).unlink()
+
+    def test_of_setting_root_user_on_private_task(self):
+        test_task = self.env['project.task'].create({
+            'name':'Test Private Task',
+            'user_ids': [Command.link(self.user_projectuser.id)]
+        })
+        self.assertNotEqual(test_task.user_ids, self.env.user, "Created private task should not have odoobot as asignee")

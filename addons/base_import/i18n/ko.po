@@ -303,6 +303,24 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "날짜 구문 오류 [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "레코드를 가져오는 동안 오류가 발생했습니다. 텍스트 구분 기호는 단일 문자여야 합니다."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"레코드를 가져오는 동안 오류가 발생했습니다. 모든 행은 크기가 같아야 합니다. 제목 행에 %d개 및 첫 번째 행에 %d개가 입력되어 "
+"있습니다. 구문 문자를 변경해야 하는지 확인하세요."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format

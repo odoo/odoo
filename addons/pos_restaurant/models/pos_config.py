@@ -26,7 +26,8 @@ class PosConfig(models.Model):
     def get_tables_order_count(self):
         """         """
         self.ensure_one()
-        tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', 'in', self.ids)])
+        floors = self.env['restaurant.floor'].search([('pos_config_id', 'in', self.ids)])
+        tables = self.env['restaurant.table'].search([('floor_id', 'in', floors.ids)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
@@ -62,7 +63,7 @@ class PosConfig(models.Model):
                 cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False)], limit=1)
                 if not cash_journal:
                     cash_journal = self.env['account.journal'].create({
-                        'name': 'Cash %s' % journal_counter,
+                        'name': _('Cash %s', journal_counter),
                         'code': 'RCSH%s' % journal_counter,
                         'type': 'cash',
                         'company_id': company.id

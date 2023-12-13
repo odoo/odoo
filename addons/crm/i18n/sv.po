@@ -17,13 +17,14 @@
 # lasch a <bmail440@gmail.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Björn Hayer, 2023
 # Robin Calvin, 2023
 # Lasse L, 2023
 # Muhammad Yaseen, 2023
+# Levi Siuzdak (sile), 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Muhammad Yaseen, 2023\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "# leads/möjligheter denna månad"
+msgstr "# kundämnen/möjligheter denna månad"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__calendar_event_count
@@ -67,21 +68,21 @@ msgstr "# förfallna möjligheter"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# Otilldelade leads"
+msgstr "# Otilldelade kundämnen"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr "%(assigned)s leads fördelade mellan %(team_count)s team."
+msgstr "%(assigned)s kundämnen fördelade mellan %(team_count)s team."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr "%(assigned)s leads tilldelade till %(team_name)s team."
+msgstr "%(assigned)s kundämnen tilldelade till %(team_name)s team."
 
 #. module: crm
 #. odoo-python
@@ -95,7 +96,7 @@ msgstr "%(attach_name)s (från %(lead_name)s)"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr "%(duplicates)s Duplicerade leads har slagits samman."
+msgstr "%(duplicates)s Överlappande kundämnen har slagits samman."
 
 #. module: crm
 #. odoo-python
@@ -103,7 +104,8 @@ msgstr "%(duplicates)s Duplicerade leads har slagits samman."
 #, python-format
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr "%(members_assigned)s leads fördelade bland %(member_count)s säljare."
+msgstr ""
+"%(members_assigned)s kundämnen fördelade bland %(member_count)s säljare."
 
 #. module: crm
 #. odoo-python
@@ -140,7 +142,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr "<b>Förutspådd lead-poäng</b>"
+msgstr "<b>Förutspådd kundämnes-poäng</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -222,8 +224,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Liknande leads</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Liknande lead</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Liknande kundämnen</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Liknande kundämne</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -231,13 +233,13 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Kundämnen</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Möjligheter</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">Kundämnen</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -276,7 +278,7 @@ msgstr "<span>Förväntade intäkter:</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Merged the Lead/Opportunity</span>"
-msgstr "<span>Sammanslagning av Lead/Möjlighet</span>"
+msgstr "<span>Sammanslagning av Kundämne/Möjlighet</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -287,7 +289,7 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
-"<span>Periodiskt tilldela leads baserat på regler</span><br/>\n"
+"<span>Periodiskt tilldela kundämnen baserat på regler</span><br/>\n"
 "                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
 "                                        Alla säljteam kommer att använda den här inställningen som standard om\n"
 "                                        annat anges.\n"
@@ -372,44 +374,44 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
-"<table border=”0” cellpadding=”0” cellspacing=”0” style=”padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;”><tr><td align=”center”>\n"
-"<table border=”0” cellpadding=”0” cellspacing=”0” width=”590” style=”padding: 24px; background-color: white; color: #454748; border-collapse:separate;”>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!— HEADER —>\n"
+"    <!-- HEADER -->\n"
 "    <tr>\n"
-"        <td align=”center” style=”min-width: 590px;”>\n"
-"            <table border=”0” cellpadding=”0” cellspacing=”0” width=”100%” style=”background-color: white; padding: 0; border-collapse:separate;”>\n"
-"                <tr><td valign=”middle”>\n"
-"                    <span style=”font-size: 10px;”>Ditt Lead/Möjlighet</span><br>\n"
-"                    <span style=”font-size: 20px; font-weight: bold;” t-out=”object.name or ’’”>Intresse för dina produkter</span>\n"
-"                </td><td valign=”middle” align=”right”>\n"
-"                    <img t-attf-src=”/logo.png?company={{ object.company_id.id }}” style=”padding: 0px; margin: 0px; height: 48px;” t-att-alt=”object.company_id.name”>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Ditt Kundämne/Möjlighet</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Intresse för dina produkter</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
 "                </td></tr>\n"
-"                <tr><td colspan=”2” style=”text-align:center;”>\n"
-"                    <hr width=”100%” style=”background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;”>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!— CONTENT —>\n"
+"    <!-- CONTENT -->\n"
 "    <tr>\n"
-"        <td style=”min-width: 590px;”>\n"
-"            <table border=”0” cellpadding=”0” cellspacing=”0” width=”590” style=”min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;”>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
-"                    <td valign=”top” style=”font-size: 13px;”>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hej <t t-out=”object.partner_id and object.partner_id.name or ’’”>Deco Addict</t>!<br><br>\n"
-"                            Välkommen till <t t-out=”object.company_id.name or ’’”>Mitt Företag (San Francisco)</t>.\n"
-"                            Det är trevligt att träffa dig! Nu när du är ombord kommer du att upptäcka vad <t t-out=”object.company_id.name or ’’”>Mitt Företag (San Francisco)</t> har att erbjuda. Mitt namn är <t t-out=”object.user_id.name or ’’”>Marc Demo</t> och jag kommer att hjälpa dig att få ut det mesta av Odoo. Kan vi planera en snabb demo snart?<br>\n"
+"                            Hej <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>!<br><br>\n"
+"                            Välkommen till <t t-out=\"object.company_id.name or ''\">Mitt Företag (San Francisco)</t>.\n"
+"                            Det är trevligt att träffa dig! Nu när du är ombord kommer du att upptäcka vad <t t-out=\"object.company_id.name or ''\">Mitt Företag (San Francisco)</t> har att erbjuda. Mitt namn är <t t-out=\"object.user_id.name or ''\">Marc Demo</t> och jag kommer att hjälpa dig att få ut det mesta av Odoo. Kan vi planera en snabb demo snart?<br>\n"
 "                            Tveka inte att kontakta mig när som helst!<br><br>\n"
 "                            Bästa!<br>\n"
-"                            <t t-if=”object.user_id”>\n"
-"                                <b><t t-out=”object.user_id.name or ’’”>Marc Demo</t></b>\n"
-"                                <br>E-postl: <t t-out=”object.user_id.email or ’’”>mark.brown23@example.com</t>\n"
-"                                <br>Telefon: <t t-out=”object.user_id.phone or ’’”>+1 650-123-4567</t>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                                <br>E-postl: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
-"                            <t t-else=””>\n"
-"                                <t t-out=”object.company_id.name or ’’”>Mitt Företag (San Francisco)</t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">Mitt Företag (San Francisco)</t>\n"
 "                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -417,18 +419,18 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!— FOOTER —>\n"
+"    <!-- FOOTER -->\n"
 "    <tr>\n"
-"        <td align=”center” style=”min-width: 590px; padding: 0 8px 0 8px; font-size:11px;”>\n"
-"            <hr width=”100%” style=”background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;”>\n"
-"            <b t-out=”object.company_id.name or ’’”>Mitt Företag (San Francisco)</b><br>\n"
-"            <div style=”color: #999999;”>\n"
-"                <t t-out=”object.company_id.phone or ’’”>+1 650-123-4567</t>\n"
-"                <t t-if=”object.company_id.email”>\n"
-"                    | <a t-attf-href=”’mailto:%s’ % {{ object.company_id.email }}” style=”text-decoration:none; color: #999999;” t-out=”object.company_id.email or ’’”>info@yourcompany.com</a>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+"            <b t-out=\"object.company_id.name or ''\">Mitt Företag (San Francisco)</b><br>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                </t>\n"
-"                <t t-if=”object.company_id.website”>\n"
-"                    | <a t-attf-href=”’%s’ % {{ object.company_id.website }}” style=”text-decoration:none; color: #999999;” t-out=”object.company_id.website or ’’”>http://www.example.com</a>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
 "                </t>\n"
 "            </div>\n"
 "        </td>\n"
@@ -436,9 +438,9 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!— POWERED BY —>\n"
-"<tr><td align=”center” style=”min-width: 590px;”>\n"
-"    Drivs av <a target=”_blank” href=”https://www.odoo.com?utm_source=db&amp;utm_medium=email” style=”color: #875A7B;”>Odoo</a>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Drivs av <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
 "</td></tr>\n"
 "</table> "
 
@@ -489,7 +491,7 @@ msgstr "Aktiv"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr "Aktiva leads"
+msgstr "Aktiva kundämnen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -576,8 +578,8 @@ msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
 msgstr ""
-"Ytterligare filterdomän när man hämtar otilldelade leads för att fördela "
-"till teamet."
+"Ytterligare filterdomän när man hämtar otilldelade kundämnen för att fördela"
+" till teamet."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -652,7 +654,7 @@ msgid ""
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
 "Eftersom du inte är medlem i något försäljningsteam, visas pipelinen för det <b>första teamet som standard.</b>\n"
-"                                        För att arbeta med CRM-systemet bör du <a name=”%d” type=”action” tabindex=”-1”>gå med i ett team.</a>"
+"                                        För att arbeta med CRM-systemet bör du <a name=\"%d\" type=\"action\" tabindex=\"-1\">gå med i ett team.</a>"
 
 #. module: crm
 #. odoo-python
@@ -673,7 +675,7 @@ msgstr "Tilldela dokumentation"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr "Tilldela leads"
+msgstr "Tilldela kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -698,7 +700,7 @@ msgstr "Tilldela denna möjlighet till"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assigned Leads Count"
-msgstr "Antal tilldelade leads"
+msgstr "Antal tilldelade kundämnen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -733,7 +735,7 @@ msgstr "Tilldelningsdomänen för team %(team)s är felaktigt formaterad"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_id
 msgid "Associated Lead"
-msgstr "Förknippad lead"
+msgstr "Förknippat kundämne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
@@ -823,7 +825,7 @@ msgstr "CRM etapper"
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
 #: model:ir.cron,cron_name:crm.ir_cron_crm_lead_assign
 msgid "CRM: Lead Assignment"
-msgstr "CRM: Tilldelning av leads"
+msgstr "CRM: Tilldelning av kundämnen"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -869,7 +871,8 @@ msgid ""
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
 "Bocka i rutan för att filtrera och kvalificera inkommande förfrågningar som "
-"leads innan de konverteras till möjligheter och knyts till en säljare."
+"kundämnen innan de konverteras till affärsmöjligheter och knyts till en "
+"säljare."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
@@ -892,8 +895,8 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Klassificera och analysera dina kategorier för leads/möjligheter som till "
-"exempel: utbildning, service"
+"Klassificera och analysera dina kategorier för kundämnen/möjligheter som "
+"till exempel: utbildning, service"
 
 #. module: crm
 #. odoo-javascript
@@ -921,7 +924,7 @@ msgstr "Avslutsdatum"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Stängda/döda leads kan inte omvandlas till affärsmöjligheter."
+msgstr "Stängda/döda kundämnen kan inte omvandlas till affärsmöjligheter."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -994,7 +997,7 @@ msgstr "Grattis! Lycka till med storfisket! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr "Betrakta leads som skapade från och med den:"
+msgstr "Överväg kundämnen som skapade från och med den:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1038,7 +1041,7 @@ msgstr "Konverteringsdatum"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Konverteringsdatum från lead till möjlighet"
+msgstr "Konverteringsdatum från kundämne till möjlighet"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1048,12 +1051,12 @@ msgstr "Alternativ för konvertering"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr "Konvertera leads till möjligheter (i batch)"
+msgstr "Konvertera kundämnen till möjligheter (i batch)"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr "Konvertera lead till möjlighet (ej batch)"
+msgstr "Konvertera kundämnen till möjlighet (ej batch)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1088,7 +1091,7 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
-"Konvertera besökare på din webbplats till leads och berika deras data "
+"Konvertera besökare på din webbplats till kundämnen och berika deras data "
 "baserat på IP-adressen"
 
 #. module: crm
@@ -1122,7 +1125,7 @@ msgstr "Land"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Skapa leads/möjligheter från webbplatsens trafik"
+msgstr "Skapa kundämnen/möjligheter från webbplatsens trafik"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1132,7 +1135,7 @@ msgstr "Skapa möjlighet"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr "Skapa en lead"
+msgstr "Skapa ett kundämnen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1147,7 +1150,7 @@ msgstr "Skapa en återkommande plan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr "Skapa en lead-generering direkt från din pipeline."
+msgstr "Skapa en kundämnes-generering direkt från din pipeline."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1162,7 +1165,7 @@ msgstr "Skapa en ny kund"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr "Skapa ny lead"
+msgstr "Skapa nytt kundämne"
 
 #. module: crm
 #. odoo-python
@@ -1469,17 +1472,17 @@ msgstr "E-post: Välkomstdemo"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr "Berika alla leads automatiskt"
+msgstr "Berika alla kundämnen automatiskt"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Berika lead automatiskt"
+msgstr "Berika kundämnen automatiskt"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr "Berika leads endast på begäran"
+msgstr "Berika kundämnen endast på begäran"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1487,13 +1490,14 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Berika dina leads automatiskt med företagsdata baserad på deras "
+"Berika dina kundämnen automatiskt med företagsdata baserad på deras "
 "e-postadress."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
-msgstr "Berika dina leads med företagsdata baserat på deras e-postadresser"
+msgstr ""
+"Berika dina kundämnen med företagsdata baserat på deras e-postadresser"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1583,7 +1587,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr "Fält som kan användas för beräkning av förutspådd lead-poäng"
+msgstr "Fält som kan användas för beräkning av förutspådd kundämnes-poäng"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1618,10 +1622,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"För ett säljteam finns inget värre än att inte ha några leads. Som tur är "
-"kan du, med bara några klick, generera leads specifikt för ditt behov: "
-"företagsstorlek, bransch, etc. För att hjälpa dig testa funktionen får du "
-"200 krediter gratis."
+"För ett säljteam finns inget värre än att inte ha några kundämnen. Som tur "
+"är kan du, med bara några klick, generera kundämnen specifikt för ditt "
+"behov: företagsstorlek, bransch, etc. För att hjälpa dig testa funktionen "
+"får du 200 krediter gratis."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1664,12 +1668,12 @@ msgstr "Kommande aktiviteter"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr "Generera nya leads baserat på land, bransch, storlek, etc."
+msgstr "Generera nya kundämnen baserat på land, bransch, storlek, etc."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Generera nya leads baserat på land, bransch, storlek, etc."
+msgstr "Generera nya kundämnen baserat på land, bransch, storlek, etc."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1816,7 +1820,7 @@ msgstr "Importera och synkronisera"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr "Importmall för leads och möjligheter"
+msgstr "Importmall för kundämnen och affärsmöjligheter"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1917,7 +1921,7 @@ msgstr "Kanbanstatus"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "KPI-värde i CRM för lead"
+msgstr "KPI-värde i CRM för kundämne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
@@ -2013,82 +2017,82 @@ msgstr "Försenade aktiviteter"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead"
-msgstr "Lead"
+msgstr "Kundämne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_enabled
 msgid "Lead Assign"
-msgstr "Tilldela lead"
+msgstr "Tilldela kundämne"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr "Lead-tilldelning begärd av %(user_name)s"
+msgstr "kundämnes-tilldelning begärd av %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
 msgid "Lead Average Capacity"
-msgstr "Genomsnittlig kapacitet för lead"
+msgstr "Genomsnittlig kapacitet för kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr "Berika leads"
+msgstr "Berika kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Generation"
-msgstr "Leadgenerering"
+msgstr "Kundämnesgenerering"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr "Leadgenerering"
+msgstr "Kundämnesgenerering"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr "Egenskaper för lead"
+msgstr "Egenskaper för kundämne"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr "Frekvens för lead-poängsättning"
+msgstr "Frekvens för kundämne-poängsättning"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr "Fält för frekvens av lead-poängsättning"
+msgstr "Fält för frekvens av kundämne-poängsättning"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Fält för frekvens av lead-poängsättning i strängformat"
+msgstr "Fält för frekvens av kundämne-poängsättning i strängformat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Startdatum för lead-poängsättning"
+msgstr "Startdatum för kundämnes-poängsättning"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Startdatum för lead-poängsättning i strängformat"
+msgstr "Startdatum för kundämnes-poängsättning i strängformat"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
-msgstr "Lead tilldelad denna medlem de senaste 30 dagarna"
+msgstr "Kundämnen tilldelad denna medlem de senaste 30 dagarna"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr "Lead eller möjlighet"
+msgstr "Kundämne eller affärsmöjlighet"
 
 #. module: crm
 #. odoo-python
@@ -2098,8 +2102,8 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
-"Automatisk tilldelning av leads/möjligheter är begränsad till chefer eller "
-"administratörer"
+"Automatisk tilldelning av kundämnen/möjligheter är begränsad till chefer "
+"eller administratörer"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -2109,7 +2113,7 @@ msgstr "Affärsmöjlighet/Möjlighet"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr "Lead/möjlighet skapad"
+msgstr "Kundämne/möjlighet skapad"
 
 #. module: crm
 #. odoo-python
@@ -2127,12 +2131,12 @@ msgstr "Lead/möjlighet skapad"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #, python-format
 msgid "Leads"
-msgstr "Leads"
+msgstr "Kundämnen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr "Leads (30 dagar)"
+msgstr "Kundämnen (30 dagar)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2140,7 +2144,7 @@ msgstr "Leads (30 dagar)"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 msgid "Leads Analysis"
-msgstr "Leadsanalys"
+msgstr "Kundämnesanalys"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -2149,8 +2153,8 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Leadsanalys låter dig kontrollera olika CRM-relaterade uppgifter som "
-"ledtider i behandlingen och antal leads per etapp. Du kan filtrera din "
+"Kundämnesanalys låter dig kontrollera olika CRM-relaterade uppgifter som "
+"ledtider i behandlingen och antal kundämnen per etapp. Du kan filtrera din "
 "analys på olika grupper för att få en mer specificerad analys. "
 
 #. module: crm
@@ -2158,28 +2162,28 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr "Tilldelade lead"
+msgstr "Tilldelade kundämnen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr "Antal leads"
+msgstr "Antal kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Skapa leads"
+msgstr "Skapa kundämnen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
-msgstr "Leads är kvalificeringssteget före skapandet av en möjlighet."
+msgstr "Kundämnen är kvalificeringssteget före skapandet av en möjlighet."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
 msgid "Leads or Opportunities"
-msgstr "Leads eller möjligheter"
+msgstr "Kundämnen eller möjligheter"
 
 #. module: crm
 #. odoo-python
@@ -2190,18 +2194,18 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
-"Tilldelning av leads till team bör göras för minst 0,2 eller högst 30 "
+"Tilldelning av kundämnen till team bör göras för minst 0,2 eller högst 30 "
 "arbetsdagar, inte %.2f."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "Leads tilldelade mig"
+msgstr "Kundämnen tilldelade mig"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are not assigned"
-msgstr "Otilldelade leads"
+msgstr "Otilldelade kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2209,23 +2213,23 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
 msgstr ""
-"Leads som du valt som har dubbletter. Om listan är tom innebär det att inga "
-"dubbletter hittades"
+"Kundämnen som du valt som har dubbletter. Om listan är tom innebär det att "
+"inga dubbletter hittades"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr "Leads med befintliga dubbletter (för information)"
+msgstr "Kundämnen med befintliga dubbletter (för information)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__opportunity_ids
 msgid "Leads/Opportunities"
-msgstr "Leads/möjligheter"
+msgstr "Kundämnen/möjligheter"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr "Antal leads/möjligheter"
+msgstr "Antal kundämnen/möjligheter"
 
 #. module: crm
 #. odoo-javascript
@@ -2253,8 +2257,8 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Länkad kontakt (valfri). Oftast skapad när leaden konverteras. Ni kan finna "
-"en partner via dess namn, TIN, mejl, eller intern referens."
+"Länkad kontakt (valfri). Oftast skapad när kundämnet konverteras. Ni kan "
+"finna en partner via dess namn, TIN, mejl, eller intern referens."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2427,7 +2431,7 @@ msgstr "Sammanfoga"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
-msgstr "Sammanslagning av leads/möjligheter"
+msgstr "Sammanslagning av kundämnen/möjligheter"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -2437,7 +2441,8 @@ msgstr "Sammanfoga affärsmöjligheter"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "Sammanfoga med befintliga leads/möjligheter för respektive kontakt"
+msgstr ""
+"Sammanfoga med befintliga kundämnen/möjligheter för respektive kontakt"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__name__merge
@@ -2480,7 +2485,7 @@ msgstr "Månatlig"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
-"Månatlig genomsnittlig kapacitet för leads för alla säljare som ingår i "
+"Månatlig genomsnittlig kapacitet för kundämnen för alla säljare som ingår i "
 "teamet"
 
 #. module: crm
@@ -2508,7 +2513,7 @@ msgstr "Min deadline"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "Mina leads"
+msgstr "Mina kundämnen"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -2525,12 +2530,12 @@ msgstr "Ny"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr "Nytt lead"
+msgstr "Nytt kundämne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads"
-msgstr "Nya leads"
+msgstr "Nya kundämnen"
 
 #. module: crm
 #. odoo-python
@@ -2601,8 +2606,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
-"Inga tilldelade leads till %(team_name)s-teamet och dess säljare eftersom "
-"ingen otilldelad lead matchar dess domän."
+"Inga tilldelade kundämnen till %(team_name)s-teamet och dess säljare "
+"eftersom ingen otilldelad kundämne matchar dess domän."
 
 #. module: crm
 #. odoo-python
@@ -2612,8 +2617,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
-"Inga allokerade leads till %(team_name)s-teamet eftersom det inte har någon "
-"kapacitet. Lägg till kapacitet till dess säljare."
+"Inga allokerade kundämnen till %(team_name)s-teamet eftersom det inte har "
+"någon kapacitet. Lägg till kapacitet till dess säljare."
 
 #. module: crm
 #. odoo-python
@@ -2623,8 +2628,8 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
-"Inga tilldelade leads till något team eller säljare. Kontrollera "
-"konfigurationen för säljteam och säljare samt ej tilldelade leads."
+"Inga tilldelade kundämnen till något team eller säljare. Kontrollera "
+"konfigurationen för säljteam och säljare samt ej tilldelade kundämnen."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2646,8 +2651,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
-"Ingen lead tilldelad till säljare eftersom ingen tilldelad lead matchar "
-"deras domäner."
+"Ingen kundämne tilldelad till säljare eftersom ingen tilldelad kundämne "
+"matchar deras domäner."
 
 #. module: crm
 #. odoo-python
@@ -2657,8 +2662,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
-"Inga nya leads tilldelade till %(team_name)s team eftersom inga otilldelade "
-"leads matchar dess domän."
+"Inga nya kundämnen tilldelade till %(team_name)s team eftersom inga "
+"otilldelade kundämnen matchar dess domän."
 
 #. module: crm
 #. odoo-python
@@ -2667,8 +2672,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
-"Inga nya leads har tilldelats teamen eftersom inga leads matchar deras "
-"domäner."
+"Inga nya kundämnen har tilldelats teamen eftersom inga kundämnen matchar "
+"deras domäner."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2734,7 +2739,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr "Antal leads och möjligheter tilldelade den gångna månaden."
+msgstr "Antal kundämnen och möjligheter tilldelade den gångna månaden."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3049,7 +3054,8 @@ msgstr "Namn på plan"
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
 "view."
-msgstr "Välj mer än ett element (lead eller möjlighet) från listvyn."
+msgstr ""
+"Välj mer än ett element (kundämne eller affärsmöjlighet) från listvyn."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
@@ -3077,23 +3083,24 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr "Potentiell dubblett-lead"
+msgstr "Potentiell dubblett-kundämne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr "Antal potentiella dubblett-leads"
+msgstr "Antal potentiella dubblett-kundämnen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr "Fältetiketter för prediktiv lead-poängsättning"
+msgstr "Fältetiketter för prediktiv kundämnes-poängsättning"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr "Prediktiv lead-poängsättning: Omberäkna automatiserade sannolikheter"
+msgstr ""
+"Prediktiv kundämnes-poängsättning: Omberäkna automatiserade sannolikheter"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3345,7 +3352,7 @@ msgstr "Schemalägg aktiviteter för att hålla reda på allt du måste göra."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "Sök leads"
+msgstr "Sök kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -3356,7 +3363,7 @@ msgstr "Sök möjligheter"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "Välj leads/möjligheter"
+msgstr "Välj kundämnen/möjligheter"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3393,7 +3400,7 @@ msgstr "Inställningar"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "Visa menyn för leads"
+msgstr "Visa menyn för kundämnen"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
@@ -3410,12 +3417,12 @@ msgstr "Visa alla möjligheter för vilka nästa åtgärdsdatum är före idag"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only lead"
-msgstr "Visa bara leads"
+msgstr "Visa bara kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only leads"
-msgstr "Visa endast leads"
+msgstr "Visa endast kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3608,7 +3615,7 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
-"Kontakterna nedan har lagts till som följare av detta lead\n"
+"Kontakterna nedan har lagts till som följare av detta kundämne\n"
 "                        eftersom de har kontaktats för mindre än 30 dagar sedan på"
 
 #. module: crm
@@ -3618,7 +3625,7 @@ msgid ""
 "automatically create new leads assigned to the channel."
 msgstr ""
 "E-postadressen som är kopplad till denna kanal. Nya mottagna "
-"e-postmeddelanden kommer automatiskt att skapa nya leads som tilldelas "
+"e-postmeddelanden kommer automatiskt att skapa nya kundämnen som tilldelas "
 "kanalen."
 
 #. module: crm
@@ -3647,7 +3654,7 @@ msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
 msgstr ""
-"Namnet på företagskontakten som kommer att blir skapad när denna lead "
+"Namnet på företagskontakten som kommer att blir skapad när detta kundämne "
 "omvandlas till en möjlighet."
 
 #. module: crm
@@ -3690,7 +3697,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr "Denna analys visar dig hur många leads som har skapats per månad."
+msgstr "Denna analys visar dig hur många kundämnen som har skapats per månad."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3706,15 +3713,15 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
-"Detta kan användas för att automatiskt tilldela leads till säljare baserat "
-"på regler"
+"Detta kan användas för att automatiskt tilldela kundämnen till säljare "
+"baserat på regler"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
 msgstr ""
 "Detta kan användas för att beräkna statistisk sannolikhet för att avsluta "
-"ett lead"
+"ett kundämne"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3783,7 +3790,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
 msgstr ""
-"Detta kommer att tilldela leads till alla medlemmar. Vill du fortsätta?"
+"Detta kommer att tilldela kundämnen till alla medlemmar. Vill du fortsätta?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
@@ -3795,7 +3802,7 @@ msgstr "Tips: Omvandla inkommande e-post till möjligheter"
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr "Tips: Visste du att Odoo har inbyggd lead-generering?"
+msgstr "Tips: Visste du att Odoo har inbyggd kundämnes-generering?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3836,8 +3843,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
-"För att förhindra dataförlust kan Leads och Möjligheter endast slås samman "
-"av grupper på %(max_length)s."
+"För att förhindra dataförlust kan Kundämnen och Möjligheter endast slås "
+"samman av grupper på %(max_length)s."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3876,7 +3883,7 @@ msgstr "Typ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ används för att separera leads från möjligheter"
+msgstr "Typ används för att separera kundämnen från möjligheter"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
@@ -3896,7 +3903,7 @@ msgstr "UTM kampanj"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr "UX: Begränsa till leadföretag eller alla om inget företag"
+msgstr "UX: Begränsa till kundämnen eller alla om inget företag"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3907,12 +3914,12 @@ msgstr "Otilldelad"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Lead"
-msgstr "Otilldelad lead"
+msgstr "Otilldelat kundämne"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Leads"
-msgstr "Otilldelade leads"
+msgstr "Otilldelade kundämnen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3938,7 +3945,7 @@ msgstr "Uppdatera sannolikheterna"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
 msgid "Use Leads"
-msgstr "Använd leads"
+msgstr "Använd kundämnen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -3947,7 +3954,7 @@ msgid ""
 "competitors\")."
 msgstr ""
 "Använd förlorade skäl för att rapportera varför möjligheter går förlorade "
-"(t.ex. ”Underpris av konkurrenter”)."
+"(t.ex. \"Underpris av konkurrenter\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3962,8 +3969,8 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"Använd leads om du behöver ett kvalificeringssteg innan du skapar en\n"
-"                    möjlighet eller en kund. Det kan vara ett visitkort du fått,\n"
+"Använd kundämnen om du behöver ett kvalificeringssteg innan du skapar en\n"
+"                    affärsmöjlighet eller en kund. Det kan vara ett visitkort du fått,\n"
 "                    ett kontaktformulär som fyllts i på din webbplats, eller en fil med okvalificerade\n"
 "                    okvalificerade prospekt som du importerar, etc."
 
@@ -3976,12 +3983,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"Använd leads om du behöver ett kvalificeringssteg innan du skapar en "
+"Använd kundämnen om du behöver ett kvalificeringssteg innan du skapar en "
 "möjlighet eller en kund. Det kan vara ett visitkort du fått, ett "
 "kontaktformulär som fyllts i på din webbplats eller en fil med "
-"okvalificerade prospekt som du importerar osv. När leadet har kvalificerats "
-"kan det omvandlas till en affärsmöjlighet och/eller en ny kund i din "
-"adressbok."
+"okvalificerade prospekt som du importerar osv. När kundämnet har "
+"kvalificerats kan det omvandlas till en affärsmöjlighet och/eller en ny kund"
+" i din adressbok."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4067,7 +4074,7 @@ msgstr "Mycket hög"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Visits to Leads"
-msgstr "Besökare till leads"
+msgstr "Besökare till kundämnen"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4228,7 +4235,7 @@ msgstr "t.ex. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "för de leads som skapats från och med"
+msgstr "för de kundämnen som skapats från och med"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

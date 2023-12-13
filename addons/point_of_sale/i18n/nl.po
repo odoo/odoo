@@ -6,16 +6,16 @@
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 13:48+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1577,7 +1577,7 @@ msgstr "Doorgaan zonder demogegevens"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion Rate"
-msgstr "Conversie ratio"
+msgstr "Conversieratio"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
@@ -1764,7 +1764,7 @@ msgstr "Klantnotitie"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
 msgid "Customer Portal URL"
-msgstr "Klant portaal URL"
+msgstr "Klantenportaal URL"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1805,8 +1805,8 @@ msgid "Customer Screen Warning"
 msgstr "Klantscherm waarschuwing"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2126,8 +2126,8 @@ msgstr "Schermnaam"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Heeft geen toegang, sla deze gegevens over voor de gebruikers overzicht "
-"e-mail"
+"Heeft geen toegang, sla deze gegevens over voor de gebruikers "
+"samenvattingsmail"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2544,7 +2544,7 @@ msgstr "Groter dan toegestaan"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
@@ -4016,8 +4016,8 @@ msgstr ""
 "teruggenomen."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4173,8 +4173,8 @@ msgid "Pay Order"
 msgstr "Betaal order"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4579,6 +4579,8 @@ msgid "Point Of Sale"
 msgstr "Kassa"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4592,6 +4594,7 @@ msgstr "Kassa"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Kassa"
 
@@ -5476,7 +5479,7 @@ msgstr "Afrondingsfout in betalingsregels"
 #: code:addons/point_of_sale/static/src/backend/debug_manager.js:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr "Voer Point of Sale JS-tests uit"
+msgstr "Kassa JS Testen uitvoeren"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5690,7 +5693,7 @@ msgstr "Verzend betaalaanvraag"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorTracebackPopup.xml:0
 #, python-format
 msgid "Send by email"
-msgstr "Versturen via e-mail"
+msgstr "Versturen per e-mail"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6707,7 +6710,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr "Er is al een electronische betaling in uitvoering."
+msgstr "Er is al een electronische betaling in behandeling."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7545,16 +7548,6 @@ msgstr "Je kunt de kassa niet sluiten als bestellingen nog in concept zijn"
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
 msgstr "Je kunt geen sessie aanmaken voor de boekhoudkundige blokeerdatum."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
-"Je kunt een rekeningafschriftregel die is gekoppeld aan een Kassa-sessie "
-"niet verwijderen."
 
 #. module: point_of_sale
 #. odoo-python

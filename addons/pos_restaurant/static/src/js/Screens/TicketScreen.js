@@ -31,7 +31,8 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 });
             }
             getTable(order) {
-                return `${order.getTable().floor.name} (${order.getTable().name})`;
+                const table = order.getTable();
+                return table ? `${table.floor.name} (${table.name})` : '';
             }
             //@override
             _getSearchFields() {
@@ -149,8 +150,9 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 return result;
             }
             async _onDoRefund() {
-                if(this.env.pos.config.iface_floorplan && !this.env.pos.table) {
-                    this.env.pos.setTable(this.getSelectedSyncedOrder().table ? this.getSelectedSyncedOrder().table : Object.values(this.env.pos.tables_by_id)[0]);
+                const order = this.getSelectedSyncedOrder();
+                if(order && this.env.pos.config.iface_floorplan && !this.env.pos.table) {
+                    this.env.pos.setTable(order.table ? order.table : Object.values(this.env.pos.tables_by_id)[0]);
                 }
                 super._onDoRefund();
             }

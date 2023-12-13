@@ -22,12 +22,14 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Pouya Malekinejad <pouya.malekinejad@gmail.com>, 2023
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
-# rahim agh <rahim.aghareb@gmail.com>, 2023
 # fardin mardani, 2023
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Ali Reza Feizi Derakhshi, 2023
+# Hamid Ahmadimoghaddam, 2023
+# saeed raesi <saeed.raesi2020@gmail.com>, 2023
+# rahim agh <rahim.aghareb@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ali Reza Feizi Derakhshi, 2023\n"
+"Last-Translator: rahim agh <rahim.aghareb@gmail.com>, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,7 +152,7 @@ msgstr "%d انتقال‌ها"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -234,6 +236,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%sبیانیه%s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -309,7 +318,7 @@ msgstr "مرور ورودی های به طور جزئی وفق داده شده"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ". Please make sure that this is a wanted behavior."
-msgstr ". لطفا مطمئن شوید که این یک رفتار تحت تعقیب است."
+msgstr ". لطفا مطمئن شوید که این یک رفتار قابل پیگیری است."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1092,7 +1101,7 @@ msgstr "<span>گزارش</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr ""
+msgstr "مانده موجود"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1388,7 +1397,7 @@ msgstr "پرداخت دوم به طور خودکار در روزنامه مقص�
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr ""
+msgstr "یک صورتحساب میبایست شامل سطرهایی از یک روزنامه واحد باشد."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1891,7 +1900,7 @@ msgstr "گزارش حسابداری ارزش خارجی"
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
 msgid "Accounting Report Line"
-msgstr ""
+msgstr "سطر گزارش حسابداری"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1955,7 +1964,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued %s entry as of %s"
-msgstr ""
+msgstr "ورودی تعهدی %s از %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2611,18 +2620,18 @@ msgstr "هزینه تحلیلی"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "مدل توزیع تحلیلی"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "مدلهای توزیع تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "جستجوی توزیع تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -2637,7 +2646,7 @@ msgstr "آیتم های تحلیلی"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "سطرتحلیلی"
+msgstr "سطر تحلیلی"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2652,7 +2661,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr ""
+msgstr "برنامه‌های تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -2786,7 +2795,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
-msgstr ""
+msgstr "در ابتدای سال مالی"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_period
@@ -2831,7 +2840,7 @@ msgstr "پیوست ها"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
 msgid "Auditable"
-msgstr ""
+msgstr "قابل حسابرسی"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__8
@@ -2855,7 +2864,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto validate"
-msgstr ""
+msgstr "تأیید خودکار"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2879,14 +2888,14 @@ msgstr "پرداخت‌های خودکار ایجاد‌شده"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr ""
+msgstr "ثبت خودکار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr ""
+msgstr "ثبت خودکار تا"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2989,7 +2998,7 @@ msgstr "ترازنامه"
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "Balance percentage can't be 0"
-msgstr ""
+msgstr "درصد تراز نمیتواند صفر باشد."
 
 #. module: account
 #. odoo-python
@@ -3023,21 +3032,21 @@ msgstr "حساب بانکی"
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s created"
-msgstr ""
+msgstr "حساب بانکی %s ایجاد شد."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s updated"
-msgstr ""
+msgstr "حساب بانکی %s به روز شد."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s with number %s deleted"
-msgstr ""
+msgstr "حساب بانکی %s به شماره %s حذف گردید."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -3934,7 +3943,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Click"
-msgstr ""
+msgstr "کلیک"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -4787,6 +4796,7 @@ msgstr "ارزها"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -4880,12 +4890,12 @@ msgstr "درآمدهای سال جاری"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cust. Payment"
-msgstr ""
+msgstr "پرداخت مشتری"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cust. Payments"
-msgstr ""
+msgstr "پرداخت‌های مشتری"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
@@ -4915,7 +4925,7 @@ msgstr "نشانی های مشتری"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Customer Bank Account"
-msgstr ""
+msgstr "حساب بانکی مشتری"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
@@ -4945,7 +4955,7 @@ msgstr "فاکتورهای مشتری"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr ""
+msgstr "فاکتورهای مشتری و صورتهای فروشنده"
 
 #. module: account
 #. odoo-python
@@ -5120,17 +5130,17 @@ msgstr "حالت تاریخ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "دامنه تاریخ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
 msgid "Date Scope"
-msgstr ""
+msgstr "محدوده تاریخ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_date
 msgid "Date example"
-msgstr ""
+msgstr "نمونه تاریخ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -6043,7 +6053,7 @@ msgstr "ایمیل به طور پیش‌فرض"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Empty"
-msgstr ""
+msgstr "خالی"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -7669,7 +7679,7 @@ msgstr "درون ایالتی"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Invalid"
-msgstr ""
+msgstr "نامعتبر"
 
 #. module: account
 #. odoo-python
@@ -9103,7 +9113,7 @@ msgstr "آیتم‌های دفترروزنامه‌ تطبیق شده"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
-msgstr ""
+msgstr "تراکنش‌های مطابقت یافته"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -9972,7 +9982,7 @@ msgstr ""
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "Oops"
-msgstr ""
+msgstr "اوپس"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
@@ -10325,7 +10335,7 @@ msgstr "پرداخت شده بر اساس"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__both
 msgid "Paid/Received"
-msgstr ""
+msgstr "پرداختی/دریافتی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
@@ -14994,7 +15004,6 @@ msgstr "فعالیت های امروز"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -15095,6 +15104,7 @@ msgid "Total amount you have to pay to this vendor."
 msgstr "مقدار کلی که شما باید به این فروشنده بپردازید."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
 msgstr "جمع کل به واحد پول"

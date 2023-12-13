@@ -10,7 +10,7 @@
                 <field name="l10n_pl_delivery_date" string="Delivery Date" attrs="{'invisible': [('l10n_pl_show_delivery_date', '=', False)]}"/>
             </field>
             <field name="qr_code_method" position="after">
-                <field name="l10n_pl_delivery_date" string="Delivery Date"/>
+                <field name="l10n_pl_delivery_date" string="Delivery Date" attrs="{'invisible': [('country_code', '!=', 'PL')]}"/>
             </field>
             <notebook position="inside">
                 <page id="pl_extra" string="PL Extra" attrs="{'invisible': [('move_type', 'not in', ['out_invoice', 'out_refund'])]}">

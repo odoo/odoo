@@ -219,9 +219,10 @@ class StockMoveLine(models.Model):
 
     @api.onchange('result_package_id', 'product_id', 'product_uom_id', 'qty_done')
     def _onchange_putaway_location(self):
-        if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and self.product_id and self.qty_done:
+        default_dest_location = self._get_default_dest_location()
+        if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and self.product_id and self.qty_done \
+                and self.location_dest_id == default_dest_location:
             qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
-            default_dest_location = self._get_default_dest_location()
             self.location_dest_id = default_dest_location.with_context(exclude_sml_ids=self.ids)._get_putaway_strategy(
                 self.product_id, quantity=qty_done, package=self.result_package_id,
                 packaging=self.move_id.product_packaging_id)
@@ -368,7 +369,7 @@ class StockMoveLine(models.Model):
         updates = {}
         for key, model in triggers:
             if key in vals:
-                updates[key] = self.env[model].browse(vals[key])
+                updates[key] = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
 
         if 'result_package_id' in updates:
             for ml in self.filtered(lambda ml: ml.package_level_id):
@@ -474,7 +475,8 @@ class StockMoveLine(models.Model):
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
+            moves |= self.filtered(lambda ml: not ml.move_id.origin_returned_move_id and ml.move_id.state not in ('done', 'cancel')\
+                and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
@@ -898,6 +900,8 @@ class StockMoveLine(models.Model):
 
     def action_revert_inventory(self):
         move_vals = []
+        # remove inventory mode
+        self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
             if move_line.is_inventory and not float_is_zero(move_line.qty_done, precision_digits=move_line.product_uom_id.rounding):

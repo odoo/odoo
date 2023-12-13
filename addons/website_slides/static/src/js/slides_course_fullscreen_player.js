@@ -682,7 +682,7 @@
                 $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
             } else if (slide.category === 'article'){
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
-                $(slide.htmlContent).appendTo($wpContainer);
+                $wpContainer.html(slide.htmlContent);
                 $content.append($wpContainer);
                 this.trigger_up('widgets_start_request', {
                     $target: $content,

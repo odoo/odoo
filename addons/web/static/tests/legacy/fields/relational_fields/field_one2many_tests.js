@@ -5900,7 +5900,6 @@ QUnit.module('Legacy fields', {}, function () {
             // click all buttons
             await testUtils.dom.click(form.$(btn1Disabled));
             await testUtils.dom.click(form.$(btn1Warn));
-            await testUtils.dom.click(form.$(btn2Disabled));
             await testUtils.dom.click(form.$(btn2Warn));
 
             // save the form

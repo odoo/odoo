@@ -1368,7 +1368,7 @@ msgstr "Broj grešaka"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtevaju akciju"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
@@ -1444,7 +1444,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Partial"
-msgstr ""
+msgstr "Delimično"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
@@ -1947,6 +1947,15 @@ msgid "There are no expense reports to approve."
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -2247,6 +2256,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
 
@@ -2351,4 +2366,3 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
-"Приватна адреса запосленог је обавезна за објављивање извештаја о трошковима. Молимо вас да то додате у образац за запослене."

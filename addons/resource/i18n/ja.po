@@ -64,7 +64,7 @@ msgstr "2週間のカレンダーに変更しますか？全ての入力が失�
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "参加者は重複することはできません。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -75,13 +75,13 @@ msgstr "1日当たりの平均時間"
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
-msgstr ""
+msgstr "リソースがこのカレンダーで働くと想定される 1 日あたりの平均時間。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "2週間モードのカレンダ"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -169,7 +169,7 @@ msgstr "終了日"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "説明"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -202,7 +202,7 @@ msgstr "金曜 午前"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
+msgstr "リソースカレンダを表示する際のこの行の順序を示します。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -239,7 +239,7 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
-msgstr ""
+msgstr "空の場合、会社の一般的な休暇となります。リソースが設定されている場合、そのリソースのみの休暇となります。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -253,14 +253,14 @@ msgstr "アクティブ項目をFalse にセットすると、リソースレコ
 msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
-msgstr ""
+msgstr "アクティブフィールドをFALSEに設定すると、作業時間を削除せずに非表示にすることができます。"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
-msgstr ""
+msgstr "2週間モードのカレンダでは、全ての期間をセクションに含める必要があります。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
@@ -368,7 +368,7 @@ msgstr "リソース"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "リソースMixin"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -385,7 +385,7 @@ msgstr "リソース休暇の詳細"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "リソース作業時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
@@ -430,7 +430,7 @@ msgstr "リソースの検索"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "就業期間休暇をけんさく"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -475,6 +475,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"作業の開始時間と終了時間。\n"
+"24:00は23:59:59.999999と解釈されます。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -516,7 +518,7 @@ msgstr "今週 ( %s ～ %s) が %s 週に対応します。"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "休暇の開始日は終了日より前にして下さい。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -546,7 +548,7 @@ msgstr "木曜"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "木曜日午後"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -564,12 +566,12 @@ msgstr "休暇"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "時間タイプ"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "時間効率は必ず正の値にして下さい。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -640,7 +642,7 @@ msgstr "週番号"
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
-msgstr ""
+msgstr "これを休日として計算するか、勤務時間として計算するか(例:研修)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -674,7 +676,7 @@ msgstr "労働時間"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr " %sの勤務時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -698,7 +700,7 @@ msgstr "労働時間"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "週の間のセクションを削除することはできません。"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

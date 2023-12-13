@@ -381,8 +381,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             }
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
-        customer = invoice.commercial_partner_id
-        if supplier.country_id == customer.country_id and supplier.country_id.code == 'SA':
+        if supplier.country_id.code == 'SA':
             if not tax or tax.amount == 0:
                 exemption_codes = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
                 if tax.l10n_sa_exemption_reason_code in TAX_EXEMPTION_CODES:

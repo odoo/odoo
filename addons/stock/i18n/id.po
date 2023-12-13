@@ -3792,17 +3792,18 @@ msgstr "Domain tidak sah sebelah kiri operator %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Domain tidak sah untuk operator%s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Domain tidak sah sebelah kanan operator %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Domain right operand '%s' tidak valid. Harus merupakan tipe Integer/Float"
 
 #. module: stock
 #. odoo-python
@@ -7419,13 +7420,6 @@ msgid "Sequence return"
 msgstr "Sequence return"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Nomor Seri"
@@ -8672,6 +8666,17 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Laporan ini tidak dapat digunakan untuk selesai dan tidak selesai %s pada "
 "saat yang sama"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10019,6 +10024,8 @@ msgstr ""
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Anda tidak dapat membelah pergerakkan stok yang sudah ditetapkan sebagai "
+"'Selesai' atau 'Dibatalkan'."
 
 #. module: stock
 #. odoo-python
@@ -10087,6 +10094,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Anda telah memproses produk lebih sedikit daripada permintaan awal."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Anda memiliki produk dalam stok dengan pelacakan nomor seri/lot yang diaktifkan.\n"
+"Nonaktifkan pelacakan pada semua produk sebelum menonaktifkan pengaturan ini. "
 
 #. module: stock
 #. odoo-python
