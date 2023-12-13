@@ -496,16 +496,18 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
 
         return self.orm.read(
             "survey.survey",
-            [[self.surveyId], ['session_answer_count']]
+            [self.surveyId],
+            ['session_answer_count'],
         ).then(function (result) {
             if (result && result.length === 1){
                 self.$('.o_survey_session_attendees_count').text(
                     result[0].session_answer_count
                 );
             }
-        }, function () {
+        }, function (err) {
             // on failure, stop refreshing
             clearInterval(self.attendeesRefreshInterval);
+            console.error(err);
         });
     },
 
