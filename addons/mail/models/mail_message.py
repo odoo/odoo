@@ -954,7 +954,8 @@ class Message(models.Model):
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
             domain = expression.AND([domain, expression.OR([
-                [("attachment_ids.name", "ilike", search_term)],
+                # sudo: access to attachment is allowed if you have access to the parent model
+                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
                 [("body", "ilike", search_term)],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
