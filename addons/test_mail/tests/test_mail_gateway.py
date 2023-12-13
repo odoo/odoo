@@ -84,6 +84,19 @@ class TestEmailParsing(TestMailCommon):
         res = self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_MULTIPART_WEIRD_FILENAME))
         self.assertEqual(res['attachments'][0][0], '62_@;,][)=.(ÇÀÉ.txt')
 
+    def test_message_parse_attachment_pdf_nonstandard_mime(self):
+        # This test checks if aliasing content-type (mime type) of "pdf" with "application/pdf" works correctly. (i.e. Treat "pdf" as "application/pdf")
+
+        # Baseline check. Parsing mail with "application/pdf"
+        mail_with_standard_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="application/pdf")
+        res_std = self.env['mail.thread'].message_parse(self.from_string(mail_with_standard_mime))
+        self.assertEqual(res_std['attachments'][0].content, test_mail_data.PDF_PARSED, "Attachment with Content-Type: application/pdf must parse without error")
+
+        # Parsing the same email, but with content-type set to "pdf"
+        mail_with_aliased_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="pdf")
+        res_alias = self.env['mail.thread'].message_parse(self.from_string(mail_with_aliased_mime))
+        self.assertEqual(res_alias['attachments'][0].content, test_mail_data.PDF_PARSED, "Attachment with aliased Content-Type: pdf must parse without error")
+
     def test_message_parse_bugs(self):
         """ Various corner cases or message parsing """
         # message without Final-Recipient
