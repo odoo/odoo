@@ -38,6 +38,7 @@ export class HierarchyNode {
         this.tree = tree;
         this.model = model;
         this._config = config;
+        this.hidden = false;
         tree.addNode(this);
         if (populateChildNodes) {
             this.populateChildNodes();
@@ -912,6 +913,23 @@ export class HierarchyModel extends Model {
         }
     }
 
+    /**
+     * ORM call to update the parentId of a record during @see updateParentNode
+     * Can be overridden to not use "write".
+     *
+     * @param {HierarchyNode} node node related to the record which parentId
+     *        should be changed
+     * @param {Number} parentResId id of the new parent record
+     */
+    async updateParentId(node, parentResId = false) {
+        return this.orm.write(
+            this.resModel,
+            [node.resId],
+            { [this.parentFieldName]: parentResId },
+            { context: this.config.context }
+        );
+    }
+
     async updateParentNode(nodeId, { parentNodeId, parentResId }) {
         const node = this.root.nodePerNodeId[nodeId];
         const parentNode = parentNodeId ? this.root.nodePerNodeId[parentNodeId] : null;
@@ -949,24 +967,29 @@ export class HierarchyModel extends Model {
                     fetchParentChildren = true;
                     domain = Domain.or([domain, [[this.parentFieldName, "=", parentNode.resId]]]);
                 }
-                if (node.id === node.tree.root.id) {
-                    this.root.removeTree(node.tree);
-                    node.tree = parentNode.tree;
-                } else {
-                    node.removeParentNode();
-                }
-            } else {
-                node.removeParentNode();
-                this.root.addNewRootNode(node);
             }
+            node.hidden = true;
             this.notify({ scrollTarget: "none" });
             await this.mutex.exec(async () => {
-                await this.orm.write(
-                    this.resModel,
-                    [node.resId],
-                    { [this.parentFieldName]: parentResId || parentNode?.resId || false },
-                    { context: this.config.context }
-                );
+                try {
+                    await this.updateParentId(node, parentResId || parentNode?.resId);
+                    node.hidden = false;
+                    if (parentNode) {
+                        if (node.id === node.tree.root.id) {
+                            this.root.removeTree(node.tree);
+                            node.tree = parentNode.tree;
+                        } else {
+                            node.removeParentNode();
+                        }
+                    } else {
+                        node.removeParentNode();
+                        this.root.addNewRootNode(node);
+                    }
+                } catch (error) {
+                    node.hidden = false;
+                    this.notify({ scrollTarget: "none" });
+                    throw error;
+                }
             });
             if (descendantsParentIds.length) {
                 domain = Domain.or([domain, [[this.parentFieldName, "in", descendantsParentIds]]]);
