@@ -368,7 +368,7 @@ class StockMove(models.Model):
                 quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
 
         def _process_increase(move, quantity):
-            # move._action_assign(quantity)
+            move._action_assign({move.id: [{'qty': quantity}]})
             move._set_quantity_done(move.quantity)
 
         err = []
@@ -1581,44 +1581,45 @@ Please change the quantity done or the rounding precision of your unit of measur
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
+
+        :param dict force_qty: a list of dict per move, each sub-dict contains values for _update_reserved_quantity
         """
         StockMove = self.env['stock.move']
         assigned_moves_ids = OrderedSet()
+        force_qty = force_qty or {}
         partially_available_moves_ids = OrderedSet()
         # Read the `reserved_availability` field of the moves out of the loop to prevent unwanted
         # cache invalidation when actually reserving the move.
-        reserved_availability = {move: move.quantity for move in self}
+        reserved_availability = {move: sum(move.move_line_ids.mapped('quantity_product_uom')) for move in self}
 
         roundings = {move: move.product_id.uom_id.rounding for move in self}
         move_line_vals_list = []
         # Once the quantities are assigned, we want to find a better destination location thanks
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
-        moves_to_assign = self
-        if not force_qty:
-            moves_to_assign = moves_to_assign.filtered(
-                lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
-            )
+        moves_to_assign = self.filtered(
+            lambda m: (not m.picked and m.state in ['confirmed', 'waiting', 'partially_available'])
+        )
         moves_to_reserve = moves_to_assign.filtered(lambda m: not m._should_bypass_reservation())
         quants_by_product = self.env['stock.quant']._get_quants_by_products_locations(moves_to_reserve.product_id, moves_to_reserve.location_id)
 
         for move in moves_to_assign:
             rounding = roundings[move]
-            if not force_qty:
-                missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
-            else:
-                missing_reserved_uom_quantity = force_qty
-            if float_compare(missing_reserved_uom_quantity, 0, precision_rounding=rounding) <= 0:
+            missing_reserved_quantity = move.product_qty - reserved_availability[move]
+            forced_reserved_quantity = False
+            if force_qty.get(move.id):
+                forced_reserved_quantity = move.product_uom._compute_quantity(sum(line.get('qty', 0) for line in force_qty[move.id]), move.product_id.uom_id, rounding_method='HALF-UP')
+            if float_compare(missing_reserved_quantity, 0, precision_rounding=rounding) <= 0 and not forced_reserved_quantity:
                 assigned_moves_ids.add(move.id)
                 continue
-            missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             quants = quants_by_product[move.product_id.id]
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
+                need = forced_reserved_quantity or missing_reserved_quantity
                 if move.move_orig_ids:
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
-                        qty_added = min(missing_reserved_quantity, quantity)
+                        qty_added = min(need, quantity)
                         move_line_vals = move._prepare_move_line_vals(qty_added)
                         move_line_vals.update({
                             'location_id': location_id.id,
@@ -1628,14 +1629,13 @@ Please change the quantity done or the rounding precision of your unit of measur
                             'package_id': package_id.id,
                         })
                         move_line_vals_list.append(move_line_vals)
-                        missing_reserved_quantity -= qty_added
-                        if float_is_zero(missing_reserved_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                        need -= qty_added
+                        if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
                             break
-
-                if missing_reserved_quantity and move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                    for i in range(0, int(missing_reserved_quantity)):
+                if need and move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
+                    for _ in range(0, int(need)):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
-                elif missing_reserved_quantity:
+                elif need:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
                                                             ml.location_dest_id == move.location_dest_id and
@@ -1647,19 +1647,22 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                             not ml.owner_id)
                     if to_update:
                         to_update[0].quantity += move.product_id.uom_id._compute_quantity(
-                            missing_reserved_quantity, move.product_uom, rounding_method='HALF-UP')
+                            need, move.product_uom, rounding_method='HALF-UP')
                     else:
-                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
-                assigned_moves_ids.add(move.id)
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=need))
+                if forced_reserved_quantity and forced_reserved_quantity < missing_reserved_quantity:
+                    partially_available_moves_ids.add(move.id)
+                else:
+                    assigned_moves_ids.add(move.id)
                 moves_to_redirect.add(move.id)
             else:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) and not force_qty:
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) and not force_qty.get(move.id):
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
                     # If we don't need any quantity, consider the move assigned.
-                    need = missing_reserved_quantity
+                    need = forced_reserved_quantity or missing_reserved_quantity
                     if float_is_zero(need, precision_rounding=rounding):
                         assigned_moves_ids.add(move.id)
                         continue
