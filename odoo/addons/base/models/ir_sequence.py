@@ -150,6 +150,11 @@ class IrSequence(models.Model):
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
+    _sql_constraints = [
+    ('number_next_actual_not_negative', 'CHECK (number_next >= 0) ', 'The value of Next Number should not be less than zero.'),
+    ('number_increment_not_negative', 'CHECK (number_increment >= 0) ', 'The value of Step should not be less than zero.')
+    ]
+
     @api.model
     def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
@@ -344,6 +349,10 @@ class IrSequenceDateRange(models.Model):
                                         string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
                                              "frequently so the displayed value might already be obsolete")
+
+    _sql_constraints = [
+    ('number_next_not_negative', 'CHECK (number_next >= 0) ', 'The value of Next Number should not be less than zero.')
+    ]
 
     def _next(self):
         if self.sequence_id.implementation == 'standard':
