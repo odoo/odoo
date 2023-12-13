@@ -46,8 +46,8 @@ const ODOO_FILTER_VALUE = {
     description: _t("Return the current value of a spreadsheet filter."),
     args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
     category: "Odoo",
-    compute: function (filterName) {
-        const unEscapedFilterName = toString(filterName).replaceAll('\\"', '"');
+    computeValueAndFormat: function (filterName) {
+        const unEscapedFilterName = toString(filterName.value).replaceAll('\\"', '"');
         return this.getters.getFilterDisplayValue(unEscapedFilterName);
     },
     returns: ["STRING"],

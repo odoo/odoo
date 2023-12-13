@@ -2,7 +2,7 @@
 
 import { freezeOdooData } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
-import { setCellContent } from "../utils/commands";
+import { setCellContent, setGlobalFilterValue } from "../utils/commands";
 import { getCell, getEvaluatedCell } from "../utils/getters";
 import { createSpreadsheetWithPivot } from "../utils/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
@@ -105,5 +105,32 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.globalFilters.length, 1);
         assert.strictEqual(data.globalFilters[0].label, "This Year");
         assert.strictEqual(data.globalFilters[0].value, new Date().getFullYear().toString());
+    });
+
+    QUnit.test("from/to global filters are exported", async function (assert) {
+        const model = await createModelWithDataSource();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "from_to",
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: {
+                from: "2020-01-01",
+                to: "2021-01-01",
+            },
+        });
+        const data = await freezeOdooData(model);
+        const filterSheet = data.sheets[1];
+        assert.strictEqual(filterSheet.cells.B2.content, "43831");
+        assert.strictEqual(filterSheet.cells.C2.content, "44197");
+        assert.strictEqual(filterSheet.cells.B2.format, 1);
+        assert.strictEqual(filterSheet.cells.C2.format, 1);
+        assert.strictEqual(data.formats[1], "m/d/yyyy");
+        assert.strictEqual(data.globalFilters.length, 1);
+        assert.strictEqual(data.globalFilters[0].label, "Date Filter");
+        assert.strictEqual(data.globalFilters[0].value, "1/1/2020, 1/1/2021");
     });
 });
