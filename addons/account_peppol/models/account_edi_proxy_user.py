@@ -144,6 +144,11 @@ class AccountEdiProxyClientUser(models.Model):
                             default_peppol_message_uuid=uuid,
                         )\
                         ._create_document_from_attachment(attachment.id)
+                    if partner_endpoint:
+                        move._message_log(body=_(
+                            'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
+                    else:
+                        move._message_log(body=_('Peppol document has been received successfully'))
                 # pylint: disable=broad-except
                 except Exception:
                     # if the invoice creation fails for any reason,
@@ -160,11 +165,6 @@ class AccountEdiProxyClientUser(models.Model):
                         'res_id': move.id,
                     })
                     self.env['ir.attachment'].create(attachment_vals)
-                if partner_endpoint:
-                    move._message_log(body=_(
-                        'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                else:
-                    move._message_log(body=_('Peppol document has been received successfully'))
 
                 proxy_acks.append(uuid)
 
