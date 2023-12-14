@@ -91,7 +91,6 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                     values['email'] = emails[0]
             env.ref('base.user_admin').write(values)
 
-            cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()
     except Exception as e:
         _logger.exception('CREATE DATABASE failed:')
