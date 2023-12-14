@@ -4,7 +4,7 @@
 from collections import Counter
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class StockAssignSerialNumbers(models.TransientModel):
@@ -18,6 +18,11 @@ class StockAssignSerialNumbers(models.TransientModel):
     show_backorders = fields.Boolean() # Technical field to show the Create Backorder and No Backorder buttons
     multiple_lot_components_names = fields.Text() # Names of components with multiple lots, used to show warning
     mark_as_done = fields.Boolean("Valide all the productions after the split")
+
+    def _check_first_sn(self):
+        for wizard in self:
+            if not (wizard.next_serial_number or wizard.serial_numbers):
+                raise ValidationError(_("Please provide The first Serial Number or a list of serial numbers"))
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:
