@@ -2,6 +2,7 @@
 
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
+import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -33,7 +34,7 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class Call extends Component {
-    static components = { CallActionList, CallParticipantCard };
+    static components = { CallActionList, CallParticipantCard, PttAdBanner };
     static props = ["thread", "compact?"];
     static template = "discuss.Call";
 
