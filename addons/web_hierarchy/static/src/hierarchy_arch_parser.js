@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { visitXML } from "@web/core/utils/xml";
+import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
 import { archParseBoolean, getActiveActions } from "@web/views/utils";
 
@@ -8,6 +9,7 @@ export class HierarchyArchParser {
     parse(xmlDoc, models, modelName) {
         const archInfo = {
             activeActions: getActiveActions(xmlDoc),
+            defaultOrder: stringToOrderBy(xmlDoc.getAttribute("default_order") || null),
             draggable: false,
             icon: "fa-share-alt o_hierarchy_icon",
             parentFieldName: "parent_id",

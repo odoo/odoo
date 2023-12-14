@@ -139,7 +139,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "hr.employee",
             serverData,
             async mockRPC(route, args) {
-                if (args.method === "read") {
+                if (args.method === "search_read") {
                     assert.step("get child data");
                 } else if (args.method === "read_group") {
                     assert.step("fetch descendants");
@@ -193,7 +193,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             viewId: 1,
             async mockRPC(route, args) {
-                if (args.method === "read") {
+                if (args.method === "search_read") {
                     assert.step("get child data with descendants");
                 }
             }
@@ -698,7 +698,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_node", 4);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
-            ["Albert", "JosephineAlbert", "LouisJosephine", "GeorgesJosephine"],
+            ["Albert", "JosephineAlbert", "GeorgesJosephine", "LouisJosephine"],
             "Georges should have Josephine as manager"
         );
     });
@@ -981,6 +981,61 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(
             getNodesTextContent(rowsContent), ["A", "BA", "CA", "EC"],
             "B should be folded and C unfolded"
+        );
+    });
+
+    QUnit.test("drag and drop record and respect ordering", async function (assert) {
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views[
+            "hr.employee,false,hierarchy"
+        ].replace("<hierarchy>", "<hierarchy default_order='name' draggable='1'>");
+        serverData.models["hr.employee"].records = [
+            { id: 1, name: "F", parent_id: false, child_ids: [] },
+            { id: 2, name: "E", parent_id: 6, child_ids: [] },
+            { id: 3, name: "D", parent_id: 6, child_ids: [] },
+            { id: 4, name: "C", parent_id: 6, child_ids: [] },
+            { id: 5, name: "B", parent_id: 6, child_ids: [] },
+            { id: 6, name: "A", parent_id: false, child_ids: [2, 3, 4, 5] },
+        ];
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 1);
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 6);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["A", "F", "BA", "CA", "DA", "EA"]
+        );
+
+        let nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        let dNode = nodeContainers[4];
+
+        await dragAndDrop(dNode.querySelector(".o_hierarchy_node"), ".o_hierarchy_row:first-child");
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 6);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["A", "D", "F", "BA", "CA", "EA"]
+        );
+
+        nodeContainers = target.querySelectorAll(".o_hierarchy_node_container");
+        dNode = nodeContainers[1];
+
+        await dragAndDrop(
+            dNode.querySelector(".o_hierarchy_node"),
+            ":nth-child(2 of .o_hierarchy_row)"
+        );
+
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 6);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["A", "F", "BA", "CA", "DA", "EA"]
         );
     });
 

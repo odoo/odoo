@@ -12,11 +12,12 @@ patch(MockServer.prototype, {
     },
 
     mockHierarchyRead(modelName, args, kwargs) {
-        const [domain, fields, parentFieldName, childFieldName] = args;
+        const [domain, fields, parentFieldName, childFieldName, order] = args;
+        kwargs.order = order;
         if (!(parentFieldName in fields)) {
             fields.push(parentFieldName);
         }
-        let records = this.mockSearchRead(modelName, [domain, fields], kwargs);
+        const records = this.mockSearchRead(modelName, [domain, fields], kwargs);
         let focusedRecordId = false;
         let fetchChildIdsForAllRecords = false;
         if (!records.length) {
