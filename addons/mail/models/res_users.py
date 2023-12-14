@@ -101,6 +101,8 @@ class Users(models.Model):
                 for user in self.filtered(lambda user: bool(email_normalize(user.email)))
                 if email_normalize(user.email) != email_normalize(vals['email'])
             }
+        if 'notification_type' in vals:
+            user_notification_type_modified = self.filtered(lambda user: user.notification_type != vals['notification_type'])
 
         write_res = super(Users, self).write(vals)
 
@@ -140,6 +142,10 @@ class Users(models.Model):
                     mail_values={'email_to': previous_email},
                     suggest_password_reset=False,
                 )
+        if 'notification_type' in vals:
+            for user in user_notification_type_modified:
+                self.env["bus.bus"]._sendone(user.partner_id, "mail.record/insert", {"Persona": {"id": user.partner_id.id, "type": "partner", "notification_preference": user.notification_type}})
+
         return write_res
 
     def action_archive(self):

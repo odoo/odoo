@@ -60,13 +60,6 @@ export class PersonaService {
             })
             .map((thread) => thread.correspondent?.id);
     }
-
-    updateUserNotificationPreference({ id, notification_preference }) {
-        if (this.store.self.user.id !== id) {
-            return;
-        }
-        this.store.self.notification_preference = notification_preference;
-    }
 }
 
 export const personaService = {
