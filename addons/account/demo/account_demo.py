@@ -47,7 +47,7 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_move_auto_reconcile_7')
             + self.ref('demo_move_auto_reconcile_8')
             + self.ref('demo_move_auto_reconcile_9')
-        ).with_context(check_move_validity=False)
+        )
 
         # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
         # any lines yet
