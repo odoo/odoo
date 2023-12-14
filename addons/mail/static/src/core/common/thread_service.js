@@ -50,11 +50,7 @@ export class ThreadService {
         if (!channelData) {
             return;
         }
-        return this.store.Thread.insert({
-            ...channelData,
-            model: "discuss.channel",
-            type: channelData.channel_type,
-        });
+        return this.store.Thread.insert(channelData);
     }
 
     async fetchChannelMembers(thread) {
@@ -63,16 +59,7 @@ export class ThreadService {
             channel_id: thread.id,
             known_member_ids: known_member_ids,
         });
-        let channelMembers = [];
-        if (
-            results["channelMembers"] &&
-            results["channelMembers"][0] &&
-            results["channelMembers"][0][1]
-        ) {
-            channelMembers = results["channelMembers"][0][1];
-        }
-        thread.memberCount = results["memberCount"];
-        thread.channelMembers.add(...channelMembers);
+        thread.update(results);
     }
 
     /**
@@ -545,11 +532,7 @@ export class ThreadService {
         const data = await this.orm.call("discuss.channel", "channel_get", [], {
             partners_to: [id],
         });
-        const thread = this.store.Thread.insert({
-            ...data,
-            model: "discuss.channel",
-            channel_type: "chat",
-        });
+        const thread = this.store.Thread.insert(data);
         return thread;
     }
 
