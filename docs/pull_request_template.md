@@ -17,3 +17,6 @@ Describe shortly, what was changed, what was the need for this particular change
 
 ## Sources cited:
  - [Source 1](https://www.example.com/)
+
+---
+I confirm I have signed the CLA and read the PR guidelines at www.odoo.com/submit-pr
