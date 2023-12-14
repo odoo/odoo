@@ -147,6 +147,15 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/shop", 'google_analytics_view_item')
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
+    def test_update_same_address_billing_shipping_edit(self):
+        ''' Phone field should be required when updating an adress for billing and shipping '''
+        self.env['product.product'].create({
+            'name': 'Office Chair Black TEST',
+            'list_price': 12.50,
+            'is_published': True,
+        })
+        self.start_tour("/shop", 'update_billing_shipping_address', login="admin")
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
@@ -399,13 +408,13 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         partner = self.env['res.partner'].create({'name': 'test'})
         be_address_POST, nl_address_POST = [
             {
-                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test', 'phone': '+333333333333333',
                 'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.be').id, 'submitted': 1,
                 'partner_id': partner.id,
                 'callback': '/shop/checkout',
             },
             {
-                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test', 'phone': '+333333333333333',
                 'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.nl').id, 'submitted': 1,
                 'partner_id': partner.id,
                 'callback': '/shop/checkout',
