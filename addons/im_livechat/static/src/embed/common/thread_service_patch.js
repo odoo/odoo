@@ -35,9 +35,6 @@ patch(ThreadService.prototype, {
     },
 
     async openChat() {
-        if (this.chatbotService.shouldRestore) {
-            this.chatbotService.restore();
-        }
         const thread = await this.livechatService.getOrCreateThread();
         if (!thread) {
             return;
