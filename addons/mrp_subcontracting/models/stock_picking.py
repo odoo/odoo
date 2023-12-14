@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
@@ -146,17 +146,33 @@ class StockPicking(models.Model):
 
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
+
+        group_move = defaultdict(list)
+        group_by_company = defaultdict(list)
         for move, bom in subcontract_details:
             if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
-            mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
-            self.env['stock.move'].create(mo._get_moves_raw_values())
-            self.env['stock.move'].create(mo._get_moves_finished_values())
-            mo.date_planned_finished = move.date  # Avoid to have the picking late depending of the MO
-            mo.action_confirm()
+            mo_subcontract = self._prepare_subcontract_mo_vals(move, bom)
+            # Link the move to the id of the MO's procurement group
+            group_move[mo_subcontract['procurement_group_id']] = move
+            # Group the MO by company
+            group_by_company[move.company_id.id].append(mo_subcontract)
 
+        all_mo = set()
+        for company, group in group_by_company.items():
+            grouped_mo = self.env['mrp.production'].with_company(company).create(group)
+            all_mo.update(grouped_mo.ids)
+
+        all_mo = self.env['mrp.production'].browse(sorted(all_mo))
+        self.env['stock.move'].create(all_mo._get_moves_raw_values())
+        self.env['stock.move'].create(all_mo._get_moves_finished_values())
+        all_mo.action_confirm()
+
+        for mo in all_mo:
             # Link the finished to the receipt move.
+            move = group_move[mo.procurement_group_id.id][0]
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
-            mo.action_assign()
+
+        all_mo.action_assign()
