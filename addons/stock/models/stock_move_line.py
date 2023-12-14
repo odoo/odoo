@@ -568,7 +568,12 @@ class StockMoveLine(models.Model):
         for (product, company), mls in ml_ids_to_check.items():
             mls = self.env['stock.move.line'].browse(mls)
             lots = self.env['stock.lot'].search([
+<<<<<<< saas-17.4
                 '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),
+||||||| 49cecec35421cc36258f900d99c1040596601167
+=======
+                '|', ('company_id', '=', False), ('company_id', '=', company.id),
+>>>>>>> 68e35384c31c3720118239dc0b012393d53fce15
                 ('product_id', '=', product.id),
                 ('name', 'in', mls.mapped('lot_name')),
             ])
