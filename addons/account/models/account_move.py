@@ -245,7 +245,7 @@ class AccountMove(models.Model):
         compute='_compute_suitable_journal_ids',
     )
     highest_name = fields.Char(compute='_compute_highest_name')
-    made_sequence_hole = fields.Boolean(compute='_compute_made_sequence_hole')
+    made_sequence_hole = fields.Boolean(compute='_compute_made_sequence_hole', search="_search_made_sequence_hole")
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -780,25 +780,33 @@ class AccountMove(models.Model):
         for record in self:
             record.highest_name = record._get_last_sequence()
 
+    @api.model
+    def _get_query_made_hole(self, ids=None):
+        return f"""
+                SELECT this.id
+                  FROM account_move this
+                  JOIN res_company company ON company.id = this.company_id
+             LEFT JOIN account_move other ON this.journal_id = other.journal_id
+                                         AND this.sequence_prefix = other.sequence_prefix
+                                         AND this.sequence_number = other.sequence_number + 1
+                 WHERE other.id IS NULL
+                   AND this.sequence_number != 1
+                   AND this.name != '/'
+                  {"AND this.id = ANY(%(move_ids)s)" if ids is not None else ""}
+        """, {'move_ids': ids} if ids is not None else {}
+
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
-        self.env.cr.execute("""
-            SELECT this.id
-              FROM account_move this
-              JOIN res_company company ON company.id = this.company_id
-         LEFT JOIN account_move other ON this.journal_id = other.journal_id
-                                     AND this.sequence_prefix = other.sequence_prefix
-                                     AND this.sequence_number = other.sequence_number + 1
-             WHERE other.id IS NULL
-               AND this.sequence_number != 1
-               AND this.name != '/'
-               AND this.id = ANY(%(move_ids)s)
-        """, {
-            'move_ids': self.ids,
-        })
+        query, params = self._get_query_made_hole(self.ids)
+        self.env.cr.execute(query, params)
         made_sequence_hole = set(r[0] for r in self.env.cr.fetchall())
         for move in self:
             move.made_sequence_hole = move.id in made_sequence_hole
+
+    def _search_made_sequence_hole(self, operator, value):
+        query, params = self._get_query_made_hole()
+        operator = 'inselect' if (operator == '=') ^ (value is False) else 'not inselect'
+        return [('id', operator, (query, params))]
 
     @api.depends('move_type')
     def _compute_type_name(self):
