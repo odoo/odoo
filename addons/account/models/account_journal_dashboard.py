@@ -131,7 +131,7 @@ class account_journal(models.Model):
               FROM account_move move
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
-               AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
+               AND move.state = 'posted'
                AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
@@ -498,6 +498,10 @@ class account_journal(models.Model):
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency)
             amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
+            if journal.type == 'purchase':
+                title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
+            else:
+                title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
             dashboard_data[journal.id].update({
                 'number_to_check': count,
                 'to_check_balance': currency.format(amount_total_signed_sum),
@@ -509,6 +513,7 @@ class account_journal(models.Model):
                 'sum_waiting': currency.format(sum_waiting),
                 'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
+                'title_has_sequence_holes': title_has_sequence_holes,
                 'is_sample_data': dashboard_data[journal.id]['entries_count'],
             })
 
@@ -833,6 +838,7 @@ class account_journal(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Journal Entries"),
             'res_model': 'account.move',
+            'search_view_id': (self.env.ref('account.view_account_move_with_gaps_in_sequence_filter').id, 'search'),
             'view_mode': 'list,form',
             'domain': expression.OR(
                 [('journal_id', '=', journal_id), ('sequence_prefix', '=', prefix)]
@@ -841,6 +847,7 @@ class account_journal(models.Model):
             'context': {
                 **self._get_move_action_context(),
                 'search_default_group_by_sequence_prefix': 1,
+                'search_default_irregular_sequences': 1,
                 'expand': 1,
             }
         }

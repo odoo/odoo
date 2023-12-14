@@ -1501,6 +1501,19 @@
             </field>
         </record>
 
+        <record id="view_account_move_with_gaps_in_sequence_filter" model="ir.ui.view">
+            <field name="name">account.move.with.gaps.in.sequence.filter</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <filter name="due_date" position="after">
+                    <separator/>
+                    <filter name="irregular_sequences" string="Irregular Sequences" domain="['|', ('made_sequence_hole', '=', True), '&amp;', '&amp;', ('state', 'in', ('draft', 'cancel')), ('sequence_number', '!=', 0), ('name', '!=', '/')]"/>
+                </filter>
+            </field>
+        </record>
+
         <!-- ACTIONS -->
 
         <!-- account.move.line (Journal Items) -->

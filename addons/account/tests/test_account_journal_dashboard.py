@@ -276,9 +276,9 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning, and draft moves shouldn't trigger the warning
 
         moves[2:4].button_draft()
-        self.assertFalse(journal._query_has_sequence_holes())  # no gap (with draft moves using sequence numbers), no gap warning
+        self.assertTrue(journal._query_has_sequence_holes())  # gap due to draft moves using sequence numbers, gap warning
         moves[3].unlink()
-        self.assertTrue(journal.has_sequence_holes)  # gap due to missing sequence, gap warning
+        self.assertTrue(journal._query_has_sequence_holes())  # gap due to missing sequence, gap warning
 
         moves[2].action_post()
         self.company_data['company'].write({'fiscalyear_lock_date': gap_date + relativedelta(days=1)})
