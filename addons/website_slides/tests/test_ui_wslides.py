@@ -172,6 +172,13 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
+    def test_course_article(self):
+        user_demo = self.env.ref('base.user_demo')
+        user_demo.write({
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_restricted_editor').id)]
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/slides/all'), 'course_article', login=user_demo.login)
+
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
