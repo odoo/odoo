@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
         $('button:contains("Done")').click();
     }
 }, {
-    content: "check that our key is present",
+    content: "check that our key is present (FIXME: requires HR to be installed)",
     trigger: '[name=api_key_ids] td:contains("my key")',
     run() {},
 }]});
