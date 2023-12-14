@@ -3,6 +3,11 @@
 [![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
 
+Odoo Reservist Management
+-------------------------
+
+Odoo Reservist Management is a custom Odoo ERP solution created for Turun Reserviläiset - Turun Reservialiupseerit. This voluntary association is dedicated to further the ideals of voluntary national defense and provide essential education and training for voluntary national defense. As the number of the members has risen and many activities have become more popular, the board of the association and the coaches have found a need for an ERP system to manage the members, activities, events and material inventory of this voluntary association.
+
 Odoo
 ----
 
