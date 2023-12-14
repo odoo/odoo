@@ -13,17 +13,19 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_container {
-    grid-template-columns: auto minmax(auto, 210px);
-
-    @include media-breakpoint-up(md){
-        grid-template: auto 1fr / 1fr auto;
-        grid-template-areas:
-            "head head"
-            "cal side";
-    }
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-columns: 1fr auto auto;
 
     .o_calendar_header {
-        grid-area: head;
+        grid-area: 1 / 1 / 2 / 3;
+    }
+
+    .o_sidebar_toggler {
+        grid-area: 1 / 3;
+    }
+
+    .o_calendar_wrapper {
+        grid-area: 3 / 1 / 3 / 4;
     }
 }
 
@@ -31,9 +33,6 @@ $o-cw-filter-avatar-size: 20px;
     --Avatar-size: #{$o-cw-filter-avatar-size};
 
     flex: 0 0 auto;
-    position: relative;
-    grid-area: side;
-    background-color: $o-view-background-color;
 
     .o_calendar_sidebar {
         @include o-webclient-padding($top: $o-horizontal-padding/2);
