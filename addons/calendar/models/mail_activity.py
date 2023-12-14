@@ -42,10 +42,7 @@ class MailActivity(models.Model):
         return messages, activities
 
     def unlink_w_meeting(self):
-        return self.unlink()
-
-    def unlink(self):
         events = self.mapped('calendar_event_id')
-        res = super().unlink()
+        res = self.unlink()
         events.unlink()
         return res
