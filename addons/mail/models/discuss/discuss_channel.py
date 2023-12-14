@@ -915,13 +915,20 @@ class Channel(models.Model):
             channel._broadcast(partners_to)
         return channel
 
-    def channel_fold(self, state=None, state_count=0):
+    def _channel_fold(self, state=None, state_count=0):
         """ Update the fold_state of the given session. In order to syncronize web browser
-            tabs, the change will be broadcast to themselves (the current user channel).
+            tabs, the change will be broadcast to themselves (the current persona channel).
             Note: the user need to be logged
-            :param state : the new status of the session for the current user.
+            :param state : the new status of the session for the current persona.
         """
-        domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', 'in', self.ids)]
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        domain = expression.AND([
+            [("channel_id", "in", self.ids)],
+            expression.OR([
+                [("partner_id", "=", current_partner.id)] if current_partner else [],
+                [("guest_id", "=", current_guest.id)] if current_guest else [],
+            ])
+        ])
         for session_state in self.env['discuss.channel.member'].search(domain):
             if not state:
                 state = session_state.fold_state
@@ -937,7 +944,8 @@ class Channel(models.Model):
                 vals['is_minimized'] = is_minimized
             if vals:
                 session_state.write(vals)
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.Thread/fold_state', {
+            target = session_state.partner_id or session_state.guest_id
+            self.env['bus.bus']._sendone(target, 'discuss.Thread/fold_state', {
                 'foldStateCount': state_count,
                 'id': session_state.channel_id.id,
                 'model': 'discuss.channel',

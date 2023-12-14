@@ -202,8 +202,8 @@ QUnit.test("chat window: fold", async (assert) => {
     pyEnv["discuss.channel"].create({});
     await start({
         mockRPC(route, args) {
-            if (args.method === "channel_fold") {
-                assert.step(`rpc:${args.method}/${args.kwargs.state}`);
+            if (route === "/discuss/channel/fold") {
+                assert.step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -211,17 +211,17 @@ QUnit.test("chat window: fold", async (assert) => {
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    assert.verifySteps(["rpc:channel_fold/open"]);
+    assert.verifySteps(["channel_fold/open"]);
 
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { count: 0 });
-    assert.verifySteps(["rpc:channel_fold/folded"]);
+    assert.verifySteps(["channel_fold/folded"]);
 
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    assert.verifySteps(["rpc:channel_fold/open"]);
+    assert.verifySteps(["channel_fold/open"]);
 });
 
 QUnit.test("chat window: open / close", async (assert) => {
@@ -229,8 +229,8 @@ QUnit.test("chat window: open / close", async (assert) => {
     pyEnv["discuss.channel"].create({});
     await start({
         mockRPC(route, args) {
-            if (args.method === "channel_fold") {
-                assert.step(`rpc:channel_fold/${args.kwargs.state}`);
+            if (route === "/discuss/channel/fold") {
+                assert.step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -238,17 +238,17 @@ QUnit.test("chat window: open / close", async (assert) => {
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    assert.verifySteps(["rpc:channel_fold/open"]);
+    assert.verifySteps(["channel_fold/open"]);
 
     await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    assert.verifySteps(["rpc:channel_fold/closed"]);
+    assert.verifySteps(["channel_fold/closed"]);
 
     // Reopen chat window
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    assert.verifySteps(["rpc:channel_fold/open"]);
+    assert.verifySteps(["channel_fold/open"]);
 });
 
 QUnit.test("open chat on very narrow device should work", async (assert) => {
@@ -295,8 +295,8 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
     });
     await start({
         mockRPC(route, args) {
-            if (args.method === "channel_fold") {
-                assert.step(`rpc:channel_fold/${args.kwargs.state}`);
+            if (route === "/discuss/channel/fold") {
+                assert.step(`channel_fold/${args.state}`);
             }
         },
     });
@@ -304,7 +304,7 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
     await focus(".o-mail-Composer-input");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    assert.verifySteps(["rpc:channel_fold/closed"]);
+    assert.verifySteps(["channel_fold/closed"]);
 });
 
 QUnit.test(
@@ -1204,11 +1204,11 @@ QUnit.test("hiding/swapping hidden chat windows does not update server state", a
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }, { name: "D&D" }]);
     await start({
         mockRPC(route, args) {
-            if (args.method === "channel_fold") {
+            if (route === "/discuss/channel/fold") {
                 const [channel] = pyEnv["discuss.channel"].searchRead([
-                    ["id", "=", args.args[0][0]],
+                    ["id", "=", args.channel_id],
                 ]);
-                assert.step(`${channel.name} - ${args.kwargs.state}`);
+                assert.step(`${channel.name} - ${args.state}`);
             }
         },
     });
