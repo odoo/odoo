@@ -1614,20 +1614,16 @@ def load_language(cr, lang):
 
 def get_po_paths(module_name: str, lang: str):
     lang_base = lang.split('_')[0]
-    if lang_base == 'es' and lang != 'es_ES':
-        # force es_419 as fallback language for the spanish variations
-        if lang == 'es_419':
-            langs = ['es_419']
-        else:
-            langs = ['es_419', lang]
-    else:
-        langs = [lang_base, lang]
-
+    # Load the base as a fallback in case a translation is missing:
+    po_names = [lang_base, lang]
+    # Exception for Spanish locales: they have two bases, es and es_419:
+    if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
+        po_names.insert(1, 'es_419')
     po_paths = [
         path
-        for lang_ in langs
+        for filename in po_names
         for dir_ in ('i18n', 'i18n_extra')
-        if (path := join(module_name, dir_, lang_ + '.po'))
+        if (path := join(module_name, dir_, filename + '.po'))
     ]
     for path in po_paths:
         with suppress(FileNotFoundError):
