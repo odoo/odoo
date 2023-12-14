@@ -167,7 +167,7 @@
                             <label for="product_id"/>
                             <div>
                                 <field name="product_id" required="1" readonly="not is_editable"
-                                       context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
+                                       context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
                                        class="w-100"/>
                                 <div class="fst-italic" invisible="not is_editable or not product_description or not product_id">
                                     <field name="product_description"/>
@@ -573,7 +573,6 @@
                             <group string="General Information">
                                 <field name="active" invisible="1"/>
                                 <field name="type" invisible="1"/>
-                                <field name="detailed_type" invisible="1"/>
                                 <field name="standard_price" class="w-25"
                                        help="When the cost of an expense product is different than 0, then the user
                                         using this product won't be able to change the amount of the expense,
