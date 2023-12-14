@@ -2849,13 +2849,14 @@ class Order extends PosModel {
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
         let has_taxes_included_in_price = tax_ids_array.filter(tax_id =>
-            this.pos.taxes_by_id[tax_id].price_include
+            this.pos.taxes_by_id[tax_id].price_include ||
+            this.pos.taxes_by_id[tax_id].children_tax_ids.length > 0 &&
+            this.pos.taxes_by_id[tax_id].children_tax_ids.every(child_tax => child_tax.price_include)
         ).length;
 
         let base_amount = lines.reduce((sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                (has_taxes_included_in_price ? line.get_price_with_tax() : line.get_price_without_tax()),
             0
         );
         return base_amount;
