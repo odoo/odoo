@@ -24,6 +24,7 @@ export class CalendarRenderer extends Component {
             animationOnMove: false,
             animationType: "forwards",
             swipeDistanceRatio: 6,
+            swipeInvalid: () => Boolean(document.querySelector(".o_event.fc-mirror")),
         };
     }
 }
