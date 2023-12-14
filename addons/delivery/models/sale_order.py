@@ -119,6 +119,7 @@ class SaleOrder(models.Model):
             'product_id': carrier.product_id.id,
             'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
+            'discount': 0.,
         }
         if carrier.invoice_policy == 'real':
             values['price_unit'] = 0
