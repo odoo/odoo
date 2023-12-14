@@ -290,7 +290,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 # HTML/Text management
 # ----------------------------------------------------------
 
-URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
+URL_SKIP_PROTOCOL_REGEX = r'mailto:|tel:|sms:'
+URL_REGEX = rf'''(\bhref=['"](?!{URL_SKIP_PROTOCOL_REGEX})([^'"]+)['"])'''
 TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'

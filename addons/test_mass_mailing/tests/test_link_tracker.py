@@ -10,9 +10,9 @@ class TestLinkTracker(common.TestMassMailCommon):
     def setUp(self):
         super(TestLinkTracker, self).setUp()
 
-        self.link = self.env['link.tracker'].search_or_create({
+        self.link = self.env['link.tracker'].search_or_create([{
             'url': 'https://www.example.com'
-        })
+        }])
 
         self.click = self.env['link.tracker.click'].create({
             'link_id': self.link.id,
