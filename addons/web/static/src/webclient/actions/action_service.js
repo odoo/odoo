@@ -729,22 +729,6 @@ function makeActionManager(env) {
                         }
                     };
 
-                    // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
-                    // we determine here which actions no longer occur in the nextStack,
-                    // and we manually destroy all their controller's widgets
-                    const nextStackActionIds = nextStack.map((c) => c.action.jsId);
-                    const toDestroy = new Set();
-                    for (const c of controllerStack) {
-                        if (!nextStackActionIds.includes(c.action.jsId)) {
-                            toDestroy.add(c);
-                        }
-                    }
-                    for (const c of toDestroy) {
-                        if (c.exportedState && c.exportedState.__legacy_widget__) {
-                            c.exportedState.__legacy_widget__.destroy();
-                        }
-                    }
-                    // END LEGACY CODE COMPATIBILITY
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
                     pushState(controller);
                     this.titleService.setParts({ action: controller.displayName });
