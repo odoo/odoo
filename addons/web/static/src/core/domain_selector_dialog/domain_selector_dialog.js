@@ -70,6 +70,13 @@ export class DomainSelectorDialog extends Component {
             readonly: this.props.readonly,
             isDebugMode: this.props.isDebugMode,
             defaultConnector: this.props.defaultConnector,
+<<<<<<< HEAD
+||||||| parent of 77a8b30f2767 (temp)
+            defaultLeafValue: this.props.defaultLeafValue,
+=======
+            defaultLeafValue: this.props.defaultLeafValue,
+            followRelations: this.props.followRelations,
+>>>>>>> 77a8b30f2767 (temp)
             domain: this.state.domain,
             update: (domain) => {
                 this.state.domain = domain;
@@ -110,3 +117,63 @@ export class DomainSelectorDialog extends Component {
         this.props.close();
     }
 }
+<<<<<<< HEAD
+||||||| parent of 77a8b30f2767 (temp)
+DomainSelectorDialog.template = "web.DomainSelectorDialog";
+DomainSelectorDialog.components = {
+    Dialog,
+    DomainSelector,
+};
+DomainSelectorDialog.props = {
+    close: Function,
+    onConfirm: Function,
+    resModel: String,
+    className: { type: String, optional: true },
+    defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
+    defaultLeafValue: { type: Array, optional: true },
+    domain: String,
+    isDebugMode: { type: Boolean, optional: true },
+    readonly: { type: Boolean, optional: true },
+    text: { type: String, optional: true },
+    confirmButtonText: { type: String, optional: true },
+    disableConfirmButton: { type: Function, optional: true },
+    discardButtonText: { type: String, optional: true },
+    title: { type: String, optional: true },
+    context: { type: Object, optional: true },
+};
+DomainSelectorDialog.defaultProps = {
+    isDebugMode: false,
+    readonly: false,
+    context: {},
+};
+=======
+DomainSelectorDialog.template = "web.DomainSelectorDialog";
+DomainSelectorDialog.components = {
+    Dialog,
+    DomainSelector,
+};
+DomainSelectorDialog.props = {
+    close: Function,
+    onConfirm: Function,
+    resModel: String,
+    className: { type: String, optional: true },
+    defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
+    defaultLeafValue: { type: Array, optional: true },
+    domain: String,
+    isDebugMode: { type: Boolean, optional: true },
+    readonly: { type: Boolean, optional: true },
+    text: { type: String, optional: true },
+    confirmButtonText: { type: String, optional: true },
+    disableConfirmButton: { type: Function, optional: true },
+    discardButtonText: { type: String, optional: true },
+    title: { type: String, optional: true },
+    context: { type: Object, optional: true },
+    followRelations: { type: Boolean, optional: true },
+};
+DomainSelectorDialog.defaultProps = {
+    isDebugMode: false,
+    readonly: false,
+    followRelations: true,
+    context: {},
+};
+>>>>>>> 77a8b30f2767 (temp)

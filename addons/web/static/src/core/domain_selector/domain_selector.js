@@ -32,10 +32,12 @@ export class DomainSelector extends Component {
         isDebugMode: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
+        followRelations: { type: Boolean, optional: true },
     };
     static defaultProps = {
         isDebugMode: false,
         readonly: true,
+        followRelations: true,
         update: () => {},
     };
 
