@@ -26,11 +26,7 @@ export class DiscussCoreCommon {
         this.messagingService.isReady.then((data) => {
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
-                const thread = this.store.Thread.insert({
-                    ...channel,
-                    model: "discuss.channel",
-                    type: channel.channel_type,
-                });
+                const thread = this.store.Thread.insert(channel);
                 if (invitedByUserId && invitedByUserId !== this.store.self?.user?.id) {
                     this.notificationService.add(
                         _t("You have been invited to #%s", thread.displayName),
@@ -46,10 +42,7 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
-                const thread = this.store.Thread.insert({
-                    ...payload,
-                    model: "discuss.channel",
-                });
+                const thread = this.store.Thread.insert(payload);
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
                     type: "info",
                 });

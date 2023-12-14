@@ -253,9 +253,11 @@ patch(MockServer.prototype, {
         this.pyEnv["discuss.channel"].write([channel.id], {
             channel_member_ids: [[2, channelMember.id]],
         });
-        this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.channel/leave", {
-            id: channel.id,
-        });
+        this.pyEnv["bus.bus"]._sendone(
+            this.pyEnv.currentPartner,
+            "discuss.channel/leave",
+            this._mockDiscussChannelChannelInfo([channel.id])[0]
+        );
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Thread: {
                 id: channel.id,
