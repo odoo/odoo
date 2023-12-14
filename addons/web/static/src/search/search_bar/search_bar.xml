@@ -35,7 +35,7 @@
                     </span>
                 </div>
 
-                <div class="o_facet_values position-relative d-flex align-items-center ps-2 rounded-end-2 text-wrap">
+                <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
                         <small class="o_facet_value" t-esc="facetValue"/>
