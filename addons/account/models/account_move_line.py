@@ -2521,7 +2521,6 @@ class AccountMoveLine(models.Model):
                 skip_invoice_sync=True,
                 skip_invoice_line_sync=True,
                 skip_account_move_synchronization=True,
-                check_move_validity=False,
             )\
             .create(full_reconcile_values_list)
 

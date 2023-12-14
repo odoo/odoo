@@ -17,7 +17,7 @@ class AccountPayment(models.Model):
             return
 
         for pay in self.with_context(
-                skip_account_move_synchronization=True, check_move_validity=False, skip_invoice_sync=True, dynamic_unlink=True):
+                skip_account_move_synchronization=True, skip_invoice_sync=True, dynamic_unlink=True):
             pay.line_ids.filtered(lambda x: x.account_id == pay.company_id.l10n_ar_tax_base_account_id or x.tax_line_id.l10n_ar_withholding_payment_type).unlink()
         res = super()._synchronize_to_moves(changed_fields)
         return res

@@ -494,7 +494,7 @@ class ResCompany(models.Model):
             balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == balancing_account)
             # There could be multiple lines if we imported the balance from unaffected earnings account too
             if len(balancing_move_line) > 1:
-                self.with_context(check_move_validity=False).account_opening_move_id.line_ids -= balancing_move_line[1:]
+                self.account_opening_move_id.line_ids -= balancing_move_line[1:]
                 balancing_move_line = balancing_move_line[0]
 
             debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)

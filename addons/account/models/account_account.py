@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _, tools
+from contextlib import nullcontext
+
+from odoo import api, fields, models, _, tools, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero
@@ -523,44 +525,52 @@ class AccountAccount(models.Model):
         opening_move = self.company_id.account_opening_move_id
 
         if opening_move.state == 'draft':
-            # check whether we should create a new move line or modify an existing one
-            account_op_lines = self.env['account.move.line'].search([('account_id', '=', self.id),
-                                                                      ('move_id','=', opening_move.id),
-                                                                      (field,'!=', False),
-                                                                      (field,'!=', 0.0)]) # 0.0 condition important for import
+            with self.env['account.move']._check_balanced({'records': opening_move}):
+                # check whether we should create a new move line or modify an existing one
+                account_op_lines = self.env['account.move.line'].search([
+                    ('account_id', '=', self.id),
+                    ('move_id', '=', opening_move.id),
+                    (field, '!=', False),
+                    (field, '!=', 0.0),  # 0.0 condition important for import
+                ])
 
-            if account_op_lines:
-                op_aml_debit = sum(account_op_lines.mapped('debit'))
-                op_aml_credit = sum(account_op_lines.mapped('credit'))
+                if account_op_lines:
+                    op_aml_debit = sum(account_op_lines.mapped('debit'))
+                    op_aml_credit = sum(account_op_lines.mapped('credit'))
 
-                # There might be more than one line on this account if the opening entry was manually edited
-                # If so, we need to merge all those lines into one before modifying its balance
-                opening_move_line = account_op_lines[0]
-                if len(account_op_lines) > 1:
-                    merge_write_cmd = [(1, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
-                    unlink_write_cmd = [(2, line.id) for line in account_op_lines[1:]]
-                    opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
+                    # There might be more than one line on this account if the opening entry was manually edited
+                    # If so, we need to merge all those lines into one before modifying its balance
+                    opening_move_line = account_op_lines[0]
+                    if len(account_op_lines) > 1:
+                        merge_write_cmd = [Command.update(opening_move_line.id, {
+                            'debit': op_aml_debit,
+                            'credit': op_aml_credit,
+                            'partner_id': False,
+                            'name': _("Opening balance"),
+                        })]
+                        unlink_write_cmd = [Command.unlink(line.id) for line in account_op_lines[1:]]
+                        opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
 
-                if amount:
-                    # modify the line
-                    opening_move_line.with_context(check_move_validity=False)[field] = amount
-                else:
-                    # delete the line (no need to keep a line with value = 0)
-                    opening_move_line.with_context(check_move_validity=False).unlink()
+                    if amount:
+                        # modify the line
+                        opening_move_line[field] = amount
+                    else:
+                        # delete the line (no need to keep a line with value = 0)
+                        opening_move_line.unlink()
 
-            elif amount:
-                # create a new line, as none existed before
-                self.env['account.move.line'].with_context(check_move_validity=False).create({
-                        'name': _('Opening balance'),
-                        field: amount,
-                        'move_id': opening_move.id,
-                        'account_id': self.id,
-                })
+                elif amount:
+                    # create a new line, as none existed before
+                    self.env['account.move.line'].create({
+                            'name': _('Opening balance'),
+                            field: amount,
+                            'move_id': opening_move.id,
+                            'account_id': self.id,
+                    })
 
-            # Then, we automatically balance the opening move, to make sure it stays valid
-            if not 'import_file' in self.env.context:
-                # When importing a file, avoid recomputing the opening move for each account and do it at the end, for better performances
-                self.company_id._auto_balance_opening_move()
+                # Then, we automatically balance the opening move, to make sure it stays valid
+                if not 'import_file' in self.env.context:
+                    # When importing a file, avoid recomputing the opening move for each account and do it at the end, for better performances
+                    self.company_id._auto_balance_opening_move()
 
     @api.model
     def default_get(self, default_fields):
@@ -693,20 +703,28 @@ class AccountAccount(models.Model):
         with opening debit/credit. In that case, the auto-balance is postpone
         until the whole file has been imported.
         """
-        rslt = super(AccountAccount, self).load(fields, data)
-
-        if 'import_file' in self.env.context and 'opening_balance' in fields:
-            companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
-            for company in companies:
-                if company.account_opening_move_id.filtered(lambda m: m.state == "posted"):
-                    raise UserError(
-                        _('You cannot import the "openning_balance" if the opening move (%s) is already posted. \
-                        If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
-                          company.account_opening_move_id.name))
-                company._auto_balance_opening_move()
-                # the current_balance of the account only includes posted moves and
-                # would always amount to 0 after the import if we didn't post the opening move
-                company.account_opening_move_id.action_post()
+        importing = 'import_file' in self.env.context and 'opening_balance' in fields
+        if importing:
+            container = {'records': self.env['account.move']}
+            manager = self.env['account.move']._check_balanced(container)
+        else:
+            manager = nullcontext
+        with manager:
+            rslt = super(AccountAccount, self).load(fields, data)
+            if importing:
+                companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
+                container['records'] = companies.account_opening_move_id
+                for company in companies:
+                    if company.account_opening_move_id.filtered(lambda m: m.state == "posted"):
+                        raise UserError(_(
+                            'You cannot import the "openning_balance" if the opening move (%s) is already posted. '
+                            'If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+                            company.account_opening_move_id.name,
+                        ))
+                    company._auto_balance_opening_move()
+                    # the current_balance of the account only includes posted moves and
+                    # would always amount to 0 after the import if we didn't post the opening move
+                companies.account_opening_move_id.action_post()
         return rslt
 
     def _toggle_reconcile_to_true(self):
