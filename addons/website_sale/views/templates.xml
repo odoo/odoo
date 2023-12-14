@@ -2034,6 +2034,9 @@
                                                 </div>
                                             </div>
                                         </t>
+                                        <t t-else="">
+                                            <input type="hidden" name="use_same" t-att-value="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id"/>                                       
+                                        </t>
                                     </div>
 
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
