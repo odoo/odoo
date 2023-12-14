@@ -18,10 +18,10 @@ class TestUi(odoo.tests.HttpCase):
         self.startPatcher(patcher)
 
     def test_01_test_ui(self):
-        self.env['link.tracker'].search_or_create({
+        self.env['link.tracker'].search_or_create([{
             'campaign_id': self.env['utm.campaign'].create({'name': 'Sale'}).id,
             'medium_id': self.env['utm.medium'].create({'name': 'Website'}).id,
             'source_id': self.env['utm.source'].create({'name': 'Search'}).id,
             'url': self.env["ir.config_parameter"].sudo().get_param("web.base.url") + '/contactus',
-        })
+        }])
         self.start_tour("/", 'website_links_tour', login="admin")
