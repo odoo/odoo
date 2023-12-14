@@ -160,3 +160,35 @@ class TestReturnPicking(TestStockCommon):
         wiz = Form(self.env['stock.immediate.transfer'].with_context(wiz['context'])).save().process()
         self.assertEqual(return_picking.move_ids.quantity_done, 2)
         self.assertEqual(return_picking.state, 'done')
+
+    def test_return_incoming_picking(self):
+        """
+            Test returns of incoming pickings have the same partner assigned to them
+        """
+        partner = self.env['res.partner'].create({'name': 'Jean'})
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'partner_id': partner.id,
+            'move_ids': [(0, 0, {
+                'name': self.UnitA.name,
+                'product_id': self.UnitA.id,
+                'product_uom_qty': 1,
+                'quantity_done': 1,
+                'product_uom': self.uom_unit.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        receipt.button_validate()
+        # create a return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=receipt.ids, active_id=receipt.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_picking.button_validate()
+        self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)
