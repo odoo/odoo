@@ -3705,12 +3705,25 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         if self.move_type != 'entry':
+            access_link = None
             for group_name, _group_method, group_data in groups:
-                if group_name in ('portal_customer', 'customer'):
+                if group_name == 'portal_customer':
                     group_data['has_button_access'] = True
+                    access_link = group_data['button_access']['url']
 
-                    # 'notification_is_customer' is used to determine whether the group should be sent the access_token
-                    group_data['notification_is_customer'] = True
+            # create a new group for partners that have been manually added as recipients
+            # those partners should have access to the invoice
+            button_access = {'url': access_link} if access_link else {}
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in msg_vals['partner_ids'] and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'button_access': button_access,
+                    'notification_is_customer': True,
+                }
+            )
+            groups.insert(0, recipient_group)
 
         return groups
 
