@@ -1154,14 +1154,4 @@
             </field>
         </record>
 
-        <!-- User Form -->
-        <record id="act_res_users_2_project_task_opened" model="ir.actions.act_window">
-            <field name="name">Assigned Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True)]</field>
-            <field name="binding_model_id" ref="base.model_res_users"/>
-            <field name="binding_view_types">form</field>
-        </record>
 </odoo>
