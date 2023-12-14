@@ -278,8 +278,10 @@ class Users(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
-    def _check_company_domain(self, companies=None):
-        return [('company_ids', 'in', models.to_company_ids(companies))] if companies else []
+    def _check_company_domain(self, companies):
+        if not companies:
+            return []
+        return [('company_ids', 'in', models.to_company_ids(companies))]
 
     @property
     def SELF_READABLE_FIELDS(self):
