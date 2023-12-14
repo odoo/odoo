@@ -19,17 +19,17 @@
                 <field name="children_ids">
                     <record id="tax_report_de_tag_17" model="account.report.line">
                         <field name="name">Declaration of the advance payment of turnover tax</field>
-                        <field name="code">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_GRUNDLAGE</field>
+                        <field name="code">AGG_DE_17</field>
                         <field name="aggregation_formula"></field>
                         <field name="children_ids">
                             <record id="tax_report_de_tag_18" model="account.report.line">
                                 <field name="name">Goods and services</field>
-                                <field name="code">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_GRUNDLAGE</field>
-                                <field name="aggregation_formula">STEUERFREIE_UMSATZE_MIT_VORSTEUERABZUG_ZEILE_19.balance + DE_48.balance + STEUERPFLICHTIGE_UMSATZE_ZEILE_25.balance + AGG_DE_31.balance</field>
+                                <field name="code">AGG_DE_18</field>
+                                <field name="aggregation_formula">AGG_DE_19.balance + DE_48.balance + AGG_DE_25.balance + AGG_DE_31.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_19" model="account.report.line">
                                         <field name="name">Taxable turnover</field>
-                                        <field name="code">STEUERFREIE_UMSATZE_MIT_VORSTEUERABZUG_ZEILE_19</field>
+                                        <field name="code">AGG_DE_19</field>
                                         <field name="aggregation_formula">DE_81_BASE.balance + DE_86_BASE.balance + DE_87.balance + DE_35.balance + DE_77.balance + DE_76.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_81" model="account.report.line">
@@ -102,7 +102,7 @@
                                     </record>
                                     <record id="tax_report_de_tag_25" model="account.report.line">
                                         <field name="name">Tax-exempt transactions with input tax deduction</field>
-                                        <field name="code">STEUERPFLICHTIGE_UMSATZE_ZEILE_25</field>
+                                        <field name="code">AGG_DE_25</field>
                                         <field name="aggregation_formula">DE_41.balance + DE_44.balance + DE_49.balance + DE_43.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_41" model="account.report.line">
@@ -239,7 +239,7 @@
                             </record>
                             <record id="tax_report_de_tag_46" model="account.report.line">
                                 <field name="name">The recipient of the service as the person liable to pay tax</field>
-                                <field name="code">LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46_GRUNDLAGE</field>
+                                <field name="code">AGG_DE_46</field>
                                 <field name="aggregation_formula">DE_46.balance + DE_73.balance + DE_84.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_48" model="account.report.line">
@@ -279,7 +279,7 @@
                             </record>
                             <record id="tax_report_de_tag_37" model="account.report.line">
                                 <field name="name">Supplementary information on turnover</field>
-                                <field name="code">ERGANZENDE_ANGABEN_ZU_UMSATZEN_ZEILE_37_GRUNDLAGE</field>
+                                <field name="code">AGG_DE_37</field>
                                 <field name="aggregation_formula">DE_42.balance + DE_60.balance + DE_21.balance + DE_45_BASE.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_42" model="account.report.line">
@@ -334,21 +334,21 @@
             </record>
             <record id="tax_report_de_tag_02" model="account.report.line">
                 <field name="name">Tax</field>
-                <field name="aggregation_formula">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_STEUER.balance</field>
+                <field name="aggregation_formula">AGG_DE_17_TAX.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_de_tax_tag_17" model="account.report.line">
                         <field name="name">Declaration of the advance payment of turnover tax</field>
-                        <field name="code">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_STEUER</field>
-                        <field name="aggregation_formula">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_STEUER.balance + LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46.balance + ABZIEHBARE_VORSTEUERBETRAGE_ZEILE_55.balance + ANDERE_STEUERBETRAGE_ZEILE_64.balance + DE_39.balance + DE_83.balance</field>
+                        <field name="code">AGG_DE_17_TAX</field>
+                        <field name="aggregation_formula">AGG_DE_18_TAX.balance + AGG_DE_46_TAX.balance - AGG_DE_55_TAX.balance + AGG_DE_64_TAX.balance + DE_39.balance + DE_83.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_de_tax_tag_18" model="account.report.line">
                                 <field name="name">Goods and services</field>
-                                <field name="code">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_STEUER</field>
-                                <field name="aggregation_formula">STEUERPFLICHT_UMSATZE_STEUER.balance + INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_STEUER.balance</field>
+                                <field name="code">AGG_DE_18_TAX</field>
+                                <field name="aggregation_formula">AGG_DE_19_TAX.balance + AGG_DE_31_TAX.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tax_tag_19" model="account.report.line">
                                         <field name="name">Taxable turnover</field>
-                                        <field name="code">STEUERPFLICHT_UMSATZE_STEUER</field>
+                                        <field name="code">AGG_DE_19_TAX</field>
                                         <field name="aggregation_formula">DE_81_TAX.balance + DE_86_TAX.balance + DE_36.balance + DE_80.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_26" model="account.report.line">
@@ -399,7 +399,7 @@
                                     </record>
                                     <record id="tax_report_de_tax_tag_31" model="account.report.line">
                                         <field name="name">Intra-Community acquisitions</field>
-                                        <field name="code">INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_STEUER</field>
+                                        <field name="code">AGG_DE_31_TAX</field>
                                         <field name="aggregation_formula">DE_89_TAX.balance + DE_93_TAX.balance + DE_98.balance + DE_96.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_33" model="account.report.line">
@@ -452,7 +452,7 @@
                             </record>
                             <record id="tax_report_de_tax_tag_46" model="account.report.line">
                                 <field name="name">Recipient of the service as the person liable to pay tax</field>
-                                <field name="code">LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46</field>
+                                <field name="code">AGG_DE_46_TAX</field>
                                 <field name="aggregation_formula">DE_47.balance + DE_74.balance + DE_85.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_47" model="account.report.line">
@@ -492,7 +492,7 @@
                             </record>
                             <record id="tax_report_de_tax_tag_55" model="account.report.line">
                                 <field name="name">Deductible input tax amounts</field>
-                                <field name="code">ABZIEHBARE_VORSTEUERBETRAGE_ZEILE_55</field>
+                                <field name="code">AGG_DE_55_TAX</field>
                                 <field name="aggregation_formula">DE_66.balance + DE_61.balance + DE_62.balance + DE_67.balance + DE_63.balance + DE_64.balance + DE_59.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_66" model="account.report.line">
@@ -576,7 +576,7 @@
                             </record>
                             <record id="tax_report_de_tax_tag_64" model="account.report.line">
                                 <field name="name">Other tax amounts</field>
-                                <field name="code">ANDERE_STEUERBETRAGE_ZEILE_64</field>
+                                <field name="code">AGG_DE_64_TAX</field>
                                 <field name="aggregation_formula">DE_65.balance + DE_69.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_65" model="account.report.line">
