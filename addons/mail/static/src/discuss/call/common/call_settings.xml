@@ -18,10 +18,13 @@
                     </label>
                 </div>
                 <div class="mb-3 d-flex align-items-center flex-wrap">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
+                    <label class="d-flex align-items-start flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
                         <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="onChangePushToTalk" t-att-checked="userSettings.usePushToTalk ? 'checked' : ''" class="form-check-input"/>
                         <span class="ms-2 text-truncate">Enable Push-to-talk</span>
                     </label>
+                </div>
+                <div t-if="userSettings.usePushToTalk and !pttExtService.isEnabled" class="text-muted fst-italic mb-3">
+                    <PttExtCanBeDownloadedText/>
                 </div>
                 <t t-if="userSettings.usePushToTalk">
                     <div class="mb-3 d-flex align-items-center flex-wrap">

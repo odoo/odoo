@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { PttExtCanBeDownloadedText } from "@mail/discuss/call/common/ptt_ext_can_be_downloaded_text";
 
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 
@@ -9,7 +10,7 @@ import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
-    static components = { ActionPanel };
+    static components = { ActionPanel, PttExtCanBeDownloadedText };
     static template = "discuss.CallSettings";
     static props = ["thread", "className?"];
 
@@ -20,6 +21,7 @@ export class CallSettings extends Component {
         this.state = useState({
             userDevices: [],
         });
+        this.pttExtService = useState(useService("discuss.ptt_extension"));
         useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
         useExternalListener(browser, "keyup", this._onKeyUp, { capture: true });
         onWillStart(async () => {

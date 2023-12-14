@@ -61,6 +61,8 @@ export const pttExtensionHookService = {
             get isEnabled() {
                 return isEnabled;
             },
+            downloadURL:
+                "https://chromewebstore.google.com/detail/discuss-push-to-talk/mdiacebcbkmjjlpclnbcgiepgifcnpmg",
         };
     },
 };
