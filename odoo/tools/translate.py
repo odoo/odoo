@@ -1564,12 +1564,14 @@ def load_language(cr, lang):
 
 def get_po_paths(module_name: str, lang: str):
     lang_base = lang.split('_')[0]
-    if lang_base == 'es' and lang != 'es_ES':
-        # force es_419 as fallback language for the spanish variations
-        if lang == 'es_419':
-            langs = ['es_419']
+    if lang_base == 'es':
+        # for Spanish variations, use es_ES and es_419 as bases
+        if lang == 'es_ES':
+            langs = ['es_419', 'es']
+        elif lang == 'es_419':
+            langs = ['es', 'es_419']
         else:
-            langs = ['es_419', lang]
+            langs = ['es', 'es_419', lang]
     else:
         langs = [lang_base, lang]
 
