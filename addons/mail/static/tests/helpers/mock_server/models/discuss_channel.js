@@ -59,12 +59,6 @@ patch(MockServer.prototype, {
             const ids = args.args[0];
             return this._mockDiscussChannelChannelFetchPreview(ids);
         }
-        if (args.model === "discuss.channel" && args.method === "channel_fold") {
-            const ids = args.args[0];
-            const state = args.args[1] || args.kwargs.state;
-            const state_count = args.args[2] || args.kwargs.state_count;
-            return this._mockDiscussChannelChannelFold(ids, state, state_count);
-        }
         if (args.model === "discuss.channel" && args.method === "channel_create") {
             const name = args.args[0];
             const groupId = args.args[1];
@@ -493,15 +487,15 @@ patch(MockServer.prototype, {
             .filter((preview) => preview.last_message);
     },
     /**
-     * Simulates the 'channel_fold' route on `discuss.channel`.
-     * In particular sends a notification on the bus.
+     * Simulates the '_channel_fold' method on `discuss.channel`. In particular
+     * sends a notification on the bus.
      *
      * @private
      * @param {number} ids
      * @param {state} [state]
      * @param {number} [state_count]
      */
-    _mockDiscussChannelChannelFold(ids, state, state_count) {
+    _mockDiscussChannel__channelFold(ids, state, state_count) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
@@ -517,7 +511,8 @@ patch(MockServer.prototype, {
                 is_minimized: foldState !== "closed",
             };
             this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.Thread/fold_state", {
+            const [partner, guest] = this._mockResPartner__getCurrentPersona();
+            this.pyEnv["bus.bus"]._sendone(partner || guest, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
                 id: channel.id,
                 model: "discuss.channel",
