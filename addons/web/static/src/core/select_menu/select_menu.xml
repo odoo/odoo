@@ -8,8 +8,8 @@
             menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''} border`"
             position="'bottom-fit'"
             beforeOpen.bind="filterOptions"
-            onOpened.bind="onOpened"
             onScroll.bind="onScroll"
+            onStateChanged.bind="onStateChanged"
         >
             <t t-set-slot="toggler">
                 <t t-if="props.multiSelect">
