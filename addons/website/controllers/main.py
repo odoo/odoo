@@ -439,6 +439,7 @@ class Website(Home):
             t['rowPerSlide'] = attribs.get('data-row-per-slide')
             t['arrowPosition'] = attribs.get('data-arrow-position')
             t['extraClasses'] = attribs.get('data-extra-classes')
+            t['columnClasses'] = attribs.get('data-column-classes')
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
