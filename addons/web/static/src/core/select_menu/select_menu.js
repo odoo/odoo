@@ -92,6 +92,7 @@ export class SelectMenu extends Component {
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
         );
+        this.isOpen = false;
 
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
@@ -101,8 +102,10 @@ export class SelectMenu extends Component {
         });
         useEffect(
             () => {
-                const groups = [{ choices: this.props.choices }, ...this.props.groups];
-                this.filterOptions(this.state.searchValue, groups);
+                if (this.isOpen) {
+                    const groups = [{ choices: this.props.choices }, ...this.props.groups];
+                    this.filterOptions(this.state.searchValue, groups);
+                }
             },
             () => [this.props.choices, this.props.groups]
         );
@@ -135,8 +138,13 @@ export class SelectMenu extends Component {
         });
     }
 
-    onOpened() {
-        this.state.searchValue = "";
+    onStateChanged({ open }) {
+        this.isOpen = open;
+
+        if (!open) {
+            this.state.searchValue = "";
+            return;
+        }
 
         const selectedElement = document.querySelector(".o_select_active");
         if (selectedElement) {
