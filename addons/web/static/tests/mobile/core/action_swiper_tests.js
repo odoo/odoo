@@ -863,4 +863,62 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             );
         }
     );
+
+    QUnit.test("swipeInvalid prop prevents swiping", async (assert) => {
+        assert.expect(3);
+        const { execRegisteredTimeouts } = mockTimeout();
+        class Parent extends Component {
+            onRightSwipe() {
+                assert.step("onRightSwipe");
+            }
+            swipeInvalid() {
+                assert.step("swipeInvalid");
+                return true;
+            }
+        }
+        Parent.components = { ActionSwiper };
+        Parent.template = xml`
+            <div class="d-flex">
+                <ActionSwiper onRightSwipe = "{
+                    action: onRightSwipe,
+                    icon: 'fa-circle',
+                    bgColor: 'bg-warning',
+                }" swipeInvalid = "swipeInvalid">
+                    <div class="target-component" style="width: 200px; height: 80px">Test</div>
+                </ActionSwiper>
+            </div>
+        `;
+        await mount(Parent, target, { env });
+        const swiper = target.querySelector(".o_actionswiper");
+        const targetContainer = target.querySelector(".o_actionswiper_target_container");
+        // Touch ends once the half of the distance has been crossed
+        await triggerEvent(target, ".o_actionswiper", "touchstart", {
+            touches: [
+                {
+                    identifier: 0,
+                    clientX: swiper.clientWidth / 2,
+                    clientY: 0,
+                    target: target,
+                },
+            ],
+        });
+        await triggerEvent(target, ".o_actionswiper", "touchmove", {
+            touches: [
+                {
+                    identifier: 0,
+                    clientX: swiper.clientWidth + 1,
+                    clientY: 0,
+                    target: target,
+                },
+            ],
+        });
+        await triggerEvent(target, ".o_actionswiper", "touchend", {});
+        execRegisteredTimeouts();
+        await nextTick();
+        assert.ok(
+            !targetContainer.style.transform.includes("translateX"),
+            "target doesn't have translateX after action is performed"
+        );
+        assert.verifySteps(["swipeInvalid"]);
+    });
 });
