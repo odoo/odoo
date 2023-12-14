@@ -15,6 +15,9 @@ patch(MockServer.prototype, {
                 args.older_attachment_id
             );
         }
+        if (route === "/discuss/channel/fold") {
+            return this._mockRouteDiscussChannelFold(args.channel_id, args.state, args.state_count);
+        }
         return super._performRPC(route, args);
     },
 
@@ -37,5 +40,16 @@ patch(MockServer.prototype, {
             .slice(0, limit)
             .map(({ id }) => id);
         return this._mockIrAttachment_attachmentFormat(attachmentIds);
+    },
+
+    /**
+     * Simulates the `/discuss/channel/fold` route.
+     *
+     * @param {number} channelId
+     * @param {boolean} state
+     * @param {number} stateCount
+     */
+    _mockRouteDiscussChannelFold(channelId, state, stateCount) {
+        return this._mockDiscussChannel__channelFold([channelId], state, stateCount);
     },
 });

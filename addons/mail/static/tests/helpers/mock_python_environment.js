@@ -20,4 +20,8 @@ patch(pyEnvTarget, {
         }
         return result;
     },
+
+    get currentGuest() {
+        return this.mockServer.getRecords("mail.guest", [["id", "=", this.cookie.get("dgid")]])[0];
+    },
 });

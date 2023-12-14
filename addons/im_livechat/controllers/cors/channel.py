@@ -15,3 +15,8 @@ class LivechatChannelController(ChannelController):
     def livechat_channel_mark_as_seen(self, guest_token, channel_id, last_message_id, allow_older=False):
         force_guest_env(guest_token)
         return self.discuss_channel_mark_as_seen(channel_id, last_message_id, allow_older)
+
+    @route("/im_livechat/cors/channel/fold", methods=["POST"], type="json", auth="public", cors="*")
+    def livechat_channel_fold(self, guest_token, channel_id, state, state_count):
+        force_guest_env(guest_token)
+        return self.discuss_channel_fold(channel_id, state, state_count)

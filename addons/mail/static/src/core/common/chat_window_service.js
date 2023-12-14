@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
@@ -28,6 +29,24 @@ export class ChatWindowService {
         this.ui = services.ui;
     }
 
+    notifyState(chatWindow) {
+        if (this.ui.isSmall || !this.store.self) {
+            return;
+        }
+        if (chatWindow.thread?.model === "discuss.channel") {
+            chatWindow.thread.foldStateCount++;
+            return rpc(
+                "/discuss/channel/fold",
+                {
+                    channel_id: chatWindow.thread.id,
+                    state: chatWindow.thread.state,
+                    state_count: chatWindow.thread.foldStateCount,
+                },
+                { shadow: true }
+            );
+        }
+    }
+
     open(thread, replaceNewMessageChatWindow) {
         const chatWindow = this.store.ChatWindow.insert({
             folded: false,
@@ -38,6 +57,7 @@ export class ChatWindowService {
         if (thread) {
             thread.state = "open";
         }
+        this.notifyState(chatWindow);
         return chatWindow;
     }
 
@@ -95,12 +115,16 @@ export class ChatWindowService {
         if (thread) {
             thread.state = chatWindow.folded ? "folded" : "open";
         }
+        this.notifyState(chatWindow);
     }
 
-    show(chatWindow) {
+    show(chatWindow, { notifyState = true } = {}) {
         chatWindow.hidden = false;
         chatWindow.folded = false;
         chatWindow.thread.state = "open";
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
     }
 
     hide(chatWindow) {
@@ -128,7 +152,11 @@ export class ChatWindowService {
         await this._onClose(chatWindow, options);
         chatWindow.delete();
     }
-    async _onClose(chatWindow, options) {}
+    async _onClose(chatWindow, { notifyState = true } = {}) {
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
+    }
 }
 
 export const chatWindowService = {
