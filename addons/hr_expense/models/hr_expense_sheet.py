@@ -668,7 +668,6 @@ class HrExpenseSheet(models.Model):
             'skip_invoice_sync': True,
             'skip_invoice_line_sync': True,
             'skip_account_move_synchronization': True,
-            'check_move_validity': False,
         }
         own_account_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'own_account')
         company_account_sheets = self - own_account_sheets
