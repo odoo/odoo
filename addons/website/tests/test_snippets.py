@@ -110,3 +110,14 @@ class TestSnippets(HttpCase):
 
     def test_snippet_image_gallery_reorder(self):
         self.start_tour("/", "snippet_image_gallery_reorder", login='admin')
+
+    def test_snippet_image_gallery_thumbnail_update(self):
+        IrAttachment = self.env['ir.attachment']
+        base = 'http://%s:%s' % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image',
+        })
+        self.start_tour('/', 'snippet_image_gallery_thumbnail_update', login='admin')
