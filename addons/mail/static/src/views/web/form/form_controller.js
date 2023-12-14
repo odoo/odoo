@@ -49,15 +49,4 @@ patch(FormController.prototype, {
             }
         }
     },
-
-    async onRecordSaved(record, changes) {
-        if (
-            changes.notification_type &&
-            record.resModel === "res.users" &&
-            this.mailStore?.user.user.id === record.resId
-        ) {
-            this.mailStore.user.notification_preference = changes.notification_type;
-        }
-        return await super.onRecordSaved(...arguments);
-    },
 });
