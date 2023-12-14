@@ -3,7 +3,7 @@
 {
     'name': 'Tests flow of API keys',
     'category': 'Tools',
-    'depends': ['web_tour'],
+    'depends': ['web_tour', 'auth_totp'],
     'assets': {
         'web.assets_tests': [
             # inside .
