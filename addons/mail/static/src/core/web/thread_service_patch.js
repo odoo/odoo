@@ -39,12 +39,6 @@ patch(ThreadService.prototype, {
             thread_id: thread.id,
             thread_model: thread.model,
         });
-        if ("attachments" in result) {
-            result["attachments"] = result["attachments"].map((attachment) => ({
-                ...attachment,
-                originThread: this.store.Thread.insert(attachment.originThread[0][1]),
-            }));
-        }
         thread.canPostOnReadonly = result.canPostOnReadonly;
         thread.hasReadAccess = result.hasReadAccess;
         thread.hasWriteAccess = result.hasWriteAccess;

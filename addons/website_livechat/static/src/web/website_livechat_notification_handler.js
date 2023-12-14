@@ -9,12 +9,7 @@ export const websiteLivechatNotifications = {
         { bus_service: busService, "mail.chat_window": chatWindowService, "mail.store": store }
     ) {
         busService.subscribe("website_livechat.send_chat_request", (payload) => {
-            const channel = store.Thread.insert({
-                ...payload,
-                id: payload.id,
-                model: "discuss.channel",
-                type: payload.channel_type,
-            });
+            const channel = store.Thread.insert(payload);
             const chatWindow = store.ChatWindow.insert({ thread: channel });
             chatWindowService.makeVisible(chatWindow);
             chatWindowService.focus(chatWindow);
