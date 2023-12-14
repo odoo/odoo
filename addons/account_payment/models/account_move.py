@@ -42,8 +42,8 @@ class AccountMove(models.Model):
 
     def _has_to_be_paid(self):
         self.ensure_one()
-        transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))
-        pending_transactions = self.transaction_ids.filtered(
+        transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))
+        pending_transactions = transactions.filtered(
             lambda tx: tx.state == 'pending' and tx.provider_code not in ('none', 'custom'))
         enabled_feature = str2bool(
             self.env['ir.config_parameter'].sudo().get_param(
@@ -53,14 +53,13 @@ class AccountMove(models.Model):
         return enabled_feature and bool(
             (
                 self.amount_residual
-                # FIXME someplace we check amount_residual and some other amount_paid < amount_total
-                # what is the correct heuristic to check ?
-                or not (transactions or pending_transactions)
+                or not transactions
             )
             and self.state == 'posted'
             and self.payment_state in ('not_paid', 'partial')
             and self.amount_total
             and self.move_type == 'out_invoice'
+            and (pending_transactions or not transactions or self.amount_paid < self.amount_total)
         )
 
     def get_portal_last_transaction(self):
