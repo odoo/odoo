@@ -44,6 +44,7 @@ export class DomainSelectorDialog extends Component {
             isDebugMode: this.props.isDebugMode,
             defaultConnector: this.props.defaultConnector,
             defaultLeafValue: this.props.defaultLeafValue,
+            followRelations: this.props.followRelations,
             domain: this.state.domain,
             update: (domain) => {
                 this.state.domain = domain;
@@ -105,9 +106,11 @@ DomainSelectorDialog.props = {
     discardButtonText: { type: String, optional: true },
     title: { type: String, optional: true },
     context: { type: Object, optional: true },
+    followRelations: { type: Boolean, optional: true },
 };
 DomainSelectorDialog.defaultProps = {
     isDebugMode: false,
     readonly: false,
+    followRelations: true,
     context: {},
 };

@@ -38,7 +38,15 @@ export class Editor extends Component {
 }
 
 export class PathEditor extends Editor {
-    static props = ["isDebugMode", "readonly", "resModel", "path", "update"];
+    static props = {
+        isDebugMode: Boolean,
+        readonly: Boolean,
+        resModel: String,
+        path: {},
+        update: Function,
+        followRelations: { type: Boolean, optional: true },
+    };
+    static defaultProps = { followRelations: true };
     static template = "web.DomainSelector.PathEditor";
 
     get component() {

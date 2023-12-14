@@ -18,7 +18,7 @@
 
     <t t-name="web.DomainSelector.PathEditor" owl="1">
         <t t-if="isSupportedPath">
-            <t t-component="component" isDebugMode="props.isDebugMode" readonly="props.readonly" resModel="props.resModel" path="props.path" update="props.update"/>
+            <t t-component="component" isDebugMode="props.isDebugMode" followRelations="props.followRelations" readonly="props.readonly" resModel="props.resModel" path="props.path" update="props.update"/>
         </t>
         <t t-else="">
             <div class="d-flex align-items-center p-0">

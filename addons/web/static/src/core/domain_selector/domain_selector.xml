@@ -143,7 +143,7 @@
     </t>
 
     <t t-name="web._DomainSelector.condition:readonly" owl="1">
-        <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" />
+        <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" followRelations="props.followRelations" />
         <t t-set="description" t-value="getDescription(node)"/>
         <span class="o_domain_leaf_operator"> <t t-esc="description.operatorDescription" /> </span>
         <t t-if="description.valueDescription">
@@ -160,7 +160,7 @@
     </t>
 
     <t t-name="web._DomainSelector.condition:editable" owl="1">
-        <PathEditor path="node.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
+        <PathEditor path="node.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" followRelations="props.followRelations" />
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
                 <t t-foreach="getOperatorsInfo(node)" t-as="operatorInfo" t-key="operatorInfo.key">
