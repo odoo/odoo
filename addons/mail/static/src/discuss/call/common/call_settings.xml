@@ -23,6 +23,9 @@
                         <span class="ms-2 text-truncate">Enable Push-to-talk</span>
                     </label>
                 </div>
+                <div t-if="store.settings.use_push_to_talk and !pttExtService.isEnabled" class="mb-3">
+                    <span class="small text-muted fst-italic" t-out="pttExtService.downloadText"/>
+                </div>
                 <t t-if="store.settings.use_push_to_talk">
                     <div class="mb-3 d-flex align-items-center flex-wrap">
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
