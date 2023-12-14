@@ -3691,6 +3691,8 @@ class BaseModel(metaclass=MetaModel):
         :param companies: the allowed companies for the related record
         :type companies: BaseModel or list or tuple or int or unquote
         """
+        if not companies:
+            return [('company_id', '=', False)]
         return ['|', ('company_id', '=', False), ('company_id', 'in', to_company_ids(companies))]
 
     def _check_company(self, fnames=None):
