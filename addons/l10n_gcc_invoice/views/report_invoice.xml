@@ -432,6 +432,17 @@
                     </div>
                 </div>
 
+                <div class="mb-2">
+                    <p class="lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
+                        Total amount in words: <br/>
+                        <span class="text-muted" t-field="o.amount_total_words"/>
+                    </p>
+                    <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
+                        المبلغ الإجمالي <br/>
+                        <span class="text-muted" t-out="o._num2words(o.amount_total, 'ar_001')"/>
+                    </p>
+                </div>
+
                 <div t-if="o.currency_id != o.company_id.currency_id"
                      class="row clearfix ms-auto text-nowrap border-top border-bottom p-2">
                     <t t-set="exchange_rate"
