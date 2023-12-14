@@ -58,7 +58,7 @@ QUnit.test("displays figures in first sheet", async (assert) => {
     const serverData = getDashboardServerData();
     serverData.models["spreadsheet.dashboard.group"].records = [
         {
-            dashboard_ids: [789],
+            published_dashboard_ids: [789],
             id: 1,
             name: "Chart",
         },
@@ -104,7 +104,7 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
     const serverData = getDashboardServerData();
     serverData.models["spreadsheet.dashboard.group"].records = [
         {
-            dashboard_ids: [789],
+            published_dashboard_ids: [789],
             id: 1,
             name: "Chart",
         },
