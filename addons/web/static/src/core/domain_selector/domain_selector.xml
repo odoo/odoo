@@ -133,7 +133,7 @@
     </t>
 
     <t t-name="web._DomainSelector.leaf:readonly" owl="1">
-        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="true" />
+        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="true" followRelations="props.followRelations" />
         <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', 'not_equal', 'set'].includes(node.operatorInfo.key) : ['is', 'equal', 'not_set'].includes(node.operatorInfo.key)"> not</t> set</t>
         <t t-else="">
             <span class="o_domain_leaf_operator"> <t t-esc="node.operatorInfo.label" /></span>
@@ -152,7 +152,7 @@
     </t>
 
     <t t-name="web._DomainSelector.leaf:editable" owl="1">
-        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
+        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" followRelations="props.followRelations" />
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
                 <t t-foreach="getOperatorsInfo(node)" t-as="operator" t-key="operator.key">
