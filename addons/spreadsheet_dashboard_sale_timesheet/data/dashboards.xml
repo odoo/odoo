@@ -7,6 +7,7 @@
         <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_project"/>
         <field name="group_ids" eval="[Command.link(ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
         <field name="sequence">200</field>
+        <field name="is_published">True</field>
     </record>
 
 </odoo>

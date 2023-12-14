@@ -81,11 +81,11 @@ export class DashboardLoader {
     async load() {
         const groups = await this._fetchGroups();
         this.groups = groups
-            .filter((group) => group.dashboard_ids.length)
+            .filter((group) => group.published_dashboard_ids.length)
             .map((group) => ({
                 id: group.id,
                 name: group.name,
-                dashboards: group.dashboard_ids,
+                dashboards: group.published_dashboard_ids,
             }));
         const dashboards = this.groups.map((group) => group.dashboards).flat();
         for (const dashboard of dashboards) {
@@ -126,16 +126,16 @@ export class DashboardLoader {
 
     /**
      * @private
-     * @returns {Promise<{id: number, name: string, dashboard_ids: number[]}[]>}
+     * @returns {Promise<{id: number, name: string, published_dashboard_ids: number[]}[]>}
      */
     async _fetchGroups() {
         const groups = await this.orm.webSearchRead(
             "spreadsheet.dashboard.group",
-            [["dashboard_ids", "!=", false]],
+            [["published_dashboard_ids", "!=", false]],
             {
                 specification: {
                     name: {},
-                    dashboard_ids: { fields: { name: {} } },
+                    published_dashboard_ids: { fields: { name: {} } },
                 },
             }
         );

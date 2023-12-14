@@ -11,8 +11,8 @@ class DashboardTestCommon(TransactionCase):
         cls.user = new_test_user(cls.env, login="Raoul")
         cls.user.groups_id |= cls.group
 
-    def create_dashboard(self):
-        dashboard_group = self.env["spreadsheet.dashboard.group"].create({
+    def create_dashboard(self, group=None):
+        dashboard_group = group or self.env["spreadsheet.dashboard.group"].create({
             "name": "Dashboard group"
         })
         dashboard = self.env["spreadsheet.dashboard"].create(
