@@ -165,9 +165,22 @@ class SaleOrder(models.Model):
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
-            line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            #line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            tax_results = self.env['account.tax']._compute_taxes([line.env['account.tax']._convert_to_tax_base_line_dict(
+                line,
+                partner=line.order_id.partner_id,
+                currency=line.order_id.currency_id,
+                product=line.product_id,
+                taxes=line.tax_id.filtered(lambda t: t.amount_type == 'fixed'),
+                price_unit=line.price_unit,
+                quantity=line.product_uom_qty,
+                discount=line.discount,
+                price_subtotal=line.price_subtotal,
+            )])
+            totals = list(tax_results['totals'].values())[0]
             discountable += line.price_total
-            discountable_per_tax[line.tax_id] += line_discountable
+            discountable_per_tax[self.env['account.tax']] += totals['amount_tax']
+            discountable_per_tax[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')] += totals['amount_untaxed']
         return discountable, discountable_per_tax
 
     def _cheapest_line(self):
