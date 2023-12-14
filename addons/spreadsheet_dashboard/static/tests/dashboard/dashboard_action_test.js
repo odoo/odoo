@@ -28,7 +28,7 @@ function getServerData(spreadsheetData) {
     serverData.views = getBasicListArchs();
     serverData.models["spreadsheet.dashboard.group"].records = [
         {
-            dashboard_ids: [789],
+            published_dashboard_ids: [789],
             id: 1,
             name: "Pivot",
         },

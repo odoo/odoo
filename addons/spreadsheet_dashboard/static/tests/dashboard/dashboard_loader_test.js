@@ -132,12 +132,12 @@ QUnit.test("don't return empty dashboard group", async (assert) => {
                         {
                             id: 45,
                             name: "Group A",
-                            dashboard_ids: [{ id: 1, name: "Dashboard CRM 1" }],
+                            published_dashboard_ids: [{ id: 1, name: "Dashboard CRM 1" }],
                         },
                         {
                             id: 46,
                             name: "Group B",
-                            dashboard_ids: [],
+                            published_dashboard_ids: [],
                         },
                     ],
                 };
@@ -236,7 +236,7 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
         },
     ];
     serverData.models["spreadsheet.dashboard.group"].records = [
-        { id: 1, name: "Container 1", dashboard_ids: [dashboardId] },
+        { id: 1, name: "Container 1", published_dashboard_ids: [dashboardId] },
     ];
     const loader = await createDashboardLoader({
         serverData,

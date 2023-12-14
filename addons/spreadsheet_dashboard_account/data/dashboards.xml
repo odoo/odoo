@@ -7,6 +7,7 @@
         <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"/>
         <field name="group_ids" eval="[Command.link(ref('account.group_account_readonly')), Command.link(ref('account.group_account_invoice'))]"/>
         <field name="sequence">20</field>
+        <field name="is_published">True</field>
     </record>
 
 </odoo>
