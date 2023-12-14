@@ -412,6 +412,44 @@ class TestProcRule(TransactionCase):
             {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
         ])
 
+    def test_push_rule_reservation_method(self):
+        """ make sure reservation_method is respected for push rules
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
+        warehouse.reception_steps = 'three_steps'
+        supplier_loc = self.env.ref('stock.stock_location_suppliers')
+        stock_loc = warehouse.lot_stock_id
+        warehouse.out_type_id.reservation_method = 'manual'
+
+        self.env['stock.rule'].create({
+            'name': 'Push Rule',
+            'route_id': warehouse.reception_route_id.id,
+            'location_id': supplier_loc.id,
+            'location_src_id': stock_loc.id,
+            'action': 'push',
+            'picking_type_id': warehouse.out_type_id.id,
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.in_type_id
+        picking_form.location_dest_id = stock_loc
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 69
+
+        receipt = picking_form.save()
+        receipt.action_confirm()
+        receipt.action_assign()
+        receipt.move_lines.quantity_done = 69
+        receipt.button_validate()
+
+        delivery = self.env['stock.picking'].search([('picking_type_id', '=', warehouse.out_type_id.id,)])
+        self.assertEqual(delivery.move_lines.product_qty, 69)
+        self.assertFalse(delivery.move_lines.reservation_date)
+        self.assertEqual(delivery.move_lines.reserved_availability, 0)
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):

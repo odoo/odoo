@@ -1751,7 +1751,7 @@ class StockMove(models.Model):
         for move_dest in moves_todo.move_dest_ids:
             move_dests_per_company[move_dest.company_id.id] |= move_dest
         for company_id, move_dests in move_dests_per_company.items():
-            move_dests.sudo().with_company(company_id)._action_assign()
+            move_dests.sudo().with_company(company_id).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')._action_assign()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
