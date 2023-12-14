@@ -231,45 +231,7 @@ class PosOrder(models.Model):
         :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
         """
         self.ensure_one()
-        commercial_partner = self.partner_id.commercial_partner_id
-
-        base_line_vals_list = []
-        for line in self.lines.with_company(self.company_id):
-            account = line.product_id._get_product_accounts()['income']
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%s' (id:%d).",
-                    line.product_id.name, line.product_id.id,
-                ))
-
-            if self.fiscal_position_id:
-                account = self.fiscal_position_id.map_account(account)
-
-            is_refund = line.qty * line.price_unit < 0
-
-            product_name = line.product_id\
-                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
-                .get_product_multiline_description_sale()
-            base_line_vals_list.append(
-                {
-                    **self.env['account.tax']._convert_to_tax_base_line_dict(
-                        line,
-                        partner=commercial_partner,
-                        currency=self.currency_id,
-                        product=line.product_id,
-                        taxes=line.tax_ids_after_fiscal_position,
-                        price_unit=line.price_unit,
-                        quantity=sign * line.qty,
-                        price_subtotal=sign * line.price_subtotal,
-                        discount=line.discount,
-                        account=account,
-                        is_refund=is_refund,
-                    ),
-                    'uom': line.product_uom_id,
-                    'name': product_name,
-                }
-            )
-        return base_line_vals_list
+        return self.lines._prepare_tax_base_line_values(sign=sign)
 
     def _prepare_invoice_lines(self):
         """ Prepare a list of orm commands containing the dictionaries to fill the
@@ -1546,6 +1508,53 @@ class PosOrderLine(models.Model):
         for line in self:
             line.margin = line.price_subtotal - line.total_cost
             line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+
+    def _prepare_tax_base_line_values(self, sign=1):
+        """ Convert pos order lines into dictionaries that would be used to compute taxes later.
+
+        :param sign: An optional parameter to force the sign of amounts.
+        :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
+        """
+        base_line_vals_list = []
+        for line in self:
+            commercial_partner = self.order_id.partner_id.commercial_partner_id
+            fiscal_position = self.order_id.fiscal_position_id
+            line = line.with_company(self.order_id.company_id)
+            account = line.product_id._get_product_accounts()['income']
+            if not account:
+                raise UserError(_(
+                    "Please define income account for this product: '%s' (id:%d).",
+                    line.product_id.name, line.product_id.id,
+                ))
+
+            if fiscal_position:
+                account = fiscal_position.map_account(account)
+
+            is_refund = line.qty * line.price_unit < 0
+
+            product_name = line.product_id\
+                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
+                .get_product_multiline_description_sale()
+            base_line_vals_list.append(
+                {
+                    **self.env['account.tax']._convert_to_tax_base_line_dict(
+                        line,
+                        partner=commercial_partner,
+                        currency=self.order_id.currency_id,
+                        product=line.product_id,
+                        taxes=line.tax_ids_after_fiscal_position,
+                        price_unit=line.price_unit,
+                        quantity=sign * line.qty,
+                        price_subtotal=sign * line.price_subtotal,
+                        discount=line.discount,
+                        account=account,
+                        is_refund=is_refund,
+                    ),
+                    'uom': line.product_uom_id,
+                    'name': product_name,
+                }
+            )
+        return base_line_vals_list
 
 
 class PosOrderLineLot(models.Model):
