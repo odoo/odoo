@@ -446,9 +446,8 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 multiImages: true,
                 onlyImages: true,
                 save: images => {
-                    let $newImageToSelect;
                     for (const image of images) {
-                        const $img = $('<img/>', {
+                        $('<img/>', {
                             class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
                             src: image.src,
                             'data-index': ++index,
@@ -456,15 +455,10 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                             'data-name': _t('Image'),
                             style: $images.length > 0 ? $images[0].style.cssText : '',
                         }).appendTo($container);
-                        if (!$newImageToSelect) {
-                            $newImageToSelect = $img;
-                        }
                     }
                     if (images.length > 0) {
                         savedPromise = this._relayout();
                         this.trigger_up('cover_update');
-                        // Triggers the re-rendering of the thumbnail
-                        $newImageToSelect.trigger('image_changed');
                     }
                 },
             };
