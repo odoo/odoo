@@ -57,13 +57,18 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
-            WHERE ("test_new_api_indexed_translation"."name" IS NULL
-            OR COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>%s) ILIKE %s)
+            WHERE TRUE
+            ORDER BY "test_new_api_indexed_translation"."id"
+        """, """
+            SELECT "test_new_api_indexed_translation"."id"
+            FROM "test_new_api_indexed_translation"
+            WHERE "test_new_api_indexed_translation"."name" IS NULL
             ORDER BY "test_new_api_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])
             record_fr.search([('name', 'ilike', 'foo')])
             record_fr.search([('name', 'ilike', '')])
+            record_fr.search([('name', 'not ilike', '')])
 
     def test_search_special_characters(self):
         name_en = f'{SPECIAL_CHARACTERS}_en'

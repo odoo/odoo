@@ -172,6 +172,9 @@ TERM_OPERATORS_NEGATION = {
     'any': 'not any',
     'not any': 'any',
 }
+
+WILDCARD_OPERATORS = ('like', 'ilike', 'not like', 'not ilike')
+
 ANY_IN = {'any': 'in', 'not any': 'not in'}
 
 TRUE_LEAF = (1, '=', 1)
@@ -1388,7 +1391,12 @@ class expression(object):
                     sql_operator = SQL_OPERATORS[operator]
                     sql_exprs = []
 
-                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    need_wildcard = operator in WILDCARD_OPERATORS
+
+                    if need_wildcard and not right:
+                        push_result(SQL("%s IS NULL", sql_field) if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE"))
+                        continue
+
                     if not need_wildcard:
                         right = field.convert_to_column(right, model, validate=False).adapted['en_US']
 
@@ -1555,7 +1563,7 @@ class expression(object):
             return SQL("%s IS NOT NULL", sql_field)
 
         # general case
-        need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+        need_wildcard = operator in WILDCARD_OPERATORS
 
         if isinstance(right, SQL):
             sql_right = right
@@ -1571,9 +1579,11 @@ class expression(object):
             sql_left = self._unaccent_wrapper(sql_left)
             sql_right = self._unaccent_wrapper(sql_right)
 
-        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_right)
+        if need_wildcard and not right:
+            return SQL("%s IS NULL", sql_field) if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE")
 
-        if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_right)
+        if right and operator in NEGATIVE_TERM_OPERATORS:
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
         return sql

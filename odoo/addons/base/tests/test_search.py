@@ -232,6 +232,8 @@ class test_search(TransactionCase):
         # test that a custom field x_active filters like active
         # we take the model res.country as a test model as it is included in base and does
         # not have an active field
+        self.addCleanup(self.registry.reset_changes) # reset the registry to avoid polluting other tests
+
         model_country = self.env['res.country']
         self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
         self.env['ir.model.fields'].create({
@@ -278,3 +280,20 @@ class test_search(TransactionCase):
         ])
         self.assertEqual(len(partners) + count_partner_before, Partner.search_count([]))
         self.assertEqual(3, Partner.search_count([], limit=3))
+
+    def test_22_like_folding(self):
+        Model = self.env['res.country']
+
+        with self.assertQueries(["""
+            SELECT "res_country"."id"
+            FROM "res_country"
+            WHERE TRUE
+            ORDER BY "res_country"."name"->>%s
+        """, """
+            SELECT "res_country"."id"
+            FROM "res_country"
+            WHERE "res_country"."code" IS NULL
+            ORDER BY "res_country"."name"->>%s
+        """]):
+            Model.search([('code', 'ilike', '')])
+            Model.search([('code', 'not ilike', '')])
