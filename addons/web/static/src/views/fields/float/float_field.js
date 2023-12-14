@@ -71,7 +71,7 @@ export const floatField = {
         {
             label: _lt("Digits"),
             name: "digits",
-            type: "string",
+            type: "digits",
         },
         {
             label: _lt("Type"),
