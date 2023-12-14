@@ -20,6 +20,7 @@ export class CallSettings extends Component {
         this.state = useState({
             userDevices: [],
         });
+        this.pttExtService = useState(useService("discuss.ptt_extension"));
         useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
         useExternalListener(browser, "keyup", this._onKeyUp, { capture: true });
         onWillStart(async () => {
