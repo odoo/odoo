@@ -16,6 +16,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'child_field',
     'icon',
     'draggable',
+    'default_order'
 }
 
 class View(models.Model):

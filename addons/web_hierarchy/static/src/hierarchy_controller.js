@@ -35,6 +35,7 @@ export class HierarchyController extends Component {
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             activeFields,
+            defaultOrderBy: this.props.archInfo.defaultOrder,
             fields,
             parentFieldName,
             childFieldName,
