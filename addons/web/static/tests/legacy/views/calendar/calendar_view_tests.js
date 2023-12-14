@@ -5115,7 +5115,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
         assert.containsNone(target, ".o_calendar_sidebar");
-        await click(target, ".o_calendar_header .oi-panel-right");
+        await click(target, ".o_sidebar_toggler .oi-panel-right");
         assert.containsOnce(target, ".o_calendar_sidebar");
         assert.verifySteps(["calendar.showSideBar-read", "calendar.showSideBar-true"]);
     });
