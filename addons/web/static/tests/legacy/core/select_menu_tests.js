@@ -1114,4 +1114,105 @@ QUnit.module("Web Components", (hooks) => {
             "SelectMenu has two updated choices available"
         );
     });
+
+    QUnit.test("SelectMenu group items only after being opened", async (assert) => {
+        let count = 0;
+
+        patchWithCleanup(SelectMenu.prototype, {
+            filterOptions(args) {
+                assert.step("filterOptions");
+                super.filterOptions(args);
+            },
+        });
+        class Parent extends Component {
+            static components = { SelectMenu };
+            static props = ["*"];
+            static template = xml`
+                <SelectMenu
+                    choices="state.choices"
+                    groups="state.groups"
+                    value="state.value"
+                    onInput.bind="onInput"
+                />
+            `;
+            setup() {
+                this.state = useState({
+                    choices: [{ label: "Option A", value: "optionA" }],
+                    groups: [
+                        {
+                            label: "Group A",
+                            choices: [
+                                { label: "Option C", value: "optionC" },
+                                { label: "Option B", value: "optionB" },
+                            ],
+                        },
+                    ],
+                    value: "hello",
+                });
+            }
+
+            onInput() {
+                count++;
+                assert.verifySteps(
+                    ["filterOptions"],
+                    "options have been filtered when typing on the search input"
+                );
+                if (count === 1) {
+                    this.state.choices = [{ label: "Option C", value: "optionC" }];
+                    this.state.groups = [
+                        {
+                            label: "Group B",
+                            choices: [{ label: "Option D", value: "optionD" }],
+                        },
+                    ];
+                } else {
+                    this.state.choices = [{ label: "Option A", value: "optionA" }];
+                    this.state.groups = [
+                        {
+                            label: "Group A",
+                            choices: [
+                                { label: "Option C", value: "optionC" },
+                                { label: "Option B", value: "optionB" },
+                            ],
+                        },
+                    ];
+                }
+            }
+        }
+
+        await mount(Parent, target, { env });
+        assert.verifySteps([], "options have not yet been filtered");
+
+        await open();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Option AGroup AOption BOption C"
+        );
+        assert.verifySteps(["filterOptions"], "options have been filtered when the menu opens");
+
+        // edit the input, to trigger onInput and update the props
+        await editInput(target, "input.o_select_menu_sticky", "option d");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Group BOption D",
+            "options and groups have been recomputed"
+        );
+        assert.verifySteps(
+            ["filterOptions"],
+            "options have been filtered since the choices changed"
+        );
+
+        // edit the input, to trigger onInput and update the props
+        await editInput(target, "input.o_select_menu_sticky", "");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "Option AGroup AOption BOption C"
+        );
+        assert.verifySteps(
+            ["filterOptions"],
+            "options have been filtered since the choices changed"
+        );
+    });
 });
