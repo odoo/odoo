@@ -250,6 +250,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             },
         })
         this._enableButton(result.status);
+        this._disablePayButtonNoPickupPoint(new $.Event("", {currentTarget:carrierChecked}))
     },
     /**
      * Check if the submit button can be enabled.
