@@ -488,13 +488,24 @@ export class ColorPalette extends Component {
         this.state.showGradientPicker = false;
         const colorSplits = [];
         if (gradient) {
+            const colorTesterEl = document.createElement("div");
+            colorTesterEl.style.display = "none";
+            document.body.appendChild(colorTesterEl);
+            const colorTesterStyle = window.getComputedStyle(colorTesterEl);
             gradient = gradient.toLowerCase();
-            // Extract colors and their positions: colors can either be in the #rrggbb format or in the
-            // rgb/rgba(...) format, positions are expected to be expressed as percentages
-            // (lengths are not supported).
-            for (const entry of gradient.matchAll(/(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\))\s*([[0-9]+%]?)/g)) {
-                colorSplits.push([entry[1], entry[2].replace('%', '')]);
+            // Extract colors and their positions: colors can either be in the #rrggbb format,
+            // in the rgb/rgba(...) format or as color name, positions are expected to be
+            // expressed as percentages (lengths are not supported).
+            for (const entry of gradient.matchAll(/(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\)|[a-z]+)\s*([[0-9]+%]?)/g)) {
+                colorTesterEl.style.color = entry[1];
+                // Ignore unknown color.
+                if (!colorTesterEl.style.color) {
+                    continue;
+                }
+                const color = colorTesterStyle.color;
+                colorSplits.push([color, entry[2].replace('%', '')]);
             }
+            colorTesterEl.remove();
         }
         // Consider unsupported gradients as not gradients.
         if (!gradient || colorSplits.length < 2) {
