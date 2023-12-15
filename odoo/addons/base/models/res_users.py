@@ -2284,10 +2284,12 @@ class Device(models.Model):
             We don't need a return value, because the purpose of caching this method (with a time-dependent parameter)
             is to determine whether we need to traverse the logic or not (which can have a performance cost if called very often).
         """
+        _logger.info("[DEVICE] The worker has no device information in his cache")
         existed_device = self.sudo().search([('session_identifier', '=', session_identifier), ('user_agent', '=', user_agent), ('active', '=', True)], limit=1)
         if existed_device and _ttl <= existed_device.sync_ttl: # A device has already been created for this period (via another worker)
+            _logger.info("[DEVICE] The worker has the device information in his cache")
             return
-
+        _logger.info("[DEVICE] The worker has to create the device")
         now = fields.Datetime.now()
         user_agent = request.httprequest.user_agent
         self.env.cr.execute("""
@@ -2312,6 +2314,7 @@ class Device(models.Model):
     @api.autovacuum
     def _gc_user_devices(self):
         """ Keep only the most recent device. """
+        _logger.info("[DEVICE] The worker delete the device")
         self.env.cr.execute("""
             DELETE FROM res_users_device WHERE active = false
         """)
@@ -2321,6 +2324,7 @@ class Device(models.Model):
         return self._revoke()
 
     def _revoke(self):
+        _logger.info("[DEVICE] The worker call _revoke")
         must_logout = bool(self.filtered('is_current'))
         session_identifiers = list({device.session_identifier for device in self.sudo()})
         odoo.http.root.session_store.delete_from_identifiers(session_identifiers)
