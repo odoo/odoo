@@ -193,6 +193,7 @@ class AccountMove(models.Model):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
+        internal_types = []
         invoice_type = self.move_type
         if invoice_type in ['out_refund', 'in_refund']:
             internal_types = ['credit_note']
