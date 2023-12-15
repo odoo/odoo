@@ -521,7 +521,6 @@ class StockMoveLine(models.Model):
         intended to be called when editing a `done` move (that's what the override of `write` here
         is done.
         """
-        Quant = self.env['stock.quant']
 
         # First, we loop over all the move lines to do a preliminary check: `qty_done` should not
         # be negative and, according to the presence of a picking type or a linked inventory
@@ -600,6 +599,10 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
+
+        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id, extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
+        Quant = self.env['stock.quant'].with_context(quants_cache=quants_cache)
+
         for ml in mls_todo:
             if ml.product_id.type == 'product':
                 rounding = ml.product_uom_id.rounding
