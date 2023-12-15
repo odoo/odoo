@@ -22,7 +22,7 @@
         <t t-if="object.country_id.name_position != 'after'">
             <t t-call="base.contact_name"/>
         </t>
-        <div class="d-flex flex-column gap-2" itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+        <div class="gap-2" itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" t-attf-class="d-flex align-items-baseline gap-1">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                 <span class="d-block w-100 lh-sm" itemprop="streetAddress" t-esc="address"/>
