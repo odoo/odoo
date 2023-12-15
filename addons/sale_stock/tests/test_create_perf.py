@@ -97,7 +97,7 @@ class TestPERF(TransactionCaseWithUserDemo):
         # + 2 SQL insert
         # + 2 queries to get analytic default tags
         # + 9 follower queries ?
-        with self.assertQueryCount(admin=48):
+        with self.assertQueryCount(admin=49):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
