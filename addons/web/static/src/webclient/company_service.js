@@ -8,6 +8,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
 import { cookie } from "@web/core/browser/cookie";
 import { redirect } from "@web/core/utils/urls";
 import { routeToUrl } from "@web/core/browser/router_service";
+import { user } from "@web/core/user";
 
 const CIDS_HASH_SEPARATOR = "-";
 
@@ -79,8 +80,8 @@ function accessErrorHandler(env, error, originalError) {
 }
 
 export const companyService = {
-    dependencies: ["user", "router", "action"],
-    start(env, { user, router, action }) {
+    dependencies: ["router", "action"],
+    start(env, { router, action }) {
         // Push an error handler in the registry. It needs to be before "rpcErrorHandler", which
         // has a sequence of 97. The default sequence of registry is 50.
         errorHandlerRegistry.add("accessErrorHandlerCompanies", accessErrorHandler);

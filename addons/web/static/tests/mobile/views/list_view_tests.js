@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { session } from "@web/session";
 import { click, getFixture, patchWithCleanup, triggerEvents } from "@web/../tests/helpers/utils";
 import { getMenuItemTexts, toggleActionMenu } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeMockedUser, patchUserWithCleanup } from "../../helpers/mock_services";
 
 let serverData;
 let fixture;
@@ -40,11 +40,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
     QUnit.module("ListView");
 
     QUnit.test("selection is properly displayed (single page)", async function (assert) {
-        registry.category("services").add(
-            "user",
-            makeFakeUserService(() => false),
-            { force: true }
-        );
+        patchUserWithCleanup({ hasGroup: () => false });
 
         await makeView({
             type: "list",
@@ -98,11 +94,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
     });
 
     QUnit.test("selection box is properly displayed (multi pages)", async function (assert) {
-        registry.category("services").add(
-            "user",
-            makeFakeUserService(() => false),
-            { force: true }
-        );
+        patchUserWithCleanup({ hasGroup: () => false });
 
         await makeView({
             type: "list",
@@ -157,12 +149,6 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
     });
 
     QUnit.test("export button is properly hidden", async (assert) => {
-        registry.category("services").add(
-            "user",
-            makeFakeUserService((group) => group === "base.group_allow_export"),
-            { force: true }
-        );
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -220,6 +206,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
     QUnit.test(
         "add custom field button not shown to non-system users (wo opt. col.)",
         async (assert) => {
+            patchWithCleanup(session, { is_system: false });
+            makeMockedUser();
             await makeView({
                 type: "list",
                 resModel: "foo",

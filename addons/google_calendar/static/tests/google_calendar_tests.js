@@ -2,10 +2,7 @@
 
 import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { registry } from "@web/core/registry";
-import { userService } from "@web/core/user_service";
-
-const serviceRegistry = registry.category("services");
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 
 let target;
 let serverData;
@@ -80,20 +77,11 @@ QUnit.module('Google Calendar', {
         };
         target = getFixture();
         setupViewRegistries();
-        serviceRegistry.add(
-            "user",
-            {
-                ...userService,
-                start() {
-                    const fakeUserService = userService.start(...arguments);
-                    Object.defineProperty(fakeUserService, "userId", {
-                        get: () => uid,
-                    });
-                    return fakeUserService;
-                },
+        patchUserWithCleanup({
+            get userId() {
+                return uid;
             },
-            { force: true }
-        );
+        });
     }
 }, function () {
 

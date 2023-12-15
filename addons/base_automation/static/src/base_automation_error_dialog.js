@@ -3,6 +3,7 @@
 import { RPCErrorDialog } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 export class BaseAutomationErrorDialog extends RPCErrorDialog {
     static template = "base_automation.ErrorDialog";
@@ -11,7 +12,7 @@ export class BaseAutomationErrorDialog extends RPCErrorDialog {
         const { id, name } = this.props.data.context.base_automation;
         this.automationId = id;
         this.automationName = name;
-        this.isUserAdmin = useService("user").isAdmin;
+        this.isUserAdmin = user.isAdmin;
         this.actionService = useService("action");
         this.orm = useService("orm");
     }

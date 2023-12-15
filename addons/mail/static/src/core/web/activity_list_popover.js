@@ -4,6 +4,7 @@ import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_it
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -32,7 +33,6 @@ export class ActivityListPopover extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.user = useService("user");
         this.store = useState(useService("mail.store"));
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
@@ -84,7 +84,7 @@ export class ActivityListPopover extends Component {
             "activity_format",
             [props.activityIds],
             {
-                context: this.user.user_context,
+                context: user.user_context,
             }
         );
         this.store.Activity.insert(activitiesData, { html: true });

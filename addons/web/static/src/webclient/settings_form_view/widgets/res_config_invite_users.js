@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
@@ -19,7 +20,6 @@ class ResConfigInviteUsers extends Component {
         this.invite = useService("user_invite");
         this.action = useService("action");
         this.notification = useService("notification");
-        this.user = useService("user");
 
         this.state = useState({
             status: "idle", // idle, inviting
@@ -63,7 +63,7 @@ class ResConfigInviteUsers extends Component {
         }
         if (invalidEmails.length) {
             const errorMessage = (() => {
-                const listFormatter = new Intl.ListFormat(this.user.lang.replace("_", "-"), {
+                const listFormatter = new Intl.ListFormat(user.lang.replace("_", "-"), {
                     type: "conjunction",
                     style: "long",
                 });

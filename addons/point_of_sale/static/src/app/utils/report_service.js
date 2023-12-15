@@ -3,11 +3,12 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { downloadFile } from "@web/core/network/download";
+import { user } from "@web/core/user";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 
 export const reportService = {
-    dependencies: ["user", "ui", "orm"],
-    start(env, { user, ui, orm }) {
+    dependencies: ["ui", "orm"],
+    start(env, { ui, orm }) {
         const reportActionsCache = {};
         return {
             async doAction(reportXmlId, active_ids) {

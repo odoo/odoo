@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
@@ -71,7 +72,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.options = this.props.options || {};
 
         this.websiteService = useService('website');
-        this.userService = useService('user');
         this.orm = useService('orm');
         this.dialogs = useService('dialog');
         this.action = useService('action');
@@ -275,11 +275,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     }
     get _context() {
         return Object.assign({},
-            this.userService.context,
+            user.context,
             {
                 website_id: this.websiteService.currentWebsite.id,
                 lang: this.websiteService.currentWebsite.metadata.lang,
-                user_lang: this.userService.context.lang,
+                user_lang: user.context.lang,
             },
         );
     }
@@ -1011,7 +1011,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     }
     /**
      * Returns the user context.
-     * @link {@web/core/user_service.js}
+     * @link {@web/core/user.js}
      *
      * @param event
      * @returns {*}

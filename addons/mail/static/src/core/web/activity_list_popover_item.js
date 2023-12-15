@@ -8,7 +8,6 @@ import { computeDelay } from "@mail/utils/common/dates";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -31,7 +30,6 @@ export class ActivityListPopoverItem extends Component {
     static template = "mail.ActivityListPopoverItem";
 
     setup() {
-        this.user = useService("user");
         this.state = useState({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(

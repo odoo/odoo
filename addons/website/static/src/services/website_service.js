@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
+import { user } from "@web/core/user";
 import { loadBundle } from "@web/core/assets";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -24,8 +25,8 @@ export const unslugHtmlDataObject = (repr) => {
 const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
 
 export const websiteService = {
-    dependencies: ['orm', 'action', 'user', 'dialog', 'hotkey'],
-    async start(env, { orm, action, user, dialog, hotkey }) {
+    dependencies: ['orm', 'action', 'hotkey'],
+    async start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
         let currentMetadata = {};

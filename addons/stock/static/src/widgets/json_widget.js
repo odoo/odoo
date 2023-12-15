@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class JsonPopOver extends Component {
@@ -21,7 +21,6 @@ export class PopOverLeadDays extends JsonPopOver {
     static template = "stock.leadDays";
     setup() {
         super.setup();
-        const user = useService("user");
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
         });

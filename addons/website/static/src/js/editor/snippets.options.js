@@ -4,6 +4,7 @@ import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
@@ -1657,7 +1658,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 options.registry.menu_data = options.Class.extend({
     init() {
         this._super(...arguments);
-        this.user = this.bindService("user");
         this.orm = this.bindService("orm");
         this.notification = this.bindService("notification");
     },
@@ -1679,7 +1679,7 @@ options.registry.menu_data = options.Class.extend({
             wysiwyg,
             container: popoverContainer,
             notify: this.notification.add,
-            checkIsWebsiteDesigner: () => this.user.hasGroup("website.group_website_designer"),
+            checkIsWebsiteDesigner: () => user.hasGroup("website.group_website_designer"),
             onEditLinkClick: (widget) => {
                 var $menu = widget.$target.find('[data-oe-id]');
                 this.trigger_up('menu_dialog', {

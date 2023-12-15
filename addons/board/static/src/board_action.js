@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { makeContext } from "@web/core/context";
+import { user } from "@web/core/user";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class BoardAction extends Component {
@@ -11,7 +12,6 @@ export class BoardAction extends Component {
     static components = { View };
     static cache = {};
     setup() {
-        const userService = useService("user");
         this.actionService = useService("action");
         const action = this.props.action;
         this.formViewId = false;
@@ -49,10 +49,7 @@ export class BoardAction extends Component {
             ];
 
             if (action.context) {
-                this.viewProps.context = makeContext([
-                    action.context,
-                    { lang: userService.context.lang },
-                ]);
+                this.viewProps.context = makeContext([action.context, { lang: user.context.lang }]);
                 if ("group_by" in this.viewProps.context) {
                     const groupBy = this.viewProps.context.group_by;
                     this.viewProps.groupBy = typeof groupBy === "string" ? [groupBy] : groupBy;

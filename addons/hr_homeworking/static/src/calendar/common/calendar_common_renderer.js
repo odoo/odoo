@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer";
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
 
@@ -54,7 +55,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 const home = this.props.model.worklocations[day].home;
                 const office = this.props.model.worklocations[day].office;
                 const other = this.props.model.worklocations[day].other;
-                const modelUserId = this.env.searchModel.userService.userId;
+                const modelUserId = user.userId;
                 if (home && home.length > 0) {
                     events = events.concat(this.filterWorkRecord(home,modelUserId))
                 }

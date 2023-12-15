@@ -7,6 +7,7 @@ import { App, mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
+import { user } from "@web/core/user";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 
@@ -45,7 +46,7 @@ whenReady(() => {
     if (localization.direction === "rtl") {
         classList.add("o_rtl");
     }
-    if (env.services.user.userId === 1) {
+    if (user.userId === 1) {
         classList.add("o_is_superuser");
     }
     if (env.debug) {

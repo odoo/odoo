@@ -8,6 +8,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -42,7 +43,6 @@ export class ResourceEditor extends Component {
 
     setup() {
         this.website = useService("website");
-        this.user = useService("user");
         this.orm = useService("orm");
         this.dialog = useService("dialog");
 
@@ -110,7 +110,7 @@ export class ResourceEditor extends Component {
 
     get context() {
         return {
-            ...this.user.context,
+            ...user.context,
             website_id: this.website.currentWebsite.id,
         };
     }

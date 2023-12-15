@@ -6,6 +6,7 @@ import { ExpressionEditor } from "@web/core/expression_editor/expression_editor"
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 export class ExpressionEditorDialog extends Component {
     static components = { Dialog, ExpressionEditor };
@@ -20,7 +21,6 @@ export class ExpressionEditorDialog extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.user = useService("user");
         this.state = useState({
             expression: this.props.expression,
         });
@@ -61,7 +61,7 @@ export class ExpressionEditorDialog extends Component {
     async onConfirm() {
         this.confirmButtonRef.el.disabled = true;
         const record = this.makeDefaultRecord();
-        const evalContext = { ...this.user.context, ...record };
+        const evalContext = { ...user.context, ...record };
         try {
             evaluateExpr(this.state.expression, evalContext);
         } catch {

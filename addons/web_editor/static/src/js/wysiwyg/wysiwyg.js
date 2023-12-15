@@ -24,6 +24,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { FileViewer } from "@web/core/file_viewer/file_viewer";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Mutex } from "@web/core/utils/concurrency";
@@ -3462,7 +3463,7 @@ export class Wysiwyg extends Component {
         }
         if (params && params.kwargs) {
             params.kwargs.context = {
-                ...this.env.services.user.context,
+                ...user.context,
                 ...params.kwargs.context,
             };
         }

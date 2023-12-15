@@ -17,6 +17,7 @@ import {
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeMockedUser } from "@web/../tests/helpers/mock_services";
 import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { Model } from "@odoo/o-spreadsheet";
@@ -277,6 +278,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 uid: 4,
             };
             patchWithCleanup(session, testSession);
+            makeMockedUser();
             const model = await createModelWithDataSource({
                 spreadsheetData,
                 mockRPC: function (route, { model, method, kwargs }) {

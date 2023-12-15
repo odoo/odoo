@@ -2,7 +2,10 @@
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeLocalizationService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import { getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { localizationService } from "@web/core/l10n/localization_service";
@@ -49,7 +52,7 @@ async function patchLang(lang) {
         Settings.defaultLocale = defaultLocale;
         Settings.defaultNumberingSystem = defaultNumberingSystem;
     });
-    patchWithCleanup(session.user_context, { lang });
+    patchUserContextWithCleanup({ lang });
     patchFetch();
     serviceRegistry.add("localization", localizationService);
     await makeTestEnv();
@@ -58,10 +61,10 @@ async function patchLang(lang) {
 QUnit.module("Translations");
 
 QUnit.test("lang is given by the user context", async (assert) => {
-    patchWithCleanup(session.user_context, { lang: "fr_FR" });
+    patchUserContextWithCleanup({ lang: "fr_FR" });
     patchWithCleanup(session, {
         cache_hashes: { translations: 1 },
-    })
+    });
     patchFetch();
     patchWithCleanup(browser, {
         fetch(url) {
@@ -74,14 +77,14 @@ QUnit.test("lang is given by the user context", async (assert) => {
 });
 
 QUnit.test("lang is given by an attribute on the DOM root node", async (assert) => {
-    patchWithCleanup(session.user_context, { lang: null });
+    patchUserContextWithCleanup({ lang: null });
     document.documentElement.setAttribute("lang", "fr-FR");
     registerCleanup(() => {
         document.documentElement.removeAttribute("lang");
     });
     patchWithCleanup(session, {
         cache_hashes: { translations: 1 },
-    })
+    });
     patchFetch();
     patchWithCleanup(browser, {
         fetch(url) {
@@ -97,7 +100,7 @@ QUnit.test("url is given by the session", async (assert) => {
     patchWithCleanup(session, {
         translationURL: "/get_translations",
         cache_hashes: { translations: 1 },
-    })
+    });
     patchFetch();
     patchWithCleanup(browser, {
         fetch(url) {

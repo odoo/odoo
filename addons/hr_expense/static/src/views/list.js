@@ -6,6 +6,7 @@ import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/docume
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
+import { user } from "@web/core/user";
 import { listView } from "@web/views/list/list_view";
 
 import { ListController } from "@web/views/list/list_controller";
@@ -17,12 +18,11 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         super.setup();
         this.orm = useService('orm');
         this.actionService = useService('action');
-        this.user = useService("user");
         this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
 
         onWillStart(async () => {
-            this.userIsExpenseTeamApprover = await this.user.hasGroup("hr_expense.group_hr_expense_team_approver");
-            this.userIsAccountInvoicing = await this.user.hasGroup("account.group_account_invoice");
+            this.userIsExpenseTeamApprover = await user.hasGroup("hr_expense.group_hr_expense_team_approver");
+            this.userIsAccountInvoicing = await user.hasGroup("account.group_account_invoice");
         });
     }
 
