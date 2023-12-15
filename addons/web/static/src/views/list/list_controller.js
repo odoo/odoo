@@ -8,6 +8,7 @@ import {
 import { download } from "@web/core/network/download";
 import { rpc } from "@web/core/network/rpc";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -74,7 +75,6 @@ export class ListController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
-        this.userService = useService("user");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -98,7 +98,7 @@ export class ListController extends Component {
         this.optionalActiveFields = [];
 
         onWillStart(async () => {
-            this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
+            this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
 
         onMounted(() => {

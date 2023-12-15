@@ -3,10 +3,9 @@
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { effectService } from "@web/core/effects/effect_service";
-import { userService } from "@web/core/user_service";
 import { session } from "@web/session";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { makeFakeLocalizationService, makeMockedUser } from "../../helpers/mock_services";
 import {
     click,
     getFixture,
@@ -18,6 +17,7 @@ import {
 
 import { Component, markup, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -38,8 +38,8 @@ QUnit.module("Effect Service", (hooks) => {
 
         execRegisteredTimeouts = mockTimeout().execRegisteredTimeouts;
         patchWithCleanup(session, { show_effect: true }); // enable effects
+        makeMockedUser();
 
-        serviceRegistry.add("user", userService);
         serviceRegistry.add("effect", effectService);
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
@@ -59,6 +59,7 @@ QUnit.module("Effect Service", (hooks) => {
 
     QUnit.test("rainbowman effect with show_effect: false", async function (assert) {
         patchWithCleanup(session, { show_effect: false });
+        makeMockedUser();
 
         const parent = await makeParent();
         parent.env.services.effect.add();

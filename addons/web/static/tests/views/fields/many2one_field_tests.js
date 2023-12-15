@@ -32,6 +32,7 @@ import {
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { errorService } from "@web/core/errors/error_service";
@@ -1128,14 +1129,16 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2one with no_create_edit and no_quick_create options should show no records when no result match", async function (assert) {
-        assert.expect(2);
+    QUnit.test(
+        "many2one with no_create_edit and no_quick_create options should show no records when no result match",
+        async function (assert) {
+            assert.expect(2);
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1143,21 +1146,22 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-        });
+            });
 
-        await click(target, ".o_field_many2one[name='product_id'] input");
-        assert.containsNone(
-            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
-            "li.o_m2o_no_result",
-            "autocomplete should not contain the no records option"
-        );
-        await editInput(target, ".o_field_many2one[name='product_id'] input", "aze");
-        assert.containsOnce(
-            target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
-            "li.o_m2o_no_result",
-            "autocomplete should contain the no records option"
-        );
-    });
+            await click(target, ".o_field_many2one[name='product_id'] input");
+            assert.containsNone(
+                target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+                "li.o_m2o_no_result",
+                "autocomplete should not contain the no records option"
+            );
+            await editInput(target, ".o_field_many2one[name='product_id'] input", "aze");
+            assert.containsOnce(
+                target.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
+                "li.o_m2o_no_result",
+                "autocomplete should contain the no records option"
+            );
+        }
+    );
 
     QUnit.test("many2one in edit mode", async function (assert) {
         assert.expect(17);
@@ -2900,7 +2904,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records[0].timmy = [12];
             const DEFAULT_USER_CTX = { ...session.user_context };
 
-            patchWithCleanup(session.user_context, { hey: "ho" });
+            patchUserContextWithCleanup({ hey: "ho" });
 
             await makeView({
                 type: "form",

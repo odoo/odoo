@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { onWillStart } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 /**
  * Mixin that handles public/private access of employee records in many2X fields
@@ -17,9 +17,8 @@ export function EmployeeFieldRelationMixin(fieldClass) {
 
         setup() {
             super.setup();
-            this.user = useService("user");
             onWillStart(async () => {
-                this.isHrUser = await this.user.hasGroup("hr.group_hr_user");
+                this.isHrUser = await user.hasGroup("hr.group_hr_user");
             });
         }
 

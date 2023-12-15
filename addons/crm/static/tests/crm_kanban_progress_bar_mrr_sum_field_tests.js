@@ -1,8 +1,7 @@
 /** @odoo-module */
 
-import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import {
     click,
     dragAndDrop,
@@ -12,8 +11,6 @@ import {
     patchWithCleanup,
 } from '@web/../tests/helpers/utils';
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
-
-const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -67,11 +64,7 @@ QUnit.module('Crm Kanban Progressbar', {
         };
         target = getFixture();
         setupViewRegistries();
-        serviceRegistry.add(
-            "user",
-            makeFakeUserService((group) => group === "crm.group_use_recurring_revenues"),
-            { force: true },
-        );
+        patchUserWithCleanup({ hasGroup: (group) => group === "crm.group_use_recurring_revenues" });
     },
 }, function () {
     QUnit.test("Progressbar: do not show sum of MRR if recurring revenues is not enabled", async function (assert) {

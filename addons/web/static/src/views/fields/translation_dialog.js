@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
 
@@ -13,8 +14,8 @@ export class TranslationDialog extends Component {
         super.setup();
         this.title = _t("Translate: %s", this.props.fieldName);
 
+        this.user = user;
         this.orm = useService("orm");
-        this.user = useService("user");
 
         this.terms = [];
         this.updatedTerms = {};
@@ -38,7 +39,7 @@ export class TranslationDialog extends Component {
                 // the user is currently utilizing. Then we set the translation value coming
                 // from the value of the field in the form
                 if (
-                    term.lang === this.user.lang &&
+                    term.lang === user.lang &&
                     !this.props.showSource &&
                     !this.props.isComingFromTranslationAlert
                 ) {

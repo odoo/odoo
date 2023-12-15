@@ -3,10 +3,12 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { session } from "@web/session";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeNotificationService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import {
     mockDownload,
     nextTick,
@@ -205,7 +207,7 @@ QUnit.module("ActionManager", (hooks) => {
                 () => {}
             )
         );
-        patchWithCleanup(session.user_context, { some_key: 2 });
+        patchUserContextWithCleanup({ some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
             if (route.includes("/report/html/some_report")) {

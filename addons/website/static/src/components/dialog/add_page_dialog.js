@@ -384,7 +384,6 @@ export class AddPageDialog extends Component {
         this.orm = useService('orm');
         this.http = useService('http');
         this.action = useService('action');
-        this.userService = useService('user');
 
         this.cssLinkEls = undefined;
         this.lastTabName = "";

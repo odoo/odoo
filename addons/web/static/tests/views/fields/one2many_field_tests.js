@@ -25,11 +25,11 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { getNextTabableElement } from "@web/core/utils/ui";
-import { session } from "@web/session";
 import { Record } from "@web/model/relational_model/record";
 import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
@@ -8224,7 +8224,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.records[0].timmy = [12];
 
-        patchWithCleanup(session, { user_context: { someKey: "some value" } });
+        patchUserContextWithCleanup({ someKey: "some value" });
 
         await makeView({
             type: "form",
@@ -8248,6 +8248,8 @@ QUnit.module("Fields", (hooks) => {
                             bin_size: true,
                             someKey: "some value",
                             uid: 7,
+                            lang: "en",
+                            tz: "taht",
                         },
                         "read partner context"
                     );
@@ -8260,6 +8262,8 @@ QUnit.module("Fields", (hooks) => {
                             active_field: 2,
                             someKey: "some value",
                             uid: 7,
+                            lang: "en",
+                            tz: "taht",
                         },
                         "read partner context"
                     );
@@ -8279,7 +8283,7 @@ QUnit.module("Fields", (hooks) => {
 
         serverData.models.partner.fields.timmy.default = [[4, 12]];
 
-        patchWithCleanup(session, { user_context: { someKey: "some value" } });
+        patchUserContextWithCleanup({ someKey: "some value" });
 
         await makeView({
             type: "form",
@@ -8303,6 +8307,8 @@ QUnit.module("Fields", (hooks) => {
                             active_field: 2,
                             someKey: "some value",
                             uid: 7,
+                            lang: "en",
+                            tz: "taht",
                         },
                         "onchange context"
                     );
@@ -8319,6 +8325,8 @@ QUnit.module("Fields", (hooks) => {
                             bin_size: true,
                             someKey: "some value",
                             uid: 7,
+                            lang: "en",
+                            tz: "taht",
                         },
                         "read timmy context"
                     );

@@ -13,7 +13,6 @@ export class SubcontractingPortalWebClient extends Component {
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
         this.actionService = useService('action');
-        this.user = useService("user");
         useOwnDebugContext({ categories: ["default"] });
         useEffect(
             () => {

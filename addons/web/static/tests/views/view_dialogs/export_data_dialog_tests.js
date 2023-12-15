@@ -16,7 +16,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "../../helpers/mock_services";
+import { patchUserWithCleanup } from "../../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
@@ -80,7 +80,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        patchUserWithCleanup({ hasGroup });
 
         fetchedFields = {
             root: [

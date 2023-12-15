@@ -3,13 +3,13 @@
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 import { timings } from "@bus/misc";
 
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { browser } from "@web/core/browser/browser";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
 import { session as sessionInfo } from "@web/session";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -18,6 +18,7 @@ import {
     registryNamesToCloneWithCleanup,
     prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
+import { makeMockedUser } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -180,6 +181,7 @@ export async function start(param0 = {}) {
         name: pyEnv.currentUser?.name,
         partner_id: pyEnv.currentPartnerId,
     });
+    makeMockedUser();
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
     }

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { Component, useEffect, useState } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -11,7 +10,6 @@ class WebsiteDashboard extends Component {
     static components = { Layout };
     setup() {
         super.setup();
-        this.userService = useService("user");
         this.keepLast = new KeepLast();
 
         this.state = useState({

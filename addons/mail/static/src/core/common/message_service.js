@@ -5,6 +5,7 @@ import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -17,7 +18,6 @@ export class MessageService {
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
-        this.userService = services.user;
     }
 
     async edit(
@@ -159,19 +159,19 @@ export class MessageService {
 
     scheduledDateSimple(message) {
         return message.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
-            locale: this.userService.lang?.replace("_", "-"),
+            locale: user.lang?.replace("_", "-"),
         });
     }
 
     dateSimple(message) {
         return message.datetime.toLocaleString(DateTime.TIME_SIMPLE, {
-            locale: this.userService.lang?.replace("_", "-"),
+            locale: user.lang?.replace("_", "-"),
         });
     }
 }
 
 export const messageService = {
-    dependencies: ["mail.store", "orm", "user"],
+    dependencies: ["mail.store", "orm"],
     start(env, services) {
         return new MessageService(env, services);
     },

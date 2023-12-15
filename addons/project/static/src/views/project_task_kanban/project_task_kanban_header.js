@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
 import { onWillStart } from "@odoo/owl";
@@ -9,7 +10,6 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     setup() {
         super.setup();
         this.action = useService('action');
-        this.userService = useService('user');
 
         this.isProjectManager = false;
         onWillStart(this.onWillStart);
@@ -17,7 +17,7 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
 
     async onWillStart() {
         if (this.props.list.isGroupedByStage) { // no need to check it if not grouped by stage
-            this.isProjectManager = await this.userService.hasGroup('project.group_project_manager');
+            this.isProjectManager = await user.hasGroup('project.group_project_manager');
         }
     }
 

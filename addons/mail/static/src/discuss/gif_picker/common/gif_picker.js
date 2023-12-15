@@ -4,6 +4,7 @@ import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -54,7 +55,6 @@ export class GifPicker extends Component {
     setup() {
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
-        this.userService = useService("user");
         this.sequential = useSequential();
         useAutofocus();
         useOnBottomScrolled(
@@ -147,8 +147,8 @@ export class GifPicker extends Component {
             const { tags } = await rpc(
                 "/discuss/gif/categories",
                 {
-                    country: this.userService.lang.slice(3, 5),
-                    locale: this.userService.lang,
+                    country: user.lang.slice(3, 5),
+                    locale: user.lang,
                 },
                 { silent: true }
             );
@@ -177,8 +177,8 @@ export class GifPicker extends Component {
         }
         try {
             const params = {
-                country: this.userService.lang.slice(3, 5),
-                locale: this.userService.lang,
+                country: user.lang.slice(3, 5),
+                locale: user.lang,
                 search_term: this.searchTerm,
             };
             if (this.next) {

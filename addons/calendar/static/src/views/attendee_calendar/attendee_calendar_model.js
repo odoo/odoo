@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -20,7 +21,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         const res = await super.load(...arguments);
         const [credentialStatus, defaultDuration] = await Promise.all([
             rpc("/calendar/check_credentials"),
-            this.orm.call("calendar.event", "get_default_duration")
+            this.orm.call("calendar.event", "get_default_duration"),
         ]);
         this.credentialStatus = credentialStatus;
         this.defaultDuration = defaultDuration;
@@ -52,7 +53,10 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     buildRawRecord(partialRecord, options = {}) {
-        const result = super.buildRawRecord(partialRecord, {...options, duration_hour: this.defaultDuration});
+        const result = super.buildRawRecord(partialRecord, {
+            ...options,
+            duration_hour: this.defaultDuration,
+        });
         if (partialRecord.recurrenceUpdate) {
             result.recurrence_update = partialRecord.recurrenceUpdate;
         }
@@ -92,7 +96,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             attendeeIds,
             eventIds,
         ]);
-        const currentPartnerId = this.user.partnerId;
+        const currentPartnerId = user.partnerId;
         if (!isEveryoneFilterActive) {
             const activeAttendeeIds = new Set(
                 attendeeFilters.filters

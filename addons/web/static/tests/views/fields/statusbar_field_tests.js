@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeNotificationService, makeMockedUser } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -206,6 +206,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(1);
 
         patchWithCleanup(session, { uid: 17 });
+        makeMockedUser();
 
         await makeView({
             type: "form",

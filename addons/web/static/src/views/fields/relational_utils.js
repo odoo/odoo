@@ -629,7 +629,7 @@ export class X2ManyFieldDialog extends Component {
     }
 }
 
-async function getFormViewInfo({ list, activeField, viewService, userService, env }) {
+async function getFormViewInfo({ list, activeField, viewService, env }) {
     let formArchInfo = activeField.views.form;
     let fields = activeField.fields;
     const comodel = list.resModel;
@@ -657,7 +657,6 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
         {}, // context
         comodel,
         viewService,
-        userService,
         env.isSmall
     );
 
@@ -681,7 +680,6 @@ export function useAddInlineRecord({ addNew }) {
 }
 
 export function useOpenX2ManyRecord({
-    resModel,
     activeField, // TODO: this should be renamed (object with keys "viewMode", "views" and "string")
     activeActions,
     getList,
@@ -690,7 +688,6 @@ export function useOpenX2ManyRecord({
     isMany2Many,
 }) {
     const viewService = useService("view");
-    const userService = useService("user");
     const env = useEnv();
 
     const addDialog = useOwnedDialogs();
@@ -707,7 +704,6 @@ export function useOpenX2ManyRecord({
             list,
             activeField,
             viewService,
-            userService,
             env,
         });
 
