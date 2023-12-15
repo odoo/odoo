@@ -8,15 +8,14 @@ import {
     getFixture,
     makeDeferred,
     nextTick,
-    patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     makeFakeLocalizationService,
+    patchUserContextWithCleanup,
     patchUserWithCleanup,
 } from "@web/../tests/helpers/mock_services";
-import { session } from "@web/session";
 
 const serviceRegistry = registry.category("services");
 
@@ -417,7 +416,7 @@ QUnit.module("Fields", (hooks) => {
             serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
                 force: true,
             });
-            patchWithCleanup(session.user_context, {
+            patchUserContextWithCleanup({
                 lang: "en_US",
             });
             await makeView({
@@ -473,7 +472,7 @@ QUnit.module("Fields", (hooks) => {
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
             force: true,
         });
-        patchWithCleanup(session.user_context, {
+        patchUserContextWithCleanup({
             lang: "en_US",
         });
 

@@ -8,11 +8,10 @@ import { ConnectionAbortedError, rpcBus, rpc } from "@web/core/network/rpc";
 import { ormService } from "@web/core/orm_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
-import { user, _makeUser } from "@web/core/user";
+import { user } from "@web/core/user";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
-import { session } from "@web/session";
 
 // -----------------------------------------------------------------------------
 // Mock Services
@@ -243,15 +242,13 @@ export function makeFakeDialogService(addDialog) {
     };
 }
 
-export function makeMockedUser(hasGroup) {
-    hasGroup = hasGroup || user.hasGroup;
-    patchWithCleanup(user, _makeUser());
-    patchWithCleanup(user, { hasGroup });
-}
-
 export function patchUserContextWithCleanup(patch) {
-    patchWithCleanup(session.user_context, patch);
-    makeMockedUser(user.hasGroup); // keep the mocked hasGroup
+    const context = user.context;
+    patchWithCleanup(user, {
+        get context() {
+            return Object.assign({}, context, patch);
+        },
+    });
 }
 
 export function patchUserWithCleanup(patch) {

@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerEditor } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
@@ -99,7 +99,7 @@ export class PartnerList extends Component {
         this.editPartner({
             country_id,
             state_id,
-            lang: session.user_context.lang,
+            lang: user.lang,
         });
     }
     async searchPartner() {

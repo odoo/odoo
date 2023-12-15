@@ -372,8 +372,8 @@ function makeActionManager(env) {
             }
         }
         // If no action => falls back on the user default action (if any).
-        if (!actionRequest && user.home_action_id) {
-            actionRequest = user.home_action_id;
+        if (!actionRequest && user.homeActionId) {
+            actionRequest = user.homeActionId;
         }
         return actionRequest ? { actionRequest, options } : null;
     }

@@ -10,8 +10,8 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
 import { deepEqual } from "@web/core/utils/objects";
-import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
 import { contains } from "@web/../tests/utils";
@@ -755,7 +755,7 @@ QUnit.module("test_mail", {}, function () {
             }
         };
 
-        patchWithCleanup(session.user_context, { lang: "zz_ZZ" });
+        patchUserContextWithCleanup({ lang: "zz_ZZ" });
 
         const { webClient } = await start({ serverData, mockRPC });
 

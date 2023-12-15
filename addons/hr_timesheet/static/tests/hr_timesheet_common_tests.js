@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
@@ -108,9 +109,6 @@ export function setupTestEnv() {
                 },
             },
         },
-        user_context: {
-            allowed_company_ids: [1],
-        },
         uom_ids: {
             1: {
                 id: 1,
@@ -132,7 +130,9 @@ export function setupTestEnv() {
             },
         },
     });
-
+    patchUserContextWithCleanup({
+        allowed_company_ids: [1],
+    });
     const serviceRegistry = registry.category("services");
     serviceRegistry.add("company", companyService, { force: true });
     serviceRegistry.add("timesheet_uom", timesheetUOMService, { force: true });

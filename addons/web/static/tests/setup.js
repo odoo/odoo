@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
 import { assets } from "@web/core/assets";
+import { user, _makeUser } from "@web/core/user";
 import { templates } from "@web/core/templates";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
-import { makeMockedUser } from "./helpers/mock_services";
 import { session as sessionInfo } from "@web/session";
 import { config as transitionConfig } from "@web/core/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -226,29 +226,30 @@ function patchSessionInfo() {
             load_menus: "161803",
             translations: "314159",
         },
-        user_context: {
-            lang: "en",
-            uid: 7,
-            tz: "taht",
-        },
         qweb: "owl",
-        uid: 7,
-        name: "Mitchell",
-        username: "The wise",
-        is_admin: true,
-        is_system: true,
-        partner_id: 7,
         // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
         // to see what user_companies is
         user_companies: {
             allowed_companies: { 1: { id: 1, name: "Hermit" } },
             current_company: 1,
         },
+        user_context: {
+            lang: "en",
+            tz: "taht",
+        },
         db: "test",
+        is_admin: true,
+        is_system: true,
+        username: "thewise@odoo.com",
+        name: "Mitchell",
+        partner_id: 7,
+        uid: 7,
         server_version: "1.0",
         server_version_info: [1, 0, 0, "final", 0, ""],
     });
-    makeMockedUser();
+    const mockedUser = _makeUser(sessionInfo);
+    patchWithCleanup(user, mockedUser);
+    patchWithCleanup(user, { hasGroup: () => Promise.resolve(false) });
     patchWithCleanup(currencies, {
         1: { name: "USD", digits: [69, 2], position: "before", symbol: "$" },
         2: { name: "EUR", digits: [69, 2], position: "after", symbol: "€" },

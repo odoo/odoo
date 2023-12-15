@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { makeFakeNotificationService, makeMockedUser } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeNotificationService,
+    patchUserWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -13,7 +16,6 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 
 import { EventBus } from "@odoo/owl";
 
@@ -205,8 +207,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("static statusbar widget on many2one field with domain", async function (assert) {
         assert.expect(1);
 
-        patchWithCleanup(session, { uid: 17 });
-        makeMockedUser();
+        patchUserWithCleanup({ userId: 17 });
 
         await makeView({
             type: "form",

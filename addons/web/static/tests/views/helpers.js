@@ -116,7 +116,7 @@ export function makeViewInDialog(params) {
 export function setupViewRegistries() {
     setupControlPanelFavoriteMenuRegistry();
     setupControlPanelServiceRegistry();
-    patchUserWithCleanup({ hasGroup: (group) => group === "base.group_allow_export" });
+    patchUserWithCleanup({ hasGroup: async (group) => group === "base.group_allow_export" });
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService());
     serviceRegistry.add("company", fakeCompanyService);

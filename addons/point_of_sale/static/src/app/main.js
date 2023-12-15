@@ -20,7 +20,7 @@ whenReady(() => {
 // The following is mostly a copy of startWebclient but without any of the legacy stuff
 (async function startPosApp() {
     odoo.info = {
-        db: session.db,
+        db: user.db.name,
         server_version: session.server_version,
         server_version_info: session.server_version_info,
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",

@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeLocalizationService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -16,7 +19,6 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
-import { session } from "@web/session";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeServerError } from "../../helpers/mock_server";
@@ -550,7 +552,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             .add("localization", makeFakeLocalizationService({ multiLang: true }), {
                 force: true,
             });
-        patchWithCleanup(session.user_context, {
+        patchUserContextWithCleanup({
             lang: "en_US",
         });
 
@@ -1150,7 +1152,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target, ".modal .btn-primary");
         assert.verifySteps([
             "web_save",
-            'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
+            'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","tz":"taht","uid":7},"buttonContext":{}}',
         ]);
     });
 
@@ -1225,7 +1227,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
         assert.verifySteps([
             "web_save",
-            'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
+            'action executed {"context":{"lang":"en","tz":"taht","uid":7},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
     });
 
