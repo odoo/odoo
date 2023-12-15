@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, groupby, split_every
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang
+from odoo.tools.translate import html_translate
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -100,14 +101,14 @@ class AccountTax(models.Model):
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, tracking=True,
-        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
+        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage'), ('division', 'Percentage Tax Included')],
         help="""
     - Group of Taxes: The tax is a set of sub taxes.
     - Fixed: The tax amount stays the same whatever the price.
-    - Percentage of Price: The tax amount is a % of the price:
+    - Percentage: The tax amount is a % of the price:
         e.g 100 * (1 + 10%) = 110 (not price included)
         e.g 110 / (1 + 10%) = 100 (price included)
-    - Percentage of Price Tax Included: The tax amount is a division of the price:
+    - Percentage Tax Included: The tax amount is a division of the price:
         e.g 180 / (1 - 10%) = 200 (not price included)
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
@@ -120,7 +121,7 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
-    description = fields.Char(string='Description', translate=True)
+    description = fields.Html(string='Description', translate=html_translate)
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(string='Included in Price', default=False, tracking=True,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -552,15 +553,15 @@ class AccountTax(models.Model):
         type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
         tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))
         for record in self:
-            name = record.name
-            if self._context.get('append_type_to_tax_name'):
-                name += ' (%s)' % type_tax_use.get(record.type_tax_use)
-            if record.tax_scope:
-                name += ' (%s)' % tax_scope.get(record.tax_scope)
-            if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
-                name += ' (%s)' % record.company_id.display_name
-            if record.country_id != record.company_id._accessible_branches()[:1].account_fiscal_country_id:
-                name += ' (%s)' % record.country_code
+            if name := record.name:
+                if self._context.get('append_type_to_tax_name'):
+                    name += ' (%s)' % type_tax_use.get(record.type_tax_use)
+                if record.tax_scope:
+                    name += ' (%s)' % tax_scope.get(record.tax_scope)
+                if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
+                    name += ' (%s)' % record.company_id.display_name
+                if record.country_id != record.company_id.account_fiscal_country_id:
+                    name += ' (%s)' % record.country_code
             record.display_name = name
 
     @api.onchange('amount')

@@ -703,7 +703,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'draft'"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
@@ -906,6 +906,7 @@
                                        domain="[('company_id', 'in', (False, company_id))]"
                                        options='{"no_quick_create": True}'
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                                       placeholder="Search a name or Tax ID..."
                                        readonly="state != 'draft'"/>
 
                                 <field name="partner_shipping_id"
@@ -932,18 +933,20 @@
 
                                 <!-- Invoice date (only invoices / receipts) -->
                                 <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
-                                       invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
+                                       invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"
+                                       placeholder="Today"/>
                                 <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
-                                       invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                                       invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
+                                       placeholder="Today"/>
                                 <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
-                                       readonly="state != 'draft'"/>
+                                       readonly="state != 'draft'" placeholder="Today"/>
 
                                 <field name="date" string="Accounting Date"
                                        invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
                                        readonly="state != 'draft'"/>
                                 <field name="payment_reference"
-                                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                                       invisible="move_type not in ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
                                        readonly="inalterable_hash != False"/>
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
@@ -1055,7 +1058,7 @@
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" column_invisible="True"/>
-                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" width="92px"/>
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
                                         <field name="product_uom_id" column_invisible="True"/>
@@ -1065,6 +1068,7 @@
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain, 'active_test': True}"
                                                options="{'no_create': True}"
+                                               width="92px"
                                                optional="show"/>
                                         <field name="price_subtotal"
                                                string="Tax excl."/>
@@ -1152,6 +1156,10 @@
                                             <field name="partner_id" invisible="1"/>
                                             <group>
                                                 <field name="product_id" widget="many2one_barcode"/>
+                                                <label for="name" string="Description" invisible="display_type in ('line_note', 'line_section')"/>
+                                                <label for="name" string="Section" invisible="display_type != 'line_section'"/>
+                                                <label for="name" string="Note" invisible="display_type != 'line_note'"/>
+                                                <field name="name" widget="text"/>
                                                 <field name="quantity"/>
                                                 <field name="product_uom_category_id" invisible="1"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
@@ -1163,10 +1171,6 @@
                                                 <field name="tax_ids" widget="many2many_tags"/>
                                                 <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                             </group>
-                                            <label for="name" string="Description" invisible="display_type in ('line_note', 'line_section')"/>
-                                            <label for="name" string="Section" invisible="display_type != 'line_section'"/>
-                                            <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                            <field name="name" widget="text"/>
                                             <group>
                                                 <field name="price_subtotal"
                                                        string="Tax excl."/>

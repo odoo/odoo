@@ -3935,10 +3935,7 @@ class AccountMove(models.Model):
                 'entry': _('Draft Entry'),
             }[self.move_type]
             name += ' '
-        if not self.name or self.name == '/':
-            if self.id:
-                name += '(* %s)' % str(self.id)
-        else:
+        if self.name and self.name != '/':
             name += self.name
             if self.env.context.get('input_full_display_name'):
                 if self.partner_id:

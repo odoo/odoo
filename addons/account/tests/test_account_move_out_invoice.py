@@ -577,7 +577,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_onchange_partner_1(self):
         move_form = Form(self.invoice)
         move_form.partner_id = self.partner_b
-        move_form.payment_reference = 'turlututu'
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -599,7 +598,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #1',
+                'name': 'installment #1',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 423.0,
@@ -607,7 +606,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #2',
+                'name': 'installment #2',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 987.0,
@@ -617,7 +616,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 1200.0,
@@ -656,7 +654,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #1',
+                'name': 'installment #1',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 414.0,
@@ -664,7 +662,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #2',
+                'name': 'installment #2',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 966.0,
@@ -674,7 +672,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 1200.0,
@@ -4031,26 +4028,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'name': 'installment #2'},
         ])
 
-        move_form.payment_reference = "Super Reference"
         move_form.save()
 
         self.assertRecordValues(payment_term_lines, [
-            {'name': 'Super Reference installment #1'},
-            {'name': 'Super Reference installment #2'},
+            {'name': 'installment #1'},
+            {'name': 'installment #2'},
         ])
 
-        move_form.payment_reference = "Great Reference"
         invoice = move_form.save()
 
         self.assertRecordValues(payment_term_lines, [
-            {'name': 'Great Reference installment #1'},
-            {'name': 'Great Reference installment #2'},
+            {'name': 'installment #1'},
+            {'name': 'installment #2'},
         ])
 
         invoice.action_post()
         wizard = self.env['account.move.send'].create({'move_ids': [Command.set(invoice.ids)]})
         wizard.action_send_and_print()
-        move_form.payment_reference = "Bad Reference"
         move_form.save()
 
         # The integrity check should work
