@@ -215,9 +215,18 @@ class AccountMove(models.Model):
         for rec in self.filtered(lambda x: x.state == 'draft'):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
+<<<<<<< HEAD
 
     def _compute_made_sequence_hole(self):
         use_documents_moves = self.filtered(lambda m: m.journal_id.l10n_latam_use_documents)
         use_documents_moves.made_sequence_hole = False
         if other_moves := self - use_documents_moves:
             super(AccountMove, other_moves)._compute_made_sequence_hole()
+||||||| parent of 96c4a4b1567e (temp)
+=======
+
+    def _compute_made_sequence_hole(self):
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        manual_documents.made_sequence_hole = False
+        super(AccountMove, self - manual_documents)._compute_made_sequence_hole()
+>>>>>>> 96c4a4b1567e (temp)
