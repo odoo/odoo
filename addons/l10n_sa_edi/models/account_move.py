@@ -51,6 +51,11 @@ class AccountMove(models.Model):
                     root = etree.fromstring(b64decode(document_xml))
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
                     move.l10n_sa_qr_code_str = qr_node.text
+            elif (move.country_code == 'SA'
+                  and move.move_type in ('out_invoice', 'out_refund')
+                  and not move.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+                  and move.state != 'draft'):
+                super()._compute_qr_code_str()
 
 
     def _l10n_sa_get_qr_code_encoding(self, tag, field, int_length=1):
