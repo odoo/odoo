@@ -1305,11 +1305,23 @@
     </template>
 
     <template id="website_sale.tax_indication" active="False">
-        <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="h6 text-muted">
-            VAT Excluded
-        </span>
-        <span t-else="" class="h6 text-muted">
-            VAT Included
+        <span class="h6 text-muted">
+            <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'">
+                <t t-if="website.company_id.country_code == 'IN'">
+                    GST Excluded
+                </t>
+                <t t-else="">
+                    VAT Excluded
+                </t>
+            </t>
+            <t t-else="">
+                <t t-if="website.company_id.country_code == 'IN'">
+                    GST Included
+                </t>
+                <t t-else="">
+                    VAT Included
+                </t>
+            </t>
         </span>
     </template>
 
