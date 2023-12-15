@@ -3716,7 +3716,7 @@ class AccountMove(models.Model):
             button_access = {'url': access_link} if access_link else {}
             recipient_group = (
                 'additional_intended_recipient',
-                lambda pdata: pdata['id'] in msg_vals['partner_ids'] and pdata['id'] != self.partner_id.id,
+                lambda pdata: pdata['id'] in msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id,
                 {
                     'has_button_access': True,
                     'button_access': button_access,
