@@ -764,3 +764,17 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertFalse(record.active, "Event must be archived in Odoo after unlinking it")
         self.assertTrue(record.need_sync, "Sync variable must be true for updating event in Google when sync re-activates")
         self.assertGoogleEventNotDeleted()
+
+    @patch_api
+    def test_videocall_location_on_location_set(self):
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'need_sync': False,
+            'location' : 'Event Location'
+        })
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventHasNoConferenceData()
