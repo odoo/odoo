@@ -218,3 +218,8 @@ class AccountMove(models.Model):
             if rec.debit_origin_id:
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
+
+    def _compute_made_sequence_hole(self):
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        manual_documents.made_sequence_hole = False
+        super(AccountMove, self - manual_documents)._compute_made_sequence_hole()
