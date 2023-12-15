@@ -278,6 +278,10 @@ class StockQuant(models.Model):
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
+                    if 'quants_cache' in self.env.context:
+                        self.env.context['quants_cache'][
+                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                        ] |= quant
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
                 else:
@@ -288,6 +292,10 @@ class StockQuant(models.Model):
                 quants |= quant
             else:
                 quant = super().create(vals)
+                if 'quants_cache' in self.env.context:
+                    self.env.context['quants_cache'][
+                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                    ] |= quant
                 quants |= quant
                 if self._is_inventory_mode():
                     quant._check_company()
@@ -742,7 +750,40 @@ class StockQuant(models.Model):
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-        return self.search(domain, order=order).sorted(lambda q: not q.lot_id)
+
+        quants_cache = self.env.context.get('quants_cache')
+        if quants_cache is not None and strict:
+            res = self.env['stock.quant']
+            if lot_id:
+                res |= quants_cache[
+                    product_id.id, location_id.id, lot_id.id,
+                    package_id and package_id.id or False,
+                    owner_id and owner_id.id or False]
+            res |= quants_cache[
+                product_id.id, location_id.id, False,
+                package_id and package_id.id or False,
+                owner_id and owner_id.id or False]
+        else:
+            res = self.search(domain, order=order).sorted(lambda q: not q.lot_id)
+        return res
+
+    def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant']._read_group(
+                domain,
+                ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                ['id:array_agg'],
+            )
+            for product, location, lot, package, owner, ids in needed_quants:
+                res[product.id, location.id, lot.id, package.id, owner.id] = self.env['stock.quant'].browse(ids)
+        return res
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
