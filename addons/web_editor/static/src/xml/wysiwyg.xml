@@ -166,6 +166,7 @@
                                 onColorLeave="(params) => this._colorpaletteApply('color', params)"
                                 onColorPicked="(params) => this._onColorpaletteColorPicked('color', params)"
                                 onCustomColorPicked="(params) => this._onColorpaletteColorPicked('color', params)"
+                                getTemplate="this.props.getColorpickerTemplate"
                                 />
                         </we-selection-items>
                     </div>
@@ -187,6 +188,7 @@
                                 onColorLeave="(params) => this._colorpaletteApply('background-color', params)"
                                 onColorPicked="(params) => this._onColorpaletteColorPicked('background-color', params)"
                                 onCustomColorPicked="(params) => this._onColorpaletteColorPicked('background-color', params)"
+                                getTemplate="this.props.getColorpickerTemplate"
                                 />
                         </we-selection-items>
                     </div>
@@ -229,6 +231,7 @@
                                     onColorLeave="(params) => this._colorpaletteApply('border-color', params)"
                                     onColorPicked="(params) => this._onColorpaletteColorPicked('border-color', params)"
                                     onCustomColorPicked="(params) => this._onColorpaletteColorPicked('border-color', params)"
+                                    getTemplate="this.props.getColorpickerTemplate"
                                     />
                             </we-selection-items>
                         </div>

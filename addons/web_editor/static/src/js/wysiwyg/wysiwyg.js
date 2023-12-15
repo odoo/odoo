@@ -1356,7 +1356,8 @@ export class Wysiwyg extends Component {
                         onDestroy: () => {
                             removeHintClasses();
                             this.linkToolsInfos.onDestroy();
-                        }
+                        },
+                        getColorpickerTemplate: this.getColorpickerTemplate.bind(this),
                     };
                 }
                 // update the shouldFocusUrl prop to focus on url when double click and click edit link
