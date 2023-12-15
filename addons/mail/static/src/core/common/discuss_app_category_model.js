@@ -26,15 +26,27 @@ export class DiscussAppCategory extends Record {
         }
     }
 
+    get isVisible() {
+        return !this.hideWhenEmpty || this.threads.some(({ is_pinned }) => is_pinned);
+    }
+
     /** @type {string} */
     extraClass;
     /** @string */
     id;
     /** @type {string} */
     name;
+    hideWhenEmpty = false;
     isOpen = false;
     canView = false;
     canAdd = false;
+    app = Record.one("DiscussApp", {
+        compute() {
+            return this._store.discuss;
+        },
+    });
+    /** @type {number} */
+    sequence;
     /** @type {string} */
     serverStateKey;
     /** @type {string} */

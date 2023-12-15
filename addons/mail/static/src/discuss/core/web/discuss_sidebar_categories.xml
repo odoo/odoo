@@ -3,9 +3,9 @@
     <t t-name="mail.DiscussSidebarCategories">
         <hr class="w-100 opacity-0"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
-        <t t-foreach="categories" t-as="categoryData" t-key="categoryData_index">
-            <t t-if="categoryData.predicate?.(store) ?? true" t-call="mail.DiscussSidebarCategory">
-                <t t-set="category" t-value="categoryData.value(store)"/>
+        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
+            <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategory">
+                <t t-set="category" t-value="cat"/>
             </t>
         </t>
     </t>
@@ -34,7 +34,7 @@
                 <t t-set="thread" t-value="thread"/>
             </t>
         </t>
-        <t t-elif="store.discuss.thread.in(category.threads)" t-call="mail.DiscussSidebarChannel">
+        <t t-elif="store.discuss.thread?.in(category.threads)" t-call="mail.DiscussSidebarChannel">
             <t t-set="thread" t-value="store.discuss.thread"/>
         </t>
     </t>
