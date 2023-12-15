@@ -372,7 +372,7 @@ export class Thread extends Record {
     }
 
     get isTransient() {
-        return !this.id;
+        return !this.id || this.id < 0;
     }
 
     get lastEditableMessageOfSelf() {
