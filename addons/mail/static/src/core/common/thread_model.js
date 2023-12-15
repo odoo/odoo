@@ -123,6 +123,11 @@ export class Thread extends Record {
         inverse: "thread",
         onDelete: (r) => r.delete(),
     });
+    correspondent = Record.one("Persona", {
+        compute() {
+            return this.computeCorrespondent();
+        },
+    });
     counter = 0;
     /** @type {string} */
     custom_channel_name;
@@ -346,8 +351,7 @@ export class Thread extends Record {
         return members;
     }
 
-    /** @type {import("models").Persona|undefined} */
-    get correspondent() {
+    computeCorrespondent() {
         if (this.type === "channel") {
             return undefined;
         }
