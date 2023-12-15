@@ -53,7 +53,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         run: () => {}, // it's a check
     }, {
         content: "Go back to /blog",
-        trigger: "iframe #top_menu a[href='/blog'] span",
+        trigger: "iframe .top_menu a[href='/blog'] span",
     }, {
         content: "Click on the adventure tag",
         trigger: "iframe a[href^='/blog/tag/adventure']",
