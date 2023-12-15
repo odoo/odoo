@@ -275,7 +275,8 @@ async function autoHideMenu(el, options) {
 document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header#top');
     if (header) {
-        const topMenu = header.querySelector('#top_menu');
+        // TODO in master: remove `#top_menu` from the selector.
+        const topMenu = header.querySelector("#top_menu, .top_menu");
         if (header.classList.contains('o_no_autohide_menu')) {
             topMenu.classList.remove('o_menu_loading');
             return;

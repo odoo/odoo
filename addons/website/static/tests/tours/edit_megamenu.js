@@ -4,7 +4,7 @@ import wTourUtils from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     content: "Toggles the mega menu.",
-    trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle',
+    trigger: "iframe .top_menu .nav-item a.o_mega_menu_toggle",
     run: function () {
         // If the mega menu is displayed inside the extra menu items, it should
         // already be displayed.
@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     // Add a megamenu item to the top menu.
     {
         content: "Click on a menu item",
-        trigger: 'iframe #top_menu .nav-item a',
+        trigger: "iframe .top_menu .nav-item a",
     },
     {
         content: "Click on 'Link' to open Link Dialog",
@@ -53,7 +53,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"}, true),
-    toggleMegaMenu({extra_trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
+    toggleMegaMenu({extra_trigger: 'iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
     {
         content: "Select the last menu link of the first column",
         trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)', // 6th is the last one
@@ -110,7 +110,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     // Add a megamenu item to the top menu.
     {
         content: "Click on a menu item",
-        trigger: 'iframe #top_menu .nav-item a',
+        trigger: 'iframe .top_menu .nav-item a',
     },
     {
         content: "Click on 'Link' to open Link Dialog",
@@ -141,12 +141,12 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Check for the new mega menu",
-        trigger: 'iframe #top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
+        trigger: 'iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
         run: function () {}, // it's a check
     },
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"}, true),
-    toggleMegaMenu({extra_trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!")'}),
+    toggleMegaMenu({extra_trigger: 'iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!")'}),
     {
         content: "Select the first menu link of the first column",
         trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
