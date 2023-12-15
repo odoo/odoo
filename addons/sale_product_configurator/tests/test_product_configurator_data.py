@@ -10,7 +10,7 @@ from odoo.addons.sale.tests.common import SaleCommon
 @tagged('post_install', '-at_install')
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
 
-    def request_get_values(self, product_template):
+    def request_get_values(self, product_template, ptav_ids=None):
         base_url = product_template.get_base_url()
         response = self.opener.post(
             url=base_url + '/sale_product_configurator/get_values',
@@ -23,7 +23,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                     'product_uom_id': None,
                     'company_id': None,
                     'pricelist_id': None,
-                    'ptav_ids': None,
+                    'ptav_ids': ptav_ids,
                     'only_main_product': False,
                 },
             }
@@ -41,6 +41,31 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                         Command.set([
                             self.size_attribute_l.id,
                             self.size_attribute_m.id,
+                        ]),
+                    ],
+                }),
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.color_attribute_red.id,
+                            self.color_attribute_blue.id,
+                        ])
+                    ],
+                }),
+            ],
+        })
+
+    def create_product_template_with_attribute_no_variant(self):
+        return self.env['product.template'].create({
+            'name': 'Chair',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.no_variant_attribute_extra.id
                         ]),
                     ],
                 }),
@@ -154,6 +179,21 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # The inactive PTAVs should not be in the product exclusions dict
         self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
         self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
+
+    def test_ptal_values_set_for_no_variant_atribute(self):
+        '''
+        Test that selected_attribute_value_id is set for attribute with only one variant and
+        `create_variant`: `no_variant`.
+        '''
+        product_template = self.create_product_template_with_attribute_no_variant()
+
+        self.authenticate('demo', 'demo')
+
+        ptav_red = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
+        )
+        result = self.request_get_values(product_template, [ptav_red.id])
+        self.assertTrue(result['products'][0]['attribute_lines'][1]['selected_attribute_value_id'])
 
 
 @tagged('post_install', '-at_install')
