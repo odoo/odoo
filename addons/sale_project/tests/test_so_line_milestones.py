@@ -155,6 +155,14 @@ class TestSoLineMilestones(TestSaleCommon):
         self.assertEqual(milestone.sale_line_id, self.sol1, "The milestone's sale order line should be the first one in the project's SO") #1
         self.assertEqual(milestone.quantity_percentage, 1.0, "The milestone's quantity percentage should be 1.0") #2
 
+    def test_compute_qty_milestone(self):
+        """ This test will check that the compute methods for the milestone quantity fields work properly. """
+        ratio = self.milestone1.quantity_percentage / self.milestone1.product_uom_qty
+        self.milestone1.quantity_percentage = 1.0
+        self.assertEqual(self.milestone1.quantity_percentage / self.milestone1.product_uom_qty, ratio, "The ratio should be the same as before")
+        self.milestone1.product_uom_qty = 25
+        self.assertEqual(self.milestone1.quantity_percentage / self.milestone1.product_uom_qty, ratio, "The ratio should be the same as before")
+
     def test_create_milestone_on_project_set_on_sales_order(self):
         """
         Regression Test:
