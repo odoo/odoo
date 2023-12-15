@@ -15,6 +15,7 @@ export class DiscussApp extends Record {
                 isOpen: false,
                 canView: true,
                 canAdd: true,
+                sequence: 10,
                 serverStateKey: "is_discuss_sidebar_category_channel_open",
                 addTitle: _t("Add or join a channel"),
                 addHotkey: "c",
@@ -26,6 +27,7 @@ export class DiscussApp extends Record {
                 isOpen: false,
                 canView: false,
                 canAdd: true,
+                sequence: 30,
                 serverStateKey: "is_discuss_sidebar_category_chat_open",
                 addTitle: _t("Start a conversation"),
                 addHotkey: "d",
@@ -46,6 +48,10 @@ export class DiscussApp extends Record {
     activeTab = "main";
     chatWindows = Record.many("ChatWindow");
     isActive = false;
+    allCategories = Record.many("DiscussAppCategory", {
+        inverse: "app",
+        sort: (c1, c2) => c1.sequence - c2.sequence,
+    });
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");

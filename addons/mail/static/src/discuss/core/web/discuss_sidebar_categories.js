@@ -15,22 +15,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
-export const discussSidebarCategoriesRegistry = registry.category(
-    "mail.discuss_sidebar_categories"
-);
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
     "mail.discuss_sidebar_channel_indicators"
-);
-
-discussSidebarCategoriesRegistry.add(
-    "channels",
-    { value: (store) => store.discuss.channels },
-    { sequence: 10 }
-);
-discussSidebarCategoriesRegistry.add(
-    "chats",
-    { value: (store) => store.discuss.chats },
-    { sequence: 30 }
 );
 
 /**
@@ -70,10 +56,6 @@ export class DiscussSidebarCategories extends Component {
                 cancel: () => {},
             });
         });
-    }
-
-    get categories() {
-        return discussSidebarCategoriesRegistry.getAll();
     }
 
     get channelIndicators() {
