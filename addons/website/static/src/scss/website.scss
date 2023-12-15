@@ -297,7 +297,8 @@ $-seen-urls: ();
     .o_menu_image_placeholder {
         width: 80px !important;
     }
-    #top_menu {
+    // TODO in master: remove the `#top_menu` selector.
+    #top_menu, .top_menu {
         flex-wrap: nowrap !important;
         &.o_menu_loading {
             overflow: hidden !important;
@@ -1034,7 +1035,8 @@ header {
         z-index: $zindex-website-header;
     }
     &:not(.o_header_no_transition) {
-        #o_main_nav {
+        // TODO in master: remove the `#o_main_nav` selector.
+        #o_main_nav, .o_main_nav {
             transition: all $-transition-duration, color 0ms;
         }
         .navbar-brand {
@@ -1073,7 +1075,8 @@ header {
         $-is-hamburger: o-website-value('header-template') == 'hamburger';
         @include media-breakpoint-up(md) {
             @if $-is-hamburger {
-                #o_main_nav {
+                // TODO in master: remove the `#o_main_nav` selector.
+                #o_main_nav, .o_main_nav {
                     padding-top: $spacer * 0.5;
                     padding-bottom: $spacer * 0.5;
                 }
@@ -1081,7 +1084,8 @@ header {
         }
     }
 
-    #o_main_nav {
+    // TODO in master: remove the `#o_main_nav` selector.
+    #o_main_nav, .o_main_nav {
         flex-direction: inherit;
     }
 
@@ -1141,7 +1145,8 @@ header {
                         max-width: 100%;
                         padding: 0 0 $spacer 0;
                     }
-                    #o_main_nav {
+                    // TODO in master: remove the `#o_main_nav` selector.
+                    #o_main_nav, .o_main_nav {
                         flex-direction: column;
                         align-items: start;
                         padding: 0;
