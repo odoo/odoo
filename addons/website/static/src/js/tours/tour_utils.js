@@ -328,7 +328,7 @@ function getClientActionUrl(path, edition) {
 function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
-        trigger: `${backend ? "iframe" : ""} #top_menu`,
+        trigger: `${backend ? "iframe" : ""} .top_menu`,
         run: function () {
             const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
             if (extraMenuButton) {
