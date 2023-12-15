@@ -166,7 +166,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
 
         const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #o_main_nav .dropdown-toggle');
+        const $dropdownMenuToggles = $editableWindow.$(".o_mega_menu_toggle, .o_main_nav .dropdown-toggle");
         $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
         // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
         $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
