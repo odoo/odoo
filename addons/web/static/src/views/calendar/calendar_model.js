@@ -9,15 +9,13 @@ import {
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 
 export class CalendarModel extends Model {
     setup(params, services) {
-        /** @protected */
-        this.user = services.user;
-
         /** @protected */
         this.keepLast = new KeepLast();
 
@@ -157,7 +155,7 @@ export class CalendarModel extends Model {
         const info = this.meta.filtersInfo[fieldName];
         if (info && info.writeFieldName && info.writeResModel) {
             const data = {
-                user_id: this.user.userId,
+                user_id: user.userId,
                 [info.writeFieldName]: filterValue,
             };
             if (info.filterFieldName) {
@@ -569,7 +567,7 @@ export class CalendarModel extends Model {
      * @protected
      */
     fetchFilters(resModel, fieldNames) {
-        return this.orm.searchRead(resModel, [["user_id", "=", this.user.userId]], fieldNames);
+        return this.orm.searchRead(resModel, [["user_id", "=", user.userId]], fieldNames);
     }
     /**
      * @protected
@@ -809,7 +807,7 @@ export class CalendarModel extends Model {
     makeFilterUser(filterInfo, previousFilter, fieldName, rawRecords) {
         const field = this.meta.fields[fieldName];
         const userFieldName = field.relation === "res.partner" ? "partnerId" : "userId";
-        const value = this.user[userFieldName];
+        const value = user[userFieldName];
 
         let colorIndex = value;
         const rawRecord = rawRecords.find((r) => r[filterInfo.writeFieldName][0] === value);
@@ -822,7 +820,7 @@ export class CalendarModel extends Model {
             type: "user",
             recordId: null,
             value,
-            label: this.user.name,
+            label: user.name,
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
             colorIndex,
@@ -845,4 +843,3 @@ export class CalendarModel extends Model {
         };
     }
 }
-CalendarModel.services = ["user"];

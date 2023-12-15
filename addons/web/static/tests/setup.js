@@ -7,6 +7,7 @@ import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
+import { makeMockedUser } from "./helpers/mock_services";
 import { session as sessionInfo } from "@web/session";
 import { config as transitionConfig } from "@web/core/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -247,6 +248,7 @@ function patchSessionInfo() {
         server_version: "1.0",
         server_version_info: [1, 0, 0, "final", 0, ""],
     });
+    makeMockedUser();
     patchWithCleanup(currencies, {
         1: { name: "USD", digits: [69, 2], position: "before", symbol: "$" },
         2: { name: "EUR", digits: [69, 2], position: "after", symbol: "€" },

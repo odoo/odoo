@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     getFixture,
@@ -16,7 +15,6 @@ import {
     toggleMenuItem,
 } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { registry } from "@web/core/registry";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
@@ -26,8 +24,6 @@ import {
     onWillStart as onWillStartOWL,
     onWillUpdateProps as onWillUpdatePropsOWL,
 } from "@odoo/owl";
-
-const serviceRegistry = registry.category("services");
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -289,7 +285,6 @@ QUnit.module("Search", (hooks) => {
         };
         target = getFixture();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("user", makeFakeUserService());
     });
 
     QUnit.module("SearchPanel");

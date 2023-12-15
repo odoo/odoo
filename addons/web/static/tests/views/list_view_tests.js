@@ -19,7 +19,11 @@ import { ListController } from "@web/views/list/list_controller";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getPickerApplyButton, getPickerCell } from "../core/datetime/datetime_test_helpers";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import {
+    makeFakeLocalizationService,
+    patchUserWithCleanup,
+    patchUserContextWithCleanup,
+} from "../helpers/mock_services";
 import {
     addRow,
     click,
@@ -703,7 +707,7 @@ QUnit.module("Views", (hooks) => {
             function hasGroup(group) {
                 return group !== "base.group_allow_export";
             }
-            serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+            patchUserWithCleanup({ hasGroup });
 
             await makeView({
                 type: "list",
@@ -736,7 +740,7 @@ QUnit.module("Views", (hooks) => {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        patchUserWithCleanup({ hasGroup });
 
         await makeView({
             type: "list",
@@ -768,7 +772,7 @@ QUnit.module("Views", (hooks) => {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        patchUserWithCleanup({ hasGroup });
 
         await makeView({
             serverData,
@@ -2290,11 +2294,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
-        serviceRegistry.add(
-            "user",
-            makeFakeUserService(() => false),
-            { force: true }
-        );
+        patchUserWithCleanup({ hasGroup: () => false });
 
         serverData.models.foo.fields.m2m.store = true;
 
@@ -11611,7 +11611,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("editable list view: contexts are correctly sent", async function (assert) {
-        patchWithCleanup(session.user_context, { someKey: "some value" });
+        assert.expect(4);
+
+        patchUserContextWithCleanup({ someKey: "some value" });
+
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11635,7 +11638,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("editable list view: contexts with multiple edit", async function (assert) {
         assert.expect(4);
 
-        patchWithCleanup(session.user_context, { someKey: "some value" });
+        patchUserContextWithCleanup({ someKey: "some value" });
 
         await makeView({
             type: "list",

@@ -10,7 +10,6 @@ export class MessageReactions extends Component {
     static template = "mail.MessageReactions";
 
     setup() {
-        this.user = useService("user");
         this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
         this.messageService = useState(useService("mail.message"));

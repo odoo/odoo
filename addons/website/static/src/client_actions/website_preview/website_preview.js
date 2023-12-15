@@ -44,7 +44,6 @@ export class WebsitePreview extends Component {
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
         this.title = useService('title');
-        this.user = useService('user');
         this.router = useService('router');
         this.action = useService('action');
         this.orm = useService('orm');

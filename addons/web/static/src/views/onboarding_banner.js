@@ -2,7 +2,7 @@
 
 import { loadCSS, loadJS } from "@web/core/assets";
 import { rpc } from "@web/core/network/rpc";
-import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { useActionLinks } from "@web/views/view_hook";
 
 import { Component, markup, onWillStart, useRef, xml } from "@odoo/owl";
@@ -13,7 +13,6 @@ export class OnboardingBanner extends Component {
     static props = {};
 
     setup() {
-        this.user = useService("user");
         this.onboardingContainerRef = useRef("onboardingContainer");
         const resModel = "searchModel" in this.env ? this.env.searchModel.resModel : undefined;
         this._handleActionLinks = useActionLinks({
@@ -45,10 +44,10 @@ export class OnboardingBanner extends Component {
     }
 
     async loadBanner(bannerRoute) {
-        let response = await rpc(bannerRoute, { context: this.user.context });
+        let response = await rpc(bannerRoute, { context: user.context });
         if (response.code === 503) {
             // Sent by Onboarding Controller when rare concurrent `create` transactions occur
-            response = await rpc(bannerRoute, { context: this.user.context });
+            response = await rpc(bannerRoute, { context: user.context });
         }
         if (!response.html) {
             return;

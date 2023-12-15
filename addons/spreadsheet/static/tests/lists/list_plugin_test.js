@@ -3,6 +3,7 @@
 import { session } from "@web/session";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { makeMockedUser } from "@web/../tests/helpers/mock_services";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
@@ -342,6 +343,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             uid: 4,
         };
         patchWithCleanup(session, testSession);
+        makeMockedUser();
         const model = await createModelWithDataSource({
             spreadsheetData,
             mockRPC: function (route, { model, method, kwargs }) {

@@ -37,7 +37,6 @@ export class TraceabilityReport extends Component {
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.user = useService("user");
 
         onWillStart(this.onWillStart);
         useSetupAction({

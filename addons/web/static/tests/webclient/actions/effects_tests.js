@@ -3,9 +3,9 @@
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, nextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
-import { session } from "@web/session";
+import { patchUserWithCleanup } from "../../helpers/mock_services";
 
 let serverData;
 let target;
@@ -22,7 +22,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
-        patchWithCleanup(session, { show_effect: true });
+        patchUserWithCleanup({ showEffect: true });
         clearRegistryWithCleanup(mainComponentRegistry);
 
         const webClient = await createWebClient({ serverData });
@@ -49,7 +49,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("on close with effect from server", async function (assert) {
         assert.expect(1);
-        patchWithCleanup(session, { show_effect: true });
+        patchUserWithCleanup({ showEffect: true });
         const mockRPC = async (route) => {
             if (route.startsWith("/web/dataset/call_button")) {
                 return Promise.resolve({
@@ -80,7 +80,7 @@ QUnit.module("ActionManager", (hooks) => {
               </header>
               <field name="display_name"/>
             </form>`;
-        patchWithCleanup(session, { show_effect: true });
+        patchUserWithCleanup({ showEffect: true });
         const mockRPC = async (route) => {
             if (route.startsWith("/web/dataset/call_button")) {
                 return Promise.resolve(false);

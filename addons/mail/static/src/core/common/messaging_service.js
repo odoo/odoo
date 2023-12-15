@@ -5,6 +5,7 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
 export class Messaging {
@@ -22,7 +23,6 @@ export class Messaging {
         this.orm = services.orm;
         this.router = services.router;
         this.isReady = new Deferred();
-        const user = services.user;
         this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.store.discuss.inbox = {
             id: "inbox",
@@ -114,7 +114,6 @@ export const messagingService = {
     dependencies: [
         "mail.store",
         "orm",
-        "user",
         "router",
         "im_status",
         "mail.attachment", // FIXME: still necessary until insert is managed by this service

@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from '@web/core/registry';
+import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -61,12 +62,11 @@ export class NewContentModal extends Component {
     static components = { NewContentElement };
 
     setup() {
-        this.user = useService('user');
         this.orm = useService('orm');
         this.dialogs = useService('dialog');
         this.website = useService('website');
         this.action = useService('action');
-        this.isSystem = this.user.isSystem;
+        this.isSystem = user.isSystem;
 
         this.newContentText = {
             failed: _t('Failed to install "%s"'),
@@ -142,8 +142,8 @@ export class NewContentModal extends Component {
     }
 
     async onWillStart() {
-        this.isDesigner = await this.user.hasGroup('website.group_website_designer');
-        this.canInstall = await this.user.isAdmin;
+        this.isDesigner = await user.hasGroup('website.group_website_designer');
+        this.canInstall = await user.isAdmin;
         if (this.canInstall) {
             const moduleNames = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleName}) => moduleName);
             this.modulesInfo = {};

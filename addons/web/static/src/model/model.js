@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { useSetupView } from "@web/views/view_hook";
@@ -141,7 +142,6 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     model.useSampleModel = useSampleModel;
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
-    const user = useService("user");
     let started = false;
 
     async function load(props) {

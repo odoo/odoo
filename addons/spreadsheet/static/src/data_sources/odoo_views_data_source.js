@@ -2,6 +2,7 @@
 
 import { LoadableDataSource } from "./data_source";
 import { Domain } from "@web/core/domain";
+import { user } from "@web/core/user";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { omit } from "@web/core/utils/objects";
 
@@ -28,7 +29,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
         this._metaData = JSON.parse(JSON.stringify(params.metaData));
         /** @protected */
         this._initialSearchParams = JSON.parse(JSON.stringify(params.searchParams));
-        const userContext = this._orm.user.context;
+        const userContext = user.context;
         this._initialSearchParams.context = omit(
             this._initialSearchParams.context || {},
             ...Object.keys(userContext)
@@ -90,7 +91,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * @returns {Array}
      */
     getComputedDomain() {
-        const userContext = this._orm.user.context;
+        const userContext = user.context;
         return new Domain(this._customDomain).toList({
             ...this._initialSearchParams.context,
             ...userContext,

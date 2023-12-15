@@ -10,6 +10,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
+import { user } from "@web/core/user";
 import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -47,7 +48,6 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;
-        this.user = config.custom.env?.services.user;
         /**
          * Cache record display names for relation filters.
          * For each filter, contains a promise resolving to
@@ -177,7 +177,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
             return [];
         }
         if (filter.type === "relation" && isEmpty(value) && defaultValue === "current_user") {
-            return [this.user.userId];
+            return [user.userId];
         }
         if (filter.type === "text" && preventAutomaticValue) {
             return "";

@@ -104,7 +104,6 @@ QUnit.module("Views", (hooks) => {
             static components = { Layout };
             setup() {
                 this.searchModel = new SearchModel(this.env, {
-                    user: useService("user"),
                     orm: useService("orm"),
                     view: useService("view"),
                 });

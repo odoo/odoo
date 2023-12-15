@@ -1,7 +1,10 @@
 /** @odoo-module **/
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
-import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeDialogService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import {
     click,
     clickSave,
@@ -913,12 +916,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("user context can be used in kanban template", async (assert) => {
-        const fakeUserService = {
-            start() {
-                return { context: { some_key: true } };
-            },
-        };
-        serviceRegistry.add("user", fakeUserService, { force: true });
+        patchUserContextWithCleanup({ some_key: true });
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -6404,7 +6402,7 @@ QUnit.module("Views", (hooks) => {
         serverData.views["product,false,form"] =
             '<form string="Product"><field name="display_name"/></form>';
 
-        patchWithCleanup(session.user_context, { lang: "brol" });
+        patchUserContextWithCleanup({ lang: "brol" });
 
         await makeView({
             type: "kanban",

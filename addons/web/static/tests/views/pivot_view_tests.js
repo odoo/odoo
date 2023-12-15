@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { makeFakeLocalizationService, patchUserContextWithCleanup } from "../helpers/mock_services";
 import {
     click,
     getFixture,
@@ -248,7 +247,6 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("localization", makeFakeLocalizationService());
-        serviceRegistry.add("user", makeFakeUserService());
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     });
 
@@ -560,9 +558,7 @@ QUnit.module("Views", (hooks) => {
             "partner,false,list": "<list/>",
             "partner,5,kanban": "<kanban/>",
         };
-        patchWithCleanup(session, {
-            user_context: { userContextKey: true },
-        });
+        patchUserContextWithCleanup({ userContextKey: true });
         const fakeActionService = {
             start() {
                 return {
@@ -570,7 +566,13 @@ QUnit.module("Views", (hooks) => {
                         assert.deepEqual(
                             action,
                             {
-                                context: { someKey: true, uid: 7, userContextKey: true },
+                                context: {
+                                    lang: "en",
+                                    tz: "taht",
+                                    someKey: true,
+                                    uid: 7,
+                                    userContextKey: true,
+                                },
                                 domain: [["product_id", "=", 37]],
                                 name: "Partners",
                                 res_model: "partner",
@@ -3678,7 +3680,7 @@ QUnit.module("Views", (hooks) => {
             '["Foo","Foo","Foo"]',
             // origin headers
             '["November 2016","December 2016","Variation","November 2016","December 2016"' +
-            ',"Variation","November 2016","December 2016","Variation"]',
+                ',"Variation","November 2016","December 2016","Variation"]',
             // number of 'measures'
             "1",
             // number of 'origins'

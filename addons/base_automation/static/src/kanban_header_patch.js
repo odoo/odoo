@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
@@ -51,7 +52,6 @@ patch(KanbanHeader.prototype, {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.user = useService("user");
     },
 
     /**
@@ -60,7 +60,7 @@ patch(KanbanHeader.prototype, {
     get permissions() {
         const permissions = super.permissions;
         Object.defineProperty(permissions, "canEditAutomations", {
-            get: () => this.user.isAdmin,
+            get: () => user.isAdmin,
             configurable: true,
         });
         return permissions;

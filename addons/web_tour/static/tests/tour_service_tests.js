@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { tourService } from "@web_tour/tour_service/tour_service";
-import { userService } from "@web/core/user_service";
 import { ormService } from "@web/core/orm_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { effectService } from "@web/core/effects/effect_service";
@@ -70,7 +69,6 @@ QUnit.module("Tour service", (hooks) => {
         patchRPCWithCleanup();
         registry
             .category("services")
-            .add("user", userService)
             .add("orm", ormService)
             .add("notification", notificationService)
             .add("effect", effectService)

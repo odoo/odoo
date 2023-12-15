@@ -5,7 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 import { Component } from "@odoo/owl";
 
@@ -17,10 +17,9 @@ export class UserMenu extends Component {
     static props = {};
 
     setup() {
-        this.user = useService("user");
+        this.user = user;
         const { origin } = browser.location;
-        const { userId } = this.user;
-        this.source = `${origin}/web/image?model=res.users&field=avatar_128&id=${userId}`;
+        this.source = `${origin}/web/image?model=res.users&field=avatar_128&id=${this.user.userId}`;
     }
 
     getElements() {

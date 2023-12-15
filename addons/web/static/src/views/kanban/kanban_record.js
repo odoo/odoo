@@ -7,6 +7,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -219,7 +220,6 @@ export class KanbanRecord extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.user = useService("user");
 
         const { Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
@@ -399,7 +399,7 @@ export class KanbanRecord extends Component {
             read_only_mode: this.props.readonly,
             record: this.dataState.record,
             selection_mode: this.props.forceGlobalClick,
-            user_context: this.user.context,
+            user_context: user.context,
             widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
         };

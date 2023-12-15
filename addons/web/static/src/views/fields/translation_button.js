@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { localization } from "@web/core/l10n/localization";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useOwnedDialogs } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { TranslationDialog } from "./translation_dialog";
 
 import { Component } from "@odoo/owl";
@@ -47,7 +48,6 @@ export class TranslationButton extends Component {
     };
 
     setup() {
-        this.user = useService("user");
         this.translationDialog = useTranslationDialog();
     }
 
@@ -55,7 +55,7 @@ export class TranslationButton extends Component {
         return localization.multiLang;
     }
     get lang() {
-        return this.user.lang.split("_")[0].toUpperCase();
+        return user.lang.split("_")[0].toUpperCase();
     }
 
     onClick() {

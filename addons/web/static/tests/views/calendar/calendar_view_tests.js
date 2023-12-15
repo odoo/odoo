@@ -37,12 +37,12 @@ import {
     clickAllDaySlot,
 } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { createWebClient, doAction } from "../../webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { userService } from "@web/core/user_service";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
@@ -71,20 +71,11 @@ QUnit.module("Views", ({ beforeEach }) => {
         target = getFixture();
         setupViewRegistries();
 
-        serviceRegistry.add(
-            "user",
-            {
-                ...userService,
-                start() {
-                    const fakeUserService = userService.start(...arguments);
-                    Object.defineProperty(fakeUserService, "userId", {
-                        get: () => uid,
-                    });
-                    return fakeUserService;
-                },
+        patchUserWithCleanup({
+            get userId() {
+                return uid;
             },
-            { force: true }
-        );
+        });
 
         serverData = {
             models: {

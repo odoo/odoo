@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "../registry";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { RainbowMan } from "./rainbow_man";
 
 const effectRegistry = registry.category("effects");
@@ -48,7 +49,7 @@ function rainbowMan(env, params = {}) {
     } else if (!message) {
         message = _t("Well Done!");
     }
-    if (env.services.user.showEffect) {
+    if (user.showEffect) {
         /** @type {import("./rainbow_man").RainbowManProps} */
         const props = {
             imgUrl: params.img_url || "/web/static/img/smile.svg",
