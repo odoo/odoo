@@ -24,6 +24,7 @@ export class LinkTools extends Link {
         onPreApplyLink: { type: Function, optional: true },
         onPostApplyLink: { type: Function, optional: true },
         onDestroy: { type: Function, optional: true },
+        getColorpickerTemplate: { type: Function, optional: true },
     };
     static defaultProps = {
         ...Link.defaultProps,
