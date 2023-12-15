@@ -10733,7 +10733,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <sheet>
-                        <field name="product_id" context="{'lang': 'en_US'}" invisible="product_id == 33" widget="many2one"/>
+                        <field name="product_id" domain="[]" context="{'lang': 'en_US'}" invisible="product_id == 33" widget="many2one"/>
                     </sheet>
                 </form>`,
         });
@@ -10750,6 +10750,17 @@ QUnit.module("Views", (hooks) => {
                 .textContent,
             "{'lang': 'en_US'}",
             "context should be properly stringified"
+        );
+        assert.containsOnce(
+            target,
+            ".o-tooltip--technical > li[data-item='domain']",
+            "domain should be present for this field"
+        );
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="domain"]').lastChild
+                .textContent,
+            "[]",
+            "domain should be properly stringified"
         );
         assert.containsOnce(
             target,
@@ -10772,6 +10783,64 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o-tooltip--technical > li[data-item=widget]").textContent.trim(),
             "Widget:Many2one (many2one)",
             "widget description should be correct"
+        );
+    });
+
+    QUnit.test("field tooltip in debug mode, on field with domain attr", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" domain="[['id', '>', 3]]"/>
+                    </sheet>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector("[name='product_id']"));
+        await nextTick();
+        assert.containsOnce(target, ".o-tooltip--technical > li[data-item='domain']");
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="domain"]').lastChild
+                .textContent,
+            "[['id', '>', 3]]"
+        );
+    });
+
+    QUnit.test("do not display unset attributes in debug field tooltip", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id"/>
+                    </sheet>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector("[name='product_id']"));
+        await nextTick();
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o-tooltip--technical > li")),
+            ["Field:product_id", "Type:many2one", "Context:{}", "Relation:product"]
         );
     });
 
