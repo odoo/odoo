@@ -404,6 +404,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_move = self.test_account_moves[1].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
+        # add a follower to the invoice
+        self.partner_b.email = 'partner_b@example.com'
+        test_move.message_subscribe(self.partner_b.ids)
+
         additional_partner = self.env['res.partner'].create({
             'name': "Additional Partner",
             'email': "additional@example.com",
@@ -428,6 +432,15 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             author=self.user_account_other.partner_id,
             content='access_token='
         )
+
+        follower_mail = self.assertMailMail(
+            self.partner_b,
+            'sent',
+            author=self.user_account_other.partner_id,
+        )
+
+        self.assertNotIn('access_token=', follower_mail.body_html,
+                      "The followers should not bet sent the access token by default")
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
