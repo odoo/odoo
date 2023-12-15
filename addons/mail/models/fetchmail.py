@@ -182,7 +182,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     @api.model
     def _fetch_mails(self):
         """ Method called by cron to fetch mails from servers """
-        return self.search([('state', '=', 'done'), ('server_type', '!=', 'local')]).fetch_mail()
+        return self.search([('state', '=', 'done'), ('server_type', '!=', 'local')]).with_context(call_by_cron=True).fetch_mail()
 
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
@@ -215,7 +215,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         self._cr.commit()
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
-                except Exception:
+                except Exception as e:
+                    if not self.env.context.get('call_by_cron', False):
+                        raise e
                     _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
                 finally:
                     if imap_server:
@@ -249,7 +251,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         if num_messages < MAX_POP_MESSAGES or failed_in_loop == num:
                             break
                         pop_server.quit()
-                except Exception:
+                except Exception as e:
+                    if not self.env.context.get('call_by_cron', False):
+                        raise e
                     _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
                 finally:
                     if pop_server:
