@@ -24,7 +24,7 @@
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.report_assets_common" t-css="false"/>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'">
+            <body t-att-class="'container' if not full_width else 'container-fluid'" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <div id="wrapwrap">
                     <main>
                         <t t-out="0"/>
@@ -83,7 +83,7 @@
 
                 </style>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden">
+            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <div id="wrapwrap">
                         <t t-out="0"/>
                 </div>
@@ -266,7 +266,7 @@
                     }
                 </script>
             </head>
-            <body class="container" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" style="overflow:hidden">
+            <body class="container" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" style="overflow:hidden" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <t t-out="body"/>
             </body>
         </html>
