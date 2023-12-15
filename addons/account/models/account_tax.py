@@ -69,6 +69,7 @@ class AccountTaxGroup(models.Model):
 
         return bool(self.env['account.tax'].search([
             ('company_id', '=', company.id),
+            ('amount_type', '!=', 'group'),
             ('tax_group_id', 'not in', all_configured_groups_ids),
             ('country_id', 'in', countries.ids),
         ], limit=1))
