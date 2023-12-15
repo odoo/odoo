@@ -283,10 +283,11 @@ class PaymentTransaction(models.Model):
 
         if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
-        elif entity_status in const.PAYMENT_STATUS_MAPPING['authorized']:
-            self._set_authorized()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
-            self._set_done()
+            if self.provider_id.capture_manually:
+                self._set_authorize()
+            else:
+                self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing
             # will not be triggered by a customer browsing the transaction from the portal.

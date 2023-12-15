@@ -115,14 +115,12 @@ DEFAULT_PAYMENT_METHODS_CODES = [
 # See https://razorpay.com/docs/payments/payments#payment-life-cycle.
 PAYMENT_STATUS_MAPPING = {
     'pending': ('created', 'pending'),
-    'authorized': ('authorized',),
     'done': ('captured', 'refunded', 'processed'),  # refunded is included to discard refunded txs.
     'error': ('failed',),
 }
 
 # Events that are handled by the webhook.
 HANDLED_WEBHOOK_EVENTS = [
-    'payment.authorized',
     'payment.captured',
     'payment.failed',
     'refund.failed',
