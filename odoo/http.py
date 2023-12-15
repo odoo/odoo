@@ -891,9 +891,9 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
     def get_session_filename(self, sid):
-        # scatter sessions across 256 directories
-        sha_dir = sid[:2]
-        dirname = os.path.join(self.path, sha_dir)
+        # scatter sessions across 4096^2 directories
+        first_subdir, second_subdir = sid[:2], sid[2:4]
+        dirname = os.path.join(self.path, first_subdir, second_subdir)
         session_path = os.path.join(dirname, sid)
         return session_path
 
@@ -920,19 +920,25 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
     def rotate(self, session, env):
         self.delete(session)
+        env['res.users.device']._delete_device()
         session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
         self.save(session)
+        env['res.users.device']._update_device()
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
         threshold = time.time() - max_lifetime
-        for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
+        prefixes = []
+        for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*', '*')):
             path = os.path.join(root.session_store.path, fname)
             with contextlib.suppress(OSError):
                 if os.path.getmtime(path) < threshold:
                     os.unlink(path)
+                    prefixes.append(path.split('/')[-1][:10])
+        if prefixes:
+            request.env['res.users.device']._delete_device_from_identifiers(prefixes)
 
 
 class Session(collections.abc.MutableMapping):

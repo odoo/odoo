@@ -24,6 +24,7 @@ from lxml.builder import E
 from passlib.context import CryptContext
 from psycopg2 import sql
 
+import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -1030,6 +1031,19 @@ class Users(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('base.res_users_identitycheck_view_form_revokedevices').id,
             'context': ctx,
+        }
+
+    def action_view_devices(self):
+        return {
+            'name': _('Connected devices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.device',
+            'view_mode': 'tree,gantt,form',
+            'views': [
+                [self.env.ref('base.res_users_device_view_tree').id, 'tree'],
+                [self.env.ref('base.res_users_device_view_gantt').id, 'gantt'],
+                [self.env.ref('base.res_users_device_view_form').id, 'form'],
+            ],
         }
 
     @api.model
@@ -2215,3 +2229,108 @@ class APIKeyShow(models.AbstractModel):
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()
     key = fields.Char(readonly=True)
+
+class Device(models.Model):
+    _name = 'res.users.device'
+    _description = 'Devices'
+
+    name = fields.Char("Device", required=True)
+    user_agent = fields.Char("User agent")
+    ip_address = fields.Char("IP address")
+    first_activity = fields.Datetime("First activity")
+    current_activity = fields.Datetime("Current activity")
+    is_current = fields.Boolean("Current device", compute="_compute_is_current")
+    user_id = fields.Many2one("res.users", index=True)
+    session_identifier = fields.Char()
+    active = fields.Boolean()
+    sync_ttl = fields.Integer()
+
+    _sql_constraints = [
+        (
+            'unique_device_ttl', 'UNIQUE(session_identifier, user_agent, sync_ttl)',
+            'Only one device occurrence by time to live')
+    ]
+
+    def _compute_is_current(self):
+        for device in self:
+            device.is_current = bool(request.session.sid.startswith(device.session_identifier))
+
+    @api.model
+    def _update_device(self):
+        """ Must be called when we want to update the device for the current request. """
+        # Note: The public user will not create devices
+        if not request or not request.session.uid or self.env.cr.readonly:
+            return
+        self._insert_device(request.session.sid[:10], request.httprequest.user_agent.string, int(datetime.datetime.utcnow().timestamp() / 300))
+
+    @api.model
+    def _delete_device(self):
+        """ Must be called when we want to delete the device for the current request. """
+        self.sudo().search([('session_identifier', '=', request.session.sid[:10])]).unlink()
+
+    @api.model
+    def _delete_device_from_identifiers(self, session_identifiers):
+        self.sudo().search([('session_identifier', 'in', session_identifiers)]).unlink()
+
+    @tools.ormcache('session_identifier', 'user_agent', '_ttl')
+    def _insert_device(self, session_identifier, user_agent, _ttl):
+        """
+            The purpose of the `_tll` parameter is for the method to be used as in a TTL cache,
+            i.e. changing the value of this time-dependent key recreates a new value in the cache.
+
+            The value is stored in a LRU cache with the same keys as the other workers (thanks to UTC),
+            the cache "aligns" itself with all workers.
+
+            :param session_identifier:  a string that is a part of sid that enables it to be uniquely identified
+            :param user_agent:          a string that is the User Agent header of the request
+            :param _ttl:                an integer that is incremented every X seconds and that is common to all workers
+            :return:                    no value
+
+            Note:
+            -----
+            We don't need a return value, because the purpose of caching this method (with a time-dependent parameter)
+            is to determine whether we need to traverse the logic or not (which can have a performance cost if called very often).
+        """
+        existed_device = self.sudo().search([('session_identifier', '=', session_identifier), ('user_agent', '=', user_agent), ('active', '=', True)], limit=1)
+        if existed_device and _ttl <= existed_device.sync_ttl: # A device has already been created for this period (via another worker)
+            return
+
+        now = fields.Datetime.now()
+        user_agent = request.httprequest.user_agent
+        self.env.cr.execute("""
+                INSERT INTO {table} (first_activity, current_activity, user_id, name, user_agent, ip_address, session_identifier, active, sync_ttl)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """.format(table=self._table),
+            [
+                existed_device.first_activity or now, # value propagated through the records to obtain the total duration of the activity
+                now,
+                request.session.uid,
+                f"{user_agent.platform} {user_agent.browser}",
+                user_agent.string,
+                request.httprequest.remote_addr,
+                session_identifier,
+                True,
+                _ttl,
+            ]
+        )
+        if self.env.cr.rowcount:
+            existed_device.active = False
+
+    @api.autovacuum
+    def _gc_user_devices(self):
+        """ Keep only the most recent device. """
+        self.env.cr.execute("""
+            DELETE FROM res_users_device WHERE active = false
+        """)
+
+    @check_identity
+    def revoke(self):
+        return self._revoke()
+
+    def _revoke(self):
+        must_logout = bool(self.filtered('is_current'))
+        session_identifiers = list({device.session_identifier for device in self.sudo()})
+        odoo.http.root.session_store.delete_from_identifiers(session_identifiers)
+        self.sudo().unlink()
+        if must_logout:
+            request.session.logout()

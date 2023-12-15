@@ -187,6 +187,8 @@ class IrHttp(models.AbstractModel):
                 key, value, request.httprequest.max_content_length,
             )
 
+        request.env['res.users.device']._update_device()
+
         request.dispatcher.pre_dispatch(rule, args)
 
         # verify the default language set in the context is valid,
