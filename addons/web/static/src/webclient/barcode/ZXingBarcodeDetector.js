@@ -98,7 +98,7 @@ export function buildZXingBarcodeDetector(ZXing) {
             const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
             const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
             try {
-                const result = this.reader.decode(binaryBitmap);
+                const result = this.reader.decodeWithState(binaryBitmap);
                 const { resultPoints } = result;
                 const boundingBox = DOMRectReadOnly.fromRect({
                     x: resultPoints[0].x,
