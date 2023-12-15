@@ -10276,7 +10276,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <sheet>
-                        <field name="product_id" context="{'lang': 'en_US'}" attrs='{"invisible": [["product_id", "=", 33]]}' widget="many2one"/>
+                        <field name="product_id" domain="[]" context="{'lang': 'en_US'}" attrs='{"invisible": [["product_id", "=", 33]]}' widget="many2one"/>
                     </sheet>
                 </form>`,
         });
@@ -10293,6 +10293,17 @@ QUnit.module("Views", (hooks) => {
                 .textContent,
             "{'lang': 'en_US'}",
             "context should be properly stringified"
+        );
+        assert.containsOnce(
+            target,
+            ".o-tooltip--technical > li[data-item='domain']",
+            "domain should be present for this field"
+        );
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="domain"]').lastChild
+                .textContent,
+            "[]",
+            "domain should be properly stringified"
         );
         assert.containsOnce(
             target,
@@ -10315,6 +10326,36 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o-tooltip--technical > li[data-item=widget]").textContent.trim(),
             "Widget:Many2one (many2one)",
             "widget description should be correct"
+        );
+    });
+
+    QUnit.test("field tooltip in debug mode, on field with domain attr", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" domain="[['id', '>', 3]]"/>
+                    </sheet>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector("[name='product_id']"));
+        await nextTick();
+        assert.containsOnce(target, ".o-tooltip--technical > li[data-item='domain']");
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="domain"]').lastChild
+                .textContent,
+            "[['id', '>', 3]]"
         );
     });
 
@@ -12841,7 +12882,7 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
-            clearTimeout: () => { },
+            clearTimeout: () => {},
         });
 
         await makeView({
@@ -13458,33 +13499,35 @@ QUnit.module("Views", (hooks) => {
         assert.ok(group.clientWidth < group.scrollWidth);
     });
 
-    QUnit.test("reload records in the context of the form to avoid having partial field values", async function (assert) {
-        serverData.actions = {
-            1: {
-                id: 1,
-                name: "Partner",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "form"]],
-                view_mode: "form",
-                res_id: 6,
-                target: "new"
-            },
-        };
+    QUnit.test(
+        "reload records in the context of the form to avoid having partial field values",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                    view_mode: "form",
+                    res_id: 6,
+                    target: "new",
+                },
+            };
 
-        serverData.views = {
-            "partner,false,form": `<form>
+            serverData.views = {
+                "partner,false,form": `<form>
                 <field name="display_name"/>
                 <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </form>`,
-        };
+            };
 
-        await makeView({
-            type: "form",
-            resModel: "user",
-            resId: 19,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "user",
+                resId: 19,
+                serverData,
+                arch: `
             <form>
                 <field name="partner_ids">
                     <tree>
@@ -13499,31 +13542,29 @@ QUnit.module("Views", (hooks) => {
                     </form>
                 </field>
             </form>`,
-            mockRPC: (route, { method, args }) => {
-                if (method === 'create') {
-                    assert.step(method);
-                    assert.deepEqual(args[0], {
-                        display_name: false,
-                        timmy: [
-                            [
-                                6,
-                                false,
-                                [12]
-                            ],
-                        ],
-                    });
-                } else if (route === '/web/action/load') {
-                    assert.step("action");
-                }
-            },
-        });
+                mockRPC: (route, { method, args }) => {
+                    if (method === "create") {
+                        assert.step(method);
+                        assert.deepEqual(args[0], {
+                            display_name: false,
+                            timmy: [[6, false, [12]]],
+                        });
+                    } else if (route === "/web/action/load") {
+                        assert.step("action");
+                    }
+                },
+            });
 
-        await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        await selectDropdownItem(target, "timmy", "gold");
-        await click(target, ".modal-dialog .o_form_button_save");
-        await click(target.querySelector(".o_data_cell"));
-        await click(target, "[name='1']");
-        assert.deepEqual(target.querySelector(".o_tag_badge_text").innerHTML, 'gold');
-        assert.verifySteps(['create', 'action'], 'Verify that create is called before action load');
-    });
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+            await selectDropdownItem(target, "timmy", "gold");
+            await click(target, ".modal-dialog .o_form_button_save");
+            await click(target.querySelector(".o_data_cell"));
+            await click(target, "[name='1']");
+            assert.deepEqual(target.querySelector(".o_tag_badge_text").innerHTML, "gold");
+            assert.verifySteps(
+                ["create", "action"],
+                "Verify that create is called before action load"
+            );
+        }
+    );
 });

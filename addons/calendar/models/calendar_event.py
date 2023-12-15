@@ -688,6 +688,11 @@ class Meeting(models.Model):
 
         removed_partner_ids = []
         added_partner_ids = []
+
+        # if commands are just integers, assume they are ids with the intent to `Command.set`
+        if partner_commands and isinstance(partner_commands[0], int):
+            partner_commands = [Command.set(partner_commands)]
+
         for command in partner_commands:
             op = command[0]
             if op in (2, 3, Command.delete, Command.unlink):  # Remove partner

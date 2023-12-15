@@ -162,6 +162,14 @@ class TestHttp(http.Controller):
     # =====================================================
     # Errors
     # =====================================================
+    @http.route('/test_http/fail', type='http', auth='none')
+    def fail(self):
+        _logger.error(
+            "The /test_http/fail route should never be called, referrer: %s",
+            http.request.httprequest.headers.get('referer')
+        )
+        raise request.not_found()
+
     @http.route('/test_http/json_value_error', type='json', auth='none')
     def json_value_error(self):
         raise ValueError('Unknown destination')

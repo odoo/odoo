@@ -189,7 +189,7 @@
                             </div>
                         </group>
                     </group>
-                    <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                    <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                         <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
                         <button string="Discard" special="cancel" data-hotkey="z"/>
@@ -209,7 +209,7 @@
             <field name="inherit_id" ref="stock.view_stock_move_operations"/>
             <field name="arch" type="xml">
                 <field name="move_line_ids" position="replace">
-                    <field name="move_line_nosuggest_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                    <field name="move_line_nosuggest_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                 </field>
             </field>
         </record>
