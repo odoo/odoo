@@ -76,3 +76,8 @@ class TestSyncGoogle(HttpCase):
         while funcs:
             func = funcs.popleft()
             func()
+
+    def assertGoogleEventHasNoConferenceData(self):
+        GoogleSync._google_insert.assert_called_once()
+        args, _ = GoogleSync._google_insert.call_args
+        self.assertFalse(args[1].get('conferenceData', False))
