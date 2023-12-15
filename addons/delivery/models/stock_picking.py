@@ -244,10 +244,11 @@ class StockPicking(models.Model):
                 related_pickings |= previous_moves.picking_id
                 previous_moves = previous_moves.move_orig_ids - accessed_moves
                 accessed_moves |= previous_moves
-            next_moves = self.move_ids.move_dest_ids
+            accessed_moves = next_moves = self.move_ids.move_dest_ids
             while next_moves:
                 related_pickings |= next_moves.picking_id
-                next_moves = next_moves.move_dest_ids
+                next_moves = next_moves.move_dest_ids - accessed_moves
+                accessed_moves |= next_moves
             without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
             without_tracking.carrier_tracking_ref = res['tracking_number']
             for p in related_pickings - without_tracking:
