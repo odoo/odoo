@@ -60,8 +60,8 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="display_name" string="Name"/>
+                    <field name="tax_scope"/>
                     <field name="description"/>
-                    <field name="invoice_label"/>
                 </tree>
             </field>
         </record>
@@ -74,6 +74,7 @@
                     <field name="name"/>
                     <field name="type_tax_use"/>
                     <field name="tax_scope"/>
+                    <field name="description"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -84,6 +85,11 @@
                                     <div class="col-6 text-end">
                                         <span class="badge rounded-pill"><t t-out="record.type_tax_use.value"/></span>
                                         <span class="badge rounded-pill"><t t-out="record.tax_scope.value"/></span>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-12">
+                                        <span class="text-muted" t-out="record.description.value"/>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +145,6 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="description"/>
                             <field name="amount_type"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
@@ -178,6 +183,7 @@
                             <group>
                                 <group>
                                     <field name="invoice_label" invisible="amount_type == 'group'"/>
+                                    <field name="description"/>
                                     <field name="tax_group_id" invisible="amount_type == 'group'" required="amount_type != 'group'"/>
                                     <field name="analytic" invisible="amount_type == 'group'" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

@@ -241,7 +241,6 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
     def test_out_refund_line_onchange_partner_1(self):
         move_form = Form(self.invoice)
         move_form.partner_id = self.partner_b
-        move_form.payment_reference = 'turlututu'
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
@@ -263,7 +262,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #1',
+                'name': 'installment #1',
                 'partner_id': self.partner_b.id,
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'amount_currency': -423.0,
@@ -271,7 +270,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #2',
+                'name': 'installment #2',
                 'partner_id': self.partner_b.id,
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'amount_currency': -987.0,
@@ -281,7 +280,6 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 1200.0,
@@ -320,7 +318,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #1',
+                'name': 'installment #1',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': -414.0,
@@ -328,7 +326,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu installment #2',
+                'name': 'installment #2',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': -966.0,
@@ -338,7 +336,6 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'partner_id': self.partner_b.id,
-            'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
             'amount_untaxed': 1200.0,
