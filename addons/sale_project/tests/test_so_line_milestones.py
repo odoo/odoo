@@ -137,6 +137,24 @@ class TestSoLineMilestones(TestSaleCommon):
         self.project.sale_line_id = self.sol2
         self.assertEqual(task.sale_line_id, self.sol1, 'The task should keep the SOL linked to the milestone.')
 
+    def test_default_values_milestone(self):
+        """ This test checks that newly created milestones have the correct default values:
+            1) the first SOL of the SO linked to the project should be used as the default one.
+            2) the quantity percentage should be 100% (1.0 in backend).
+        """
+        project = self.env['project.project'].create({
+            'name': 'Test project',
+            'sale_line_id': self.sol2.id, # sol1 was created first so we use sol2 to demonstrate that sol1 is used
+        })
+        milestone = self.env['project.milestone'].with_context({'default_project_id': project.id}).create({
+            'name': 'Test milestone',
+            'project_id': project.id,
+            'is_reached': False,
+        })
+        # since SOL1 was created before SOL2, it should be selected
+        self.assertEqual(milestone.sale_line_id, self.sol1, "The milestone's sale order line should be the first one in the project's SO") #1
+        self.assertEqual(milestone.quantity_percentage, 1.0, "The milestone's quantity percentage should be 1.0") #2
+
     def test_create_milestone_on_project_set_on_sales_order(self):
         """
         Regression Test:
