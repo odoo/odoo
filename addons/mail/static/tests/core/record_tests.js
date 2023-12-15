@@ -4,7 +4,7 @@ import { BaseStore, Record, makeStore, modelRegistry } from "@mail/core/common/r
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { markup } from "@odoo/owl";
+import { markup, reactive, toRaw } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 
@@ -191,7 +191,6 @@ QUnit.test("Computed fields", async (assert) => {
 });
 
 QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
-    let logs = [];
     (class Thread extends Record {
         static id = "name";
         name;
@@ -208,13 +207,13 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
         }
         typeLazy = Record.attr("", {
             compute() {
-                logs.push("LAZY");
+                assert.step("LAZY");
                 return this.computeType();
             },
         });
         typeEager = Record.attr("", {
             compute() {
-                logs.push("EAGER");
+                assert.step("EAGER");
                 return this.computeType();
             },
             eager: true,
@@ -227,29 +226,25 @@ QUnit.test("Computed fields: lazy (default) vs. eager", async (assert) => {
     }).register();
     const store = await start();
     const thread = store.Thread.insert("General");
-    assert.deepEqual(logs, ["EAGER"]);
-    logs = [];
+    const members = thread.members;
+    assert.verifySteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "empty chat");
-    assert.deepEqual(logs, []);
+    assert.verifySteps([]);
     assert.strictEqual(thread.typeLazy, "empty chat");
-    assert.deepEqual(logs, ["LAZY"]);
-    logs = [];
-    thread.members.add("John");
-    assert.deepEqual(logs, ["LAZY", "EAGER"]); // lazy-needed field are re-computed/sorted again at least once, because no track of "unread"
-    logs = [];
+    assert.verifySteps(["LAZY"]);
+    members.add("John");
+    assert.verifySteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "self-chat");
-    assert.deepEqual(logs, []);
-    thread.members.add("Antony");
-    assert.deepEqual(logs, ["EAGER"]);
-    logs = [];
+    assert.verifySteps([]);
+    members.add("Antony");
+    assert.verifySteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "dm chat");
-    assert.deepEqual(logs, []);
-    thread.members.add("Demo");
-    assert.deepEqual(logs, ["EAGER"]);
+    assert.verifySteps([]);
+    members.add("Demo");
+    assert.verifySteps(["EAGER"]);
     assert.strictEqual(thread.typeEager, "group chat");
-    logs = [];
     assert.strictEqual(thread.typeLazy, "group chat");
-    assert.deepEqual(logs, ["LAZY"]);
+    assert.verifySteps(["LAZY"]);
 });
 
 QUnit.test("Trusted insert on html field with { html: true }", async (assert) => {
@@ -341,4 +336,249 @@ QUnit.test("Can insert with relation as id, using relation as data object", asyn
     assert.ok(store.User.get("John").settings.pushNotif);
     assert.ok(store.User.get("Paul"));
     assert.notOk(store.User.get("Paul").settings.pushNotif);
+});
+
+QUnit.test("Set on attr should invoke onChange", async (assert) => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body;
+    }).register();
+    const store = await start();
+    const message = store.Message.insert(1);
+    Record.onChange(message, "body", () => assert.step("BODY_CHANGED"));
+    assert.verifySteps([]);
+    message.update({ body: "test1" });
+    message.body = "test2";
+    assert.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
+});
+
+QUnit.test("record list sort should be manually observable", async (assert) => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messages = Record.many("Message", { inverse: "thread" });
+    }).register();
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body;
+        author;
+        thread = Record.one("Thread", { inverse: "messages" });
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert(1);
+    const messages = store.Message.insert([
+        { id: 1, body: "a", thread },
+        { id: 2, body: "b", thread },
+    ]);
+    function sortMessages() {
+        // minimal access through observed variables to reduce unexpected observing
+        observedMessages.sort((m1, m2) => (m1.body < m2.body ? -1 : 1));
+        assert.step(`sortMessages`);
+    }
+    const observedMessages = reactive(thread.messages, sortMessages);
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    sortMessages();
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    assert.verifySteps(["sortMessages"]);
+    messages[0].body = "c";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    assert.verifySteps(["sortMessages", "sortMessages"]);
+    messages[0].body = "d";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    assert.verifySteps(["sortMessages"]);
+    messages[0].author = "Jane";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    assert.verifySteps([]);
+    store.Message.insert({ id: 3, body: "c", thread });
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3,1");
+    assert.verifySteps(["sortMessages", "sortMessages"]);
+    messages[0].delete();
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
+    assert.verifySteps(["sortMessages"]);
+});
+
+QUnit.test("relation field sort should be automatically observed", async (assert) => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messages = Record.many("Message", {
+            inverse: "thread",
+            sort: (m1, m2) => (m1.body < m2.body ? -1 : 1),
+        });
+    }).register();
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body;
+        author;
+        thread = Record.one("Thread", { inverse: "messages" });
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert(1);
+    const messages = store.Message.insert([
+        { id: 1, body: "a", thread },
+        { id: 2, body: "b", thread },
+    ]);
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    messages[0].body = "c";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    messages[0].body = "d";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    messages[0].author = "Jane";
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,1");
+    store.Message.insert({ id: 3, body: "c", thread });
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3,1");
+    messages[0].delete();
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "2,3");
+});
+
+QUnit.test("reading of lazy compute relation field should recompute", async (assert) => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messages = Record.many("Message", {
+            inverse: "thread",
+            sort: (m1, m2) => (m1.body < m2.body ? -1 : 1),
+        });
+        messages2 = Record.many("Message", {
+            compute() {
+                return this.messages.map((m) => m.id);
+            },
+        });
+    }).register();
+    (class Message extends Record {
+        static id = "id";
+        id;
+        thread = Record.one("Thread", { inverse: "messages" });
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert(1);
+    store.Message.insert([
+        { id: 1, thread },
+        { id: 2, thread },
+    ]);
+    const messages2 = thread.messages2;
+    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2");
+    store.Message.insert([{ id: 3, thread }]);
+    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2,3");
+    store.Message.insert([{ id: 4, thread }]);
+    assert.strictEqual(`${messages2.map((m) => m.id)}`, "1,2,3,4");
+});
+
+QUnit.test("lazy compute should re-compute while they are observed", async (assert) => {
+    (class Channel extends Record {
+        static id = "id";
+        id;
+        count = 0;
+        multiplicity = Record.attr(undefined, {
+            compute() {
+                assert.step("computing");
+                if (this.count > 3) {
+                    return "many";
+                }
+                return "few";
+            },
+        });
+    }).register();
+    const store = await start();
+    const channel = store.Channel.insert(1);
+    let observe = true;
+    function render() {
+        if (observe) {
+            assert.step(`render ${reactiveChannel.multiplicity}`);
+        }
+    }
+    const reactiveChannel = reactive(channel, render);
+    render();
+    assert.verifySteps(
+        ["computing", "render few", "render few"],
+        "initial call, render with new value"
+    );
+    channel.count = 2;
+    assert.verifySteps(["computing"], "changing value to 2 is observed");
+    channel.count = 5;
+    assert.verifySteps(["computing", "render many"], "changing value to 5 is observed");
+    observe = false;
+    channel.count = 6;
+    assert.verifySteps(["computing"], "changing value to 6, still observed until it changes");
+    channel.count = 7;
+    assert.verifySteps(["computing"], "changing value to 7, still observed until it changes");
+    channel.count = 1;
+    assert.verifySteps(["computing"], "changing value to 1, observed one last time");
+    channel.count = 0;
+    assert.verifySteps([], "changing value to 0, no longer observed");
+    channel.count = 7;
+    assert.verifySteps([], "changing value to 7, no longer observed");
+    channel.count = 1;
+    assert.verifySteps([], "changing value to 1, no longer observed");
+    assert.strictEqual(channel.multiplicity, "few");
+    assert.verifySteps(["computing"]);
+    observe = true;
+    render();
+    assert.verifySteps(["render few"]);
+    channel.count = 7;
+    assert.verifySteps(["computing", "render many"]);
+});
+
+QUnit.test("lazy sort should re-sort while they are observed", async (assert) => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        messages = Record.many("Message", {
+            sort: (m1, m2) => m1.sequence - m2.sequence,
+        });
+    }).register();
+    (class Message extends Record {
+        static id = "id";
+        id;
+        sequence;
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert(1);
+    thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    let observe = true;
+    function render() {
+        if (observe) {
+            assert.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+        }
+    }
+    const reactiveChannel = reactive(thread, render);
+    render();
+    const message = thread.messages[0];
+    assert.verifySteps(["render 1,2"]);
+    message.sequence = 3;
+    assert.verifySteps(["render 2,1"]);
+    message.sequence = 4;
+    assert.verifySteps([]);
+    message.sequence = 5;
+    assert.verifySteps([]);
+    message.sequence = 1;
+    assert.verifySteps(["render 1,2"]);
+    observe = false;
+    message.sequence = 10;
+    assert.equal(
+        `${toRaw(thread)
+            ._raw._fields.get("messages")
+            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`,
+        "2,1",
+        "observed one last time when it changes"
+    );
+    assert.verifySteps([]);
+    message.sequence = 1;
+    assert.equal(
+        `${toRaw(thread)
+            ._raw._fields.get("messages")
+            .value.data.map((localId) => toRaw(thread)._raw._store.get(localId).id)}`,
+        "2,1",
+        "no longer observed"
+    );
+    assert.equal(`${thread.messages.map((m) => m.id)}`, "1,2");
+    observe = true;
+    render();
+    assert.verifySteps(["render 1,2"]);
+    message.sequence = 10;
+    assert.verifySteps(["render 2,1"]);
 });
