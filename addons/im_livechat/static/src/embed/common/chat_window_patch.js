@@ -28,7 +28,7 @@ patch(ChatWindow.prototype, {
         }
         if (this.livechatService.state === SESSION_STATE.PERSISTED) {
             this.livechatState.hasFeedbackPanel = true;
-            this.chatWindowService.show(this.props.chatWindow);
+            this.chatWindowService.show(this.props.chatWindow, { notifyState: false });
         } else {
             this.thread?.delete();
             await super.close();
