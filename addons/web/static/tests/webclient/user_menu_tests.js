@@ -8,9 +8,8 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeFakeLocalizationService, makeMockedUser } from "../helpers/mock_services";
+import { makeFakeLocalizationService, patchUserWithCleanup } from "../helpers/mock_services";
 import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { session } from "@web/session";
 
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
@@ -19,8 +18,7 @@ let env;
 
 QUnit.module("UserMenu", {
     async beforeEach() {
-        patchWithCleanup(session, { name: "Sauron" });
-        makeMockedUser();
+        patchUserWithCleanup({ name: "Sauron" });
         patchWithCleanup(browser, {
             location: {
                 origin: "http://lordofthering",

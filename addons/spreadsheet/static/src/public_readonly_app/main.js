@@ -2,13 +2,14 @@
 import { App, whenReady } from "@odoo/owl";
 import { PublicReadonlySpreadsheet } from "./public_readonly";
 import { templates } from "@web/core/templates";
+import { user } from "@web/core/user";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 
 (async function boot() {
     odoo.info = {
-        db: session.db,
+        db: user.db.name,
         server_version: session.server_version,
         server_version_info: session.server_version_info,
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",

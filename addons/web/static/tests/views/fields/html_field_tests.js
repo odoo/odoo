@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
-import {
-    click,
-    clickSave,
-    editInput,
-    getFixture,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { htmlField } from "@web/views/fields/html/html_field";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { session } from "@web/session";
+import {
+    makeFakeLocalizationService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 
 const RED_TEXT = /* html */ `<div class="kek" style="color:red">some text</div>`;
 const GREEN_TEXT = /* html */ `<div class="kek" style="color:green">hello</div>`;
@@ -175,7 +171,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
             force: true,
         });
-        patchWithCleanup(session.user_context, {
+        patchUserContextWithCleanup({
             lang: "en_US",
         });
 

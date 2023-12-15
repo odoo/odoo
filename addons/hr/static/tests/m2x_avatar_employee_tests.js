@@ -227,7 +227,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 employee_ids: [employeeId],
             });
 
-            patchUserWithCleanup({ hasGroup: () => true });
+            patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
             const views = {
                 "m2x.avatar.employee,false,kanban": `<kanban>
@@ -268,7 +268,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             employee_ids: [employeeId],
         });
 
-        patchUserWithCleanup({ hasGroup: () => true });
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
@@ -421,7 +421,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
 
             // Granting all users access to hr.group_hr_user
             // (reminder: if the user doesn't have access to hr.group_hr_user, the employee field should show the public employee, else the hr.employee record)
-            patchUserWithCleanup({ hasGroup: () => true });
+            patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
             const { openView } = await start({
                 mockRPC(route, args) {

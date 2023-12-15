@@ -120,7 +120,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("fallback on home action if no action found", async (assert) => {
         assert.expect(2);
-        patchUserWithCleanup({ home_action_id: 1001 });
+        patchUserWithCleanup({ homeActionId: 1001 });
 
         await createWebClient({ serverData });
         await nextTick(); // wait for the navbar to be updated

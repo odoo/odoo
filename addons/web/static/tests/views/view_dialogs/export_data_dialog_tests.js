@@ -78,7 +78,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         setupViewRegistries();
 
         function hasGroup(group) {
-            return group === "base.group_allow_export";
+            return Promise.resolve(group === "base.group_allow_export");
         }
         patchUserWithCleanup({ hasGroup });
 

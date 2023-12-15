@@ -4,7 +4,6 @@ import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_it
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -79,14 +78,9 @@ export class ActivityListPopover extends Component {
     }
 
     async updateFromProps(props) {
-        const activitiesData = await this.orm.silent.call(
-            "mail.activity",
-            "activity_format",
-            [props.activityIds],
-            {
-                context: user.user_context,
-            }
-        );
+        const activitiesData = await this.orm.silent.call("mail.activity", "activity_format", [
+            props.activityIds,
+        ]);
         this.store.Activity.insert(activitiesData, { html: true });
     }
 }

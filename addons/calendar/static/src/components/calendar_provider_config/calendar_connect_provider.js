@@ -2,7 +2,7 @@
 
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
@@ -49,7 +49,7 @@ export class CalendarConnectProvider extends Component {
         // See google/microsoft_calendar for the origin of this shortened version
         const { restart_sync_method, sync_route } =
             providerData[this.props.record.data.external_calendar_provider];
-        await this.orm.call("res.users", restart_sync_method, [[session.uid]]);
+        await this.orm.call("res.users", restart_sync_method, [[user.userId]]);
         const response = await rpc(sync_route, {
             model: "calendar.event",
             fromurl: window.location.href,

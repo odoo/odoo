@@ -705,7 +705,7 @@ QUnit.module("Views", (hooks) => {
         "export feature in list for users not in base.group_allow_export",
         async function (assert) {
             function hasGroup(group) {
-                return group !== "base.group_allow_export";
+                return Promise.resolve(group !== "base.group_allow_export");
             }
             patchUserWithCleanup({ hasGroup });
 
@@ -738,7 +738,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("list with export button", async function (assert) {
         function hasGroup(group) {
-            return group === "base.group_allow_export";
+            return Promise.resolve(group === "base.group_allow_export");
         }
         patchUserWithCleanup({ hasGroup });
 
@@ -770,7 +770,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Direct export button invisible", async function (assert) {
         function hasGroup(group) {
-            return group === "base.group_allow_export";
+            return Promise.resolve(group === "base.group_allow_export");
         }
         patchUserWithCleanup({ hasGroup });
 
@@ -2294,7 +2294,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
-        patchUserWithCleanup({ hasGroup: () => false });
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(false) });
 
         serverData.models.foo.fields.m2m.store = true;
 
@@ -9737,7 +9737,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_search_read",
-            `{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
+            `{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
             "web_search_read",
         ]);
     });
@@ -9820,9 +9820,9 @@ QUnit.module("Views", (hooks) => {
             await toggleMenuItem(target, "Custom Action");
 
             assert.verifySteps([
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":2,"active_ids":[2,3,4],"active_model":"foo","active_domain":[]}}',
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[["bar","=",true]]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":2,"active_ids":[2,3,4],"active_model":"foo","active_domain":[]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[["bar","=",true]]}}',
             ]);
         }
     );
@@ -9903,9 +9903,9 @@ QUnit.module("Views", (hooks) => {
             await toggleMenuItem(target, "Custom Action");
 
             assert.verifySteps([
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
-                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
+                '{"action_id":44,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
             ]);
         }
     );
@@ -19701,8 +19701,8 @@ QUnit.module("Views", (hooks) => {
         const wc = await createWebClient({ serverData, mockRPC });
         await doAction(wc, 1);
         assert.verifySteps([
-            `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref"}`,
-            `foo: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true,"tree_view_ref":"foo_view_ref"}`,
+            `foo: get_views: {"lang":"en","tz":"taht","uid":7,"tree_view_ref":"foo_view_ref"}`,
+            `foo: web_search_read: {"lang":"en","tz":"taht","uid":7,"bin_size":true,"tree_view_ref":"foo_view_ref"}`,
         ]);
 
         await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
@@ -19711,15 +19711,15 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "focus");
         await click(input);
         await nextTick();
-        assert.verifySteps([`bar: name_search: {"lang":"en","uid":7,"tz":"taht"}`]);
+        assert.verifySteps([`bar: name_search: {"lang":"en","tz":"taht","uid":7}`]);
 
         const items = Array.from(
             target.querySelectorAll(".o_selected_row .o_field_many2many_tags .dropdown-item")
         );
         await click(items.find((el) => el.textContent.trim() === "Search More..."));
         assert.verifySteps([
-            `bar: get_views: {"lang":"en","uid":7,"tz":"taht"}`,
-            `bar: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+            `bar: get_views: {"lang":"en","tz":"taht","uid":7}`,
+            `bar: web_search_read: {"lang":"en","tz":"taht","uid":7,"bin_size":true}`,
         ]);
         assert.containsOnce(target, ".modal");
         assert.strictEqual(

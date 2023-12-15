@@ -6,7 +6,6 @@ import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
 import { makeMockXHR, mocks, patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
@@ -123,7 +122,6 @@ export const setupManager = {
                 return audio;
             },
         });
-        patchWithCleanup(session, { show_effect: true });
         patchUserWithCleanup({ showEffect: true });
         if (!webServicesRegistry.contains("file_upload")) {
             webServicesRegistry.add("file_upload", {

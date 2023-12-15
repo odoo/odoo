@@ -2,7 +2,7 @@
 
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@website/libs/zoomodoo/zoomodoo";
@@ -113,7 +113,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
                 }).bind(this);
 
                 if (!key) {
-                    if (!editableMode && session.is_admin) {
+                    if (!editableMode && user.isAdmin) {
                         const message = _t("Cannot load google map.");
                         const urlTitle = _t("Check your configuration.");
                         this.notification.add(
