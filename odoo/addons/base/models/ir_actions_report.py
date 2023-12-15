@@ -855,7 +855,8 @@ class IrActionsReport(models.Model):
             if attachment_vals_list:
                 attachment_names = ', '.join(x['name'] for x in attachment_vals_list)
                 try:
-                    self.env['ir.attachment'].create(attachment_vals_list)
+                    attachment = self.env['ir.attachment'].create(attachment_vals_list)
+                    attachment.register_as_main_attachment(force=True)
                 except AccessError:
                     _logger.info("Cannot save PDF report %r attachments for user %r", attachment_names, self.env.user.display_name)
                 else:
