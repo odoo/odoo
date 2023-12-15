@@ -13,10 +13,12 @@ patch(DiscussApp, {
             extraClass: "o-mail-DiscussSidebarCategory-livechat",
             id: "livechat",
             name: _t("Livechat"),
+            hideWhenEmpty: true,
             isOpen: false,
             canView: false,
             canAdd: false,
             serverStateKey: "is_discuss_sidebar_category_livechat_open",
+            sequence: 20,
         };
         return res;
     },
