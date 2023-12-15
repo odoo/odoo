@@ -1852,3 +1852,68 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         loaded_data = self.pos_config.current_session_id.load_data([])
 
         self.assertFalse(loaded_data['data']['pos.config'][0]['pricelist_id'], False)
+
+    def test_refund_rounding_backend(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding up',
+            'rounding': 0.05,
+            'rounding_method': 'UP',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 49.99,
+            'taxes_id': False,
+        })
+
+        self.pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+            'only_round_cash_method': True,
+        })
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': False,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.env['product.product'].search([('available_in_pos', '=', True)], limit=1).id,
+                'price_unit': 49.99,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 49.99,
+                'price_subtotal_incl': 49.99,
+            })],
+            'pricelist_id': False,
+            'amount_paid': 50.0,
+            'amount_total': 49.99,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+        #make payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        refund = order.refund()
+        refund = self.PosOrder.browse(refund['res_id'])
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'payment_method_id': self.cash_payment_method.id
+        })
+        self.assertEqual(refund_payment.amount, -50.0)
+        refund_payment.with_context(**payment_context).check()
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(refund.amount_total, -49.99)
+        self.assertEqual(refund.amount_paid, -50.0)
+        self.assertEqual(current_session.state, 'closed')
