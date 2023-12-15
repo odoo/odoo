@@ -11,11 +11,12 @@ import json
 import logging
 import os
 import time
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from functools import wraps
 from hashlib import sha256
 from itertools import chain, repeat
 from markupsafe import Markup
+import re
 
 import babel.core
 import pytz
@@ -24,6 +25,7 @@ from lxml.builder import E
 from passlib.context import CryptContext
 from psycopg2 import sql
 
+import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -983,6 +985,19 @@ class Users(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('base.res_users_identitycheck_view_form_revokedevices').id,
             'context': ctx,
+        }
+
+    def action_view_devices(self):
+        return {
+            'name': _('Connected devices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.device',
+            'view_mode': 'tree,gantt,form',
+            'views': [
+                [self.env.ref('base.res_users_device_view_tree').id, 'tree'],
+                [self.env.ref('base.res_users_device_view_gantt').id, 'gantt'],
+                [self.env.ref('base.res_users_device_view_form').id, 'form'],
+            ],
         }
 
     @api.model
@@ -2166,3 +2181,75 @@ class APIKeyShow(models.AbstractModel):
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()
     key = fields.Char(readonly=True)
+
+FINGERPRINT_HEADERS = ['HTTP_SEC_CH_UA_PLATFORM', 'HTTP_SEC_CH_UA', 'HTTP_USER_AGENT']
+class Device(models.Model):
+    _name = 'res.users.device'
+    _description = 'Devices'
+
+    name = fields.Char("Device", required=True)
+    raw_fingerprint = fields.Char("Raw fingerprint")
+
+    last_ip_address = fields.Char("Last IP address", help="Tracking IP address")
+    first_activity = fields.Datetime("First Activity", help="Tracking first activity time")
+    last_activity = fields.Datetime("Last Activity", help="Tracking last activity time")
+
+    is_current = fields.Boolean("Current device", compute="_compute_is_current")
+
+    user_id = fields.Many2one('res.users', index=True)
+    file_prefix = fields.Char()
+
+    def _compute_is_current(self):
+        for device in self:
+            device.is_current = bool(request.session.sid.startswith(device.file_prefix)) if device.file_prefix else False
+
+    def _get_file_prefix(self):
+        return request.session.sid[:10] # Base64^10 ~= 1.15e+18
+
+    def _parse_fingerprint(self, raw_fingerprint):
+        readable_fingerprint = ''
+        os_pattern = re.compile(r'linux|windows|mac os', re.IGNORECASE)
+        browser_pattern = re.compile(r'microsoft edge|firefox|chrome|safari', re.IGNORECASE)
+        os = os_pattern.search(raw_fingerprint)
+        browser = browser_pattern.search(raw_fingerprint)
+        readable_fingerprint = (os.group(0) if os else 'Unknown OS') + ' ' + (browser.group(0) if browser else 'Unknown Browser')
+        return readable_fingerprint
+
+    def _extract_fingerprint(self):
+        headers = request.httprequest.headers.environ
+        raw_fingerprint = OrderedDict({header: headers.get(header) for header in FINGERPRINT_HEADERS})
+        return json.dumps(raw_fingerprint)
+
+    @check_identity
+    def revoke(self):
+        return self._revoke()
+
+    def _revoke(self):
+        logout = bool(self.filtered('is_current'))
+        file_prefixes = list({device.file_prefix for device in self.sudo() if device.file_prefix})
+        odoo.http.root.session_store.delete_from_prefixes(file_prefixes)
+        self.sudo().unlink()
+        if logout:
+            request.session.logout()
+
+    @api.model
+    def _update_device(self):
+        file_prefix = self._get_file_prefix()
+        uid = request.session.uid
+        raw_fingerprint = self._extract_fingerprint()
+        device = self.sudo().search([
+            ('file_prefix', '=', file_prefix),
+            ('raw_fingerprint', '=', raw_fingerprint)
+        ], limit=1)
+        if not device:
+            device = self.sudo().create({
+                'user_id': uid,
+                'name': self._parse_fingerprint(raw_fingerprint),
+                'raw_fingerprint': raw_fingerprint,
+                'first_activity': fields.Datetime.now(),
+                'file_prefix': file_prefix,
+            })
+        device.sudo().write({
+            'last_ip_address': request.httprequest.remote_addr,
+            'last_activity': fields.Datetime.now(),
+        })

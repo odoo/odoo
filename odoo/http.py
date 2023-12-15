@@ -861,9 +861,9 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
     def get_session_filename(self, sid):
-        # scatter sessions across 256 directories
-        sha_dir = sid[:2]
-        dirname = os.path.join(self.path, sha_dir)
+        # scatter sessions across 4096^2 directories
+        first_subdir, second_subdir = sid[:2], sid[2:4]
+        dirname = os.path.join(self.path, first_subdir, second_subdir)
         session_path = os.path.join(dirname, sid)
         return session_path
 

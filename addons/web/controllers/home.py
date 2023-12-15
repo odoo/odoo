@@ -50,6 +50,7 @@ class Home(http.Controller):
 
         # Side-effect, refresh the session lifetime
         request.session.touch()
+        request.env['res.users.device']._update_device()
 
         # Restore the user on the environment, it was lost due to auth="none"
         request.update_env(user=request.session.uid)

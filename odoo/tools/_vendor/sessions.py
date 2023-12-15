@@ -17,8 +17,11 @@ r"""
 """
 import logging
 import os
+import glob
 import re
 import tempfile
+import base64
+import binascii
 from hashlib import sha1
 from os import path, replace as rename
 from odoo.tools.misc import pickle
@@ -33,7 +36,9 @@ _sha1_re = re.compile(r"^[a-f0-9]{40}$")
 def generate_key(salt=None):
     if salt is None:
         salt = repr(salt).encode("ascii")
-    return sha1(b"".join([salt, str(time()).encode("ascii"), os.urandom(30)])).hexdigest()
+    key = sha1(b"".join([salt, str(time()).encode("ascii"), os.urandom(30)])).hexdigest()
+    base64_key = base64.urlsafe_b64encode(key.encode('utf-8')).decode('utf-8')
+    return base64_key
 
 
 class ModificationTrackingDict(CallbackDict):
@@ -108,7 +113,10 @@ class SessionStore(object):
 
     def is_valid_key(self, key):
         """Check if a key has the correct format."""
-        return _sha1_re.match(key) is not None
+        try:
+            return bool(base64.urlsafe_b64decode(key))
+        except binascii.Error:
+            return False
 
     def generate_key(self, salt=None):
         """Simple function that generates a new session key."""
@@ -208,6 +216,17 @@ class FilesystemSessionStore(SessionStore):
             os.unlink(fn)
         except OSError:
             pass
+
+    def delete_from_prefixes(self, prefixes):
+        # prefix = session_dir_path/sub_dir_A/sub_dir_B/part_of_sid*
+        check = re.compile(r'[./]')
+        prefixes = [os.path.join(self.path, p[:2], p[2:4], p + '*') for p in prefixes if not bool(check.search(p))]
+        for prefix in prefixes:
+            for fn in glob.glob(prefix):
+                try:
+                    os.unlink(fn)
+                except OSError:
+                    pass
 
     def get(self, sid):
         if not self.is_valid_key(sid):

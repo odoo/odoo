@@ -173,6 +173,7 @@ class CustomerPortal(Controller):
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
+        request.env['res.users.device']._update_device()
         values = self._prepare_portal_layout_values()
         return request.render("portal.portal_my_home", values)
 
