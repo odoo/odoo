@@ -17,7 +17,7 @@ export function getTooltipInfo(params) {
             widget: params.fieldInfo.widget,
             widgetDescription,
             context: params.fieldInfo.context,
-            domain: params.field.domain,
+            domain: params.fieldInfo.domain || params.field.domain,
             invisible: params.fieldInfo.invisible,
             column_invisible: params.fieldInfo.column_invisible,
             readonly: params.fieldInfo.readonly,
