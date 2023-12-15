@@ -322,7 +322,7 @@
                                         optional="hide"
                                         options="{'create': [('parent.use_create_lots', '=', True)]}"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
-                                        domain="[('product_id','=',product_id)]"
+                                        domain="[('product_id','=',product_id), ('product_qty', '=', 0)]"
                                     />
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
