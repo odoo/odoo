@@ -2,12 +2,12 @@
 
 import { _makeUser, user } from "@web/core/user";
 import { makeTestEnv } from "../helpers/mock_env";
-import { patchUserWithCleanup } from "../helpers/mock_services";
+import { patchWithCleanup } from "../helpers/utils";
 
 QUnit.module("User");
 
 QUnit.test("successive calls to hasGroup", async (assert) => {
-    patchUserWithCleanup(_makeUser());
+    patchWithCleanup(user, _makeUser({ uid: 7 }));
     const groups = ["x"];
     const mockRPC = (route, args) => {
         assert.step(`${args.model}/${args.method}/${args.args[0]}`);

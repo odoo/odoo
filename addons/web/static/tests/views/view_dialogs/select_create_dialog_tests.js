@@ -11,7 +11,6 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
-import { session } from "@web/session";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { listView } from "@web/views/list/list_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -220,12 +219,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                 );
             }
         };
-        patchWithCleanup(session.user_context, { uid: 2 });
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.services.dialog.add(SelectCreateDialog, {
             noCreate: true,
             resModel: "partner",
-            domain: [["id", "=", session.user_context.uid]],
+            domain: [["id", "=", 2]],
         });
         await nextTick();
     });

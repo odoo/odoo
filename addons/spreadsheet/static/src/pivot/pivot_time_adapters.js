@@ -4,7 +4,8 @@ import { helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
+
 const { toNumber, formatValue } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
@@ -255,7 +256,7 @@ function getGroupStartingDay(field, groupBy, readGroup) {
     if (field.type === "date") {
         return sqlValue;
     }
-    const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
+    const userTz = user.tz || luxon.Settings.defaultZoneName;
     return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
 }
 

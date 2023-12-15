@@ -17,7 +17,7 @@ import { Component, whenReady } from "@odoo/owl";
  */
 export async function startWebClient(Webclient) {
     odoo.info = {
-        db: session.db,
+        db: user.db.name,
         server_version: session.server_version,
         server_version_info: session.server_version_info,
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",

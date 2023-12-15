@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { serializeDate, today } from "@web/core/l10n/dates";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
@@ -80,7 +80,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
     const actionChecks = {
         context: { force_search_count: 1 },
-        domain: [["activity_user_id", "=", session.uid]],
+        domain: [["activity_user_id", "=", user.userId]],
     };
     patchWithCleanup(env.services.action, {
         doAction(action) {

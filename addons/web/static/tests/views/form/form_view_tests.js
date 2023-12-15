@@ -8589,7 +8589,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read",
-            `{"action_id":29,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1],"active_model":"partner","active_domain":[]}}`,
+            `{"action_id":29,"context":{"lang":"en","tz":"taht","uid":7,"active_id":1,"active_ids":[1],"active_model":"partner","active_domain":[]}}`,
             "web_read",
         ]);
     });
@@ -8641,7 +8641,7 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "onchange",
             "web_save",
-            `{"action_id":29,"context":{"lang":"en","uid":7,"tz":"taht","active_id":6,"active_ids":[6],"active_model":"partner","active_domain":[]}}`,
+            `{"action_id":29,"context":{"lang":"en","tz":"taht","uid":7,"active_id":6,"active_ids":[6],"active_model":"partner","active_domain":[]}}`,
             "web_read",
         ]);
 
@@ -9467,7 +9467,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_field_translate.btn-link");
         assert.verifySteps([
             `translate args [[1],"foo"]`,
-            `translate context {"lang":"en","uid":7,"tz":"taht"}`,
+            `translate context {"lang":"en","tz":"taht","uid":7}`,
         ]);
 
         assert.containsOnce(target, ".modal");
