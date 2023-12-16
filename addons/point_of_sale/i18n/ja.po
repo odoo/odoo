@@ -431,9 +431,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"在庫可能品は在庫管理対象の製品です。在庫アプリのインストールが必要です。\n"
-"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではない製品です。\n"
-"サービス品は物理的なモノが存在しない無形の製品です。"
+"在庫可能品は在庫管理対象のプロダクトです。在庫アプリのインストールが必要です。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではないプロダクトです。\n"
+"サービス品は物理的なモノが存在しない無形のプロダクトです。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -817,7 +817,7 @@ msgstr ""
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
-msgstr "製品価格の読み込み中にエラーが発生しました。すべての価格表がPOSで利用可能であることを確認してください。"
+msgstr "プロダクト価格の読み込み中にエラーが発生しました。すべての価格表がPOSで利用可能であることを確認してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1070,7 +1070,7 @@ msgid ""
 "products."
 msgstr ""
 "クーポン、プロモーション、ギフトカード、ロイヤリティなど、様々なキャンペーンで売上を向上させます。特定な条件を設定できます "
-"(製品、お客様、最低購入数、期間)。リワードとしては、値引 (%又は値引額)や無料製品を提供できます。"
+"(プロダクト、お客様、最低購入数、期間)。リワードとしては、値引 (%又は値引額)や無料プロダクトを提供できます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1326,7 +1326,7 @@ msgstr "キャッシャー"
 msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
-msgstr "カテゴリは、タッチスクリーンインターフェイスを介して製品を閲覧するために使用されます。"
+msgstr "カテゴリは、タッチスクリーンインターフェイスを介してプロダクトを閲覧するために使用されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1386,14 +1386,14 @@ msgstr "ハードウェアスケール統合を使用して製品に重みを付
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template__available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale."
-msgstr "この製品をPOSに表示するかどうかを確認します。"
+msgstr "このプロダクトをPOSに表示するかどうかを確認します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_uom_category__is_pos_groupable
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
-msgstr "このカテゴリの製品をPOS注文でグループ化するかどうかを確認します"
+msgstr "このカテゴリのプロダクトをPOS注文でグループ化するかどうかを確認します"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2129,7 +2129,7 @@ msgstr "オーダと請求書のデフォルト仕訳帳"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default sales tax for products"
-msgstr "製品のデフォルト販売税"
+msgstr "プロダクトのデフォルト販売税"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
@@ -4010,7 +4010,7 @@ msgstr "現金方式のみ"
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
-msgstr "PoSアプリのマネージャーアクセス権を持つユーザのみが、注文の製品価格を変更できます。"
+msgstr "PoSアプリのマネージャーアクセス権を持つユーザのみが、オーダのプロダクト価格を変更できます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4719,7 +4719,7 @@ msgstr "設定オプションを表示するには、上記のPOSを作成/選�
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr "この製品の収入勘定を定義してください: \"%s\"(id：％d)。"
+msgstr "このプロダクトの収入勘定を定義してください: \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5177,7 +5177,7 @@ msgstr "価格表"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__price
 msgid "Priced Product"
-msgstr "価格設定済製品"
+msgstr "価格設定済プロダクト"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5377,7 +5377,7 @@ msgstr "プロダクトテンプレート"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__detailed_type
 msgid "Product Type"
-msgstr "製品タイプ"
+msgstr "プロダクトタイプ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
@@ -7828,12 +7828,12 @@ msgstr "倉庫 (POS)"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
-msgstr "サイトメッセージ"
+msgstr "ウェブサイトメッセージ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr "サイト通信履歴"
+msgstr "ウェブサイト通信履歴"
 
 #. module: point_of_sale
 #. odoo-javascript

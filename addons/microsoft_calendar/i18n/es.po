@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,6 +187,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
 msgstr ""
+"Debido a una limitación del calendario de Outlook, las actualizaciones de "
+"recurrencia deben realizarse desde allí."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -195,6 +198,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
 "If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
+"Debido a una limitación del calendario de Outlook, las actualizaciones de recurrencia deben realizarse desde allí.\n"
+"Si esta recurrencia no aparece en el calendario de Outlook, debe eliminarla en el calendario de Odoo y recrearla en el calendario de Outlook."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -204,6 +209,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrent events must be created "
 "directly in Outlook Calendar."
 msgstr ""
+"Debido a una limitación del calendario de Outlook, debe crear los eventos "
+"recurrentes desde el calendario de Outlook."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
@@ -231,6 +238,9 @@ msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
 msgstr ""
+"Para tener un organizador diferente en su evento, es necesario que el "
+"organizador tenga su Calendario de Odoo sincronizado con el Calendario de "
+"Outlook."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -251,17 +261,18 @@ msgstr ""
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Indicates if synchronization with Outlook Calendar is paused or not."
 msgstr ""
+"Indica si la sincronización con el Calendario de Outlook está en pausa o no."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_last_sync_date
 msgid "Last Sync Date"
-msgstr ""
+msgstr "Fecha de la última sincronización"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Last Sync Time"
-msgstr ""
+msgstr "Hora de la última sincronización"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_uid
@@ -279,7 +290,7 @@ msgstr "Última actualización el"
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,help:microsoft_calendar.field_res_users__microsoft_last_sync_date
 msgid "Last synchronization date with Outlook Calendar"
-msgstr ""
+msgstr "Fecha de la última sincronización con el Calendario de Outlook"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
@@ -289,12 +300,12 @@ msgstr "Dejarlos intactos"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_account_id
 msgid "Microsoft Calendar Account"
-msgstr ""
+msgstr "Cuenta del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_credentials
 msgid "Microsoft Calendar Account Data"
-msgstr ""
+msgstr "Datos de la cuenta del calendario de Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -341,7 +352,7 @@ msgstr "ID Master de recurrencia de Microsoft"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Microsoft Synchronization Paused"
-msgstr ""
+msgstr "Sincronización de Microsoft pausada"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
@@ -415,7 +426,7 @@ msgstr "Outlook: sincronización"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Pausar sincronización"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -437,7 +448,7 @@ msgstr "Reinicio de cuenta de Microsoft Calendar"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Stop Synchronization"
-msgstr ""
+msgstr "Detener sincronización"
 
 #. module: microsoft_calendar
 #. odoo-javascript
@@ -489,7 +500,7 @@ msgstr "La sincronización con Outlook Calendar ha sido detenida con éxito."
 #. module: microsoft_calendar
 #: model:ir.model.constraint,message:microsoft_calendar.constraint_res_users_microsoft_token_uniq
 msgid "The user has already a microsoft account"
-msgstr ""
+msgstr "El usuario ya tiene una cuenta de microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -542,3 +553,4 @@ msgstr ""
 #, python-format
 msgid "Your administrator paused the synchronization with Outlook Calendar."
 msgstr ""
+"Su administrador pausó la sincronización con el Calendario de Outlook."

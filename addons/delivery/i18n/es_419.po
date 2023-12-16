@@ -57,7 +57,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr "<span class=\"o_stat_text text-danger\">Sin debug</span>"
+msgstr "<span class=\"o_stat_text text-danger\">Sin solución de bugs</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -85,8 +85,8 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
-"Una descripción del método de entrega que desea comunicar a sus clientes en "
-"la orden de venta y en el correo electrónico de confirmación de venta. Por "
+"Una descripción del método de envío que desea comunicar a sus clientes en la"
+" orden de venta y en el correo electrónico de confirmación de venta. Por "
 "ejemplo, instrucciones que el cliente debe seguir."
 
 #. module: delivery
@@ -298,7 +298,7 @@ msgstr "Envío establecido"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr "Prefijo de C.P. de envío"
+msgstr "Prefijo del código postal de envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -592,8 +592,8 @@ msgid ""
 msgstr ""
 "Prefijos de códigos postales que aplican para este transportista. Tome en "
 "cuenta que las expresiones comunes se pueden utilizar para la compatibilidad"
-" con países con longitudes de códigos postales variantes. Es decir, se puede"
-" agregar \"$\" al final del prefijo para que coincida con el código postal "
+" con países con longitudes de códigos postales variantes. Es decir, puede "
+"agregar \"$\" al final del prefijo para que coincida con el código postal "
 "exacto (por ejemplo, \"100$\" solo coincidirá con \"100\" y no con \"1000\")"
 
 #. module: delivery
@@ -639,7 +639,7 @@ msgstr "Cantidad"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "Etiqueta de devolución accesible desde el portal de clientes"
+msgstr "Puede acceder a la etiqueta de devolución desde el portal de clientes"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -676,8 +676,8 @@ msgstr "Producto de servicio"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Establezca como \"Verdadero\" si sus credenciales están certificadas para la"
-" producción."
+"Establezca como \"Verdadero\" si sus credenciales están certificadas para "
+"producción."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -704,8 +704,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"El seguro de envío es un servicio que se puede reembolsar a los remitentes "
-"cuyos paquetes se pierdan, sean robados y/o se dañen en el camino.d"
+"El seguro de envío es un servicio que puede reembolsar a los remitentes en "
+"caso de que sus paquetes se pierdan, sean robados o se dañen en el camino."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -751,7 +751,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
 msgstr ""
-"La etiqueta de devolución se genera automáticamente al realizarse el envío."
+"La etiqueta de devolución se genera de forma automática al realizar el "
+"envío."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
@@ -763,8 +764,7 @@ msgstr "El seguro de envío debe ser un porcentaje entre 0 y 100."
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
-"El envío es gratuito debido a que el importe de la orden excede de %.2f."
+msgstr "El envío es gratuito, el importe de la orden es mayor a %.2f."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -773,9 +773,9 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Estos métodos le permiten calcular automáticamente la política de envío\n"
-"            de acuerdo a sus ajustes; en la orden de venta (basada en la\n"
-"            cotización) o en la factura (basado en las órdenes de envío). "
+"Estos métodos le permiten calcular de forma automática el precio de envío\n"
+"            de acuerdo a sus ajustes; en la orden de venta (de acuerdo con la\n"
+"            cotización) o en la factura (de acuerdo con las órdenes de envío). "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -790,7 +790,7 @@ msgstr "Este porcentaje se agregará al precio de envío."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr "Peso total del pedido"
+msgstr "Peso total de la orden"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form

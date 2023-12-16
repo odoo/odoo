@@ -590,7 +590,7 @@ msgstr "Volver a la orden"
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Volver al presupuesto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -630,6 +630,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Precio base para el cálculo.\n"
+"Precio de venta: el precio base será el precio de venta.\n"
+"Precio de coste: el precio base será el precio de coste.\n"
+"Otra lista de precios: cálculo del precio base de acuerdo con otra lista de precios."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -1120,7 +1124,7 @@ msgstr "Descuentos en líneas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Precio con descuento"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1225,7 +1229,7 @@ msgstr "Dinámicamente"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "E.G: product description, ebook, legal notice, ..."
-msgstr ""
+msgstr "Por ejemplo: descripción del producto, ebook, aviso legal,..."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1235,7 +1239,7 @@ msgstr "Cada valor debe definirse una sola vez por atributo y por producto."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "Silla de madera amigable con el ambiente"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1423,7 +1427,7 @@ msgstr "Proporciona el orden de secuencia al mostrar una lista de productos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "Lista de precios para miembros gold"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1866,13 +1870,15 @@ msgstr "Cantidad mín."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox (option)"
-msgstr ""
+msgstr "Casilla múltiple (opción)"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
+"El tipo de visualización con casillas múltiples no es compatible con la "
+"creación de variantes"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
@@ -2042,6 +2048,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"No puede asociar el valor %(value)s con el atributo %(attribute)s en el "
+"producto %(product)s porque no coinciden."
 
 #. module: product
 #. odoo-python
@@ -2051,6 +2059,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"En el producto %(product)s no puede transformar el atributo "
+"%(attribute_src)s en el atributo %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2388,7 +2398,7 @@ msgstr "Etiqueta de producto 4x12 (PDF)"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "Etiqueta de producto 4x12 Sin precio (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
@@ -2413,7 +2423,7 @@ msgstr "Informe de la etiqueta del prodcuto 4x12"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "Informe de la etiqueta del producto 4x12 Sin precio"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
@@ -3078,6 +3088,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"El número de variantes por generar es mayor que el límite permitido. Evite "
+"crear variantes para cada combinación o créelas solo bajo pedido desde la "
+"orden de ventas. Para hacerlo, abra la vista de formulario de atributos y "
+"cambie el modo de *Crear variantes*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3129,6 +3143,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"El valor %(value)s no se define por el atributo %(attribute)s en el producto"
+" %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3291,7 +3307,7 @@ msgstr "Nombre de Unidad de Medida"
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "Precio unitario:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3317,7 +3333,7 @@ msgstr "Subir"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Subir archivos a su producto"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3338,6 +3354,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers."
 msgstr ""
+"Utilice esta función para almacenar cualquier archivo que quiera compartir "
+"con sus clientes."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3651,14 +3669,14 @@ msgstr ""
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr ""
+msgstr "Puede subir una imagen que se use como color del valor del atributo."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "No puede editar este producto en el catálogo."
 
 #. module: product
 #. odoo-python
@@ -3678,6 +3696,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"No puede cambiar el modo de creación de variantes del atributo %(attribute)s, se utiliza en los siguientes productos:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3687,6 +3707,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"No puede eliminar el atributo del valor %(value)s porque se utiliza en los siguientes productos:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3873,7 +3895,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Debe dejar al menos una cantidad."
 
 #. module: product
 #. odoo-python

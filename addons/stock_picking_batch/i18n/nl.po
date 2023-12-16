@@ -242,24 +242,24 @@ msgstr "Batch naam"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Batchpicking"
+msgstr "Batches"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Batchpickingsregels"
+msgstr "Batchregels"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Batchpickings"
+msgstr "Batches"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Batchpicking niet gereed"
+msgstr "Batche niet gereed"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
@@ -331,7 +331,7 @@ msgstr "Contact"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Aantal batchpickings"
+msgstr "Aantal batches"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
@@ -370,7 +370,7 @@ msgstr "Land van bestemming"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Destination Location"
-msgstr "Bestemming"
+msgstr "Bestemmingslocatie"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -629,12 +629,12 @@ msgstr "Bewerkingen"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Package ID"
-msgstr "ID pakket"
+msgstr "Verpakking ID"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Picken"
+msgstr "Verplaatsing"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
@@ -648,7 +648,7 @@ msgstr "Picking type"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Voeg 'Gereed'-hoeveelheden toe aan de batchpicking om een nieuw pakket te "
+"Voeg 'Gereed'-hoeveelheden toe aan de batch om een nieuw verpakking te "
 "maken."
 
 #. module: stock_picking_batch
@@ -717,7 +717,7 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Result Package ID"
-msgstr "ID eindpakket"
+msgstr "Eindverpakking ID"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
@@ -746,7 +746,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Zoek batchpicking"
+msgstr "Zoek batch"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
@@ -812,7 +812,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Voorraad batchpicking"
+msgstr "Voorraad batchverplaatsing"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -848,7 +848,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"De volgende transfers kunnen niet worden toegevoegd aan de batchtransfer %s. Controleer hun statussen en bewerkingssoorten.\n"
+"De volgende verplaatsingen kunnen niet worden toegevoegd aan de batch %s. Controleer de statussen en bewerkingssoorten.\n"
 "\n"
 "Incompatibiliteiten: %s"
 
@@ -860,7 +860,7 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Het doel van batchpicking is om bewerkingen te groeperen die mogelijk samen "
+"Het doel van batches is om bewerkingen te groeperen die mogelijk samen "
 "(moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook handig "
 "zijn om functies toe te wijzen (één persoon = één batch) of helpt het "
 "tijdbeheer van functies (taken die klaar moeten zijn voor 13 uur)."
@@ -1029,7 +1029,7 @@ msgstr "Je moet een aantal pickings toevoegen aan de batch."
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "een nieuwe batchpicking"
+msgstr "een nieuwe batch"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
@@ -1039,7 +1039,7 @@ msgstr "een nieuwe wavepicking"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "een bestaande batchpicking"
+msgstr "een bestaande batch"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing

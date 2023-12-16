@@ -295,7 +295,7 @@ msgstr ""
 "            </t>\n"
 "            请抽少许时间，对我们处理“<strong t-out=\"object.name or ''\">工作规划和财政预算</strong>” 任务的表现评分。\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                该项任务分配给 <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>处理。<br>\n"
+"                该项任务指派给 <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>处理。<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <br>\n"
@@ -464,7 +464,7 @@ msgstr "<small class=\"text-end\">阶段: </small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr "<small class=\"text-muted\">受让人</small>"
+msgstr "<small class=\"text-muted\">受托人</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -992,14 +992,14 @@ msgstr "已指派"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "已分派任务"
+msgstr "已指派任务"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 msgid "Assigned to"
-msgstr "分派给"
+msgstr "指派给"
 
 #. module: project
 #. odoo-python
@@ -1018,18 +1018,18 @@ msgstr "受托人"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr "分配日期"
+msgstr "指派日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr "分派日期"
+msgstr "指派日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_assign
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr "分配日期"
+msgstr "指派日期"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__at_risk
@@ -1687,7 +1687,7 @@ msgstr "该项目结束的日期。在查看项目的计划时，会考虑到项
 msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
-msgstr "该任务上次分配（或未分配）的日期。据此，您可以统计出分配任务通常所需的时间。"
+msgstr "该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -2188,7 +2188,7 @@ msgstr "授予门户访问权限"
 msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
-msgstr "将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被分配的任务。"
+msgstr "将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被指派的任务。"
 
 #. module: project
 #. odoo-python
@@ -4081,7 +4081,7 @@ msgstr "在全部范围内搜索"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "在分配的人中搜索"
+msgstr "在指派的人中搜索"
 
 #. module: project
 #. odoo-python
@@ -5137,7 +5137,7 @@ msgstr "任务取消归档"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Unassigned"
-msgstr "未分派"
+msgstr "未指派"
 
 #. module: project
 #. odoo-python
@@ -5263,9 +5263,9 @@ msgid ""
 msgstr ""
 "在标题中使用这些关键字来设置新任务：\n"
 "\n"
-"        30h 为任务分配 30 小时\n"
+"        30h 为任务指派 30 小时\n"
 "        #tags 为任务设置标签\n"
-"        @user 将任务分配给某个用户\n"
+"        @user 将任务指派给某个用户\n"
 "        ! 为任务设置高优先级\n"
 "\n"
 "        确保格式和顺序正确 例如，改进配置屏幕，5h #feature #v16 @Mitchell !"
@@ -5391,7 +5391,7 @@ msgstr "关闭的工作天数"
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr "分配的工作时间"
+msgstr "指派的工作时间"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
@@ -5407,7 +5407,7 @@ msgstr "工时"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr "分配的工作时间"
+msgstr "指派的工作时间"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5578,7 +5578,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr "受让人"
+msgstr "受托人"
 
 #. module: project
 #. odoo-javascript
@@ -5826,7 +5826,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "👤 Unassigned"
-msgstr "👤 未分配"
+msgstr "👤 未指派"
 
 #. module: project
 #. odoo-javascript

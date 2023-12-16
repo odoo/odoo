@@ -74,7 +74,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"如果将传输添加到超过此行数的批中，则不会自动向其添加传输。\n"
+"如果将调拨添加到超过此行数的批中，则不会自动向其添加调拨。\n"
 "如果没有行限制，则将此值保留为“0”。"
 
 #. module: stock_picking_batch
@@ -83,8 +83,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"传输将不会自动添加到超过此传输数量的批中。\n"
-"如果没有传输限制，则将此值保留为“0”。"
+"调拨将不会自动添加到超过此调拨数量的批中。\n"
+"如果没有调拨限制，则将此值保留为“0”。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -838,7 +838,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"以下传输不能添加到批量传输 %s。请检查它们的状态和作业类型。\n"
+"以下调拨不能添加到批量调拨 %s。请检查它们的状态和作业类型。\n"
 "\n"
 "不兼容：%s"
 
@@ -863,7 +863,7 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"波传输的目标是将来自不同传输的作业分组在一起，以提高它们的效率。分配工作(一个人=一批)或帮助作业的时间管理(任务在下午1点完成)也可能很有用。"
+"波调拨的目标是将来自不同调拨的作业分组在一起，以提高它们的效率。分配工作(一个人=一批)或帮助作业的时间管理(任务在下午1点完成)也可能很有用。"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -912,12 +912,12 @@ msgstr "今日活动"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer Display Name"
-msgstr "转账显示名称"
+msgstr "调拨显示名称"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -935,7 +935,7 @@ msgstr "调拨"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "转移"
+msgstr "调拨"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
