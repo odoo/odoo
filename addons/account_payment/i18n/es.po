@@ -46,6 +46,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Autorizado</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -53,6 +55,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Pagado</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -67,12 +71,12 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Pendientes"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\"> Pendiente</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Transacción de pago</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -194,6 +198,7 @@ msgstr ""
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
 msgstr ""
+"Habilite pagos con tarjeta de crédito y débito compatibles con Stripe."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -294,7 +299,7 @@ msgstr ""
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Onboarding Online Payments"
-msgstr ""
+msgstr "Integración de pagos en línea"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_onboarding_onboarding_step
@@ -309,7 +314,7 @@ msgstr "Pagos en línea"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Pagar facturas en línea"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -577,6 +582,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"No puede eliminar un método de pago vinculado a un proveedor en el estado habilitado o de prueba.\n"
+"Proveedores vinculados: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -595,3 +602,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Primero debe desactivar un proveedor de pago antes de eliminar su diario.\n"
+"Proveedores vinculados: %s"

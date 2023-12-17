@@ -40,6 +40,11 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* El estado 'Nuevo' se usa cuando un usuario está configurando una orden de reparación nueva o que no se ha confirmado.\n"
+"* El estado 'Confirmado' se usa cuando un usuario confirma una orden de reparación.\n"
+"* El estado 'En reparación' se usa cuando se está realizando una reparación.\n"
+"* El estado 'Reparado' se usa cuando se terminó una reparación.\n"
+"* El estado 'Cancelado' se usa cuando un usuario cancela una orden de reparación."
 
 #. module: repair
 #. odoo-python
@@ -1081,7 +1086,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "Mostrar botón de establecer cantidades"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1266,7 +1271,7 @@ msgstr "En reparación"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "Bajo garantía"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name

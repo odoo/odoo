@@ -523,6 +523,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Precio base para el cálculo.\n"
+"Precio de venta: el precio base será el precio de venta.\n"
+"Precio de coste: el precio base será el precio de coste.\n"
+"Otra lista de precios: cálculo del precio base de acuerdo con otra lista de precios."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -1750,6 +1754,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"No puede asociar el valor %(value)s con el atributo %(attribute)s en el "
+"producto %(product)s porque no coinciden."
 
 #. module: product
 #. odoo-python
@@ -1759,6 +1765,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"En el producto %(product)s no puede transformar el atributo "
+"%(attribute_src)s en el atributo %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2720,6 +2728,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"El valor %(value)s no se define por el atributo %(attribute)s en el producto"
+" %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3196,6 +3206,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"No puede cambiar el modo de creación de variantes del atributo %(attribute)s, se utiliza en los siguientes productos:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3205,6 +3217,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"No puede eliminar el atributo del valor %(value)s porque se utiliza en los siguientes productos:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3380,7 +3394,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Debe dejar al menos una cantidad."
 
 #. module: product
 #. odoo-python

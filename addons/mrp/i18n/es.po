@@ -612,6 +612,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
 msgstr ""
+"Todas las cantidades de producto deben ser mayores o iguales a 0.\n"
+"Se pueden utilizar las líneas con cantidades en 0 como líneas opcionales. \n"
+"¡Debe instalar el módulo mrp_byproduct si desea gestionar productos adicionales en las listas de materiales!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1775,7 +1778,7 @@ msgstr "Fecha de alerta de retraso"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delays"
-msgstr ""
+msgstr "Atrasos "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2000,7 +2003,7 @@ msgstr "Asegure la trazabilidad de un producto almacenable en su almacén"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Falla del equipo"
 
 #. module: mrp
 #. odoo-python
@@ -2222,7 +2225,7 @@ msgstr "Disponible para usar / A mano"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Disponible/En stock"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2258,7 +2261,7 @@ msgstr "Generar números de serie"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr ""
+msgstr "Generar una nueva LdM desde esta orden de fabricación "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -3355,7 +3358,7 @@ msgstr "No disponible"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
+msgstr "Tenga en cuenta que se encuentra disponible otra versión de esta LdM."
 
 #. module: mrp
 #. odoo-python
@@ -3909,6 +3912,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Producir: mover los componentes a la ubicación de producción directamente para comenzar el proceso de fabricación.\n"
+"Recolectar/producir: primero se deben descargar los componentes del stock a la ubicación de entrada para luego trasladarlos a la ubicación de producción."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4045,7 +4050,7 @@ msgstr "La capacidad de producto debe ser única para cada centro de trabajo."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr ""
+msgstr "Producto a construir..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__production_id
@@ -4713,7 +4718,7 @@ msgstr "¿Mostrar ventana emergente?"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
 msgid "Show Produce"
-msgstr ""
+msgstr "Mostrar Producir"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
