@@ -128,6 +128,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>¡Advertencia!</strong> Hay una captura parcial pendiente. Espere\n"
+"                    un momento para que se procese. Revise la configuración del pago de su proveedor si\n"
+"                    la captura aún está pendiente después de unos minutos."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -135,6 +138,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>¡Advertencia!</strong> No puede capturar una cantidad negativa mayor\n"
+"                    a"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -172,13 +177,15 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
+"Se envió una solicitud de reembolso por %(amount)s. Se creará el pago "
+"pronto. Referencia de transacción de reembolso: %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "A token cannot be unarchived once it has been archived."
-msgstr ""
+msgstr "No se puede desarchivar un token una vez que se ha archivado."
 
 #. module: payment
 #. odoo-python
@@ -186,7 +193,7 @@ msgstr ""
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
-msgstr ""
+msgstr "Se inició una transacción con referencia %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -844,7 +851,7 @@ msgstr "Generar enlace de pago de ventas"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr ""
+msgstr "Generar y copiar un enlace de pago "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -861,7 +868,7 @@ msgstr "Ruta HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "Contiene un borrador inferior"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
@@ -871,7 +878,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Contiene un importe restante "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -973,7 +980,7 @@ msgstr "Error de servidor interno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Es un importe a capturar "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1057,7 +1064,7 @@ msgstr "Manual"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr ""
+msgstr "Captura manual admitida"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1067,7 +1074,7 @@ msgstr "Importe máximo "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Captura máxima admitida"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1123,6 +1130,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
 msgstr ""
+"No se encontró un método de pago para esta empresa. Cree uno desde el menú "
+"de proveedores de pago."
 
 #. module: payment
 #. odoo-javascript
@@ -1143,7 +1152,7 @@ msgstr "No se seleccionó una opción de pago"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "No se puede asignar un token a un contacto público."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
@@ -1386,7 +1395,7 @@ msgstr "Proveedor de pago"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr ""
+msgstr "Asistente para la integración de proveedores de pago"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1659,6 +1668,9 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Algunas de las transacciones que intenta capturar solo pueden capturarse "
+"completas. Gestione las transacciones individualmente para capturar una "
+"cantidad parcial."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1725,17 +1737,17 @@ msgstr "El token de acceso es inválido."
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "El importe a capturar debe ser positivo y no debe ser superior a %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "Las transacciones subordinadas de la transacción."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr ""
+msgstr "La parte clara de los datos de pago del método de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
@@ -1753,6 +1765,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
+"Los países donde está disponible este proveedor de pago. Si desea que esté "
+"disponible para todos los países, deje este espacio vacío."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
@@ -1760,6 +1774,8 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
+"Las monedas disponibles con este proveedor de pago. Deje el campo vacío si "
+"no quiere restringir ninguna."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1787,6 +1803,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
 msgstr ""
+"La moneda principal de la empresa, utilizada para mostrar los campos "
+"monetarios."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
@@ -1794,6 +1812,9 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"El importe máximo de pago para el que está disponible este proveedor de "
+"pago. Si desea que esté disponible para cualquier importe, deje este espacio"
+" vacío."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1844,7 +1865,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
-msgstr ""
+msgstr "La referencia de proveedor de pago de la transacción"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1891,6 +1912,8 @@ msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
 msgstr ""
+"La plantilla que muestra el formulario de pago en línea cuando se realiza un"
+" pago con token."
 
 #. module: payment
 #. odoo-python
@@ -1900,6 +1923,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
+"Ocurrió un error en la transacción con referencia %(ref)s por %(amount)s "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1909,6 +1934,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
+"Se confirmó la transacción con referencia %(ref)s por %(amount)s "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1918,6 +1945,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
+"Se confirmó la transacción con referencia %(ref)s por %(amount)s "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1949,6 +1978,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
+"Esta acción también archivará los tokens %s que estén registrados con este "
+"proveedor. Archivar los tokens es irreversible."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2015,7 +2046,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
 msgid "Token Inline Form Template"
-msgstr ""
+msgstr "Plantilla de formulario en línea de token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
@@ -2190,6 +2221,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
+"Si el proveedor se encuentra visible en el sitio web o no. Los tokens siguen"
+" funcionando pero solo son visibles en los formularios."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2204,6 +2237,7 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
+"No puede eliminar al proveedor de pago %s. Desactívelo o desinstálelo."
 
 #. module: payment
 #. odoo-python
@@ -2388,7 +2422,7 @@ msgstr "peligro"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "info"
-msgstr ""
+msgstr "info"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server

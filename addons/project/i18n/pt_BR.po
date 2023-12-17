@@ -11,7 +11,7 @@
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
-# Layna Nascimento, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Maitê Dietze, 2023
 # 
 msgid ""
@@ -809,7 +809,7 @@ msgstr "Tudo"
 #: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.ui.menu,name:project.menu_project_management_all_tasks
 msgid "All Tasks"
-msgstr "Todas as atividades"
+msgstr "Todas as tarefas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
@@ -3407,6 +3407,14 @@ msgstr ""
 "Modelo primário que contém o alias. O modelo que contém a referência de "
 "alias não é necessariamente o modelo dado por alias_model_id (exemplo: "
 "projeto (parent_model) e tarefa (model))"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid ""
+"Partner company cannot be different from its assigned projects' company"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
