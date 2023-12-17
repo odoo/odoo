@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -51,6 +51,13 @@ msgstr ""
 "</li></p>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
@@ -61,7 +68,7 @@ msgstr "A-NZ BIS Billing 3.0"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr ""
+msgstr "Articles 226 items 11 to 15 Directive 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -79,6 +86,14 @@ msgstr "BIS3 DE (XRechnung)"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -144,6 +159,12 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -216,7 +237,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -319,6 +341,15 @@ msgstr ""
 #, python-format
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
 msgstr ""
 
 #. module: account_edi_ubl_cii

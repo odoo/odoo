@@ -261,12 +261,12 @@ msgstr "Conto analitico"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_search
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Ricerca distribuzione analitica"
+msgstr "Ricerca ripartizione analitica"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Applicabilità del piano analitico"
+msgstr "Applicabilità piano analitico"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_precision
@@ -405,7 +405,7 @@ msgstr "Categoria:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr "Categoria: non trovato"
+msgstr "Categoria: non trovata"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1301,7 +1301,7 @@ msgstr "Nuova nota spese"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr "Nuovi resoconti spese"
+msgstr "Nuove note spese"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1424,8 +1424,8 @@ msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
 msgstr ""
-"Una volta che il <b>resoconto delle spese</b> è pronto puoi inviarlo al tuo "
-"manager e aspettare l'approvazione."
+"Dopo aver preparato la <b>nota spese</b>, puoi inviarla al supervisore e "
+"attendere che venga approvata."
 
 #. module: hr_expense
 #. odoo-python
@@ -1751,12 +1751,10 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Invia una mail a questo alias di posta elettronica con la ricevuta in "
-"allegato per creare una spesa in un solo clic. Se la prima parola "
-"dell'oggetto della mail contiene il riferimento interno della categoria o il"
-" nome della categoria, la categoria corrispondente sarà automaticamente "
-"impostata. Digita l'importo della spesa nell'oggetto della mail per "
-"impostare anche esso sulla spesa."
+"L'invio di una e-mail a questo alias, allegando la ricevuta, permette di "
+"creare una spesa in un clic. Se l'oggetto inizia con un riferimento interno "
+"o un nome, verrà impostata automaticamente la corrispondente categoria. "
+"Inserendo anche l'importo, verrà aggiunto alla spesa."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1881,23 +1879,23 @@ msgstr "Imposta"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount"
-msgstr "Importo tassa"
+msgstr "Importo imposta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__amount_tax
 msgid "Tax amount in Currency"
-msgstr "Importo tasse in valuta"
+msgstr "Importo imposta in valuta"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount in company currency"
-msgstr "Importo tasse nella valuta dell'azienda"
+msgstr "Importo imposta in valuta aziendale"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr "Importo tassa in valuta"
+msgstr "Importo imposta in valuta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1950,8 +1948,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
-"La prima parola dell'oggetto dell'email non corrisponde a nessun codice di "
-"categoria. Dovrai impostare manualmente la categoria sulla spesa."
+"La prima parola nell'oggetto della e-mail non corrisponde ad alcun codice "
+"categoria, deve essere impostato manualmente nella spesa."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2123,7 +2121,7 @@ msgstr "Importo imponibile"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
 msgid "UoM Category"
-msgstr "Categoria unità di misura"
+msgstr "Categoria UdM"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2138,7 +2136,7 @@ msgstr "Carica"
 #, python-format
 msgid "Use the breadcrumbs to go back to the list of expenses."
 msgstr ""
-"Utilizza i percorsi di navigazione per tornare all'elenco delle spese."
+"Utilizza i percorsi di navigazione per ritornare all'elenco delle spese."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
@@ -2231,7 +2229,7 @@ msgstr "Nessuna autorizzazione per modificare la nota spese."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr "Non si può creare un rapporto senza categoria."
+msgstr "Impossibile creare rendiconti senza una categoria."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2371,7 +2369,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
-"Devi avere almeno una categoria spendibile nel tuo database per procedere!"
+"Per procedere è necessario che nel database sia presente almeno una "
+"categoria da addebitare."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

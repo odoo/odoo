@@ -21,6 +21,7 @@
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Torbat Jargalsaikhan, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-26 14:21+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023\n"
+"Last-Translator: Torbat Jargalsaikhan, 2023\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1296,7 +1297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Календар дээрх дараагийн Үйл ажиллагаа"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1966,6 +1967,15 @@ msgid "There are no expense reports to approve."
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -2269,6 +2279,12 @@ msgstr "Та өөрийн үүсгэсэн зардлыг түтгэлзүүлэ
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr "Та өөр өөр ажилтны зардлыг нийлүүлж тооцоо үүсгэх боломжгүй."
 
@@ -2373,4 +2389,3 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
-"Зардлын тайланг байршуулахын тулд ажилтны хувийн хаяг шаардлагатай. Үүнийг ажилтны маягт дээр нэмнэ үү."

@@ -2037,6 +2037,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Crear cursos en línea\n"
+"=====================\n"
+"\n"
+"Destacados\n"
+"\n"
+" * Integración de la gestión de cursos y temas\n"
+" * Navigación de pantalla completa\n"
+" * Compatible con vídeos de YouTube, documentos de Google, PDF, imágenes, artículos\n"
+" * Ponga a prueba el conocimiento con cuestionarios\n"
+" * Filtros y etiquetas\n"
+" * Estadísticas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -5922,6 +5934,32 @@ msgid ""
 "\n"
 "https://paymentservices.amazon.com/docs/EN/12.html"
 msgstr ""
+"# Servicios de pago de Amazon\n"
+"\n"
+"## Detalles de implementación\n"
+"\n"
+"### Funciones compatibles\n"
+"\n"
+"- Pago con flujo de redirección\n"
+"- Pago con varias [tarjetas](https://paymentservices.amazon.com/docs/EN/24a.html) de crédito globales y locales\n"
+"- [Webhook](https://paymentservices-reference.payfort.com/docs/api/build/index.html#transaction-feedback)\n"
+"\n"
+"### API y puerta de enlace\n"
+"\n"
+"Decidimos hacer la integración con la API de \n"
+"[redireccionamiento](https://paymentservices-reference.payfort.com/docs/api/build/index.html#redirection)\n"
+"ya que es la puerta de enlace que mejor cubre nuestras necesidades de entre las tres que ofrece\n"
+"los servicios de pago de Amazon a partir de julio 2022. Consulte las notas de desarrollador de la tarea para obtener detalles en otras puertas de enlace.\n"
+"\n"
+"## Detalles de la fusión\n"
+"\n"
+"La primera versión de este módulo se especificó en la tarea\n"
+"[2802678](https://www.odoo.com/web#id=2802678&model=project.task) and merged with PR odoo/odoo#95860\n"
+"en `saas-15.5`.\n"
+"\n"
+"## Instrucciones de prueba\n"
+"\n"
+"https://paymentservices.amazon.com/docs/EN/12.html"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_asiapay
@@ -6037,6 +6075,38 @@ msgid ""
 "\n"
 "https://developer.flutterwave.com/docs/integration-guides/testing-helpers"
 msgstr ""
+"# Flutterwave\n"
+"\n"
+"## Detalles de implementación\n"
+"\n"
+"### Funciones compatibles\n"
+"\n"
+"- Pago con flujo de dirección\n"
+"- [Tokenización](https://developer.flutterwave.com/reference/endpoints/tokenized-charge/)\n"
+"- Varios métodos de pago como tarjetas de crédito, M-Pesa y \n"
+"  [otros](https://developer.flutterwave.com/docs/collecting-payments/payment-methods/).\n"
+"- [Webhook](https://developer.flutterwave.com/docs/integration-guides/webhooks/).\n"
+"\n"
+"Además, Flutterwave también le permite implementar reembolsos y preautorizaciones.\n"
+"\n"
+"### API y puerta de enlace\n"
+"\n"
+"Decidimos hacer la integración con\n"
+"[Flutterwave estándar](https://developer.flutterwave.com/docs/collecting-payments/standard/) ya que es\n"
+"la puerta de enlace que mejor cubre nuestras necesidades de las tres que ofrece Flutterwave a partir de\n"
+"mayo 2022. Consulte las notas de desarrollador de la tarea para obtener detalles sobre otras puertas de enlace.\n"
+"\n"
+"La versión de la API que implementa este módulo es v3.\n"
+"\n"
+"## Detalles de la fusión\n"
+"\n"
+"La primera versión de este modulo se especificó en la tarea\n"
+"[2759117](https://www.odoo.com/web#id=2759117&model=project.task) y se fusionó con PR\n"
+"odoo/odoo#84820 en `saas-15.4`.\n"
+"\n"
+"## Instrucciones de prueba\n"
+"\n"
+"https://developer.flutterwave.com/docs/integration-guides/testing-helpers"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
@@ -6088,6 +6158,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Detalles de implementación\n"
+"\n"
+"### Funciones compatibles\n"
+"\n"
+"- Pago con el flujo de redirección\n"
+"- Varios métodos de pago como tarjetas de crédito, débito y\n"
+"  [otros](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- Notificaciones de [Webhook](https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  \n"
+"\n"
+"### Funciones no implementadas\n"
+"\n"
+"- [Captura manual](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Devoluciones parciales](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API y puerta de enlace\n"
+"\n"
+"Elegimos integrarnos con una combinación de las soluciones de\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) y\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing) :\n"
+"El pago con flujo de redirección se inicia al enviar una solicitud de cliente HTTP con una carga útil\n"
+"codificada por formulario, como hace el SDK de JavaScript de Checkout Pro como técnica de fondo. Las solicitudes a la API restantes se realizan\n"
+"según la documentación de la API de Checkout. No fue posible integrarse solo con Checkout Pro\n"
+"ya que únicamente permite redirigir a los clientes a la página de pago. Tampoco pudimos integrarnos solo con la API de Checkout ya que\n"
+"necesitaríamos construir un formulario de pago personalizado para aceptar pagos directos desde el sitio web del comerciante.\n"
+"\n"
+"Las otras puertas de enlace se descartaron. Consulte las notas del desarrollador de la tarea para obtener detalles sobre otras puertas de enlace.\n"
+"\n"
+"La API implementada en este módulo no tiene alguna versión.\n"
+"\n"
+"## Detalles de la fusión\n"
+"\n"
+"La primera versión del módulo se especificó en la tarea\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) y se fusionó con PR\n"
+"odoo/odoo#83957 en `saas-15.5`.\n"
+"\n"
+"## Instrucciones de prueba\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -6129,6 +6240,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ for the list of test\n"
 "payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## Detalles de implementación\n"
+"\n"
+"### Funciones compatibles\n"
+"\n"
+"- Pago con flujo de redirección\n"
+"- Captura manual\n"
+"- Devoluciones parciales\n"
+"- Varios métodos de pago como tarjetas de débito/crédito, netbanking, UPI y\n"
+"  [otros](https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"Además, Razorpay también permite implementar la tokenización pero necesita el secreto de la tarjeta para\n"
+"cada transacción.\n"
+"\n"
+"### API y puerta de enlace\n"
+"\n"
+"Elegimos integrarnos con\n"
+"[Razorpay Hosted Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted).\n"
+"Las otras puertas de enlace se descartaron. Consulte las notas del desarrollador de la tarea para obtener más información sobre las otras puertas de enlace.\n"
+"\n"
+"La versión de la API que implementa este módulo es la v1.\n"
+"\n"
+"## Detalles de la fusión\n"
+"\n"
+"La primera versión de este módulo se especificó en la tarea\n"
+"[2800823](https://www.odoo.com/web#id=2800823&model=project.task) y se fusionó con el PR\n"
+"odoo/odoo#92848 en `saas-15.5`.\n"
+"\n"
+"## Instrucciones de prueba\n"
+"\n"
+"El número de teléfono del contacto debe ser un número válido de la India. Por ejemplo: +91123456789\n"
+"\n"
+"Consulte https://razorpay.com/docs/payments/payments/test-card-upi-details/ para obtener la lista de detalles\n"
+"de prueba de pago.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -6590,6 +6737,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: función de registro para registrar "
+"información de debug en la tabla <code>ir.logging</code> "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9576,7 +9725,7 @@ msgstr "El widget usa la información del campo por defecto"
 #. module: base
 #: model:res.groups,name:base.group_sanitize_override
 msgid "Bypass HTML Field Sanitize"
-msgstr ""
+msgstr "Evitar la depuración de campos HTML"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -10129,7 +10278,7 @@ msgstr "Cerrado"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Close the onboarding panel"
-msgstr ""
+msgstr "Cerrar el panel de integración"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -12408,6 +12557,8 @@ msgstr "Duración"
 msgid ""
 "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr ""
+"E - ABASTECIMIENTO DE AGUA, ALCANTARILLADO, GESTIÓN DE RESIDUOS Y "
+"ACTIVIDADES DE REPARACIÓN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -12541,7 +12692,7 @@ msgstr "Contratos de los empleados"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
 msgid "Employee Hourly Cost"
-msgstr ""
+msgstr "Salario por hora del empleado"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
@@ -14325,6 +14476,8 @@ msgstr "Consejo de Cooperación del Golfo - Punto de venta"
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice_stock_account
 msgid "Gulf Cooperation Council WMS Accounting"
 msgstr ""
+"Contabilidad para los países del Consejo de Cooperación para los Estados "
+"Árabes del Golfo"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -15516,7 +15669,7 @@ msgstr "Integra tus POS con la terminal de SIX Payment"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_stripe
 msgid "Integrate your POS with a Stripe payment terminal"
-msgstr ""
+msgstr "Integre su PdV con una terminal de pago de Stripe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
@@ -17150,12 +17303,13 @@ msgstr "Administrar inventario y disponibilidad de productos."
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_skills
 msgid "Manage skills of your employees"
-msgstr ""
+msgstr "Gestione las habilidades de sus empleados"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resume of your employees"
 msgstr ""
+"Gestione las habilidades, el conocimiento y el currículum de sus empleados"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -17844,6 +17998,9 @@ msgid ""
 "Module %r not loaded or inexistent (try to inherit %r), or templates of "
 "addon being loaded %r are misordered (template %r)"
 msgstr ""
+"El modulo %r no se ha cargado o no existe (intente heredar %r), o las "
+"plantillas de complemento que se están cargando %r están desordenadas "
+"(plantilla %r)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_category_form
@@ -18213,7 +18370,7 @@ msgstr "Botón de suscripción al boletín de noticias"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing_sms
 msgid "Newsletter Subscribe SMS Template"
-msgstr ""
+msgstr "Plantilla de suscripción al boletín mediante SMS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
@@ -18555,7 +18712,7 @@ msgstr "N° Tahiti"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY"
-msgstr ""
+msgstr "O - ADMINISTRACIÓN PÚBLICA Y DEFENSA, SEGURIDAD SOCIAL OBLIGATORIA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -20545,7 +20702,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Odoo is unable to merge the generated PDFs."
-msgstr ""
+msgstr "Odoo no puede fusionar los PDF generados."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -20600,7 +20757,7 @@ msgstr "Propiedad 'On delete' (al eliminar) para campos many2one"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_picking
 msgid "On site Payment & Picking"
-msgstr ""
+msgstr "Pago y recogida en la ubicación"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -20767,6 +20924,8 @@ msgid ""
 "Only the portal users can delete their accounts. The user(s) %s can not be "
 "deleted."
 msgstr ""
+"Solo los usuarios del portal pueden eliminar sus cuentas. Los usuarios %s no"
+" se pueden eliminar."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -21333,7 +21492,7 @@ msgstr "Calendario de Outlook"
 #. module: base
 #: model:ir.module.module,description:base.module_microsoft_outlook
 msgid "Outlook support for incoming / outgoing mail servers"
-msgstr ""
+msgstr "Soporte de Outlook para servidores de entrada o salida"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -23547,7 +23706,7 @@ msgstr "Pruebas de los configuradores de los productos de venta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_stock
 msgid "Sale Project - Sale Stock"
-msgstr ""
+msgstr "Proyecto de venta - Stock de venta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -23984,7 +24143,7 @@ msgstr "Enviar SMS al finalizar movimientos de inventario"
 #: model:ir.module.module,description:base.module_project_sms
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
-msgstr ""
+msgstr "Envía mensajes de texto cuando la etapa de proyecto/tarea se mueva"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
@@ -24003,7 +24162,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
-msgstr ""
+msgstr "Envíe sus encuestas o compártalas en vivo."
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -24914,7 +25073,7 @@ msgstr "Cambiar a"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "Switch to language"
-msgstr ""
+msgstr "Cambiar a idioma"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -25217,7 +25376,7 @@ msgstr "Probar el RPC"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_sale_product_configurators
 msgid "Test Suite for Sale Product Configurator"
-msgstr ""
+msgstr "Suite de prueba para configuradores de productos de venta"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module_install
@@ -25249,7 +25408,7 @@ msgstr "Prueba de las restricciones de acceso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_edi_ubl_cii_tests
 msgid "Testing the Import/Export invoices with UBL/CII"
-msgstr ""
+msgstr "Probar la importación/exportación de facturas con UBL/CII"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_tests
@@ -25305,7 +25464,7 @@ msgstr "Tailandia - Contabilidad"
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The \"%s\" action cannot be selected as home action."
-msgstr ""
+msgstr "La acción \"%s\" no se puede seleccionar como acción de inicio. "
 
 #. module: base
 #. odoo-python
@@ -25451,6 +25610,8 @@ msgid ""
 "The company %(company_name)s cannot be archived because it is still used as "
 "the default company of %(active_users)s users."
 msgstr ""
+"La empresa %(company_name)s no se puede archivar porque todavía se utiliza "
+"como la empresa por defecto de los usuarios%(active_users)s."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -25575,6 +25736,10 @@ msgid ""
 "previously modified it, and you are therefore not able to modify it yourself"
 " while preserving the content."
 msgstr ""
+"El valor del campo que está guardando (%s %s) incluye contenido que está "
+"restringido por motivos de seguridad. Es posible que alguien con privilegios"
+" superiores lo haya modificado antes, por lo que usted no puede modificarlo "
+"si preserva este contenido."
 
 #. module: base
 #. odoo-python
@@ -25612,6 +25777,8 @@ msgid ""
 "                            Users can choose their favorite language in "
 "their preferences."
 msgstr ""
+"Se instalaron los idiomas que seleccionó.                            Los "
+"usuarios pueden seleccionar su idioma preferido en sus preferencias."
 
 #. module: base
 #. odoo-python
@@ -25789,6 +25956,12 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
+"No se pudo completar la operación:\n"
+"- Crear/actualizar: no configuró un campo obligatorio.\n"
+"- Eliminar: otro modelo requiere que se elimine el registro. Si es posible, mejor archívelo.\n"
+"\n"
+"Modelo: %(model_name)s (%(model_tech_name)s)\n"
+"Campo: %(field_name)s (%(field_tech_name)s)\n"
 
 #. module: base
 #. odoo-python
@@ -25807,6 +25980,10 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
+"La operación no se puede completar: otro modelo necesita que el registro se borre. Si es posible, mejor archívelo.\n"
+"\n"
+"Modelo: %(model_name)s (%(model_tech_name)s)\n"
+"Limitación: %(constraint)s\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -25898,6 +26075,8 @@ msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
 msgstr ""
+"El número registrado de la empresa. Úselo si es diferente al NIF. Debe ser "
+"único para todos los contactos del mismo país"
 
 #. module: base
 #. odoo-python
@@ -27281,6 +27460,7 @@ msgstr "Use '1' para sí y '0' para no"
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Use Coupons, Gift Cards and Loyalty programs in Point of Sale"
 msgstr ""
+"Use cupones, tarjetas de regalo y programas de lealtad en el Punto de venta"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode
@@ -28126,6 +28306,8 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
+"Al volver a facturar el gasto en la orden de ventas, configure el coste al "
+"importe del gasto sin impuestos."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -28474,6 +28656,8 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n"
 "%s"
 msgstr ""
+"No puede archivar este servidor de correo electrónico saliente (%s) ya que todavía se necesita usar en los siguientes casos:\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -29019,6 +29203,8 @@ msgid ""
 "has been successfully installed.\n"
 "                            Users can choose their favorite language in their preferences."
 msgstr ""
+"se pudo instalar con éxito.\n"
+"                            Los usuarios pueden elegir su idioma favorito en las preferencias."
 
 #. module: base
 #. odoo-python
