@@ -526,6 +526,15 @@ msgid "There was en error processing your payment: invalid credit card ID."
 msgstr "지불 처리 중 오류 발생: 신용 카드 ID가 잘못되었습니다."
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the outgoing payments tab defined on the bank journal."
+msgstr "해당 모듈을 삭제하려면, 먼저 은행 전표에 있는 출금 탭에 지정되어 있는 관련 결제 방법 항목을 삭제하시기 바랍니다."
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids

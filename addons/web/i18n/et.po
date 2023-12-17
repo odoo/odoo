@@ -19,8 +19,8 @@
 # Leaanika Randmets, 2023
 # JanaAvalah, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,6 +371,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"<span>Invoice</span>\n"
+"                           <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1196,7 +1198,6 @@ msgstr "Helista"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1615,7 +1616,6 @@ msgstr "Riik"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1651,6 +1651,13 @@ msgstr "Loo \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Loo %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2813,6 +2820,13 @@ msgid "Invalid fields: "
 msgstr "Vigased väljad:"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -3778,6 +3792,13 @@ msgstr "Ainult sina"
 #, python-format
 msgid "Open View"
 msgstr "Ava vaade"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6154,7 +6175,6 @@ msgstr "kehtib antud uuenduse jaoks."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "uue "
@@ -6544,6 +6564,13 @@ msgstr "ms"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6706,13 +6733,6 @@ msgstr "määratud"
 #, python-format
 msgid "set (true)"
 msgstr "määratud (tõene)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript

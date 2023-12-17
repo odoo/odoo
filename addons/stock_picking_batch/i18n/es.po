@@ -72,6 +72,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Un traslado no se añadirá automáticamente a los lotes que superen este número de líneas si el traslado se añade al mismo.\n"
+"Deje este valor como '0' si no hay límite de líneas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -79,6 +81,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Un traslado no se añadirá automáticamente a los lotes que superen este número de traslados.\n"
+"Deje este valor como '0' si no hay límite de traslados."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -155,7 +159,7 @@ msgstr "Selecciones Permitidas"
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid "Assigned to %s Responsible"
-msgstr ""
+msgstr "Asignado al responsable %s"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -170,33 +174,35 @@ msgstr "Confirmar automáticamente"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr ""
+msgstr "Lotes automáticos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "Agrupe automáticamente los lotes por contactos."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr ""
+msgstr "Agrupe automáticamente los lotes por país de destino."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr ""
+msgstr "Agrupe automáticamente los lotes por ubicación de destino."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr ""
+msgstr "Agrupe automáticamente los lotes por ubicación de origen."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"Ponga automáticamente las recolecciones en lotes a medida que se vayan "
+"confirmando cuando sea posible."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -707,7 +713,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "Mostrar botón de establecer cantidades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
