@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Patricia Lorenzo Bartolomé, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
 # David Ramia, 2023
@@ -57,7 +57,7 @@ msgstr "%s: Son sus propios gastos "
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr ""
+msgstr "%s: No es gerente o encargado de RR.HH."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -220,7 +220,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "All payment methods allowed"
-msgstr ""
+msgstr "Todos los métodos de pago permitido"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -397,7 +397,7 @@ msgstr "Cancelar"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "No se puede aprobar la razón "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -665,7 +665,7 @@ msgstr "Empleado (a reembolsar)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "Diario de gastos del empleado "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -831,7 +831,7 @@ msgstr "Las categorías de gastos se refacturar a sus clientes."
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "Gasto creado desde: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -856,7 +856,7 @@ msgstr "Informe de gastos rechazado"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "Informe de gastos restablecido a borrador"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -922,6 +922,8 @@ msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
 msgstr ""
+"Gastos cuyo informe se ha enviado al aprobador y está a la espera de "
+"aprobación."
 
 #. module: hr_expense
 #. odoo-python
@@ -943,7 +945,7 @@ msgstr "Gastos de los miembros de tu equipo"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses that need to be submitted to the approver."
-msgstr ""
+msgstr "Gastos que necesitan enviarse a la persona responsable de aprobar. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
@@ -1145,7 +1147,7 @@ msgstr "Asiento contable"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "Asiento contable eliminado"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1155,7 +1157,7 @@ msgstr "Apunte contable"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "Asiento contable eliminado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
@@ -1376,7 +1378,7 @@ msgstr "No se encontraron informes de gastos. ¡Vamos a crear uno!"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Not Refused"
-msgstr ""
+msgstr "No rechazado "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1462,7 +1464,7 @@ msgstr "O"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr ""
+msgstr "O envie sus recibos a"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -2013,7 +2015,7 @@ msgstr "El diario debe establecerse en gastos contabilizados"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr ""
+msgstr "El diario se utiliza cuando los gastos son pagados por el empleado"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -2328,6 +2330,8 @@ msgid ""
 "You cannot refuse:\n"
 " %s"
 msgstr ""
+"No puede rechazar:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
