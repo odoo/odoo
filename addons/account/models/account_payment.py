@@ -143,6 +143,9 @@ class AccountPayment(models.Model):
     # == Display purpose fields ==
     payment_method_code = fields.Char(
         related='payment_method_line_id.code')
+    payment_receipt_title = fields.Char(
+        compute='_compute_payment_receipt_title'
+    )
 
     # used to know whether the field `partner_bank_id` needs to be displayed or not in the payments form views
     show_partner_bank_account = fields.Boolean(
@@ -653,6 +656,10 @@ class AccountPayment(models.Model):
                 pay.reconciled_invoices_type = 'credit_note'
             else:
                 pay.reconciled_invoices_type = 'invoice'
+
+    def _compute_payment_receipt_title(self):
+        """ To override in order to change the title displayed on the payment receipt report """
+        self.payment_receipt_title = _('Payment Receipt')
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
