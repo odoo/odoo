@@ -3796,3 +3796,31 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_id = self.product_7_template.product_variant_ids[0]
         mo = mo_form.save()
         self.assertEqual(mo.move_raw_ids.product_id, c3)
+
+    def test_mo_duration_expected(self):
+        """
+        Test to verify that the 'duration_expected' on a work order in a manufacturing order
+        correctly remains as manually set after completion. This test involves creating a product
+        with a Bill of Materials (BOM) and an operation with an initial expected duration.
+        A manufacturing order is then created for this product, the expected duration of the
+        work order is manually changed, and the order is completed. The test checks that
+        the expected duration remains as manually set and does not revert to the original value.
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_5
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 1.0
+        production = production_form.save()
+        production.action_confirm()
+
+        init_duration_expected = production.workorder_ids.duration_expected
+
+        production.workorder_ids.duration_expected = init_duration_expected + 5
+
+        production_form = Form(production)
+        production_form.qty_producing = 1.0
+        production = production_form.save()
+
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
