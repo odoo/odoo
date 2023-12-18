@@ -62,7 +62,6 @@ export function rpcErrorHandler(env, error, originalError) {
                 ErrorComponent = errorDialogRegistry.get(exceptionClass);
             }
         }
-
         env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
             traceback: error.traceback,
             message: originalError.message,
@@ -72,6 +71,8 @@ export function rpcErrorHandler(env, error, originalError) {
             subType: originalError.subType,
             code: originalError.code,
             type: originalError.type,
+            date: originalError.date,
+            serverHost: error.event.target?.location.host,
         });
         return true;
     }

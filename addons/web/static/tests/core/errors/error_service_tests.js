@@ -87,6 +87,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
     error.message = "Some strange error occured";
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
+    error.date = new Date('Fri, 05 Jan 2024 08:34:56 GMT');
     function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, RPCErrorDialog);
         assert.deepEqual(props, {
@@ -100,6 +101,8 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
             message: "Some strange error occured",
             exceptionName: null,
             traceback: error.stack,
+            date: new Date('Fri, 05 Jan 2024 08:34:56 GMT'),
+            serverHost: undefined,
         });
     }
     serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
@@ -129,6 +132,7 @@ QUnit.test(
             name: "strange_error",
         };
         error.data = errorData;
+        error.date = new Date('Fri, 05 Jan 2024 12:34:56 GMT');
         function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, CustomDialog);
             assert.deepEqual(props, {
@@ -140,6 +144,8 @@ QUnit.test(
                 message: "Some strange error occured",
                 exceptionName: null,
                 traceback: error.stack,
+                date: new Date('Fri, 05 Jan 2024 12:34:56 GMT'),
+                serverHost: undefined,
             });
         }
         serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
@@ -174,6 +180,7 @@ QUnit.test(
         };
         error.exceptionName = "normal_error";
         error.data = errorData;
+        error.date = new Date('Fri, 05 Jan 2024 15:34:56 GMT');
         function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, NormalDialog);
             assert.deepEqual(props, {
@@ -185,6 +192,8 @@ QUnit.test(
                 message: "A normal error occured",
                 exceptionName: "normal_error",
                 traceback: error.stack,
+                date: new Date('Fri, 05 Jan 2024 15:34:56 GMT'),
+                serverHost: undefined,
             });
         }
         serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });

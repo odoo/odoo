@@ -60,6 +60,8 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
         [...target.querySelector("main p").childNodes].map((el) => el.textContent),
         [
             "An error occurred",
+            "",
+            "",
             "Please use the copy button to report the error to your support service.",
         ]
     );
@@ -114,6 +116,8 @@ QUnit.test("Client ErrorDialog with traceback", async (assert) => {
         [...target.querySelector("main p").childNodes].map((el) => el.textContent),
         [
             "An error occurred",
+            "",
+            "",
             "Please use the copy button to report the error to your support service.",
         ]
     );

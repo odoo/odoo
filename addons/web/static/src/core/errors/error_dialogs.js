@@ -19,6 +19,8 @@ export const standardErrorDialogProps = {
     subType: { type: [String, { value: null }], optional: true },
     code: { type: [Number, String, { value: null }], optional: true },
     type: { type: [String, { value: null }], optional: true },
+    serverHost: { type: [String, { value: null }], optional: true },
+    date: { type: [Date, { value: null }], optional: true },
     close: Function, // prop added by the Dialog service
 };
 

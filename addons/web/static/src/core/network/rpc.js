@@ -17,6 +17,7 @@ export class RPCError extends Error {
         this.data = null;
         this.exceptionName = null;
         this.subType = null;
+        this.date = null;
     }
 }
 
@@ -29,7 +30,7 @@ export class ConnectionLostError extends Error {
 
 export class ConnectionAbortedError extends Error {}
 
-export function makeErrorFromResponse(reponse) {
+export function makeErrorFromResponse(reponse, dateHeader) {
     // Odoo returns error like this, in a error field instead of properly
     // using http error codes...
     const { code, data: errorData, message, type: subType } = reponse;
@@ -39,6 +40,7 @@ export function makeErrorFromResponse(reponse) {
     error.data = errorData;
     error.message = message;
     error.code = code;
+    error.date = new Date(dateHeader);
     return error;
 }
 
@@ -87,7 +89,10 @@ rpc._rpc = function (url, params, settings) {
                 rpcBus.trigger("RPC:RESPONSE", { data, settings, result: params.result });
                 return resolve(responseResult);
             }
-            const error = makeErrorFromResponse(responseError);
+            const error = makeErrorFromResponse(
+                responseError,
+                request.getResponseHeader("date")
+            );
             rpcBus.trigger("RPC:RESPONSE", { data, settings, error });
             reject(error);
         });
