@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
             <div t-if="!ui.isSmall || pos.mobile_pane === 'left'"
-                t-att-class="{'flex-grow-1': ui.isSmall}"
+                t-att-class="{'flex-grow-1 mw-100': ui.isSmall}"
                 class="leftpane d-flex flex-column border-end bg-200" >
                 <OrderWidget lines="currentOrder.orderlines" t-slot-scope="scope"
                     total="env.utils.formatCurrency(currentOrder.get_total_with_tax())"
