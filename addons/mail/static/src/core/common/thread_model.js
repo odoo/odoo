@@ -57,13 +57,6 @@ export class Thread extends Record {
         return thread;
     }
 
-    onUpdateType() {
-        this._store.discuss.channels.threads = [[this.type === "channel" ? "ADD" : "DELETE", this]];
-        this._store.discuss.chats.threads = [
-            [["chat", "group"].includes(this.type) ? "ADD" : "DELETE", this],
-        ];
-    }
-
     /** @type {number} */
     id;
     /** @type {string} */
@@ -243,9 +236,10 @@ export class Thread extends Record {
             return "chatter";
         },
         eager: true,
-        /** @this {import("models").Thread} */
-        onUpdate() {
-            this.onUpdateType();
+    });
+    discussAppCategory = Record.one("DiscussAppCategory", {
+        compute() {
+            return this._computeDiscussAppCategory();
         },
     });
     /** @type {string} */
@@ -262,6 +256,15 @@ export class Thread extends Record {
     custom_notifications = false;
     /** @type {String} */
     mute_until_dt;
+
+    _computeDiscussAppCategory() {
+        if (["group", "chat"].includes(this.type)) {
+            return this._store.discuss.chats;
+        }
+        if (this.type === "channel") {
+            return this._store.discuss.channels;
+        }
+    }
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
