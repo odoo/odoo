@@ -14,6 +14,7 @@ class TestProjectCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestProjectCommon, cls).setUpClass()
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
 
         user_group_employee = cls.env.ref('base.group_user')
         user_group_project_user = cls.env.ref('project.group_project_user')
