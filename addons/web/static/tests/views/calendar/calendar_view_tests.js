@@ -5003,4 +5003,44 @@ QUnit.module("Views", ({ beforeEach }) => {
             assert.containsOnce(target, ".o_view_sample_data", "should have sample data");
         }
     );
+
+    QUnit.test("Display last day of allday event in day mode", async (assert) => {
+        serverData.models.event.records = [
+            {
+                id: 1,
+                user_id: uid,
+                partner_id: 1,
+                name: "allday",
+                start: "2016-12-12 15:55:05",
+                stop: "2016-12-13 18:55:05",
+                allday: true,
+                partner_ids: [1],
+                type: 2,
+                is_hatched: false,
+                is_striked: false,
+            },
+        ];
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="day" color="partner_id"/>
+            `,
+        });
+
+        await click(target, ".scale_button_selection");
+        await click(target, ".o_calendar_button_day");
+        assert.strictEqual(
+            target.querySelector(".fc-day-grid .o_event_title").textContent,
+            "allday",
+            "We should have an all day event in the first day."
+        );
+        await click(target, ".o_calendar_button_next");
+        assert.strictEqual(
+            target.querySelector(".fc-day-grid .o_event_title").textContent,
+            "allday",
+            "We should have an all day event in the second day."
+        );
+    });
 });

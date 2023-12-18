@@ -138,7 +138,7 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && record.isAllDay
+                ["week", "month", "day"].includes(this.props.model.scale) && record.isAllDay
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
             allDay: record.isAllDay,
