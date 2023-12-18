@@ -14,7 +14,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         """
         mo = self.generate_mo()[0]
         self.assertEqual(mo.state, 'confirmed')
-        res = mo.action_serial_mass_produce_wizard()
+        res = mo.action_mass_produce()
         self.assertFalse(res)
 
     def test_smp_produce_all(self):
@@ -32,7 +32,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
             })._apply_inventory()
         mo.action_assign()
         # Open the wizard
-        action = mo.action_serial_mass_produce_wizard()
+        action = mo.action_mass_produce()
         wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
         # Let the wizard generate all serial numbers
         wizard.next_serial_number = "sn#1"
@@ -63,7 +63,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
                 'location_id': mo.location_src_id.id,
             })._apply_inventory()
         mo.action_assign()
-        action = mo.action_serial_mass_produce_wizard()
+        action = mo.action_mass_produce()
         wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
         wizard.next_serial_number = "sn#1"
         wizard.next_serial_count = count - 1
@@ -109,7 +109,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
             })._apply_inventory()
         mo.action_assign()
         # Open the wizard
-        action = mo.action_serial_mass_produce_wizard()
+        action = mo.action_mass_produce()
         wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
         # Let the wizard generate all serial numbers
         wizard.next_serial_number = "sn#1"
@@ -221,7 +221,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
 
         mo.action_assign()
         # Open the wizard
-        action = mo.action_serial_mass_produce_wizard()
+        action = mo.action_mass_produce()
         wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
         # Let the wizard generate all serial numbers
         wizard.next_serial_number = "sn#3"
