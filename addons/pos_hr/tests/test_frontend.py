@@ -8,8 +8,8 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.env.user.groups_id += cls.env.ref('hr.group_hr_user')
 

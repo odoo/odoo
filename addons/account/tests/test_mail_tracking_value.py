@@ -12,6 +12,11 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestTracking(AccountTestInvoicingCommon, MailCommon):
 
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
+
     def test_aml_change_tracking(self):
         """ tests that the field_groups is correctly set """
         account_move = self.env['account.move'].create({

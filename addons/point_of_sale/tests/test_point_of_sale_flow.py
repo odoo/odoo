@@ -16,6 +16,11 @@ from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('GBP')
+
     def compute_tax(self, product, price, qty=1, taxes=None):
         if not taxes:
             taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id)

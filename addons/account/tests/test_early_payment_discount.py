@@ -8,8 +8,9 @@ from odoo import fields, Command
 class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR')
         # Payment Terms
         cls.early_pay_10_percents_10_days = cls.env['account.payment.term'].create({
             'name': '10% discount if paid within 10 days',
@@ -140,7 +141,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -279,7 +280,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -288,7 +289,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -312,7 +313,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -321,7 +322,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -345,7 +346,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -354,7 +355,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -378,7 +379,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -387,7 +388,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -752,7 +753,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.pay_term_net_30_days.id,
         })
@@ -761,7 +762,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -792,7 +793,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.pay_term_net_30_days.id,
         })
@@ -801,7 +802,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'date': '2019-01-01',
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
             'invoice_payment_term_id': self.pay_term_net_30_days.id,
         })

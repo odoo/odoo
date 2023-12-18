@@ -11,8 +11,8 @@ from odoo.tools import html2plaintext
 class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.product_by_lot = cls.env['product.product'].create({
             'name': 'Product By Lot',

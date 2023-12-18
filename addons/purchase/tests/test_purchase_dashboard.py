@@ -11,8 +11,8 @@ from odoo import fields
 class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Create two new users
         cls.user_a = new_test_user(cls.env, login='purchaseusera', groups='purchase.group_purchase_user')
@@ -25,6 +25,11 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
         }
         cls.product_100 = cls.env['product.product'].create({**product_data, 'standard_price': 100})
         cls.product_250 = cls.env['product.product'].create({**product_data, 'standard_price': 250})
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_purchase_dashboard(self):

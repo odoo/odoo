@@ -23,8 +23,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
     """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         new_sale_tax, new_purchase_tax = cls.env['account.tax'].create([{
             'name': 'Tax 12.499%',
             'amount': 12.499,
@@ -45,7 +45,6 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 }),
             ],
         } for tax_type in ('sale', 'purchase')])
-
         cls.company_data.update({
             'service_order_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
                 'name': 'service_order_sales_price',

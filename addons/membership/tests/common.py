@@ -9,8 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestMembershipCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Test memberships
         cls.membership_1 = cls.env['product.product'].create({

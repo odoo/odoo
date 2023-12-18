@@ -19,21 +19,18 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref='es_full'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('es')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.frozen_today = datetime(year=2023, month=1, day=1, hour=0, minute=0, second=0)
 
         # ==== Companies ====
         cls.company_data['company'].write({  # -> PersonTypeCode 'J'
-            'country_id': cls.env.ref('base.es').id,  # -> ResidenceTypeCode 'R'
             'street': "C. de Embajadores, 68-116",
             'state_id': cls.env.ref('base.state_es_m').id,
             'city': "Madrid",
             'zip': "12345",
             'vat': 'ES59962470K',
-        })
-        cls.company_data_2['company'].write({  # -> PersonTypeCode 'J'
-            'country_id': cls.env.ref('base.us').id,  # -> ResidenceTypeCode 'R'
         })
 
         cls.caixabank = cls.env['res.bank'].create({

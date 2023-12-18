@@ -54,6 +54,7 @@ import odoo
 from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
+from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
@@ -173,7 +174,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
+    groups_id = [Command.set(kwargs.pop('groups_id', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):

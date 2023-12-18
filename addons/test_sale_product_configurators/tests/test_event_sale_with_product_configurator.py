@@ -13,8 +13,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Adding sale users to test the access rights
         cls.salesman = mail_new_test_user(

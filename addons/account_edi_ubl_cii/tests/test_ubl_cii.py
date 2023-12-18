@@ -12,8 +12,9 @@ from odoo.tools import file_open
 class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
 
         cls.uom_units = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozens = cls.env.ref('uom.product_uom_dozen')

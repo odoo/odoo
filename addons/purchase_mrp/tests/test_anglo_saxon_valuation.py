@@ -12,8 +12,8 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.vendor01 = cls.env['res.partner'].create({'name': "Super Vendor"})
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)

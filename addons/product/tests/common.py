@@ -15,41 +15,53 @@ class ProductCommon(
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.company.currency_id = cls.env.ref('base.USD')
-        cls.currency = cls.env.ref('base.USD')
-
-        # Ideally, this logic should be moved into sthg like a NoAccountCommon in account :D
-        # Since tax fields are specified in account module, cannot be given as create values
-        NO_TAXES_CONTEXT = {
-            'default_taxes_id': False
-        }
-
         cls.product_category = cls.env['product.category'].create({
             'name': 'Test Category',
         })
-        cls.product = cls.env['product.product'].with_context(**NO_TAXES_CONTEXT).create({
+        cls.product, cls.service_product = cls.env['product.product'].create([{
             'name': 'Test Product',
             'detailed_type': 'consu',
             'list_price': 20.0,
             'categ_id': cls.product_category.id,
-        })
-        cls.service_product = cls.env['product.product'].with_context(**NO_TAXES_CONTEXT).create({
+        }, {
             'name': 'Test Service Product',
             'detailed_type': 'service',
             'list_price': 50.0,
             'categ_id': cls.product_category.id,
-        })
-        cls.consumable_product = cls.product
+        }])
         cls.pricelist = cls.env['product.pricelist'].create({
             'name': 'Test Pricelist',
         })
         cls._archive_other_pricelists()
 
     @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.env.ref('base.group_system')  # For the management/creation of products
+
+    @classmethod
     def _archive_other_pricelists(cls):
         cls.env['product.pricelist'].search([
             ('id', '!=', cls.pricelist.id),
         ]).action_archive()
+
+    @classmethod
+    def _create_pricelist(cls, **create_vals):
+        return cls.env['product.pricelist'].create({
+            'name': "Test Pricelist",
+            **create_vals,
+        })
+
+    @classmethod
+    def _create_product(cls, **create_vals):
+        return cls.env['product.product'].create({
+            'name': "Test Product",
+            'type': 'consu',
+            'list_price': 100.0,
+            'standard_price': 50.0,
+            'categ_id': cls.product_category.id,
+            **create_vals,
+        })
 
 
 class ProductAttributesCommon(ProductCommon):

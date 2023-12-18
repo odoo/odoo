@@ -10,8 +10,8 @@ from odoo.tests import tagged
 class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.env['account.edi.document'].search([]).unlink()
         cls.env['account.edi.format'].search([]).unlink()

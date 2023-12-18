@@ -10,8 +10,9 @@ from odoo.tools.safe_eval import datetime
 @tagged('post_install', '-at_install')
 class TestAccountPaymentTerms(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR', rounding=0.001)
         cls.pay_term_today = cls.env['account.payment.term'].create({
             'name': 'Today',
             'line_ids': [
@@ -253,13 +254,13 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         })
 
         computed_term = pay_term._compute_terms(
-            fields.Date.from_string('2016-01-01'), self.currency_data['currency'], self.env.company,
+            fields.Date.from_string('2016-01-01'), self.other_currency, self.env.company,
             0.0, 0.0, 1.0, 0.04, 0.09,
         )
         self.assertEqual(
             [
                 (
-                    self.currency_data['currency'].round(l['foreign_amount']),
+                    self.other_currency.round(l['foreign_amount']),
                     self.company_data['currency'].round(l['company_amount']),
                 )
                 for l in computed_term['line_ids']

@@ -8,8 +8,8 @@ from odoo.tests import Form, tagged
 class StockMoveInvoice(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.ProductProduct = cls.env['product.product']
         cls.SaleOrder = cls.env['sale.order']

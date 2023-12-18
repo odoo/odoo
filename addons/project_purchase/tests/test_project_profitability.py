@@ -15,6 +15,11 @@ from odoo.tools.float_utils import float_compare
 @tagged('-at_install', 'post_install')
 class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurchaseToInvoiceCommon, AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
+
     def test_bills_without_purchase_order_are_accounted_in_profitability_project_purchase(self):
         """
         A bill that has an AAL on one of its line should be taken into account

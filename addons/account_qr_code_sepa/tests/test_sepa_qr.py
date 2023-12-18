@@ -11,8 +11,8 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
     """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.company_data['company'].qr_code = True
         cls.acc_sepa_iban = cls.env['res.partner.bank'].create({

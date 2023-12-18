@@ -27,3 +27,24 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.init_invoice("out_invoice", partner, "2023-05-15", amounts=[1500], taxes=self.tax_sale_a, post=True)
         self.env.invalidate_all()
         self.assertEqual(partner.days_sales_outstanding, 50)
+
+    def test_account_move_count(self):
+        self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'date': '2017-01-01',
+                'invoice_date': '2017-01-01',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'date': '2017-01-01',
+                'invoice_date': '2017-01-01',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
+            },
+        ]).action_post()
+
+        self.assertEqual(self.partner_a.supplier_rank, 1)
+        self.assertEqual(self.partner_a.customer_rank, 1)

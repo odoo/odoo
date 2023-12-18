@@ -8,22 +8,15 @@ from odoo import Command
 class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.payable_account = cls.company_data['default_account_payable']
 
-        cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
-            'name': 'Stars',
-            'symbol': '☆',
-            'currency_unit_label': 'Stars',
-            'currency_subunit_label': 'Little Stars',
-        }, rate2016=6.0, rate2017=4.0)
-
         cls.curr_1 = cls.company_data['currency']
-        cls.curr_2 = cls.currency_data['currency']
-        cls.curr_3 = cls.currency_data_2['currency']
+        cls.curr_2 = cls.setup_other_currency('EUR')
+        cls.curr_3 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
 
         cls.payment_2016_curr_1 = cls.env['account.move'].create({
             'date': '2016-01-01',
@@ -157,7 +150,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'date': '2016-01-01',
             'invoice_date': '2016-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.curr_2.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 300,
@@ -189,7 +182,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.curr_2.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 300,

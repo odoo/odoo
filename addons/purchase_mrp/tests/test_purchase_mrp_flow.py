@@ -13,8 +13,8 @@ from odoo.fields import Command
 class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         # Useful models
         cls.UoM = cls.env['uom.uom']
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
@@ -51,13 +51,13 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'rounding': 0.001})
 
         # Creating all components
-        cls.component_a = cls._create_product('Comp A', cls.uom_unit)
-        cls.component_b = cls._create_product('Comp B', cls.uom_unit)
-        cls.component_c = cls._create_product('Comp C', cls.uom_unit)
-        cls.component_d = cls._create_product('Comp D', cls.uom_unit)
-        cls.component_e = cls._create_product('Comp E', cls.uom_unit)
-        cls.component_f = cls._create_product('Comp F', cls.uom_unit)
-        cls.component_g = cls._create_product('Comp G', cls.uom_unit)
+        cls.component_a = cls._create_product_with_form('Comp A', cls.uom_unit)
+        cls.component_b = cls._create_product_with_form('Comp B', cls.uom_unit)
+        cls.component_c = cls._create_product_with_form('Comp C', cls.uom_unit)
+        cls.component_d = cls._create_product_with_form('Comp D', cls.uom_unit)
+        cls.component_e = cls._create_product_with_form('Comp E', cls.uom_unit)
+        cls.component_f = cls._create_product_with_form('Comp F', cls.uom_unit)
+        cls.component_g = cls._create_product_with_form('Comp G', cls.uom_unit)
 
         # Create a kit 'kit_1' :
         # -----------------------
@@ -66,7 +66,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         #         |- component_b   x1
         #         |- component_c   x3
 
-        cls.kit_1 = cls._create_product('Kit 1', cls.uom_unit)
+        cls.kit_1 = cls._create_product_with_form('Kit 1', cls.uom_unit)
 
         cls.bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
@@ -101,9 +101,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         #              |- component_e x1
 
         # Creating all kits
-        cls.kit_2 = cls._create_product('Kit 2', cls.uom_unit)
-        cls.kit_3 = cls._create_product('kit 3', cls.uom_unit)
-        cls.kit_parent = cls._create_product('Kit Parent', cls.uom_unit)
+        cls.kit_2 = cls._create_product_with_form('Kit 2', cls.uom_unit)
+        cls.kit_3 = cls._create_product_with_form('kit 3', cls.uom_unit)
+        cls.kit_parent = cls._create_product_with_form('Kit Parent', cls.uom_unit)
 
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_2 = cls.env['mrp.bom'].create({
@@ -154,7 +154,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'bom_id': bom_kit_parent.id})
 
     @classmethod
-    def _create_product(cls, name, uom_id, routes=()):
+    def _create_product_with_form(cls, name, uom_id, routes=()):
         p = Form(cls.env['product.product'])
         p.name = name
         p.detailed_type = 'product'
@@ -247,8 +247,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     def test_kit_component_cost_multi_currency(self):
         # Set kit and component product to automated FIFO
-        kit = self._create_product('Kit', self.uom_unit)
-        cmp = self._create_product('CMP', self.uom_unit)
+        kit = self._create_product_with_form('Kit', self.uom_unit)
+        cmp = self._create_product_with_form('CMP', self.uom_unit)
 
         bom_kit = self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,

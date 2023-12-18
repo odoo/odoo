@@ -9,6 +9,16 @@ from odoo.exceptions import UserError
 @tagged('post_install', '-at_install')
 class TestAccountTax(AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
+
     def set_up_and_use_tax(self):
 
         self.env['account.move'].create({

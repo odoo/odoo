@@ -1,73 +1,31 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
 from odoo import Command
+
+from odoo.addons.analytic.tests.common import AnalyticCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAnalyticAccount(TransactionCase):
+class TestAnalyticAccount(AnalyticCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        # Create new user to avoid demo data.
-        user = cls.env['res.users'].create({
-            'name': 'The anal(ytic) expert!',
-            'login': 'analytic',
-            'password': 'analytic',
-            'groups_id': [
-                (6, 0, cls.env.user.groups_id.ids),
-                (4, cls.env.ref('analytic.group_analytic_accounting').id),
-            ],
-        })
-        user.partner_id.email = 'analyticman@test.com'
-
-        # Shadow the current environment/cursor with one having the report user.
-        # This is mandatory to test access rights.
-        cls.env = cls.env(user=user)
-        cls.cr = cls.env.cr
-
-        cls.company_data = cls.env['res.company'].create({
-            'name': 'company_data',
-        })
-        cls.env.user.company_ids |= cls.company_data
-
-        user.write({
-            'company_ids': [(6, 0, cls.company_data.ids)],
-            'company_id': cls.company_data.id,
-        })
-        cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
-
-        cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({
-            'name': 'Plan 1',
-            'default_applicability': 'unavailable',
-        })
-        cls.analytic_plan_child = cls.env['account.analytic.plan'].create({
-            'name': 'Plan Child',
-            'parent_id': cls.analytic_plan_1.id,
-        })
-        cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({
-            'name': 'Plan 2',
-        })
-
         cls.partner_a = cls.env['res.partner'].create({'name': 'partner_a', 'company_id': False})
         cls.partner_b = cls.env['res.partner'].create({'name': 'partner_b', 'company_id': False})
 
-        cls.analytic_account_1 = cls.env['account.analytic.account'].create({'name': 'Account 1', 'plan_id': cls.analytic_plan_1.id})
-        cls.analytic_account_2 = cls.env['account.analytic.account'].create({'name': 'Account 2', 'plan_id': cls.analytic_plan_child.id})
-        cls.analytic_account_3 = cls.env['account.analytic.account'].create({'name': 'Account 3', 'plan_id': cls.analytic_plan_2.id})
-
-        cls.distribution_1 = cls.env['account.analytic.distribution.model'].create({
-            'partner_id': cls.partner_a.id,
-            'analytic_distribution': {cls.analytic_account_3.id: 100}
-        })
-
-        cls.distribution_2 = cls.env['account.analytic.distribution.model'].create({
-            'partner_id': cls.partner_b.id,
-            'analytic_distribution': {cls.analytic_account_2.id: 100}
-        })
+        cls.distribution_1, cls.distribution_2 = cls.env['account.analytic.distribution.model'].create([
+            {
+                'partner_id': cls.partner_a.id,
+                'analytic_distribution': {cls.analytic_account_3.id: 100}
+            },
+            {
+                'partner_id': cls.partner_b.id,
+                'analytic_distribution': {cls.analytic_account_2.id: 100}
+            },
+        ])
 
     def test_aggregates(self):
         # debit and credit are hidden by the group when account is installed
@@ -122,12 +80,12 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(distribution_json, {}, "No distribution should be given")
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_a.id,
-            "company_id": self.company_data.id,
+            "company_id": self.company.id,
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_3.id): 100}, "Distribution 1 should be given")
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_b.id,
-            "company_id": self.company_data.id,
+            "company_id": self.company.id,
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_2.id): 100}, "Distribution 2 should be given")
 
@@ -136,21 +94,21 @@ class TestAnalyticAccount(TransactionCase):
         distribution_3 = self.env['account.analytic.distribution.model'].create({
             'partner_id': self.partner_a.id,
             'analytic_distribution': {self.analytic_account_1.id: 100},
-            'company_id': self.company_data.id,
+            'company_id': self.company.id,
         })
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({})
         self.assertEqual(distribution_json, {}, "No distribution should be given")
 
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_a.id,
-            "company_id": self.company_data.id,
+            "company_id": self.company.id,
         })
         self.assertEqual(distribution_json, distribution_3.analytic_distribution,
                          "Distribution 3 should be given, as the company is specified in the model")
 
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_b.id,
-            "company_id": self.company_data.id,
+            "company_id": self.company.id,
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_2.id): 100},
                          "Distribution 2 should be given, for the partner")
@@ -168,7 +126,7 @@ class TestAnalyticAccount(TransactionCase):
 
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
             "partner_id": self.partner_a.id,
-            "company_id": self.company_data.id,
+            "company_id": self.company.id,
             "partner_category_id": partner_category.ids,
         })
         self.assertEqual(distribution_json, distribution_4.analytic_distribution,

@@ -19,6 +19,8 @@ class TestEdiXmls(TestEsEdiCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('USD')
+
         cls.certificate.write({
             'date_start': '2019-01-01 01:00:00',
             'date_end': '2021-01-01 01:00:00',
@@ -552,7 +554,7 @@ class TestEdiXmls(TestEsEdiCommon):
             invoice = self.create_invoice(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
-                currency_id=self.currency_data['currency'].id,
+                currency_id=self.other_currency.id,
                 invoice_line_ids=[
                     {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
                     {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
@@ -1030,7 +1032,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 move_type='in_refund',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
-                currency_id=self.currency_data['currency'].id,
+                currency_id=self.other_currency.id,
                 l10n_es_registration_date='2019-01-02',
                 invoice_line_ids=[
                     {
@@ -1085,7 +1087,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 move_type='in_invoice',
                 ref='fakedua',
                 partner_id=self.partner_b.id,
-                currency_id=self.currency_data['currency'].id,
+                currency_id=self.other_currency.id,
                 l10n_es_registration_date='2019-01-02',
                 invoice_line_ids=[
                     {

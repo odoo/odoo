@@ -8,6 +8,12 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency('EUR', rounding=0.001)
+
     def _dispatch_move_lines(self, moves):
         base_lines = moves.line_ids\
             .filtered(lambda x: x.tax_ids and not x.tax_line_id)\
@@ -1038,7 +1044,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'credit': 0.0,
                     'amount_currency': 2400.0,
                     'account_id': self.company_data['default_account_revenue'].id,
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'tax_ids': [Command.set(percent_tax.ids)],
                 }),
                 Command.create({
@@ -1047,7 +1053,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'credit': 0.0,
                     'amount_currency': 6000.0,
                     'account_id': self.company_data['default_account_revenue'].id,
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'tax_ids': [Command.set(percent_tax.ids)],
                 }),
                 # Tax lines
@@ -1057,7 +1063,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'credit': 0.0,
                     'amount_currency': 360.0,
                     'account_id': self.company_data['default_account_revenue'].id,
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'tax_repartition_line_id': tax_rep.id,
                 }),
                 Command.create({
@@ -1066,7 +1072,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'credit': 0.0,
                     'amount_currency': 200.0,
                     'account_id': self.company_data['default_account_revenue'].id,
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'tax_repartition_line_id': tax_rep.id,
                 }),
                 # Balance

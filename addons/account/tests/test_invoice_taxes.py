@@ -9,10 +9,9 @@ from odoo.tests import tagged, Form
 class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        cls.company_data['company'].country_id = cls.env.ref('base.us')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('GBP')
 
         cls.percent_tax_1 = cls.env['account.tax'].create({
             'name': '21%',
@@ -631,15 +630,15 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.env['res.currency.rate'].create({
             'name': '2018-01-01',
             'rate': 1.1726,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
         })
-        self.currency_data['currency'].rounding = 0.05
+        self.other_currency.rounding = 0.05
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_date': '2018-01-01',
             'date': '2018-01-01',
             'invoice_line_ids': [(0, 0, {
@@ -660,31 +659,31 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.env['res.currency.rate'].create({
             'name': '2018-01-01',
             'rate': 0.654065014,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
         })
-        self.currency_data['currency'].rounding = 0.05
+        self.other_currency.rounding = 0.05
 
         invoice = self._create_invoice([
             (5, self.percent_tax_3_incl),
             (10, self.percent_tax_3_incl),
             (50, self.percent_tax_3_incl),
-        ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
+        ], currency_id=self.other_currency, invoice_payment_term_id=self.pay_terms_a)
         invoice.action_post()
 
     def test_tax_calculation_multi_currency(self):
         self.env['res.currency.rate'].create({
             'name': '2018-01-01',
             'rate': 0.273748,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
         })
-        self.currency_data['currency'].rounding = 0.01
+        self.other_currency.rounding = 0.01
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_date': '2018-01-01',
             'date': '2018-01-01',
             'invoice_line_ids': [(0, 0, {
@@ -705,7 +704,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         }])
 
         with Form(invoice) as invoice_form:
-            invoice_form.currency_id = self.currency_data['currency']
+            invoice_form.currency_id = self.other_currency
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 567.38,

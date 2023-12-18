@@ -9,8 +9,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
@@ -26,8 +26,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
 
         # Sale Order 1, no project/task created, used to timesheet at employee rate
-        SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
-        SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrder = cls.env['sale.order']
+        SaleOrderLine = cls.env['sale.order.line']
         cls.sale_order_1 = SaleOrder.create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
@@ -90,7 +90,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
 
     def test_billing_employee_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'employee rate'. Then move the task into a 'task rate' project. """
-        Task = self.env['project.task'].with_context(tracking_disable=True)
+        Task = self.env['project.task']
         Timesheet = self.env['account.analytic.line']
 
         # create a task
@@ -202,7 +202,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         Check task and subtask creation, and timesheeting in a project billed at 'task rate'.
         Then move the task into a 'employee rate' project then, 'non billable'.
         """
-        Task = self.env['project.task'].with_context(tracking_disable=True)
+        Task = self.env['project.task']
         Timesheet = self.env['account.analytic.line']
 
         # create a task
@@ -300,7 +300,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             3) Create an employee mapping in this project
             4) Check if the partner_id and pricing_type fields have been changed
         """
-        with Form(self.env['project.project'].with_context({'tracking_disable': True})) as project_form:
+        with Form(self.env['project.project']) as project_form:
             project_form.name = 'Test Billable Project'
             project_form.allow_billable = True
             # `sale_line_employee_ids` is not visible if `partner_id` is not set

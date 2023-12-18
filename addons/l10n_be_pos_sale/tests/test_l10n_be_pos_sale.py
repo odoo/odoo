@@ -9,12 +9,11 @@ from odoo import Command
 class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='be_comp'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestPointOfSaleHttpCommon.setup_country('be')
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_settle_order_is_invoice(self):
-        #Change company country to Belgium
-        self.env.user.company_id.country_id = self.env.ref('base.be')
 
         self.product_a = self.env['product.product'].create({
             'name': 'Product A',

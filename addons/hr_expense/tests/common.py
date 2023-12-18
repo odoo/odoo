@@ -11,8 +11,11 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 class TestExpenseCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.company_data_2 = cls.setup_other_company()
+        cls.other_currency = cls.setup_other_currency('EUR')
 
         group_expense_manager = cls.env.ref('hr_expense.group_hr_expense_manager')
 

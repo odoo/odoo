@@ -28,6 +28,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product99 = self.create_product('Product_99', self.categ_basic, 99, 50)
         self.product_multi_tax = self.create_product('Multi-tax product', self.categ_basic, 100, 100, (self.taxes['tax8'] | self.taxes['tax9']).ids)
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
+        self.company_data_2 = self.setup_other_company()
 
     def test_orders_no_invoiced(self):
         """ Test for orders without invoice

@@ -8,8 +8,10 @@ from odoo.tests import Form, tagged
 class TestAccountPayment(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency('EUR')
 
         company = cls.company_data['default_journal_bank'].company_id
 
@@ -96,7 +98,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         payment.write({
             'partner_type': 'supplier',
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
         })
 
@@ -104,12 +106,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             **expected_payment_values,
             'partner_type': 'supplier',
             'destination_account_id': self.partner_a.property_account_payable_id.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
         }])
         self.assertRecordValues(payment.move_id, [{
             **expected_move_values,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
         }])
         self.assertRecordValues(payment.line_ids.sorted('balance'), [
@@ -118,7 +120,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 25.0,
                 'amount_currency': -50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
                 'account_id': self.partner_a.property_account_payable_id.id,
             },
             {
@@ -126,7 +128,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'debit': 25.0,
                 'credit': 0.0,
                 'amount_currency': 50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
             },
         ])
 
@@ -349,7 +351,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         # So, change the payment partner_type beforehand rather than in the form view.
         payment.partner_type = 'supplier'
         pay_form = Form(payment)
-        pay_form.currency_id = self.currency_data['currency']
+        pay_form.currency_id = self.other_currency
         pay_form.partner_id = self.partner_a
         payment = pay_form.save()
 
@@ -357,12 +359,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             **expected_payment_values,
             'partner_type': 'supplier',
             'destination_account_id': self.partner_a.property_account_payable_id.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
         }])
         self.assertRecordValues(payment.move_id, [{
             **expected_move_values,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
         }])
         self.assertRecordValues(payment.line_ids.sorted('balance'), [
@@ -371,7 +373,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 25.0,
                 'amount_currency': -50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
                 'account_id': self.partner_a.property_account_payable_id.id,
             },
             {
@@ -379,7 +381,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'debit': 25.0,
                 'credit': 0.0,
                 'amount_currency': 50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
             },
         ])
 
@@ -772,7 +774,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         set on the journal.
         '''
         self.company_data['default_journal_bank'].write({
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
         })
 
         payment = self.env['account.payment'].create({
@@ -784,23 +786,23 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         })
 
         self.assertRecordValues(payment, [{
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
         }])
         self.assertRecordValues(payment.move_id, [{
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
         }])
         self.assertRecordValues(payment.line_ids.sorted('balance'), [
             {
                 'debit': 0.0,
                 'credit': 25.0,
                 'amount_currency': -50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
             },
             {
                 'debit': 25.0,
                 'credit': 0.0,
                 'amount_currency': 50.0,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
             },
         ])
 

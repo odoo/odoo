@@ -10,30 +10,32 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 class TestSaEdiCommon(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='sa', edi_format_ref='l10n_sa_edi.edi_sa_zatca'):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    @AccountEdiTestCommon.setup_edi_format('l10n_sa_edi.edi_sa_zatca')
+    @AccountEdiTestCommon.setup_country('sa')
+    def setUpClass(cls):
+        super().setUpClass()
         # Setup company
-        cls.company = cls.company_data['company']
-        cls.company.name = 'SA Company Test'
-        cls.company.country_id = cls.env.ref('base.sa')
-        cls.company.email = "info@company.saexample.com"
-        cls.company.phone = '+966 51 234 5678'
-        cls.customer_invoice_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('type', '=', 'sale')], limit=1)
-        cls.company.l10n_sa_edi_building_number = '1234'
-        cls.company.l10n_sa_edi_plot_identification = '1234'
-        cls.company.street2 = "Testomania"
-        cls.company.l10n_sa_additional_identification_number = '2525252525252'
-        cls.company.l10n_sa_additional_identification_scheme = 'CRN'
-        cls.company.vat = '311111111111113'
-        cls.company.l10n_sa_private_key = cls.env['res.company']._l10n_sa_generate_private_key()
-        cls.company.state_id = cls.env['res.country.state'].create({
-            'name': 'Riyadh',
-            'code': 'RYA',
-            'country_id': cls.company.country_id.id
+        cls.company.write({
+            'name': 'SA Company Test',
+            'email': 'info@company.saexample.com',
+            'phone': '+966 51 234 5678',
+            'l10n_sa_edi_building_number': '1234',
+            'l10n_sa_edi_plot_identification': '1234',
+            'street2': 'Testomania',
+            'l10n_sa_additional_identification_number': '2525252525252',
+            'l10n_sa_additional_identification_scheme': 'CRN',
+            'vat': '311111111111113',
+            'l10n_sa_private_key': cls.env['res.company']._l10n_sa_generate_private_key(),
+            'state_id': cls.env['res.country.state'].create({
+                'name': 'Riyadh',
+                'code': 'RYA',
+                'country_id': cls.company.country_id.id
+            }),
+            'street': 'Al Amir Mohammed Bin Abdul Aziz Street',
+            'city': 'المدينة المنورة',
+            'zip': '42317',
         })
-        cls.company.street = 'Al Amir Mohammed Bin Abdul Aziz Street'
-        cls.company.city = 'المدينة المنورة'
-        cls.company.zip = '42317'
+        cls.customer_invoice_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('type', '=', 'sale')], limit=1)
         cls.customer_invoice_journal.l10n_sa_serial_number = '123456789'
         cls.partner_us = cls.env['res.partner'].create({
             'name': 'Chichi Lboukla',

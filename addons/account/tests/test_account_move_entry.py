@@ -12,8 +12,11 @@ from collections import defaultdict
 class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.company_data_2 = cls.setup_other_company()
+        cls.other_currency = cls.setup_other_currency('GBP')
 
         tax_repartition_line = cls.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
@@ -61,6 +64,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 500.0,
         }
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
 
     def test_out_invoice_auto_post_at_date(self):
         # Create auto-posted (but not recurring) entry
@@ -122,7 +130,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # The currency set on the account is not the same as the one set on the company.
         # It should raise an error.
-        custom_account.currency_id = self.currency_data['currency']
+        custom_account.currency_id = self.other_currency
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.line_ids[0].account_id = custom_account
@@ -136,7 +144,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_fiscal_position_multicompany(self):
         """A move is assigned a fiscal position that matches its own company."""
         company1 = self.company_data["company"]
-        company2 = self.company_data_2["company"]
+        company2 = self._create_company(name='company2')
         partner = self.env['res.partner'].create({'name': 'Belouga'})
         fpos1 = self.env["account.fiscal.position"].create(
             {
@@ -337,14 +345,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with move_form.line_ids.new() as line_form:
             line_form.name = 'debit_line'
             line_form.account_id = self.company_data['default_account_revenue']
-            line_form.currency_id = self.currency_data['currency']
+            line_form.currency_id = self.other_currency
             line_form.amount_currency = 1200.0
 
         # New line that should get 400.0 as credit.
         with move_form.line_ids.new() as line_form:
             line_form.name = 'credit_line'
             line_form.account_id = self.company_data['default_account_revenue']
-            line_form.currency_id = self.currency_data['currency']
+            line_form.currency_id = self.other_currency
             line_form.amount_currency = -1200.0
         move = move_form.save()
 
@@ -352,13 +360,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             move.line_ids.sorted('debit'),
             [
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': -1200.0,
                     'debit': 0.0,
                     'credit': 400.0,
                 },
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': 1200.0,
                     'debit': 400.0,
                     'credit': 0.0,
@@ -374,13 +382,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             move.line_ids.sorted('debit'),
             [
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': -1200.0,
                     'debit': 0.0,
                     'credit': 600.0,
                 },
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': 1200.0,
                     'debit': 600.0,
                     'credit': 0.0,
@@ -398,13 +406,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             move.line_ids.sorted('debit'),
             [
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': -1200.0,
                     'debit': 0.0,
                     'credit': 200.0,
                 },
                 {
-                    'currency_id': self.currency_data['currency'].id,
+                    'currency_id': self.other_currency.id,
                     'amount_currency': 1200.0,
                     'debit': 200.0,
                     'credit': 0.0,
@@ -483,7 +491,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'partner_id': self.partner_a.id,
             'date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'line_ids': [
                 (0, None, self.entry_line_vals_1),
                 (0, None, self.entry_line_vals_2),
@@ -778,7 +786,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     Command.create({
                         'name': "line1",
                         'account_id': self.company_data['default_account_receivable'].id,
-                        'currency_id': self.currency_data['currency'].id,
+                        'currency_id': self.other_currency.id,
                         'balance': 400.0,
                         'amount_currency': 1200.0,
                     }),
@@ -795,7 +803,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     Command.create({
                         'name': "line1",
                         'account_id': self.company_data['default_account_receivable'].id,
-                        'currency_id': self.currency_data['currency'].id,
+                        'currency_id': self.other_currency.id,
                         'balance': -600.0,
                         'amount_currency': -1200.0,
                     }),
@@ -1094,3 +1102,26 @@ class TestAccountMove(AccountTestInvoicingCommon):
             for (balance, cumulated_balance), read_result in zip(expected, read_results):
                 self.assertAlmostEqual(balance, read_result['balance'])
                 self.assertAlmostEqual(cumulated_balance, read_result['cumulated_balance'])
+
+    def test_move_line_rounding(self):
+        """Whatever arguments we give to the creation of an account move,
+        in every case the amounts should be properly rounded to the currency's precision.
+        In other words, we don't fall victim of the limitation introduced by 9d87d15db6dd40
+
+        Here the rounding should be done according to company_currency_id, which is a related
+        on move_id.company_id.currency_id.
+        In principle, it should not be necessary to add it to the create values,
+        since it is supposed to be computed by the ORM...
+        """
+        move = self.env['account.move'].create({
+            'line_ids': [
+                (0, 0, {'debit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
+                (0, 0, {'credit': 100.0 / 3, 'account_id': self.company_data['default_account_revenue'].id}),
+            ],
+        })
+
+        self.assertEqual(
+            [(33.33, 0.0), (0.0, 33.33)],
+            move.line_ids.mapped(lambda x: (x.debit, x.credit)),
+            "Quantities should have been rounded according to the currency."
+        )
