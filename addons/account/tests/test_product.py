@@ -4,7 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', 'post_install_l10n', '-at_install')
 class TestProduct(AccountTestInvoicingCommon):
 
     def test_multi_company_product_tax(self):
@@ -21,7 +21,7 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertRecordValues(product_without_company.sudo(), [{
             'taxes_id': companies.account_sale_tax_id.ids,
             'supplier_taxes_id': companies.account_purchase_tax_id.ids,
-        }])
+        }])  # Take care that inactive default taxes won't be shown on the product
         # Product should have only the default tax of the company it belongs to.
         self.assertRecordValues(product_with_company.sudo(), [{
             'taxes_id': self.company_data['company'].account_sale_tax_id.ids,
