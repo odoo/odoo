@@ -153,6 +153,19 @@ class TestSelfAccessRights(TestHrCommon):
         for f in self.self_protected_fields_user:
             self.richard.with_user(self.richard).read([f])  # should not raise
 
+    def testReadSelfUserEmployeeManualField(self):
+        self.env['base'].flush()
+        self.env.clear()
+        res_users_model = self.env['ir.model']._get('res.users')
+        self.env['ir.model.fields'].create({
+            'name': 'x_custom_field',
+            'model_id': res_users_model.id,
+            'field_description': 'custom field',
+            'ttype': 'char',
+        })
+        for f in self.self_protected_fields_user:
+            self.hubert.with_user(self.hubert).read([f, 'x_custom_field'])  # should not raise
+
     def testReadOtherUserEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert.with_user(self.richard).read(self.self_protected_fields_user)

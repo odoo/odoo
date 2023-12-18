@@ -542,7 +542,10 @@ class Users(models.Model):
         if fields and self == self.env.user:
             readable = self.SELF_READABLE_FIELDS
             for key in fields:
-                if not (key in readable or key.startswith('context_')):
+                if key.startswith('context_') or (key in self._fields and self._fields[key].manual):
+                    continue
+
+                if key not in readable:
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
