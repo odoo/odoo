@@ -1744,7 +1744,10 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                             animateTransformEl.removeAttribute("begin");
                         });
                         this._setImgSrc(this.svgInEl, resolve);
-                });
+                    }).catch(() => {
+                        // Could be the case if somehow the `src` is an absolute
+                        // URL from another domain.
+                    });
             } else {
                 this._setImgSrc(this.svgInEl, resolve);
             }
