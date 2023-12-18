@@ -100,6 +100,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/discuss/core/common/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/browser/title_service.js'),
 
             'im_livechat/static/src/embed/**/*',
             'im_livechat/static/src/embed/livechat_data.js',

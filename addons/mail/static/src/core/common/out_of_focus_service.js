@@ -15,19 +15,17 @@ const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
  */
 export class OutOfFocusService {
     constructor(env, services) {
+        this.setup(env, services);
+    }
+
+    setup(env, services) {
         this.env = env;
         this.audio = new Audio();
         this.audio.src = this.audio.canPlayType("audio/ogg; codecs=vorbis")
             ? url("/mail/static/src/audio/ting.ogg")
             : url("/mail/static/src/audio/ting.mp3");
-        this.counter = 0;
         this.multiTab = services.multi_tab;
         this.notificationService = services.notification;
-        this.titleService = services.title;
-        env.bus.addEventListener("window_focus", () => {
-            this.counter = 0;
-            this.titleService.setParts({ _chat: undefined });
-        });
     }
 
     notify(message, channel) {
@@ -54,9 +52,6 @@ export class OutOfFocusService {
             title: notificationTitle,
             type: "info",
         });
-        this.counter++;
-        const titlePattern = this.counter === 1 ? _t("%s Message") : _t("%s Messages");
-        this.titleService.setParts({ _chat: sprintf(titlePattern, this.counter) });
     }
 
     /**
@@ -139,7 +134,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["multi_tab", "notification", "title"],
+    dependencies: ["multi_tab", "notification"],
     start(env, services) {
         const service = new OutOfFocusService(env, services);
         return service;
