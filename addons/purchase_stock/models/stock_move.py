@@ -55,6 +55,8 @@ class StockMove(models.Model):
             invoiced_value = 0
             invoiced_qty = 0
             for invoice_line in line.sudo().invoice_lines:
+                if invoice_line.move_id.state != 'posted':
+                    continue
                 if invoice_line.tax_ids:
                     invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
                         invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
