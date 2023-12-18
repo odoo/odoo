@@ -3825,3 +3825,35 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_id = self.product_7_template.product_variant_ids[0]
         mo = mo_form.save()
         self.assertEqual(mo.move_raw_ids.product_id, c3)
+
+    def test_mo_duration_expected(self):
+        """
+        Test to verify that the 'duration_expected' on a work order in a manufacturing order 
+        correctly remains as manually set after completion. This test involves creating a product 
+        with a Bill of Materials (BOM) and an operation with an initial expected duration.
+        A manufacturing order is then created for this product, the expected duration of the
+        work order is manually changed, and the order is completed. The test checks that 
+        the expected duration remains as manually set and does not revert to the original value.
+        """
+        # Selecting a predefined BOM (bom_2) with one operation having a time cycle of 15 minutes
+        bom = self.bom_2
+
+        # Creating a Manufacturing Order (MO) using a Form, which provides a more dynamic way of setting up records for testing
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6  # Assigning the product for the MO
+        production_form.product_qty = 1  # Setting the quantity of the product to be produced
+        production_form.bom_id = bom  # Assigning the BOM to be used in this MO
+        production = production_form.save()  # Saving the form to create the MO record
+
+        # Storing the initial 'duration_expected' value of the work order
+        init_duration_expected = production.workorder_ids.duration_expected
+
+        # Manually increasing the 'duration_expected' by 5 minutes
+        production.workorder_ids.duration_expected = init_duration_expected + 5
+
+        # Completing the manufacturing process by simulating a click on the "Produce all" button
+        production.button_mark_done()
+
+        # Verifying that 'duration_expected' is not equal to the initial value after completion
+        # This checks that the manual adjustment to 'duration_expected' is retained
+        self.assertNotEqual(production.workorder_ids.duration_expected, init_duration_expected, 'Duration expected should not be equal to the initial duration expected')
