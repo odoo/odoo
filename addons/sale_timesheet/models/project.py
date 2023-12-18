@@ -243,20 +243,6 @@ class Project(models.Model):
             }
         }
 
-    def action_make_billable(self):
-        return {
-            "name": _("Create Sales Order"),
-            "type": 'ir.actions.act_window',
-            "res_model": 'project.create.sale.order',
-            "views": [[False, "form"]],
-            "target": 'new',
-            "context": {
-                'active_id': self.id,
-                'active_model': 'project.project',
-                'default_product_id': self.timesheet_product_id.id,
-            },
-        }
-
     def action_billable_time_button(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
