@@ -2,7 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, fields
+<<<<<<< HEAD
 from odoo.tests import Form, tagged
+||||||| parent of f19447f8fb5d (temp)
+from odoo.tests.common import Form
+=======
+from odoo.tests.common import Form, tagged
+>>>>>>> f19447f8fb5d (temp)
 from odoo.tools.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon

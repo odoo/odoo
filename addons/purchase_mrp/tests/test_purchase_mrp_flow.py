@@ -3,8 +3,17 @@
 
 from datetime import timedelta
 
+<<<<<<< HEAD
 from odoo.tests import Form, TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+||||||| parent of f19447f8fb5d (temp)
+from odoo.tests.common import Form, TransactionCase
+from odoo.tests import tagged
+=======
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import Form
+from odoo.tests import tagged
+>>>>>>> f19447f8fb5d (temp)
 from odoo import fields
 from odoo.fields import Command
 

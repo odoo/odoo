@@ -1,7 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
+<<<<<<< HEAD
+||||||| parent of f19447f8fb5d (temp)
+from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
+from odoo.addons.website.tools import MockRequest
+=======
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
+from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
+from odoo.addons.website.tools import MockRequest
+>>>>>>> f19447f8fb5d (temp)
+from odoo.exceptions import UserError
+<<<<<<< HEAD
+from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
+||||||| parent of f19447f8fb5d (temp)
+from odoo.tests.common import TransactionCase, tagged
+=======
+from odoo.tests.common import tagged
+>>>>>>> f19447f8fb5d (temp)
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
