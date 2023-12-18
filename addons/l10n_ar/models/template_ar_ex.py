@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ar_ex')
     def _get_ar_ex_template_data(self):
         return {
-            'name': 'Argentine Generic Chart of Accounts for Exempt Individuals',
+            'name': _('Argentine Generic Chart of Accounts for Exempt Individuals'),
             'parent': 'ar_base',
             'code_digits': '12',
         }
