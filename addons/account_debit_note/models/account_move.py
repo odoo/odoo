@@ -32,3 +32,17 @@ class AccountMove(models.Model):
     def action_debit_note(self):
         action = self.env.ref('account_debit_note.action_view_account_move_debit').read()[0]
         return action
+
+    def _get_starting_sequence(self):
+        starting_sequence = super()._get_starting_sequence()
+        if self.debit_origin_id and self.move_type in ('out_invoice', 'in_invoice'):
+            starting_sequence = "D" + starting_sequence
+        return starting_sequence
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        where_string, param = super()._get_last_sequence_domain(relaxed)
+        if self.debit_origin_id and self.move_type in ('out_invoice', 'in_invoice'):
+            where_string += " AND debit_origin_id IS NOT NULL"
+        else:
+            where_string += " AND debit_origin_id IS NULL"
+        return where_string, param
