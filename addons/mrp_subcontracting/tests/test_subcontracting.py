@@ -60,6 +60,13 @@ class TestSubcontractingBasic(TransactionCase):
             error_message = f"At least one {operation_type} (operation_type) got reused on duplication (should have been recreated)"
             self.assertEqual(len(original_type_set & copy_type_set), 0, error_message)
 
+    def test_warehouse_subcontracting_resupply_type_code(self):
+        """ Assert that default operation code of resupply subcontractors is 'internal'. """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse',
+            'code': 'MYWH'
+        })
+        self.assertEqual(warehouse.subcontracting_resupply_type_id.code, 'internal')
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingFlows(TestMrpSubcontractingCommon):

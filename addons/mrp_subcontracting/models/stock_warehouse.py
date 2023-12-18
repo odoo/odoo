@@ -22,7 +22,7 @@ class StockWarehouse(models.Model):
         domain=[('code', '=', 'mrp_operation')], copy=False)
     subcontracting_resupply_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Resupply Operation Type',
-        domain=[('code', '=', 'outgoing')], copy=False)
+        domain=[('code', '=', 'internal')], copy=False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -142,7 +142,7 @@ class StockWarehouse(models.Model):
             },
             'subcontracting_resupply_type_id': {
                 'name': _('Resupply Subcontractor'),
-                'code': 'outgoing',
+                'code': 'internal',
                 'use_create_lots': False,
                 'use_existing_lots': True,
                 'default_location_dest_id': self._get_subcontracting_location().id,
