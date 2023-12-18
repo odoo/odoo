@@ -29,7 +29,6 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
@@ -745,9 +744,6 @@ class Users(models.Model):
     @api.model
     def action_get(self):
         return self.sudo().env.ref('base.action_res_users_my').read()[0]
-
-    def check_super(self, passwd):
-        return check_super(passwd)
 
     @api.model
     def _get_invalidation_fields(self):
