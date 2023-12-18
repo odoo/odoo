@@ -37,7 +37,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_purchase_81',
                 'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
-                'account_sale_tax_id': 'vat_77',
-                'account_purchase_tax_id': 'vat_77_purchase',
             },
         }
