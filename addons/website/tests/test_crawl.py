@@ -5,6 +5,7 @@ import logging
 import time
 
 import lxml.html
+from collections import defaultdict
 from werkzeug import urls
 
 import odoo
@@ -52,14 +53,25 @@ class Crawler(HttpCaseWithUserDemo):
 
     def crawl(self, url, seen=None, msg=''):
         if seen is None:
-            seen = set()
+            seen_urls = set()
+            seen_paths = defaultdict(lambda: 0)
+        else:
+            [seen_urls, seen_paths] = seen
 
         url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", '/<slug>/', url)
         url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", '\g<1>=param', url_slug)
-        if url_slug in seen:
-            return seen
+        if url_slug in seen_urls:
+            return [seen_urls, seen_paths]
+
+        seen_urls.add(url_slug)
+        if '?' in url:
+            url_path = '?'.join(url.split('?')[:-1])
         else:
-            seen.add(url_slug)
+            url_path = url
+        seen_paths[url_path] += 1
+
+        if seen_paths[url_path] > 3:
+            return [seen_urls, seen_paths]
 
         _logger.info("%s %s", msg, url)
         r = self.url_open(url, allow_redirects=False)
@@ -68,7 +80,7 @@ class Crawler(HttpCaseWithUserDemo):
             new_url = r.headers.get('Location')
             current_url = r.url
             if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
-                return seen
+                return [seen_urls, seen_paths]
             r = self.url_open(new_url)
 
         code = r.status_code
@@ -92,13 +104,13 @@ class Crawler(HttpCaseWithUserDemo):
                     (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
-                self.crawl(href, seen, msg)
-        return seen
+                self.crawl(href, [seen_urls, seen_paths], msg)
+        return [seen_urls, seen_paths]
 
     def test_10_crawl_public(self):
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
-        seen = self.crawl('/', msg='Anonymous Coward')
+        seen = self.crawl('/', msg='Anonymous Coward')[0]
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
@@ -121,7 +133,7 @@ class Crawler(HttpCaseWithUserDemo):
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('demo', 'demo')
-        seen = self.crawl('/', msg='demo')
+        seen = self.crawl('/', msg='demo')[0]
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
@@ -137,7 +149,7 @@ class Crawler(HttpCaseWithUserDemo):
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('admin', 'admin')
-        seen = self.crawl('/', msg='admin')
+        seen = self.crawl('/', msg='admin')[0]
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
