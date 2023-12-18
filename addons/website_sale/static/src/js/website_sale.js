@@ -764,7 +764,8 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
             });
         }
 
-        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        const activeClasses = (ev.target.parentElement.dataset.activeClasses || '').match(/\S+/g) || [];
+
         ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
             activeClasses.map(c => btn.classList.toggle(c));
         });
