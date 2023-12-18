@@ -19,8 +19,10 @@ def archive_products(env):
 class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.company_data_2 = cls.setup_other_company()
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
@@ -146,8 +148,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
@@ -158,7 +160,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         })
 
         # Set basic defaults
-        cls.company = cls.company_data['company']
         cls.pos_sale_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('code', '=', 'POSS')])
         cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
@@ -187,7 +188,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.company_currency = cls.company.currency_id
         # other_currency is a currency different from the company_currency
         # sometimes company_currency is different from USD, so handle appropriately.
-        cls.other_currency = cls.currency_data['currency']
+        cls.other_currency = cls.setup_other_currency("EUR", rounding=0.001)
 
         cls.currency_pricelist = cls.env['product.pricelist'].create({
             'name': 'Public Pricelist',

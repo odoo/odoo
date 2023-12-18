@@ -80,6 +80,11 @@ class TestProjectProfitabilityCommon(Common):
 @tagged('-at_install', 'post_install')
 class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
+
     def test_profitability_of_non_billable_project(self):
         """ Test no data is found for the project profitability since the project is not billable
             even if it is linked to a sale order items.

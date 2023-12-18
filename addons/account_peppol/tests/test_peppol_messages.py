@@ -20,8 +20,8 @@ FILE_PATH = 'account_peppol/tests/assets'
 class TestPeppolMessage(TestAccountMoveSendCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
 
         cls.env.company.write({

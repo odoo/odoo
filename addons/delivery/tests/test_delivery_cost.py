@@ -18,7 +18,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         cls._enable_uom()
 
         # the tests hereunder assume all the prices in USD
-        cls._use_currency('USD')
         cls.env.company.country_id = cls.env.ref('base.us').id
 
         cls.product.weight = 1.0

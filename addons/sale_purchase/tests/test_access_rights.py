@@ -10,8 +10,8 @@ from odoo.tests import tagged
 class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Create a users
         group_sale_user = cls.env.ref('sales_team.group_sale_salesman')

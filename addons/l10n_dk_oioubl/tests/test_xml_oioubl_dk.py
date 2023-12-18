@@ -12,11 +12,10 @@ from odoo.tools import file_open
 class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="dk"):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestUBLCommon.setup_country('dk')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data['company'].write({
-            'country_id': cls.env.ref('base.dk').id,
-            'currency_id': cls.env.ref('base.DKK').id,
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',

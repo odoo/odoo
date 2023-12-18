@@ -10,8 +10,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, *kw):
-        # chart_template_ref is dropped on purpose because not needed for account_payment tests.
+    def setUpClass(cls):
         super().setUpClass()
 
         Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information

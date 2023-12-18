@@ -16,6 +16,8 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
         cls.WebsiteSaleController = WebsiteSale()
         cls.website = cls.env['website'].browse(1)
 
+        cls.product.write({'taxes_id': [Command.clear()]})
+
         cls.topup = cls.env['product.product'].create({
             'name': 'Ewallet Top up',
             'list_price': 50.0,
@@ -55,7 +57,7 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
 
         order = self.empty_cart
         with MockRequest(self.env, website=self.website, sale_order_id=order.id):
-            self.WebsiteSaleController.cart_update_json(self.consumable_product.id, set_qty=1)
+            self.WebsiteSaleController.cart_update_json(self.product.id, set_qty=1)
             self.assertEqual(order.amount_total, 20)
             self.WebsiteSaleController.claim_reward(self.ewallet_program.reward_ids[0].id)
             self.assertEqual(order.amount_total, 10)

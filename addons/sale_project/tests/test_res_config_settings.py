@@ -10,10 +10,10 @@ from .common import TestSaleProjectCommon
 @tagged('post_install', '-at_install')
 class TestResConfigSettings(TestSaleProjectCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_b.id,
             'partner_invoice_id': cls.partner_b.id,
             'partner_shipping_id': cls.partner_b.id,

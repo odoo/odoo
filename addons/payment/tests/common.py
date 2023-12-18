@@ -32,18 +32,8 @@ class PaymentCommon(BaseCommon):
         cls.group_public = cls.env.ref('base.group_public')
 
         cls.admin_user = cls.env.ref('base.user_admin')
-        cls.internal_user = cls.env['res.users'].create({
-            'name': 'Internal User (Test)',
-            'login': 'internal',
-            'password': 'internal',
-            'groups_id': [Command.link(cls.group_user.id)]
-        })
-        cls.portal_user = cls.env['res.users'].create({
-            'name': 'Portal User (Test)',
-            'login': 'payment_portal',
-            'password': 'payment_portal',
-            'groups_id': [Command.link(cls.group_portal.id)]
-        })
+        cls.internal_user = cls._create_new_internal_user()
+        cls.portal_user = cls._create_new_portal_user()
         cls.public_user = cls.env.ref('base.public_user')
 
         cls.admin_partner = cls.admin_user.partner_id

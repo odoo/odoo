@@ -6,8 +6,8 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 class TestSaleStockCommon(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.warehouse_3_steps_pull = cls.env['stock.warehouse'].create({
             'name': 'Warehouse 3 steps',
             'code': '3S',

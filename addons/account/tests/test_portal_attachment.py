@@ -13,8 +13,8 @@ from odoo.tools import mute_logger
 class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.out_invoice = cls.env['account.move'].with_context(tracking_disable=True).create({
             'move_type': 'out_invoice',

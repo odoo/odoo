@@ -9,8 +9,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestAngloSaxonCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.PosMakePayment = cls.env['pos.make.payment']
         cls.PosOrder = cls.env['pos.order']
         cls.Statement = cls.env['account.bank.statement']

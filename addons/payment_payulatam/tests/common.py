@@ -7,8 +7,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class PayULatamCommon(AccountTestInvoicingCommon, PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.payulatam = cls._prepare_provider('payulatam', update_values={
             'payulatam_account_id': 'dummy',

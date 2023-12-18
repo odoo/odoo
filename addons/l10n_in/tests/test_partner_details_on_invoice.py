@@ -8,8 +8,9 @@ _logger = logging.getLogger(__name__)
 class TestReports(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="in"):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('in')
+    def setUpClass(cls):
+        super().setUpClass()
         country_in_id = cls.env.ref("base.in").id
         cls.company_data["company"].write({
             "vat": "24AAGCC7144L6ZE",

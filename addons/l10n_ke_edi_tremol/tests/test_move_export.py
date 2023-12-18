@@ -9,8 +9,9 @@ from freezegun import freeze_time
 class TestKeMoveExport(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='ke'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('ke')
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.partner_a.write({
             'name': 'Sirius Cybernetics Corporation',

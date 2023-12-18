@@ -10,8 +10,8 @@ from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsComm
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',

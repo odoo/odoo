@@ -10,19 +10,18 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.env.user.company_id.anglo_saxon_accounting = True
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
-    def _create_product(self, name, product_type, price):
-        return self.env['product.product'].create({
-            'name': name,
-            'type': product_type,
-            'standard_price': price,
-            'categ_id': self.stock_account_product_categ.id if product_type == 'product' else self.env.ref('product.product_category_all').id,
-        })
+    @classmethod
+    def _create_product(cls, **kwargs):
+        return super()._create_product(
+            categ_id=cls.stock_account_product_categ.id if kwargs.get('type') == 'product' else cls.env.ref('product.product_category_all').id,
+            **kwargs
+        )
 
     def test_sale_mrp_kit_bom_cogs(self):
         """Check invoice COGS aml after selling and delivering a product
@@ -44,11 +43,11 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         #     * 3 x Component BB (Cost: $5, Consumable)
         # ----------------------------------------------
 
-        self.component_a = self._create_product('Component A', 'product', 3.00)
-        self.component_b = self._create_product('Component B', 'product', 4.00)
-        self.component_bb = self._create_product('Component BB', 'consu', 5.00)
-        self.kit_a = self._create_product('Kit A', 'product', 0.00)
-        self.kit_b = self._create_product('Kit B', 'consu', 0.00)
+        self.component_a = self._create_product(name='Component A', type='product', standard_price=3.00)
+        self.component_b = self._create_product(name='Component B', type='product', standard_price=4.00)
+        self.component_bb = self._create_product(name='Component BB', type='consu', standard_price=5.00)
+        self.kit_a = self._create_product(name='Kit A', type='product', standard_price=0.00)
+        self.kit_b = self._create_product(name='Kit B', type='consu', standard_price=0.00)
 
         self.kit_a.write({
             'property_account_expense_id': self.company_data['default_account_expense'].id,
@@ -220,8 +219,8 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         """
         self.stock_account_product_categ.property_cost_method = 'fifo'
 
-        kit = self._create_product('Simple Kit', 'product', 0)
-        component = self._create_product('Compo A', 'product', 0)
+        kit = self._create_product(name='Simple Kit', type='product', standard_price=0)
+        component = self._create_product(name='Compo A', type='product', standard_price=0)
         kit.property_account_expense_id = self.company_data['default_account_expense']
 
         self.env['mrp.bom'].create({
@@ -324,8 +323,8 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         """
         self.stock_account_product_categ.property_cost_method = 'fifo'
 
-        kit = self._create_product('Simple Kit', 'product', 0)
-        component = self._create_product('Compo A', 'product', 0)
+        kit = self._create_product(name='Simple Kit', type='product', standard_price=0)
+        component = self._create_product(name='Compo A', type='product', standard_price=0)
         (kit + component).invoice_policy = 'delivery'
         kit.property_account_expense_id = self.company_data['default_account_expense']
 
@@ -424,9 +423,9 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
     def test_kit_avco_fully_owned_and_delivered_invoice_post_delivery(self):
         self.stock_account_product_categ.property_cost_method = 'average'
 
-        compo01 = self._create_product('Compo 01', 'product', 10)
-        compo02 = self._create_product('Compo 02', 'product', 20)
-        kit = self._create_product('Kit', 'product', 0)
+        compo01 = self._create_product(name='Compo 01', type='product', standard_price=10)
+        compo02 = self._create_product(name='Compo 02', type='product', standard_price=20)
+        kit = self._create_product(name='Kit', type='product', standard_price=0)
 
         (compo01 + compo02 + kit).invoice_policy = 'delivery'
 
@@ -475,9 +474,9 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
     def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
         self.stock_account_product_categ.property_cost_method = 'average'
 
-        compo01 = self._create_product('Compo 01', 'product', 10)
-        compo02 = self._create_product('Compo 02', 'product', 20)
-        kit = self._create_product('Kit', 'product', 0)
+        compo01 = self._create_product(name='Compo 01', type='product', standard_price=10)
+        compo02 = self._create_product(name='Compo 02', type='product', standard_price=20)
+        kit = self._create_product(name='Kit', type='product', standard_price=0)
 
         (compo01 + compo02 + kit).invoice_policy = 'delivery'
 

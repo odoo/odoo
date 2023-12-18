@@ -12,6 +12,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super(TestPurchaseToInvoiceCommon, cls).setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR')
         uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.product_order = cls.env['product.product'].create({
@@ -918,7 +919,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(bill.currency_id, self.env.ref('base.EUR'), "The currency of the Bill should be the one set on the Bill")
         self.assertEqual(bill.invoice_line_ids.currency_id, self.env.ref('base.EUR'), "The currency of the Bill lines should be the same as the currency of the Bill")
 
-        ctx['default_currency_id'] = self.currency_data['currency'].id
+        ctx['default_currency_id'] = self.other_currency.id
         move_form_currency_in_context = Form(self.env['account.move'].with_context(ctx))
         move_form_currency_in_context.currency_id = self.env.ref('base.EUR')
         with move_form_currency_in_context.invoice_line_ids.new() as line_form:
@@ -929,8 +930,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         move_form_currency_in_context.partner_id = vendor_a
         bill = move_form_currency_in_context.save()
 
-        self.assertEqual(bill.currency_id, self.currency_data['currency'], "The currency of the Bill should be the one of the context")
-        self.assertEqual(bill.invoice_line_ids.currency_id, self.currency_data['currency'], "The currency of the Bill lines should be the same as the currency of the Bill")
+        self.assertEqual(bill.currency_id, self.other_currency, "The currency of the Bill should be the one of the context")
+        self.assertEqual(bill.invoice_line_ids.currency_id, self.other_currency, "The currency of the Bill lines should be the same as the currency of the Bill")
 
     def test_payment_reference_autocomplete_invoice(self):
         """

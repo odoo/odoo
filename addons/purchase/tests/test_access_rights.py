@@ -9,8 +9,8 @@ from odoo.exceptions import AccessError
 class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Create a users
         group_purchase_user = cls.env.ref('purchase.group_purchase_user')

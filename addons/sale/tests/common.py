@@ -22,6 +22,10 @@ class SaleCommon(
         # Not defined in product common because only used in sale
         cls.group_discount_per_so_line = cls.env.ref('sale.group_discount_per_so_line')
 
+        (cls.product + cls.service_product).write({
+                'taxes_id': [Command.clear()],
+        })
+
         cls.empty_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
         })
@@ -29,7 +33,7 @@ class SaleCommon(
             'partner_id': cls.partner.id,
             'order_line': [
                 Command.create({
-                    'product_id': cls.consumable_product.id,
+                    'product_id': cls.product.id,
                     'product_uom_qty': 5.0,
                 }),
                 Command.create({
@@ -227,8 +231,8 @@ class TestSaleCommon(AccountTestInvoicingCommon, TestSaleCommonBase):
     ''' Setup to be used post-install with sale and accounting test configuration.'''
 
     @classmethod
-    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
-        company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
+    def collect_company_accounting_data(cls, company):
+        company_data = super().collect_company_accounting_data(company)
 
         company_data.update(cls.setup_sale_configuration_for_company(company_data['company']))
 

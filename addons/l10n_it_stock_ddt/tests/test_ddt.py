@@ -8,11 +8,11 @@ from odoo.tests import Form, tagged
 class TestDDT(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='it'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestSaleCommon.setup_country('it')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data['company'].write({
                         'vat':"IT12345670017",
-                        'country_id': cls.env.ref('base.it').id,
                         'l10n_it_codice_fiscale': '01234560157',
                         'l10n_it_tax_system': 'RF01',
                         'street': 'Via Giovanni Maria Platina 66',
@@ -35,13 +35,6 @@ class TestDDT(TestSaleCommon):
         if hasattr(settings, '_create_proxy_user'):
             # Needed when `l10n_it_edi_sdiscoop` is installed
             settings._create_proxy_user(cls.company_data['company'], 'demo')
-
-    @classmethod
-    def setup_company_data(cls, company_name, **kwargs):
-        return super().setup_company_data(company_name, **{
-            **kwargs,
-            'country_id': cls.env.ref('base.it').id,
-        })
 
     def test_ddt_flow(self):
         """

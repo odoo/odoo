@@ -9,8 +9,8 @@ from odoo.tests import tagged, Form
 class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         categ_form = Form(cls.env['product.category'])
         categ_form.name = 'fifo auto'

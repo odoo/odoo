@@ -12,8 +12,8 @@ from odoo.tests import tagged
 class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
         cls.env['product.pricelist'].sudo().search([]).action_archive()

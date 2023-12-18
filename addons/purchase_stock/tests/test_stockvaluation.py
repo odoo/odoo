@@ -298,8 +298,8 @@ class TestStockValuation(TransactionCase):
 class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
@@ -381,6 +381,11 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         create_patch = patch('odoo.models.BaseModel.create', new_create)
         cls.startClassPatcher(post_patch)
         cls.startClassPatcher(create_patch)
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
 
     def _bill(self, po, qty=None, price=None):
         action = po.action_create_invoice()
