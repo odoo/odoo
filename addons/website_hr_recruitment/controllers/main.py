@@ -8,6 +8,7 @@ from odoo import http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv.expression import AND
 from odoo.http import request
+from odoo.tools import email_normalize
 from odoo.tools.misc import groupby
 
 
@@ -279,12 +280,71 @@ class WebsiteHrRecruitment(http.Controller):
             **kwargs
         )
 
+    def _build_search_domain(self, field, value):
+        if field == 'name':
+            return [('partner_name', '=ilike', value)]
+        if field == 'email':
+            return [('email_normalized', '=', email_normalize(value))]
+        if field == 'phone':
+            return ['|', ('partner_phone', '=', value), ('partner_mobile', '=', value)]
+        if field == 'linkedin':
+            return [('linkedin_profile', '=ilike', value)]
+
+    def _get_ongoing_application_response(self, ongoing_application, job_id, value):
+        message = _("An application already exists for %s. Duplicates might be rejected.", value)
+        if ongoing_application.user_id:
+            message += " " + _("In case of issue, contact %s", ongoing_application.user_id.name)
+            if ongoing_application.user_id.email:
+                message += ", %s" % ongoing_application.user_id.email
+            if ongoing_application.user_id.phone:
+                message += ", %s" % ongoing_application.user_id.phone
+        return {
+            'applied_same_job': ongoing_application.job_id.id == int(job_id),
+            'applied_other_job': True,
+            'message': message
+        }
+
+    def _get_refused_application_response(self, job_id):
+        message = _("You applied for this position less than 6 months ago, and have been rejected. Please don't reapply unless you have a good reason.")
+        return {
+            'applied_same_job': True,
+            'applied_other_job': False,
+            'message': message
+        }
+
     @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public")
-    def check_recent_application(self, email, job_id):
-        date_limit = datetime.now() - timedelta(days=90)
-        domain = [('email_from', '=ilike', email),
-                  ('create_date', '>=', date_limit)]
-        recent_applications = http.request.env['hr.applicant'].sudo().search(domain)
-        response = {'applied_same_job': any(a.job_id.id == int(job_id) for a in recent_applications),
-                    'applied_other_job': bool(recent_applications)}
-        return response
+    def check_recent_application(self, field, value, job_id):
+        Applicant = http.request.env['hr.applicant'].sudo()
+        search_domain = self._build_search_domain(field, value)
+        if not search_domain:
+            return {
+                'applied_same_job': False,
+                'applied_other_job': False,
+                'message': '',
+            }
+
+        applications = Applicant.search(search_domain + [
+            '|',
+                ('application_status', '=', 'ongoing'),
+                '&',
+                    ('application_status', '=', 'refused'),
+                    ('active', '=', False),
+        ], order='create_date desc')
+
+        refused_applications = applications.filtered(
+            lambda a: a.application_status == 'refused'
+                      and not a.active
+                      and a.job_id.id == int(job_id)
+                      and a.create_date >= (datetime.now() - timedelta(days=180)))
+        if refused_applications:
+            return self._get_refused_application_response(job_id)
+
+        ongoing_applications = applications.filtered(lambda a: a.application_status == 'ongoing')
+        if ongoing_applications:
+            return self._get_ongoing_application_response(ongoing_applications[0], job_id, value)
+
+        return {
+            'applied_same_job': False,
+            'applied_other_job': False,
+            'message': '',
+        }
