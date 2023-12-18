@@ -26,7 +26,6 @@ Also:
         'views/report_invoice.xml',
         'views/res_company_views.xml',
         'views/res_partner_bank_views.xml',
-        'views/report_payment_receipt_templates.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
