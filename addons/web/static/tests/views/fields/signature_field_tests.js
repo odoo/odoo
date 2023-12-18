@@ -399,4 +399,44 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.verifySteps(["web_save"]);
     });
+
+    QUnit.test("signature field should render initials", async function (assert) {
+        patchWithCleanup(NameAndSignature.prototype, {
+            setup() {
+                super.setup(...arguments);
+                assert.step(this.getCleanedName());
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form>
+                    <field name="product_id"/>
+                    <field name="sign" widget="signature" options="{'full_name': 'product_id', 'type': 'initial'}" />
+                </form>`,
+            mockRPC: async (route) => {
+                if (route === "/web/sign/get_fonts/") {
+                    return {};
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            "div[name=sign] div.o_signature svg",
+            "should have a valid signature widget"
+        );
+
+        // Click on the widget to open signature modal
+        await click(target, "div[name=sign] div.o_signature");
+        assert.containsOnce(
+            target,
+            ".modal .modal-body a.o_web_sign_auto_button",
+            'should open a modal with "Auto" button'
+        );
+        assert.verifySteps(["V.B."]);
+    });
 });

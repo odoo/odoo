@@ -22,6 +22,10 @@ export class SignatureField extends Component {
         height: { type: Number, optional: true },
         previewImage: { type: String, optional: true },
         width: { type: Number, optional: true },
+        type: { validate: (t) => ["initial", "signature"].includes(t), optional: true },
+    };
+    static defaultProps = {
+        type: "signature",
     };
 
     setup() {
@@ -85,7 +89,7 @@ export class SignatureField extends Component {
         if (!this.props.readonly) {
             const nameAndSignatureProps = {
                 displaySignatureRatio: 3,
-                signatureType: "signature",
+                signatureType: this.props.type,
                 noInputName: true,
             };
             const { fullName, record } = this.props;
@@ -168,6 +172,7 @@ export const signatureField = {
         fullName: options.full_name,
         height: options.size ? options.size[1] || undefined : attrs.height,
         previewImage: options.preview_image,
+        type: options.type,
         width: options.size ? options.size[0] || undefined : attrs.width,
     }),
 };
