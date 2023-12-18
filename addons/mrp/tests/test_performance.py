@@ -94,7 +94,7 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
 
         mo.action_assign()
 
-        action = mo.action_serial_mass_produce_wizard()
+        action = mo.action_mass_produce()
         wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
         wizard.next_serial_number = "sn#1"
         wizard.next_serial_count = quantity

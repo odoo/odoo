@@ -238,7 +238,6 @@ class MrpProduction(models.Model):
     production_capacity = fields.Float(compute='_compute_production_capacity', help="Quantity that can be produced with the current stock of components")
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
-    show_serial_mass_produce = fields.Boolean('Display the serial mass produce wizard action', compute='_compute_show_serial_mass_produce')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
@@ -680,15 +679,6 @@ class MrpProduction(models.Model):
     def _compute_show_lot_ids(self):
         for order in self:
             order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking != 'none' for m in order.move_raw_ids)
-
-    @api.depends('state', 'move_raw_ids')
-    def _compute_show_serial_mass_produce(self):
-        self.show_serial_mass_produce = False
-        for order in self:
-            if order.state in ['confirmed', 'progress', 'to_close'] and order.product_id.tracking == 'serial' and \
-                    float_compare(order.product_qty, 1, precision_rounding=order.product_uom_id.rounding) > 0 and \
-                    float_compare(order.qty_producing, order.product_qty, precision_rounding=order.product_uom_id.rounding) < 0:
-                order.show_serial_mass_produce = True
 
     @api.depends('state', 'move_finished_ids')
     def _compute_show_allocation(self):
@@ -2212,36 +2202,18 @@ class MrpProduction(models.Model):
             'target': 'new',
         }
 
-    def action_serial_mass_produce_wizard(self, mark_as_done=False):
+    def action_mass_produce(self):
         self.ensure_one()
         self._check_company()
-        if self.state not in ['confirmed', 'progress', 'to_close']:
+        if self.state not in ['draft', 'confirmed', 'progress', 'to_close']:
             return
-        if self.product_id.tracking != 'serial':
-            return
-        if self.state == 'confirmed' and self.reservation_state != 'assigned':
-            missing_components = {move.product_id for move in self.move_raw_ids if float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0}
-            message = _("Make sure enough quantities of these components are reserved to do the production:\n")
-            message += "\n".join(component.name for component in missing_components)
-            raise UserError(message)
-        next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        lot_components = {}
-        for move in self.move_raw_ids:
-            if move.product_id.tracking != 'lot':
-                continue
-            lot_ids = move.move_line_ids.lot_id.ids
-            if not lot_ids:
-                continue
-            lot_components.setdefault(move.product_id, set()).update(lot_ids)
-        multiple_lot_components = set([p for p, l in lot_components.items() if len(l) != 1])
+
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
         action['context'] = {
-            'default_production_id': self.id,
+            'default_production_ids': self.ids,
+            'default_move_raw_ids': self.move_raw_ids.ids,
             'default_expected_qty': self.product_qty,
-            'default_next_serial_number': next_serial,
-            'default_next_serial_count': self.product_qty - self.qty_produced,
-            'default_multiple_lot_components_names': ",".join(c.display_name for c in multiple_lot_components) if multiple_lot_components else None,
-            'default_mark_as_done': mark_as_done,
+            'production_ids_to_validate': self,
         }
         return action
 
