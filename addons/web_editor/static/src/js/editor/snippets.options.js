@@ -7151,6 +7151,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.hoverEffectColor;
                 delete img.dataset.hoverEffectStrokeWidth;
                 delete img.dataset.hoverEffectIntensity;
+                img.classList.remove("o_animate_on_hover");
                 return;
             }
             if (img.dataset.mimetype !== "image/svg+xml") {
