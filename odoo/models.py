@@ -1901,8 +1901,6 @@ class BaseModel(metaclass=MetaModel):
             query_parts.append(SQL("OFFSET %s", offset))
 
         self._flush_search(domain, fnames_to_flush)
-        if fnames_to_flush:
-            self._read_group_check_field_access_rights(fnames_to_flush)
 
         self.env.cr.execute(SQL("\n").join(query_parts))
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
@@ -2098,11 +2096,6 @@ class BaseModel(metaclass=MetaModel):
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
 
         return SQL(", ").join(orderby_terms), SQL(", ").join(extra_groupby_terms), fnames_used
-
-    @api.model
-    def _read_group_check_field_access_rights(self, field_names):
-        """ Check whether the given field names can be grouped or aggregated. """
-        self.check_field_access_rights('read', field_names)
 
     @api.model
     def _read_group_empty_value(self, spec):

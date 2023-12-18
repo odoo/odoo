@@ -829,44 +829,29 @@ class Task(models.Model):
                     error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
                 raise AccessError(error_message)
 
-    def read(self, fields=None, load='_classic_read'):
-        self._ensure_fields_are_accessible(fields)
-        return super(Task, self).read(fields=fields, load=load)
+    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
+        if not self.env.su and self.env.user.has_group('base.group_portal'):
+            valid_names = self.SELF_READABLE_FIELDS
+            field_names = [fname for fname in field_names if fname in valid_names]
+        return super()._determine_fields_to_fetch(field_names, ignore_when_in_cache)
 
     @api.model
-    def _read_group_check_field_access_rights(self, field_names):
-        super()._read_group_check_field_access_rights(field_names)
-        self._ensure_fields_are_accessible(field_names)
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        fields_list = {term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
-        self._ensure_fields_are_accessible(fields_list)
-        return super()._search(domain, offset, limit, order, access_rights_uid)
-
-    def mapped(self, func):
-        # Note: This will protect the filtered method too
-        if func and isinstance(func, str):
-            fields_list = func.split('.')
-            self._ensure_fields_are_accessible(fields_list)
-        return super(Task, self).mapped(func)
-
-    def filtered_domain(self, domain):
-        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]]
-        self._ensure_fields_are_accessible(fields_list)
-        return super(Task, self).filtered_domain(domain)
+    def check_field_access_rights(self, operation, field_names):
+        if field_names and operation in ('read', 'write'):
+            self._ensure_fields_are_accessible(field_names, operation)
+        elif not field_names and not self.env.su and self.env.user.has_group('base.group_portal'):
+            valid_names = self.SELF_READABLE_FIELDS
+            return [
+                fname for fname in super().check_field_access_rights(operation, field_names)
+                if fname in valid_names
+            ]
+        return super().check_field_access_rights(operation, field_names)
 
     def copy_data(self, default=None):
         defaults = super().copy_data(default=default)
         if self.env.user.has_group('project.group_project_user'):
             return defaults
         return [{k: v for k, v in default.items() if k in self.SELF_READABLE_FIELDS} for default in defaults]
-
-    @api.model
-    def _ensure_portal_user_can_write(self, fields):
-        for field in fields:
-            if field not in self.SELF_WRITABLE_FIELDS:
-                raise AccessError(_("You don't have write access on the %(field)s field.", field=field))
 
     def _set_stage_on_project_from_task(self):
         stage_ids_per_project = defaultdict(list)

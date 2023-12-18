@@ -575,10 +575,22 @@ class Users(models.Model):
         return super(Users, self).check_field_access_rights(operation, field_names)
 
     @api.model
-    def _read_group_check_field_access_rights(self, field_names):
-        super()._read_group_check_field_access_rights(field_names)
-        if set(field_names).intersection(USER_PRIVATE_FIELDS):
-            raise AccessError(_("Invalid 'group by' parameter"))
+    def _read_group_select(self, aggregate_spec, query):
+        try:
+            fname, __, __ = models.parse_read_group_spec(aggregate_spec)
+        except Exception:
+            # may happen if aggregate_spec == '__count', for instance
+            fname = None
+        if fname in USER_PRIVATE_FIELDS:
+            raise AccessError(_("Cannot aggregate on %s parameter", fname))
+        return super()._read_group_select(aggregate_spec, query)
+
+    @api.model
+    def _read_group_groupby(self, groupby_spec, query):
+        fname, __, __ = models.parse_read_group_spec(groupby_spec)
+        if fname in USER_PRIVATE_FIELDS:
+            raise AccessError(_("Cannot groupby on %s parameter", fname))
+        return super()._read_group_groupby(groupby_spec, query)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
