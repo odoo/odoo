@@ -1702,14 +1702,14 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     start() {
         this._super(...arguments);
-        this.originalImgSrc = this.el.src;
+        this.originalImgSrc = this.el.getAttribute('src');
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
-        if (this.originalImgSrc && (this.lastImgSrc === this.el.src)) {
+        if (this.originalImgSrc && (this.lastImgSrc === this.el.getAttribute('src'))) {
             this.el.src = this.originalImgSrc;
         }
     },
@@ -1808,9 +1808,9 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                 return;
             }
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("setImgHoverEffectSrc");
-            this.el.src = preloadedImg.src;
+            this.el.src = preloadedImg.getAttribute('src');
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
-            this.lastImgSrc = preloadedImg.src;
+            this.lastImgSrc = preloadedImg.getAttribute('src');
             this.el.onload = () => {
                 resolve();
             };
