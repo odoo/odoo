@@ -9,13 +9,13 @@ class AccountChartTemplate(models.AbstractModel):
     @template('in')
     def _get_in_template_data(self):
         return {
-            'property_account_receivable_id': 'p10040',
-            'property_account_payable_id': 'p11211',
-            'property_account_expense_categ_id': 'p2107',
-            'property_account_income_categ_id': 'p20011',
-            'property_tax_payable_account_id': 'p11239',
-            'property_tax_receivable_account_id': 'p10059',
-            'code_digits': '6',
+            'property_account_receivable_id': 'account_26010000',
+            'property_account_payable_id': 'account_16010000',
+            'property_account_expense_categ_id': 'account_54010000',
+            'property_account_income_categ_id': 'account_51010000',
+            'property_tax_payable_account_id': 'account_15020120',
+            'property_tax_receivable_account_id': 'account_24040100',
+            'code_digits': '8',
             'display_invoice_amount_total_words': True,
         }
 
@@ -27,11 +27,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '1002',
                 'cash_account_code_prefix': '1001',
                 'transfer_account_code_prefix': '1008',
-                'account_default_pos_receivable_account_id': 'p10041',
-                'income_currency_exchange_account_id': 'p2013',
-                'expense_currency_exchange_account_id': 'p2117',
-                'account_journal_early_pay_discount_loss_account_id': 'p2132',
-                'account_journal_early_pay_discount_gain_account_id': '2012',
+                'account_default_pos_receivable_account_id': 'account_26010010',
+                'income_currency_exchange_account_id': 'account_52040010',
+                'expense_currency_exchange_account_id': 'account_65010030',
+                'account_journal_early_pay_discount_loss_account_id': 'account_65010050',
+                'account_journal_early_pay_discount_gain_account_id': 'account_52040000',
                 'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
                 'fiscalyear_last_month': '3',
                 'account_sale_tax_id': 'igst_sale_18',
