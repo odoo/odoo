@@ -289,7 +289,6 @@
                                     <field name="is_locked" column_invisible="True"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="has_tracking" column_invisible="True"/>
-                                    <field name="display_assign_serial" column_invisible="True"/>
                                     <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
                                     <field name="date" optional="hide"/>
@@ -298,7 +297,6 @@
                                     <field name="show_quant" column_invisible="True"/>
                                     <field name="show_lots_text" column_invisible="True"/>
                                     <field name="show_lots_m2o" column_invisible="True"/>
-                                    <field name="display_assign_serial" column_invisible="True"/>
                                     <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="display_import_lot" column_invisible="True"/>
                                     <field name="picking_type_entire_packs" column_invisible="True"/>
@@ -326,10 +324,6 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_assign_serial" type="object"
-                                            icon="fa-plus-square"
-                                            role="img" title="Assign Serial Numbers"
-                                            invisible="not display_assign_serial"/>
                                 </tree>
                             </field>
                             <field name="id" invisible="1"/>
