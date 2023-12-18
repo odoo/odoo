@@ -1494,11 +1494,8 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         for quantity in quantities:
             # Receive <quantity> finished products
             picking_receipt.do_unreserve()
-            Form(self.env['stock.assign.serial'].with_context(
-                default_move_id=picking_receipt.move_ids[0].id,
-                default_next_serial_number=self.env['stock.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_ids[0].product_id) or 'sn#1',
-                default_next_serial_count=quantity,
-            )).save().generate_serial_numbers()
+            lot_name = self.env['stock.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_ids[0].product_id) or 'sn#1'
+            picking_receipt.move_ids[0]._generate_serial_numbers(lot_name, quantity)
             picking_receipt.move_ids.picked = True
             wizard_data = picking_receipt.button_validate()
             if wizard_data is not True:
@@ -1525,11 +1522,8 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         picking_receipt.action_confirm()
         picking_receipt.do_unreserve()
         # Receive finished products
-        Form(self.env['stock.assign.serial'].with_context(
-            default_move_id=picking_receipt.move_ids[0].id,
-            default_next_serial_number=self.env['stock.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_ids[0].product_id) or 'sn#1',
-            default_next_serial_count=quantity,
-        )).save().generate_serial_numbers()
+        lot_name = self.env['stock.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_ids[0].product_id) or 'sn#1'
+        picking_receipt.move_ids[0]._generate_serial_numbers(lot_name, quantity)
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
