@@ -13,7 +13,7 @@
                 <field name="l10n_pl_delivery_date" string="Delivery Date" attrs="{'invisible': [('country_code', '!=', 'PL')]}"/>
             </field>
             <notebook position="inside">
-                <page id="pl_extra" string="PL Extra" attrs="{'invisible': [('move_type', 'not in', ['out_invoice', 'out_refund'])]}">
+                <page id="pl_extra" string="PL Extra" attrs="{'invisible': ['|', ('move_type', 'not in', ['out_invoice', 'out_refund']), ('country_code', '!=', 'PL')]}">
                     <group>
                         <group>
                             <field name="l10n_pl_vat_b_spv_dostawa"/>
