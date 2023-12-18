@@ -5,12 +5,10 @@
         <record id="transportation_expense_sheet" model="hr.expense.sheet">
             <field name="name">Transportation Expense</field>
             <field name="employee_id" ref="hr.employee_al"/>
-            <field name="state">approve</field>
         </record>
         <record id="restaurant_expense_sheet" model="hr.expense.sheet">
             <field name="name">Restaurant Expense</field>
             <field name="employee_id" ref="hr.employee_al"/>
-            <field name="state">approve</field>
         </record>
 
         <record id="hr_expense.travel_admin_by_car_expense" model="hr.expense">
@@ -24,9 +22,8 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
-            <field eval="60.0" name="price_unit"/>
+            <field name="total_amount_currency" eval="240.0"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field eval="4.0" name="quantity"/>
             <field name="date" eval="time.strftime('%Y-%m-12')"/>
             <field name="sheet_id" ref="transportation_expense_sheet"/>
         </record>
@@ -35,9 +32,8 @@
             <field name="employee_id" ref="hr.employee_al"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_meal"/>
-            <field eval="40.0" name="price_unit"/>
+            <field name="total_amount_currency" eval="320.0"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field eval="8.0" name="quantity"/>
             <field name="date" eval="time.strftime('%Y-%m-10')"/>
             <field name="sheet_id" ref="restaurant_expense_sheet"/>
         </record>
