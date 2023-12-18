@@ -29,6 +29,7 @@ export class DiscussChannelListController extends ListController {
             thread = await this.threadService.fetchChannel(record.resId);
         }
         if (thread) {
+            this.threadService.pin(thread);
             return this.threadService.open(thread);
         }
         return super.openRecord(record);

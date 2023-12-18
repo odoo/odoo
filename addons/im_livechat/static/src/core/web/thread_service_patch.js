@@ -5,18 +5,6 @@ import { ThreadService } from "@mail/core/common/thread_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
-    /**
-     * @override
-     * @param {import("models").Thread} thread
-     * @param {boolean} pushState
-     */
-    setDiscussThread(thread, pushState) {
-        super.setDiscussThread(thread, pushState);
-        if (this.ui.isSmall && thread.type === "livechat") {
-            this.store.discuss.activeTab = "livechat";
-        }
-    },
-
     canLeave(thread) {
         return thread.type !== "livechat" && super.canLeave(thread);
     },
