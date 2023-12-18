@@ -8,8 +8,8 @@ class SaleTestTaxTotals(TestTaxTotals):
     allow_inherited_tests_method = True
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.so_product = cls.env['product.product'].create({
             'name': 'Odoo course',

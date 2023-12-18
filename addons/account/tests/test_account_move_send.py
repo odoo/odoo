@@ -51,7 +51,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         cls.user_account = cls.env['res.users'].with_context(cls._test_context).create({
             'company_id': cls.company_main.id,
             'company_ids': [
-                (6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)
+                Command.set(cls.company_data['company'].ids)
             ],
             'country_id': cls.env.ref('base.be').id,
             'email': 'e.e@example.com',
@@ -121,6 +121,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             test_record=cls.test_account_moves,
             test_template=cls.move_template,
         )
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
 
     def setUp(self):
         super().setUp()
@@ -402,10 +407,6 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_move = self.test_account_moves[1].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        # add a follower to the invoice
-        self.partner_b.email = 'partner_b@example.com'
-        test_move.message_subscribe(self.partner_b.ids)
-
         additional_partner = self.env['res.partner'].create({
             'name': "Additional Partner",
             'email': "additional@example.com",
@@ -431,21 +432,13 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             content='access_token='
         )
 
-        follower_mail = self.assertMailMail(
-            self.partner_b,
-            'sent',
-            author=self.user_account_other.partner_id,
-        )
-
-        self.assertNotIn('access_token=', follower_mail.body_html,
-                      "The followers should not bet sent the access token by default")
-
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
         cls.partner_a.email = "partner_a@tsointsoin"
         cls.partner_b.email = "partner_b@tsointsoin"
 
@@ -476,6 +469,11 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
 
     def test_invoice_single(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

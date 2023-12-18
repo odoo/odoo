@@ -31,8 +31,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         self.start_tour(self._get_url(kwargs.get('pos_config')), tour_name, login=login, **kwargs)
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         env = cls.env
         cls.env.user.groups_id += env.ref('point_of_sale.group_pos_manager')

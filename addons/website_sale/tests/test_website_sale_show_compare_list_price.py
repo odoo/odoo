@@ -10,8 +10,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHttpCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         ProductTemplate = cls.env['product.template']
         Pricelist = cls.env['product.pricelist']

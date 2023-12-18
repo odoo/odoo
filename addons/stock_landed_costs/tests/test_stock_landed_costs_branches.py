@@ -9,10 +9,9 @@ from odoo.tests import tagged, Form
 class TestStockLandedCostsBranches(TestStockValuationLCCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        cls.company = cls.env.company
         cls.branch = cls.env['res.company'].create({
             'name': 'Branch',
             'parent_id': cls.company.id,

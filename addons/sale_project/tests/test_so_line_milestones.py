@@ -11,8 +11,8 @@ from psycopg2.errors import NotNullViolation
 class TestSoLineMilestones(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
         uom_hour = cls.env.ref('uom.product_uom_hour')

@@ -9,8 +9,8 @@ from odoo.exceptions import UserError
 class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         uom_unit = cls.env.ref('uom.product_uom_unit')
         product = cls.env['product.product'].create({
@@ -21,7 +21,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
             'uom_po_id': uom_unit.id,
         })
 
-        cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
+        cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({

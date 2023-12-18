@@ -6,8 +6,9 @@ from odoo.tests import tagged
 class TestHSNsummary(TestTaxCommon):
 
     @classmethod
+    @TestTaxCommon.setup_country('in')
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='in')
+        super().setUpClass()
 
         cls.test_hsn_code_1 = '1234'
         cls.test_hsn_code_2 = '4321'

@@ -8,9 +8,9 @@ from odoo import Command
 class TestL10nArWithholdingArRi(TestAr):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='ar_ri'):
+    def setUpClass(cls):
 
-        super().setUpClass(chart_template_ref=chart_template_ref)
+        super().setUpClass()
 
         cls.tax_wth_seq = cls.env['ir.sequence'].create({
             'implementation': 'standard',
@@ -36,19 +36,7 @@ class TestL10nArWithholdingArRi(TestAr):
 
         cls.tax_21 = cls.env.ref('account.%s_ri_tax_vat_21_ventas' % cls.env.company.id)
 
-        cls.actual_rate = cls.env['res.currency.rate'].create({
-            'name': '2023-01-01',
-            'rate': 1/100,
-            'currency_id': cls.currency_data['currency'].id,
-            'company_id': cls.env.company.id,
-        })
-
-        cls.future_rate = cls.env['res.currency.rate'].create({
-            'name': '2023-05-01',
-            'rate': 1/200,
-            'currency_id': cls.currency_data['currency'].id,
-            'company_id': cls.env.company.id,
-        })
+        cls.other_currency = cls.setup_other_currency('USD', rounding=0.001, rates=[('2023-01-01', 0.01), ('2023-05-01', 0.005)])
 
     def in_invoice_wht(self, l10n_latam_document_number):
         in_invoice_wht = self.env['account.move'].create({
@@ -171,7 +159,7 @@ class TestL10nArWithholdingArRi(TestAr):
         moves = self.in_invoice_2_wht('2-4')
         taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': 5}, {'id': self.tax_wth_test_2.id, 'base_amount': 6.05}]
         wizard = self.new_payment_register(moves, [])
-        wizard.currency_id = self.currency_data['currency'].id
+        wizard.currency_id = self.other_currency.id
         wizard.amount = 6.05
         wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
         wizard.l10n_ar_withholding_ids._compute_amount()

@@ -10,19 +10,20 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         # Use the testing environment.
         cls.env['website'].get_current_website().company_id = cls.env.company
         cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
+        cls.other_currency = cls.setup_other_currency('GBP')
 
     def test_get_combination_info(self):
         # Setup pricelist: make sure the pricelist has a 10% discount
         self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'discount_policy': 'with_discount',
             'company_id': self.env.company.id,
             'item_ids': [Command.create({

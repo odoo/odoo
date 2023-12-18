@@ -12,8 +12,8 @@ from odoo.tests import Form, tagged
 class TestReInvoice(TestCommonSaleTimesheet):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # patch expense products to make them services creating task/project
         service_values = {
@@ -42,7 +42,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'partner_id': cls.partner_a.id
         })
 
-        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -53,8 +53,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
         cls.Invoice = cls.env['account.move'].with_context(
             default_move_type='in_invoice',
             default_invoice_date=cls.sale_order.date_order,
-            mail_notrack=True,
-            mail_create_nolog=True,
         )
 
     def test_at_cost(self):

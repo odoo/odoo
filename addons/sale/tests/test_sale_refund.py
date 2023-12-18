@@ -11,11 +11,11 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 class TestSaleRefund(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Create the SO with four order lines
-        cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,

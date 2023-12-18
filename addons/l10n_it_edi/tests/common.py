@@ -11,23 +11,24 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestItEdi(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='it'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('it')
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Company data ------
+        cls.company_data_2 = cls.setup_other_company(
+            name='company_2_data',
+            vat='IT01234560157',
+            phone='0266766700',
+            mobile='+393288088988',
+            email='test@test.it',
+            street="1234 Test Street",
+            zip="12345",
+            city="Prova",
+            l10n_it_codice_fiscale='01234560157',
+            l10n_it_tax_system="RF01",
+        )
         cls.company = cls.company_data_2['company']
-        cls.company.write({
-            'vat': 'IT01234560157',
-            'phone': '0266766700',
-            'mobile': '+393288088988',
-            'email': 'test@test.it',
-            'street': "1234 Test Street",
-            'zip': "12345",
-            'city': "Prova",
-            'country_id': cls.env.ref('base.it').id,
-            'l10n_it_codice_fiscale': '01234560157',
-            'l10n_it_tax_system': "RF01",
-        })
         cls.company.partner_id.write({
             'l10n_it_pa_index': "0803HR0"
         })

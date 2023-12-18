@@ -11,9 +11,15 @@ from odoo import Command, fields
 
 @tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCommon):
+
     @classmethod
-    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
-        company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR', rounding=0.001)
+
+    @classmethod
+    def collect_company_accounting_data(cls, company):
+        company_data = super().collect_company_accounting_data(company)
 
         # Create stock config.
         company_data.update({
@@ -31,7 +37,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with freeze_time(date):
             rslt = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
                 'order_line': [
                     (0, 0, {
                         'name': product.name,
@@ -52,7 +58,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', default_date=date))
             move_form.invoice_date = date
             move_form.partner_id = self.partner_a
-            move_form.currency_id = self.currency_data['currency']
+            move_form.currency_id = self.other_currency
             move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
             return move_form.save()
 
@@ -225,7 +231,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         date_accounting = '2021-01-03'
         rate_accounting = 26.0
 
-        foreign_currency = self.currency_data['currency']
+        foreign_currency = self.other_currency
         company_currency = self.env.company.currency_id
         self.env['res.currency.rate'].create([
         {
@@ -414,7 +420,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'detailed_type': 'product',
         })
         purchase_order = self.env['purchase.order'].create({
-                'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
                 'order_line': [
                     Command.create({
                         'name': self.product_a.name,

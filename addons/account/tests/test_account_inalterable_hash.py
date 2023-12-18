@@ -9,8 +9,8 @@ from unittest.mock import patch
 @tagged('post_install', '-at_install')
 class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
     def _send(self, moves, hash_version=False):
         wizard = self.env['account.move.send'].create({'move_ids': [Command.set(moves.ids)]})

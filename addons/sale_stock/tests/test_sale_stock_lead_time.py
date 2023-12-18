@@ -12,8 +12,8 @@ from datetime import timedelta
 class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Update the product_1 with type and Customer Lead Time
         cls.test_product_order.sale_delay = 5.0

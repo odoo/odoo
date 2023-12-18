@@ -3,6 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from contextlib import contextmanager
+from functools import wraps
 from unittest.mock import patch
 
 import base64
@@ -31,14 +32,16 @@ def _mocked_cancel_success(edi_format, invoices):
 
 
 class AccountEdiTestCommon(AccountTestInvoicingCommon):
+    # To override by the helper method setup_edi_format to set up an edi format
+    edi_format_ref = False
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # ==== EDI ====
-        if edi_format_ref:
-            cls.edi_format = cls.env.ref(edi_format_ref)
+        if cls.edi_format_ref:
+            cls.edi_format = cls.env.ref(cls.edi_format_ref)
         else:
             with cls.mock_edi(cls, _needs_web_services_method=_generate_mocked_needs_web_services(True)):
                 cls.edi_format = cls.env['account.edi.format'].sudo().create({
@@ -47,6 +50,17 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
                 })
         cls.journal = cls.company_data['default_journal_sale']
         cls.journal.edi_format_ids = [(6, 0, cls.edi_format.ids)]
+
+    @staticmethod
+    def setup_edi_format(edi_format_ref):
+        def _decorator(function):
+            @wraps(function)
+            def wrapper(self):
+                self.edi_format_ref = edi_format_ref
+                function(self)
+            return wrapper
+
+        return _decorator
 
     ####################################################
     # EDI helpers

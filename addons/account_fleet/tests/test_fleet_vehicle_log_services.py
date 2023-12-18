@@ -8,8 +8,8 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.vendor = cls.env['res.partner'].create({'name': "Vendor"})
         cls.purchaser = cls.env['res.partner'].create({'name': "Purchaser"})
         brand = cls.env["fleet.vehicle.model.brand"].create({
@@ -113,6 +113,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.assertEqual(self.car_2.log_services[0].amount, self.service_line.price_subtotal)
 
     def test_fleet_log_services_amount(self):
+        other_currency = self.setup_other_currency('EUR')
         brand = self.env["fleet.vehicle.model.brand"].create({
             "name": "Audi",
         })
@@ -134,10 +135,9 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
             'partner_id': partner.id,
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': other_currency.id,
             'line_ids': [
                 (0, 0, {
-                    'currency_id': self.currency_data['currency'].id,
                     'account_id': self.company_data['default_account_expense'].id,
                     'vehicle_id': car.id,
                     'quantity': 1,

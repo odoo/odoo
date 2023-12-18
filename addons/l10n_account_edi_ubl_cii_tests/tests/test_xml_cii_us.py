@@ -7,8 +7,8 @@ from odoo.tests import tagged
 class TestCIIUS(TestUBLCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -25,16 +25,6 @@ class TestCIIUS(TestUBLCommon):
             'type_tax_use': 'purchase',
             'amount': 0,
         })
-
-    @classmethod
-    def setup_company_data(cls, company_name, chart_template):
-        # OVERRIDE
-        res = super().setup_company_data(
-            company_name,
-            chart_template=chart_template,
-            country_id=cls.env.ref("base.us").id,
-        )
-        return res
 
     def test_print_pdf_us_company(self):
         """ Even for a US company, a printed PDF should contain a Factur-X xml

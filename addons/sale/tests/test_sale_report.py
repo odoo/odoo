@@ -21,9 +21,6 @@ class TestSaleReportCurrencyRate(SaleCommon):
         cls.eur_cmp = cls.env['res.company'].create({
             'name': 'EUR Company', 'currency_id': cls.env.ref('base.EUR').id,
         })
-        # The test requires the main company to be in USD so that the currency of the products
-        # shared between companies is USD
-        cls._use_currency('USD')
 
     def test_sale_report_foreign_currency(self):
         """

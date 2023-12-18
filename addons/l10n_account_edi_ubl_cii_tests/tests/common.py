@@ -15,17 +15,15 @@ from lxml import etree
 class TestUBLCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency('USD', rounding=0.001)
 
         # Required for `product_uom_id` to be visible in the form views
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
-        # Ensure the testing currency is using a valid ISO code.
-        real_usd = cls.env.ref('base.USD')
-        real_usd.name = 'FUSD'
-        real_usd.flush_model(['name'])
-        cls.currency_data['currency'].name = 'USD'
+        cls.company.invoice_is_ubl_cii = True
 
         # remove this tax, otherwise, at import, this tax with children taxes can be selected and the total is wrong
         cls.tax_armageddon.children_tax_ids.unlink()
@@ -59,20 +57,6 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'include_base_amount': True,
             'sequence': 2,
         })
-
-    @classmethod
-    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
-        # OVERRIDE to force the company with EUR currency.
-        eur = cls.env.ref('base.EUR')
-        if not eur.active:
-            eur.active = True
-
-        res = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
-        res['company'].write({
-            'currency_id': eur.id,
-            'invoice_is_ubl_cii': True,  # check the ubl_cii format by default in the send & print wizard
-        })
-        return res
 
     def assert_same_invoice(self, invoice1, invoice2, **invoice_kwargs):
         self.assertEqual(len(invoice1.invoice_line_ids), len(invoice2.invoice_line_ids))
@@ -210,7 +194,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'narration': 'test narration',
             'ref': 'ref_move',
             **invoice_kwargs,

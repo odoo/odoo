@@ -7,10 +7,10 @@ from odoo.tests import tagged
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestEdiJson(AccountTestInvoicingCommon):
 
-
     @classmethod
-    def setUpClass(cls, chart_template_ref="in"):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('in')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.env['ir.config_parameter'].set_param('l10n_in_edi.manage_invoice_negative_lines', True)
         cls.maxDiff = None
         cls.company_data["company"].write({
@@ -19,7 +19,6 @@ class TestEdiJson(AccountTestInvoicingCommon):
             "city": "City 1",
             "zip": "500001",
             "state_id": cls.env.ref("base.state_in_ts").id,
-            "country_id": cls.env.ref("base.in").id,
             "vat": "36AABCT1332L011",
         })
         cls.partner_a.write({

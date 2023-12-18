@@ -12,8 +12,8 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         # Required for `uom_id` to be visible in the view
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
         cls.env.ref('stock.route_warehouse0_mto').active = True
@@ -170,17 +170,6 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
             p.route_ids.add(r)
         return p.save()
 
-    def _create_product(self, name, uom_id, routes=()):
-        p = Form(self.env['product.product'])
-        p.name = name
-        p.detailed_type = 'product'
-        p.uom_id = uom_id
-        p.uom_po_id = uom_id
-        p.route_ids.clear()
-        for r in routes:
-            p.route_ids.add(r)
-        return p.save()
-
         # Helper to process quantities based on a dict following this structure :
         #
         # qty_to_process = {
@@ -247,10 +236,10 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # --------------------------
         route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
         route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
-        product_a = self._create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
-        product_c = self._create_product('Product C', self.uom_kg)
-        product_b = self._create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
-        product_d = self._create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_a = self._cls_create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_c = self._cls_create_product('Product C', self.uom_kg)
+        product_b = self._cls_create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
+        product_d = self._cls_create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
         # Bill of materials for product A, B, D.
@@ -1124,9 +1113,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         multiple UoMs on its components
         """
         # Create some components
-        component_uom_unit = self._create_product('Comp Unit', self.uom_unit)
-        component_uom_dozen = self._create_product('Comp Dozen', self.uom_dozen)
-        component_uom_kg = self._create_product('Comp Kg', self.uom_kg)
+        component_uom_unit = self._cls_create_product('Comp Unit', self.uom_unit)
+        component_uom_dozen = self._cls_create_product('Comp Dozen', self.uom_dozen)
+        component_uom_kg = self._cls_create_product('Comp Kg', self.uom_kg)
 
         # Create a kit 'kit_uom_1' :
         # -----------------------
@@ -1135,7 +1124,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         #             |- component_uom_dozen   x1 Test-Dozen
         #             |- component_uom_kg      x3 Test-G
 
-        kit_uom_1 = self._create_product('Kit 1', self.uom_unit)
+        kit_uom_1 = self._cls_create_product('Kit 1', self.uom_unit)
 
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
@@ -1228,10 +1217,10 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         """
 
         # Create some components
-        component_uom_unit = self._create_product('Comp Unit', self.uom_unit)
-        component_uom_dozen = self._create_product('Comp Dozen', self.uom_dozen)
-        component_uom_kg = self._create_product('Comp Kg', self.uom_kg)
-        component_uom_gm = self._create_product('Comp g', self.uom_gm)
+        component_uom_unit = self._cls_create_product('Comp Unit', self.uom_unit)
+        component_uom_dozen = self._cls_create_product('Comp Dozen', self.uom_dozen)
+        component_uom_kg = self._cls_create_product('Comp Kg', self.uom_kg)
+        component_uom_gm = self._cls_create_product('Comp g', self.uom_gm)
         components = [component_uom_unit, component_uom_dozen, component_uom_kg, component_uom_gm]
 
         # Create a kit 'kit_uom_in_kit' :
@@ -1241,8 +1230,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         #                                                       |- component_uom_dozen   x1 Test-Dozen
         #                                                       |- component_uom_kg      x5 Test-G
 
-        kit_uom_1 = self._create_product('Sub Kit 1', self.uom_unit)
-        kit_uom_in_kit = self._create_product('Parent Kit', self.uom_unit)
+        kit_uom_1 = self._cls_create_product('Sub Kit 1', self.uom_unit)
+        kit_uom_in_kit = self._cls_create_product('Parent Kit', self.uom_unit)
 
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
@@ -1355,9 +1344,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
         })
 
-        kit_1 = self._create_product('Kit1', self.uom_unit)
-        component_shelf1 = self._create_product('Comp Shelf1', self.uom_unit)
-        component_shelf2 = self._create_product('Comp Shelf2', self.uom_unit)
+        kit_1 = self._cls_create_product('Kit1', self.uom_unit)
+        component_shelf1 = self._cls_create_product('Comp Shelf1', self.uom_unit)
+        component_shelf2 = self._cls_create_product('Comp Shelf2', self.uom_unit)
 
         with Form(self.env['mrp.bom']) as bom:
             bom.product_tmpl_id = kit_1.product_tmpl_id
@@ -1438,9 +1427,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # 2x Dozens kit_1 --|- component_unit   x6 Units
         #                   |- component_kg     x7 Kg
 
-        kit_1 = self._create_product('Kit1', self.uom_unit)
-        component_unit = self._create_product('Comp Unit', self.uom_unit)
-        component_kg = self._create_product('Comp Kg', self.uom_kg)
+        kit_1 = self._cls_create_product('Kit1', self.uom_unit)
+        component_unit = self._cls_create_product('Comp Unit', self.uom_unit)
+        component_kg = self._cls_create_product('Comp Kg', self.uom_kg)
 
         with Form(self.env['mrp.bom']) as bom:
             bom.product_tmpl_id = kit_1.product_tmpl_id
@@ -2303,7 +2292,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         Post the second invoice
         COGS should be based on the delivered kit
         """
-        kit = self._create_product('Simple Kit', self.uom_unit)
+        kit = self._cls_create_product('Simple Kit', self.uom_unit)
         categ_form = Form(self.env['product.category'])
         categ_form.name = 'Super Fifo'
         categ_form.property_cost_method = 'fifo'

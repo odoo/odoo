@@ -9,8 +9,8 @@ from odoo.tests import tagged
 class PurchaseTestTaxTotals(TestTaxTotals):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.po_product = cls.env['product.product'].create({
             'name': 'Odoo course',

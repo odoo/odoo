@@ -10,8 +10,6 @@ class TestCarrierPropagation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # For performances reasons
-        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.warehouse = cls.env.ref("stock.warehouse0")
 
         # Set Warehouse as multi steps delivery

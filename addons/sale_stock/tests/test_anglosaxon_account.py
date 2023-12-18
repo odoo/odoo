@@ -11,7 +11,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
         and posting the invoice with both companies selected and company B as the main.
         """
         company_a_data = self.company_data
-        company_b_data = self.company_data_2
+        company_b_data = self.setup_other_company()
         companies_with_b_first = company_b_data['company'] + company_a_data['company']
         product = self.test_product_delivery
 

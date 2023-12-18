@@ -16,13 +16,11 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         return None
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='hk'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('hk')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data['company'].qr_code = True
-        cls.company_data['company'].partner_id.update({
-            'country_id': cls.env.ref('base.hk').id,
-            'city': 'HK',
-        })
+        cls.company_data['company'].partner_id.city = 'HK'
 
         cls.acc_emv_hk = cls.env['res.partner.bank'].create({
             'acc_number': '123456789012345678',

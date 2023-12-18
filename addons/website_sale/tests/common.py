@@ -31,7 +31,7 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
             'website_id': cls.website.id,
             'order_line': [
                 Command.create({
-                    'product_id': cls.consumable_product.id,
+                    'product_id': cls.product.id,
                     'product_uom_qty': 5.0,
                 }),
                 Command.create({
@@ -43,7 +43,7 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
 
         # Publish tests products
         (
-            cls.consumable_product
+            cls.product
             + cls.service_product
         ).website_published = True
         cls.pricelist.website_id = cls.website

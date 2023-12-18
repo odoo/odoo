@@ -360,7 +360,7 @@ class TestSalePrices(SaleCommon):
 
     def test_multi_currency_discount(self):
         """Verify the currency used for pricelist price & discount computation."""
-        product_1 = self.consumable_product
+        product_1 = self.product
         product_2 = self.service_product
 
         # Make sure the company is in USD

@@ -12,12 +12,12 @@ _logger = logging.getLogger(__name__)
 class TestAr(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='ar_ri'):
-        super(TestAr, cls).setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_chart_template('ar_ri')
+    def setUpClass(cls):
+        super().setUpClass()
 
         # ==== Company ====
         cls.company_data['company'].write({
-            'currency_id': cls.env.ref('base.ARS').id,
             'name': '(AR) Responsable Inscripto (Unit Tests)',
             "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
             'l10n_ar_gross_income_type': 'local',
@@ -42,13 +42,12 @@ class TestAr(AccountTestInvoicingCommon):
         cls.partner_ri = cls.company_ri.partner_id
 
         # ==== Company MONO ====
-        cls.company_mono = cls.setup_company_data('(AR) Monotributista (Unit Tests)', chart_template=chart_template_ref)['company']
-        cls.company_mono.write({
-            'currency_id': cls.env.ref('base.ARS').id,
-            'name': '(AR) Monotributista (Unit Tests)',
-            "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
-            'l10n_ar_gross_income_type': 'exempt',
-        })
+        cls.company_mono = cls._create_company(
+            name='(AR) Monotributista (Unit Tests)',
+            currency_id=cls.env.ref('base.ARS').id,
+            l10n_ar_afip_start_date=time.strftime('%Y-01-01'),
+            l10n_ar_gross_income_type='exempt',
+        )
         cls.company_mono.partner_id.write({
             'name': '(AR) Monotributista (Unit Tests)',
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,

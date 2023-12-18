@@ -7,8 +7,9 @@ from odoo.tests import tagged
 class InvoiceGetReferenceTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='fi'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @AccountTestInvoicingCommon.setup_country('fi')
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
 

@@ -631,7 +631,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
     def test_timesheet_upsell(self):
         """ Test timesheet upselling and email """
 
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -695,7 +695,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
     def test_timesheet_upsell_copied_so(self):
         """ Test that copying a SO which had an upsell activity still create an upsell activity on the copy. """
 
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -845,7 +845,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         3) confirm SO and check the project_profitability panel
         4) update the price of the sol and check the project_profitability panel
         """
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
         })
         product_price = self.product_order_timesheet3.list_price
@@ -869,7 +869,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
     def test_sale_order_with_multiple_project_templates(self):
         """Test when creating multiple projects for one sale order every project has its own allocated hours"""
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -951,7 +951,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         products = [product_1, product_2] #perform the tests for both product and variants
         for product in products:
             # 1. product.template form: [uom: unit] --> change to service --> [uom: hour]
-            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+            with Form(product, view="sale_timesheet.view_product_timesheet_form") as product_form:
                 product_form.detailed_type = 'service'
                 product_form.service_policy = 'delivered_timesheet'
                 self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
@@ -961,7 +961,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 'detailed_type': 'consu',
                 'uom_id': uom_kg.id,
             })
-            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+            with Form(product, view="sale_timesheet.view_product_timesheet_form") as product_form:
                 product_form.detailed_type = 'service'
                 product_form.service_policy = 'delivered_timesheet'
                 self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
@@ -987,7 +987,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'project_id': False,  # will create a project,
             'project_template_id': project_template.id,
         })
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
         })
         sale_order_line = self.env['sale.order.line'].create({

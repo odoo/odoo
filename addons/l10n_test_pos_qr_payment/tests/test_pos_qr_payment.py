@@ -9,8 +9,9 @@ from .common import TestPosQrCommon
 class TestUiSEPA(TestPosQrCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='be_comp'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestPosQrCommon.setup_country('be')
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Set Bank Account on journal
         cls.bank_account = cls.env['res.partner.bank'].create({
@@ -61,8 +62,9 @@ class TestUiSEPA(TestPosQrCommon):
 class TestUiCH(TestPosQrCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='ch'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestPosQrCommon.setup_country('ch')
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Set required fields for Swiss QR bank account partner
         cls.company_data['company'].partner_id.write({
@@ -124,10 +126,10 @@ class TestUiHK(TestPosQrCommon):
         return None
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='hk'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestPosQrCommon.setup_country('hk')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data['company'].partner_id.update({
-            'country_id': cls.env.ref('base.hk').id,
             'city': 'HK',
         })
 
@@ -178,8 +180,9 @@ class TestUiHK(TestPosQrCommon):
 class TestUIBR(TestPosQrCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='br'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestPosQrCommon.setup_country('br')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data['company'].partner_id.update({
             'country_id': cls.env.ref('base.br').id,
             'city': 'BR',

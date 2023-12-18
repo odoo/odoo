@@ -1057,8 +1057,8 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 @tagged('post_install', '-at_install')
 class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.env.ref('base.EUR').active = True
         cls.company_data['company'].anglo_saxon_accounting = True
         cls.stock_location = cls.env['stock.location'].create({

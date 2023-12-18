@@ -12,6 +12,11 @@ import pytz
 @tagged('-at_install', 'post_install')
 class TestPurchase(AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
+
     def test_date_planned(self):
         """Set a date planned on 2 PO lines. Check that the PO date_planned is the earliest PO line date
         planned. Change one of the dates so it is even earlier and check that the date_planned is set to
@@ -75,8 +80,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         partner.
         """
         # set partner to send reminder in Company 2
-        self.partner_a.with_company(self.env.companies[1]).receipt_reminder_email = True
-        self.partner_a.with_company(self.env.companies[1]).reminder_date_before_receipt = 1
+        self.partner_a.with_company(self.company_data_2['company']).receipt_reminder_email = True
+        self.partner_a.with_company(self.company_data_2['company']).reminder_date_before_receipt = 1
         # Create the PO in Company 1
         self.env.user.tz = 'Europe/Brussels'
         po = Form(self.env['purchase.order'])
@@ -95,7 +100,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po.save()
         po.button_confirm()
         # Check that reminder is not set in Company 1 and the mail will not be sent
-        self.assertEqual(po.company_id, self.env.companies[0])
+        self.assertEqual(po.company_id, self.company)
         self.assertFalse(po.receipt_reminder_email)
         self.assertEqual(po.reminder_date_before_receipt, 1, "The default value should be taken from the company")
         old_messages = po.message_ids

@@ -1,25 +1,23 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
-chart_template_ref = 'in'
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestFiscal(AccountTestInvoicingCommon):
 
     @classmethod
+    @AccountTestInvoicingCommon.setup_country('in')
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+        super().setUpClass()
         cls.default_company_state = cls.env.ref('base.state_in_gj')
-        cls.default_company = cls.setup_company_data(
-            company_name='Odoo In test',
-            chart_template=chart_template_ref,
+        cls.default_company = cls._create_company(
+            name='Odoo In test',
             state_id=cls.default_company_state.id,
-        )['company']
-        cls.outside_in_company = cls.setup_company_data(
-            company_name='Outside India Company',
-            chart_template=False,
+        )
+        cls.outside_in_company = cls._create_company(
+            name='Outside India Company',
             country_id=cls.env.ref('base.us').id,
-        )['company']
+        )
         cls.env.company = cls.default_company
         cls.partner_intra_state = cls.partner_a.copy({
             'state_id': cls.default_company_state.id,
@@ -59,7 +57,7 @@ class TestFiscal(AccountTestInvoicingCommon):
         self.assertEqual(test_invoice.fiscal_position_id, self.env['account.chart.template'].ref(fiscal_position_ref))
 
     def test_l10n_in_setting_up_company(self):
-        company = self.setup_company_data(company_name='Fiscal Setup Test Company', chart_template=chart_template_ref)['company']
+        company = self._create_company(name='Fiscal Setup Test Company')
         # Test with no state but country india
         self._assert_in_intra_state_fiscal_with_company(company)
         # Change state
@@ -89,13 +87,12 @@ class TestFiscal(AccountTestInvoicingCommon):
         )
 
     def test_l10n_in_fiscal_for_branch(self):
-        branch_1 = self.setup_company_data(
-            company_name='Branch 1',
-            chart_template=chart_template_ref,
+        branch_1 = self._create_company(
+            name='Branch 1',
             parent_id=self.default_company.id,
             state_id=self.partner_inter_state.state_id.id,  # Setting Partner B state will be now Intra State for branch 1
             account_fiscal_country_id=self.env.ref('base.in').id,
-        )['company']
+        )
         self.env.company = self.outside_in_company
         branch_2 = self.env['res.company'].create({
             'name': 'Branch 2',

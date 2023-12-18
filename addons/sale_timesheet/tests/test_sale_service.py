@@ -11,10 +11,10 @@ class TestSaleService(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -797,7 +797,7 @@ class TestSaleService(TestCommonSaleTimesheet):
     def test_compute_project_and_task_button_with_ts(self):
         """ This test ensures that the button are correctly computed when there is a timesheet service product on a SO. The behavior was not modified in sale_timesheet, but since
         the timesheet product case can not be tested in sale_project, we have to add the test here."""
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create([{
+        sale_order_1 = self.env['sale.order'].create([{
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -820,7 +820,7 @@ class TestSaleService(TestCommonSaleTimesheet):
     def test_compute_show_timesheet_button(self):
         """ This test ensures that the hours recorded button is correctly computed. If there is a service product with an invoice policy of prepaid or timesheet, and there is
         at least on project linked to the SO, then the button should be displayed """
-        sale_order_1, sale_order_2 = self.env['sale.order'].with_context(tracking_disable=True).create([{
+        sale_order_1, sale_order_2 = self.env['sale.order'].create([{
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,

@@ -127,9 +127,9 @@ class TestExpensesMailImport(TestExpenseCommon):
 
         # subject having other currency then company currency, it should ignore other currency then company currency
         assertParsedValues(
-            f'foo bar {self.currency_data["currency"].symbol}1406.91 royal giant',
+            f'foo bar {self.other_currency.symbol}1406.91 royal giant',
             self.company_data['currency'],
-            f'foo bar {self.currency_data["currency"].symbol} royal giant',
+            f'foo bar {self.other_currency.symbol} royal giant',
             1406.91,
             self.env['product.product'],
             self.company_data['currency'],
@@ -147,18 +147,18 @@ class TestExpensesMailImport(TestExpenseCommon):
         )
         # subject having other currency then company currency, it should accept other currency because multi currency is activated
         assertParsedValues(
-            f'product_a {self.currency_data["currency"].symbol}2510.90 chhota bheem',
-            self.company_data['currency'] + self.currency_data['currency'],
+            f'product_a {self.other_currency.symbol}2510.90 chhota bheem',
+            self.company_data['currency'] + self.other_currency,
             "chhota bheem",
             2510.90,
             self.product_a,
-            self.currency_data['currency'],
+            self.other_currency,
         )
 
         # subject without product and currency, should take company currency and default product
         assertParsedValues(
             "foo bar 109.96 spear goblins",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar spear goblins",
             109.96,
             self.env['product.product'],
@@ -168,7 +168,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         # subject with currency symbol at end
         assertParsedValues(
             "product_a foo bar 2910.94$ inferno dragon",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar inferno dragon",
             2910.94,
             self.product_a,
@@ -178,7 +178,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         # subject with no amount and product
         assertParsedValues(
             "foo bar mega knight",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar mega knight",
             0.0,
             self.env['product.product'],
@@ -188,7 +188,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         # price with a comma
         assertParsedValues(
             "foo bar 291,56$ mega knight",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar mega knight",
             291.56,
             self.env['product.product'],
@@ -198,7 +198,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         # price different decimals than currency
         assertParsedValues(
             "foo bar 291$ mega knight",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar mega knight",
             291.0,
             self.env['product.product'],
@@ -206,7 +206,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         )
         assertParsedValues(
             "product_a foo bar 291.5$ mega knight",
-            self.company_data['currency'] + self.currency_data['currency'],
+            self.company_data['currency'] + self.other_currency,
             "foo bar mega knight",
             291.5,
             self.product_a,

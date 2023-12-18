@@ -9,8 +9,8 @@ from odoo.exceptions import UserError
 class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product_order = cls.env['product.product'].create({
             'name': "Product",

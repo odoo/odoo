@@ -8,13 +8,11 @@ from odoo.tests.common import tagged
 class L10nLatamCheckTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        chart_template = cls.company_data['company'].chart_template
-
-        cls.company_data_3 = cls.setup_company_data(
-            'company_3_data', chart_template=chart_template, **{'country_id': cls.env.ref('base.ar').id})
+        cls.chart_template = cls.company_data['company'].chart_template
+        cls.company_data_3 = cls.setup_other_company(name='company_3_data', country_id=cls.env.ref('base.ar').id)
 
         cls.bank_journal = cls.company_data_3['default_journal_bank']
         # enable use electronic/deferred checks on bank journal

@@ -2,11 +2,10 @@
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.project.tests.test_project_profitability import TestProjectProfitabilityCommon
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import tagged
 
 
-class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon, AccountTestInvoicingCommon):
+class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon):
     def check_project_profitability_before_creating_and_approving_expense_sheet(self, expense, project, project_profitability_items_empty):
         self.assertDictEqual(
             project._get_profitability_items(False),

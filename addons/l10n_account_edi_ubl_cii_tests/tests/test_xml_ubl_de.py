@@ -8,8 +8,9 @@ import base64
 class TestUBLDE(TestUBLCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="de_skr03"):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestUBLCommon.setup_country("de")
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -52,17 +53,12 @@ class TestUBLDE(TestUBLCommon):
         })
 
     @classmethod
-    def setup_company_data(cls, company_name, chart_template):
-        # OVERRIDE
-        # to force the company to be german + add phone and email
-        res = super().setup_company_data(
-            company_name,
-            chart_template=chart_template,
-            country_id=cls.env.ref("base.de").id,
+    def setup_independent_company(cls, **kwargs):
+        return super().setup_independent_company(
             phone="+49(0) 30 227-0",
             email="test@xrechnung@com",
+            **kwargs,
         )
-        return res
 
     ####################################################
     # Test export - import
@@ -191,7 +187,7 @@ class TestUBLDE(TestUBLCommon):
     def test_import_invoice_xml(self):
         self._assert_imported_invoice_from_file(subfolder='tests/test_files/from_odoo',
             filename='xrechnung_ubl_out_invoice.xml', amount_total=3083.58, amount_tax=401.58,
-            list_line_subtotals=[1782, 1000, -100], currency_id=self.currency_data['currency'].id)
+            list_line_subtotals=[1782, 1000, -100], currency_id=self.other_currency.id)
 
     def test_import_export_invoice_xml(self):
         """

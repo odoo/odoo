@@ -9,8 +9,8 @@ from odoo.tests import Form, tagged
 class TestReInvoice(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan',

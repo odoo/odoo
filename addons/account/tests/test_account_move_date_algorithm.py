@@ -9,6 +9,11 @@ import freezegun
 @tagged('post_install', '-at_install')
 class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR')
+
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
@@ -146,8 +151,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-02-12')
     def test_reconcile_with_lock_date(self):
-        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.currency_data['currency'].id)
-        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.currency_data['currency'].id)
+        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
+        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.other_currency.id)
         (invoice + refund).action_post()
         self._set_lock_date('2017-01-31')
 
@@ -162,8 +167,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-02-12')
     def test_unreconcile_with_lock_date(self):
-        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.currency_data['currency'].id)
-        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.currency_data['currency'].id)
+        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
+        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.other_currency.id)
         (invoice + refund).action_post()
 
         amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -198,7 +203,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
         invoice = self._create_invoice(
             'out_invoice', '2016-01-01',
-            currency_id=self.currency_data['currency'].id,
+            currency_id=self.other_currency.id,
             invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
         )
         payment = self._create_payment('2016-02-01', amount=invoice.amount_total)

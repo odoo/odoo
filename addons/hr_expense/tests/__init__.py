@@ -6,6 +6,3 @@ from . import test_account_journal_dashboard
 from . import test_expenses
 from . import test_expenses_access_rights
 from . import test_expenses_mail_import
-from . import test_expenses_multi_company
-from . import test_expenses_tax
-from . import test_expenses_standard_price_update_warning

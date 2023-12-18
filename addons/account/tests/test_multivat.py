@@ -2,10 +2,10 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.addons.account.models.chart_template import AccountChartTemplate
-from odoo.addons.account.tests.common import instantiate_accountman
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+
+from odoo.addons.account.models.chart_template import AccountChartTemplate
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 def _get_chart_template_mapping(self, get_all=False):
@@ -137,31 +137,25 @@ def _tax_vals(name, amount, external_id_prefix):
 
 @tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
-class TestMultiVAT(TransactionCase):
+class TestMultiVAT(AccountTestInvoicingCommon):
 
     @classmethod
+    def _use_chart_template(cls, company, chart_template_ref=None):
+        test_get_data = data_method_provider("local", "be")
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            cls.env['account.chart.template'].try_loading('local', company=company, install_demo=False)
+
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('be')
     @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
     def setUpClass(cls):
         """
             Setups a company with a custom chart template, containing a tax and a fiscal position.
             We need to add xml_ids to the templates because they are loaded from their xml_ids
         """
-        super().setUpClass()
-        instantiate_accountman(cls)
-
-        cls.company_1 = cls.env['res.company'].create({
-            'name': 'TestCompany1',
-            'country_id': cls.env.ref('base.be').id,
-        })
-
-        cls.user.write({
-            'company_ids': [Command.set(cls.company_1.ids)],
-            'company_id': cls.company_1.id,
-        })
-
-        test_get_data = data_method_provider("local", "be")
-        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
-            cls.env['account.chart.template'].try_loading('local', company=cls.company_1, install_demo=False)
+        # Avoid creating data from AccountTestInvoicingCommon setUpClass
+        # just use the override of the functions it provides
+        super(AccountTestInvoicingCommon, cls).setUpClass()
 
         foreign_country = cls.env.ref("base.fr")
         cls.foreign_vat_fpos = cls.env["account.fiscal.position"].create({

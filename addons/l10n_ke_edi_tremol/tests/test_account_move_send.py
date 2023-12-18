@@ -10,8 +10,9 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 class TestKEAccountMoveSend(TestAccountMoveSendCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='ke'):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    @TestAccountMoveSendCommon.setup_country('ke')
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_sent_to_fiscal_device(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True, partner=self.partner_a)

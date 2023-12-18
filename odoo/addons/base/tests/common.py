@@ -6,7 +6,7 @@ import threading
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
-from odoo.tests.common import TransactionCase, HttpCase
+from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo import Command
 
 DISABLED_MAIL_CONTEXT = {
@@ -27,12 +27,72 @@ class BaseCommon(TransactionCase):
         # Mail logic won't be tested by default in other modules.
         # Mail API overrides should be tested with dedicated tests on purpose
         # Hack to use with_context and avoid manual context dict modification
-        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+        cls.env = cls.env['base'].with_context(**cls.default_env_context()).env
+
+        independent_user = cls.setup_independent_user()
+        if independent_user:
+            cls.env = cls.env(user=independent_user)
+            cls.user = cls.env.user
+
+        independent_company = cls.setup_independent_company()
+        if independent_company:
+            # avoid using the context to assign companies
+            cls.env.user.company_id = independent_company
+            cls.env.user.company_ids = [Command.set(independent_company.ids)]
+        else:
+            cls.setup_main_company()
+
+        # Make sure all class variables have the same env.
+        # Do not specify any class variables before the env changes.
+        cls.company = cls.env.company
+        cls.currency = cls.env.company.currency_id
 
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test Partner',
         })
-        cls.currency = cls.env.company.currency_id
+
+        cls.group_portal = cls.env.ref('base.group_portal')
+        cls.group_user = cls.env.ref('base.group_user')
+        cls.group_system = cls.env.ref('base.group_system')
+
+    @classmethod
+    def default_env_context(cls):
+        """ To Override to reactivate the tracking """
+        return {**DISABLED_MAIL_CONTEXT}
+
+    @classmethod
+    def setup_other_currency(cls, code, **kwargs):
+        rates = kwargs.pop('rates', [])
+        currency = cls.env['res.currency'].with_context(active_test=False).search([('name', '=', code)], limit=1)
+        currency.rate_ids.unlink()
+        currency.write({
+            'active': True,
+            'rate_ids': [Command.create(
+                {
+                    'name': rate_date,
+                    'rate': rate,
+                    'company_id': cls.env.company.id,
+                }
+            ) for rate_date, rate in rates],
+            **kwargs,
+        })
+        return currency
+
+    @classmethod
+    def setup_independent_company(cls, **kwargs):
+        return None
+
+    @classmethod
+    def setup_independent_user(cls):
+        return None
+
+    @classmethod
+    def get_default_groups(cls):
+        return cls.env['res.users']._default_groups()
+
+    @classmethod
+    def setup_main_company(cls, currency_code='USD'):
+        cls._use_currency(cls.env.company, currency_code)
 
     @classmethod
     def _enable_currency(cls, currency_code):
@@ -43,15 +103,49 @@ class BaseCommon(TransactionCase):
         return currency
 
     @classmethod
-    def _use_currency(cls, currency_code):
+    def _use_currency(cls, company, currency_code):
         # Enforce constant currency
         currency = cls._enable_currency(currency_code)
-        if not cls.env.company.currency_id == currency:
+        if company.currency_id != currency:
             cls.env.transaction.cache.set(cls.env.company, type(cls.env.company).currency_id, currency.id, dirty=True)
             # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
             # The value is added in cache, and the cache value is set as dirty so that that
             # the value will be written to the database on next flush.
             # this was needed because some journal entries may exist when running tests, especially l10n demo data.
+
+    @classmethod
+    def _create_partner(cls, **create_values):
+        return cls.env['res.partner'].create({
+            'name': "Test Partner",
+            'company_id': False,
+            **create_values,
+        })
+
+    @classmethod
+    def _create_company(cls, **create_values):
+        company = cls.env['res.company'].create({
+            'name': "Test Company",
+            **create_values,
+        })
+        cls.env.user.company_ids = [Command.link(company.id)]
+        # cls.env.context['allowed_company_ids'].append(company.id)
+        return company
+
+    @classmethod
+    def _create_new_internal_user(cls, **kwargs):
+        return new_test_user(
+            cls.env,
+            **({'login': 'internal_user'} | kwargs),
+        )
+
+    @classmethod
+    def _create_new_portal_user(cls, **kwargs):
+        return new_test_user(
+            cls.env,
+            groups='base.group_portal',
+            **({'login': 'portal_user'} | kwargs),
+        )
+
 
 class BaseUsersCommon(BaseCommon):
 
@@ -59,24 +153,8 @@ class BaseUsersCommon(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.group_portal = cls.env.ref('base.group_portal')
-        cls.group_user = cls.env.ref('base.group_user')
-
-        cls.user_portal = cls.env['res.users'].create({
-            'name': 'Test Portal User',
-            'login': 'portal_user',
-            'password': 'portal_user',
-            'email': 'portal_user@gladys.portal',
-            'groups_id': [Command.set([cls.group_portal.id])],
-        })
-
-        cls.user_internal = cls.env['res.users'].create({
-            'name': 'Test Internal User',
-            'login': 'internal_user',
-            'password': 'internal_user',
-            'email': 'mark.brown23@example.com',
-            'groups_id': [Command.set([cls.group_user.id])],
-        })
+        cls.user_portal = cls._create_new_portal_user()
+        cls.user_internal = cls._create_new_internal_user()
 
 
 class TransactionCaseWithUserDemo(TransactionCase):

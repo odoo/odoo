@@ -8,8 +8,10 @@ from odoo import fields
 
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.other_currency = cls.setup_other_currency('EUR')
 
         (
             cls.stock_input_account,
@@ -51,11 +53,11 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
 @tagged("post_install", "-at_install")
 class TestAccountMove(TestAccountMoveStockCommon):
     def test_standard_perpetual_01_mc_01(self):
-        rate = self.currency_data["rates"].sorted()[0].rate
+        rate = self.other_currency.rate_ids.sorted()[0].rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency_data["currency"]
+        move_form.currency_id = self.other_currency
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_A
             line_form.tax_ids.clear()
@@ -75,11 +77,11 @@ class TestAccountMove(TestAccountMoveStockCommon):
 
     def test_fifo_perpetual_01_mc_01(self):
         self.product_A.categ_id.property_cost_method = "fifo"
-        rate = self.currency_data["rates"].sorted()[0].rate
+        rate = self.other_currency.rate_ids.sorted()[0].rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency_data["currency"]
+        move_form.currency_id = self.other_currency
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_A
             line_form.tax_ids.clear()
@@ -99,11 +101,11 @@ class TestAccountMove(TestAccountMoveStockCommon):
 
     def test_average_perpetual_01_mc_01(self):
         self.product_A.categ_id.property_cost_method = "average"
-        rate = self.currency_data["rates"].sorted()[0].rate
+        rate = self.other_currency.rate_ids.sorted()[0].rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency_data["currency"]
+        move_form.currency_id = self.other_currency
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_A
             line_form.tax_ids.clear()
@@ -132,7 +134,7 @@ class TestAccountMove(TestAccountMoveStockCommon):
             'move_type': 'out_refund',
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
+            'currency_id': self.other_currency.id,
             'invoice_line_ids': [
                 (0, None, {'product_id': self.product_A.id}),
             ]

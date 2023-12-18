@@ -24,8 +24,8 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Code from addons/account_payment/tests/common.py:
         Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information

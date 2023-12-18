@@ -8,8 +8,8 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestUnexpectedAmount(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         cls.env = cls.env(context={
             **cls.env.context,
             'disable_abnormal_invoice_detection': False,
