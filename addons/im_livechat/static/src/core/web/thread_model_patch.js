@@ -5,11 +5,10 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
-    onUpdateType() {
-        super.onUpdateType();
-        this._store.discuss.livechat.threads = [
-            [this.type === "livechat" ? "ADD" : "DELETE", this],
-        ];
+    _computeDiscussAppCategory() {
+        return this.type === "livechat"
+            ? this._store.discuss.livechat
+            : super._computeDiscussAppCategory();
     },
     get hasMemberList() {
         return this.type === "livechat" || super.hasMemberList;

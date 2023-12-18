@@ -45,6 +45,7 @@ export class DiscussAppCategory extends Record {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);
         },
+        inverse: "discussAppCategory",
     });
 }
 
