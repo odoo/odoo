@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from hashlib import sha256
 from lxml import html, etree
 from urllib.parse import urlparse
 import requests
@@ -14,6 +15,7 @@ class LinkPreview(models.Model):
     _name = 'mail.link.preview'
     _description = "Store link preview data"
 
+    active = fields.Boolean(default=True)
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade', required=True)
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
@@ -33,7 +35,11 @@ class LinkPreview(models.Model):
         if not message.body:
             return
         tree = html.fromstring(message.body)
-        urls = tree.xpath('//a[not(@data-oe-model)]/@href')
+        deactivated_link_preview_urls = self.search([
+            ('message_id', '=', message.id),
+            ('active', '=', False),
+        ]).mapped('source_url')
+        urls = filter(lambda url: sha256(url.encode('utf-8')).hexdigest() not in deactivated_link_preview_urls, tree.xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         # Some websites are blocking non browser user agent.
@@ -49,6 +55,20 @@ class LinkPreview(models.Model):
         self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
             'LinkPreview': link_previews._link_preview_format()
         })
+
+    @api.model
+    def _deactive_link_preview(self):
+        for link_preview in self:
+            link_preview.write({
+                'active': False,
+                'image_mimetype': None,
+                'og_description': None,
+                'og_image': None,
+                'og_mimetype': None,
+                'og_title': None,
+                'og_type': None,
+                'source_url': sha256(link_preview.source_url.encode('utf-8')).hexdigest(),
+            })
 
     @api.model
     def _create_link_preview(self, url, message_id, request_session):
@@ -68,7 +88,7 @@ class LinkPreview(models.Model):
                 'message_id': link_preview.message_id.id,
             }))
         self.env['bus.bus']._sendmany(notifications)
-        self.unlink()
+        self._deactive_link_preview()
 
     @api.model
     def _is_link_preview_enabled(self):
