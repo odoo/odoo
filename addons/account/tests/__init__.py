@@ -32,6 +32,7 @@ from . import test_account_all_l10n
 from . import test_reconciliation_matching_rules
 from . import test_account_onboarding
 from . import test_portal_attachment
+from . import test_product
 from . import test_tax_report
 from . import test_transfer_wizard
 from . import test_account_incoming_supplier_invoice
