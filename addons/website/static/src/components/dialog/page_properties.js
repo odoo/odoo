@@ -122,7 +122,7 @@ export class DuplicatePageDialog extends Component {
     static props = {
         onDuplicate: Function,
         close: Function,
-        pageId: Number,
+        pageIds: { type: Array, element: Number },
     };
 
     setup() {
@@ -136,15 +136,18 @@ export class DuplicatePageDialog extends Component {
     }
 
     async duplicate() {
+        const duplicates = [];
         if (this.state.name) {
-            const res = await this.orm.call(
-                'website.page',
-                'clone_page',
-                [this.props.pageId, this.state.name]
-            );
-            this.website.goToWebsite({path: res, edition: true});
+            for (let count = 0; count < this.props.pageIds.length; count++) {
+                const name = this.state.name + (count ? ` ${count + 1}` : "");
+                duplicates.push(await this.orm.call(
+                    'website.page',
+                    'clone_page',
+                    [this.props.pageIds[count], name]
+                ));
+            }
         }
-        this.props.onDuplicate();
+        this.props.onDuplicate(duplicates);
     }
 }
 
@@ -187,10 +190,11 @@ export class PagePropertiesDialog extends FormViewDialog {
 
     clonePage() {
         this.dialog.add(DuplicatePageDialog, {
-            pageId: this.resId,
-            onDuplicate: () => {
+            pageIds: [this.resId],
+            onDuplicate: (duplicates) => {
                 this.props.close();
                 this.props.onClose();
+                this.website.goToWebsite({ path: duplicates[0], edition: true });
             },
         });
     }
