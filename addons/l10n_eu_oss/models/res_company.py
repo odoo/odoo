@@ -111,9 +111,9 @@ class Company(models.Model):
 
     def _get_oss_account(self):
         self.ensure_one()
-        if not self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}', raise_if_not_found=False):
-            self._create_oss_account()
-        return self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}')
+        if not (oss_account := self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}', raise_if_not_found=False)):
+            oss_account = self._create_oss_account()
+        return oss_account
 
     def _create_oss_account(self):
         if (
@@ -151,6 +151,7 @@ class Company(models.Model):
             'res_id': oss_account.id,
             'noupdate': True,
         })
+        return oss_account
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
