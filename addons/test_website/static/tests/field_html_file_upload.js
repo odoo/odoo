@@ -4,7 +4,7 @@ import { FileSelectorControlPanel } from '@web_editor/components/media_dialog/fi
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { HtmlField } from '@web_editor/js/backend/html_field';
 import {registry} from '@web/core/registry';
-import testUtils from '@web/../tests/legacy/helpers/test_utils';
+import testUtils from '@web/../tests/legacy_tests/helpers/test_utils';
 import { uploadService } from '@web_editor/components/upload_progress_toast/upload_service';
 import { unsplashService } from '@web_unsplash/services/unsplash_service';
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";

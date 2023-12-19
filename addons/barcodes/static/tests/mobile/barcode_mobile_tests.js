@@ -3,7 +3,7 @@
     import {barcodeService} from "@barcodes/barcode_service";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { registry } from "@web/core/registry";
-    import testUtils from "@web/../tests/legacy/helpers/test_utils";
+    import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 
     const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
     const isMobileChrome = barcodeService.isMobileChrome;
