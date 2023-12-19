@@ -2241,7 +2241,7 @@ class PosSession(models.Model):
     def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
         shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
-        if shop_config:
+        if shop_config and shop_config.active:
             convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
             if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
                 self.env['pos.session'].create({
