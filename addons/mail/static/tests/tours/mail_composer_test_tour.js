@@ -124,5 +124,30 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
             isCheck: true,
         },
+        // Test the full composer input text is kept on closing
+        {
+            content: "Open full composer",
+            trigger: "button[aria-label='Full composer']",
+        },
+        {
+            content: "Write something in full composer",
+            trigger: ".note-editable",
+            run: "text keep the content",
+        },
+        {
+            content: "Close full composer",
+            trigger: ".btn-close",
+        },
+        {
+            content: "Check full composer text is kept",
+            trigger: ".o-mail-Composer-input",
+            run() {
+                if (this.$anchor[0].value !== "keep the content") {
+                    throw new Error(
+                        "Composer in chatter should contain full composer text after discarding."
+                    );
+                }
+            },
+        },
     ],
 });
