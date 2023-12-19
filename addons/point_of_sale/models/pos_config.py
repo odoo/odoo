@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytz
 
 from odoo import api, fields, models, _, Command
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -612,7 +612,11 @@ class PosConfig(models.Model):
         if not companies:
             companies = self.env['res.company'].search([])
         for company in companies.filtered('chart_template'):
-            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', False)])
+            domain = AND([
+                [('company_id', '=', company.id), ('module_pos_restaurant', '=', False)],
+                OR([[('active', '=', True)], [('active', '=', False)]]),
+            ])
+            pos_configs = self.search(domain)
             if not pos_configs:
                 self = self.with_company(company)
                 pos_configs = self.env['pos.config'].create({
