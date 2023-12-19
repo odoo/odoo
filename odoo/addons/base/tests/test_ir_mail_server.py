@@ -287,7 +287,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 from_filter=False,
             )
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     def test_mail_server_send_email_context_force(self):
         """ Allow to force notifications_email / bounce_address from context
         to allow higher-level apps to send values until end of mail stack
@@ -317,6 +317,20 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter=context_server.from_filter,
         )
 
+        # miss-configured database, no mail servers from filter
+        # match the user / notification email
+        self.env['ir.mail_server'].search([]).from_filter = "random.domain"
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@test.com')
+            IrMailServer.with_context(domain_notifications_email='test@custom_domain.com').send_email(message)
+
+        self.connect_mocked.assert_called_once()
+        self.assertSMTPEmailsSent(
+            smtp_from='test@custom_domain.com',
+            message_from='"specific_user" <test@custom_domain.com>',
+            from_filter='random.domain',
+        )
+
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_IDNA(self):
         """ Test that the mail from / recipient envelop are encoded using IDNA """
@@ -332,7 +346,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter=False,
         )
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     @patch.dict(config.options, {
         "from_filter": "dummy@example.com, test.mycompany.com, dummy2@example.com",
         "smtp_server": "example.com",
