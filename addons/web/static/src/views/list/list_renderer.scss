@@ -323,6 +323,8 @@
             > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
                 width: 100%;
                 .o_input {
+                    --o-input-background-color: initial;
+
                     border: none;
                     padding: 0;
                     margin: 0;
@@ -405,10 +407,6 @@
 
     .o_data_row.o_selected_row > .o_data_cell.o_invalid_cell:not(.o_readonly_modifier) {
         border-bottom: 1px solid $danger;
-
-        .o_input {
-            --o-input-background-color: transparent;
-        }
 
         &:not(:focus-within) {
             background-color: $o-input-invalid-bg;
