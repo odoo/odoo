@@ -141,26 +141,31 @@ class AccountPartialReconcile(models.Model):
         self.env['account.partial.reconcile'].flush_model()
         amls.flush_recordset(['full_reconcile_id'])
         self.env.cr.execute("""
-            WITH RECURSIVE partials (line_id, current_id) AS (
-                    SELECT id, id 
-                      FROM account_move_line
-                     WHERE id = ANY(%s)
-                       AND full_reconcile_id IS NULL
+            WITH RECURSIVE partials (line_id, current_id, reconcile_id, mk) AS (
+                    SELECT l.id, 
+                           CASE WHEN l.id = apr.debit_move_id THEN apr.credit_move_id ELSE apr.debit_move_id END,
+                           apr.id,
+                           CASE WHEN l.id = apr.debit_move_id THEN 'C' ELSE 'D' END
+                      FROM account_move_line l
+                      JOIN account_partial_reconcile apr ON l.id = apr.debit_move_id
+                                                         OR l.id = apr.credit_move_id
+                            
+                     WHERE l.id = ANY(%s)
+                       AND l.full_reconcile_id IS NULL
 
-                                                UNION
+                    UNION ALL
                                                 
                     SELECT p.line_id,
-                           CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id
-                                ELSE partial.debit_move_id
-                           END
+                           CASE p.mk WHEN 'C' THEN apr.debit_move_id ELSE apr.credit_move_id END,
+                           apr.id,
+                           CASE p.mk WHEN 'C' THEN 'D' ELSE 'C' END
                       FROM partials p
-                      JOIN account_partial_reconcile partial ON p.current_id = partial.debit_move_id
-                                                             OR p.current_id = partial.credit_move_id
+                      JOIN account_partial_reconcile apr ON (p.current_id = apr.debit_move_id AND mk='D')
+                                                         OR (p.current_id = apr.credit_move_id AND mk='C')
+                     WHERE apr.id!=p.reconcile_id
             )
-              SELECT line_id, 'P' || MIN(partial.id) AS matching_number
+              SELECT line_id, 'P' || min(reconcile_id) AS matching_number
                 FROM partials
-                JOIN account_partial_reconcile partial ON current_id = partial.debit_move_id
-                                                       OR current_id = partial.credit_move_id
             GROUP BY line_id
         """, [
             amls.ids,
