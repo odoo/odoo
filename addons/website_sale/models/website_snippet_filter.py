@@ -53,9 +53,8 @@ class WebsiteSnippetFilter(models.Model):
         return samples
 
     def _filter_records_to_values(self, records, is_sample=False):
-        if self.model_name == 'product.product':
-            if not self.env.context.get('show_variants') and not is_sample:
-                records = records and records.product_tmpl_id.product_variant_id
+        if self.model_name == 'product.product' and not self.env.context.get('show_variants') and not is_sample:
+            records = records and records.product_tmpl_id.product_variant_id
         res_products = super()._filter_records_to_values(records, is_sample)
         if self.model_name == 'product.product':
             for res_product in res_products:

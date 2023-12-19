@@ -103,9 +103,7 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
         const productTemplateId = $("#product_details").find(".product_template_id");
         return Object.assign(this._super.apply(this, arguments), {
             productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
-            context: {
-                show_variants: this.el.dataset.showVariants,
-            },
+            context: { show_variants: this.el.dataset.showVariants, },
         });
     },
 });
@@ -140,20 +138,19 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
         const isVariant = ev.currentTarget.closest('[data-show-variants=true]');
         const hasAttributes = ev.currentTarget.dataset.hasAttributes;
         if (!isVariant && hasAttributes) {
-            this._handleAdd($card);
-        } else {
-            const data = await rpc("/shop/cart/update_json", {
-                product_id: $card.find('input[data-product-id]').data('product-id'),
-                add_qty: 1,
-                display: false,
+            return this._handleAdd($card);
+        }
+        const data = await rpc("/shop/cart/update_json", {
+            product_id: $card.find('input[data-product-id]').data('product-id'),
+            add_qty: 1,
+            display: false,
+        });
+        wSaleUtils.updateCartNavBar(data);
+        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
+        if (this.add2cartRerender) {
+            this.trigger_up('widgets_start_request', {
+                $target: this.$el.closest('.s_dynamic'),
             });
-            wSaleUtils.updateCartNavBar(data);
-            wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
-            if (this.add2cartRerender) {
-                this.trigger_up('widgets_start_request', {
-                    $target: this.$el.closest('.s_dynamic'),
-                });
-            }
         }
     },
     /**
