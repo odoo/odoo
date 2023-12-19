@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
+    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=True)
 
     def _compute_bom_count(self):
         for product in self:
@@ -109,7 +109,7 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=False)
+    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=True)
 
     def _compute_bom_count(self):
         for product in self:
