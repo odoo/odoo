@@ -81,8 +81,8 @@
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_team']" position="before">
-                <filter name="on_timeoff" string="On Time Off" domain="[('is_absent', '=', True)]"/>
                 <filter name="at_work" string="At work" domain="[('is_absent', '=', False)]"/>
+                <filter name="on_timeoff" string="On Time Off" domain="[('is_absent', '=', True)]"/>
                 <separator/>
             </xpath>
         </field>

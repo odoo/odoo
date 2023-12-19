@@ -124,11 +124,11 @@ class HrEmployeeBase(models.AbstractModel):
         employees_absent = self.filtered(lambda employee:
                                          employee.hr_presence_state != 'present'
                                          and employee.is_absent)
-        employees_absent.update({'hr_icon_display': 'presence_holiday_absent'})
+        employees_absent.update({'hr_icon_display': 'presence_holiday_absent', 'show_hr_icon_display': True})
         employees_present = self.filtered(lambda employee:
                                           employee.hr_presence_state == 'present'
                                           and employee.is_absent)
-        employees_present.update({'hr_icon_display': 'presence_holiday_present'})
+        employees_present.update({'hr_icon_display': 'presence_holiday_present', 'show_hr_icon_display': True})
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule

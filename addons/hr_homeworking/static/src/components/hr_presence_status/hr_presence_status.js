@@ -10,8 +10,8 @@ const patchHrPresenceStatus = () => ({
     get color() {
         if (this.location) {
             let color = "text-muted";
-            if (this.props.record.data.hr_presence_state !== "to_define") {
-                color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "text-warning";
+            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
+                color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "o_icon_employee_absent";
             }
             return color;
         }

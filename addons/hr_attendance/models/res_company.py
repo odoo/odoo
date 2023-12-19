@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
@@ -85,3 +84,11 @@ class ResCompany(models.Model):
         self.write({
             'attendance_kiosk_key': uuid.uuid4().hex
         })
+
+    def _check_hr_presence_control(self, at_install):
+        companies = self.env.companies
+        for company in companies:
+            if at_install and company.hr_presence_control_login:
+                company.hr_presence_control_attendance = True
+            if not at_install and company.hr_presence_control_attendance:
+                company.hr_presence_control_login = True
