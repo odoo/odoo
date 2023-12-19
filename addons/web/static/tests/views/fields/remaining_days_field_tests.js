@@ -487,4 +487,41 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        'RemainingDaysField, enter empty value manually in edit list view',
+        async function (assert) {
+            patchDate(2017, 9, 8, 15, 35, 11);
+            serverData.models.partner.records = [
+                { id: 1, datetime: "2017-10-08 10:00:00" },
+            ];
+
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree multi_edit="1">
+                        <field name="datetime" widget="remaining_days" />
+                    </tree>`,
+            });
+
+            const cells = target.querySelectorAll(".o_data_cell");
+            const rows = target.querySelectorAll(".o_data_row");
+
+            assert.strictEqual(cells[0].textContent, "Today");
+
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[0], ".o_data_cell");
+            await editInput(target, ".o_field_remaining_days input", "");
+            await click(target);
+
+            assert.strictEqual(
+                rows[0].querySelector(".o_data_cell").textContent,
+                "",
+                "should have nothing as date field value"
+            );
+        }
+    );
+
 });

@@ -193,7 +193,9 @@ export const useDateTimePicker = (hookParams) => {
      */
     const onInputKeydown = (ev) => {
         switch (ev.key) {
-            case "Enter":
+            case "Enter": {
+                return onInputChange(ev);
+            }
             case "Escape": {
                 return saveAndClose();
             }
