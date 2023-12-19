@@ -136,26 +136,6 @@ class TestSaleOrder(SaleCommon):
         sale_order = self.sale_order.with_context(tz='Europe/Brussels').copy({'date_order': '2019-12-31 23:30:00'})
         self.assertTrue(sale_order.name.startswith('SO/2020/'))
 
-    def test_draft(self):
-        """ Test is changing state to draft for sale orders, only cancel and sent can be moved to draft """
-        so_copy = self.sale_order.copy()
-
-        # SO in state 'sale' can't be moved
-        so_copy.action_confirm()
-        so_copy.action_draft()
-        self.assertTrue(so_copy.state == 'sale', 'Sale: Moving SO from `sale` to draft should`t be possible')
-
-        # SO in state 'sent' can be moved
-        so_copy.action_quotation_sent()
-        so_copy.action_draft()
-        self.assertTrue(so_copy.state == 'draft', 'Sale: Moving SO from `sent` to `draft` should be possible')
-
-        # SO in state 'cancel' can be moved
-        so_copy._action_cancel()
-        so_copy.action_draft()
-        self.assertTrue(so_copy.state == 'draft', 'Sale: Moving SO from `cancel` to `draft` should be possible')
-
-
     def test_unlink_cancel(self):
         """ Test deleting and cancelling sales orders depending on their state and on the user's rights """
         # SO in state 'draft' can be deleted

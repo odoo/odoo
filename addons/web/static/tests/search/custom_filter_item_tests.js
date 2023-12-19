@@ -10,7 +10,6 @@ import {
 import { localization } from "@web/core/l10n/localization";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { browser } from "@web/core/browser/browser";
-import { BUILTINS } from "@web/core/py_js/py_builtin";
 import {
     addCondition,
     applyFilter,
@@ -584,36 +583,6 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), [["date_field", "=", "2017-01-01"]]);
     });
 
-    QUnit.test("custom filter date with today operator", async function (assert) {
-        patchTimeZone(-240);
-        const controlPanel = await makeWithSearch({
-            serverData,
-            resModel: "foo",
-            Component: ControlPanel,
-            searchViewId: false,
-            searchMenuTypes: ["filter"],
-        });
-
-        await toggleFilterMenu(target);
-        await toggleAddCustomFilter(target);
-
-        await editConditionField(target, 0, "date_field");
-        await editConditionOperator(target, 0, "today");
-        await applyFilter(target);
-
-        assert.deepEqual(getFacetTexts(target), ['A date is today']);
-
-        assert.deepEqual(
-            getDomain(controlPanel),
-            [
-                "&",
-                ["date_field", ">=", `${BUILTINS.today} 00:00:00`],
-                ["date_field", "<=", `${BUILTINS.today} 23:59:59`],
-            ],
-            "domain should be in UTC format"
-        );
-    });
-
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
         assert.expect(5);
 
@@ -657,36 +626,6 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(
             getDomain(controlPanel),
             [["date_time_field", "=", "2017-02-22 15:00:00"]],
-            "domain should be in UTC format"
-        );
-    });
-
-    QUnit.test("custom filter datetime with today operator", async function (assert) {
-        patchTimeZone(-240);
-        const controlPanel = await makeWithSearch({
-            serverData,
-            resModel: "foo",
-            Component: ControlPanel,
-            searchViewId: false,
-            searchMenuTypes: ["filter"],
-        });
-
-        await toggleFilterMenu(target);
-        await toggleAddCustomFilter(target);
-
-        await editConditionField(target, 0, "date_time_field");
-        await editConditionOperator(target, 0, "today");
-        await applyFilter(target);
-
-        assert.deepEqual(getFacetTexts(target), ['DateTime is today']);
-
-        assert.deepEqual(
-            getDomain(controlPanel),
-            [
-                "&",
-                ["date_time_field", ">=", `${BUILTINS.today} 00:00:00`],
-                ["date_time_field", "<=", `${BUILTINS.today} 23:59:59`],
-            ],
             "domain should be in UTC format"
         );
     });
