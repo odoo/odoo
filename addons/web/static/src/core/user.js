@@ -18,8 +18,6 @@ import { session } from "@web/session";
 export function _makeUser(session) {
     // Retrieve user-related information from the session
     const {
-        db,
-        dbuuid,
         home_action_id: homeActionId,
         is_admin: isAdmin,
         is_internal_user: isInternalUser,
@@ -35,8 +33,6 @@ export function _makeUser(session) {
     let settings = user_settings;
 
     // Delete user-related information from the session, s.t. there's a single source of truth
-    delete session.db;
-    delete session.dbuuid;
     delete session.home_action_id;
     delete session.is_admin;
     delete session.is_internal_user;
@@ -94,16 +90,6 @@ export function _makeUser(session) {
         },
         get tz() {
             return this.context.tz;
-        },
-        get db() {
-            // FIXME: should this be there?
-            const res = {
-                name: db,
-            };
-            if (dbuuid) {
-                res.uuid = dbuuid;
-            }
-            return res;
         },
         get settings() {
             return Object.assign({}, settings);

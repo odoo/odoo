@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { WORKER_VERSION } from "@bus/workers/websocket_worker";
@@ -99,7 +98,7 @@ export const busService = {
             }
             send("initialize_connection", {
                 websocketURL: `${params.serverURL.replace("http", "ws")}/websocket`,
-                db: user.db.name,
+                db: session.db,
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue("last_notification_id", 0),
                 uid,
