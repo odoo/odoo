@@ -1224,6 +1224,34 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(1, len(sheet_own.account_move_ids), "When an expense is paid by the employee, one move is created")
         self.assertEqual(2, len(sheet_company.account_move_ids), "When an expense is paid by the company, one move is created per expense")
 
+    def test_payment_edit_fields(self):
+        """ Test payment fields cannot be modified once linked with an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet 2',
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
+                    'payment_mode': 'company_account',
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        })
+        sheet.action_submit_sheet()
+        sheet.action_approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        payment = sheet.account_move_ids.payment_id
+
+        with self.assertRaises(UserError, msg="Cannot edit payment amount after linking to an expense"):
+            payment.write({'amount': 500})
+
+        payment.write({'is_move_sent': True})
+
     def test_payment_unlinks(self):
         sheet_company = self.env['hr.expense.sheet'].create({
             'company_id': self.env.company.id,
