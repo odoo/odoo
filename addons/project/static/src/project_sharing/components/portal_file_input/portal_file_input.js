@@ -26,7 +26,7 @@ export class PortalFileInput extends FileInput {
             files.map(
                 (file) =>
                     super.uploadFiles({
-                        file,
+                        ufile: file,
                         name: file.name,
                         ...otherParams,
                     })

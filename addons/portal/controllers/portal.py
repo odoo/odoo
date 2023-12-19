@@ -293,7 +293,7 @@ class CustomerPortal(Controller):
         })
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
-    def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
+    def attachment_add(self, name, ufile, res_model, res_id, access_token=None, **kwargs):
         """Process a file uploaded from the portal chatter and create the
         corresponding `ir.attachment`.
 
@@ -341,7 +341,7 @@ class CustomerPortal(Controller):
         # or garbage collected otherwise: see  `_garbage_collect_attachments`.
         attachment = IrAttachment.create({
             'name': name,
-            'datas': base64.b64encode(file.read()),
+            'datas': base64.b64encode(ufile.read()),
             'res_model': 'mail.compose.message',
             'res_id': 0,
             'access_token': access_token,

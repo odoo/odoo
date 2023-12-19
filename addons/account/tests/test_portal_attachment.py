@@ -46,7 +46,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'res_id': self.out_invoice.id,
                 'csrf_token': http.Request.csrf_token(self),
             },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
+            files=[('ufile', ('test.txt', b'test', 'plain/text'))],
         )
         self.assertEqual(res.status_code, 400)
         self.assertIn("you do not have the rights", res.text)
@@ -61,7 +61,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
+            files=[('ufile', ('test.txt', b'test', 'plain/text'))],
         )
         self.assertEqual(res.status_code, 200)
         create_res = json.loads(res.content.decode('utf-8'))
@@ -85,7 +85,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
-            files=[('file', ('test.svg', b'<svg></svg>', 'image/svg+xml'))],
+            files=[('ufile', ('test.svg', b'<svg></svg>', 'image/svg+xml'))],
         )
         self.assertEqual(res.status_code, 200)
         create_res = json.loads(res.content.decode('utf-8'))
@@ -260,7 +260,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'csrf_token': http.Request.csrf_token(self),
                 'access_token': self.out_invoice._portal_ensure_token(),
             },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
+            files=[('ufile', ('test.txt', b'test', 'plain/text'))],
         )
         self.assertEqual(res.status_code, 200)
         create_res = json.loads(res.content.decode('utf-8'))
