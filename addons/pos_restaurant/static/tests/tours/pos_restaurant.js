@@ -132,3 +132,20 @@ registry
             return getSteps(); 
         } 
     });
+
+registry
+    .category("web_tour.tours")
+    .add("SaveLastPreparationChangesTour", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            FloorScreen.do.clickTable("5");
+            ProductScreen.do.clickDisplayedProduct("Coca-Cola");
+            ProductScreen.check.selectedOrderlineHas("Coca-Cola", "1.0");
+            ProductScreen.do.clickOrderButton();
+            ProductScreen.check.orderlinesHaveNoChange();
+            return getSteps();
+        }
+    });

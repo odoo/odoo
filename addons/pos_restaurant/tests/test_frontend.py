@@ -253,3 +253,10 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     def test_08_refund_stay_current_table(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="pos_admin")
+
+    def test_09_save_last_preparation_changes(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SaveLastPreparationChangesTour', login="pos_admin")
+        self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
+        self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
