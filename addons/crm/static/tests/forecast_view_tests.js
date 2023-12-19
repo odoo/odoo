@@ -9,7 +9,7 @@ import {
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { mock } from "@web/../tests/legacy/helpers/test_utils";
+import { mock } from "@web/../tests/legacy_tests/helpers/test_utils";
 import { browser } from "@web/core/browser/browser";
 
 const patchDate = mock.patchDate;

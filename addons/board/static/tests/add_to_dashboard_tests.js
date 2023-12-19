@@ -21,7 +21,7 @@ import {
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 
 const patchDate = testUtils.mock.patchDate;
