@@ -74,7 +74,7 @@
                             <field name="organizer_id"/>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="address_id" context="{'show_address': 1}"/>
+                            <field name="address_id" context="{'show_address': 1}" placeholder="Online if not set"/>
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
@@ -232,9 +232,10 @@
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value" class="d-flex ps-1">
+                                        <div class="d-flex ps-1">
                                             <i class="fa fa-map-marker mt-1 me-2 text-center ps-1" title="Location"/>
-                                            <span t-esc="record.address_id.value" class="ms-1"/>
+                                            <span t-if="record.address_id.value" t-out="record.address_id.value" class="ms-1"/>
+                                            <span t-else="" class="ms-1">Online Event</span>
                                         </div>
                                         <div class="d-flex ps-1">
                                             <i class="fa fa-group mt-1 me-2 text-center" title="Attendees"/>
@@ -300,11 +301,13 @@
                     domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Online" name="filter_online" domain="[('address_id', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                     <filter string="Template" name="event_type_id" context="{'group_by': 'event_type_id'}"/>
                     <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
                     <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by': 'date_begin'}"/>
+                    <filter string="Venue" name="venue" context="{'group_by': 'address_id'}"/>
                 </group>
             </search>
         </field>
