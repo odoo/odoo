@@ -6,27 +6,72 @@
 (function () {
     "use strict";
 
-    class ModuleLoader {
-        /** @type {Map<string,{fn: Function, deps: string[]}>} mapping name => deps/fn */
-        factories = new Map();
-        /** @type {Set<string>} names of modules waiting to be started */
-        jobs = new Set();
-        /** @type {Set<string>} names of failed modules */
-        failed = new Set();
+    if (globalThis.odoo?.loader) {
+        // Allows for duplicate calls to `module_loader`: only the first one is
+        // executed.
+        return;
+    }
 
-        /** @type {Map<string,any>} mapping name => value */
+    /**
+     * @param {() => void} callback
+     */
+    function domReady(callback) {
+        if (document.readyState === "complete") {
+            callback();
+        } else {
+            document.addEventListener("DOMContentLoaded", callback);
+        }
+    }
+
+    /**
+     * @param {string} heading
+     * @param {string[]} names
+     */
+    function list(heading, names) {
+        const frag = document.createDocumentFragment();
+        if (!names || !names.length) {
+            return frag;
+        }
+        frag.textContent = heading;
+        const ul = document.createElement("ul");
+        for (const el of names) {
+            const li = document.createElement("li");
+            li.textContent = el;
+            ul.append(li);
+        }
+        frag.appendChild(ul);
+        return frag;
+    }
+
+    class ModuleLoader {
+        /**
+         * Mapping name => { deps, fn }
+         * @type {typeof odoo.loader.factories}
+         */
+        factories = new Map();
+        /**
+         * Names of modules waiting to be started
+         * @type {typeof odoo.loader.jobs}
+         */
+        jobs = new Set();
+        /**
+         * Names of failed modules
+         * @type {typeof odoo.loader.failed}
+         */
+        failed = new Set();
+        /**
+         * Mapping name => value
+         * @type {typeof odoo.loader.modules}
+         */
         modules = new Map();
 
         bus = new EventTarget();
 
+        /** @type {Promise<void> | null} */
         checkErrorProm = null;
 
-        /**
-         * @param {string} name
-         * @param {string[]} deps
-         * @param {Function} factory
-         */
-        define(name, deps, factory) {
+        /** @type {typeof odoo.define} */
+        define(name, deps, factory, lazy = false) {
             if (typeof name !== "string") {
                 throw new Error(`Invalid name definition: ${name} (should be a string)"`);
             }
@@ -36,12 +81,15 @@
             if (typeof factory !== "function") {
                 throw new Error(`Factory should be defined by a function ${factory}`);
             }
-            if (!this.factories.has(name)) {
-                this.factories.set(name, {
-                    deps,
-                    fn: factory,
-                    ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies,
-                });
+            if (this.factories.has(name)) {
+                return; // Ignore duplicate modules
+            }
+            this.factories.set(name, {
+                deps,
+                fn: factory,
+                ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies || lazy,
+            });
+            if (!lazy) {
                 this.addJob(name);
                 this.checkErrorProm ||= Promise.resolve().then(() => {
                     this.checkAndReportErrors();
@@ -50,6 +98,9 @@
             }
         }
 
+        /**
+         * @param {string} name
+         */
         addJob(name) {
             this.jobs.add(name);
             this.startModules();
@@ -71,8 +122,11 @@
             }
         }
 
+        /**
+         * @param {string} name
+         */
         startModule(name) {
-            const require = (name) => this.modules.get(name);
+            const require = (dependency) => this.modules.get(dependency);
             this.jobs.delete(name);
             const factory = this.factories.get(name);
             let value = null;
@@ -145,35 +199,10 @@
                 return;
             }
 
-            function domReady(cb) {
-                if (document.readyState === "complete") {
-                    cb();
-                } else {
-                    document.addEventListener("DOMContentLoaded", cb);
-                }
-            }
-
-            function list(heading, names) {
-                const frag = document.createDocumentFragment();
-                if (!names || !names.length) {
-                    return frag;
-                }
-                frag.textContent = heading;
-                const ul = document.createElement("ul");
-                for (const el of names) {
-                    const li = document.createElement("li");
-                    li.textContent = el;
-                    ul.append(li);
-                }
-                frag.appendChild(ul);
-                return frag;
-            }
-
             domReady(() => {
                 // Empty body
-                while (document.body.childNodes.length) {
-                    document.body.childNodes[0].remove();
-                }
+                document.body.innerHTML = "";
+
                 const container = document.createElement("div");
                 container.className =
                     "o_module_error position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
@@ -210,10 +239,7 @@
         }
     }
 
-    if (!globalThis.odoo) {
-        globalThis.odoo = {};
-    }
-    const odoo = globalThis.odoo;
+    const odoo = (globalThis.odoo ||= {});
     if (odoo.debug && !new URLSearchParams(location.search).has("debug")) {
         // remove debug mode if not explicitely set in url
         odoo.debug = "";
@@ -221,6 +247,5 @@
 
     const loader = new ModuleLoader();
     odoo.define = loader.define.bind(loader);
-
     odoo.loader = loader;
 })();
