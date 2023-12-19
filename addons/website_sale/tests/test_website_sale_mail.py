@@ -35,7 +35,8 @@ class TestWebsiteSaleMail(HttpCase):
         # We change the domain of the website to test that the email that
         # will be sent uses the correct domain for its links.
         main_website.domain = "my-test-domain.com"
-        other_websites.domain = "https://domain-not-used.fr"
+        for w in other_websites:
+            w.domain = f'domain-not-used-{w.id}.fr'
         with patch.object(MailMail, 'unlink', lambda self: None):
             start_time = fields.Datetime.now()
             self.start_tour("/", 'shop_mail', login="admin")
