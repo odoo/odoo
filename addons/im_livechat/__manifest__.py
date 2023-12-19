@@ -132,7 +132,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'im_livechat.embed_test_assets': [
             ('include', 'web.tests_assets'),
-            ('remove', 'web/static/tests/mock_server_tests.js'),
+            ('remove', 'web/static/tests/legacy/mock_server_tests.js'),
             ('remove', 'im_livechat/static/**'),
             'im_livechat/static/tests/helpers/**',
             ('include', 'im_livechat.assets_embed_core'),

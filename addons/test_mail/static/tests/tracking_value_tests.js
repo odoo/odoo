@@ -10,7 +10,7 @@ import {
     patchTimeZone,
     getFixture,
 } from "@web/../tests/helpers/utils";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 let target;

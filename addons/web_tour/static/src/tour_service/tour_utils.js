@@ -129,7 +129,7 @@ export function getConsumeEventType(element, runCommand) {
 }
 
 /**
- * ! This function is a copy-paste of its namesake in web/static/tests/helpers/utils.js
+ * ! This function is a copy-paste of its namesake in @web/../tests/helpers/utils
  * TODO: Unify utils for tests and tours since they're doing the exact same thing
  * @param {Node} n1
  * @param {Node} n2
@@ -367,7 +367,7 @@ export class RunningTourActionHelper {
         );
     }
     /**
-     * ! This function is a reduced version of "drag" in web/static/tests/helpers/utils.js
+     * ! This function is a reduced version of "drag" in @web/../tests/helpers/utils
      * TODO: Unify utils for tests and tours since they're doing the exact same thing
      * @param {HTMLElement} source
      * @param {HTMLElement} target

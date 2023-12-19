@@ -10,7 +10,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
 import { deepEqual } from "@web/core/utils/objects";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";

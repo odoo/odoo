@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { patch } from "@web/core/utils/patch";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
