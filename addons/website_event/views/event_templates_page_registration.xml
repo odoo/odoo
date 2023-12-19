@@ -397,10 +397,10 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between p-0">
                                     <div class="o_wevent_registration_multi_select flex-md-grow-1 me-2 text-end"/>
-                                    <div class="w-auto ms-auto">
+                                    <div class="ms-auto">
                                         <select t-if="not ticket.is_expired and ticket.sale_available"
                                             t-attf-name="nb_register-#{ticket.id}"
-                                            class="form-select">
+                                            class="w-auto form-select">
                                             <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
                                             <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                             <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
