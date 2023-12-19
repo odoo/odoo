@@ -225,7 +225,7 @@ class TestIrMailServer(MailCommon):
                 self.assertEqual(mail_server, expected_mail_server)
                 self.assertEqual(mail_from, expected_email_from)
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     def test_mail_server_send_email(self):
         """ Test main 'send_email' usage: check mail_server choice based on from
         filters, encapsulation, spoofing. """
@@ -292,3 +292,19 @@ class TestIrMailServer(MailCommon):
                 message_from=f'"Name" <{self.default_from}@{self.alias_domain}>',
                 mail_server=self.mail_server_domain,
             )
+
+        # miss-configured database, no mail servers from filter
+        # match the user / notification email
+        self.env['ir.mail_server'].search([]).from_filter = "random.domain"
+        self.mail_alias_domain.default_from = 'test'
+        self.mail_alias_domain.name = 'custom_domain.com'
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@test.com')
+            IrMailServer.send_email(message)
+
+        self.connect_mocked.assert_called_once()
+        self.assertSMTPEmailsSent(
+            smtp_from='test@custom_domain.com',
+            message_from='"specific_user" <test@custom_domain.com>',
+            from_filter='random.domain',
+        )
