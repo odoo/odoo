@@ -1745,6 +1745,11 @@ export class PosStore extends Reactive {
             }
         }
         order.updateLastOrderChange();
+
+        //We make sure that the last_order_change is updated in the backend
+        order.save_to_db();
+        order.pos.ordersToUpdateSet.add(this);
+        order.pos.sendDraftToServer();
     }
     closeScreen() {
         this.addOrderIfEmpty();
