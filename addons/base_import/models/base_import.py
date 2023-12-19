@@ -566,6 +566,9 @@ class Import(models.TransientModel):
                 val = self._remove_currency_symbol(val)
                 if val:
                     if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                            # This is not a float so exit this try
+                            float('a')
                         val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
                     # We are now sure that this is a float, but we still need to find the
                     # thousand and decimal separator
@@ -1532,7 +1535,7 @@ class Import(models.TransientModel):
 
         return input_file_data
 
-_SEPARATORS = [' ', '/', '-', '']
+_SEPARATORS = [' ', '/', '-', '.', '']
 _PATTERN_BASELINE = [
     ('%m', '%d', '%Y'),
     ('%d', '%m', '%Y'),
