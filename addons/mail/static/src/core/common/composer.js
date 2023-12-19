@@ -11,6 +11,8 @@ import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { browser } from "@web/core/browser/browser";
+import { useDebounced } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -20,6 +22,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useExternalListener,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -120,6 +123,10 @@ export class Composer extends Component {
         this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
+        this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
+            execBeforeUnmount: true,
+        });
+        useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         if (this.props.dropzoneRef) {
             useDropzone(
                 this.props.dropzoneRef,
@@ -155,6 +162,7 @@ export class Composer extends Component {
         useEffect(
             () => {
                 this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                this.saveContentDebounced();
             },
             () => [this.props.composer.textInputContent, this.ref.el]
         );
@@ -170,6 +178,9 @@ export class Composer extends Component {
         );
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+            if (!this.props.composer.textInputContent) {
+                this.restoreContent();
+            }
         });
     }
 
@@ -503,7 +514,17 @@ export class Composer extends Component {
                 if (!isDiscard && this.props.composer.thread.model === "mail.box") {
                     this.notifySendFromMailbox();
                 }
-                this.clear();
+                if (
+                    args.length === 0 &&
+                    document
+                        .querySelector(".o_mail_composer_form_view .note-editable")
+                        .innerText.replace(/^\s*$/gm, "")
+                ) {
+                    this.saveContent();
+                    this.restoreContent();
+                } else {
+                    this.clear();
+                }
                 this.props.messageToReplyTo?.cancel();
                 if (this.thread) {
                     this.threadService.fetchNewMessages(this.thread);
@@ -515,6 +536,7 @@ export class Composer extends Component {
 
     clear() {
         this.props.composer.clear();
+        browser.localStorage.removeItem(this.props.composer.localId);
     }
 
     notifySendFromMailbox() {
@@ -642,6 +664,21 @@ export class Composer extends Component {
         this.props.composer.isFocused = true;
         if (this.props.composer.thread) {
             this.threadService.markAsRead(this.props.composer.thread);
+        }
+    }
+
+    saveContent() {
+        const fullComposerContent =
+            document
+                .querySelector(".o_mail_composer_form_view .note-editable")
+                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? this.props.composer.textInputContent;
+        browser.localStorage.setItem(this.props.composer.localId, fullComposerContent);
+    }
+
+    restoreContent() {
+        const fullComposerContent = browser.localStorage.getItem(this.props.composer.localId);
+        if (fullComposerContent) {
+            this.props.composer.textInputContent = fullComposerContent;
         }
     }
 }
