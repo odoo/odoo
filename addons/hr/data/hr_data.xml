@@ -60,11 +60,6 @@
             <field name="plan_id" ref="offboarding_plan"/>
         </record>
 
-        <record model="ir.config_parameter" id="hr_presence_control_login" forcecreate="False">
-            <field name="key">hr.hr_presence_control_login</field>
-            <field name="value">True</field>
-        </record>
-
         <!-- Departure Reasons -->
         <record id="departure_fired" model="hr.departure.reason">
             <field name="sequence">0</field>

@@ -9,11 +9,9 @@
                 <!-- Employee is present/connected and it is normal according to his work schedule  -->
                 <i t-if="record.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Present"/>
                 <!-- Employee is not present/connected and it is normal according to his work schedule -->
-                <i t-if="record.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle-o text-warning" title="Absent" role="img" aria-label="Absent"/>
+                <i t-if="record.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle text-warning" title="Absent" role="img" aria-label="Absent"/>
                 <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                <i t-if="record.hr_icon_display == 'presence_absent_active'" class="fa fa-fw fa-circle-o text-success" title="Present but not active" role="img" aria-label="Present but not active"/>
-                <!-- Employee is not here but according to his work schedule, he should be connected -->
-                <i t-if="record.hr_icon_display == 'presence_to_define'" class="fa fa-fw fa-circle-o text-muted" title="No information" role="img" aria-label="To define"/>
+                <i t-if="record.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Out of Working Hours" role="img" aria-label="Out of Working Hours"/>
             </span>
         </xpath>
     </t>

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -87,4 +86,6 @@ actions(Check in/Check out) performed by them.
         ]
     },
     'license': 'LGPL-3',
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
 }
