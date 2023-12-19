@@ -2,6 +2,24 @@
 
 import wTourUtils from "website.tour_utils";
 
+const wallRaceConditionClass = "image_wall_race_condition";
+const preventRaceConditionSteps = [{
+    content: "Wait a few ms to avoid race condition",
+    // Ensure the class is remove from previous call of those steps
+    trigger: `body:not(.${wallRaceConditionClass})`,
+    run() {
+        setTimeout(() => {
+            document.body.classList.add(wallRaceConditionClass);
+        }, 500);
+    }
+}, {
+    content: "Check the race condition class is added after a few ms",
+    trigger: `body.${wallRaceConditionClass}`,
+    run() {
+        document.body.classList.remove(wallRaceConditionClass);
+    }
+}];
+
 const selectSignImageStep = {
     content: "Click on sign image",
     extra_trigger: ".o_we_customize_panel:not(:has(.snippet-option-gallery_img))",
@@ -9,7 +27,13 @@ const selectSignImageStep = {
 };
 // Without reselecting the image, the tour manages to click on the
 // move button before the active image is updated.
-const reselectSignImageSteps = [{
+
+// We need to wait a few ms before clicking on the footer because after
+// clicking on reposition option, there may be a delay during the click on
+// another block would be ignored.
+const reselectSignImageSteps = [
+    ...preventRaceConditionSteps,
+{
     content: "Select footer",
     trigger: "iframe footer",
 }, selectSignImageStep];
