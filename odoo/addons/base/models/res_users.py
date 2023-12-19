@@ -46,6 +46,7 @@ DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
     # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
     # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
     deprecated=['plaintext'],
+    pbkdf2_sha512__rounds=600_000,
 )
 
 concat = chain.from_iterable
