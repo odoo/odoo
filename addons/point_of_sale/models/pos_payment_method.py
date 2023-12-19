@@ -46,6 +46,8 @@ class PosPaymentMethod(models.Model):
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
     image = fields.Image("Image", max_width=50, max_height=50)
+    delivery_service_ids = fields.One2many('pos.delivery.service', 'payment_method_id', string='Delivery Services', help='The delivery services that use this payment method.')
+    delivery_payment_method = fields.Boolean(default=False, compute='_compute_delivery_payment_method', store=True, help='Technical field to know if the payment method is used by a delivery service.')
 
     @api.depends('type')
     def _compute_hide_use_payment_terminal(self):
@@ -83,6 +85,11 @@ class PosPaymentMethod(models.Model):
     def _compute_is_cash_count(self):
         for pm in self:
             pm.is_cash_count = pm.type == 'cash'
+
+    @api.depends('delivery_service_ids')
+    def _compute_delivery_payment_method(self):
+        for pm in self:
+            pm.delivery_payment_method = bool(pm.delivery_service_ids)
 
     def _is_write_forbidden(self, fields):
         whitelisted_fields = {'sequence'}

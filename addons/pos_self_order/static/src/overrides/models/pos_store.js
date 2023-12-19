@@ -10,6 +10,9 @@ patch(PosStore.prototype, {
         await super.processServerData(...arguments);
         this.self_ordering = this.data.custom.self_ordering;
     },
+    shouldLoadOrders() {
+        return super.shouldLoadOrders() || this.self_ordering;
+    },
 });
 
 patch(Order.prototype, {

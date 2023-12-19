@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_deliveroo.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//h2[hasclass('delivery-service-name')]" position="after">
+            <h1 t-if="props.data.delivery.display" class="delivery-display-id" t-esc="props.data.delivery.display" />
+            <span>Pickup time: <t t-esc="props.data.delivery.prepare_for" /></span>
+        </xpath>
+    </t>
+</templates>

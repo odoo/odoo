@@ -14,29 +14,29 @@ class PosDeliveryService(models.Model):
     client_id = fields.Char("Client ID", help='', copy=False, required=True)
     client_secret = fields.Char("Client Secret", copy=False, required=True)
     access_token = fields.Char(copy=False)
-    access_token_expiration_timestamp = fields.Float()
-    journal_id = fields.Many2one('account.journal',
-        string='Journal',
-        domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
-        ondelete='restrict')
+    access_token_expiration_timestamp = fields.Float(copy=False)
+    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, copy=False, help="The payment method and its journal should be created especially for this delivery service.")
     active = fields.Boolean("Active", default=True)
     is_test = fields.Boolean("Test Mode", help='Run transactions in the test environment.')
-    config_id = fields.Many2one('pos.config', string='Point of Sale')
+    config_ids = fields.Many2many('pos.config', 'pos_config_delivery_service_rel', 'delivery_service_id', 'config_id', string='Point of Sale')
 
     def _new_order(self, order_id):
         # notify the pos sessions / preparation screens
         pass
 
-    @api.model
     def _get_access_token(self) -> str:
         self.ensure_one()
         return (self.access_token_expiration_timestamp or 0) > time.time() \
             and self.access_token or self._refresh_access_token()
 
-    @api.model
     def _refresh_access_token(self) -> str:
         pass
 
-    @api.model
     def _upload_menu(self):
+        pass
+
+    def _accept_order(self, id: int):
+        pass
+
+    def _reject_order(self, id: int, rejected_reason: str = "busy"):
         pass

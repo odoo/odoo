@@ -3,7 +3,7 @@
 {
     'name': 'Deliveroo Integration Point of Sale',
     'category': 'Sales/Point of Sale',
-    'depends': ['point_of_sale'],
+    'depends': ['pos_restaurant'],
     'license': 'LGPL-3',
     'data': [
         'views/pos_delivery_service.xml',

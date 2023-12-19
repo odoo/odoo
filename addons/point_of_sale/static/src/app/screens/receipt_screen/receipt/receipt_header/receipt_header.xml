@@ -17,13 +17,26 @@
                 <div t-if="props.data.company.email" t-esc="props.data.company.email" />
                 <div t-if="props.data.company.website" t-esc="props.data.company.website" />
                 <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
-                <div t-if="props.data.cashier" class="cashier">
+                <t t-if="props.data.delivery.service_name">
                     <div>--------------------------------</div>
-                    <div>Served by <t t-esc="props.data.cashier" /></div>
-                </div>
-                <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
-                    <span class="fs-2" t-esc="props.data.trackingNumber" />
-                </div>
+                    <h2 class="delivery-service-name" t-esc="props.data.delivery.service_name"/>
+                    <div>
+                        <span>Order note: <t t-esc="props.data.delivery.note" /></span>
+                    </div>
+                    <div>--------------------------------</div>
+                    <span>Submitted <t t-esc="props.data.delivery.date_order"/></span>
+                    <div>--------------------------------</div>
+                </t>
+                <t t-else="">
+                    <div t-if="props.data.cashier" class="cashier">
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc="props.data.cashier" />
+                        </div>
+                    </div>
+                    <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
+                        <span class="fs-2" t-esc="props.data.trackingNumber" />
+                    </div>
+                </t>
             </div>
         </div>
         <br /><br />

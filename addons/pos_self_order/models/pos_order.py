@@ -167,7 +167,7 @@ class PosOrder(models.Model):
         return orders | self_orders
 
     @api.model
-    def export_for_ui_table_draft(self, table_ids):
-        orders = super().export_for_ui_table_draft(table_ids)
+    def export_for_ui_table_draft(self, table_ids, domain=[]):
+        orders = super().export_for_ui_table_draft(table_ids, domain)
         self_orders = self.get_standalone_self_order().export_for_ui()
         return orders + self_orders

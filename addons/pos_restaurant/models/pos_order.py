@@ -3,7 +3,7 @@
 from functools import partial
 
 from odoo import api, fields, models
-
+from odoo.osv.expression import OR
 
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
@@ -93,6 +93,7 @@ class PosOrder(models.Model):
         return result
 
     @api.model
-    def export_for_ui_table_draft(self, table_ids):
-        orders = self.env['pos.order'].search([('state', '=', 'draft'), ('table_id', 'in', table_ids)])
+    def export_for_ui_table_draft(self, table_ids, domain=[]):
+        search_domain = OR([domain, [('state', '=', 'draft'), ('table_id', 'in', table_ids)]])
+        orders = self.env['pos.order'].search(search_domain)
         return orders.export_for_ui()

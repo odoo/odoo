@@ -44,7 +44,7 @@ class PosPayment(models.Model):
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):
         for payment in self:
-            if payment.payment_method_id not in payment.session_id.config_id.payment_method_ids:
+            if payment.payment_method_id not in payment.session_id.config_id.payment_method_ids and not payment.payment_method_id.delivery_payment_method:
                 raise ValidationError(_('The payment method selected is not allowed in the config of the POS session.'))
 
     def _export_for_ui(self, payment):
