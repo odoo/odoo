@@ -15,7 +15,7 @@ const patchHrPresenceStatus = () => ({
 
     get color() {
         if (this.value.startsWith("presence_holiday")) {
-            return `text-${this.value === "presence_holiday_present" ? "success" : "warning"}`;
+            return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
         }
         return super.color;
     },

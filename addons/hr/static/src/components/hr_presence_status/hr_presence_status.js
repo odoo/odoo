@@ -32,19 +32,18 @@ export class HrPresenceStatus extends Component {
     get color() {
         switch (this.value) {
             case "presence_present":
-            case "presence_absent_active":
                 return "text-success";
             case "presence_absent":
+                return "o_icon_employee_absent";
+            case "presence_out_of_working_hour":
                 return "text-muted";
-            case "presence_to_define":
-                return "text-warning";
             default:
                 return "";
         }
     }
 
     get icon() {
-        return `fa-circle${this.value.startsWith("presence_absent") ? "-o" : ""}`;
+        return "fa-circle";
     }
 
     get label() {
