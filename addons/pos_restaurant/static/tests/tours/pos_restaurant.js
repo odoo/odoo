@@ -142,3 +142,16 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.orderCountSyncedInTableIs("4", "1"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => [
+            ProductScreen.confirmOpeningPopup(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
+            ProductScreen.clickOrderButton(),
+            ProductScreen.orderlinesHaveNoChange()
+        ].flat(),
+    });
