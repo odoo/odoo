@@ -1020,7 +1020,8 @@
                     data-reload="/"/>
             <we-button title="Show/hide logo" class="flex-grow-1 d-flex justify-content-center"
                     data-img="/website/static/src/img/snippets_options/header_extra_element_logo.svg"
-                    data-customize-website-views="website.option_header_brand_logo"
+                    data-customize-website-views="|website.option_header_brand_name|website.option_header_brand_logo"
+                    data-reset-view-arch="true"
                     data-reload="/"/>
         </we-row>
     </div>
@@ -1110,7 +1111,7 @@
         </we-select>
     </div>
 
-    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand.logo"
+    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand"
          data-no-check="true"
          groups="website.group_website_designer">
         <we-select string="Logo" data-reload="/">
