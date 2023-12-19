@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from ast import literal_eval
 
 from pytz import timezone, UTC, utc
 from datetime import timedelta, datetime
@@ -62,14 +59,15 @@ class HrEmployeeBase(models.AbstractModel):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
+        ('archive', 'Archived'),
+        ('out_of_working_hour', 'Out of Working hours')], compute='_compute_presence_state', default='out_of_working_hour')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     hr_icon_display = fields.Selection([
         ('presence_present', 'Present'),
-        ('presence_absent_active', 'Present but not active'),
+        ('presence_out_of_working_hour', 'Out of Working hours'),
         ('presence_absent', 'Absent'),
-        ('presence_to_define', 'To define'),
+        ('presence_archive', 'Archived'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     im_status = fields.Char(related="user_id.im_status")
@@ -155,16 +153,17 @@ class HrEmployeeBase(models.AbstractModel):
         presence criterions. e.g. hr_attendance, hr_holidays
         """
         # Check on login
-        check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
         employee_to_check_working = self.filtered(lambda e: 'offline' in str(e.user_id.im_status))
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
-            state = 'to_define'
-            if check_login:
+            state = 'out_of_working_hour'
+            if employee.company_id.hr_presence_control_login:
                 if 'online' in str(employee.user_id.im_status):
                     state = 'present'
-                elif 'offline' in str(employee.user_id.im_status) and employee.id not in working_now_list:
+                elif 'offline' in str(employee.user_id.im_status) and employee.id in working_now_list:
                     state = 'absent'
+            if not employee.active:
+                state = 'archive'
             employee.hr_presence_state = state
 
     @api.depends('user_id')
@@ -260,27 +259,9 @@ class HrEmployeeBase(models.AbstractModel):
         This method compute the state defining the display icon in the kanban view.
         It can be overriden to add other possibilities, like time off or attendances recordings.
         """
-        working_now_list = self.filtered(lambda e: e.hr_presence_state == 'present')._get_employee_working_now()
         for employee in self:
-            show_icon = True
-            if employee.hr_presence_state == 'present':
-                if employee.id in working_now_list:
-                    icon = 'presence_present'
-                else:
-                    icon = 'presence_absent_active'
-            elif employee.hr_presence_state == 'absent':
-                # employee is not in the working_now_list and he has a user_id
-                icon = 'presence_absent'
-            else:
-                # without attendance, default employee state is 'to_define' without confirmed presence/absence
-                # we need to check why they are not there
-                # Display an orange icon on internal users.
-                icon = 'presence_to_define'
-                if not employee.user_id:
-                    # We don't want non-user employee to have icon.
-                    show_icon = False
-            employee.hr_icon_display = icon
-            employee.show_hr_icon_display = show_icon
+            employee.hr_icon_display = 'presence_' + employee.hr_presence_state
+            employee.show_hr_icon_display = bool(employee.user_id)
 
     @api.model
     def _get_employee_working_now(self):
