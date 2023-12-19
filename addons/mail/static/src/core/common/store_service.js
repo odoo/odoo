@@ -210,7 +210,7 @@ export class Store extends BaseStore {
             if (thread.model === "discuss.channel") {
                 channelIds.push(id);
                 if (thread.accessWithoutMembership) {
-                    this.env.services["bus_service"].addChannel(id);
+                    this.env.services["bus_service"].addChannel(`discuss.channel_${thread.id}`);
                 }
             }
         }

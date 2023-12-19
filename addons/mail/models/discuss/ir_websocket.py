@@ -25,9 +25,9 @@ class IrWebsocket(models.AbstractModel):
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
         discuss_channel_ids = list()
-        for channel in reversed(channels):
+        for channel in channels.copy():
             if isinstance(channel, str):
-                match = re.findall(r'discuss\.channel.* (\d+)', channel)
+                match = re.findall(r'discuss\.channel_(\d+)', channel)
                 if match:
                     discuss_channel_ids.append(int(match[0]))
                     channels.remove(channel)

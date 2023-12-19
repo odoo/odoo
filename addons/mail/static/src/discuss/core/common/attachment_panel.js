@@ -55,7 +55,8 @@ export class AttachmentPanel extends Component {
         return (
             this.props.thread.model !== "mail.box" &&
             this.props.thread.type !== "chat" &&
-            this.store.user?.user?.isInternalUser
+            this.store.user?.user?.isInternalUser &&
+            !this.props.thread.accessWithoutMembership
         );
     }
 
