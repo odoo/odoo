@@ -22,8 +22,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'sale_ok':
                     continue
                 res[idx] = ('ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _get_trigger_domain(self):
         res = super()._get_trigger_domain()
@@ -33,8 +33,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'program_id.sale_ok':
                     continue
                 res[idx] = ('program_id.ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _try_pending_coupon(self):
         if not request:
