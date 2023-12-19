@@ -6,7 +6,7 @@ import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {useService} from "@web/core/utils/hooks";
-import {DeletePageDialog} from '@website/components/dialog/page_properties';
+import {DeletePageDialog, DuplicatePageDialog} from '@website/components/dialog/page_properties';
 import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
 
 
@@ -57,7 +57,17 @@ export class PageListController extends PageControllerMixin(listView.Controller)
             };
         }
         if (this.props.resModel === "website.page") {
-            menuItems.duplicate.isAvailable = () => false;
+            menuItems.duplicate.callback = async (records = []) => {
+                const resIds = this.model.root.selection.map((record) => record.resId);
+                this.dialog.add(DuplicatePageDialog, {
+                    // TODO Remove pageId in master
+                    pageId: 0, // Ignored but mandatory
+                    pageIds: resIds,
+                    onDuplicate: () => {
+                        this.model.load();
+                    },
+                });
+            };
         }
         return menuItems;
     }
