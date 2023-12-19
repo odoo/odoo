@@ -522,6 +522,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option "
                               "and activate the currency ?", currency_code_node.text))
 
+        # ==== Bank Details ====
+
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+
+        if bank_details:
+            self._import_retrieve_and_fill_partner_bank_details(invoice_form, bank_details=bank_details)
+
         # ==== Reference ====
 
         ref_node = tree.find('./{*}ID')
