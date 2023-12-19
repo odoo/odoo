@@ -132,4 +132,55 @@ QUnit.module("ViewComponents", (hooks) => {
             "toggler is not present as no other option is available"
         );
     });
+
+    QUnit.test(
+        "ViewScaleSelector show weekends button is disabled when scale is day",
+        async (assert) => {
+            const env = await makeTestEnv();
+            class Parent extends Component {
+                static components = { ViewScaleSelector };
+                static template = xml`<ViewScaleSelector t-props="compProps"/>`;
+                setup() {
+                    this.state = useState({
+                        scale: "day",
+                    });
+                }
+                get compProps() {
+                    return {
+                        scales: {
+                            day: {
+                                description: "Daily",
+                            },
+                            week: {
+                                description: "Weekly",
+                                hotkey: "o",
+                            },
+                            year: {
+                                description: "Yearly",
+                            },
+                        },
+                        setScale: (key) => (this.state.scale = key),
+                        isWeekendVisible: false,
+                        toggleWeekendVisibility: () => {},
+                        currentScale: this.state.scale,
+                    };
+                }
+            }
+
+            await mount(Parent, target, { env });
+
+            assert.containsOnce(target, ".o_view_scale_selector");
+            await click(target, ".scale_button_selection");
+            assert.strictEqual(
+                target.querySelector(".o_show_weekends")?.classList.contains("disabled"),
+                true
+            );
+            await click(target, ".dropdown-item:nth-child(2)");
+            await click(target, ".scale_button_selection");
+            assert.strictEqual(
+                target.querySelector(".o_show_weekends")?.classList.contains("disabled"),
+                false
+            );
+        }
+    );
 });
