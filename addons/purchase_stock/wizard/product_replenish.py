@@ -28,6 +28,13 @@ class ProductReplenish(models.TransientModel):
                 res['supplier_id'] = orderpoint.supplier_id.id
             elif product_tmpl_id.seller_ids:
                 res['supplier_id'] = product_tmpl_id.seller_ids[0].id
+
+            buy_route_ref = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+            if buy_route_ref and res.get("route_id") == buy_route_ref.id and not product_id.product_tmpl_id.seller_ids:
+                # Do not set the buy route as default when the vendors are not configured.
+                # Otherwise, a warning is shown as soon as the wizard is displayed, which is not supported by the frontend.
+                res["route_id"] = False
+
         return res
 
     @api.depends('route_id', 'supplier_id')
