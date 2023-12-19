@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- required for the SLSP but cannot yet be mapped to the tax report as we don't support amortized tax yet -->
+    <record id="tax_tag_capital_base_positive" model="account.account.tag">
+        <field name="name">+CAPA</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="tax_tag_capital_base_negative" model="account.account.tag">
+        <field name="name">-CAPA</field>
+        <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="tax_tag_capital_tax_positive" model="account.account.tag">
+        <field name="name">+CAPB</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="tax_tag_capital_tax_negative" model="account.account.tag">
+        <field name="name">-CAPB</field>
+        <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+</odoo>
