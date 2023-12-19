@@ -629,3 +629,29 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         }
     ],
 });
+
+registry.category("web_tour.tours").add('base_automation.on_change_rule_creation', {
+    test: true,
+    url: "/web#action=base_automation.base_automation_act",
+    steps: () => [
+    {
+        trigger: ".o-kanban-button-new",
+    }, {
+        trigger: ".o_field_widget[name=name] input",
+        run: "text Test rule",
+    }, {
+        trigger: ".o_field_widget[name=model_id] input",
+        run: "text ir.ui.view",
+    }, {
+        trigger: ".ui-menu-item > a:containsExact('View')",
+    }, {
+        trigger: ".o_field_widget[name=trigger] select",
+        run: 'text "on_change"',
+    }, {
+        trigger: ".o_field_widget[name=on_change_field_ids] input",
+        run: "text Active",
+    }, {
+        trigger: ".ui-menu-item > a:containsExact('Active')",
+    },
+    ...stepUtils.saveForm(),
+]});
