@@ -6,6 +6,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { session } from "@web/session";
 
 import { Component } from "@odoo/owl";
 
@@ -17,9 +18,10 @@ export class UserMenu extends Component {
     static props = {};
 
     setup() {
-        this.user = user;
         const { origin } = browser.location;
-        this.source = `${origin}/web/image?model=res.users&field=avatar_128&id=${this.user.userId}`;
+        this.source = `${origin}/web/image?model=res.users&field=avatar_128&id=${user.userId}`;
+        this.userName = user.name;
+        this.dbName = session.db;
     }
 
     getElements() {
