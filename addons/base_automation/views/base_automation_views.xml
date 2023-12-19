@@ -98,7 +98,12 @@
                                     options="{'no_open': True, 'no_create': True}"
                                     domain="[('model_id', '=', model_id)]"
                                     context="{'hide_model': 1}"
-                                    invisible="trigger not in ['on_create_or_write', 'on_change']" widget="many2many_tags" />
+                                    invisible="trigger != 'on_create_or_write'" widget="many2many_tags" />
+                                <field name="on_change_field_ids" string="When updating" placeholder="Select fields..."
+                                    options="{'no_open': True, 'no_create': True}"
+                                    domain="[('model_id', '=', model_id)]"
+                                    context="{'hide_model': 1}"
+                                    invisible="trigger != 'on_change'" widget="many2many_tags" />
                             </group>
                             <group>
                                 <label for="record_getter" string="Target Record" invisible="trigger != 'on_webhook'" />
