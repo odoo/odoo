@@ -10,7 +10,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
 import { deepEqual } from "@web/core/utils/objects";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
@@ -883,39 +883,38 @@ QUnit.module("test_mail", {}, function () {
     );
 
     QUnit.test("activity view: Domain should not reset on load", async function (assert) {
-            Object.assign(serverData.views, {
-                "mail.test.activity,false,list":
-                    '<tree string="MailTestActivity"><field name="name"/></tree>',
-            });
-            const { env, openView } = await start({
-                serverData,
-            });
-            await openView({
-                res_model: "mail.test.activity",
-                views: [[false, "activity"]],
-                domain: [['id', '=', 1]],
-            });
-            patchWithCleanup(env.services.action, {
-                doAction(action, options) {
-                    assert.step("doAction");
-                    options.onClose();
-                },
-            });
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/></tree>',
+        });
+        const { env, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+            domain: [["id", "=", 1]],
+        });
+        patchWithCleanup(env.services.action, {
+            doAction(action, options) {
+                assert.step("doAction");
+                options.onClose();
+            },
+        });
 
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // search create dialog
-            await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
-            assert.verifySteps(["doAction"]);
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // search create dialog
+        await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
+        assert.verifySteps(["doAction"]);
 
-            await click(document.querySelector(".o_activity_view .o_record_selector"));
-            // again open search create dialog
-            assert.strictEqual(
-                document.querySelectorAll(".modal-lg .o_data_row").length,
-                1,
-                "Should contains only one record after calling schedule activity which load view again"
-            );
-        }
-    );
+        await click(document.querySelector(".o_activity_view .o_record_selector"));
+        // again open search create dialog
+        assert.strictEqual(
+            document.querySelectorAll(".modal-lg .o_data_row").length,
+            1,
+            "Should contains only one record after calling schedule activity which load view again"
+        );
+    });
 
     QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
         assert.expect(2);

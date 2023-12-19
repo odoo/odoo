@@ -153,7 +153,7 @@
         'point_of_sale.assets_qunit_tests': [
             ('include', 'point_of_sale._assets_pos'),
             # dependencies of web.tests_assets (in the web tests, these come from assets_backend)
-            'web/static/tests/patch_translations.js',
+            'web/static/tests/legacy/patch_translations.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/src/legacy/js/**/*',
             ('remove', 'web/static/src/legacy/js/libs/**/*'),
@@ -182,8 +182,8 @@
             # own test helpers in this module that depend on files that they add in assets_backend
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
-            'web/static/tests/legacy/helpers/**/*',
-            ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
+            'web/static/tests/legacy/legacy_tests/helpers/**/*',
+            ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
             'web/static/lib/fullcalendar/core/main.css',
             'web/static/lib/fullcalendar/daygrid/main.css',
@@ -207,14 +207,14 @@
             ('include', "web.chartjs_lib"),
 
             # 'web/static/tests/legacy/main_tests.js',
-            'web/static/tests/helpers/**/*.js',
-            'web/static/tests/views/helpers.js',
-            'web/static/tests/search/helpers.js',
-            'web/static/tests/views/calendar/helpers.js',
-            'web/static/tests/webclient/**/helpers.js',
-            'web/static/tests/qunit.js',
-            'web/static/tests/main.js',
-            'web/static/tests/setup.js',
+            'web/static/tests/legacy/helpers/**/*.js',
+            'web/static/tests/legacy/views/helpers.js',
+            'web/static/tests/legacy/search/helpers.js',
+            'web/static/tests/legacy/views/calendar/helpers.js',
+            'web/static/tests/legacy/webclient/**/helpers.js',
+            'web/static/tests/legacy/qunit.js',
+            'web/static/tests/legacy/main.js',
+            'web/static/tests/legacy/setup.js',
 
             ## END copy of web.tests_assets
             # pos unit tests

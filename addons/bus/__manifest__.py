@@ -25,11 +25,11 @@
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
         'web.tests_assets': [
-            'bus/static/tests/helpers/**/*',
+            'bus/static/tests/legacy/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
-            'bus/static/tests/**/*.js',
-            ('remove', 'bus/static/tests/helpers/**/*'),
+            'bus/static/tests/legacy/**/*.js',
+            ('remove', 'bus/static/tests/legacy/helpers/**/*'),
         ],
         'bus.websocket_worker_assets': [
             'web/static/src/module_loader.js',
