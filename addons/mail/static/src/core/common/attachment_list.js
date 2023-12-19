@@ -27,20 +27,6 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @return {import("models").Attachment[]}
-     */
-    get nonImagesAttachments() {
-        return this.props.attachments.filter((attachment) => !attachment.isImage);
-    }
-
-    /**
-     * @return {import("models").Attachment[]}
-     */
-    get imagesAttachments() {
-        return this.props.attachments.filter((attachment) => attachment.isImage);
-    }
-
-    /**
      * @param {import("models").Attachment} attachment
      */
     getImageUrl(attachment) {
