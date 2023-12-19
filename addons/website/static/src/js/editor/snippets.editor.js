@@ -155,6 +155,28 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we corrected the behavior of
+        // the logo button that led to an error when switching from Text to
+        // Logo. Remove me in master.
+        const logoViewName = 'website.option_header_brand_logo';
+        const logoButtonEl = $html.find(`[data-customize-website-views="${logoViewName}"]`)[0];
+        if (logoButtonEl) {
+            logoButtonEl.dataset.customizeWebsiteViews = `|website.option_header_brand_name|${logoViewName}`;
+            logoButtonEl.dataset.resetViewArch = "true";
+        }
+        const brandSelectorEl = $html.find('[data-name="option_header_brand_none"]')[0]
+            ?.closest("[data-selector]");
+        if (brandSelectorEl) {
+            brandSelectorEl.dataset.selector = brandSelectorEl.dataset.selector
+                .replace('.navbar-brand.logo', '.navbar-brand');
+        }
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
