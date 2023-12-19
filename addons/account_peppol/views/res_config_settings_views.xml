@@ -29,6 +29,15 @@
                                             ]}">
                                     <field name="account_peppol_endpoint_warning"/>
                                 </div>
+                                <div class="alert alert-warning mt-3"
+                                     role="alert"
+                                     attrs="{'invisible': ['|', '|',
+                                                ('country_code', '!=', 'BE'),
+                                                ('account_peppol_eas', 'in', (False, '0208')),
+                                                ('is_account_peppol_participant', '=', False),
+                                            ]}">
+                                    The recommended EAS code for Belgium is 0208. The Endpoint should be the Company Registry number.
+                                </div>
                                 <div class="pt-3"
                                     attrs="{'invisible': [('is_account_peppol_participant', '=', False)]}">
                                     <div class="row">
