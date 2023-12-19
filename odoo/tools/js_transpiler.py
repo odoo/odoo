@@ -662,11 +662,12 @@ def relative_path_to_module_path(url, path_rel):
 
 
 ODOO_MODULE_RE = re.compile(r"""
-    \s*                                       # some starting space
-    \/(\*|\/).*\s*                            # // or /*
-    @odoo-module                              # @odoo-module
-    (\s+alias=(?P<alias>[\w.]+))?             # alias=web.AbstractAction (optional)
-    (\s+default=(?P<default>False|false|0))?  # default=False or false or 0 (optional)
+    \s*                             # starting white space
+    \/(\*|\/)                       # /* or //
+    .*                              # any comment in between (optional)
+    @odoo-module                    # '@odoo-module' statement
+    (\s+alias=(?P<alias>[^\s*]+))?  # alias (e.g. alias=web.Widget, alias=@web/../tests/utils) (optional)
+    (\s+default=(?P<default>\w+))?  # no implicit default export (e.g. default=false) (optional)
 """, re.VERBOSE)
 
 
