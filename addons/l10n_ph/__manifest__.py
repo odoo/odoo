@@ -5,7 +5,7 @@
     'countries': ['ph'],
     'summary': "This is the module to manage the accounting chart for The Philippines.",
     'category': 'Accounting/Localizations/Account Charts',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Odoo PS',
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/philippines.html',
     'depends': [
@@ -13,6 +13,8 @@
         'base_vat',
     ],
     'data': [
+        'data/account_account_tag_data.xml',
+        'data/account_tax_report_data.xml',
         'wizard/generate_2307_wizard_views.xml',
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
