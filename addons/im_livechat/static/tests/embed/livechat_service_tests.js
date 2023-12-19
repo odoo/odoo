@@ -6,8 +6,10 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 
 import { Command } from "@mail/../tests/helpers/command";
 
-import { click, contains } from "@web/../tests/utils";
 import { cookie } from "@web/core/browser/cookie";
+import { click, contains, insertText } from "@web/../tests/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { Deferred } from "@web/core/utils/concurrency";
 
 QUnit.module("livechat service");
 
@@ -48,4 +50,39 @@ QUnit.test("previous operator prioritized", async () => {
     start();
     click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
+});
+
+QUnit.test("Only necessary requests are made when creating a new chat", async (assert) => {
+    await startServer();
+    await loadDefaultConfig();
+    const linkPreviewDeferred = new Deferred();
+    await start({
+        mockRPC(route) {
+            if (!route.includes("assets")) {
+                assert.step(route);
+            }
+            if (route === "/mail/link_preview") {
+                linkPreviewDeferred.resolve();
+            }
+        },
+    });
+    await contains(".o-livechat-LivechatButton");
+    assert.verifySteps([
+        "/im_livechat/init",
+        "/web/webclient/load_menus", // called because menu_service is loaded in qunit bundle
+        "/mail/load_message_failures", // called because mail/core/web is loaded in qunit bundle
+    ]);
+    await click(".o-livechat-LivechatButton");
+    assert.verifySteps(["/im_livechat/get_session"]);
+    await insertText(".o-mail-Composer-input", "Hello!");
+    assert.verifySteps([]);
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "Hello!" });
+    await linkPreviewDeferred;
+    assert.verifySteps([
+        "/im_livechat/get_session",
+        "/mail/init_messaging",
+        "/mail/message/post",
+        "/mail/link_preview",
+    ]);
 });

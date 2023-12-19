@@ -53,12 +53,16 @@ patch(Thread, {
 });
 
 patch(Thread.prototype, {
-    chatbotScriptId: null,
-
     setup() {
         super.setup();
         this.chatbotTypingMessage = Record.one("Message");
         this.livechatWelcomeMessage = Record.one("Message");
+        this.chatbotScriptId = null;
+        /**
+         * Indicates whether this thread was just created (i.e. no reload occurs
+         * since the creation).
+         */
+        this.isNewlyCreated = false;
     },
 
     get isLastMessageFromCustomer() {
