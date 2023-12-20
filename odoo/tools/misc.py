@@ -16,7 +16,6 @@ import io
 import itertools
 import json
 import os
-import pickle as pickle_
 import re
 import socket
 import subprocess
@@ -1502,44 +1501,6 @@ def format_duration(value):
     return '%02d:%02d' % (hours, minutes)
 
 consteq = hmac_lib.compare_digest
-
-_PICKLE_SAFE_NAMES = {
-    'builtins': [
-        'set',  # Required to support `set()` for Python < 3.8
-    ],
-    'datetime': [
-        'datetime',
-        'date',
-        'time',
-    ],
-    'pytz': [
-        '_p',
-        '_UTC',
-    ],
-}
-
-# https://docs.python.org/3/library/pickle.html#restricting-globals
-# forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
-class Unpickler(pickle_.Unpickler, object):
-    def find_class(self, module_name, name):
-        safe_names = _PICKLE_SAFE_NAMES.get(module_name, [])
-        if name in safe_names:
-            return super().find_class(module_name, name)
-        raise AttributeError("global '%s.%s' is forbidden" % (module_name, name))
-def _pickle_load(stream, encoding='ASCII', errors=False):
-    unpickler = Unpickler(stream, encoding=encoding)
-    try:
-        return unpickler.load()
-    except Exception:
-        _logger.warning('Failed unpickling data, returning default: %r',
-                        errors, exc_info=True)
-        return errors
-pickle = types.ModuleType(__name__ + '.pickle')
-pickle.load = _pickle_load
-pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
-pickle.dump = pickle_.dump
-pickle.dumps = pickle_.dumps
-pickle.HIGHEST_PROTOCOL = pickle_.HIGHEST_PROTOCOL
 
 
 class ReadonlyDict(Mapping):

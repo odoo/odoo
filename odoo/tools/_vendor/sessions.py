@@ -18,10 +18,10 @@ r"""
 import logging
 import os
 import re
+import json
 import tempfile
 from hashlib import sha1
 from os import path, replace as rename
-from odoo.tools.misc import pickle
 from time import time
 
 from werkzeug.datastructures import CallbackDict
@@ -191,9 +191,9 @@ class FilesystemSessionStore(SessionStore):
     def save(self, session):
         fn = self.get_session_filename(session.sid)
         fd, tmp = tempfile.mkstemp(suffix=_fs_transaction_suffix, dir=self.path)
-        f = os.fdopen(fd, "wb")
+        f = os.fdopen(fd, "w", encoding="utf-8")
         try:
-            pickle.dump(dict(session), f, pickle.HIGHEST_PROTOCOL)
+            json.dump(dict(session), f)
         finally:
             f.close()
         try:
@@ -213,7 +213,7 @@ class FilesystemSessionStore(SessionStore):
         if not self.is_valid_key(sid):
             return self.new()
         try:
-            f = open(self.get_session_filename(sid), "rb")
+            f = open(self.get_session_filename(sid), "r", encoding="utf-8")
         except IOError:
             _logger.debug('Could not load session from disk. Use empty session.', exc_info=True)
             if self.renew_missing:
@@ -222,7 +222,7 @@ class FilesystemSessionStore(SessionStore):
         else:
             try:
                 try:
-                    data = pickle.load(f, errors={})
+                    data = json.load(f)
                 except Exception:
                     _logger.debug('Could not load session data. Use empty session.', exc_info=True)
                     data = {}
