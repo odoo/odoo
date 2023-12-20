@@ -1226,13 +1226,14 @@ export class Record {
     static _onChange(record, key, callback) {
         let proxy;
         function _observe() {
-            void proxy[key];
-            if (proxy[key] instanceof Object) {
-                void Object.keys(proxy[key]);
+            // access proxy[key] only once to avoid triggering reactive get() many times
+            const val = proxy[key];
+            if (typeof val === "object" && val !== null) {
+                void Object.keys(val);
             }
-            if (proxy[key] instanceof Array) {
-                void proxy[key].length;
-                void proxy[key].forEach((i) => i);
+            if (Array.isArray(val)) {
+                void val.length;
+                void val.forEach((i) => i);
             }
         }
         if (Array.isArray(key)) {
