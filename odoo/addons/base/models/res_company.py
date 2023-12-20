@@ -235,7 +235,7 @@ class Company(models.Model):
         return arch, view
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def name_search(self, name, args=None, operator='ilike', limit=None):
         context = dict(self.env.context)
         newself = self
         if context.pop('user_preference', None):
@@ -244,10 +244,10 @@ class Company(models.Model):
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             companies = self.env.user.company_ids
-            domain = (domain or []) + [('id', 'in', companies.ids)]
+            args = (args or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
         self = newself.with_context(context)
-        return super()._name_search(name, domain, operator, limit, order)
+        return super().name_search(name, args, operator, limit)
 
     @api.model
     @api.returns('self', lambda value: value.id)

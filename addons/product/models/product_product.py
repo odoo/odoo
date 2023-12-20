@@ -534,9 +534,8 @@ class ProductProduct(models.Model):
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         if name:
-            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             product_ids = []
-            if operator in positive_operators:
+            if operator not in expression.NEGATIVE_TERM_OPERATORS:
                 product_ids = list(self._search([('default_code', '=', name)] + domain, limit=limit, order=order))
                 if not product_ids:
                     product_ids = list(self._search([('barcode', '=', name)] + domain, limit=limit, order=order))
@@ -558,7 +557,7 @@ class ProductProduct(models.Model):
                 ])
                 domain2 = expression.AND([domain, domain2])
                 product_ids = list(self._search(domain2, limit=limit, order=order))
-            if not product_ids and operator in positive_operators:
+            if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:

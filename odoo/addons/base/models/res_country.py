@@ -8,6 +8,8 @@ from odoo.osv import expression
 from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
+from odoo.tools.sql import SQL
+
 _logger = logging.getLogger(__name__)
 
 
@@ -94,7 +96,6 @@ class Country(models.Model):
         if ids:
             search_domain.append(('id', 'not in', ids))
         ids += list(self._search(search_domain + domain, limit=limit, order=order))
-
         return ids
 
     @api.model
@@ -158,6 +159,7 @@ class CountryState(models.Model):
     _description = "Country state"
     _name = 'res.country.state'
     _order = 'code'
+    _rec_names_search = ['name', 'country_id']
 
     country_id = fields.Many2one('res.country', string='Country', required=True)
     name = fields.Char(string='State Name', required=True,
@@ -169,28 +171,13 @@ class CountryState(models.Model):
     ]
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if self.env.context.get('country_id'):
-            domain = expression.AND([domain, [('country_id', '=', self.env.context.get('country_id'))]])
-
-        if operator == 'ilike' and not (name or '').strip():
-            domain1 = []
-            domain2 = []
-        else:
-            domain1 = [('code', '=ilike', name)]
-            domain2 = [('name', operator, name)]
-
-        first_state_ids = []
-        if domain1:
-            first_state_ids = list(self._search(
-                expression.AND([domain1, domain]), limit=limit, order=order,
-            ))
-        return first_state_ids + list(self._search(
-            expression.AND([domain2, domain, [('id', 'not in', first_state_ids)]]),
-            limit=limit,
-            order=order,
-        ))
+    def name_search(self, name, args=None, operator='ilike', limit=None):
+        args = args or [] + self._search_display_name(name, operator)
+        query = self._search(args, limit=limit, order=self._order)
+        query.order = SQL(",").join(
+            SQL("%s = %s",self._field_to_sql(self.table, fname="country_id"), self.env.context.get('country_id', -1)),
+            query.order)
+        return [(record.id, record.display_name) for record in query.sudo()]
 
     @api.depends('country_id')
     def _compute_display_name(self):
