@@ -4,7 +4,7 @@ import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 
 import { debounce } from "@web/core/utils/timing";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useAutofocus } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 import { session } from "@web/session";
 
@@ -28,6 +28,7 @@ const { onWillUnmount, useRef } = owl;
 class PartnerListScreen extends PosComponent {
     setup() {
         super.setup();
+        useAutofocus({refName: 'search-word-input-partner'});
         useListener("click-save", () => this.env.bus.trigger("save-partner"));
         useListener("save-changes", useAsyncLockedMethod(this.saveChanges));
         this.searchWordInputRef = useRef("search-word-input-partner");

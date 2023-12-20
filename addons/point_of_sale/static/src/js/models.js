@@ -135,6 +135,7 @@ export class PosGlobalState extends PosModel {
             },
         };
 
+        this.tempScreenIsShown = false;
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
             synch: { status: "connected", pending: 0 },
