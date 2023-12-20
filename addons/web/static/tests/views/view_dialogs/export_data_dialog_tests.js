@@ -30,14 +30,18 @@ QUnit.module("ViewDialogs", (hooks) => {
     let target;
     let fetchedFields;
 
+    const clickExportMenuAction = async () => {
+        const o_control_panel = target.querySelector(".o_control_panel .o_cp_action_menus");
+        const menus = o_control_panel.querySelectorAll(".dropdown-menu span");
+        const export_menu = [...menus].find((menu) => menu.textContent === "Export");
+        await click(export_menu);
+    };
+
     const openExportDataDialog = async () => {
         await click(target.querySelector(".o_list_record_selector input[type='checkbox'"));
-        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
+        const o_control_panel = target.querySelector(".o_control_panel .o_cp_action_menus");
+        await click(o_control_panel.querySelector(".dropdown-toggle"));
+        await clickExportMenuAction();
         await nextTick();
     };
 
@@ -647,45 +651,46 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, ".o_select_button");
     });
 
-    QUnit.test("toggling import compatibility after adding an expanded field", async function (assert) {
-        assert.expect(1);
+    QUnit.test(
+        "toggling import compatibility after adding an expanded field",
+        async function (assert) {
+            assert.expect(1);
 
-        mockDownload(({ url, data }) => {
-            assert.ok(
-                JSON.parse(data.data)["import_compat"],
-                "request to generate the file must have 'import_compat' as true"
-            );
-            return Promise.resolve();
-        });
+            mockDownload(({ url, data }) => {
+                assert.ok(
+                    JSON.parse(data.data)["import_compat"],
+                    "request to generate the file must have 'import_compat' as true"
+                );
+                return Promise.resolve();
+            });
 
-        await makeView({
-            serverData,
-            type: "list",
-            resModel: "partner",
-            arch: `<tree><field name="foo"/></tree>`,
-            actionMenus: {},
-            mockRPC(route, args) {
-                if (route === "/web/export/formats") {
-                    return Promise.resolve([
-                        { tag: "csv", label: "CSV" },
-                    ]);
-                }
-                if (route === "/web/export/get_fields") {
-                    if (!args.parent_field) {
-                        return Promise.resolve(fetchedFields.root);
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `<tree><field name="foo"/></tree>`,
+                actionMenus: {},
+                mockRPC(route, args) {
+                    if (route === "/web/export/formats") {
+                        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
                     }
-                    return Promise.resolve(fetchedFields[args.prefix]);
-                }
-            },
-        });
+                    if (route === "/web/export/get_fields") {
+                        if (!args.parent_field) {
+                            return Promise.resolve(fetchedFields.root);
+                        }
+                        return Promise.resolve(fetchedFields[args.prefix]);
+                    }
+                },
+            });
 
-        await openExportDataDialog();
-        await click(target, "[data-field_id='activity_ids']");
-        await click(target, "[data-field_id='activity_ids/partner_ids'] .o_add_field");
-        await click(target, ".o_import_compat input");
-        await click(target, "[data-field_id='activity_ids']");
-        await click(target, ".o_select_button");
-    });
+            await openExportDataDialog();
+            await click(target, "[data-field_id='activity_ids']");
+            await click(target, "[data-field_id='activity_ids/partner_ids'] .o_add_field");
+            await click(target, ".o_import_compat input");
+            await click(target, "[data-field_id='activity_ids']");
+            await click(target, ".o_select_button");
+        }
+    );
 
     QUnit.test("Export dialog: many2many fields are extendable", async function (assert) {
         await makeView({
@@ -937,11 +942,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         isDomainSelected = true;
         await click(target.querySelector(".o_list_select_domain"));
         await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
+        await clickExportMenuAction();
         await click(target.querySelector(".o_select_button"));
     });
 
@@ -1261,46 +1262,43 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "Direct export list take optional fields into account",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("Direct export list take optional fields into account", async function (assert) {
+        assert.expect(3);
 
-            mockDownload(({ url, data }) => {
-                assert.strictEqual(
-                    url,
-                    "/web/export/xlsx",
-                    "should call get_file with the correct url"
-                );
-                assert.deepEqual(JSON.parse(data.data).fields, [
-                    { label: "Bar", name: "bar", type: "boolean" },
-                ]);
-                return Promise.resolve();
-            });
+        mockDownload(({ url, data }) => {
+            assert.strictEqual(
+                url,
+                "/web/export/xlsx",
+                "should call get_file with the correct url"
+            );
+            assert.deepEqual(JSON.parse(data.data).fields, [
+                { label: "Bar", name: "bar", type: "boolean" },
+            ]);
+            return Promise.resolve();
+        });
 
-            await makeView({
-                serverData,
-                type: "list",
-                resModel: "partner",
-                arch: `
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
                  <tree>
                      <field name="foo" optional="show"/>
                      <field name="bar" optional="show"/>
                  </tree>`,
-            });
+        });
 
-            await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
-            await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
-            assert.containsN(
-                target,
-                "th",
-                3,
-                "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
-            );
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
+        assert.containsN(
+            target,
+            "th",
+            3,
+            "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
+        );
 
-            await exportAllAction(target);
-        }
-    );
+        await exportAllAction(target);
+    });
 
     QUnit.test("Export dialog: disable button during export", async function (assert) {
         await makeView({
