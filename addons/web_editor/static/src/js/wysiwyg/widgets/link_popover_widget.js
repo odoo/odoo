@@ -27,6 +27,21 @@ const LinkPopoverWidget = Widget.extend({
         this._dp = new DropPrevious();
     },
     /**
+     * @override
+     * @todo replace this hack in master. This is required to not listen to the
+     * DOM mutation of adding this widget inside the DOM (which is probably not
+     * even needed in the first place).
+     */
+    _widgetRenderAndInsert(insertCallback, ...rest) {
+        const patchedInsertCallback = (...args) => {
+            this.options.wysiwyg.odooEditor.observerUnactive();
+            const res = insertCallback(...args);
+            this.options.wysiwyg.odooEditor.observerActive();
+            return res;
+        };
+        return this._super(patchedInsertCallback, ...rest);
+    },
+    /**
      *
      * @override
      */
@@ -59,17 +74,10 @@ const LinkPopoverWidget = Widget.extend({
             this.popover.hide();
         });
 
-        // init tooltips & popovers
-        this.$('[data-toggle="tooltip"]').tooltip({
-            delay: 0,
-            placement: 'bottom',
-            container: this.options.wysiwyg.odooEditor.document.body,
-        });
+        // Init popover -> it is moved out of the link (and the savable area)
         const tooltips = [];
-        for (const el of this.$('[data-toggle="tooltip"]').toArray()) {
-            tooltips.push($(el).data('bs.tooltip'));
-        }
         let popoverShown = true;
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this.$target.popover({
             html: true,
             content: this.$el,
@@ -85,28 +93,32 @@ const LinkPopoverWidget = Widget.extend({
             container: this.options.wysiwyg.odooEditor.document.body,
         })
         .on('show.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerUnactive('show.bs.popover');
             this._loadAsyncLinkPreview();
             popoverShown = true;
         })
-        .on('inserted.bs.popover', () => {
-            this.options.wysiwyg.odooEditor.observerActive('show.bs.popover');
-        })
         .on('hide.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerUnactive('hide.bs.popover');
             popoverShown = false;
         })
         .on('hidden.bs.popover.link_popover', () => {
-            this.options.wysiwyg.odooEditor.observerActive('hide.bs.popover');
             for (const tooltip of tooltips) {
                 tooltip.hide();
             }
         })
         .on('inserted.bs.popover.link_popover', () => {
             this.$target.data('bs.popover').tip.classList.add('o_edit_menu_popover');
-        })
-        .popover('show');
+        }).popover('show');
+        this.options.wysiwyg.odooEditor.observerActive();
 
+        // Init popover inner tooltips (no need of observer unactive since out
+        // of the editable area).
+        this.$('[data-toggle="tooltip"]').tooltip({
+            delay: 0,
+            placement: 'bottom',
+            container: this.options.wysiwyg.odooEditor.document.body,
+        });
+        for (const el of this.$('[data-toggle="tooltip"]').toArray()) {
+            tooltips.push($(el).data('bs.tooltip'));
+        }
 
         this.popover = this.$target.data('bs.popover');
         this.$target.on('mousedown.link_popover', (e) => {
@@ -135,7 +147,7 @@ const LinkPopoverWidget = Widget.extend({
                     this.popover.hide();
                 }
             }
-        }
+        };
         $(document).on('mouseup.link_popover', onClickDocument);
         if (document !== this.options.wysiwyg.odooEditor.document) {
             $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
@@ -291,14 +303,7 @@ LinkPopoverWidget.createFor = async function (parent, targetEl, options) {
         return null;
     }
     const popoverWidget = new this(parent, targetEl, options);
-    const wysiwyg = $('#wrapwrap').data('wysiwyg');
-    if (wysiwyg) {
-        wysiwyg.odooEditor.observerUnactive('LinkPopoverWidget');
-    }
-    await popoverWidget.appendTo(targetEl)
-    if (wysiwyg) {
-        wysiwyg.odooEditor.observerActive('LinkPopoverWidget');
-    }
+    await popoverWidget.appendTo(targetEl);
     return popoverWidget;
 };
 
