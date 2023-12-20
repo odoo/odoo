@@ -6,7 +6,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const { isConnectionError } = require('point_of_sale.utils');
 
     const { debounce } = require("@web/core/utils/timing");
-    const { useListener } = require("@web/core/utils/hooks");
+    const { useListener, useAutofocus } = require("@web/core/utils/hooks");
     const { useAsyncLockedMethod } = require("point_of_sale.custom_hooks");
     const { session } = require("@web/session");
 
@@ -30,6 +30,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     class PartnerListScreen extends PosComponent {
         setup() {
             super.setup();
+            useAutofocus({refName: 'search-word-input-partner'});
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
             useListener('save-changes', useAsyncLockedMethod(this.saveChanges));
             this.searchWordInputRef = useRef('search-word-input-partner');
