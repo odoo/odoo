@@ -22,8 +22,8 @@ class WebsiteSaleStock(Controller):
             product.sudo().stock_notification_partner_ids += partner
 
         if request.website.is_public_user():
-            request.session['product_with_stock_notification_enabled'] = request.session.get(
-                'product_with_stock_notification_enabled',
-                set()
-            ) | {product_id}
+            request.session['product_with_stock_notification_enabled'] = list(
+                set(request.session.get('product_with_stock_notification_enabled', []))
+                | {product_id}
+            )
             request.session['stock_notification_email'] = email
