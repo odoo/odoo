@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from pytz import UTC
+from pytz import timezone, UTC
 from datetime import date, datetime, time
 
 from odoo import api, fields, models
@@ -145,7 +145,8 @@ class Employee(models.Model):
         valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
         if not valid_contracts:
             return super()._get_calendar_attendances(date_from, date_to)
-        return valid_contracts.resource_calendar_id.get_work_duration_data(date_from, date_to)
+        employee_timezone = timezone(self.tz) if self.tz else None
+        return valid_contracts.resource_calendar_id.with_context(employee_timezone=employee_timezone).get_work_duration_data(date_from, date_to)
 
     def write(self, vals):
         res = super().write(vals)
