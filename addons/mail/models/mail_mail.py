@@ -406,23 +406,16 @@ class MailMail(models.Model):
                     'partner_id': False,
                 })
         # specific behavior to customize the send email for notified partners
-        for partner in self.recipient_ids:
-            # check partner email content
-            emails_normalized = tools.email_normalize_all(partner.email)
-            if emails_normalized:
-                email_to = [
-                    tools.formataddr((partner.name or "", email or "False"))
-                    for email in emails_normalized
-                ]
-            else:
-                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
-            email_list.append({
+        emails_to = self.recipient_ids._get_email_to()
+        email_list += [
+            {
                 'email_cc': [],
                 'email_to': email_to,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': partner.email or '',
                 'partner_id': partner,
-            })
+            } for partner, email_to in zip(self.recipient_ids, emails_to)
+        ]
 
         # prepare attachments: remove attachments if user send the link with the
         # access_token.

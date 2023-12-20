@@ -51,6 +51,36 @@ class Partner(models.Model):
             WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
         return self.env.cr.dictfetchall()[0].get('needaction_count')
 
+    def _get_email_to(self):
+        """ Compute an 'email_to' for partners, using formataddr. It is a list
+        of emails, valid to be given to IrMailServer.build_email(). Be defensive
+        in computation, notably
+
+          * double format: if email already holds a formatted email like
+            'Name' <email@domain.com> we should not use it as it to compute
+            email formatted like "Name <'Name' <email@domain.com>>";
+          * multi emails: sometimes this field is used to hold several addresses
+            like email1@domain.com, email2@domain.com. We currently let this value
+            untouched, but remove any formatting from multi emails;
+          * invalid email: if something is wrong, keep it in email_formatted as
+            this eases management and understanding of failures at mail.mail,
+            mail.notification and mailing.trace level;
+          * void email: email_formatted is False, as we cannot do anything with
+            it;
+        """
+        emails_to = []
+        for partner in self:
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                email_to = [
+                    tools.formataddr((partner.name or "", email or "False"))
+                    for email in emails_normalized
+                ]
+            else:
+                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
+            emails_to.append(email_to)
+        return emails_to
+
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
