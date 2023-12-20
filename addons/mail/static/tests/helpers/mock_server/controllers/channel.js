@@ -50,6 +50,11 @@ patch(MockServer.prototype, {
      * @param {number} stateCount
      */
     _mockRouteDiscussChannelFold(channelId, state, stateCount) {
-        return this._mockDiscussChannel__channelFold([channelId], state, stateCount);
+        const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(channelId);
+        return this._mockDiscussChannelMember__channelFold(
+            memberOfCurrentUser.id,
+            state,
+            stateCount
+        );
     },
 });

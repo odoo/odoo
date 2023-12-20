@@ -78,4 +78,31 @@ patch(MockServer.prototype, {
         const [member] = this.getRecords("discuss.channel.member", [["id", "in", ids]]);
         return this._mockResPartnerMailPartnerFormat([member.partner_id]).get(member.partner_id);
     },
+    /**
+     * Simulates the '_channel_fold' method on `discuss.channel.member`.
+     *
+     * @private
+     * @param {number} id
+     * @param {state} [state]
+     * @param {number} [state_count]
+     */
+    _mockDiscussChannelMember__channelFold(id, state, state_count) {
+        const [member] = this.pyEnv["discuss.channel.member"].searchRead([["id", "=", id]]);
+        if (member.fold_state === state) {
+            return;
+        }
+        this.pyEnv["discuss.channel.member"].write([id], { fold_state: state });
+        let target;
+        if (member.partner_id) {
+            target = this.pyEnv["res.partner"].searchRead([["id", "=", member.partner_id[0]]]);
+        } else {
+            target = this.pyEnv["mail.guest"].searchRead([["id", "=", member.guest_id[0]]]);
+        }
+        this.pyEnv["bus.bus"]._sendone(target, "discuss.Thread/fold_state", {
+            foldStateCount: state_count,
+            id: member.channel_id[0],
+            model: "discuss.channel",
+            fold_state: state,
+        });
+    },
 });
