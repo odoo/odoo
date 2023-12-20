@@ -14,7 +14,7 @@ export class LinkPopoverWidget {
         }
         const popoverWidget = new this(params);
         params.wysiwyg?.odooEditor.observerUnactive('LinkPopoverWidget');
-        popoverWidget.start();
+        popoverWidget.start(); // This is not async
         params.wysiwyg?.odooEditor.observerActive('LinkPopoverWidget');
         return popoverWidget;
     };
@@ -127,19 +127,13 @@ export class LinkPopoverWidget {
             container: this.container,
         })
         .on('show.bs.popover.link_popover', () => {
-            this.wysiwyg.odooEditor.observerUnactive('show.bs.popover');
             this._loadAsyncLinkPreview();
             popoverShown = true;
         })
-        .on('inserted.bs.popover', () => {
-            this.wysiwyg.odooEditor.observerActive('show.bs.popover');
-        })
         .on('hide.bs.popover.link_popover', () => {
-            this.wysiwyg.odooEditor.observerUnactive('hide.bs.popover');
             popoverShown = false;
         })
         .on('hidden.bs.popover.link_popover', () => {
-            this.wysiwyg.odooEditor.observerActive('hide.bs.popover');
             for (const tooltip of tooltips) {
                 tooltip.hide();
             }
@@ -149,7 +143,6 @@ export class LinkPopoverWidget {
             popover.tip.classList.add('o_edit_menu_popover');
         })
         .popover('show');
-
 
         this.popover = Popover.getInstance(this.target);
         this.$target.on('mousedown.link_popover', (e) => {
@@ -178,7 +171,7 @@ export class LinkPopoverWidget {
                     this.popover.hide();
                 }
             }
-        }
+        };
         $(document).on('mouseup.link_popover', onClickDocument);
         if (document !== this.wysiwyg.odooEditor.document) {
             $(this.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
