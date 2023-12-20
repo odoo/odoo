@@ -832,13 +832,13 @@ class AccountGroup(models.Model):
     @api.depends('code_prefix_start')
     def _compute_code_prefix_end(self):
         for group in self:
-            if not group.code_prefix_end or group.code_prefix_end < group.code_prefix_start:
+            if not group.code_prefix_end or (group.code_prefix_start and group.code_prefix_end < group.code_prefix_start):
                 group.code_prefix_end = group.code_prefix_start
 
     @api.depends('code_prefix_end')
     def _compute_code_prefix_start(self):
         for group in self:
-            if not group.code_prefix_start or group.code_prefix_start > group.code_prefix_end:
+            if not group.code_prefix_start or (group.code_prefix_end and group.code_prefix_start > group.code_prefix_end):
                 group.code_prefix_start = group.code_prefix_end
 
     @api.depends('code_prefix_start', 'code_prefix_end')
