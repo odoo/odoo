@@ -142,20 +142,44 @@ class TestHttpSession(TestHttpBase):
             self.url_open(f'/test_http/{milky_way.id}').raise_for_status()
 
     def test_session7_serializable(self):
-        """Tests setting a non-serializable value to the session is prevented
-        The test ensures the warning/exception is raised at the moment the attribute is set,
-        and not simply when the session is being saved in the session store.
+        """
+            Test (non-)serializable values in the session in JSON format.
         """
         session = self.authenticate(None, None)
         self.assertFalse(session.foo)
 
-        # Values allowed
-        for value in [
+        def check_session_attr(value):
+            """
+                :return:
+                    - True: can be used
+                    - False: cannot be used
+                    - None: not recommended (can be used, but the value is modified)
+            """
+            try:
+                session.foo = value
+                try:
+                    self.assertEqual(session.foo, value)
+                except Exception:
+                    return None
+                session.pop('foo')
+                self.assertFalse(session.foo)
+                session['foo'] = value
+                self.assertEqual(session.foo, value)
+                session.pop('foo')
+                return True
+            except Exception:
+                return False
+
+        accepted_values = [
             123,
             12.3,
             'foo',
-            (1, 2, 3, 4),
-            [1, 2, 3, 4],
+            True,
+            None,
+            [1, 2, 3],
+            {'foo': 'bar'},
+        ]
+        forbidden_values = [
             set(),
             {'1234'},
             datetime.datetime.now(),
@@ -163,17 +187,6 @@ class TestHttpSession(TestHttpBase):
             datetime.time(1, 33, 7),
             pytz.timezone('UTC'),
             pytz.timezone('Europe/Brussels'),
-        ]:
-            session.foo = value
-            self.assertEqual(session.foo, value)
-            session.pop('foo')
-            self.assertFalse(session.foo)
-            session['foo'] = value
-            self.assertEqual(session.foo, value)
-            session.pop('foo')
-
-        # Values forbidden by odoo, raising a warning
-        for value in [
             str,
             int,
             float,
@@ -181,35 +194,15 @@ class TestHttpSession(TestHttpBase):
             range,
             "foo".startswith,
             datetime.datetime.strftime,
-        ]:
-            with self.assertLogs(level="WARNING"):
-                session['foo'] = value
-            self.assertFalse(session.foo)
-            with self.assertLogs(level="WARNING"):
-                session.foo = value
-            self.assertFalse(session.foo)
-            with self.assertLogs(level="WARNING"):
-                # testing you cannot set a non-serializable value at the creation of the session
-                # e.g. in the __init__ of the session class
-                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
-            with self.assertRaises(TypeError):
-                dict.update(session, foo=value)
-            self.assertFalse(session.foo)
-
-        # Values forbidden by pickle, raising an exception
-        for value in [
             lambda: 'bar',
-        ]:
-            with self.assertRaises(AttributeError):
-                session['foo'] = value
-            self.assertFalse(session.foo)
-            with self.assertRaises(AttributeError):
-                session.foo = value
-            self.assertFalse(session.foo)
-            with self.assertRaises(AttributeError):
-                # testing you cannot set a non-serializable value at the creation of the session
-                # e.g. in the __init__ of the session class
-                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
-            with self.assertRaises(TypeError):
-                dict.update(session, foo=value)
-            self.assertFalse(session.foo)
+        ]
+        not_recommended_values = [
+            (1, 2, 3),
+        ]
+
+        for value in accepted_values:
+            self.assertEqual(check_session_attr(value), True)
+        for value in forbidden_values:
+            self.assertEqual(check_session_attr(value), False)
+        for value in not_recommended_values:
+            self.assertEqual(check_session_attr(value), None)
