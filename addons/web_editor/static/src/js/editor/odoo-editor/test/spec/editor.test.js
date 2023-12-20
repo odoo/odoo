@@ -4297,6 +4297,16 @@ X[]
                 contentAfter: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>[] c http://test.com d</p>',
                 //in reality: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>'
             });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>http://test.com[]</p>',
+                stepFunction: async (editor) => {
+                    // Setup: simulate multiple text nodes in a p: <p>"http://test" ".com"</p>
+                    editor.editable.firstChild.firstChild.splitText(11);
+                    // Action: insert space
+                    insertText(editor, ' ');
+                },
+                contentAfter: '<p><a href="http://test.com">http://test.com</a> []</p>',
+            });
         });
         it('should transform url after enter', async () => {
             await testEditor(BasicEditor, {
