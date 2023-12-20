@@ -489,38 +489,6 @@ patch(MockServer.prototype, {
             .filter((preview) => preview.last_message);
     },
     /**
-     * Simulates the '_channel_fold' method on `discuss.channel`. In particular
-     * sends a notification on the bus.
-     *
-     * @private
-     * @param {number} ids
-     * @param {state} [state]
-     * @param {number} [state_count]
-     */
-    _mockDiscussChannel__channelFold(ids, state, state_count) {
-        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
-        for (const channel of channels) {
-            const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
-                channel.id
-            );
-            const foldState = state
-                ? state
-                : memberOfCurrentUser.fold_state === "open"
-                ? "folded"
-                : "open";
-            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                fold_state: foldState,
-            });
-            const [partner, guest] = this._mockResPartner__getCurrentPersona();
-            this.pyEnv["bus.bus"]._sendone(partner || guest, "discuss.Thread/fold_state", {
-                foldStateCount: state_count,
-                id: channel.id,
-                model: "discuss.channel",
-                fold_state: foldState,
-            });
-        }
-    },
-    /**
      * Simulates 'channel_create' on 'discuss.channel'.
      *
      * @private

@@ -133,8 +133,8 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/fold", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_fold(self, channel_id, state, state_count=0):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
+    def discuss_channel_fold(self, channel_id, state, state_count):
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
             raise NotFound()
-        return channel._channel_fold(state, state_count)
+        return member._channel_fold(state, state_count)
