@@ -216,7 +216,7 @@ def add_form_signature(html_fragment, env_sudo):
         # the value of email_to can still be None in case of default value
         if 'email_to' not in form_values:
             continue
-        elif not form_values['email_to'].attrib.get('value'):
+        elif form_values['email_to'].attrib.get('value', '') in ('', 'info@yourcompany.example.com'):
             form_values['email_to'].attrib['value'] = env_sudo.company.email or ''
         has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
         value = form_values['email_to'].attrib['value'] + (':email_cc' if has_cc else '')
