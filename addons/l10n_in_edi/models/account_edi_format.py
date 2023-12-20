@@ -90,11 +90,6 @@ class AccountEdiFormat(models.Model):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_base_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding') and not self._l10n_in_is_global_discount(line)):
-            if line.price_subtotal < 0:
-                # Line having a negative amount is not allowed.
-                if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
-                    raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
-                                  "Please create a credit note instead."))
             if line.display_type == 'product' and line.discount < 0:
                 error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
             if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
@@ -460,6 +455,7 @@ class AccountEdiFormat(models.Model):
                 json_payload['ItemList'].remove(discount_line)
         if not discount_lines:
             return json_payload
+        invoice.message_post(body=_("Negative lines will be decreased from positive invoice lines having the same taxes and HSN code"))
 
         lines_grouped_and_sorted = defaultdict(list)
         for line in sorted(json_payload['ItemList'], key=lambda i: i['AssAmt'], reverse=True):
@@ -557,8 +553,6 @@ class AccountEdiFormat(models.Model):
                 json_payload["ExpDtls"].update({
                     "Port": invoice.l10n_in_shipping_port_code_id.code
                 })
-        if not invoice._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
-            return json_payload
         return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(invoice, json_payload)
 
     @api.model
