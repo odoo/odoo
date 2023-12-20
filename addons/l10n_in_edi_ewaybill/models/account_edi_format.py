@@ -26,9 +26,9 @@ class AccountEdiFormat(models.Model):
         """
             There is two type of api call to create E-waybill
             1. base on IRN, IRN is number created when we do E-invoice
-            2. direct call, when E-invoice not aplicable or it"s credit not
+            2. direct call, when E-invoice not aplicable or it"s credit note or debit note
         """
-        if move.move_type == "out_refund":
+        if move.move_type == "out_refund" or move.debit_origin_id:
             return "direct"
         einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
         return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(move) and "irn" or "direct"
