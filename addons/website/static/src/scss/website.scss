@@ -1184,11 +1184,19 @@ header {
         @include o-apply-colors('header-sales_one-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
+    header#top > nav:not(.o_header_mobile) #o_main_nav > .container {
+        // TODO: remove in master and add "align-items-center" in the XML.
+        align-items: center;
+    }
 } @else if o-website-value('header-template') == 'sales_two' {
     #wrapwrap .o_header_sales_two_top {
         @include o-apply-colors('header-sales_two');
         @include o-apply-colors('header-sales_two-custom');
         @include o-add-gradient('menu-secondary-gradient');
+    }
+    header#top > nav:not(.o_header_mobile) #o_main_nav #top_menu {
+        // TODO: remove in master and add "align-items-center" in the XML.
+        align-items: center;
     }
 } @else if o-website-value('header-template') == 'sales_three' {
     #wrapwrap .o_header_sales_three_top {
@@ -1201,6 +1209,10 @@ header {
         @include o-apply-colors('header-sales_four');
         @include o-apply-colors('header-sales_four-custom');
         @include o-add-gradient('menu-secondary-gradient');
+    }
+    header#top > nav:not(.o_header_mobile) #o_main_nav .navbar-nav {
+        // TODO: remove in master and add "align-items-center" in the XML.
+        align-items: center;
     }
 }
 

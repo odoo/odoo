@@ -11,6 +11,7 @@ class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         decimal_product_uom = cls.env.ref('product.decimal_product_uom')
         decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
@@ -2485,27 +2486,15 @@ class TestStockFlow(TestStockCommon):
         pickings.button_validate()
         self.assertTrue(all(pickings.mapped(lambda p: p.state == 'done')), "Pickings should be set as done")
 
-    def test_pickings_on_duplicated_operation_types(self):
-        """ Ensure we can create pickings on duplicated operation types without collision in names
-            Steps:
-            - Create a picking on an operation type
-            - Duplicate the operation type
-            - Create another picking on the duplicated operation type
-        """
-        self.PickingObj.create({
+    def test_empty_picking_draft(self):
+        """ test an empty still can be reset to draft """
+        picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
+            'location_id': self.stock_location,
             'location_dest_id': self.stock_location,
         })
-        duplicated_picking_type = self.env['stock.picking.type'].browse(self.picking_type_in).copy()
-        picking_2 = self.PickingObj.create({
-            'picking_type_id': duplicated_picking_type.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
-        })
-        # trigger SQL constraints
-        self.PickingObj.flush_model()
-        self.assertEqual(self.PickingObj.search_count([('name', '=', picking_2.name)]), 1)
+        self.assertFalse(picking.move_ids)
+        self.assertEqual(picking.state, 'draft')
 
 
 @tagged('-at_install', 'post_install')

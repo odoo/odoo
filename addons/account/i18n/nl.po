@@ -160,14 +160,14 @@ msgstr "%s (afronding)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr "%s - %s; %s gefactureerd, %s ontvangen aan %s per stuk"
+msgstr "%s - %s; %s gefactureerd, %s ontvangen aan %s per eenheid"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr "%s - %s; %s gefactureerd, %s afgeleverd aan %s per stuk"
+msgstr "%s - %s; %s gefactureerd, %s afgeleverd aan %s per eenheid"
 
 #. module: account
 #. odoo-python
@@ -1107,7 +1107,7 @@ msgstr "<span title=\"Latest Statement\">Laatste afschrift</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr "<span title=\"Outstanding Payments/Receipts\">Betalingen</span>"
+msgstr "<span title=\"Openstaande betalingen/ontvangsten\">Betalingen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1579,7 +1579,7 @@ msgstr "Toegang waarschuwing"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr "Volgens elk type account"
+msgstr "Volgens elk type rekening"
 
 #. module: account
 #. odoo-python
@@ -1595,7 +1595,7 @@ msgstr "Volgens elk type account"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr "Account"
+msgstr "Rekening"
 
 #. module: account
 #. odoo-python
@@ -1747,7 +1747,7 @@ msgstr "Debiteurenrekening (Kassa)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr "Account afstemmen"
+msgstr "Rekening afletteren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1793,7 +1793,7 @@ msgstr "TaxCloud account"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
 msgid "Account Templates"
-msgstr "Accountsjablonen"
+msgstr "Rekeningsjablonen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
@@ -2732,7 +2732,7 @@ msgstr "Kostenverdeling"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "Analytisch distributiemodel"
+msgstr "Kostenplaatsverdelingmodel"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
@@ -3917,7 +3917,7 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Het wijzigen van een BTW nummer is niet toegestaan zodra facturen zijn "
+"Het wijzigen van een btw-nummer is niet toegestaan zodra facturen zijn "
 "uitgegeven voor je account. Neem direct contact met ons op voor deze "
 "bewerking."
 
@@ -4412,7 +4412,7 @@ msgstr "Prijs van de verkochte goederen"
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
 msgid "Cost of Production"
-msgstr "Productiekost"
+msgstr "Productiekosten"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
@@ -5110,7 +5110,7 @@ msgstr "Klantbetaling"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr "Betalingstermijnen klant"
+msgstr "Betaalvoorwaarden klant"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments
@@ -6416,12 +6416,12 @@ msgstr "Voorbeeld Ongeldig"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_preview
 msgid "Example Preview"
-msgstr "Preview voorbeeld"
+msgstr "Voorbeeld voorbeeld"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_preview_discount
 msgid "Example Preview Discount"
-msgstr "Preview voorbeeld korting"
+msgstr "Voorbeeld voorbeeld korting"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -7547,7 +7547,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Als het actief veld uitstaat, kun je de betalingstermijnen verbergen zonder "
+"Als het actief veld uitstaat, kun je de betaalvoorwaarden verbergen zonder "
 "deze te verwijderen."
 
 #. module: account
@@ -9523,7 +9523,7 @@ msgstr "Ontbrekende vreemde valuta op gedeeltelijke transacties met ID's: %s"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable line."
-msgstr "Vereist account op verantwoordelijke regel ontbreekt."
+msgstr "Ontbrekend vereiste rekening op verantwoordelijke regel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mode
@@ -10988,12 +10988,12 @@ msgstr "Details betalingstermijn"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
 msgid "Payment Terms"
-msgstr "Betalingstermijnen"
+msgstr "Betaalvoorwaarden"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Terms Line"
-msgstr "Betalingstermijnen regel"
+msgstr "Betaalvoorwaardenregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
@@ -11017,59 +11017,59 @@ msgstr "Betaalwijze"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Payment terms"
-msgstr "Betalingstermijnen"
+msgstr "Betaalvoorwaarden"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 10 Days after End of Next Month"
-msgstr "Betalingstermijnen: 10 dagen na het einde van volgende maand"
+msgstr "Betaalvoorwaarden: 10 dagen na het einde van volgende maand"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr "Betalingstermijnen: 15 dagen"
+msgstr "Betaalvoorwaarden: 15 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
-msgstr "Betalingstermijnen: 21 dagen"
+msgstr "Betaalvoorwaarden: 21 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr "Betalingstermijnen: 30 dagen"
+msgstr "Betaalvoorwaarden: 30 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr ""
-"Betalingstermijnen: 30 dagen, 2% vroege betalingskorting binnen 7 dagen"
+"Betaalvoorwaarden: 30 dagen, 2% vroege betalingskorting binnen 7 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Betalingstermijnen: 30% voorschot op het einde van de volgende maand"
+msgstr "Betaalvoorwaarden: 30% voorschot op het einde van de volgende maand"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Betalingstermijnen: 30% nu, resterend saldo binnen 60 dagen"
+msgstr "Betaalvoorwaarden: 30% nu, resterend saldo binnen 60 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
-msgstr "Betalingstermijnen: 45 dagen"
+msgstr "Betaalvoorwaarden: 45 dagen"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
-msgstr "Betalingstermijnen: Eind van volgende maand"
+msgstr "Betaalvoorwaarden: Eind van volgende maand"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Betalingstermijnen: Directe betaling"
+msgstr "Betaalvoorwaarden: Directe betaling"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -11157,7 +11157,7 @@ msgstr "Percentage van afschriftregel"
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
-"Het percentage voor de betalingstermijnen regel moet liggen tussen 0 en 100."
+"Het percentage voor de betaalvoorwaardenregel moet liggen tussen 0 en 100."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11379,7 +11379,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Preview"
-msgstr "Preview"
+msgstr "Voorbeeld"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__preview_data
@@ -12531,7 +12531,7 @@ msgstr "Selecteer eerst een relatie"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
 msgid "Select here the kind of valuation related to this payment terms line."
 msgstr ""
-"Selecteer hier het soort voorraadwaarde voor deze betalingstermijnen regel."
+"Selecteer hier het soort voorraadwaarde voor deze betaalvoorwaardenregel."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13028,7 +13028,7 @@ msgid ""
 "than the allowed ones."
 msgstr ""
 "Sommige boekingsregels bestaan al in dit dagboek, maar met andere dan de "
-"toegestane accounts."
+"toegestane rekeningen."
 
 #. module: account
 #. odoo-python
@@ -13841,8 +13841,8 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms"
 " using a single 100% line. "
 msgstr ""
-"De vroegtijdige korting kan enkel worden gebruikt met betalingstermijnen die"
-" één enkele 100% regel gebruiken. "
+"De vroegtijdige korting kan enkel worden gebruikt met betaalvoorwaarden die "
+"één enkele 100% regel gebruiken. "
 
 #. module: account
 #. odoo-python
@@ -13887,7 +13887,7 @@ msgstr ""
 #, python-format
 msgid "The Months and Days of the Payment Terms lines must be positive."
 msgstr ""
-"De regels Maanden en Dagen van de betalingstermijnen moeten positief zijn."
+"De regels Maanden en Dagen van de betaalvoorwaarden moeten positief zijn."
 
 #. module: account
 #. odoo-python
@@ -13923,7 +13923,7 @@ msgstr "Deze rekening %s (%s) is vervallen."
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "The account code can only contain alphanumeric characters and dots."
-msgstr "De accountcode mag alleen alfanumerieke tekens en punten bevatten."
+msgstr "De rekeningcode mag alleen alfanumerieke tekens en punten bevatten."
 
 #. module: account
 #. odoo-python
@@ -14036,7 +14036,7 @@ msgid ""
 "reconciling its lines."
 msgstr ""
 "De kasbasisposten die zijn gemaakt op basis van de BTW op deze post, bij het"
-" afstemmen van de regels."
+" afletteren van de regels."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -14991,7 +14991,7 @@ msgid ""
 msgstr ""
 "Deze rekening is in %(journal_names)s dagboek(en) (ids %(journal_ids)s) "
 "geconfigureerd als debet- of creditrekening voor betalingen. Dit betekent "
-"dat het type van dit account afletterbaar moet zijn."
+"dat het type van deze rekening afletterbaar moet zijn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15346,8 +15346,8 @@ msgid ""
 "it."
 msgstr ""
 "Om betalingen te registreren met %s, moet de ontvangende bankrekening "
-"handmatig worden gevalideerd. Je moet naar de partnerbankrekening gaan om "
-"deze te valideren."
+"handmatig worden gevalideerd. Je moet naar de bankrekening van de relatie "
+"gaan om deze te bevestigen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -16030,7 +16030,7 @@ msgstr "Gebruikersgroep door"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__user_has_group_validate_bank_account
 msgid "User Has Group Validate Bank Account"
-msgstr "Gebruiker heeft Groep Bankrekening valideren"
+msgstr "Gebruiker heeft Groep Bankrekening bevestigen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -16045,7 +16045,7 @@ msgid ""
 "accounting"
 msgstr ""
 "Utility-veld om aan te geven of de boekingsregel onderworpen is aan storno "
-"accounting"
+"boekhouding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -16060,7 +16060,7 @@ msgstr "Bevestig boeking"
 #. module: account
 #: model:res.groups,name:account.group_validate_bank_account
 msgid "Validate bank account"
-msgstr "Bankrekening valideren"
+msgstr "Bankrekening bevestigen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__auto_reconcile
@@ -16187,7 +16187,7 @@ msgstr "Leveranciersbetaling"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Betalingstermijnen leverancier"
+msgstr "Betaalvoorwaarden leverancier"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_payable
@@ -16474,7 +16474,7 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
-"Je kunt geen betalingstermijnen verwijderen gerelateerd aan gegevens. "
+"Je kunt geen betaalvoorwaarden verwijderen gerelateerd aan gegevens. "
 "Daarentegen, kun je ze wel archiveren."
 
 #. module: account
@@ -16671,7 +16671,7 @@ msgid ""
 "\n"
 "Think of it as safeguarding your customer's receivables; your CFO would appreciate it :)"
 msgstr ""
-"Je kunt het account %s niet verwijderen, omdat het voor een contact wordt gebruikt.\n"
+"Je kunt de rekening %s niet verwijderen, omdat het voor een contact wordt gebruikt.\n"
 "\n"
 "Zie het als het veiligstellen van de vorderingen van je klant; je CFO zou het op prijs stellen :)"
 
@@ -16837,8 +16837,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
-"Je kunt een te betalen/te ontvangen regel niet verwijderen omdat dit niet in"
-" overeenstemming is met de betalingstermijnen"
+"Je kunt een te betalen/te ontvangen regel niet verwijderen, omdat dit niet "
+"in overeenstemming is met de betaalvoorwaarden"
 
 #. module: account
 #. odoo-python
@@ -17165,7 +17165,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr "Je kunt een document met een inactieve valuta niet valideren: %s"
+msgstr "Je kunt een document met een inactieve valuta niet bevestigen: %s"
 
 #. module: account
 #. odoo-python
@@ -17443,7 +17443,7 @@ msgstr "bijv. F"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "e.g. Payment terms: 30 days after invoice date"
-msgstr "bv. Betalingstermijnen: 30 dagen na factuurdatum"
+msgstr "bv. Betaalvoorwaarden: 30 dagen na factuurdatum"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

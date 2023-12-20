@@ -13,7 +13,7 @@ class TestPaymentProvider(AsiaPayCommon):
         """ Test that AsiaPay providers are filtered out from compatible providers when the currency
         is not supported. """
         compatible_providers = self.env['payment.provider']._get_compatible_providers(
-            self.company_id, self.partner.id, self.amount, currency_id=self.env.ref('base.AFN').id
+            self.env.company.id, self.partner.id, self.amount, currency_id=self.env.ref('base.AFN').id
         )
         self.assertNotIn(self.asiapay, compatible_providers)
 

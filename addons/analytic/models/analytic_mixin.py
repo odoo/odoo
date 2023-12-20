@@ -11,7 +11,6 @@ class AnalyticMixin(models.AbstractModel):
     analytic_distribution = fields.Json(
         'Analytic Distribution',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
-        precompute=True
     )
     # Json non stored to be able to search on analytic_distribution.
     analytic_distribution_search = fields.Json(

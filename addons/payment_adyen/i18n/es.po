@@ -26,6 +26,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Advertencia:</strong> para capturar el importe manualmente, también tiene que configurar\n"
+"                   Capturar Atraso a manual en la configuración de su cuenta Adyen."
 
 #. module: payment_adyen
 #. odoo-python
@@ -33,6 +35,7 @@ msgstr ""
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
 msgstr ""
+"Se envió una solicitud para anular la transacción con referencia %s (%s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -42,7 +45,7 @@ msgstr "Clave API"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "API URL Prefix"
-msgstr ""
+msgstr "Prefijo de la URL de la API"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -64,7 +67,7 @@ msgstr ""
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "No se puede mostrar el formulario de pago"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
@@ -91,7 +94,7 @@ msgstr "Clave HMAC"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Tiene Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -205,6 +208,8 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"El importe precesado por Adyen para la transacción %s es diferente que el "
+"importe pedido. Se creó otra transacción con el importe correcto."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
@@ -217,7 +222,7 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The capture of the transaction with reference %s failed."
-msgstr ""
+msgstr "Falló la captura de la transacción con referencia %s ."
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -244,6 +249,7 @@ msgstr "La clave de cliente del usuario del servicio web"
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
 msgstr ""
+"El código de la cuenta de vendedor que se debe de usar con este proveedor."
 
 #. module: payment_adyen
 #. odoo-python

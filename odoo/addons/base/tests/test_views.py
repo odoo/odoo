@@ -15,6 +15,7 @@ from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import get_cache_key_counter, mute_logger, view_validation, safe_eval
 from odoo.addons.base.models import ir_ui_view
 
@@ -29,7 +30,7 @@ class ViewXMLID(common.TransactionCase):
         self.assertTrue(view.model_data_id)
         self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
 
-class ViewCase(common.TransactionCase):
+class ViewCase(TransactionCaseWithUserDemo):
     def setUp(self):
         super(ViewCase, self).setUp()
         self.View = self.env['ir.ui.view']
@@ -2304,7 +2305,7 @@ class TestViews(ViewCase):
                 </form>
             """,
         })
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         # Make sure demo doesn't have the base.group_system
         self.assertFalse(self.env['res.partner'].with_user(user_demo).env.user.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']
@@ -3935,7 +3936,7 @@ class TestValidationTools(common.BaseCase):
             {'field'},
         )
 
-class TestAccessRights(common.TransactionCase):
+class TestAccessRights(TransactionCaseWithUserDemo):
 
     @common.users('demo')
     def test_access(self):
@@ -3961,7 +3962,7 @@ class TestAllViews(common.TransactionCase):
                 view._check_xml()
 
 @common.tagged('post_install', '-at_install', '-standard', 'render_all_views')
-class TestRenderAllViews(common.TransactionCase):
+class TestRenderAllViews(TransactionCaseWithUserDemo):
 
     @common.users('demo', 'admin')
     def test_render_all_views(self):
@@ -4318,7 +4319,7 @@ class ViewModifiers(ViewCase):
                 </form>
             """,
         })
-        user_demo = self.env.ref('base.user_demo')
+        user_demo = self.user_demo
         # Make sure demo doesn't have the base.group_system
         self.assertFalse(self.env['res.partner'].with_user(user_demo).env.user.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']

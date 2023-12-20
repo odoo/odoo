@@ -279,6 +279,7 @@ export class PosStore extends Reactive {
         this.base_url = loadedData["base_url"];
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
         this.db.addProductIdsToNotDisplay(loadedData["pos_special_products_ids"]);
+        this.partner_commercial_fields = loadedData["partner_commercial_fields"];
         await this._loadPosPrinters(loadedData["pos.printer"]);
         this.open_orders_json = loadedData["open_orders"];
     }
@@ -665,7 +666,9 @@ export class PosStore extends Reactive {
                 }
             }
         }
-        if(!missingProductIds.size) return;
+        if (!missingProductIds.size) {
+            return;
+        }
         const products = await this.orm.call(
             "pos.session",
             "get_pos_ui_product_product_by_params",
@@ -675,13 +678,15 @@ export class PosStore extends Reactive {
         this._loadProductProduct(products);
     }
     async _loadMissingPricelistItems(products) {
-        if(!products.length) return;
-        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
-        const product_ids = products.map(product => product.id);
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
 
         const pricelistItems = await this.orm.call(
-            'pos.session',
-            'get_pos_ui_product_pricelist_item_by_product',
+            "pos.session",
+            "get_pos_ui_product_pricelist_item_by_product",
             [odoo.pos_session_id, product_tmpl_ids, product_ids]
         );
 
@@ -691,9 +696,9 @@ export class PosStore extends Reactive {
         // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
         // for reference check order of the Product Pricelist Item model
         for (const pricelist of this.pricelists) {
-            const itemIds = new Set(pricelist.items.map(item => item.id));
+            const itemIds = new Set(pricelist.items.map((item) => item.id));
 
-            const _pricelistItems = pricelistItems.filter(item => {
+            const _pricelistItems = pricelistItems.filter((item) => {
                 return item.pricelist_id[0] === pricelist.id && !itemIds.has(item.id);
             });
             pricelist.items = [..._pricelistItems, ...pricelist.items];
@@ -1944,6 +1949,10 @@ export class PosStore extends Reactive {
             cashier: this.get_cashier()?.name,
             header: this.config.receipt_header,
         };
+    }
+
+    isChildPartner(partner) {
+        return partner.parent_name;
     }
 }
 

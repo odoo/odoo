@@ -74,6 +74,7 @@ class TestPartner(MailCommon):
         return partner
 
     def test_address_tracking(self):
+        self.env.company.name = 'YourCompany'
         company_partner = self.env.company.partner_id
         # use some wacky formatting to check inlining
         company_partner.country_id.address_format = """%(street)s
@@ -85,6 +86,9 @@ class TestPartner(MailCommon):
             'city': 'Some City Name',
             'street': 'Some Street Name',
             'type': 'contact',
+            'zip': '94134',
+            'state_id': self.env.ref('base.state_us_5').id,
+            'country_id': self.env.ref('base.us').id,
         })
         child_partner = self.env['res.partner'].create({
             'name': 'Some Guy',

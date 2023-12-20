@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,8 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"La conexión con el servidor VIES falló. No se pudo validar el número de IVA "
+"%s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -48,6 +51,8 @@ msgstr "Contacto"
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
+"Los números de IVA europeos se verifican automáticamente en la base de datos"
+" VIES."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -60,6 +65,8 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Si esta casilla está seleccionada, la posición fiscal por defecto a aplicar "
+"dependerá del resultado de la verificación del servicio europeo VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -71,7 +78,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Realizar validación VIES"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -86,6 +93,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"El número %(vat_label)s [%(wrong_vat)s] no parece ser válido. \n"
+"Tome en cuenta que el formato esperado es %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -103,7 +112,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
 
 #. module: base_vat
 #. odoo-python
@@ -138,7 +147,7 @@ msgstr "Verificar NIFs con el servicio europeo VIES"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "Verificación de número de IVA en VIES"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form

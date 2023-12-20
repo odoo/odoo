@@ -16,6 +16,10 @@ class TestMailSchedule(EventCase, MockEmail):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_mail_schedule(self):
         """ Test mail scheduling for events """
+        self.env.company.write({
+            'name': 'YourCompany',
+            'email': 'info@yourcompany.example.com',
+        })
         event_cron_id = self.env.ref('event.event_mail_scheduler')
 
         # deactivate other schedulers to avoid messing with crons

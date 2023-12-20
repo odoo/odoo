@@ -38,21 +38,21 @@
                 </li>
                 <li t-if="field.domain" data-item="domain">
                     <span class="o-tooltip--technical--title">Domain:</span>
-                    <t t-esc="field.domain"/>
+                    <t t-esc="field.domain.length === 0 ? '[]' : field.domain"/>
                 </li>
-                <li t-if="'invisible' in field" data-item="invisible">
+                <li t-if="field.invisible" data-item="invisible">
                     <span class="o-tooltip--technical--title">Invisible:</span>
                     <t t-esc="field.invisible"/>
                 </li>
-                <li t-if="'column_invisible' in field" data-item="column_invisible">
+                <li t-if="field.column_invisible" data-item="column_invisible">
                     <span class="o-tooltip--technical--title">Column invisible:</span>
                     <t t-esc="field.column_invisible"/>
                 </li>
-                <li t-if="'required' in field" data-item="required">
+                <li t-if="field.required" data-item="required">
                     <span class="o-tooltip--technical--title">Required:</span>
                     <t t-esc="field.required"/>
                 </li>
-                <li t-if="'readonly' in field" data-item="readonly">
+                <li t-if="field.readonly" data-item="readonly">
                     <span class="o-tooltip--technical--title">Readonly:</span>
                     <t t-esc="field.readonly"/>
                 </li>

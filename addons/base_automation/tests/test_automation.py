@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import TransactionCase
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo import Command
 
 import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestAutomation(TransactionCase):
+class TestAutomation(TransactionCaseWithUserDemo):
 
     def test_01_on_create_or_write(self):
         """ Simple on_create with admin user """
@@ -68,7 +69,7 @@ class TestAutomation(TransactionCase):
         # action cached was cached with admin, force CacheMiss
         automation.env.clear()
 
-        self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
+        self_portal = self.env["ir.filters"].with_user(self.user_demo.id)
         # verify the portal user can create ir.filters but can not read base.automation
         self.assertTrue(self_portal.env["ir.filters"].check_access_rights("create", raise_exception=False))
         self.assertFalse(self_portal.env["base.automation"].check_access_rights("read", raise_exception=False))
@@ -106,7 +107,7 @@ class TestAutomation(TransactionCase):
         # action cached was cached with admin, force CacheMiss
         automation.env.clear()
 
-        self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
+        self_portal = self.env["ir.filters"].with_user(self.user_demo.id)
 
         # simulate a onchange call on name
         result = self_portal.onchange({}, [], {"name": {}, "active": {}})

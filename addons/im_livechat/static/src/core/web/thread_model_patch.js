@@ -25,8 +25,8 @@ patch(Thread.prototype, {
         return super.correspondents.filter((correspondent) => !correspondent.is_bot);
     },
 
-    get correspondent() {
-        let correspondent = super.correspondent;
+    computeCorrespondent() {
+        let correspondent = super.computeCorrespondent();
         if (this.type === "livechat" && !correspondent) {
             // For livechat threads, the correspondent is the first
             // channel member that is not the operator.

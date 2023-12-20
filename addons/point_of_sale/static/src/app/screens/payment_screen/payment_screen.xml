@@ -70,7 +70,10 @@
                 t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
                 t-on-click="() => this.selectPartner(false, [])">
                 <i class="fa fa-user me-2" role="img" title="Customer" />
-                <span class="partner-name" t-esc="currentOrder.get_partner()?.name or 'Customer'" /> 
+                <span class="partner-name">
+                    <t t-if="currentOrder.get_partner()" t-esc="currentOrder.get_partner().name"/>
+                    <t t-else="">Customer</t>
+                </span> 
             </button>
             <button class="button js_invoice btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }" 
                 t-on-click="toggleIsToInvoice">

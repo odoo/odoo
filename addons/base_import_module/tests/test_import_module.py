@@ -42,7 +42,7 @@ class TestImportModule(odoo.tests.TransactionCase):
                 b'"id","name"\n' \
                 b'bar,bar'
             ),
-            ('foo/data.sql', b"INSERT INTO res_partner (active, name) VALUES (true, 'baz');"),
+            ('foo/data.sql', b"INSERT INTO res_currency (name, symbol, active) VALUES ('New Currency', 'NCU', TRUE);"),
             ('foo/static/css/style.css', b".foo{color: black;}"),
             ('foo/static/js/foo.js', b"console.log('foo')"),
             ('bar/__manifest__.py', b"{'data': ['data.xml']}"),
@@ -60,7 +60,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(self.env.ref('foo.foo').name, 'foo')
         self.assertEqual(self.env.ref('foo.bar')._name, 'res.partner')
         self.assertEqual(self.env.ref('foo.bar').name, 'bar')
-        self.assertEqual(self.env['res.partner'].search_count([('name', '=', 'baz')]), 1)
+        self.assertEqual(self.env['res.currency'].search_count([('symbol', '=', 'NCU')]), 1)
 
         self.assertEqual(self.env.ref('bar.foo')._name, 'res.country')
         self.assertEqual(self.env.ref('bar.foo').name, 'foo')

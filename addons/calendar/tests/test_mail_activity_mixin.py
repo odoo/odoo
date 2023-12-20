@@ -75,3 +75,8 @@ class TestMailActivityMixin(MailCommon):
             act1.calendar_event_id = ev1
 
             self.assertEqual(test_record.activity_calendar_event_id.name, ev1.name, "This should be the calendar event of the next activity")
+
+            act1._action_done(feedback="Mark activity as done with text")
+
+            self.assertFalse(act1.exists(), "activity marked as done should be deleted")
+            self.assertTrue(ev1.exists(), "event of done activity must not be deleted")

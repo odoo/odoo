@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Date
-from odoo.tests import Form
+from odoo.tests import Form, tagged, loaded_demo_data
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
+_logger = logging.getLogger(__name__)
 
+
+@tagged('post_install', '-at_install')
 class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def setUp(self):
@@ -250,6 +255,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
         """
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
         product_category_all = self.env.ref('product.product_category_all')
@@ -309,6 +317,30 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
+        in_account = self.env['account.account'].create({
+            'name': 'IN Account',
+            'code': '000001',
+            'account_type': 'asset_current',
+        })
+        out_account = self.env['account.account'].create({
+            'name': 'OUT Account',
+            'code': '000002',
+            'account_type': 'asset_current',
+        })
+        valu_account = self.env['account.account'].create({
+            'name': 'VALU Account',
+            'code': '000003',
+            'account_type': 'asset_current',
+        })
+        production_cost_account = self.env['account.account'].create({
+            'name': 'PROD COST Account',
+            'code': '000004',
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_stock_account_input_categ_id = in_account
+        product_category_all.property_stock_account_output_categ_id = out_account
+        product_category_all.property_stock_account_production_cost_id = production_cost_account
+        product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
         purchase = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,

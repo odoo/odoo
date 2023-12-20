@@ -3208,13 +3208,28 @@ export class OdooEditor extends EventTarget {
             styleSection.querySelector('button span').textContent = activeLabel;
         }
 
+        const isInMedia = this.toolbar.classList.contains('oe-media');
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#create-link');
         linkButton && linkButton.classList.toggle('active', !!linkNode);
+        // Hide unlink button if no link in selection, always hide on media
+        // elements.
+        const unlinkButton = this.toolbar.querySelector('#unlink');
+        unlinkButton?.classList.toggle('d-none', isInMedia || !linkNode);
         const undoButton = this.toolbar.querySelector('#undo');
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
+
+        // Hide create-link button if selection spans several blocks, always
+        // hide on media elements.
+        const range = getDeepRange(this.editable, { sel, correctTripleClick: true });
+        const spansBlocks = [...range.commonAncestorContainer.childNodes].some(isBlock);
+        linkButton?.classList.toggle('d-none', spansBlocks || isInMedia);
+        
+        // Hide link button group if it has no visible button.
+        const linkBtnGroup = this.toolbar.querySelector('#link.btn-group');
+        linkBtnGroup?.classList.toggle('d-none', !linkBtnGroup.querySelector('.btn:not(.d-none)'));
         if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
             this._positionToolbar();
         }
@@ -4786,7 +4801,7 @@ export class OdooEditor extends EventTarget {
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
                 const url = /^https?:\/\//i.test(text) ? text : 'http://' + text;
-                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(urlFileExtention.toLowerCase());
                 // A url cannot be transformed inside an existing link.
@@ -4844,11 +4859,11 @@ export class OdooEditor extends EventTarget {
                             name: this.options._t('Embed Youtube Video'),
                             description: this.options._t('Embed the youtube video in the document.'),
                             fontawesome: 'fa-youtube-play',
-                            callback: () => {
+                            callback: async () => {
                                 revertTextInsertion();
                                 let videoElement;
                                 if (this.options.getYoutubeVideoElement) {
-                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                    videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
                                 } else {
                                     videoElement = document.createElement('iframe');
                                     videoElement.setAttribute('width', '560');

@@ -13,6 +13,9 @@ class TestCRMLead(TestCrmCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        # To avoid magic phone sanitization
+        cls.env.company.country_id = cls.env.ref('base.us')
+
         cls.emails_provider_generic = {
             ('robert.poilvert@gmail.com', 'robert.poilvert@gmail.com'),
             ('fp@odoo.com', 'fp@odoo.com'),

@@ -74,13 +74,13 @@ msgid ""
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
 " * 草稿：调拨尚未确认。 预订不应用。\n"
-" * 等待另一个作业:在准备好之前，该传输正在等待另一个作业。\n"
+" * 等待另一个作业:在准备好之前，该调拨正在等待另一个作业。\n"
 " * 等待：调拨正在等待某些产品的可用性。\n"
-"(a) 运输政策是“尽快”：没有产品可以预留。\n"
-"(b) 运输政策是“当所有产品准备就绪”时：并非所有产品都可以预留。\n"
+"(a) 调拨政策是“尽快”：没有产品可以预留。\n"
+"(b) 调拨政策是“当所有产品准备就绪”时：并非所有产品都可以预留。\n"
 " * 就绪：调拨已准备好进行处理。\n"
-"(a) 运输政策是“尽快”：至少预留了一种产品。\n"
-"(b) 运输政策是“当所有产品准备就绪”时：所有产品都已预订。\n"
+"(a) 调拨政策是“尽快”：至少预留了一种产品。\n"
+"(b) 调拨政策是“当所有产品准备就绪”时：所有产品都已预订。\n"
 " * 完成：已处理调拨。\n"
 " * 已取消：调拨已取消。"
 
@@ -1401,7 +1401,7 @@ msgstr "批量调拨"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
 msgid "Before scheduled date"
-msgstr "在预定日期之前"
+msgstr "在安排日期之前"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -2281,7 +2281,7 @@ msgstr "补货需要完成的日期。"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr "移库动作确认或者取消的日期。"
+msgstr "调拨动作确认或者取消的日期。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -3481,7 +3481,7 @@ msgstr "分组…"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
-msgstr "将您的调拨作业以波浪式传输分组，以便一起处理它们"
+msgstr "将您的调拨作业以波浪式调拨分组，以便一起处理它们"
 
 #. module: stock
 #. odoo-javascript
@@ -4022,7 +4022,7 @@ msgstr "内部参考号码，它不同于制造商的批次/序列号码"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid ""
 "Internal transfers allow you to move products from one location to another."
-msgstr "内部调拨允许您将产品从一个位置移动到另一个位置。"
+msgstr "内部调拨允许您将产品从一个位置调拨到另一个位置。"
 
 #. module: stock
 #. odoo-python
@@ -5227,7 +5227,7 @@ msgstr "未找到快递。现在创建一个！"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr "未找到内部转账。让我们创建一个！"
+msgstr "未找到内部调拨。让我们创建一个！"
 
 #. module: stock
 #. odoo-python
@@ -6964,7 +6964,7 @@ msgstr "收货路线"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "收货"
+msgstr "接收"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
@@ -9271,7 +9271,7 @@ msgstr "追溯明细"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -9294,7 +9294,7 @@ msgstr "调拨"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Transfers %s: Please add some items to move."
-msgstr "移动%s：请添加一些要移动的项目。"
+msgstr "调拨%s：请添加一些要移动的项目。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
@@ -9307,7 +9307,7 @@ msgstr "移动%s：请添加一些要移动的项目。"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "调拨允许您将产品从一个位置移动到另外一个位置。"
+msgstr "调拨允许您将产品从一个位置调拨到另外一个位置。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -10410,7 +10410,7 @@ msgstr "您不能使用两次相同的序列号。 请更正序列号编码。"
 msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
-msgstr "如果没有保留数量，则无法验证转账。要强制转账，请对数量进行编码。"
+msgstr "如果没有保留数量，则无法验证调拨。要强制调拨，请对数量进行编码。"
 
 #. module: stock
 #. odoo-python
@@ -10419,7 +10419,7 @@ msgstr "如果没有保留数量，则无法验证转账。要强制转账，请
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
-msgstr "您无法验证空转移。请在继续之前添加一些要转移的产品。"
+msgstr "您无法验证空调拨。请在继续之前添加一些要调拨的产品。"
 
 #. module: stock
 #. odoo-python
@@ -10482,7 +10482,7 @@ msgstr "您每次只能退回一次拣货。"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr "您可能需要更新该转移作业的位置"
+msgstr "您可能需要更新该调拨作业的位置"
 
 #. module: stock
 #. odoo-python

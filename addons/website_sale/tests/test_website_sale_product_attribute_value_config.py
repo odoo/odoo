@@ -10,13 +10,14 @@ from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
-class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-
         # Use the testing environment.
+        cls.env['website'].get_current_website().company_id = cls.env.company
+        cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
 
     def test_get_combination_info(self):
@@ -79,6 +80,9 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website._get_current_pricelist()
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         product = self.env['product.template'].create({
             'name': 'Test Product',
             'list_price': 2000,
@@ -168,10 +172,9 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
 
 @tagged('post_install', '-at_install', 'product_pricelist')
-class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
-        self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
         self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
@@ -225,7 +228,6 @@ class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProduc
 
     def test_cart_update_with_fpos_no_variant_product(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
-        self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
         # Add 10% tax on product
         tax10 = self.env['account.tax'].create({'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent', 'type_tax_use': 'sale'})

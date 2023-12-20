@@ -218,6 +218,11 @@ class StockMove(models.Model):
                 continue
             move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
 
+    @api.depends('byproduct_id')
+    def _compute_show_info(self):
+        super()._compute_show_info()
+        self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids).show_quant = False
+
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
         if self.raw_material_production_id and self.has_tracking == 'none':
@@ -288,7 +293,7 @@ class StockMove(models.Model):
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
         if vals.get('manual_consumption'):
-            self.picked = True
+            vals['picked'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines

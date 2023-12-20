@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -289,7 +290,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">您的潜在客户</span><br>\n"
+"                    <span style=\"font-size: 10px;\">您的线索</span><br>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
 "                </td></tr>\n"
@@ -307,18 +308,18 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            您好，<br>\n"
-"                            您所在地区的潜在客户已与我们取得联系。因此，以下已分配给 <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
+"                            您所在地区的线索已与我们取得联系。因此，以下已分配给 <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
 "                            <ol>\n"
 "                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">主题为定义</a>，<t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">联系人姓名未定义</t>，<t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">国家未定义</t>，<t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">电子邮件未定义</t>，<t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br>\n"
 "                            </ol>\n"
 "                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                请连接<a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">合作伙伴门户</a>获取详细信息。每个潜在客户的左上角都有两个按钮，您在联系后应按下按钮：\"我感兴趣\" & \"我不感兴趣\"。<br>\n"
+"                                请连接<a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">合作伙伴门户</a>获取详细信息。每个线索的左上角都有两个按钮，您在联系后应按下按钮：\"我感兴趣\" & \"我不感兴趣\"。<br>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                您尚无权限访问我们的数据库。请联系\n"
 "                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">我们</t>。<br>\n"
 "                            </t>\n"
-"                            The 如果您在 20 天内未联系潜在客户，该潜在客户将被派给其他合作伙伴。<br><br>\n"
+"                            The 如果您在 20 天内未联系线索，该线索将被派给其他合作伙伴。<br><br>\n"
 "                            谢谢！<br>\n"
 "                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"></t>\n"
 "                            <br>\n"
@@ -756,7 +757,7 @@ msgstr "地理位置："
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
-msgstr "提供将潜在客户分配给该合作伙伴的概率。 （0 表示没有分配。）"
+msgstr "提供将线索分配给该合作伙伴的概率。 （0 表示没有分配。）"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -783,7 +784,7 @@ msgstr "分组方式"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am interested by this lead."
-msgstr "我对此潜在客户很感兴趣。"
+msgstr "我对此线索很感兴趣。"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1300,7 +1301,7 @@ msgstr "发送邮件"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr "在将潜在顾客分配给合作伙伴时发送给他"
+msgstr "在将线索分配给合作伙伴时发送给他"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence

@@ -106,7 +106,8 @@
                 <field name="product_id" optional="hide"
                     readonly="1"
                     column_invisible="context.get('product_template_invisible_variant', False)"
-                    groups="product.group_product_variant"/>
+                    groups="product.group_product_variant"
+                    domain="[('product_tmpl_id', '=', context.get('default_product_tmpl_id'))] if context.get('default_product_tmpl_id') else [('product_tmpl_id', '=', product_tmpl_id)]"/>
                 <field name="product_tmpl_id" string="Product"
                     readonly="1"
                     column_invisible="context.get('visible_product_tmpl_id', True)"/>

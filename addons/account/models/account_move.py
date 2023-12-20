@@ -28,6 +28,7 @@ from odoo.tools import (
     formatLang,
     frozendict,
     get_lang,
+    groupby,
     index_exists,
     is_html_empty,
 )
@@ -1211,6 +1212,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = False
 
+    @api.depends_context('lang')
     @api.depends(
         'invoice_line_ids.currency_rate',
         'invoice_line_ids.tax_base_amount',
@@ -1398,11 +1400,11 @@ class AccountMove(models.Model):
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
-        for record in self:
-            if record.fiscal_position_id.foreign_vat:
-                record.tax_country_id = record.fiscal_position_id.country_id
-            else:
-                record.tax_country_id = record.company_id.account_fiscal_country_id
+        foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
+        for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id.country_id
+        for company_id, record_group in groupby((self-foreign_vat_records), key=lambda r: r.company_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = company_id.account_fiscal_country_id
 
     @api.depends('tax_country_id')
     def _compute_tax_country_code(self):
@@ -4065,21 +4067,26 @@ class AccountMove(models.Model):
         )
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals)
-        local_msg_vals = dict(msg_vals or {})
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+        self.ensure_one()
+
         if self.move_type != 'entry':
-            # This allows partners added to the email list in the sending wizard to access this document.
-            for group_name, _group_method, group_data in groups:
-                if group_name == 'customer' and self._portal_ensure_token():
-                    access_link = self._notify_get_action_link(
-                        'view', **local_msg_vals, access_token=self.access_token)
-                    group_data.update({
-                        'has_button_access': True,
-                        'button_access': {
-                            'url': access_link,
-                        },
-                    })
+            local_msg_vals = dict(msg_vals or {})
+            self._portal_ensure_token()
+            access_link = self._notify_get_action_link('view', **local_msg_vals, access_token=self.access_token)
+
+            # Create a new group for partners that have been manually added as recipients.
+            # Those partners should have access to the invoice.
+            button_access = {'url': access_link} if access_link else {}
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in local_msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'button_access': button_access,
+                }
+            )
+            groups.insert(0, recipient_group)
 
         return groups
 

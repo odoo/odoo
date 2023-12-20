@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -65,6 +66,15 @@ TIME_TRIGGERS = [
     'on_time_updated',
 ]
 
+def get_webhook_request_payload():
+    if not request:
+        return None
+    try:
+        payload = request.get_json_data()
+    except ValueError:
+        payload = {**request.httprequest.args}
+    return payload
+
 
 class BaseAutomation(models.Model):
     _name = 'base.automation'
@@ -86,7 +96,7 @@ class BaseAutomation(models.Model):
     )
     url = fields.Char(compute='_compute_url')
     webhook_uuid = fields.Char(string="Webhook UUID", readonly=True, copy=False, default=lambda self: str(uuid4()))
-    record_getter = fields.Char(default="env[payload.get('_model')].browse(payload.get('id'))",
+    record_getter = fields.Char(default="model.env[payload.get('_model')].browse(int(payload.get('_id')))",
                                 help="This code will be run to find on which record the automation rule should be run.")
     log_webhook_calls = fields.Boolean(string="Log Calls", default=False)
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
@@ -489,7 +499,7 @@ class BaseAutomation(models.Model):
 
         if not record.exists():
             msg = "Webhook #%s could not be triggered because no record to run it on was found."
-            msg_args = (self.id)
+            msg_args = (self.id,)
             _logger.warning(msg, *msg_args)
             if self.log_webhook_calls:
                 ir_logging_sudo.create(self._prepare_loggin_values(message=msg % msg_args, level="ERROR"))

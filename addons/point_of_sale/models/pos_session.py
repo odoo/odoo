@@ -1606,6 +1606,7 @@ class PosSession(models.Model):
             'pos.order': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
         }
 
+
     def _load_model(self, model):
         model_name = model.replace('.', '_')
         loader = getattr(self, '_get_pos_ui_%s' % model_name, None)
@@ -1685,6 +1686,7 @@ class PosSession(models.Model):
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
         loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+        loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
 
     @api.model
     def _pos_ui_models_to_load(self):
@@ -2239,7 +2241,7 @@ class PosSession(models.Model):
     def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
         shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
-        if shop_config:
+        if shop_config and shop_config.active:
             convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
             if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
                 self.env['pos.session'].create({

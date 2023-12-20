@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import models, fields, api, SUPERUSER_ID
 from odoo.http import request
+
+_logger = logging.getLogger(__name__)
 
 
 class website_form_config(models.Model):
@@ -115,6 +119,11 @@ class website_form_model_fields(models.Model):
         # only allow users who can change the website structure
         if not self.env['res.users'].has_group('website.group_website_designer'):
             return False
+
+        unexisting_fields = [field for field in fields if field not in self.env[model]._fields.keys()]
+        if unexisting_fields:
+            # TODO in master: Raise instead of log
+            _logger.error("Unable to whitelist field(s) %r for model %r.", unexisting_fields, model)
 
         # the ORM only allows writing on custom fields and will trigger a
         # registry reload once that's happened. We want to be able to

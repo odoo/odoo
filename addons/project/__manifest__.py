@@ -81,6 +81,7 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.qunit_suite_tests': [
+            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/**/*.js',
         ],
         'web.assets_tests': [

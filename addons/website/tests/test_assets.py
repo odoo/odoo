@@ -13,9 +13,11 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
     def test_01_multi_domain_assets_generation(self):
         Website = self.env['website']
         Attachment = self.env['ir.attachment']
+        # Create an additional website to ensure it works in multi-website setup
+        Website.create({'name': 'Second Website'})
         # Simulate single website DBs: make sure other website do not interfer
         # (We can't delete those, constraint will most likely be raised)
-        Website.search([]).write({'domain': 'inactive.test'})
+        [w.write({'domain': f'inactive-{w.id}.test'}) for w in Website.search([])]
         # Don't use HOST, hardcode it so it doesn't get changed one day and make
         # the test useless
         domain_1 = "http://127.0.0.1:%s" % config['http_port']
@@ -99,6 +101,42 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
         new_public_assets_links = re.findall(r'(/web/assets/\d+/\w{7}/web.assets_frontend\..+)"/>', page)
         self.assertEqual(new_admin_assets_links, new_public_assets_links, "t-cache should have been invalidated for public user too")
+
+    def test_invalid_unlink(self):
+        self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()
+
+        asset_bundle_xmlid = 'web.assets_frontend'
+        website_default = self.env['website'].search([], limit=1)
+
+        code = b"document.body.dataset.hello = 'world';"
+        attach = self.env['ir.attachment'].create({
+            'name': 'EditorExtension.css',
+            'mimetype': 'text/css',
+            'raw': code,
+        })
+        custom_url = '/_custom/web/content/%s/%s' % (attach.id, attach.name)
+        attach.url = custom_url
+
+        self.env['ir.asset'].create({
+            'name': 'EditorExtension',
+            'bundle': asset_bundle_xmlid,
+            'path': custom_url,
+            'website_id': website_default.id,
+        })
+
+        website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, assets_params={'website_id': website_default.id})
+        self.assertIn(custom_url, [f['url'] for f in website_bundle.files])
+        base_website_css_version = website_bundle.get_version('css')
+
+        no_website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid)
+        self.assertNotIn(custom_url, [f['url'] for f in no_website_bundle.files])
+        self.assertNotEqual(no_website_bundle.get_version('css'), base_website_css_version)
+
+        website_attach = website_bundle.css()
+        self.assertTrue(website_attach.exists())
+        no_website_bundle.css()
+        self.assertTrue(website_attach.exists(), 'attachment for website should still exist after generating attachment for no website')
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestWebAssets(odoo.tests.HttpCase):

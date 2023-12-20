@@ -21,11 +21,11 @@
                     <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
-                    <filter string="Blocking" name="blocking" domain="[('state', 'not in', ['1_done','1_canceled']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
+                    <filter string="Blocking" name="blocking" domain="[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator/>
                     <filter string="Last Stage Update" name="date_last_stage_update" date="date_last_stage_update"/>
                     <separator/>
-                    <filter string="Open Tasks" name="open_tasks" domain="[('state', 'not in', ['1_done','1_canceled'])]"/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal'])]"/>
                     <filter string="Closed Tasks" name="closed_tasks" domain="[('state', 'in', ['1_done','1_canceled'])]"/>
                     <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update"/>
                     <separator/>
@@ -600,8 +600,8 @@
                                         <span invisible="context.get('default_project_id', False)" style="display: block; margin-top: 4px;">
                                             <field name="project_id" options="{'no_open': True}"/>
                                         </span>
-                                        <span t-if="record.partner_id.value" t-att-title="record.partner_id.value" style="display: block; margin-top: 4px;">
-                                            <field name="partner_id" class="text-truncate d-block"/>
+                                        <span t-if="record.partner_id.value" style="display: block; margin-top: 4px;">
+                                            <field name="partner_id"/>
                                         </span>
                                         <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
                                             <field name="milestone_id" options="{'no_open': True}" />
@@ -669,7 +669,6 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <tree string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
-                    <field name="company_id" column_invisible="True"/>
                     <field name="sequence" readonly="1" column_invisible="True"/>
                     <field name="allow_milestones" column_invisible="True"/>
                     <field name="subtask_count" column_invisible="True"/>
@@ -1040,7 +1039,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('state', 'not in', ['1_done', '1_canceled']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>

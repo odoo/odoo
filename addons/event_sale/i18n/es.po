@@ -392,7 +392,7 @@ msgstr "Boletos no gratuitos"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Not Sold"
-msgstr ""
+msgstr "No vendido"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -442,6 +442,8 @@ msgid ""
 "Please make sure all your event related lines are configured before "
 "confirming this order:%s"
 msgstr ""
+"Asegúrese de configurar todas las líneas relacionadas al evento antes de "
+"confirmar esta orden: %s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
@@ -463,7 +465,7 @@ msgstr "Precio reducido con IVA"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
 msgid "Price include"
-msgstr ""
+msgstr "Precio incluido"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
@@ -560,7 +562,7 @@ msgstr "Estado de la orden de venta"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
 msgid "Sale Status"
-msgstr ""
+msgstr "Estado de venta"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -663,6 +665,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Sin confirmar: inscripciones en estado pendiente, en espera de una acción (es un caso específico, en particular con el estado de venta)\n"
+"Inscrito: inscripciones que se consideran hechas por cliente\n"
+"Asistido: inscripciones en las que el participante asistió al evento\n"
+"Cancelado: inscripciones canceladas manualmente"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed

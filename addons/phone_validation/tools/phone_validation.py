@@ -22,7 +22,31 @@ try:
             ) from e
 
         if not phonenumbers.is_possible_number(phone_nbr):
-            raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
+            reason = phonenumbers.is_possible_number_with_reason(phone_nbr)
+            if reason == phonenumbers.ValidationResult.INVALID_COUNTRY_CODE:
+                raise UserError(_('Impossible number %s: not a valid country prefix.', number))
+            if reason == phonenumbers.ValidationResult.TOO_SHORT:
+                raise UserError(_('Impossible number %s: not enough digits.', number))
+            # in case of "TOO_LONG", we may try to reformat the number in case it was
+            # entered without '+' prefix or using leading '++' not always recognized;
+            # in any case final error should keep the original number to ease tracking
+            if reason == phonenumbers.ValidationResult.TOO_LONG:
+                # people may enter 0033... instead of +33...
+                if number.startswith('00'):
+                    try:
+                        phone_nbr = phone_parse(f'+{number.lstrip("00")}', country_code)
+                    except UserError:
+                        raise UserError(_('Impossible number %s: too many digits.', number))
+                # people may enter 33... instead of +33...
+                elif not number.startswith('+'):
+                    try:
+                        phone_nbr = phone_parse(f'+{number}', country_code)
+                    except UserError:
+                        raise UserError(_('Impossible number %s: too many digits.', number))
+                else:
+                    raise UserError(_('Impossible number %s: too many digits.', number))
+            else:
+                raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
         if not phonenumbers.is_valid_number(phone_nbr):
             raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
 
@@ -60,6 +84,21 @@ try:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
+    def phone_get_region_data_for_number(number):
+        try:
+            phone_obj = phone_parse(number, None)
+        except (phonenumbers.phonenumberutil.NumberParseException, UserError):
+            return {
+                'code': '',
+                'national_number': '',
+                'phone_code': '',
+            }
+        return {
+            'code': phonenumbers.phonenumberutil.region_code_for_number(phone_obj),
+            'national_number': str(phone_obj.national_number),
+            'phone_code': str(phone_obj.country_code),
+        }
+
 except ImportError:
 
     def phone_parse(number, country_code):
@@ -74,3 +113,10 @@ except ImportError:
             )
             _phonenumbers_lib_warning = True
         return number
+
+    def phone_get_region_code_for_number(number):
+        return {
+            'code': '',
+            'national_number': '',
+            'phone_code': '',
+        }

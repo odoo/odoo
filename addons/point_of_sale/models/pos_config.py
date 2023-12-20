@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytz
 
 from odoo import api, fields, models, _, Command
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -612,7 +612,11 @@ class PosConfig(models.Model):
         if not companies:
             companies = self.env['res.company'].search([])
         for company in companies.filtered('chart_template'):
-            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', False)])
+            domain = AND([
+                [('company_id', '=', company.id), ('module_pos_restaurant', '=', False)],
+                OR([[('active', '=', True)], [('active', '=', False)]]),
+            ])
+            pos_configs = self.search(domain)
             if not pos_configs:
                 self = self.with_company(company)
                 pos_configs = self.env['pos.config'].create({
@@ -742,16 +746,18 @@ class PosConfig(models.Model):
             WITH pm AS (
                   SELECT product_id,
                          Max(write_date) date
-                    FROM stock_quant
+                    FROM stock_move_line
                 GROUP BY product_id
+                ORDER BY date DESC
             )
                SELECT product_product.id
                  FROM {tables}
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE {where_clause}
-             ORDER BY product_product__product_tmpl_id.priority DESC,
-                      product_product__product_tmpl_id.detailed_type DESC,
-                      COALESCE(pm.date, product_product.write_date) DESC
+                ORDER BY product_product__product_tmpl_id.priority DESC,
+                    case when product_product__product_tmpl_id.detailed_type = 'service' then 1 else 0 end DESC,
+                    pm.date DESC NULLS LAST,
+                    product_product.write_date
                 LIMIT %s
         """
         self.env.cr.execute(query, params + [self.get_limited_product_count()])

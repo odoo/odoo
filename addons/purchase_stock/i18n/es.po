@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +83,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"De acuerdo con la configuración del proyecto, la cantidad recibida se puede calcular automáticamente con el mecanismo:\n"
+"- Manual: la cantidad se establece de manera manual en la línea\n"
+"- Movimientos de stock: la cantidad se establece según los producstos que ha recibido\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -441,6 +445,9 @@ msgid ""
 " number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"Durante los últimos x días; el número de productos recibidos a tiempo divido"
+" entre el número de products.x ordenados es el parámetro "
+"purchase_stock.on_time_delivery_days del sistema o 365."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -639,7 +646,7 @@ msgstr "Mostrar el botón de configurar proveedor"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_product_replenish_form_inherit_stock
 msgid "Show Vendor"
-msgstr ""
+msgstr "Mostrar proveedor"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -685,7 +692,7 @@ msgstr "Información de reabastecimiento del proveedor de existencia"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr ""
+msgstr "Opción de reabastecimiento de almacén de stock"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -846,7 +853,7 @@ msgstr "Plazo de entrega del vendedor "
 #: code:addons/purchase_stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Vendor Not Found in Product %s"
-msgstr ""
+msgstr "No se encontró un proveedor en el producto %s"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
@@ -883,6 +890,9 @@ msgid ""
 "created to fulfill the need.<br/>Note: This rule will be used in combination"
 " with the rules<br/>of the reception route(s)"
 msgstr ""
+"Cuando se necesiten productos en <b>%s</b>, <br/> se generará una solicitud "
+"de presupuesto para satisfacer dicha necesidad.<br/>Nota: Esta regla se "
+"utilizará en combinación con las reglas<br/>de las rutas de recepción"
 
 #. module: purchase_stock
 #. odoo-python

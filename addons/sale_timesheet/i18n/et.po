@@ -14,8 +14,8 @@
 # Algo Kärp <algokarp@gmail.com>, 2023
 # JanaAvalah, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2023
 # Leaanika Randmets, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                   Tegevusi ei leitud. Loome ühe!\n"
+"                </p><p>\n"
+"                    Jälgi oma logitud aega igapäevaselt, logitud read lähevad kliendi arvele!\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -105,7 +112,7 @@ msgstr ", mis viib"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "- Timesheet product"
-msgstr ""
+msgstr "Ajaarvestuslehe toode"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -114,6 +121,9 @@ msgid ""
 "                        Define the rate at which an employee's time is billed based on their expertise, skills, or experience.\n"
 "                        To bill the same service at a different rate, create separate sales order items."
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\"/>\n"
+"                        Määra töötajatele arveldusmäär, mis põhineb nende oskuste ja kogemuste põhjal..\n"
+"                        Kui soovid sama teenust arveldada erineva arveldusmääraga, siis pead looma erinevad müügitellimused.  "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -134,7 +144,7 @@ msgstr "<span class=\"o_stat_text\">Müügitellimus</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Amount Due:</strong>"
-msgstr ""
+msgstr "<strong>Kuulub tasumisele:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -159,7 +169,7 @@ msgstr "<u>Kasumlikkus</u>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Sales</u>"
-msgstr ""
+msgstr "<u>Müük</u>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -170,6 +180,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Vastavalt toote konfiguratsioonile saab tarnitud koguse automaatselt arvutada mehhanismi abil:\n"
+"  - Käsitsi: kogus määratakse reale käsitsi\n"
+"  - Analüütiliste kulude alusel: kogus on summa postitatud kuludest\n"
+"  - Ajaarvestus: kogus on müügireaga seotud ülesannetele logitud tundide alusel.\n"
+"  - Laoliikumised: kogus tuleb kinnitatud korjetest\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -475,7 +490,7 @@ msgstr "Lõppkuupäev"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
 msgid "Existing Employee"
-msgstr ""
+msgstr "Olemasolev töötaja"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -750,7 +765,7 @@ msgstr "Mittearveldatavad tunnid"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Arveldamata"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -932,7 +947,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1089,7 +1104,7 @@ msgstr "Service Upsell Threshold Ratio"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheets"
-msgstr ""
+msgstr "Teenus ajaarvestuslehel"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1112,7 +1127,7 @@ msgstr "Teenused"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
 msgid "Show Hours Recorded Button"
-msgstr ""
+msgstr "Näita salvestatud tundide nuppu"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1287,7 +1302,7 @@ msgstr "Ajaarvestuslehe toode"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 msgid "Timesheet Report"
-msgstr ""
+msgstr "Tööaja arvestuslehtede aruanne"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1400,7 +1415,7 @@ msgstr "Timesheets on project (one fare per SO/Project)"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets revenues"
-msgstr ""
+msgstr "Tööaja arvestuslehtede tulud"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
@@ -1420,7 +1435,7 @@ msgstr "Timesheets taken when invoicing time spent"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are"
-msgstr ""
+msgstr "Tööaja arvestuslehed ilma müügitellimuseta on"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -1552,7 +1567,7 @@ msgstr "Te ei saa eemaldada juba arveldatud tööajalogimise rida."
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
 msgid "billed manually"
-msgstr ""
+msgstr "arveldatud manuaalselt"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1566,7 +1581,7 @@ msgstr "päev(a)"
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "days remaining"
-msgstr ""
+msgstr "päevi järele"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1583,7 +1598,7 @@ msgstr "marginaal ("
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__not_billable
 msgid "not billable"
-msgstr ""
+msgstr "ei ole arveldatav"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form

@@ -13,7 +13,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
 
     def setUp(self):
         super(TestSMSPerformance, self).setUp()
-
+        self.env.company.country_id = self.env.ref('base.us')
         self.test_record = self.env['mail.test.sms'].with_context(self._test_context).create({
             'name': 'Test',
             'customer_id': self.customer.id,
@@ -35,7 +35,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
-        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=27):
+        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=31):
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -50,7 +50,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
-        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=27):
+        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=31):
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -64,7 +64,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     @warmup
     def test_message_sms_record_default(self):
         record = self.test_record.with_user(self.env.user)
-        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=29):
+        with self.subTest("QueryCount"), self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=32):
             messages = record._message_sms(
                 body='Performance Test',
             )

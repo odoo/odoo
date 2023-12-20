@@ -679,6 +679,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
 msgstr ""
+"Todas las cantidades de producto deben ser mayores o iguales a 0.\n"
+"Se pueden utilizar las líneas con cantidades en 0 como líneas opcionales. \n"
+"¡Debe instalar el módulo mrp_byproduct si desea gestionar productos adicionales en las listas de materiales!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1974,7 +1977,7 @@ msgstr "Fecha de alerta de retraso"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delays"
-msgstr ""
+msgstr "Atrasos "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2204,7 +2207,7 @@ msgstr "Asegure la trazabilidad de un producto almacenable en su almacén"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Falla del equipo"
 
 #. module: mrp
 #. odoo-python
@@ -2431,7 +2434,7 @@ msgstr "Disponible para usar / A mano"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Disponible/En stock"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2467,12 +2470,12 @@ msgstr "Generar números de serie"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr ""
+msgstr "Generar una nueva LdM desde esta orden de fabricación "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
 msgid "Generated Lot/SN Label to Print"
-msgstr ""
+msgstr "Etiqueta de número de serie o lote generada para imprimir"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2677,6 +2680,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente las etiquetas "
+"del informe de asignación de una orden de fabricación cuando esté hecha."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -2684,6 +2689,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente el informe de "
+"asignación de una orden de fabricación cuando se haya realizado y tenga "
+"movimientos asignados."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2691,6 +2699,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente la etiqueta de "
+"número de lote o serie de una orden de fabricación cuando esté hecha."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
@@ -2698,6 +2708,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a MO when it is done."
 msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente las etiquetas "
+"de los productos de una orden de fabricación cuando esté hecha."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2705,6 +2717,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
+"Si esta casilla está marcada, Odoo imprimirá automáticamente la orden de "
+"producción de una orden de fabricación cuando esté hecha."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -3674,12 +3688,12 @@ msgstr "No disponible"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "Not Ready"
-msgstr ""
+msgstr "No lista"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
+msgstr "Tenga en cuenta que se encuentra disponible otra versión de esta LdM."
 
 #. module: mrp
 #. odoo-python
@@ -3792,6 +3806,9 @@ msgid ""
 "                                install the IoT App on a computer that is on the same local network as the\n"
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
+"Odoo abre una vista previa en PDF por defecto. Si usted desea imprimir instantáneamente,\n"
+"                                        instale la aplicación IoT en un ordenador que esté en la misma red local que\n"
+"                                        el operador del código de barras y configure el enrutamiento de los reportes."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -4167,14 +4184,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Please unblock the work center to start the work order."
-msgstr ""
+msgstr "Desbloquee el centro de trabajo para iniciar la orden de trabajo."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Please unblock the work center to validate the work order"
-msgstr ""
+msgstr "Desbloquee el centro de trabajo para validar la orden de trabajo"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -4307,6 +4324,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Producir: mover los componentes a la ubicación de producción directamente para comenzar el proceso de fabricación.\n"
+"Recolectar/producir: primero se deben descargar los componentes del stock a la ubicación de entrada para luego trasladarlos a la ubicación de producción."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4445,7 +4464,7 @@ msgstr "La capacidad de producto debe ser única para cada centro de trabajo."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr ""
+msgstr "Producto a construir..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__production_ids
@@ -5004,7 +5023,7 @@ msgstr "Seleccione operaciones para copiar"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Selection not supported."
-msgstr ""
+msgstr "Selección no admitida."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -5126,7 +5145,7 @@ msgstr "¿Mostrar ventana emergente?"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
 msgid "Show Produce"
-msgstr ""
+msgstr "Mostrar Producir"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
