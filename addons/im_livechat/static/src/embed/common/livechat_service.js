@@ -193,6 +193,7 @@ export class LivechatService {
      */
     async getOrCreateThread({ persist = false } = {}) {
         let threadData = this.sessionCookie;
+        let isNewlyCreated = false;
         if (!threadData || (!threadData.uuid && persist)) {
             const chatbotScriptId = this.sessionCookie
                 ? this.sessionCookie.chatbot_script_id
@@ -208,6 +209,7 @@ export class LivechatService {
                 },
                 { shadow: true }
             );
+            isNewlyCreated = true;
         }
         if (!threadData?.operator) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
@@ -222,9 +224,10 @@ export class LivechatService {
         const thread = this.store.Thread.insert({
             ...threadData,
             id: threadData.id ?? this.TEMPORARY_ID,
-            isLoaded: !threadData.id,
+            isLoaded: !threadData.id || isNewlyCreated,
             model: "discuss.channel",
             channel_type: "livechat",
+            isNewlyCreated,
         });
         this.state = thread.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         if (this.state === SESSION_STATE.PERSISTED && !this.sessionInitialized) {
