@@ -2,6 +2,7 @@
 
 import requests
 
+from datetime import timedelta
 from lxml import html
 
 from odoo import api, models, fields, tools
@@ -13,7 +14,7 @@ class LinkPreview(models.Model):
     _name = 'mail.link.preview'
     _description = "Store link preview data"
 
-    message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade', required=True)
+    message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')
     is_hidden = fields.Boolean()
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
@@ -98,6 +99,24 @@ class LinkPreview(models.Model):
         link_preview_throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
         return link_preview_throttle > 0
 
+    @api.model
+    def _search_or_create_from_url(self, url):
+        """Return the URL preview, first from the database if available otherwise make the request."""
+        lifetime = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_link_preview_lifetime_days', 3))
+        preview = self.env['mail.link.preview'].search([
+            ('source_url', '=', url),
+            ('create_date', '>=', fields.Datetime.now() - timedelta(days=lifetime)),
+        ], order='create_date DESC', limit=1)
+
+        if not preview:
+            preview_values = link_preview.get_link_preview_from_url(url)
+            if not preview_values:
+                return
+
+            preview = self.env['mail.link.preview'].create(preview_values)
+
+        return preview._link_preview_format()[0]
+
     def _link_preview_format(self):
         return [{
             'id': preview.id,
@@ -111,3 +130,11 @@ class LinkPreview(models.Model):
             'og_site_name': preview.og_site_name,
             'source_url': preview.source_url,
         } for preview in self]
+
+    @api.autovacuum
+    def _gc_mail_link_preview(self):
+        lifetime = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_link_preview_lifetime_days', 3))
+        self.env['mail.link.preview'].search([
+            ('message_id', '=', False),
+            ('create_date', '<', fields.Datetime.now() - timedelta(days=lifetime)),
+        ], order='create_date ASC', limit=1000).unlink()
