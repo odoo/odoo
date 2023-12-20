@@ -367,8 +367,16 @@ form: module.record_id""" % (xml_id,)
 
             record = env['ir.model.data']._load_xmlid(xid)
             if record:
-                # if the resource already exists, don't update it but store
-                # its database id (can be useful)
+                # if the resource already exists, update only the IMD noupdate flag
+                # from False to True, and store its database id (can be useful)
+                env.cr.execute(
+                    """
+                    UPDATE ir_model_data
+                       SET noupdate = True, write_date = NOW() AT TIME ZONE 'UTC'
+                     WHERE module = %s AND name = %s AND noupdate IS NOT True
+                    """,
+                    xid.split('.'),
+                )
                 self.idref[rec_id] = record.id
                 return None
             elif not nodeattr2bool(rec, 'forcecreate', True):
