@@ -58,16 +58,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: '#toolbar button[data-bs-original-title="Link Style"]',
     },
     {
-        // When doing automated testing, the link popover takes time to
-        // hide. While hidding, the editor observer is unactive in order to
-        // prevent the popover mutation to be recorded. In a manual
-        // scenario, the popover has plenty of time to be hidden and the
-        // obsever would be re-activated in time. As this problem arise only
-        // in test, we make sure the popover is hidden
-        trigger: 'iframe html:not(:has(.popover))',
-        run: () => null, // it's a check
-    },
-    {
         content: "Click on the secondary style button.",
         trigger: '#toolbar we-button[data-value="secondary"]',
     },
