@@ -6,9 +6,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
-    chatbot_script_id: null,
-    requested_by_operator: false,
-
     setup() {
         super.setup();
         this.chatbotTypingMessage = Record.one("Message", {
@@ -31,6 +28,13 @@ patch(Thread.prototype, {
                 }
             },
         });
+        this.chatbot_script_id = null;
+        /**
+         * Indicates whether this thread was just created (i.e. no reload occurs
+         * since the creation).
+         */
+        this.isNewlyCreated = false;
+        this.requested_by_operator = false;
     },
 
     get isLastMessageFromCustomer() {
