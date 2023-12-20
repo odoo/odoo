@@ -132,20 +132,24 @@ export class DiscussCoreCommon {
                 });
             });
             this.busService.subscribe("discuss.channel.member/seen", (payload) => {
-                const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
+                const { allow_older, channel_id, guest_id, id, last_seen_message, partner_id } =
+                    payload;
                 const member = this.store.ChannelMember.insert({
                     id,
-                    seen_message_id: { id: last_message_id },
+                    seen_message_id: last_seen_message,
                     persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
                     thread: { id: channel_id, model: "discuss.channel" },
                 });
+                if (allow_older) {
+                    member.thread.localSeenMessage = null;
+                }
                 if (member?.persona.eq(this.store.self)) {
-                    this.threadService.updateSeen(member.thread, last_message_id);
+                    this.threadService.updateSeen(member.thread, member.seen_message_id);
                 }
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
                 if (message.originThread) {
-                    if (message.id > message.originThread.seen_message_id) {
+                    if (message.id > message.originThread.seenMessage?.id) {
                         message.originThread.message_unread_counter--;
                     }
                 }
@@ -222,7 +226,7 @@ export class DiscussCoreCommon {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
-                channel.seen_message_id = message.id;
+                this.threadService.updateSeen(channel, message);
             } else {
                 if (notif.id > this.store.initBusId) {
                     channel.message_unread_counter++;
@@ -262,6 +266,7 @@ export class DiscussCoreCommon {
         ) {
             this.threadService.markAsRead(channel);
         }
+        channel.localSeenMessage = null;
         this.env.bus.trigger("discuss.channel/new_message", { channel, message });
     }
 }

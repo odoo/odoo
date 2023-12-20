@@ -243,7 +243,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
             ["partner_id", "=", partnerId],
         ])[0],
         channel_id: channelId,
-        last_message_id: 100,
+        last_seen_message: { id: 100 },
         partner_id: partnerId,
     });
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
@@ -293,7 +293,7 @@ QUnit.test(
                 ["partner_id", "=", partnerId],
             ])[0],
             channel_id: channelId,
-            last_message_id: 100,
+            last_seen_message: { id: 100 },
             partner_id: partnerId,
         });
         await contains(".o-mail-MessageSeenIndicator i", { count: 2 });

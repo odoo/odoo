@@ -203,8 +203,8 @@ export class Thread extends Record {
     needactionMessages = Record.many("Message");
     /** @type {string} */
     name;
-    /** @type {number|false} */
-    seen_message_id;
+    seenMessage = Record.one("Message");
+    localSeenMessage = Record.one("Message");
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";

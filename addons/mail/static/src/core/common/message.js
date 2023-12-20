@@ -384,14 +384,13 @@ export class Message extends Component {
     }
 
     onClickMarkAsUnread() {
-        const previousMessageId =
-            this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
-        if (this.props.thread.seen_message_id === previousMessageId) {
+        const previousMessage = this.message.originThread.getPreviousMessage(this.message);
+        if (this.props.thread.seenMessage.eq(previousMessage)) {
             return;
         }
         return rpc("/discuss/channel/set_last_seen_message", {
             channel_id: this.message.originThread.id,
-            last_message_id: previousMessageId,
+            last_message_id: previousMessage?.id ?? false,
             allow_older: true,
         });
     }

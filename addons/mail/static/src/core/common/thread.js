@@ -153,6 +153,7 @@ export class Thread extends Component {
                 }
                 this.threadService.fetchNewMessages(this.props.thread);
             }
+            this.threadService.markAsRead(this.props.thread);
         });
         useEffect(
             (isLoaded) => {
@@ -435,5 +436,11 @@ export class Thread extends Component {
             return false;
         }
         return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
+    }
+
+    isNewMessageSeparatorVisible(previousMessage) {
+        const lastSeenId =
+            this.props.thread.localSeenMessage?.id ?? this.props.thread.seenMessage?.id ?? false;
+        return lastSeenId === (previousMessage?.id ?? false);
     }
 }

@@ -114,8 +114,10 @@ export class LivechatService {
      * @param {Object} values
      */
     updateSession(values) {
-        if (Record.isRecord(values?.channel)) {
-            values.channel = values.channel.toData();
+        for (const key of Object.keys(values)) {
+            if (Record.isRecord(values[key])) {
+                values[key] = values[key].toData();
+            }
         }
         const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
         Object.assign(session, {

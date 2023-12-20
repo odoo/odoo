@@ -652,9 +652,11 @@ patch(MockServer.prototype, {
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     state: memberOfCurrentUser.fold_state || "closed",
-                    seen_message_id: Array.isArray(memberOfCurrentUser.seen_message_id)
-                        ? memberOfCurrentUser.seen_message_id[0]
-                        : memberOfCurrentUser.seen_message_id,
+                    lastSeenMessage: {
+                        id: Array.isArray(memberOfCurrentUser.seen_message_id)
+                            ? memberOfCurrentUser.seen_message_id[0]
+                            : memberOfCurrentUser.seen_message_id,
+                    },
                 });
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
@@ -1002,7 +1004,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
             channel_id: channel.id,
             id: memberOfCurrentUser?.id,
-            last_message_id: message_id,
+            last_seen_message: { id: message_id },
             [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
         });
     },

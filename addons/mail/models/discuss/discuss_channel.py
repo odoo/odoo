@@ -812,7 +812,7 @@ class Channel(models.Model):
                     info['message_unread_counter'] = member.message_unread_counter
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
-                    info['seen_message_id'] = member.seen_message_id.id
+                    info['seen_message_id'] = {"id": member.seen_message_id.id} if member.seen_message_id else False
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
                     info['last_interest_dt'] = fields.Datetime.to_string(member.last_interest_dt)
@@ -1011,9 +1011,10 @@ class Channel(models.Model):
             'last_seen_dt': fields.Datetime.now(),
         })
         data = {
+            'allow_older': allow_older,
             'channel_id': self.id,
             'id': member.id,
-            'last_message_id': last_message.id,
+            'last_seen_message': {"id": last_message.id},
         }
         data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
         target = current_partner or current_guest
