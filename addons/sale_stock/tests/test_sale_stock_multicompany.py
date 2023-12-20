@@ -45,7 +45,6 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'product_uom_qty': 10,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         sale_order = self.env['sale.order']
 
@@ -64,7 +63,6 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'product_uom_qty': 10,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         so_company_A = sale_order.with_company(self.env.company).create(sale_order_vals2)
         self.assertEqual(so_company_A.warehouse_id.id, self.warehouse_A.id)
@@ -80,7 +78,6 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
                 'product_uom_qty': 10,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         so_company_B = sale_order.with_company(self.company_data_2['company']).create(sale_order_vals3)
         self.assertEqual(so_company_B.warehouse_id.id, self.warehouse_B.id)

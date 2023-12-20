@@ -408,6 +408,7 @@ class TestSalePrices(SaleCommon):
 
         pricelist = self.env['product.pricelist'].create({
             'name': 'Test multi-currency',
+            'company_id': False,
             'discount_policy': 'without_discount',
             'currency_id': other_curr.id,
             'item_ids': [
