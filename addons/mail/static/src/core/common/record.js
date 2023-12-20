@@ -384,23 +384,22 @@ export function makeStore(env) {
                         if (fieldDefinition.onUpdate) {
                             /** @type {Function} */
                             let observe;
-                            const fn = (record) => fieldDefinition.onUpdate.call(record);
                             Object.assign(field, {
-                                onChange: () => {
-                                    fn(recordProxy);
+                                onUpdate: () => {
+                                    /**
+                                     * Forward internal proxy for performance as onUpdate does not
+                                     * need reactive (observe is called separately).
+                                     */
+                                    fieldDefinition.onUpdate.call(record._proxyInternal);
                                     observe?.();
                                 },
                             });
                             Record._onChange(recordProxy, name, (obs) => {
                                 observe = obs;
-                                if (field.sorting) {
-                                    observe();
-                                    return;
-                                }
                                 if (Record.UPDATE !== 0) {
-                                    Record.ADD_QUEUE(field, "onChange");
+                                    Record.ADD_QUEUE(field, "onUpdate");
                                 } else {
-                                    field.onChange();
+                                    field.onUpdate();
                                 }
                             });
                         }
@@ -1004,7 +1003,7 @@ class RecordList extends Array {
  *   when it's needed (i.e. accessed). Eager sorted fields are immediately re-sorted at end of update cycle,
  *   whereas lazy sorted fields wait extra for them being needed.
  * @property {boolean} [sortInNeed] on lazy sorted-fields, determines whether this field is needed (i.e. accessed).
- * @property {() => void} [onChange] function that contains functions to be called when the value of field
+ * @property {() => void} [onUpdate] function that contains functions to be called when the value of field
  *   has changed, e.g. sort and onUpdate.
  * @property {RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
  *   or a RecordList if it's a relational field.
@@ -1034,7 +1033,7 @@ export class Record {
     /** @type {Aray<{field: RecordField, records: Record[]}>} */
     static FD_QUEUE = []; // field-ondeletes
     /** @type {RecordField[]} */
-    static FO_QUEUE = []; // field-onchanges
+    static FU_QUEUE = []; // field-onupdates
     /** @type {Function[]} */
     static RO_QUEUE = []; // record-onchanges
     /** @type {Record[]} */
@@ -1053,7 +1052,7 @@ export class Record {
                 Record.FS_QUEUE.length > 0 ||
                 Record.FA_QUEUE.length > 0 ||
                 Record.FD_QUEUE.length > 0 ||
-                Record.FO_QUEUE.length > 0 ||
+                Record.FU_QUEUE.length > 0 ||
                 Record.RO_QUEUE.length > 0 ||
                 Record.RD_QUEUE.length > 0
             ) {
@@ -1061,14 +1060,14 @@ export class Record {
                 const FS_QUEUE = [...Record.FS_QUEUE];
                 const FA_QUEUE = [...Record.FA_QUEUE];
                 const FD_QUEUE = [...Record.FD_QUEUE];
-                const FO_QUEUE = [...Record.FO_QUEUE];
+                const FU_QUEUE = [...Record.FU_QUEUE];
                 const RO_QUEUE = [...Record.RO_QUEUE];
                 const RD_QUEUE = [...Record.RD_QUEUE];
                 Record.FC_QUEUE.length = 0;
                 Record.FS_QUEUE.length = 0;
                 Record.FA_QUEUE.length = 0;
                 Record.FD_QUEUE.length = 0;
-                Record.FO_QUEUE.length = 0;
+                Record.FU_QUEUE.length = 0;
                 Record.RO_QUEUE.length = 0;
                 Record.RD_QUEUE.length = 0;
                 while (FC_QUEUE.length > 0) {
@@ -1093,9 +1092,9 @@ export class Record {
                         onDelete?.call(field.value.owner._proxy, record._proxy)
                     );
                 }
-                while (FO_QUEUE.length > 0) {
-                    const field = FO_QUEUE.pop();
-                    field.onChange();
+                while (FU_QUEUE.length > 0) {
+                    const field = FU_QUEUE.pop();
+                    field.onUpdate();
                 }
                 while (RO_QUEUE.length > 0) {
                     const cb = RO_QUEUE.pop();
@@ -1137,7 +1136,7 @@ export class Record {
     }
     /**
      * @param {RecordField|Record} fieldOrRecord
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onChange"} type
+     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"} type
      * @param {Record} [record] when field with onAdd/onDelete, the record being added or deleted
      */
     static ADD_QUEUE(fieldOrRecord, type, record) {
@@ -1195,9 +1194,9 @@ export class Record {
                     }
                 }
             }
-            if (type === "onChange") {
-                if (!Record.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    Record.FO_QUEUE.push(field);
+            if (type === "onUpdate") {
+                if (!Record.FU_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    Record.FU_QUEUE.push(field);
                 }
             }
         }
