@@ -272,9 +272,13 @@
         },
 
         send: async function (e) {
+            const $button = this.$el.find('.s_website_form_send, .o_website_form_send');
+            // TODO : remove in master and fix the template
+            if ($button.length === 0 && (this.$el.data('force_action') ||  this.$el.data('model_name')) === undefined) {
+                return;
+            }
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
-            const $button = this.$el.find('.s_website_form_send, .o_website_form_send');
             $button.addClass('disabled') // !compatibility
                    .attr('disabled', 'disabled');
             this.restoreBtnLoading = dom.addButtonLoadingEffect($button[0]);
