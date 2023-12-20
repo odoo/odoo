@@ -35,8 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'a757000',
                 'account_sale_tax_id': 'attn_VAT-OUT-21-L',
                 'account_purchase_tax_id': 'attn_VAT-IN-V81-21',
-                'default_cash_difference_income_account_id': 'a709000',
-                'default_cash_difference_expense_account_id': 'a709000',
+                'default_cash_difference_income_account_id': 'a757100',
+                'default_cash_difference_expense_account_id': 'a657100',
                 'transfer_account_id': 'a58',
             },
         }
