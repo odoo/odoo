@@ -29,6 +29,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
+import { router, routerBus } from "@web/core/browser/router";
 
 import { Component, onMounted, xml } from "@odoo/owl";
 
@@ -80,7 +81,7 @@ QUnit.module("ActionManager", (hooks) => {
             "ClientAction_Id 1"
         );
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
-        assert.deepEqual(webClient.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             action: 1001,
             menu_id: 2,
         });
@@ -195,8 +196,8 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        const webClient = await createWebClient({ serverData, mockRPC });
-        webClient.env.bus.trigger("test:hashchange", {
+        await createWebClient({ serverData, mockRPC });
+        routerBus.trigger("test:hashchange", {
             action: "HelloWorldTest",
         });
         await nextTick();
@@ -214,8 +215,8 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        const webClient = await createWebClient({ serverData, mockRPC });
-        webClient.env.bus.trigger("test:hashchange", {
+        await createWebClient({ serverData, mockRPC });
+        routerBus.trigger("test:hashchange", {
             action: 1,
         });
         await nextTick();
@@ -235,8 +236,8 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        const webClient = await createWebClient({ serverData, mockRPC });
-        webClient.env.bus.trigger("test:hashchange", {
+        await createWebClient({ serverData, mockRPC });
+        routerBus.trigger("test:hashchange", {
             id: 2,
             model: "partner",
         });
@@ -275,8 +276,8 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        const webClient = await createWebClient({ serverData, mockRPC });
-        webClient.env.bus.trigger("test:hashchange", {
+        await createWebClient({ serverData, mockRPC });
+        routerBus.trigger("test:hashchange", {
             action: 3,
             id: "",
             model: "partner",
@@ -298,8 +299,8 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async function (route, { method }) {
             assert.step(method || route);
         };
-        const webClient = await createWebClient({ serverData, mockRPC });
-        webClient.env.bus.trigger("test:hashchange", {
+        await createWebClient({ serverData, mockRPC });
+        routerBus.trigger("test:hashchange", {
             action: 3,
             view_type: "kanban",
         });
@@ -326,8 +327,8 @@ QUnit.module("ActionManager", (hooks) => {
                     assert.step(method || route);
                 }
             };
-            const webClient = await createWebClient({ serverData, mockRPC });
-            webClient.env.bus.trigger("test:hashchange", {
+            await createWebClient({ serverData, mockRPC });
+            routerBus.trigger("test:hashchange", {
                 action: 3,
                 id: 2,
                 view_type: "form",
@@ -400,7 +401,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         // switch to kanban view
-        webClient.env.bus.trigger("test:hashchange", {
+        routerBus.trigger("test:hashchange", {
             action: 3,
             view_type: "kanban",
         });
@@ -409,7 +410,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
         // switch to form view, open record 4
-        webClient.env.bus.trigger("test:hashchange", {
+        routerBus.trigger("test:hashchange", {
             action: 3,
             id: 4,
             view_type: "form",
@@ -444,7 +445,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // switch to record 4
-        webClient.env.bus.trigger("test:hashchange", {
+        routerBus.trigger("test:hashchange", {
             action: 3,
             id: 4,
             view_type: "form",
@@ -479,10 +480,10 @@ QUnit.module("ActionManager", (hooks) => {
             }),
         });
         const webClient = await createWebClient({ serverData });
-        let currentHash = webClient.env.services.router.current.hash;
+        let currentHash = router.current.hash;
         assert.deepEqual(currentHash, {});
         await loadState(webClient, { action: 3 });
-        currentHash = webClient.env.services.router.current.hash;
+        currentHash = router.current.hash;
         assert.deepEqual(currentHash, {
             action: 3,
             model: "partner",
@@ -491,7 +492,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["push_state"], "should have pushed the final state");
         await click(target.querySelector("tr .o_data_cell"));
         await nextTick();
-        currentHash = webClient.env.services.router.current.hash;
+        currentHash = router.current.hash;
         assert.deepEqual(currentHash, {
             action: 3,
             id: 1,
@@ -685,7 +686,7 @@ QUnit.module("ActionManager", (hooks) => {
             await switchView(target, "kanban");
             assert.containsOnce(target, ".o_kanban_view", "should now display the kanban view");
 
-            const hash = webClient.env.services.router.current.hash;
+            const hash = router.current.hash;
             hash.view_type = "form";
             await loadState(webClient.env, hash);
             assert.containsOnce(
@@ -774,7 +775,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         registry.category("services").add("error", errorService);
 
-        const webClient = await createWebClient({ serverData });
+        await createWebClient({ serverData });
         assert.verifySteps(["clientAction setup"]);
         await nextTick();
         assert.expectErrors(["my error"]);
@@ -785,7 +786,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".dropdown-item.o_app", 3);
         assert.containsNone(target, ".o_menu_brand");
         assert.strictEqual(target.querySelector(".o_action_manager").innerHTML, "");
-        assert.deepEqual(webClient.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             action: "__test__client__action__",
             menu_id: 1,
         });
@@ -809,7 +810,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         browser.location.hash = "#action=myAction";
 
-        const webClient = await createWebClient({ serverData });
+        await createWebClient({ serverData });
         assert.verifySteps([]);
         await nextTick();
         assert.verifySteps(["myAction mounted"]);
@@ -824,7 +825,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");
 
-        assert.deepEqual(webClient.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             action: "__test__client__action__",
             menu_id: 1,
         });
@@ -849,7 +850,7 @@ QUnit.module("ActionManager", (hooks) => {
         registry.category("actions").add("myAction", MyAction);
 
         browser.location.hash = "#action=myAction";
-        const webClient = await createWebClient({ serverData });
+        await createWebClient({ serverData });
         assert.verifySteps([]);
         await nextTick();
         assert.verifySteps(["myAction mounted"]);
@@ -859,7 +860,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");
 
-        assert.deepEqual(webClient.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             action: "__test__client__action__",
             menu_id: 1,
         });

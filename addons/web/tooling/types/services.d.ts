@@ -13,8 +13,6 @@ declare module "services" {
     import { notificationService } from "@web/core/notifications/notification_service";
     import { ormService } from "@web/core/orm_service";
     import { popoverService } from "@web/core/popover/popover_service";
-    import { routerService } from "@web/core/browser/router_service";
-    import { rpcService } from "@web/core/network/rpc";
     import { titleService } from "@web/core/browser/title_service";
     import { uiService } from "@web/core/ui/ui_service";
     import { userService } from "@web/core/user_service";
@@ -35,8 +33,6 @@ declare module "services" {
         notification: ReturnType<typeof notificationService.start>;
         orm: ReturnType<typeof ormService.start>;
         popover: ReturnType<typeof popoverService.start>;
-        router: ReturnType<typeof routerService.start>;
-        rpc: ReturnType<typeof rpcService.start>;
         title: ReturnType<typeof titleService.start>;
         ui: ReturnType<typeof uiService.start>;
         user: ReturnType<typeof userService.start>;

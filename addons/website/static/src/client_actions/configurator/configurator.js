@@ -10,6 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { mixCssColors } from '@web/core/utils/colors';
+import { router } from "@web/core/browser/router";
 import {
     Component,
     onMounted,
@@ -607,7 +608,6 @@ export class Configurator extends Component {
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');
-        this.router = useService('router');
 
         // Using the back button must update the router state.
         useExternalListener(window, "popstate", () => {
@@ -641,7 +641,7 @@ export class Configurator extends Component {
         // service would let us push a state with a new pathname.
         onMounted(() => {
             setTimeout(() => {
-                this.router.cancelPushes();
+                router.cancelPushes();
                 this.updateBrowserUrl();
             });
         });

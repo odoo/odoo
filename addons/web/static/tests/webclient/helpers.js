@@ -17,7 +17,6 @@ import {
     fakeTitleService,
     fakeCompanyService,
     makeFakeLocalizationService,
-    makeFakeRouterService,
     makeFakeHTTPService,
     makeFakeBarcodeService,
 } from "../helpers/mock_services";
@@ -31,6 +30,7 @@ import { Component, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import { routerBus } from "@web/core/browser/router";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -71,7 +71,6 @@ export function setupWebClientRegistries() {
         orm: () => ormService,
         overlay: () => overlayService,
         popover: () => popoverService,
-        router: () => makeFakeRouterService(),
         title: () => fakeTitleService,
         ui: () => uiService,
         view: () => viewService,
@@ -127,7 +126,7 @@ export async function loadState(env, state) {
     if (env instanceof Component) {
         env = env.env;
     }
-    env.bus.trigger("test:hashchange", state);
+    routerBus.trigger("test:hashchange", state);
     // wait the asynchronous hashchange
     // (the event hashchange must be triggered in a nonBlocking stack)
     await nextTick();

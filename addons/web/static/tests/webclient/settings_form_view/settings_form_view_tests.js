@@ -22,6 +22,7 @@ import { pick } from "@web/core/utils/objects";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeServerError } from "../../helpers/mock_server";
+import { router } from "@web/core/browser/router";
 
 let target;
 let serverData;
@@ -844,7 +845,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelector(".o_control_panel .o_form_button_save"));
 
         await nextTick();
-        assert.notOk(webClient.env.services.router.current.hash.id);
+        assert.notOk(router.current.hash.id);
     });
 
     QUnit.test(

@@ -10,7 +10,6 @@ import { View, getDefaultConfig } from "@web/views/view";
 import {
     fakeCompanyService,
     makeFakeLocalizationService,
-    makeFakeRouterService,
     patchUserWithCleanup,
 } from "../helpers/mock_services";
 import {
@@ -117,7 +116,6 @@ export function setupViewRegistries() {
     setupControlPanelFavoriteMenuRegistry();
     setupControlPanelServiceRegistry();
     patchUserWithCleanup({ hasGroup: async (group) => group === "base.group_allow_export" });
-    serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService());
     serviceRegistry.add("company", fakeCompanyService);
 }

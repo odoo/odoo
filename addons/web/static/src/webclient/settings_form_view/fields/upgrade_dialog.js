@@ -10,7 +10,6 @@ export class UpgradeDialog extends Component {
     static components = { Dialog };
     setup() {
         this.orm = useService("orm");
-        this.router = useService("router");
     }
     async _confirmUpgrade() {
         const usersCount = await this.orm.call("res.users", "search_count", [

@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
-import { routerService } from "@web/core/browser/router_service";
 import { effectService } from "@web/core/effects/effect_service";
 import { localization } from "@web/core/l10n/localization";
 import { ConnectionAbortedError, rpcBus, rpc } from "@web/core/network/rpc";
@@ -9,8 +7,6 @@ import { ormService } from "@web/core/orm_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { user } from "@web/core/user";
-import { objectToUrlEncodedString } from "@web/core/utils/urls";
-import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 
 // -----------------------------------------------------------------------------
@@ -160,24 +156,6 @@ export function makeMockFetch(mockRPC) {
     };
 }
 
-/**
- * @param {Object} [params={}]
- * @returns {typeof routerService}
- */
-export function makeFakeRouterService(params = {}) {
-    return {
-        start({ bus }) {
-            const router = routerService.start(...arguments);
-            bus.addEventListener("test:hashchange", (ev) => {
-                const hash = ev.detail;
-                browser.location.hash = objectToUrlEncodedString(hash);
-            });
-            registerCleanup(router.cancelPushes);
-            return router;
-        },
-    };
-}
-
 export const fakeCommandService = {
     start() {
         return {
@@ -321,7 +299,6 @@ export const mocks = {
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
     notification: makeFakeNotificationService,
-    router: makeFakeRouterService,
     title: () => fakeTitleService,
     ui: () => uiService,
     dialog: makeFakeDialogService,
