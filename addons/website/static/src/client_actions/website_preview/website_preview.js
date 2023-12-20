@@ -11,7 +11,7 @@ import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
-import { routeToUrl } from "@web/core/browser/router_service";
+import { routeToUrl, router } from "@web/core/browser/router";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
 import { renderToElement } from "@web/core/utils/render";
@@ -44,7 +44,6 @@ export class WebsitePreview extends Component {
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
         this.title = useService('title');
-        this.router = useService('router');
         this.action = useService('action');
         this.orm = useService('orm');
 
@@ -354,7 +353,7 @@ export class WebsitePreview extends Component {
         // history when leaving the component, so that the webclient can
         // correctly find back and replay the client action.
         if (!this.backendUrl) {
-            this.backendUrl = routeToUrl(this.router.current);
+            this.backendUrl = routeToUrl(router.current);
         }
         const currentTitle = this.iframe.el.contentDocument.title;
         history.replaceState({}, currentTitle, this.iframe.el.contentDocument.location.href);

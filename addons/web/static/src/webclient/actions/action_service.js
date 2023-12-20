@@ -16,6 +16,7 @@ import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { router as _router } from "@web/core/browser/router";
 
 import {
     Component,
@@ -120,7 +121,7 @@ const CTX_KEY_REGEX =
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
 
-function makeActionManager(env) {
+export function makeActionManager(env, router = _router) {
     const keepLast = new KeepLast();
     let id = 0;
     let controllerStack = [];
@@ -313,7 +314,7 @@ function makeActionManager(env) {
      * @returns {ActionParams | null}
      */
     function _getActionParams() {
-        const state = env.services.router.current.hash;
+        const state = router.current.hash;
         const options = { clearBreadcrumbs: true };
         let actionRequest = null;
         if (state.action) {
@@ -424,7 +425,7 @@ function makeActionManager(env) {
      * @returns {SwitchViewParams | null}
      */
     function _getSwitchViewParams() {
-        const state = env.services.router.current.hash;
+        const state = router.current.hash;
         if (state.action && !actionRegistry.contains(state.action)) {
             const currentController = controllerStack[controllerStack.length - 1];
             const currentActionId =
@@ -1404,7 +1405,7 @@ function makeActionManager(env) {
             newState.view_type = props.type;
             newState.id = props.resId || (props.state && props.state.resId) || undefined;
         }
-        env.services.router.pushState(newState, { replace: true });
+        router.pushState(newState, { replace: true });
     }
     return {
         doAction,
@@ -1423,7 +1424,7 @@ function makeActionManager(env) {
 }
 
 export const actionService = {
-    dependencies: ["effect", "localization", "notification", "router", "title", "ui"],
+    dependencies: ["effect", "localization", "notification", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

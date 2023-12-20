@@ -8,6 +8,7 @@ import { makeMockServer } from "./mock_server";
 import { mocks } from "./mock_services";
 import { patchWithCleanup } from "./utils";
 import { Component } from "@odoo/owl";
+import { startRouter } from "@web/core/browser/router";
 
 function prepareRegistry(registry, keepContent = false) {
     const _addEventListener = registry.addEventListener.bind(registry);
@@ -103,6 +104,7 @@ export function prepareRegistriesWithCleanup() {
  * @returns {Promise<OdooEnv>}
  */
 export async function makeTestEnv(config = {}) {
+    startRouter();
     // add all missing dependencies if necessary
     const serviceRegistry = registry.category("services");
     const servicesToProcess = serviceRegistry.getAll();

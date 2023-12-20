@@ -5,6 +5,7 @@ import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
+import { router } from "@web/core/browser/router";
 
 export class ViewHierarchy extends Component {
     static components = { Layout, HierarchyNavbar };
@@ -12,10 +13,9 @@ export class ViewHierarchy extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.router = useService("router");
         this.state = useState({ showInactive: false, searchedView: {}, viewTree: {} });
         this.websites = useState({ names: new Set(["All Websites"]), selected: "All Websites" });
-        this.viewId = this.props.action.context.active_id || this.router.current.hash.active_id;
+        this.viewId = this.props.action.context.active_id || router.current.hash.active_id;
         this.hideGenericViewByWebsite = {};
 
         onWillStart(async () => {

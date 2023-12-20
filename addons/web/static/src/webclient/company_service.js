@@ -7,8 +7,8 @@ import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { cookie } from "@web/core/browser/cookie";
 import { redirect } from "@web/core/utils/urls";
-import { routeToUrl } from "@web/core/browser/router_service";
 import { user } from "@web/core/user";
+import { routeToUrl, router } from "@web/core/browser/router";
 
 const CIDS_HASH_SEPARATOR = "-";
 
@@ -57,7 +57,6 @@ function getCompanyIdsFromBrowser(hash) {
 
 const errorHandlerRegistry = registry.category("error_handlers");
 function accessErrorHandler(env, error, originalError) {
-    const router = env.services.router;
     const hash = router.current.hash;
     if (!hash._company_switching) {
         return false;
@@ -67,7 +66,7 @@ function accessErrorHandler(env, error, originalError) {
         if (!model || !id || view_type !== "form") {
             return false;
         }
-        const route = { ...env.services.router.current };
+        const route = { ...router.current };
         delete route.hash.id;
         delete route.hash.view_type;
         redirect(routeToUrl(route));
@@ -80,8 +79,8 @@ function accessErrorHandler(env, error, originalError) {
 }
 
 export const companyService = {
-    dependencies: ["router", "action"],
-    start(env, { router, action }) {
+    dependencies: ["action"],
+    start(env, { action }) {
         // Push an error handler in the registry. It needs to be before "rpcErrorHandler", which
         // has a sequence of 97. The default sequence of registry is 50.
         errorHandlerRegistry.add("accessErrorHandlerCompanies", accessErrorHandler);

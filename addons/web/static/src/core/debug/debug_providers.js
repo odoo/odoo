@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
-import { routeToUrl } from "../browser/router_service";
+import { routeToUrl, router } from "../browser/router";
 
 const commandProviderRegistry = registry.category("command_provider");
 
@@ -22,7 +22,7 @@ commandProviderRegistry.add("debug", {
             }
             result.push({
                 action() {
-                    const route = env.services.router.current;
+                    const route = router.current;
                     route.search.debug = "";
                     browser.location.href = browser.location.origin + routeToUrl(route);
                 },

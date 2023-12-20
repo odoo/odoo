@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { routeToUrl } from "@web/core/browser/router_service";
+import { routeToUrl, router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 
@@ -54,12 +54,12 @@ function becomeSuperuser({ env }) {
     };
 }
 
-function leaveDebugMode({ env }) {
+function leaveDebugMode() {
     return {
         type: "item",
         description: _t("Leave the Developer Tools"),
         callback: () => {
-            const route = env.services.router.current;
+            const route = router.current;
             route.search.debug = "";
             browser.location.href = browser.location.origin + routeToUrl(route);
         },

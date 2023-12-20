@@ -15,6 +15,7 @@ import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switc
 import { companyService } from "@web/webclient/company_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
+import { router } from "@web/core/browser/router";
 
 const serviceRegistry = registry.category("services");
 let target;
@@ -177,7 +178,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 1 });
+        assert.deepEqual(router.current.hash, { cids: 1 });
         assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
@@ -190,7 +191,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 3
          */
         await click(scMenuEl.querySelectorAll(".toggle_company")[0]);
-        assert.deepEqual(scMenu.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             cids: 1,
             _company_switching: 1,
         });

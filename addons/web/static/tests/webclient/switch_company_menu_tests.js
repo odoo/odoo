@@ -9,6 +9,7 @@ import { companyService } from "@web/webclient/company_service";
 import { click, getFixture, makeDeferred, mount, patchWithCleanup } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
+import { router } from "@web/core/browser/router";
 
 const serviceRegistry = registry.category("services");
 
@@ -202,7 +203,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 3 });
+        assert.deepEqual(router.current.hash, { cids: 3 });
         assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
@@ -218,7 +219,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hulk
          */
         await click(target.querySelectorAll(".toggle_company")[0]);
-        assert.deepEqual(scMenu.env.services.router.current.hash, {
+        assert.deepEqual(router.current.hash, {
             cids: 3,
             _company_switching: 1,
         });

@@ -18,6 +18,8 @@ import { patch } from "@web/core/utils/patch";
 import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
 import { cookie } from "@web/core/browser/cookie";
+import { router, routerBus } from "@web/core/browser/router";
+import { objectToUrlEncodedString } from "@web/core/utils/urls";
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -28,7 +30,7 @@ function forceLocaleAndTimezoneWithCleanup() {
     patchTimeZone(60);
 }
 
-function makeMockLocation(hasListeners = () => true) {
+function makeMockLocation() {
     const locationLink = Object.assign(document.createElement("a"), {
         href: window.location.origin + window.location.pathname,
         assign(url) {
@@ -46,9 +48,6 @@ function makeMockLocation(hasListeners = () => true) {
                 target[p] = value;
                 const newURL = new URL(locationLink.href).toString();
 
-                if (!hasListeners()) {
-                    return true;
-                }
                 // the event hashchange must be triggered in a nonBlocking stack
                 // https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid
                 window.setTimeout(() => {
@@ -103,17 +102,13 @@ function patchBrowserWithCleanup() {
     const originalSetInterval = browser.setInterval;
     const originalClearInterval = browser.clearInterval;
 
-    let hasHashChangeListeners = false;
     let nextAnimationFrameHandle = 1;
     const animationFrameHandles = new Set();
-    const mockLocation = makeMockLocation(() => hasHashChangeListeners);
+    const mockLocation = makeMockLocation();
     patchWithCleanup(browser, {
         // patch addEventListner to automatically remove listeners bound (via
         // browser.addEventListener) during a test (e.g. during the deployment of a service)
-        addEventListener(evName) {
-            if (evName === "hashchange") {
-                hasHashChangeListeners = true;
-            }
+        addEventListener() {
             originalAddEventListener(...arguments);
             registerCleanup(() => {
                 originalRemoveEventListener(...arguments);
@@ -189,6 +184,18 @@ function patchBrowserWithCleanup() {
             }
         },
     });
+}
+
+function patchRouterWithCleanup() {
+    const hashchange = (ev) => {
+        const hash = ev.detail;
+        browser.location.hash = objectToUrlEncodedString(hash);
+    };
+    routerBus.addEventListener("test:hashchange", hashchange);
+    registerCleanup(() => {
+        routerBus.removeEventListener("test:hashchange", hashchange);
+    });
+    registerCleanup(router.cancelPushes);
 }
 
 function patchBodyAddEventListener() {
@@ -364,6 +371,7 @@ export async function setupTests() {
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
+        patchRouterWithCleanup();
         patchCookie();
         patchBodyAddEventListener();
         patchEventBus();
