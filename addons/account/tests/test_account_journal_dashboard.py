@@ -180,21 +180,21 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
                 'price_unit': 2.27,
                 'tax_ids': [],
             })]
-        } for i in range(12)]).sorted('date')
-        gap_date = moves[6].date
+        } for i in range(10)]).sorted('date')
+        gap_date = moves[3].date
 
-        moves.action_post()
-        self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning
+        moves[:8].action_post()  # Only post 8 moves and keep 2 draft moves
+        self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning, and draft moves shouldn't trigger the warning
 
-        moves[5:7].button_draft()
+        moves[2:4].button_draft()
         self.assertFalse(journal._query_has_sequence_holes())  # no gap (with draft moves using sequence numbers), no gap warning
-        moves[6].unlink()
-        self.assertTrue(journal._query_has_sequence_holes())  # gap due to missing sequence, gap warning
+        moves[3].unlink()
+        self.assertTrue(journal.has_sequence_holes)  # gap due to missing sequence, gap warning
 
-        moves[5:6].action_post()
+        moves[2].action_post()
         self.company_data['company'].write({'fiscalyear_lock_date': gap_date + relativedelta(days=1)})
         self.assertFalse(journal._query_has_sequence_holes())  # gap but prior to lock-date, no gap warning
 
-        moves[10].button_draft()
-        moves[10].button_cancel()
-        self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, no gap warning
+        moves[6].button_draft()
+        moves[6].button_cancel()
+        self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, gap warning
