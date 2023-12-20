@@ -1,7 +1,6 @@
 from odoo import _
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.http import request, route
-from odoo.exceptions import ValidationError
 
 
 class CustomerPortalAr(CustomerPortal):
@@ -51,29 +50,4 @@ class CustomerPortalAr(CustomerPortal):
                 if not data.get(field_name):
                     error[field_name] = 'missing'
 
-        return error, error_message
-
-    def _vat_validation(self, data, error, error_message, partner_creation=False):
-        """ If Argentinian Company Do the vat validation taking into account the identification_type """
-        if not self.is_argentinian_company():
-            return super()._vat_validation(data, error, error_message, partner_creation=partner_creation)
-
-        partner = request.env.user.partner_id
-        if data.get("l10n_latam_identification_type_id") and data.get("vat") and partner and \
-           (partner.l10n_latam_identification_type_id.id != data.get("l10n_latam_identification_type_id") or partner.vat != data.get("vat")):
-            if partner.can_edit_vat():
-                if hasattr(partner, "check_vat"):
-                    partner_dummy = partner.new({
-                        'vat': data['vat'], 'country_id': (int(data['country_id']) if data.get('country_id') else False),
-                        'l10n_latam_identification_type_id': (int(data['l10n_latam_identification_type_id'])
-                                                              if data.get('l10n_latam_identification_type_id') else False),
-                    })
-                    try:
-                        partner_dummy.check_vat()
-                    except ValidationError as exception:
-                        error["vat"] = 'error'
-                        error_message.append(exception.name)
-            else:
-                error_message.append(_('Changing Number and Identification type is not allowed once document(s) have been'
-                                       ' issued for your account. Please contact us directly for this operation.'))
         return error, error_message
