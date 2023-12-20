@@ -1,4 +1,5 @@
 /** @odoo-module */
+/* global afterEach */
 
 import {
     ancestors,
