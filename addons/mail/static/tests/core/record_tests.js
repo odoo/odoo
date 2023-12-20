@@ -582,3 +582,20 @@ QUnit.test("lazy sort should re-sort while they are observed", async (assert) =>
     message.sequence = 10;
     assert.verifySteps(["render 2,1"]);
 });
+
+QUnit.test("store updates can be observed", async (assert) => {
+    const store = await start();
+    function onUpdate() {
+        assert.step(`abc:${reactiveStore.abc}`);
+    }
+    const rawStore = toRaw(store)._raw;
+    const reactiveStore = reactive(store, onUpdate);
+    onUpdate();
+    assert.verifySteps(["abc:undefined"]);
+    store.abc = 1;
+    assert.verifySteps(["abc:1"], "observable from makeStore");
+    rawStore._store.abc = 2;
+    assert.verifySteps(["abc:2"], "observable from record._store");
+    rawStore.Model.store.abc = 3;
+    assert.verifySteps(["abc:3"], "observable from Model.store");
+});
