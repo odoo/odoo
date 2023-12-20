@@ -63,7 +63,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         // the callbacks in `onMounted` hook.
         onMounted(() => this.numberBuffer.reset());
         this.numberBuffer.use({
-            triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
+            triggerAtInput: (...args) => {
+                if (!this.env.pos.tempScreenIsShown) this.updateSelectedOrderline(...args);
+            },
             useWithBarcode: true,
         });
     }
