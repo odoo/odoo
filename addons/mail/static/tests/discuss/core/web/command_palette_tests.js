@@ -59,10 +59,10 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     await insertText(".o_command_palette_search input", "#");
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
     await contains(".o_command", { count: 2 });
-    await contains(".o_command", { text: "general", before: [".o_command", { text: "project" }] });
+    await contains(".o_command", { text: "project", before: [".o_command", { text: "general" }] });
     await contains(".o_command.focused");
-    await click(".o_command.focused", { text: "general" });
-    await contains(".o-mail-ChatWindow", { text: "general" });
+    await click(".o_command.focused", { text: "project" });
+    await contains(".o-mail-ChatWindow", { text: "project" });
 });
 
 QUnit.test("Channel mentions in the command palette of Discuss app with @", async () => {

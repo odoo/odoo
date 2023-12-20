@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { ThreadService } from "@mail/core/common/thread_service";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -33,7 +34,8 @@ patch(ThreadService.prototype, {
         super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
         this.store.discuss.livechat.threads.sort(
-            (t1, t2) => t2.lastInterestDateTime?.ts - t1.lastInterestDateTime?.ts
+            (t1, t2) =>
+                compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
         );
     },
 
@@ -43,7 +45,11 @@ patch(ThreadService.prototype, {
     goToOldestUnreadLivechatThread() {
         const oldestUnreadThread = this.store.discuss.livechat.threads
             .filter((thread) => thread.isUnread)
-            .sort((t1, t2) => t1.lastInterestDateTime?.ts - t2.lastInterestDateTime?.ts)[0];
+            .sort(
+                (t1, t2) =>
+                    compareDatetime(t1.lastInterestDateTime, t2.lastInterestDateTime) ||
+                    t1.id - t2.id
+            )[0];
         if (!oldestUnreadThread) {
             return false;
         }

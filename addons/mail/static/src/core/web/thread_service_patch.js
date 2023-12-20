@@ -6,6 +6,7 @@ import { parseEmail } from "@mail/js/utils";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 let nextId = 1;
 
@@ -241,18 +242,10 @@ patch(ThreadService.prototype, {
     getRecentChannels() {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.model === "discuss.channel")
-            .sort((a, b) => {
-                if (a.lastInterestDateTime?.ts !== b.lastInterestDateTime?.ts) {
-                    if (!b.lastInterestDateTime) {
-                        return -1;
-                    }
-                    if (!a.lastInterestDateTime) {
-                        return 1;
-                    }
-                    return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
-                }
-                return a.id - b.id;
-            });
+            .sort(
+                (a, b) =>
+                    compareDatetime(b.lastInterestDateTime, a.lastInterestDateTime) || b.id - a.id
+            );
     },
     getNeedactionChannels() {
         return this.getRecentChannels().filter((channel) => this.getCounter(channel) > 0);
