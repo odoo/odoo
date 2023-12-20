@@ -389,6 +389,8 @@ class StockMove(models.Model):
     def action_show_details(self):
         self.ensure_one()
         action = super().action_show_details()
+        action['context']['default_location_dest_id'] = self.location_dest_id.id
+        action['context']['default_location_id'] = self.location_id.id
         if self.raw_material_production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
