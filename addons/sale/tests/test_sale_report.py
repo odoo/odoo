@@ -43,9 +43,9 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         # Create corresponding pricelists and rates.
         pricelists = self.env['product.pricelist'].create([
-            {'name': 'Pricelist (USD)', 'currency_id': usd.id},
-            {'name': 'Pricelist (EUR)', 'currency_id': eur.id},
-            {'name': 'Pricelist (ARS)', 'currency_id': ars.id},
+            {'name': 'Pricelist (USD)', 'currency_id': usd.id, 'company_id': False},
+            {'name': 'Pricelist (EUR)', 'currency_id': eur.id, 'company_id': False},
+            {'name': 'Pricelist (ARS)', 'currency_id': ars.id, 'company_id': False},
         ])
         self.env['res.currency.rate'].create([
             {'name': past_day, 'rate': 555, 'currency_id': ars.id, 'company_id': self.eur_cmp.id},
