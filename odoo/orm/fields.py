@@ -481,7 +481,7 @@ class Field[T, C]:
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
-            attrs['readonly'] = attrs.get('readonly', True)
+            attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         elif attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
@@ -666,7 +666,8 @@ class Field[T, C]:
 
         # determine dependencies, compute, inverse, and search
         self.compute = self._compute_related
-        if self.inherited or not (self.readonly or field.readonly):
+        if not self.inverse and (self.inherited or not (self.readonly or field.readonly)):
+            # keep the inverse method given in the field definition, if any
             self.inverse = self._inverse_related
         if (
             not self.store
