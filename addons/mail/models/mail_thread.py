@@ -3252,7 +3252,8 @@ class MailThread(models.AbstractModel):
                     notif_create_values += [{
                         'author_id': message.author_id.id,
                         'is_read': True,  # discard Inbox notification
-                        'mail_email_to': recipients_data.get(recipient_id).get()
+                        # 'mail_email_to': recipients_data.get(recipient_id).get()
+                        'mail_email_to': ','.join(EmailPartner.browse(recipient_id)._get_email_to()[0]),
                         'mail_mail_id': new_email.id,
                         'mail_message_id': message.id,
                         'notification_status': 'ready',

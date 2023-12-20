@@ -12,7 +12,7 @@ class MailNotification(models.Model):
     _name = 'mail.notification'
     _table = 'mail_notification'
     _order = "id DESC"
-    _rec_name = 'res_partner_id'
+    _rec_name = 'mail_message_id'
     _log_access = False
     _description = 'Message Notifications'
 
@@ -54,8 +54,8 @@ class MailNotification(models.Model):
     _sql_constraints = [
         # email notification: partner is required
         ('notification_partner_required',
-         "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
-         'Customer is required for inbox / email notification'),
+         "CHECK(notification_type != 'inbox' OR res_partner_id IS NOT NULL)",
+         'Customer is required for inbox notification'),
     ]
 
     # ------------------------------------------------------------
