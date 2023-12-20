@@ -4358,7 +4358,8 @@ var SnippetsMenu = Widget.extend({
         const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
         this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
         $(this.customizePanel).append($customizeTableBlock);
-        $title.append(this._toolbarWrapperEl.querySelector('#removeFormat'));
+        this._removeFormatButton = this._removeFormatButton || this._toolbarWrapperEl.querySelector('#removeFormat');
+        $title.append(this._removeFormatButton);
         this._$toolbarContainer.append(this._toolbarWrapperEl);
 
         this._checkEditorToolbarVisibility();
