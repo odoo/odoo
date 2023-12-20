@@ -4285,60 +4285,77 @@ X[]
     });
 
     describe('automatic link creation when typing a space after an url', () => {
+        const simulateInputSpace = (editor) => {
+            editor.testMode = false;
+            triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
+            // Insert space at the cursor position.
+            const selection = editor.document.getSelection();
+            const anchorOffset = selection.anchorOffset;
+            const textNode = selection.anchorNode;
+            const textContent = textNode.textContent;
+            textNode.textContent = textContent.slice(0, anchorOffset) + '\u00a0' + textContent.slice(anchorOffset);
+            selection.extend(textNode, anchorOffset + 1);
+            selection.collapseToEnd();
+            triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
+            triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
+        }
         it('should transform url after space', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a http://test.com b http://test.com[] c http://test.com d</p>',
+                stepFunction: simulateInputSpace,
+                contentAfter: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>http://test.com.[]</p>',
+                stepFunction: simulateInputSpace,
+                contentAfter: '<p><a href="http://test.com">http://test.com</a>.&nbsp;[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>test.com...[]</p>',
+                stepFunction: simulateInputSpace,
+                contentAfter: '<p><a href="https://test.com">test.com</a>...&nbsp;[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>test.com,[]</p>',
+                stepFunction: simulateInputSpace,
+                contentAfter: '<p><a href="https://test.com">test.com</a>,&nbsp;[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>test.com,hello[]</p>',
+                stepFunction: simulateInputSpace,
+                contentAfter: '<p><a href="https://test.com">test.com</a>,hello&nbsp;[]</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>http://test.com[]</p>',
                 stepFunction: async (editor) => {
                     editor.testMode = false;
-                    const selection = document.getSelection();
-                    const anchorOffset = selection.anchorOffset;
                     const p = editor.editable.querySelector('p');
-                    const textNode = p.childNodes[0];
-                    await triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
-                    textNode.textContent = "a http://test.com b http://test.com\u00a0 c http://test.com d";
-                    selection.extend(textNode, anchorOffset + 1);
+                    // Simulate multiple text nodes in a p: <p>"http://test" ".com"</p>
+                    const firstTextNode = p.childNodes[0];
+                    const secondTextNode = firstTextNode.splitText(11); 
+                    const selection = editor.document.getSelection();
+                    const anchorOffset = selection.anchorOffset;
+                    triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
+                    secondTextNode.textContent = ".com\u00a0";
+                    selection.extend(secondTextNode, anchorOffset + 1);
                     selection.collapseToEnd();
-                    await triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
-                    await triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
+                    triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
+                    triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
                 },
-                contentAfter: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>',
+                contentAfter: '<p><a href="http://test.com">http://test.com</a>&nbsp;[]</p>',
             });
         });
         it('should not transform an email url after space', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>user@domain.com[]</p>',
-                stepFunction: async (editor) => {
-                    editor.testMode = false;
-                    const selection = document.getSelection();
-                    const anchorOffset = selection.anchorOffset;
-                    const p = editor.editable.querySelector('p');
-                    const textNode = p.childNodes[0];
-                    await triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
-                    textNode.textContent = "user@domain.com\u00a0";
-                    selection.extend(textNode, anchorOffset + 1);
-                    selection.collapseToEnd();
-                    await triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
-                    await triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
-                },
+                stepFunction: simulateInputSpace,
                 contentAfter: '<p>user@domain.com&nbsp;[]</p>',
             });
         });
         it('should not transform url after two space', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a http://test.com b http://test.com [] c http://test.com d</p>',
-                stepFunction: async (editor) => {
-                    editor.testMode = false;
-                    const selection = document.getSelection();
-                    const anchorOffset = selection.anchorOffset;
-                    const p = editor.editable.querySelector('p');
-                    const textNode = p.childNodes[0];
-                    await triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
-                    textNode.textContent = "a http://test.com b http://test.com \u00a0 c http://test.com d";
-                    selection.extend(textNode, anchorOffset + 1);
-                    selection.collapseToEnd();
-                    await triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
-                    await triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
-                },
+                stepFunction: simulateInputSpace,
                 contentAfter: '<p>a http://test.com b http://test.com &nbsp;[] c http://test.com d</p>',
             });
         });
