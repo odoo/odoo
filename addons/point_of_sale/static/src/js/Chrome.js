@@ -280,9 +280,11 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.tempScreen.name = name;
             this.tempScreen.component = this.constructor.components[name];
             this.tempScreenProps = Object.assign({}, props, { resolve });
+            this.env.pos.tempScreenIsShown = true;
         }
         __closeTempScreen() {
             this.tempScreen.isShown = false;
+            this.env.pos.tempScreenIsShown = false;
             this.tempScreen.name = null;
         }
         __showScreen({ detail: { name, props = {} } }) {
