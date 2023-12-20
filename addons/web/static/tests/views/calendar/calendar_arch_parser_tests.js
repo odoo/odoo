@@ -92,7 +92,14 @@ QUnit.test("hasQuickCreate", (assert) => {
     check(assert, "quick_add", "true", "hasQuickCreate", true);
     check(assert, "quick_add", "True", "hasQuickCreate", true);
     check(assert, "quick_add", "1", "hasQuickCreate", true);
+    check(assert, "quick_add", "10", "hasQuickCreate", true);
+    check(assert, "quick_add", "00", "hasQuickCreate", true);
+    check(assert, "quick_add", "7923640", "hasQuickCreate", true);
+    check(assert, "quick_add", "7923641", "hasQuickCreate", true);
+    check(assert, "quick_add", "fals0", "hasQuickCreate", true);
+    check(assert, "quick_add", "falseButTrue", "hasQuickCreate", true);
     check(assert, "quick_add", "false", "hasQuickCreate", false);
+    check(assert, "quick_add", "fALse", "hasQuickCreate", false);
     check(assert, "quick_add", "False", "hasQuickCreate", false);
     check(assert, "quick_add", "0", "hasQuickCreate", false);
 });
