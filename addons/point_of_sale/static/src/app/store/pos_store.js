@@ -147,6 +147,7 @@ export class PosStore extends Reactive {
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
         this.showOfflineWarning = true; // Allows to avoid the display of the offline popup when the user has already had it.
+        this.tempScreenIsShown = false;
 
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -1922,10 +1923,12 @@ export class PosStore extends Reactive {
                 component: registry.category("pos_screens").get(name),
                 props: { ...props, resolve },
             };
+            this.tempScreenIsShown = true;
         });
     }
 
     closeTempScreen() {
+        this.tempScreenIsShown = false;
         this.tempScreen = null;
     }
     openCashControl() {
