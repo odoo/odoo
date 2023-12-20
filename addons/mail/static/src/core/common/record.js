@@ -530,6 +530,7 @@ class RecordList extends Array {
     constructor() {
         super();
         const recordList = this;
+        recordList._raw = recordList;
         const recordListProxyInternal = new Proxy(recordList, {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
@@ -564,7 +565,9 @@ class RecordList extends Array {
                     );
                 }
                 // Attempt an unimplemented array method call
-                const array = [...recordListFullProxy];
+                const array = [
+                    ...recordList._proxyInternal[Symbol.iterator].call(recordListFullProxy),
+                ];
                 return array[name]?.bind(array);
             },
             /** @param {RecordList<R>} recordListProxy */
@@ -599,7 +602,11 @@ class RecordList extends Array {
                         const newLength = parseInt(val);
                         if (newLength !== recordList.data.length) {
                             if (newLength < recordList.data.length) {
-                                recordListProxy.splice(newLength, recordList.length - newLength);
+                                recordList.splice.call(
+                                    recordListProxy,
+                                    newLength,
+                                    recordList.length - newLength
+                                );
                             }
                             recordListProxy.data.length = newLength;
                         }
@@ -671,7 +678,7 @@ class RecordList extends Array {
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
             /** @type {R[]} */
-            const oldRecordsProxy = recordList._proxy.slice();
+            const oldRecordsProxy = recordList._proxyInternal.slice.call(recordList._proxy);
             for (const oldRecordProxy of oldRecordsProxy) {
                 toRaw(oldRecordProxy)._raw.__uses__.delete(recordList);
             }
@@ -712,7 +719,7 @@ class RecordList extends Array {
             /** @type {R} */
             const oldRecordProxy = recordListFullProxy.at(-1);
             if (oldRecordProxy) {
-                recordListFullProxy.splice(recordListFullProxy.length - 1, 1);
+                recordList.splice.call(recordListFullProxy, recordListFullProxy.length - 1, 1);
             }
             return oldRecordProxy;
         });
@@ -772,7 +779,11 @@ class RecordList extends Array {
         const recordList = toRaw(this)._raw;
         const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListSplice() {
-            const oldRecordsProxy = recordListFullProxy.slice(start, start + deleteCount);
+            const oldRecordsProxy = recordList._proxyInternal.slice.call(
+                recordListFullProxy,
+                start,
+                start + deleteCount
+            );
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
             list.splice(
                 start,
@@ -828,8 +839,8 @@ class RecordList extends Array {
                 }
                 recordList._insert(last, function recordListAddInsertOne(record) {
                     if (record.localId !== recordList.data[0]) {
-                        recordList._proxy.pop();
-                        recordList._proxy.push(record);
+                        recordList.pop.call(recordList._proxy);
+                        recordList.push.call(recordList._proxy, record);
                     }
                 });
                 return;
@@ -840,7 +851,7 @@ class RecordList extends Array {
                 }
                 recordList._insert(val, function recordListAddInsertMany(record) {
                     if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList._proxy.push(record);
+                        recordList.push.call(recordList._proxy, record);
                     }
                 });
             }
@@ -884,7 +895,7 @@ class RecordList extends Array {
                 val,
                 function recordList_AddNoInvManyInsert(record) {
                     if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList._proxy.push(record);
+                        recordList.push.call(recordList._proxy, record);
                         record.__uses__.add(recordList);
                     }
                 },
@@ -903,7 +914,7 @@ class RecordList extends Array {
                     function recordListDelete_Insert(record) {
                         const index = recordList.data.indexOf(record.localId);
                         if (index !== -1) {
-                            recordList._proxy.splice(index, 1);
+                            recordList.splice.call(recordList._proxy, index, 1);
                         }
                     },
                     { mode: "DELETE" }
@@ -926,7 +937,7 @@ class RecordList extends Array {
                 function recordList_DeleteNoInv_Insert(record) {
                     const index = recordList.data.indexOf(record.localId);
                     if (index !== -1) {
-                        recordList._proxy.splice(index, 1);
+                        recordList.splice.call(recordList._proxy, index, 1);
                         record.__uses__.delete(recordList);
                     }
                 },
@@ -939,7 +950,7 @@ class RecordList extends Array {
         const recordList = toRaw(this)._raw;
         return Record.MAKE_UPDATE(function recordListClear() {
             while (recordList.data.length > 0) {
-                recordList._proxy.pop();
+                recordList.pop.call(recordList._proxy);
             }
         });
     }
@@ -1030,9 +1041,9 @@ export class Record {
     static FC_QUEUE = []; // field-computes
     /** @type {RecordField[]} */
     static FS_QUEUE = []; // field-sorts
-    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    /** @type {Array<{field: RecordField, records: Record[]}>} */
     static FA_QUEUE = []; // field-onadds
-    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    /** @type {Array<{field: RecordField, records: Record[]}>} */
     static FD_QUEUE = []; // field-ondeletes
     /** @type {RecordField[]} */
     static FU_QUEUE = []; // field-onupdates
@@ -1239,7 +1250,7 @@ export class Record {
             }
             if (Array.isArray(val)) {
                 void val.length;
-                void val.forEach((i) => i);
+                void toRaw(val).forEach.call(val, (i) => i);
             }
         }
         if (Array.isArray(key)) {
@@ -1527,6 +1538,7 @@ export class Record {
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
         const ModelFullProxy = this;
+        const Model = toRaw(ModelFullProxy);
         return Record.MAKE_UPDATE(function RecordInsert() {
             const isMulti = Array.isArray(data);
             if (!isMulti) {
@@ -1535,7 +1547,7 @@ export class Record {
             const oldTrusted = Record.trusted;
             Record.trusted = options.html ?? Record.trusted;
             const res = data.map(function RecordInsertMap(d) {
-                return ModelFullProxy._insert(d, options);
+                return Model._insert.call(ModelFullProxy, d, options);
             });
             Record.trusted = oldTrusted;
             if (!isMulti) {
@@ -1547,9 +1559,11 @@ export class Record {
     /** @returns {Record} */
     static _insert(data) {
         const ModelFullProxy = this;
-        const res = ModelFullProxy.preinsert(data);
-        res.update(data);
-        return res;
+        const Model = toRaw(ModelFullProxy);
+        const recordFullProxy = Model.preinsert.call(ModelFullProxy, data);
+        const record = toRaw(recordFullProxy)._raw;
+        record.update.call(record._proxy, data);
+        return recordFullProxy;
     }
     /**
      * @param {Object} data
@@ -1558,7 +1572,7 @@ export class Record {
     static preinsert(data) {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);
-        return ModelFullProxy.get(data) ?? Model.new(data);
+        return Model.get.call(ModelFullProxy, data) ?? Model.new(data);
     }
     static isCommand(data) {
         return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
@@ -1652,9 +1666,13 @@ export class Record {
         const data = { ...recordProxy };
         for (const [name, { value }] of record._fields) {
             if (RecordList.isMany(value)) {
-                data[name] = value.map((recordProxy) => recordProxy.toIdData());
+                data[name] = value.map((recordProxy) => {
+                    const record = toRaw(recordProxy)._raw;
+                    return record.toIdData.call(record._proxyInternal);
+                });
             } else if (RecordList.isOne(value)) {
-                data[name] = value[0]?.toIdData();
+                const record = toRaw(value[0])?._raw;
+                data[name] = record?.toIdData.call(record._proxyInternal);
             } else {
                 data[name] = recordProxy[name]; // Record.attr()
             }
