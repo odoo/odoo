@@ -297,20 +297,22 @@ export function makeStore(env) {
                             record[name] = fieldDefinition.default;
                         }
                         if (fieldDefinition.compute) {
-                            onChange(recordProxy, name, () => {
-                                if (field.computing) {
-                                    /**
-                                     * Use a reactive to reset the computeInNeed flag when there is
-                                     * a change. This assumes when other reactive are still
-                                     * observing the value, its own callback will reset the flag to
-                                     * true through the proxy getters.
-                                     */
-                                    field.computeInNeed = false;
-                                }
-                            });
-                            // reset flags triggered by registering onChange
-                            field.computeInNeed = false;
-                            field.sortInNeed = false;
+                            if (!fieldDefinition.eager) {
+                                onChange(recordProxy, name, () => {
+                                    if (field.computing) {
+                                        /**
+                                         * Use a reactive to reset the computeInNeed flag when there is
+                                         * a change. This assumes when other reactive are still
+                                         * observing the value, its own callback will reset the flag to
+                                         * true through the proxy getters.
+                                         */
+                                        field.computeInNeed = false;
+                                    }
+                                });
+                                // reset flags triggered by registering onChange
+                                field.computeInNeed = false;
+                                field.sortInNeed = false;
+                            }
                             const proxy2 = reactive(recordProxy, function computeObserver() {
                                 field.requestCompute();
                             });
@@ -337,20 +339,22 @@ export function makeStore(env) {
                             });
                         }
                         if (fieldDefinition.sort) {
-                            onChange(recordProxy, name, () => {
-                                if (field.sorting) {
-                                    /**
-                                     * Use a reactive to reset the inNeed flag when there is a
-                                     * change. This assumes if another reactive is still observing
-                                     * the value, its own callback will reset the flag to true
-                                     * through the proxy getters.
-                                     */
-                                    field.sortInNeed = false;
-                                }
-                            });
-                            // reset flags triggered by registering onChange
-                            field.computeInNeed = false;
-                            field.sortInNeed = false;
+                            if (!fieldDefinition.eager) {
+                                onChange(recordProxy, name, () => {
+                                    if (field.sorting) {
+                                        /**
+                                         * Use a reactive to reset the inNeed flag when there is a
+                                         * change. This assumes if another reactive is still observing
+                                         * the value, its own callback will reset the flag to true
+                                         * through the proxy getters.
+                                         */
+                                        field.sortInNeed = false;
+                                    }
+                                });
+                                // reset flags triggered by registering onChange
+                                field.computeInNeed = false;
+                                field.sortInNeed = false;
+                            }
                             const proxy2 = reactive(recordProxy, function sortObserver() {
                                 field.requestSort();
                             });
