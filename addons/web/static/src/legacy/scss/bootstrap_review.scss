@@ -198,3 +198,29 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
 .carousel-control-next .sr-only {
     left: 50%; // Avoid horizontal scrollbar in Chrome
 }
+
+// Modal
+.modal-content {
+    // If the text color of the body (used for the text color in modals) is not
+    // visible due to insufficient contrast with the modal background, we adjust
+    // the text color in the modal using the following code. For example, if the
+    // user sets a black background for its website and the text color of the
+    // body is white, the text will not be visible on modals with a white
+    // background.
+
+    // Check if the body text color is light.
+    $-is-body-text-light: color-yiq($body-color) == $yiq-text-dark;
+
+    @if $modal-content-color == null {
+        color: if(
+            $-is-body-text-light,
+            color-yiq($modal-content-bg, $light: $body-color, $dark: $yiq-text-dark),
+            color-yiq($modal-content-bg, $light: $yiq-text-light, $dark: $body-color)
+        );
+    }
+    @if $-is-body-text-light {
+        .text-muted {
+            color: color-yiq($modal-content-bg, $light: $text-muted, $dark: mute-color($yiq-text-dark)) !important;
+        }
+    }
+}
