@@ -143,6 +143,7 @@ export class PosGlobalState extends PosModel {
 
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
+        this.tempScreenIsShown = false;
 
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
