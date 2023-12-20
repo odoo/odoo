@@ -7,14 +7,10 @@ from odoo import api, fields, models
 class MailNotification(models.Model):
     _inherit = 'mail.notification'
 
+    # sms contextual information
     notification_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'cascade'})
-    sms_id_int = fields.Integer('SMS ID', index='btree_not_null')
-    # Used to give links on form view without foreign key. In most cases, you'd want to use sms_id_int or sms_tracker_ids.sms_uuid.
-    sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id')
-    sms_tracker_ids = fields.One2many('sms.tracker', 'mail_notification_id', string="SMS Trackers")
-    sms_number = fields.Char('SMS Number')
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
@@ -30,6 +26,13 @@ class MailNotification(models.Model):
         ('sms_not_delivered', 'Not Delivered'),
         ('sms_rejected', 'Rejected'),
     ])
+    # sms specific
+    sms_id_int = fields.Integer('SMS ID', index='btree_not_null')
+    # Used to give links on form view without foreign key. In most cases you should
+    # use sms_id_int or sms_tracker_ids.sms_uuid
+    sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id')
+    sms_tracker_ids = fields.One2many('sms.tracker', 'mail_notification_id', string="SMS Trackers")
+    sms_number = fields.Char('SMS Number')
 
     @api.depends('sms_id_int', 'notification_type')
     def _compute_sms_id(self):
