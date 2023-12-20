@@ -12,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
+import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
@@ -31,7 +32,6 @@ export class SpreadsheetDashboardAction extends Component {
         this.Status = Status;
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
-        this.router = useService("router");
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
         // because spreadsheets models are preserved across multiple components when navigating
         // with the breadcrumb
@@ -51,7 +51,7 @@ export class SpreadsheetDashboardAction extends Component {
             }
         });
         useEffect(
-            () => this.router.pushState({ dashboard_id: this.activeDashboardId }),
+            () => router.pushState({ dashboard_id: this.activeDashboardId }),
             () => [this.activeDashboardId]
         );
         useEffect(

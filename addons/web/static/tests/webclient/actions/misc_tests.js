@@ -15,6 +15,7 @@ import {
 import { listView } from "@web/views/list/list_view";
 import { companyService } from "@web/webclient/company_service";
 import { onWillStart } from "@odoo/owl";
+import { router } from "@web/core/browser/router";
 
 let serverData;
 let target;
@@ -210,7 +211,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         let currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, defaultTitle);
-        let currentHash = webClient.env.services.router.current.hash;
+        let currentHash = router.current.hash;
         assert.deepEqual(currentHash, {});
         await doAction(webClient, 4);
         await nextTick();
@@ -219,7 +220,7 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Partners Action 4",
         });
-        currentHash = webClient.env.services.router.current.hash;
+        currentHash = router.current.hash;
         assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
         await doAction(webClient, 8);
         await nextTick();
@@ -228,7 +229,7 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Favorite Ponies",
         });
-        currentHash = webClient.env.services.router.current.hash;
+        currentHash = router.current.hash;
         assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
@@ -237,7 +238,7 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Twilight Sparkle",
         });
-        currentHash = webClient.env.services.router.current.hash;
+        currentHash = router.current.hash;
         assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
     });
 

@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { routeToUrl } from "@web/core/browser/router_service";
+import { router, routeToUrl } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -50,7 +50,6 @@ registry.category("actions").add("invalid_action", InvalidAction);
  */
 function reload(env, action) {
     const { menu_id, action_id } = action.params || {};
-    const { router } = env.services;
     const route = { ...router.current };
 
     if (menu_id || action_id) {

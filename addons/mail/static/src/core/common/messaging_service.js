@@ -2,6 +2,7 @@
 
 import { cleanTerm } from "@mail/utils/common/format";
 
+import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -21,7 +22,6 @@ export class Messaging {
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
-        this.router = services.router;
         this.isReady = new Deferred();
         this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.store.discuss.inbox = {
@@ -59,8 +59,8 @@ export class Messaging {
     initMessagingCallback(data) {
         this.store.update(data);
         this.store.discuss.isActive =
-            (data.menu_id && data.menu_id === this.router.current.hash?.menu_id) ||
-            this.router.hash?.action === "mail.action_discuss";
+            (data.menu_id && data.menu_id === router.current.hash?.menu_id) ||
+            router.hash?.action === "mail.action_discuss";
         this.isReady.resolve(data);
         this.store.isMessagingReady = true;
     }
@@ -114,7 +114,6 @@ export const messagingService = {
     dependencies: [
         "mail.store",
         "orm",
-        "router",
         "im_status",
         "mail.attachment", // FIXME: still necessary until insert is managed by this service
         "mail.thread", // FIXME:     still necessary until insert is managed by this service

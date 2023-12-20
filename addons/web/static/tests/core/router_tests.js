@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { parseHash, parseSearchQuery, routeToUrl } from "@web/core/browser/router_service";
-import { makeFakeRouterService } from "../helpers/mock_services";
+import {
+    parseHash,
+    parseSearchQuery,
+    routeToUrl,
+    router,
+    startRouter,
+} from "@web/core/browser/router";
 import { nextTick, patchWithCleanup } from "../helpers/utils";
 
-import { EventBus } from "@odoo/owl";
-
 async function createRouter(params = {}) {
-    const env = params.env || {};
-    env.bus = env.bus || new EventBus();
     if (params.onPushState) {
         const originalPushState = browser.history.pushState;
         const onPushState = params.onPushState;
@@ -23,8 +24,7 @@ async function createRouter(params = {}) {
             }),
         });
     }
-    const router = await makeFakeRouterService(params).start(env);
-    return router;
+    startRouter();
 }
 
 QUnit.module("Router");
@@ -103,7 +103,7 @@ QUnit.test("routeToUrl encodes URI compatible strings", (assert) => {
 QUnit.module("Router: Push state");
 
 QUnit.test("can push in same timeout", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     assert.deepEqual(router.current.hash, {});
 
@@ -117,7 +117,7 @@ QUnit.test("can push in same timeout", async (assert) => {
 });
 
 QUnit.test("can lock keys", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 }, { lock: true });
     await nextTick();
@@ -137,7 +137,7 @@ QUnit.test("can lock keys", async (assert) => {
 });
 
 QUnit.test("can re-lock keys in same final call", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 }, { lock: true });
     await nextTick();
@@ -148,7 +148,7 @@ QUnit.test("can re-lock keys in same final call", async (assert) => {
 });
 
 QUnit.test("can unlock keys", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 }, { lock: true });
     await nextTick();
@@ -168,7 +168,7 @@ QUnit.test("can unlock keys", async (assert) => {
 });
 
 QUnit.test("can replace hash", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 });
     await nextTick();
@@ -180,7 +180,7 @@ QUnit.test("can replace hash", async (assert) => {
 });
 
 QUnit.test("can replace hash with locked keys", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 }, { lock: true });
     await nextTick();
@@ -192,7 +192,7 @@ QUnit.test("can replace hash with locked keys", async (assert) => {
 });
 
 QUnit.test("can merge hash", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 2 });
     await nextTick();
@@ -205,7 +205,7 @@ QUnit.test("can merge hash", async (assert) => {
 
 QUnit.test("undefined keys are not pushed", async (assert) => {
     const onPushState = () => assert.step("pushed state");
-    const router = await createRouter({ onPushState });
+    await createRouter({ onPushState });
 
     router.pushState({ k1: undefined });
     await nextTick();
@@ -214,7 +214,7 @@ QUnit.test("undefined keys are not pushed", async (assert) => {
 });
 
 QUnit.test("undefined keys destroy previous non locked keys", async (assert) => {
-    const router = await createRouter();
+    await createRouter();
 
     router.pushState({ k1: 1 });
     await nextTick();
@@ -227,7 +227,7 @@ QUnit.test("undefined keys destroy previous non locked keys", async (assert) => 
 
 QUnit.test("do not re-push when hash is same", async (assert) => {
     const onPushState = () => assert.step("pushed state");
-    const router = await createRouter({ onPushState });
+    await createRouter({ onPushState });
 
     router.pushState({ k1: 1, k2: 2 });
     await nextTick();
@@ -240,7 +240,7 @@ QUnit.test("do not re-push when hash is same", async (assert) => {
 
 QUnit.test("do not re-push when hash is same (with integers as strings)", async (assert) => {
     const onPushState = () => assert.step("pushed state");
-    const router = await createRouter({ onPushState });
+    await createRouter({ onPushState });
 
     router.pushState({ k1: 1, k2: "2" });
     await nextTick();

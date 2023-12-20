@@ -10,6 +10,7 @@ import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";
 import { ImportDataSidepanel } from "../import_data_sidepanel/import_data_sidepanel";
 import { Layout } from "@web/search/layout";
+import { router } from "@web/core/browser/router";
 
 export class ImportAction extends Component {
     static template = "ImportAction";
@@ -24,8 +25,6 @@ export class ImportAction extends Component {
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.router = useService("router");
-
         this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
         this.resModel = this.props.action.params.model;
         this.model = useImportModel({
@@ -53,7 +52,7 @@ export class ImportAction extends Component {
 
     enter() {
         const newState = { action: "import", model: this.resModel };
-        this.router.pushState(newState, { replace: true });
+        router.pushState(newState, { replace: true });
     }
 
     exit(resIds) {

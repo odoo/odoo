@@ -22,6 +22,7 @@ import {
     patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
+import { router, routerBus } from "@web/core/browser/router";
 
 import { onMounted } from "@odoo/owl";
 import { patchUserContextWithCleanup } from "../../helpers/mock_services";
@@ -544,7 +545,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         // The form view is automatically switched to the next record
         // Go back to the previous (now deleted) record
-        webClient.env.bus.trigger("test:hashchange", {
+        routerBus.trigger("test:hashchange", {
             model: "partner",
             id: 1,
             action: 3,
@@ -553,7 +554,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.nextTick();
 
         // Go back to the list view
-        webClient.env.bus.trigger("test:hashchange", {
+        routerBus.trigger("test:hashchange", {
             model: "partner",
             action: 3,
             view_type: "list",
@@ -1257,15 +1258,15 @@ QUnit.module("ActionManager", (hooks) => {
             // open a record in form view
             await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
+            assert.strictEqual(router.current.hash.id, 1);
             // do some other action
             await doAction(webClient, 4);
             await nextTick(); // wait for the router to update its state
-            assert.notOk(webClient.env.services.router.current.hash.id);
+            assert.notOk(router.current.hash.id);
             // go back to form view
             await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
+            assert.strictEqual(router.current.hash.id, 1);
         }
     );
 
@@ -1972,7 +1973,7 @@ QUnit.module("ActionManager", (hooks) => {
         // Open Partner form in create mode
         await doAction(webClient, 3, { viewType: "form" });
         await nextTick();
-        const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
+        const prevHash = Object.assign({}, router.current.hash);
         // Edit another partner in a dialog
         await doAction(webClient, {
             name: "Edit a Partner",
@@ -1985,7 +1986,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await nextTick();
         assert.deepEqual(
-            webClient.env.services.router.current.hash,
+            router.current.hash,
             prevHash,
             "push_state in dialog shouldn't change the hash"
         );

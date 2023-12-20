@@ -3,6 +3,7 @@
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { session } from "@web/session";
+import { router } from "@web/core/browser/router";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
 
@@ -29,7 +30,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         return menusData[menuId];
     }
     function _updateURL(menuId) {
-        env.services.router.pushState({ menu_id: menuId }, { lock: true });
+        router.pushState({ menu_id: menuId }, { lock: true });
     }
     function _setCurrentMenu(menu, updateURL = true) {
         menu = typeof menu === "number" ? _getMenu(menu) : menu;
@@ -87,7 +88,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
 }
 
 export const menuService = {
-    dependencies: ["action", "router"],
+    dependencies: ["action"],
     async start(env) {
         const fetchLoadMenus = makeFetchLoadMenus();
         const menusData = await fetchLoadMenus();

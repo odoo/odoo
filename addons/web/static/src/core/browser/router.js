@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import { registry } from "../registry";
+import { EventBus } from "@odoo/owl";
 import { shallowEqual } from "../utils/objects";
 import { objectToUrlEncodedString } from "../utils/urls";
 import { browser } from "./browser";
+
+export const routerBus = new EventBus();
 
 /**
  * Casts the given string to a number if possible.
@@ -114,73 +116,74 @@ function getRoute(urlObj) {
     return { pathname, search: searchQuery, hash: hashQuery };
 }
 
-function makeRouter(env) {
-    const bus = env.bus;
-    const lockedKeys = new Set();
-    let current = getRoute(browser.location);
-    let pushTimeout;
-    browser.addEventListener("hashchange", (ev) => {
-        browser.clearTimeout(pushTimeout);
-        const loc = new URL(ev.newURL);
-        current = getRoute(loc);
-        bus.trigger("ROUTE_CHANGE");
-    });
+let current;
+let pushTimeout;
+let lockedKeys;
+let allPushArgs;
 
-    /**
-     * @param {string} mode
-     * @returns {(hash: string, options: any) => any}
-     */
-    function makeDebouncedPush(mode) {
-        let allPushArgs = [];
-        function doPush() {
-            // Aggregates push/replace state arguments
-            const replace = allPushArgs.some(([, options]) => options && options.replace);
-            const newHash = allPushArgs.reduce((finalHash, [hash, options]) => {
-                hash = applyLocking(lockedKeys, hash, current.hash, options);
-                if (finalHash) {
-                    hash = applyLocking(lockedKeys, hash, finalHash, options);
-                }
-                return Object.assign(finalHash || {}, hash);
-            }, null);
-            // Calculates new route based on aggregated hash and options
-            const newRoute = computeNewRoute(newHash, replace, current);
-            if (!newRoute) {
-                return;
+export function startRouter() {
+    lockedKeys = new Set();
+    current = getRoute(browser.location);
+    pushTimeout = null;
+    allPushArgs = [];
+}
+
+browser.addEventListener("hashchange", (ev) => {
+    browser.clearTimeout(pushTimeout);
+    const loc = new URL(ev.newURL);
+    current = getRoute(loc);
+    routerBus.trigger("ROUTE_CHANGE");
+});
+
+/**
+ * @param {string} mode
+ * @returns {(hash: string, options: any) => any}
+ */
+function makeDebouncedPush(mode) {
+    function doPush() {
+        // Aggregates push/replace state arguments
+        const replace = allPushArgs.some(([, options]) => options && options.replace);
+        const newHash = allPushArgs.reduce((finalHash, [hash, options]) => {
+            hash = applyLocking(lockedKeys, hash, current.hash, options);
+            if (finalHash) {
+                hash = applyLocking(lockedKeys, hash, finalHash, options);
             }
-            // If the route changed: pushes or replaces browser state
-            const url = browser.location.origin + routeToUrl(newRoute);
-            if (mode === "push") {
-                browser.history.pushState({}, "", url);
-            } else {
-                browser.history.replaceState({}, "", url);
-            }
-            current = getRoute(browser.location);
+            return Object.assign(finalHash || {}, hash);
+        }, null);
+        // Calculates new route based on aggregated hash and options
+        const newRoute = computeNewRoute(newHash, replace, current);
+        if (!newRoute) {
+            return;
         }
-        return function pushOrReplaceState(hash, options) {
-            allPushArgs.push([hash, options]);
-            browser.clearTimeout(pushTimeout);
-            pushTimeout = browser.setTimeout(() => {
-                doPush();
-                pushTimeout = null;
-                allPushArgs = [];
-            });
-        };
+        // If the route changed: pushes or replaces browser state
+        const url = browser.location.origin + routeToUrl(newRoute);
+        if (mode === "push") {
+            browser.history.pushState({}, "", url);
+        } else {
+            browser.history.replaceState({}, "", url);
+        }
+        current = getRoute(browser.location);
     }
-
-    return {
-        get current() {
-            return current;
-        },
-        pushState: makeDebouncedPush("push"),
-        replaceState: makeDebouncedPush("replace"),
-        cancelPushes: () => browser.clearTimeout(pushTimeout),
+    return function pushOrReplaceState(hash, options) {
+        allPushArgs.push([hash, options]);
+        browser.clearTimeout(pushTimeout);
+        pushTimeout = browser.setTimeout(() => {
+            doPush();
+            pushTimeout = null;
+            allPushArgs = [];
+        });
     };
 }
 
-export const routerService = {
-    start(env) {
-        return makeRouter(env);
+startRouter();
+
+export const router = {
+    get current() {
+        return current;
     },
+    pushState: makeDebouncedPush("push"),
+    replaceState: makeDebouncedPush("replace"),
+    cancelPushes: () => browser.clearTimeout(pushTimeout),
 };
 
 export function objectToQuery(obj) {
@@ -190,5 +193,3 @@ export function objectToQuery(obj) {
     });
     return query;
 }
-
-registry.category("services").add("router", routerService);

@@ -44,7 +44,7 @@
             ("include", "web._assets_bootstrap"),
             ("include", "web._assets_bootstrap_backend"),
             ('include', 'web._assets_core'),
-            ("remove", "web/static/src/core/browser/router_service.js"),
+            ("remove", "web/static/src/core/browser/router.js"),
             ("remove", "web/static/src/core/debug/**/*"),
             "web/static/src/views/fields/formatters.js",
             "web/static/src/libs/fontawesome/css/font-awesome.css",

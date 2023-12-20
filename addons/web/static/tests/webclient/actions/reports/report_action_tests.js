@@ -23,6 +23,7 @@ import {
 } from "@web/../tests/webclient/helpers";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 import { registerCleanup } from "../../../helpers/cleanup";
+import { router } from "@web/core/browser/router";
 
 let serverData;
 let target;
@@ -399,7 +400,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await doAction(webClient, 12); // 12 is a html report action in serverData
         await nextTick();
-        const hash = webClient.router.current.hash;
+        const hash = router.current.hash;
         // used to put report.client_action in the url
         assert.strictEqual(hash.action === "report.client_action", false);
         assert.strictEqual(hash.action === 12, true);

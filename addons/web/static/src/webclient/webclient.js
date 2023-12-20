@@ -10,6 +10,7 @@ import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
+import { routerBus, router } from "@web/core/browser/router";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -24,7 +25,6 @@ export class WebClient extends Component {
         this.menuService = useService("menu");
         this.actionService = useService("action");
         this.title = useService("title");
-        this.router = useService("router");
         useOwnDebugContext({ categories: ["default"] });
         if (this.env.debug) {
             registry.category("systray").add(
@@ -40,7 +40,7 @@ export class WebClient extends Component {
             fullscreen: false,
         });
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
-        useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
+        useBus(routerBus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
             if (mode !== "new") {
                 this.state.fullscreen = mode === "fullscreen";
@@ -58,7 +58,7 @@ export class WebClient extends Component {
 
     async loadRouterState() {
         let stateLoaded = await this.actionService.loadState();
-        let menuId = Number(this.router.current.hash.menu_id || 0);
+        let menuId = Number(router.current.hash.menu_id || 0);
 
         if (!stateLoaded && menuId) {
             // Determines the current actionId based on the current menu

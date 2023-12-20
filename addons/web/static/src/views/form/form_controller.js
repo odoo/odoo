@@ -33,6 +33,7 @@ import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { router } from "@web/core/browser/router";
 
 import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -144,7 +145,6 @@ export class FormController extends Component {
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.dialogService = useService("dialog");
-        this.router = useService("router");
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
@@ -394,7 +394,7 @@ export class FormController extends Component {
     }
 
     updateURL() {
-        this.router.pushState({ id: this.model.root.resId || undefined });
+        router.pushState({ id: this.model.root.resId || undefined });
     }
 
     getStaticActionMenuItems() {

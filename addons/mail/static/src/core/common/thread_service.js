@@ -5,6 +5,7 @@ import { Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
+import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -33,7 +34,6 @@ export class ThreadService {
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.notificationService = services.notification;
-        this.router = services.router;
         this.ui = services.ui;
         this.messageService = services["mail.message"];
         this.personaService = services["mail.persona"];
@@ -397,7 +397,7 @@ export class ThreadService {
     async unpin(thread) {
         thread.isLocallyPinned = false;
         if (thread.eq(this.store.discuss.thread)) {
-            this.router.replaceState({ active_id: undefined });
+            router.replaceState({ active_id: undefined });
         }
         if (thread.model === "discuss.channel" && thread.is_pinned) {
             return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
@@ -618,7 +618,7 @@ export class ThreadService {
                 ? "chat"
                 : "channel";
         if (pushState) {
-            this.router.pushState({ active_id: activeId });
+            router.pushState({ active_id: activeId });
         }
         if (!thread.is_pinned) {
             thread.isLocallyPinned = true;
@@ -883,7 +883,6 @@ export const threadService = {
         "mail.store",
         "orm",
         "notification",
-        "router",
         "mail.message",
         "mail.persona",
         "mail.out_of_focus",
