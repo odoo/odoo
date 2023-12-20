@@ -72,7 +72,9 @@ class AccountMoveReversal(models.TransientModel):
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
         if 'company_id' in fields:
-            res['company_id'] = move_ids.company_id.root_id.id or self.env.company.id
+            if len(move_ids.company_id) > 1:
+                raise UserError(_("You can't create a credit note for entries belonging to different companies."))
+            res['company_id'] = move_ids.company_id.id or self.env.company.id
         if 'move_ids' in fields:
             res['move_ids'] = [(6, 0, move_ids.ids)]
         return res
