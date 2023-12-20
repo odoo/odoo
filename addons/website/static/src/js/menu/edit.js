@@ -306,16 +306,23 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             this.wysiwyg.odooEditor.automaticStepSkipStack();
 
             for (const record of records) {
-                const $savable = $(record.target).closest(this.savableSelector);
-
                 if (record.attributeName === 'contenteditable') {
                     continue;
                 }
+
+                const $savable = $(record.target).closest(this.savableSelector);
+                if (!$savable.length) {
+                    continue;
+                }
+
+                // Mark any savable element dirty if any tracked mutation occurs
+                // inside of it.
                 $savable.not('.o_dirty').each(function () {
                     if (!this.hasAttribute('data-oe-readonly')) {
                         this.classList.add('o_dirty');
                     }
                 });
+
                 if (this.options.processRecordsCallback) {
                     for (const el of $savable) {
                         this.options.processRecordsCallback(record, el);
