@@ -34,6 +34,11 @@ class AttachmentController(http.Controller):
             attachment = env["ir.attachment"].create(vals)
             attachment._post_add_create()
             attachmentData = {
+                "author": {
+                    "id": attachment.create_uid.id,
+                    "name": attachment.create_uid.name,
+                    "partnerId": attachment.create_uid.partner_id.id,
+                },
                 "filename": ufile.filename,
                 "id": attachment.id,
                 "mimetype": attachment.mimetype,

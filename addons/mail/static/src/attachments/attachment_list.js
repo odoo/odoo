@@ -28,6 +28,13 @@ export class AttachmentList extends Component {
         this.attachmentViewer = useAttachmentViewer();
     }
 
+    onImageLoaded({ ev, attachment }) {
+        const image = ev.target;
+        if (image) {
+            attachment.isSmallImg = image.height <= 30;
+        }
+    }
+
     /**
      * @return {import("@mail/attachments/attachment_model").Attachment[]}
      */
