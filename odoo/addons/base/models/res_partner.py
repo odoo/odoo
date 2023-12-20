@@ -139,14 +139,10 @@ class PartnerCategory(models.Model):
             category.display_name = ' / '.join(reversed(names))
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if name:
-            # Be sure name_search is symetric to display_name
-            name = name.split(' / ')[-1]
-            domain = [('name', operator, name)] + domain
-        return self._search(domain, limit=limit, order=order)
-
+    def _search_display_name(self, name, operator='ilike'):
+        # Be sure name_search is symetric to display_name
+        name = (name or '').split('/')[-1]
+        return super()._search_display_name(name, operator)
 
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'

@@ -37,14 +37,13 @@ class Bank(models.Model):
             bank.display_name = name
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
+    def _search_display_name(self, name, operator='ilike'):
         if name:
-            name_domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
+            domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
-                name_domain = ['&', '!'] + name_domain[1:]
-            domain = domain + name_domain
-        return self._search(domain, limit=limit, order=order)
+                domain = ['&', '!'] + domain[1:]
+            return domain
+        return super()._search_display_name(name, operator)
 
     @api.onchange('country')
     def _onchange_country_id(self):

@@ -244,7 +244,7 @@ class MetaModel(api.Meta):
 
             add('id', fields.Id(automatic=True))
             add_default('display_name', fields.Char(
-                string='Display Name', automatic=True, compute='_compute_display_name'))
+                string='Display Name', automatic=True, compute='_compute_display_name', search='_search_display_name'))
 
             if attrs.get('_log_access', self._auto):
                 add_default('create_uid', fields.Many2one(
@@ -1697,8 +1697,11 @@ class BaseModel(metaclass=MetaModel):
         This method is used to implement the search on the ``display_name``
         field, and can be overridden to change the search criteria.
         """
+        if name == '' and operator in ('like', 'ilike'):
+            return []
+
         if not self._rec_name and not self._rec_names_search:
-            _logger.error("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
+            _logger.error("Cannot execute _search_display_name, no _rec_name or _rec_names_search defined on %s", self._name)
 
         aggregator = expression.OR
         if operator in expression.NEGATIVE_TERM_OPERATORS:
@@ -7053,7 +7056,6 @@ class BaseModel(metaclass=MetaModel):
         if create_values:
             records_batches.append(self.create(create_values))
         return self.concat(*records_batches)
-
 
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
