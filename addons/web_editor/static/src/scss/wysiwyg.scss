@@ -414,7 +414,9 @@ body:not(.editor_has_snippets) {
 
 .oe_edited_link {
     position: relative;
-    display: inline-block;
+    &:not(.nav-link) {
+        display: inline-block;
+    }
     &::before {
         content: '';
         border: dashed 3px #01bad2;
