@@ -1622,7 +1622,7 @@
                                 <t t-call='website_sale.base_unit_price'>
                                     <t t-set='product' t-value='line.product_id'/>
                                     <t t-set='combination_info'
-                                       t-value="{'base_unit_price':product._get_base_unit_price(product_price)}"/>
+                                       t-value="{'base_unit_price': product._get_base_unit_price(product_price/line.product_uom_qty)}"/>
                                 </t>
                             </small>
                         </div>
