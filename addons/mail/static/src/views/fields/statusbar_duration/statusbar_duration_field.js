@@ -14,7 +14,7 @@ export class StatusBarDurationField extends StatusBarField {
         if (Object.keys(durationTracking).length) {
             for (const item of items) {
                 const duration = durationTracking[item.value];
-                if (duration > 0) {
+                if (duration >= 0) {
                     item.shortTimeInStage = formatDuration(duration, false);
                     item.fullTimeInStage = formatDuration(duration, true);
                 } else {

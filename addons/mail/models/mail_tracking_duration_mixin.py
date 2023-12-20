@@ -56,6 +56,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
                   AND m.res_id IN %(record_ids)s
              ORDER BY v.id
         """
+        self.env.cr.flush()
         self.env.cr.execute(query, {"field_id": field.id, "model_name": self._name, "record_ids": tuple(self.ids)})
         trackings = self.env.cr.dictfetchall()
 
