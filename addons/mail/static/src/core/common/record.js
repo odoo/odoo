@@ -207,6 +207,7 @@ export function makeStore(env) {
                     record._RawModel = Model;
                     const recordProxyInternal = new Proxy(record, {
                         get(record, name, recordFullProxy) {
+                            recordFullProxy = record._downgradeProxy(recordFullProxy);
                             const field = record._fields.get(name);
                             if (field) {
                                 if (field.compute && !field.eager) {
@@ -262,6 +263,7 @@ export function makeStore(env) {
                             });
                         },
                     });
+                    record._proxyInternal = recordProxyInternal;
                     const recordProxy = reactive(recordProxyInternal);
                     record._proxy = recordProxy;
                     if (record instanceof BaseStore) {
@@ -526,6 +528,7 @@ class RecordList extends Array {
         const recordListProxyInternal = new Proxy(recordList, {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
+                recordListFullProxy = recordList._downgradeProxy(recordListFullProxy);
                 if (
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
@@ -602,9 +605,20 @@ class RecordList extends Array {
                 });
             },
         });
+        recordList._proxyInternal = recordListProxyInternal;
         recordList._proxy = reactive(recordListProxyInternal);
         return recordList;
     }
+
+    /**
+     * The internal reactive is only necessary to trigger outer reactives when
+     * writing on it. As it has no callback, reading through it has no effect,
+     * except slowing down performance and complexifying the stack.
+     */
+    _downgradeProxy(fullProxy) {
+        return this._proxy === fullProxy ? this._proxyInternal : fullProxy;
+    }
+
     /**
      * @param {R|any} val
      * @param {(R) => void} [fn] function that is called in-between preinsert and
@@ -668,8 +682,8 @@ class RecordList extends Array {
     }
     /** @param {R[]} records */
     push(...records) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListPush() {
             for (const val of records) {
                 const record = recordList._insert(val, function recordListPushInsert(record) {
@@ -687,7 +701,8 @@ class RecordList extends Array {
     }
     /** @returns {R} */
     pop() {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListPop() {
             /** @type {R} */
             const oldRecordProxy = recordListFullProxy.at(-1);
@@ -699,8 +714,8 @@ class RecordList extends Array {
     }
     /** @returns {R} */
     shift() {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListShift() {
             const recordProxy = recordListFullProxy.store.recordByLocalId.get(
                 recordListFullProxy.data.shift()
@@ -720,8 +735,8 @@ class RecordList extends Array {
     }
     /** @param {R[]} records */
     unshift(...records) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListUnshift() {
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._insert(records[i], (record) => {
@@ -739,7 +754,8 @@ class RecordList extends Array {
     }
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return recordListFullProxy.data.indexOf(toRaw(recordProxy)?._raw.localId);
     }
     /**
@@ -748,8 +764,8 @@ class RecordList extends Array {
      * @param {...R} [newRecordsProxy]
      */
     splice(start, deleteCount, ...newRecordsProxy) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListSplice() {
             const oldRecordsProxy = recordListFullProxy.slice(start, start + deleteCount);
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
@@ -781,7 +797,8 @@ class RecordList extends Array {
     }
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListSort() {
             sortRecordList(recordListFullProxy, func);
             return recordListFullProxy;
@@ -789,7 +806,8 @@ class RecordList extends Array {
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return recordListFullProxy.data
             .map((localId) => recordListFullProxy.store.recordByLocalId.get(localId))
             .concat(...collections.map((c) => [...c]));
@@ -922,7 +940,8 @@ class RecordList extends Array {
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         for (const localId of recordListFullProxy.data) {
             yield recordListFullProxy.store.recordByLocalId.get(localId);
         }
@@ -1635,6 +1654,7 @@ export class Record {
         }
         delete data._fields;
         delete data._proxy;
+        delete data._proxyInternal;
         delete data._proxyUsed;
         delete data._raw;
         delete data._RawModel;
@@ -1651,6 +1671,15 @@ export class Record {
             }
         }
         return data;
+    }
+
+    /**
+     * The internal reactive is only necessary to trigger outer reactives when
+     * writing on it. As it has no callback, reading through it has no effect,
+     * except slowing down performance and complexifying the stack.
+     */
+    _downgradeProxy(fullProxy) {
+        return this._proxy === fullProxy ? this._proxyInternal : fullProxy;
     }
 }
 
