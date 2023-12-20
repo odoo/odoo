@@ -83,9 +83,11 @@ class WebsiteSlides(WebsiteProfile):
                 # e.g. upgrade from Odoo 15.0 to 18.0.
                 request.session.viewed_slides = dict.fromkeys(request.session.get('viewed_slides', []), 1)
             viewed_slides = request.session['viewed_slides']
-            if slide.id not in viewed_slides:
+            # Convert `slide.id` to string is necessary because of the JSON format of the session
+            slide_id = str(slide.id)
+            if slide_id not in viewed_slides:
                 if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
-                    viewed_slides[slide.id] = 1
+                    viewed_slides[slide_id] = 1
                     request.session.touch()
         else:
             slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
