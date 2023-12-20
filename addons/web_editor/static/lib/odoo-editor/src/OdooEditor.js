@@ -2683,6 +2683,8 @@ export class OdooEditor extends EventTarget {
                     (!this.commandBar._active ||
                         this.commandBar._currentOpenOptions.closeOnSpace !== true)
                 ) {
+                    // Merge adjacent text nodes.
+                    selection.anchorNode.parentNode.normalize();
                     const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
                     const textNodeSplitted = textSliced.split(/\s/);
 
