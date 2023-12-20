@@ -3,6 +3,7 @@
 import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -124,7 +125,7 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
+    await waitUntilSubscribe();
     assert.verifySteps(["update-channels"]);
 });
 
