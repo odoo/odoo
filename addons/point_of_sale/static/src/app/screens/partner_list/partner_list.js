@@ -1,10 +1,26 @@
 /** @odoo-module **/
 
+<<<<<<< HEAD
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { Dialog } from "@web/core/dialog/dialog";
+||||||| parent of 12f62edc7595 (temp)
+import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
+import { useService } from "@web/core/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { session } from "@web/session";
+
+=======
+import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
+import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { session } from "@web/session";
+
+>>>>>>> 12f62edc7595 (temp)
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerEditor } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
@@ -32,7 +48,14 @@ export class PartnerList extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.notification = useService("pos_notification");
+<<<<<<< HEAD
         this.dialog = useService("dialog");
+||||||| parent of 12f62edc7595 (temp)
+        this.searchWordInputRef = useRef("search-word-input-partner");
+=======
+        this.searchWordInputRef = useRef("search-word-input-partner");
+        useAutofocus({refName: 'search-word-input-partner'});
+>>>>>>> 12f62edc7595 (temp)
 
         this.state = useState({
             query: null,

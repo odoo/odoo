@@ -77,6 +77,14 @@ export class ProductScreen extends Component {
         });
 
         this.numberBuffer.use({
+<<<<<<< HEAD
+||||||| parent of 12f62edc7595 (temp)
+            triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
+=======
+            triggerAtInput: (...args) => {
+                if (!this.pos.tempScreenIsShown) this.updateSelectedOrderline(...args);
+            },
+>>>>>>> 12f62edc7595 (temp)
             useWithBarcode: true,
         });
     }

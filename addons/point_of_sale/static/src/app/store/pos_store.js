@@ -155,6 +155,13 @@ export class PosStore extends Reactive {
 
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
+<<<<<<< HEAD
+||||||| parent of 12f62edc7595 (temp)
+        this.showOfflineWarning = true; // Allows to avoid the display of the offline popup when the user has already had it.
+=======
+        this.showOfflineWarning = true; // Allows to avoid the display of the offline popup when the user has already had it.
+        this.tempScreenIsShown = false;
+>>>>>>> 12f62edc7595 (temp)
 
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -1944,6 +1951,7 @@ export class PosStore extends Reactive {
         await this.addProductFromUi(product, options);
         this.numberBuffer.reset();
     }
+<<<<<<< HEAD
 
     async getEditedPackLotLines(isAllowOnlyOneLot, packLotLinesToEdit, productName) {
         const payload = await makeAwaitable(this.dialog, EditListPopup, {
@@ -1951,6 +1959,26 @@ export class PosStore extends Reactive {
             name: productName,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
+||||||| parent of 12f62edc7595 (temp)
+    // FIXME POSREF get rid of temp screens entirely?
+    showTempScreen(name, props = {}) {
+        return new Promise((resolve) => {
+            this.tempScreen = {
+                name,
+                component: registry.category("pos_screens").get(name),
+                props: { ...props, resolve },
+            };
+=======
+    // FIXME POSREF get rid of temp screens entirely?
+    showTempScreen(name, props = {}) {
+        return new Promise((resolve) => {
+            this.tempScreen = {
+                name,
+                component: registry.category("pos_screens").get(name),
+                props: { ...props, resolve },
+            };
+            this.tempScreenIsShown = true;
+>>>>>>> 12f62edc7595 (temp)
         });
         if (!payload) {
             return;
@@ -1966,6 +1994,17 @@ export class PosStore extends Reactive {
         return { modifiedPackLotLines, newPackLotLines };
     }
 
+<<<<<<< HEAD
+||||||| parent of 12f62edc7595 (temp)
+    closeTempScreen() {
+        this.tempScreen = null;
+    }
+=======
+    closeTempScreen() {
+        this.tempScreenIsShown = false;
+        this.tempScreen = null;
+    }
+>>>>>>> 12f62edc7595 (temp)
     openCashControl() {
         if (this.shouldShowCashControl()) {
             this.dialog.add(
