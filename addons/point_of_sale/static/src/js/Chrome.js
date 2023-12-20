@@ -328,9 +328,11 @@ export class Chrome extends PosComponent {
             component: this.constructor.components[name],
             props: { ...props, resolve },
         };
+        this.env.pos.tempScreenIsShown = true;
     }
     __closeTempScreen() {
         this.state.tempScreen = null;
+        this.env.pos.tempScreenIsShown = false;
     }
     __showScreen({ detail: { name, props = {} } }) {
         const component = this.constructor.components[name];
