@@ -55,6 +55,12 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def _call_peppol_proxy(self, endpoint, params=None, edi_user=None):
+        errors = {
+            'code_incorrect': _('The verification code is not correct'),
+            'code_expired': _('This verification code has expired. Please request a new one.'),
+            'too_many_attempts': _('Too many attempts to request an SMS code. Please try again later.'),
+        }
+
         if not edi_user:
             edi_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
 
@@ -68,7 +74,9 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(e.message)
 
         if 'error' in response:
-            raise UserError(response['error'].get('message') or response['error']['data']['message'])
+            error_code = response['error'].get('code')
+            error_message = response['error'].get('message') or response['error'].get('data', {}).get('message')
+            raise UserError(errors.get(error_code) or error_message or _('Connection error, please try again later.'))
         return response
 
     # -------------------------------------------------------------------------
@@ -137,6 +145,13 @@ class ResConfigSettings(models.TransientModel):
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
+        edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
+        if company.partner_id._check_peppol_participant_exists(edi_identification) and not self.account_peppol_migration_key:
+            raise UserError(
+                _("A participant with these details has already been registered on the network. "
+                  "If you have previously registered to an alternative Peppol service, please deregister from that service, "
+                  "or request a migration key before trying again."))
+
         edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
         self.account_peppol_proxy_state = 'not_verified'
 
@@ -227,6 +242,8 @@ class ResConfigSettings(models.TransientModel):
         )
         self.account_peppol_proxy_state = 'pending'
         self.account_peppol_verification_code = False
+        # in case they have already been activated on the IAP side
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
 
     def button_cancel_peppol_registration(self):
         """
