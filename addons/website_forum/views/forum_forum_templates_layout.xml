@@ -23,23 +23,23 @@
     <t t-set="_forum_name" t-value="forum.name if forum else _all_forums"/>
     <!-- allows to be overridden such as in website_slides_forum -->
     <t t-set="breadcrumb_kind" t-valuef="base"/>
-    <nav id="o_wforum_nav" t-attf-class="navbar d-flex align-items-baseline gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } px-0" aria-label="breadcrumb">
+    <nav id="o_wforum_nav" t-attf-class="navbar d-flex gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } px-0" aria-label="breadcrumb">
         <t t-if="_page_name == 'single_question'">
             <div class="flex-grow-1">
                 <div class="o_wforum_breadcrumb_root_single row g-0">
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
-                        <a class="btn btn-lg btn-link px-0 pb-2" t-attf-href="/forum/#{ _forum_slug }">
-                            <i class="d-inline-block oi oi-chevron-left me-1 small lh-50"/><t t-out="_forum_name"/>
+                        <a class="btn btn-link px-0 pb-2 fs-5" t-attf-href="/forum/#{ _forum_slug }">
+                            <i class="d-inline-block fa fa-angle-left me-1 small"/><t t-out="_forum_name"/>
                         </a>
                     </div>
                     <div class="d-lg-none col-2 text-end">
-                        <button class="btn position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
+                        <button class="btn position-relative ms-auto fs-5" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                             <i class="fa fa-navicon"/>
                         </button>
                     </div>
                 </div>
                 <div class="d-flex gap-2 align-items-baseline">
-                    <h3 t-attf-class="col-lg-10 mb-0" t-out="question.name"/>
+                    <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
                         <span t-elif="not question.active" class="badge bg-danger">
@@ -69,31 +69,31 @@
         <t t-elif="_page_name == 'list_questions' or is_edit">
             <t t-set="target" t-value="post.parent_id if is_answer else post"/>
             <div class="o_wforum_breadcrumb_root_list_or_edit d-flex">
-                <div t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1">
-                    <h5 t-if="not is_edit" class="fw-bold mb-0" t-out="_forum_name"/>
-                    <h5 t-elif="not is_answer" class="fw-bold mb-0">Edit Question</h5>
-                    <h5 t-else="is_answer" class="fw-bold mb-0">Edit Answer</h5>
+                <div t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1 fs-5">
+                    <span t-if="not is_edit" class="fw-bold mb-0" t-out="_forum_name"/>
+                    <span t-elif="not is_answer" class="fw-bold mb-0">Edit Question</span>
+                    <span t-else="is_answer" class="fw-bold mb-0">Edit Answer</span>
                 </div>
             </div>
         </t>
-        <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 mb-0 p-0">
-            <li class="o_wforum_breadcrumb_root breadcrumb-item text-nowrap">
-                <h5 class="mb-0"><a t-attf-href="/forum/#{ _forum_slug }" t-out="_forum_name"/></h5>
+        <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
+            <li class="o_wforum_breadcrumb_root breadcrumb-item text-nowrap text-truncatet">
+                <a t-attf-href="/forum/#{ _forum_slug }" t-out="_forum_name"/>
             </li>
             <li t-if="queue_type" class="breadcrumb-item text-nowrap d-none d-lg-flex">
-                <h5 class="mb-0">Moderation</h5>
+                <span>Moderation</span>
             </li>
-            <li class="breadcrumb-item text-nowrap">
-                <h5 class="fw-bold mb-0" t-out="_page_name_label"/>
+            <li class="breadcrumb-item text-nowrap text-truncate">
+                <span class="fw-bold text-truncate" t-out="_page_name_label"/>
             </li>
         </ol>
         <t t-if="_page_name != 'single_question'">
             <div class="d-lg-none text-end">
-                <button class="btn position-relative ms-auto" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
+                <button class="btn position-relative ms-auto fs-5" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                     <i class="fa fa-navicon"/>
                 </button>
             </div>
-            <div t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
+            <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
                     <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"></t></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
@@ -182,9 +182,9 @@
                         data-bs-toggle="popover"
                         t-att-data-bs-title="popover_title"
                         t-att-data-bs-content="popover_content">
-                        <a class="o_wforum_ask_btn disabled btn btn-primary mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
+                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
                     </div>
-                    <a t-elif="uid and forum" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
+                    <a t-elif="uid and forum" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary w-100 w-md-auto #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
                         t-att-data-karma="forum.karma_ask" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </t>
                 <button t-if="website_forum_action and not queue_type == 'close' and posts_ids" type="button" class="o_wforum_btn_filter_tool btn btn-secondary"
@@ -214,7 +214,7 @@
                 <t t-call="website_forum.user_sidebar"/>
                 <t t-call="website_forum.user_sidebar_mobile"/>
                 <div class="o_wforum_content_wrapper col-lg-9">
-                    <div class="o_wprofile_email_validation_container row g-0 justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
+                    <div class="o_wprofile_email_validation_container d-flex flex-column justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
                         <t t-call="website_profile.email_validation_banner">
                             <t t-set="redirect_url" t-value="'/forum/%s' % forum.id if forum else '/forum/all/'"/>
                             <t t-set="additional_validation_email_message"> and join this Forum</t>
@@ -275,8 +275,8 @@
             title="My profile">
             <img class="o_wforum_avatar rounded-circle o_object_fit_cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
-                <h6 class="mb-1" t-out="user_id.name"/>
-                <small class="text-reset opacity-50"><t t-out="user_id.karma"/> XP</small>
+                <h6 class="mt-0 mb-1" t-out="user_id.name"/>
+                <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
             </div>
         </a>
     </div>

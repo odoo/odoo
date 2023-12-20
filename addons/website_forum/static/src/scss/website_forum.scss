@@ -62,11 +62,15 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
                 border-top: 0;
             }
 
-            tr:hover {
-                @if ($body-bg and color-contrast($body-bg) != $color-contrast-dark) {
-                    background-color: lighten($body-bg, 10%);
-                } @else {
-                    background-color: darken($body-bg, 2%);
+            tr {
+                transform: scale(1); // Hack for Safari not supporting `position-relative`
+
+                &:hover {
+                    @if ($body-bg and color-contrast($body-bg) != $color-contrast-dark) {
+                        background-color: lighten($body-bg, 10%);
+                    } @else {
+                        background-color: darken($body-bg, 2%);
+                    }
                 }
             }
         }
