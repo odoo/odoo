@@ -1429,10 +1429,8 @@ export class Record {
                     );
                 }
             }
-            Object.assign(recordProxy, {
-                localId: Model.localId(ids),
-                ...ids,
-            });
+            Object.assign(record, { localId: Model.localId(ids) });
+            Object.assign(recordProxy, { ...ids });
             ModelProxy.records[record.localId] = recordProxy;
             if (record._RawModel.name === "Store") {
                 Object.assign(record, {
