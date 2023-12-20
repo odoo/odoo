@@ -192,10 +192,12 @@ export class PosStore extends Reactive {
                 component: registry.category("pos_screens").get(name),
                 props: { ...props, resolve },
             };
+            this.globalState.tempScreenIsShown = true;
         });
     }
 
     closeTempScreen() {
+        this.globalState.tempScreenIsShown = false;
         this.tempScreen = null;
     }
     openCashControl() {
