@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 import { session } from "@web/session";
 
@@ -38,6 +38,7 @@ export class PartnerListScreen extends Component {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.searchWordInputRef = useRef("search-word-input-partner");
+        useAutofocus({refName: 'search-word-input-partner'});
 
         this.state = useState({
             query: null,
