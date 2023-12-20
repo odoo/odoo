@@ -175,8 +175,8 @@ class BlogPost(models.Model):
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade', default=lambda self: self.env['blog.blog'].search([], limit=1))
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
-    teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
-    teaser_manual = fields.Text(string='Teaser Content')
+    teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
+    teaser_manual = fields.Text(string='Teaser Content', translate=True)
 
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
 
@@ -202,6 +202,14 @@ class BlogPost(models.Model):
 
     def _set_teaser(self):
         for blog_post in self:
+            if not blog_post.with_context(lang='en_US').teaser_manual:
+                # By default, if no teaser is set in english, it will use the
+                # first 200 characters of the content. We don't want to break
+                # that when adding a manual teaser in a translation.
+                # That's how the ORM work: when setting a translation value, if
+                # there is no source value, the source will also receive the
+                # translation value
+                blog_post.update_field_translations('teaser_manual', {'en_US': ''})
             blog_post.teaser_manual = blog_post.teaser
 
     @api.depends('create_date', 'published_date')
