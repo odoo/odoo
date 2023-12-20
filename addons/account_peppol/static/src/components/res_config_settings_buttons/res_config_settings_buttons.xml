@@ -44,6 +44,23 @@
                             Confirm
                     </button>
                 </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary"
+                            t-on-click="sendCode"
+                            t-if="proxyState === 'not_verified'">
+                            Verify phone number
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary ms-1"
+                            t-on-click="sendCode"
+                            t-att-disabled="this.state.isSmsButtonDisabled"
+                            t-if="proxyState === 'sent_verification'">
+                            Send again
+                    </button>
+                </div>
             </div>
         </xpath>
     </t>
