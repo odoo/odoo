@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from lxml import html
-from urllib.parse import urlparse
 import requests
+
+from lxml import html
 
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
@@ -35,15 +32,11 @@ class LinkPreview(models.Model):
         urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
-        # Some websites are blocking non browser user agent.
-        requests_session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
-        })
         link_preview_values = []
         link_previews_by_url = {
             preview.source_url: preview for preview in message.sudo().link_preview_ids
         }
-        for url in list(urls):
+        for url in urls:
             if url in link_previews_by_url:
                 preview = link_previews_by_url.pop(url)
                 if not preview.is_hidden:
@@ -104,17 +97,6 @@ class LinkPreview(models.Model):
     def _is_link_preview_enabled(self):
         link_preview_throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
         return link_preview_throttle > 0
-
-    @api.model
-    def _is_domain_throttled(self, url):
-        domain = urlparse(url).netloc
-        date_interval = fields.Datetime.to_string((datetime.now() - relativedelta(seconds=10)))
-        call_counter = self.search_count([
-            ('source_url', 'ilike', domain),
-            ('create_date', '>', date_interval),
-        ])
-        link_preview_throttle = int(self.env['ir.config_parameter'].get_param('mail.link_preview_throttle', 99))
-        return call_counter > link_preview_throttle
 
     def _link_preview_format(self):
         return [{
