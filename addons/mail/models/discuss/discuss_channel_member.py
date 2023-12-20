@@ -210,6 +210,22 @@ class ChannelMember(models.Model):
         self.ensure_one()
         return self.partner_id.mail_partner_format(fields=fields).get(self.partner_id)
 
+    def _channel_fold(self, state, state_count):
+        """Update the fold_state of the given member. The change will be
+        broadcasted to the member channel.
+
+        :param state: the new status of the session for the current member.
+        """
+        self.ensure_one()
+        if self.fold_state == state:
+            return
+        self.fold_state = state
+        self.env['bus.bus']._sendone(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
+            'foldStateCount': state_count,
+            'id': self.channel_id.id,
+            'model': 'discuss.channel',
+            'fold_state': self.fold_state,
+        })
     # --------------------------------------------------------------------------
     # RTC (voice/video)
     # --------------------------------------------------------------------------
