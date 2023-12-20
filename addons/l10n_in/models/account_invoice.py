@@ -34,7 +34,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
         for record in self:
-            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
+            record.l10n_in_gst_treatment = gst if (gst := record.partner_id.l10n_in_gst_treatment) else 'unregistered'
 
     @api.model
     def _l10n_in_get_indian_state(self, partner):
