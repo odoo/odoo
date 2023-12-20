@@ -225,6 +225,7 @@
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="package_id" invisible="1"/>
+                    <field name="result_package_id" invisible="1"/>
                     <field name="quant_id"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', parent.location_id)]"
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True}"
