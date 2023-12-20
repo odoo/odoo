@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from pytz import UTC
+from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
 from string import digits
@@ -516,7 +516,8 @@ class HrEmployeePrivate(models.Model):
 
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
-        return self.resource_calendar_id.get_work_duration_data(date_from, date_to)
+        employee_timezone = timezone(self.tz) if self.tz else None
+        return self.resource_calendar_id.with_context(employee_timezone=employee_timezone).get_work_duration_data(date_from, date_to)
 
     # ---------------------------------------------------------
     # Business Methods
