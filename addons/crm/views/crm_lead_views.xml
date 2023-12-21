@@ -11,7 +11,7 @@
                             invisible="not active or probability == 100 or type == 'lead'"/>
                         <button name="%(crm.crm_lead_lost_action)d" string="Lost" data-hotkey="l" title="Mark as lost"
                             type="action" invisible="type == 'lead' or not active and probability &lt; 100"/>
-                        <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity"
+                        <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             class="oe_highlight" invisible="type == 'opportunity' or not active" data-hotkey="v"/>
                         <button name="toggle_active" string="Restore" type="object" data-hotkey="x"
                             invisible="probability &gt; 0 or active"/>

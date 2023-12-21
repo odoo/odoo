@@ -189,10 +189,10 @@
                         t-esc="record.partner_id.value"
                         t-att-title="record.partner_id.value"
                         t-if="record.partner_id.value"/>
-                    <span class="o_text_overflow" t-if="record.partner_assigned_id.value">
-                        <i class="fa fa-arrow-circle-right" aria-label="Assigned Partner" title="Assigned Partner"/>
+                    <span class="o_text_overflow ms-1" t-if="record.partner_assigned_id.value">
+                        (<i class="fa fa-long-arrow-right me-1" aria-label="Assigned Partner" title="Assigned Partner"/>
                         <span t-att-title="record.partner_assigned_id.value"
-                            t-esc="record.partner_assigned_id.value"/>
+                            t-esc="record.partner_assigned_id.value"/>)
                     </span>
                 </xpath>
             </field>
