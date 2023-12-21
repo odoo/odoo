@@ -16,7 +16,7 @@ class IrActionsReport(models.Model):
         if collected_streams \
                 and res_ids \
                 and len(res_ids) == 1 \
-                and self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+                and self._is_invoice_report(report_ref):
             invoice = self.env['account.move'].browse(res_ids)
             if invoice.is_sale_document() and invoice.state != 'draft':
                 to_embed = invoice.edi_document_ids
