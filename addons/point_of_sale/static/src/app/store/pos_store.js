@@ -980,6 +980,7 @@ export class PosStore extends Reactive {
 
             await this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
+            context["paid_orders_not_sent_uuid"] = paidOrdersNotSent.map((order) => order.uuid);
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders

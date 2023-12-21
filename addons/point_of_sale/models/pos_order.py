@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
-from datetime import datetime
-from markupsafe import Markup
-from itertools import groupby
 from collections import defaultdict
+from datetime import datetime
+from itertools import groupby
+from markupsafe import Markup
+from random import randrange
 
+import base64
+import logging
 import psycopg2
 import pytz
 
@@ -13,7 +15,6 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
-import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -118,6 +119,9 @@ class PosOrder(models.Model):
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+
+        pos_session._remove_capture_content(order)
+
         return pos_order._process_saved_order(draft)
 
     def _prepare_combo_line_uuids(self, order_vals):
@@ -932,21 +936,44 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        order_names = [order.get('name') for order in orders]
+        sync_token = randrange(100000000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("Start PoS synchronisation #%d for PoS orders references: %s", sync_token, order_names)
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
+        first_exception = None
         for order in orders:
+            order_name = order.get('name', False)
             existing_draft_order = self.env["pos.order"].search(
                 ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
 
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, existing_draft_order))
-            else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
-                if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, False))
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, False))
+                    else:
+                        _logger.info("PoS order %s already exists and is the same as the one sent by the PoS", order_name)
+                        self.env['pos.session']._remove_capture_content(order)
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['session_id'])
+                is_draft = order.get('state') == 'draft'
+                paid_orders_not_sent_uuid = self.env.context.get('paid_orders_not_sent_uuid')
+                is_paid = paid_orders_not_sent_uuid and order['uuid'] in paid_orders_not_sent_uuid
+                if pos_session._should_capture_order(order, is_draft, is_paid):
+                    pos_session._handle_order_process_fail(order, e)
+                if not first_exception and not is_paid:
+                    # We want to make sure that any capturable order was captured. So we can't re-raise here
+                    first_exception = e
+
+        if first_exception:
+            raise first_exception
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
@@ -957,6 +984,7 @@ class PosOrder(models.Model):
 
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         is_rescue_session = any(order.get('session_id') not in session_ids for order in orders)
+        _logger.info("Finish PoS synchronisation #%d", sync_token)
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_rescue_session else [],
