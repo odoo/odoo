@@ -381,10 +381,13 @@ class IrModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
+            missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
+            if unavailable_modules:
+                raise UserError(missing_dependencies_description)
             import_module = self.env['base.import.module'].create({
                 'module_file': base64.b64encode(resp.content),
                 'state': 'init',
-                'modules_dependencies': self._get_missing_dependencies(resp.content)
+                'modules_dependencies': missing_dependencies_description,
             })
             return {
                 'name': 'Install an App',
@@ -402,18 +405,31 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
-        modules = self._get_missing_dependencies_modules(zip_data)
+        modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
-        if modules:
-            description = _('The following modules will be also installed:\n')
+        if unavailable_modules:
+            description = _(
+                "The installation of the data module would fail as the following dependencies can't"
+                " be found in the addons-path:\n"
+            )
+            for module in unavailable_modules:
+                description += "- " + module + "\n"
+            description += _(
+                "\nYou may need the Enterprise version to install the data module. Please visit "
+                "https://www.odoo.com/pricing-plan for more information.\n"
+                "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+            )
+        elif modules:
+            description = _("The following modules will also be installed:\n")
             for mod in modules:
                 description += "- " + mod.shortdesc + "\n"
-        return description
+        return description, unavailable_modules
 
     def _get_missing_dependencies_modules(self, zip_data):
         dependencies_to_install = self.env['ir.module.module']
-        known_mods = self.search([])
+        known_mods = self.search([('to_buy', '=', False)])
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
+        not_found_modules = set()
         with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
             manifest_files = [
                 file
@@ -431,7 +447,10 @@ class IrModule(models.Model):
                     continue
                 unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
                 dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
-        return dependencies_to_install
+                not_found_modules |= set(
+                    mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
+                )
+        return dependencies_to_install, not_found_modules
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
