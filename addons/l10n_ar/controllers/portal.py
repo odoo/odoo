@@ -1,4 +1,3 @@
-from odoo import _
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.http import request, route
 
