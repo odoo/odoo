@@ -17,7 +17,7 @@ const formatters = registry.category("formatters");
 export class PivotRenderer extends Component {
     static template = "web.PivotRenderer";
     static components = { Dropdown, DropdownItem, CheckBox, PivotHeader, ReportViewMeasures };
-    static props = ["model"];
+    static props = ["model", "buttonTemplate"];
 
     setup() {
         this.actionService = useService("action");
