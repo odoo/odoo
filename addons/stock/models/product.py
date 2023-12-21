@@ -10,7 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, check_barcode_encoding
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.mail import html2plaintext, is_html_empty
 
 OPERATORS = {
@@ -424,6 +424,10 @@ class Product(models.Model):
                 'warning': {
                     'title': _('Warning!'),
                     'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
+
+    @api.onchange('standard_price', 'type', 'cost_currency_id')
+    def onchange_standard_price(self):
+        return self.product_tmpl_id._get_cost_warning(self.standard_price)
 
     @api.model
     def view_header_get(self, view_id, view_type):
@@ -849,6 +853,19 @@ class ProductTemplate(models.Model):
         self.filtered(
             lambda t: not t.tracking or t.type in ('consu', 'service')  and t.tracking != 'none'
         ).tracking = 'none'
+
+    @api.onchange('standard_price', 'type', 'cost_currency_id')
+    def onchange_standard_price(self):
+        return self._get_cost_warning(self.standard_price)
+
+    def _get_cost_warning(self, cost):
+        if self.type == 'product' and float_compare(cost, 0, precision_rounding=self.cost_currency_id.rounding) < 0:
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _("The cost of a storable product should not be negative."),
+                },
+            }
 
     @api.onchange('type')
     def _onchange_type(self):

@@ -697,3 +697,17 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(len(layers), 1)
         self.assertEqual(layers.quantity, 5)
         self.assertEqual(layers.value, 2500)
+
+    def test_positive_unit_price(self):
+        """"
+        Unit price of storable product should be positive
+        """
+        err_msg = "The unit price of a storable product should not be negative."
+        self.product_id_1.type = 'product'
+        with self.assertLogs(level="WARNING") as logger:
+            with Form(self.env['purchase.order']) as po_form:
+                po_form.partner_id = self.partner_a
+                with po_form.order_line.new() as pol:
+                    pol.product_id = self.product_id_1
+                    pol.price_unit = -5
+        self.assertIn(err_msg, logger.output[0])

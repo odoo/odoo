@@ -148,6 +148,17 @@ class PurchaseOrderLine(models.Model):
     # Business methods
     # --------------------------------------------------
 
+    @api.onchange('product_id', 'price_unit', 'currency_id')
+    def _onchange_price_unit(self):
+        currency = self.currency_id or self.company_id.currency_id or self.env.company.currency_id
+        if self.product_id.type == 'product' and float_compare(self.price_unit, 0, precision_rounding=currency.rounding) < 0:
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _("The unit price of a storable product should not be negative."),
+                },
+            }
+
     def _update_move_date_deadline(self, new_date):
         """ Updates corresponding move picking line deadline dates that are not yet completed. """
         moves_to_update = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
