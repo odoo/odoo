@@ -346,10 +346,11 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         with ZipFile(archive, 'w') as zipf:
             for path, data in files:
                 zipf.writestr(path, data)
+        modules_dependencies, _not_found = self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
         import_module = self.env['base.import.module'].create({
                 'module_file': base64.b64encode(archive.getvalue()),
                 'state': 'init',
-                'modules_dependencies': self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
+                'modules_dependencies': modules_dependencies,
             })
         dependencies_names = import_module.get_dependencies_to_install_names()
         self.assertEqual(dependencies_names, [])
