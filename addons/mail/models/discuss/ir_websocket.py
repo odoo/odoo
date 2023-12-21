@@ -3,6 +3,8 @@
 from odoo import models
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
+from contextlib import suppress
+
 
 class IrWebsocket(models.AbstractModel):
     _inherit = "ir.websocket"
@@ -22,6 +24,14 @@ class IrWebsocket(models.AbstractModel):
     @add_guest_to_context
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
+        guest = None
+        with suppress(StopIteration):
+            guest_channel = next(c for c in channels if isinstance(c, str) and c.startswith("mail.guest_"))
+            channels = [c for c in channels if c != guest_channel]
+            guest = self.env["mail.guest"]._get_guest_from_token(guest_channel.split("_")[1])
+            new_context = {**self.env.context}
+            new_context.update(guest=guest)
+            self = self.with_context(new_context)
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest:
             channels.append(guest)

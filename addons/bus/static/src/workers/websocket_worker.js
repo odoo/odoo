@@ -11,7 +11,7 @@ import { debounce } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start' | 'update_context'} WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -64,8 +64,6 @@ export class WebsocketWorker {
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
         this.messageWaitQueue = [];
-        // Context to be attached to each websocket request
-        this._context = {};
         this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
@@ -148,9 +146,6 @@ export class WebsocketWorker {
                 return this._forceUpdateChannels();
             case "initialize_connection":
                 return this._initializeConnection(client, data);
-            case "update_context":
-                this._context = data;
-                break;
         }
     }
 
@@ -406,9 +401,6 @@ export class WebsocketWorker {
      * @param {{event_name: string, data: any }} message Message to send to the server.
      */
     _sendToServer(message) {
-        if (Object.keys(this._context).length > 0) {
-            message.context = this._context;
-        }
         const payload = JSON.stringify(message);
         if (!this._isWebsocketConnected()) {
             this.messageWaitQueue.push(payload);

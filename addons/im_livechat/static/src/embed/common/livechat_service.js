@@ -234,17 +234,7 @@ export class LivechatService {
     }
 
     async initializePersistedSession() {
-        if (this.guestToken) {
-            await this.busService.updateContext({
-                ...this.busService.context,
-                guest_token: this.guestToken,
-            });
-        }
-        if (this.busService.isActive) {
-            this.busService.forceUpdateChannels();
-        } else {
-            await this.busService.start();
-        }
+        await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.messaging"].initialize();
     }
 
