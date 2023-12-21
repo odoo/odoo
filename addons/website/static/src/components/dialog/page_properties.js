@@ -148,7 +148,6 @@ export class DuplicatePageDialog extends Component {
 }
 
 export class PagePropertiesDialog extends FormViewDialog {
-    static template = "website.PagePropertiesDialog";
     static props = {
         ...FormViewDialog.props,
         onClose: { type: Function, optional: true },
@@ -172,7 +171,13 @@ export class PagePropertiesDialog extends FormViewDialog {
         this.orm = useService('orm');
         this.website = useService('website');
 
-        this.viewProps.resId = this.resId;
+        this.viewProps = {
+            ...this.viewProps,
+            resId: this.resId,
+            buttonTemplate: "website.PagePropertiesDialogButtons",
+            clonePage: this.clonePage.bind(this),
+            deletePage: this.deletePage.bind(this),
+        };
     }
 
     get resId() {
