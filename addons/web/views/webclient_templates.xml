@@ -150,8 +150,16 @@
                 </div>
 
                 <div class="mb-3 field-login">
+<<<<<<< master
                     <label for="login" class="form-label d-flex justify-content-between">Email</label>
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off"/>
+||||||| de5c0e0863f926dbd62ca584b9808420d5423070
+                    <label for="login" class="form-label">Email</label>
+                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
+=======
+                    <label for="login" class="form-label">Email</label>
+                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="username" autofocus="autofocus" autocapitalize="off"/>
+>>>>>>> 9b00e6a0e461dac162b28a343241efaaba8fdfe1
                 </div>
 
                 <div class="mb-3">
