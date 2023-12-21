@@ -31,6 +31,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -111,7 +112,6 @@ export class Message extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.messageService = useState(useService("mail.message"));
         this.attachmentService = useService("mail.attachment");
-        this.user = useService("user");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
@@ -411,7 +411,7 @@ export class Message extends Component {
         if (ev.target.closest(".o_mail_redirect")) {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
-            if (this.user.partnerId !== partnerId) {
+            if (user.partnerId !== partnerId) {
                 this.threadService.openChat({ partnerId });
             }
             return;

@@ -1,8 +1,13 @@
 /** @odoo-module */
 
+import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import {
+    patchUserWithCleanup,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
@@ -289,14 +294,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     });
 
     QUnit.test("user context is combined with list context to fetch data", async function (assert) {
-        const context = {
-            allowed_company_ids: [15],
-            tz: "bx",
-            lang: "FR",
-            uid: 4,
-        };
         const testSession = {
-            uid: 4,
             user_companies: {
                 allowed_companies: {
                     15: { id: 15, name: "Hermit" },
@@ -304,8 +302,15 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
                 },
                 current_company: 15,
             },
-            user_context: context,
         };
+        patchWithCleanup(session, testSession);
+        patchUserContextWithCleanup({
+            allowed_company_ids: [15],
+            tz: "bx",
+            lang: "FR",
+            uid: 4,
+        });
+        patchUserWithCleanup({ userId: 4 });
         const spreadsheetData = {
             sheets: [
                 {
@@ -341,7 +346,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             lang: "FR",
             uid: 4,
         };
-        patchWithCleanup(session, testSession);
         const model = await createModelWithDataSource({
             spreadsheetData,
             mockRPC: function (route, { model, method, kwargs }) {
@@ -574,7 +578,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     );
 
     QUnit.test("can import (export) contextual domain", async function (assert) {
-        const uid = session.user_context.uid;
+        const uid = user.userId;
         const spreadsheetData = {
             lists: {
                 1: {

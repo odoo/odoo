@@ -26,7 +26,6 @@ patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
         this.action = useService("action");
-        this.userService = useService("user");
         this.avatarCard = usePopover(AvatarCardPopover);
     },
     get authorAvatarAttClass() {

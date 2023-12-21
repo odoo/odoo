@@ -18,7 +18,6 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useState(useService("ui"));
-        this.userService = useService("user");
         this.employee = false;
         this.state = useState({
             checkedIn: false,

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
@@ -23,8 +24,7 @@ const NUMBERING_SYSTEMS = [
 ];
 
 export const localizationService = {
-    dependencies: ["user"],
-    start: async (env, { user }) => {
+    start: async () => {
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
         const lang = user.lang || document.documentElement.getAttribute("lang")?.replace(/-/g, "_");

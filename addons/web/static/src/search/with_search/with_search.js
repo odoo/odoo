@@ -54,7 +54,6 @@ export class WithSearch extends Component {
         this.searchModel = new SearchModelClass(
             this.env,
             {
-                user: useService("user"),
                 orm: useService("orm"),
                 view: useService("view"),
                 field: useService("field"),

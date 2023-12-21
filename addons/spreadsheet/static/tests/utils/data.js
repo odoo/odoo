@@ -1,5 +1,6 @@
 /** @odoo-module */
-import { session } from "@web/session";
+
+import { user } from "@web/core/user";
 
 /**
  * @typedef {object} ServerData
@@ -268,7 +269,7 @@ export function getBasicData() {
             fields: {
                 name: { string: "Name", type: "char" },
             },
-            records: [{ id: session.uid, name: session.name }],
+            records: [{ id: user.userId, name: user.name }],
         },
         partner: {
             fields: {

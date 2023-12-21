@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 import { makeTestEnv } from "../../helpers/mock_env";
+import { patchUserWithCleanup } from "../../helpers/mock_services";
 import {
     click,
     getFixture,
@@ -20,7 +21,6 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/search/helpers";
-import { session } from "@web/session";
 import {
     createWebClient,
     doAction,
@@ -120,7 +120,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("fallback on home action if no action found", async (assert) => {
         assert.expect(2);
-        patchWithCleanup(session, { home_action_id: 1001 });
+        patchUserWithCleanup({ homeActionId: 1001 });
 
         await createWebClient({ serverData });
         await nextTick(); // wait for the navbar to be updated

@@ -11,7 +11,7 @@ import { addGlobalFilter } from "../../utils/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "../../utils/global_filter";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -220,7 +220,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
 
     QUnit.test("can import (export) contextual domain", async function (assert) {
         const chartId = "1";
-        const uid = session.user_context.uid;
+        const uid = user.userId;
         const spreadsheetData = {
             sheets: [
                 {

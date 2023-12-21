@@ -16,7 +16,6 @@ import {
     fakeCommandService,
     makeFakeDialogService,
     makeFakeLocalizationService,
-    makeFakeUserService,
 } from "../../helpers/mock_services";
 import {
     click,
@@ -350,7 +349,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("view").add("getView", getView);
 
         const serverData = getActionManagerServerData();
@@ -391,7 +389,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("view").add("editViewItem", editView);
 
         const serverData = getActionManagerServerData();
@@ -557,7 +554,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("form").add("setDefaults", setDefaults);
 
         const serverData = getActionManagerServerData();
@@ -605,7 +601,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("form").add("setDefaults", setDefaults);
 
         const serverData = getActionManagerServerData();
@@ -654,7 +649,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("form").add("setDefaults", setDefaults);
 
         const serverData = getActionManagerServerData();
@@ -706,7 +700,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("form").add("viewRawRecord", viewRawRecord);
 
         const serverData = getActionManagerServerData();
@@ -747,7 +740,6 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("services").add("user", makeFakeUserService());
         registry.category("debug").category("form").add("viewMetadata", viewMetadata);
 
         const serverData = getActionManagerServerData();

@@ -3,13 +3,10 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 import { contains } from "@web/../tests/utils";
-import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, click } from "@web/../tests/helpers/utils";
 import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-
-const serviceRegistry = registry.category("services");
 
 /* The widgets M2XAVatarEmployee inherits from M2XAvatarUser. Those tests therefore allows
    to test the opening of popover employee cards for both widgets type. If the widgets
@@ -230,11 +227,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 employee_ids: [employeeId],
             });
 
-            serviceRegistry.add(
-                "user",
-                makeFakeUserService(() => true),
-                { force: true }
-            );
+            patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
             const views = {
                 "m2x.avatar.employee,false,kanban": `<kanban>
@@ -275,11 +268,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             employee_ids: [employeeId],
         });
 
-        serviceRegistry.add(
-            "user",
-            makeFakeUserService(() => true),
-            { force: true }
-        );
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
@@ -432,11 +421,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
 
             // Granting all users access to hr.group_hr_user
             // (reminder: if the user doesn't have access to hr.group_hr_user, the employee field should show the public employee, else the hr.employee record)
-            serviceRegistry.add(
-                "user",
-                makeFakeUserService(() => true),
-                { force: true }
-            );
+            patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
             const { openView } = await start({
                 mockRPC(route, args) {

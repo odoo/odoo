@@ -11,7 +11,7 @@ import {
     fakeCompanyService,
     makeFakeLocalizationService,
     makeFakeRouterService,
-    makeFakeUserService,
+    patchUserWithCleanup,
 } from "../helpers/mock_services";
 import {
     setupControlPanelFavoriteMenuRegistry,
@@ -116,11 +116,7 @@ export function makeViewInDialog(params) {
 export function setupViewRegistries() {
     setupControlPanelFavoriteMenuRegistry();
     setupControlPanelServiceRegistry();
-    serviceRegistry.add(
-        "user",
-        makeFakeUserService((group) => group === "base.group_allow_export"),
-        { force: true }
-    );
+    patchUserWithCleanup({ hasGroup: async (group) => group === "base.group_allow_export" });
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService());
     serviceRegistry.add("company", fakeCompanyService);

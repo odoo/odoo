@@ -10,6 +10,7 @@ import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
+import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
@@ -37,15 +38,7 @@ import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
-export async function loadSubViews(
-    fieldNodes,
-    fields,
-    context,
-    resModel,
-    viewService,
-    userService,
-    isSmall
-) {
+export async function loadSubViews(fieldNodes, fields, context, resModel, viewService, isSmall) {
     for (const fieldInfo of Object.values(fieldNodes)) {
         const fieldName = fieldInfo.name;
         const field = fields[fieldName];
@@ -97,7 +90,7 @@ export async function loadSubViews(
         } = await viewService.loadViews({
             resModel: comodel,
             views: [[false, viewType]],
-            context: makeContext([fieldContext, userService.context, refinedContext]),
+            context: makeContext([fieldContext, user.context, refinedContext]),
         });
         const { ArchParser } = viewRegistry.get(viewType);
         const xmlDoc = parseXML(views[viewType].arch);
@@ -153,7 +146,6 @@ export class FormController extends Component {
         this.dialogService = useService("dialog");
         this.router = useService("router");
         this.orm = useService("orm");
-        this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
         useBus(this.ui.bus, "resize", this.render);
@@ -176,7 +168,6 @@ export class FormController extends Component {
                 this.props.context,
                 this.props.resModel,
                 this.viewService,
-                this.user,
                 this.env.isSmall
             );
             const { activeFields, fields } = extractFieldsFromArchInfo(

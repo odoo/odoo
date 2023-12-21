@@ -7,11 +7,9 @@ import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
-import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { makeFakeLocalizationService, patchUserWithCleanup } from "../helpers/mock_services";
 import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { session } from "@web/session";
 
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
@@ -20,13 +18,12 @@ let env;
 
 QUnit.module("UserMenu", {
     async beforeEach() {
-        patchWithCleanup(session, { name: "Sauron" });
+        patchUserWithCleanup({ name: "Sauron" });
         patchWithCleanup(browser, {
             location: {
                 origin: "http://lordofthering",
             },
         });
-        serviceRegistry.add("user", userService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         target = getFixture();
@@ -122,7 +119,12 @@ QUnit.test("can be rendered", async (assert) => {
     for (const item of items) {
         click(item);
     }
-    assert.verifySteps(["callback ring_item", "callback bad_item", "callback frodo_item", "callback eye_item"]);
+    assert.verifySteps([
+        "callback ring_item",
+        "callback bad_item",
+        "callback frodo_item",
+        "callback eye_item",
+    ]);
 });
 
 QUnit.test("display the correct name in debug mode", async (assert) => {

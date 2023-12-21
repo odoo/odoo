@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from './hooks';
 import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
 
@@ -37,7 +38,6 @@ export class HrOrgChart extends Component {
 
         this.orm = useService('orm');
         this.actionService = useService("action");
-        this.user = useService("user");
         this.popover = usePopover(HrOrgChartPopover);
 
         this.state = useState({'employee_id': null});
@@ -76,7 +76,7 @@ export class HrOrgChart extends Component {
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,
-                    context: this.user.context,
+                    context: user.context,
                 }
             );
             if (Object.keys(orgData).length === 0) {

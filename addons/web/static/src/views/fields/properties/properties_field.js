@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { standardFieldProps } from "../standard_field_props";
 import { uuid } from "../../utils";
 import { PropertyDefinition } from "./property_definition";
@@ -36,7 +37,6 @@ export class PropertiesField extends Component {
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.user = useService("user");
         this.dialogService = useService("dialog");
         this.popover = usePopover(PropertyDefinition, {
             closeOnClickAway: this.checkPopoverClose,
@@ -769,7 +769,7 @@ export class PropertiesField extends Component {
         }
 
         // check if we can write on the definition record
-        this.state.canChangeDefinition = await this.user.checkAccessRight(
+        this.state.canChangeDefinition = await user.checkAccessRight(
             this.definitionRecordModel,
             "write"
         );

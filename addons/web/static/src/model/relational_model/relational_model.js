@@ -89,7 +89,7 @@ const DEFAULT_HOOKS = {
 };
 
 export class RelationalModel extends Model {
-    static services = ["action", "company", "dialog", "notification", "orm", "user"];
+    static services = ["action", "company", "dialog", "notification", "orm"];
     static Record = Record;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -104,11 +104,10 @@ export class RelationalModel extends Model {
     /**
      * @param {Params} params
      */
-    setup(params, { action, company, dialog, notification, user }) {
+    setup(params, { action, company, dialog, notification }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
-        this.user = user;
 
         this.bus = new EventBus();
 

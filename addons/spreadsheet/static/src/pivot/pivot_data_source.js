@@ -1,9 +1,10 @@
 /** @odoo-module */
 
+import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
-import { Domain } from "@web/core/domain";
 
 export class PivotDataSource extends OdooViewsDataSource {
     /**
@@ -49,10 +50,9 @@ export class PivotDataSource extends OdooViewsDataSource {
             }
         );
 
-        const userContext = this._orm.user.context;
         const domain = new Domain(this._initialSearchParams.domain).toList({
             ...this._initialSearchParams.context,
-            ...userContext,
+            ...user.context,
         });
 
         const searchParams = { ...this._initialSearchParams, domain };

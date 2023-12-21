@@ -22,7 +22,6 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 
 const patchDate = testUtils.mock.patchDate;
@@ -274,7 +273,6 @@ QUnit.module("Board", (hooks) => {
             "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
             "partner,false,search": "<search/>",
         };
-        registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, {
@@ -342,8 +340,6 @@ QUnit.module("Board", (hooks) => {
                 }
             };
 
-            registry.category("services").add("user", makeFakeUserService());
-
             patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
 
             const webClient = await createWebClient({ serverData, mockRPC });
@@ -379,8 +375,6 @@ QUnit.module("Board", (hooks) => {
             "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
             "partner,false,search": "<search/>",
         };
-
-        registry.category("services").add("user", makeFakeUserService());
 
         patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
 
@@ -419,8 +413,6 @@ QUnit.module("Board", (hooks) => {
                     <filter name="filter" domain="[('user_id','=',uid)]"/>
                 </search>`,
         };
-
-        registry.category("services").add("user", makeFakeUserService());
 
         patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
 
@@ -461,7 +453,6 @@ QUnit.module("Board", (hooks) => {
                 </search>`,
         };
 
-        registry.category("services").add("user", makeFakeUserService());
         patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
         patchWithCleanup(odoo, { debug: true });
 

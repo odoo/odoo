@@ -37,12 +37,12 @@ import {
     clickAllDaySlot,
 } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { createWebClient, doAction } from "../../webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { userService } from "@web/core/user_service";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
@@ -56,7 +56,7 @@ const viewRegistry = registry.category("views");
 
 let target;
 let serverData;
-const uid = -1;
+const uid = 6;
 
 QUnit.module("Views", ({ beforeEach }) => {
     beforeEach(() => {
@@ -71,20 +71,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         target = getFixture();
         setupViewRegistries();
 
-        serviceRegistry.add(
-            "user",
-            {
-                ...userService,
-                start() {
-                    const fakeUserService = userService.start(...arguments);
-                    Object.defineProperty(fakeUserService, "userId", {
-                        get: () => uid,
-                    });
-                    return fakeUserService;
-                },
-            },
-            { force: true }
-        );
+        patchUserWithCleanup({ userId: uid });
 
         serverData = {
             models: {
@@ -1521,7 +1508,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                                 default_allday: false,
                                 lang: "en",
                                 tz: "taht",
-                                uid: 7,
+                                uid: 6,
                             },
                             "should send the context to create events"
                         );
@@ -1613,7 +1600,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                             default_allday: false,
                             lang: "en",
                             tz: "taht",
-                            uid: 7,
+                            uid: 6,
                         },
                         "should send the context to create events"
                     );
@@ -1723,7 +1710,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                                 default_allday: false,
                                 lang: "en",
                                 tz: "taht",
-                                uid: 7,
+                                uid: 6,
                             },
                             "should send the context to create events"
                         );
@@ -1974,7 +1961,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                                 default_allday: true,
                                 lang: "en",
                                 tz: "taht",
-                                uid: 7,
+                                uid: 6,
                             },
                             "should send the correct data to create events"
                         );
@@ -2046,7 +2033,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                                 default_allday: true,
                                 lang: "en",
                                 tz: "taht",
-                                uid: 7,
+                                uid: 6,
                             },
                             "should send the correct data to create events"
                         );
@@ -2273,7 +2260,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 default_allday: true,
                 lang: "en",
                 tz: "taht",
-                uid: 7,
+                uid: 6,
             },
         };
         await click(target, ".o-calendar-quick-create--edit-btn");
@@ -2305,7 +2292,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                                     default_allday: true,
                                     lang: "en",
                                     tz: "taht",
-                                    uid: 7,
+                                    uid: 6,
                                 },
                             },
                             "should open the form view with the context default values"
@@ -2476,7 +2463,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 default_allday: true,
                 lang: "en",
                 tz: "taht",
-                uid: 7,
+                uid: 6,
             },
         };
 
@@ -2907,10 +2894,10 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
-        assert.hasClass(findEvent(target, 1), "o_calendar_color_-1"); // uid = -1 ...
-        assert.hasClass(findEvent(target, 2), "o_calendar_color_-1"); // uid = -1 ...
+        assert.hasClass(findEvent(target, 1), "o_calendar_color_6"); // uid = 6
+        assert.hasClass(findEvent(target, 2), "o_calendar_color_6"); // uid = 6
         assert.hasClass(findEvent(target, 3), "o_calendar_color_4");
-        assert.hasClass(findEvent(target, 4), "o_calendar_color_-1"); // uid = -1 ...
+        assert.hasClass(findEvent(target, 4), "o_calendar_color_6"); // uid = 6
         assert.containsNone(
             findFilterPanelSection(target, "partner_id"),
             "[class*='o_cw_filter_color_']"
@@ -3915,7 +3902,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                             target: "current",
                             context: {
                                 lang: "en",
-                                uid: 7,
+                                uid: 6,
                                 tz: "taht",
                                 default_name: "It's just a fleshwound",
                                 default_start: "2016-12-13 06:00:00",

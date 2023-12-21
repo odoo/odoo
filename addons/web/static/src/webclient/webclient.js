@@ -25,7 +25,6 @@ export class WebClient extends Component {
         this.actionService = useService("action");
         this.title = useService("title");
         this.router = useService("router");
-        this.user = useService("user");
         useOwnDebugContext({ categories: ["default"] });
         if (this.env.debug) {
             registry.category("systray").add(
