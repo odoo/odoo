@@ -30,7 +30,7 @@ class ReportBomStructure(models.AbstractModel):
             if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_digits=comp['uom'].rounding):
                 continue
             components_qty_to_produce[comp['product_id']] += comp['base_bom_line_qty']
-            components_qty_available[comp['product_id']] = comp['quantity_available']
+            components_qty_available[comp['product_id']] = comp['free_to_manufacture_qty']
         producibles = [float_round(components_qty_available[p_id] / qty, precision_digits=0, rounding_method='DOWN') for p_id, qty in components_qty_to_produce.items()]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
@@ -241,6 +241,7 @@ class ReportBomStructure(models.AbstractModel):
             'quantity': current_quantity,
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
+            'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty', 0),
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
             'name': product.display_name or bom.product_tmpl_id.display_name,
             'uom': bom.product_uom_id if bom else product.uom_id,
@@ -360,6 +361,7 @@ class ReportBomStructure(models.AbstractModel):
             'quantity': line_quantity,
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
+            'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty', 0),
             'base_bom_line_qty': bom_line.product_qty,
             'uom': bom_line.product_uom_id,
             'uom_name': bom_line.product_uom_id.name,
@@ -381,11 +383,13 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
-        return {
+        quantities_info = {
             'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.detailed_type == 'product' else 0,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.detailed_type == 'product' else 0,
             'stock_loc': 'in_stock',
         }
+        quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
+        return quantities_info
 
     @api.model
     def _update_product_info(self, product, bom_key, product_info, warehouse, quantity, bom, parent_bom, parent_product):
