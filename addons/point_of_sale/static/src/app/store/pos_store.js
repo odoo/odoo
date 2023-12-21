@@ -1233,7 +1233,11 @@ export class PosStore extends Reactive {
      * while processing orders in the backend
      */
     _getCreateOrderContext(orders, options) {
-        return this.context || {};
+        const orderContext = this.context || {};
+        if (options.printedOrders !== undefined) {
+            orderContext.is_receipt_printed = options.printedOrders;
+        }
+        return orderContext;
     }
     // send an array of orders to the server
     // available options:
