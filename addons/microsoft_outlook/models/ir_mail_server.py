@@ -33,7 +33,7 @@ class IrMailServer(models.Model):
             'To extend its use, you should set a "mail.default.from" system parameter.')
         super(IrMailServer, self - outlook_servers)._compute_smtp_authentication_info()
 
-    @api.constrains('smtp_authentication', 'smtp_pass', 'smtp_encryption', 'from_filter', 'smtp_user')
+    @api.constrains('smtp_authentication', 'smtp_pass', 'smtp_encryption', 'smtp_user')
     def _check_use_microsoft_outlook_service(self):
         outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
         for server in outlook_servers:
@@ -46,11 +46,6 @@ class IrMailServer(models.Model):
                 raise UserError(_(
                     'Incorrect Connection Security for Outlook mail server %r. '
                     'Please set it to "TLS (STARTTLS)".', server.name))
-
-            if server.from_filter != server.smtp_user:
-                raise UserError(_(
-                    'This server %r can only be used for your personal email address. '
-                    'Please fill the "from_filter" field with %r.', server.name, server.smtp_user))
 
             if not server.smtp_user:
                 raise UserError(_(
