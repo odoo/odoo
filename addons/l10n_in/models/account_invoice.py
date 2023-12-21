@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import logging
+import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
@@ -61,6 +62,18 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.onchange('name')
+    def _onchange_name_warning(self):
+        if self.country_code == 'IN' and self.journal_id.type == 'sale' and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name)):
+            return {'warning': {
+                'title' : _("Invalid sequence as per GST rule 46(b)"),
+                'message': _(
+                    "The invoice number should not exceed 16 characters\n"
+                    "and must only contain '-' (hyphen) and '/' (slash) as special characters"
+                )
+            }}
+        return super()._onchange_name_warning()
 
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
