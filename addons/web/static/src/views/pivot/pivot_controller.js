@@ -18,6 +18,7 @@ export class PivotController extends Component {
         Model: Function,
         modelParams: Object,
         Renderer: Function,
+        buttonTemplate: { type: String, optional: true },
     };
 
     setup() {
