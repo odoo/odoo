@@ -193,18 +193,32 @@ class IrModel(models.Model):
     order = fields.Char(string='Order', default='id', required=True,
                         help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')
-    field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
-                               default=_default_field_id)
+    field_id = fields.One2many(
+        'ir.model.fields', 'model_id', string='Fields',
+        required=True, copy=True, default=_default_field_id,
+        groups='base.group_erp_manager')
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
                                            help="The list of models that extends the current model.")
     state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)
-    access_ids = fields.One2many('ir.model.access', 'model_id', string='Access')
-    rule_ids = fields.One2many('ir.rule', 'model_id', string='Record Rules')
+    access_ids = fields.One2many(
+        'ir.model.access', 'model_id', string='Access',
+        groups='base.group_erp_manager')
+    rule_ids = fields.One2many(
+        'ir.rule', 'model_id', string='Record Rules',
+        groups='base.group_erp_manager')
     transient = fields.Boolean(string="Transient Model")
-    modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
+    # available to internal users, notably for configuration models like templates,
+    # activities, ...
+    business = fields.Boolean(string="Business Model")
+    modules = fields.Char(
+        compute='_in_modules', string='In Apps',
+        groups='base.group_system',
+        help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
-    count = fields.Integer(compute='_compute_count', string="Count (Incl. Archived)",
-                           help="Total number of records in this model")
+    count = fields.Integer(
+        compute='_compute_count', string="Count (Incl. Archived)",
+        groups='base.group_system',
+        help="Total number of records in this model")
 
     @api.depends()
     def _inherited_models(self):
@@ -381,6 +395,7 @@ class IrModel(models.Model):
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
         return {
+            'business': model._business,
             'model': model._name,
             'name': model._description,
             'order': model._order,
@@ -435,6 +450,7 @@ class IrModel(models.Model):
             _name = pycompat.to_text(model_data['model'])
             _description = model_data['name']
             _module = False
+            _business = bool(model_data.get('business', True))
             _custom = True
             _transient = bool(model_data['transient'])
             _order = model_data['order']
