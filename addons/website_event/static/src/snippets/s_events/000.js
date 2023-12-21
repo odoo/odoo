@@ -5,6 +5,8 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import DynamicSnippet from '@website/snippets/s_dynamic_snippet/000';
 
 const DynamicSnippetEvents = DynamicSnippet.extend({
+    // While the selector has 'upcoming_snippet' in its name, it now has a filter
+    // option to include ongoing events. The name is kept for backward compatibility.
     selector: '.s_event_upcoming_snippet',
     disabledInEditableMode: false,
 
