@@ -52,7 +52,17 @@ class PaymentTransaction(models.Model):
             if tx.provider_id.code == 'custom':
                 for so in tx.sale_order_ids:
                     so.reference = tx._compute_sale_order_reference(so)
-            # send payment status mail.
+
+            # Send the payment status email.
+            # The transactions are manually cached while in a sudoed environment to prevent an
+            # AccessError: In some circumstances, sending the mail would generate the report assets
+            # during the rendering of the mail body, causing a cursor commit, a flush, and forcing
+            # the re-computation of the pending computed fields of the `mail.compose.message`,
+            # including part of the template. Since that template reads the order's transactions and
+            # the re-computation of the field is not done with the same environment, reading fields
+            # that were not already available in the cache could trigger an AccessError (e.g., if
+            # the payment was initiated by a public user).
+            sales_orders.mapped('transaction_ids')
             sales_orders._send_payment_succeeded_for_order_mail()
 
         return txs_to_process
