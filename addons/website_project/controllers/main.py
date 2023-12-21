@@ -30,9 +30,19 @@ class WebsiteForm(form.WebsiteForm):
         data = super().extract_data(model, values)
         if model.model == 'project.task' and values.get('email_from'):
             partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']])
-            partner_id = partners_list[0].id if partners_list else False
-            data['record']['partner_id'] = partner_id
+            partner = partners_list[0] if partners_list else self.env['res.partner']
+            data['record']['partner_id'] = partner.id
             data['record']['email_from'] = values['email_from']
-            if not partner_id:
+            if partner:
+                if not partner.phone:
+                    data['record']['partner_phone'] = values['partner_phone']
+                if not partner.name:
+                    data['record']['partner_name'] = values['partner_name']
+                if not partner.company_name:
+                    data['record']['partner_company_name'] = values['partner_company_name']
+            else:
                 data['record']['email_cc'] = values['email_from']
+                data['record']['partner_phone'] = values['partner_phone']
+                data['record']['partner_name'] = values['partner_name']
+                data['record']['partner_company_name'] = values['partner_company_name']
         return data
