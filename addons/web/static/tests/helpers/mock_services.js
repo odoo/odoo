@@ -8,7 +8,7 @@ import { ConnectionAbortedError, rpcBus, rpc } from "@web/core/network/rpc";
 import { ormService } from "@web/core/orm_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
-import { userService } from "@web/core/user_service";
+import { user } from "@web/core/user";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
@@ -242,15 +242,17 @@ export function makeFakeDialogService(addDialog) {
     };
 }
 
-export function makeFakeUserService(hasGroup = () => false) {
-    return {
-        ...userService,
-        start() {
-            const fakeUserService = userService.start(...arguments);
-            fakeUserService.hasGroup = hasGroup;
-            return fakeUserService;
+export function patchUserContextWithCleanup(patch) {
+    const context = user.context;
+    patchWithCleanup(user, {
+        get context() {
+            return Object.assign({}, context, patch);
         },
-    };
+    });
+}
+
+export function patchUserWithCleanup(patch) {
+    patchWithCleanup(user, patch);
 }
 
 export const fakeCompanyService = {
@@ -322,7 +324,6 @@ export const mocks = {
     router: makeFakeRouterService,
     title: () => fakeTitleService,
     ui: () => uiService,
-    user: () => userService,
     dialog: makeFakeDialogService,
     orm: () => ormService,
     action: makeFakeActionService,

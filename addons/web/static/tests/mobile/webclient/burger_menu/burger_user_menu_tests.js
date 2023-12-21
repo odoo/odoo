@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { BurgerUserMenu } from "@web/webclient/burger_menu/burger_user_menu/burger_user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
-import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
@@ -17,7 +16,6 @@ let env;
 
 QUnit.module("BurgerUserMenu", {
     async beforeEach() {
-        serviceRegistry.add("user", userService);
         serviceRegistry.add("hotkey", hotkeyService);
         target = getFixture();
     },

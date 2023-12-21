@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { editView } from "@web/views/debug_items";
 import { listView } from "@web/views/list/list_view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
@@ -26,6 +24,7 @@ import {
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 
 import { onMounted } from "@odoo/owl";
+import { patchUserContextWithCleanup } from "../../helpers/mock_services";
 let serverData;
 let target;
 const serviceRegistry = registry.category("services");
@@ -692,7 +691,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
-        patchWithCleanup(session.user_context, { some_key: 2 });
+        patchUserContextWithCleanup({ some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
             if (route.startsWith("/web/dataset/call_button")) {
@@ -2050,7 +2049,6 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.doesNotHaveClass(
@@ -2181,7 +2179,6 @@ QUnit.module("ActionManager", (hooks) => {
         // those two lines can be removed once the list view is converted to wowl
         serverData.actions[3].views.unshift([false, "pivot"]);
         serverData.views["partner,false,pivot"] = "<pivot/>";
-        serviceRegistry.add("user", makeFakeUserService());
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -2192,7 +2189,6 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("action group_by of type string", async function (assert) {
         assert.expect(2);
         serverData.views["partner,false,pivot"] = `<pivot/>`;
-        registry.category("services").add("user", makeFakeUserService());
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, {
             name: "Partner",

@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
@@ -26,8 +27,8 @@ export class BurgerMenu extends Component {
 
     setup() {
         this.company = useService("company");
-        this.user = useService("user");
         this.menuRepo = useService("menu");
+        this.user = user;
         this.state = useState({
             isUserMenuOpened: false,
             isBurgerOpened: false,

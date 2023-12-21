@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { VideoSelector } from "@web_editor/components/media_dialog/video_selector";
 import { browser } from "@web/core/browser/browser";
@@ -2346,7 +2347,7 @@ export class Wysiwyg extends Component {
                 callback: async () => {
                     const [user] = await this.orm.read(
                         'res.users',
-                        [session.uid],
+                        [user.userId],
                         ['signature'],
                     );
                     if (user && user.signature) {
@@ -2848,8 +2849,8 @@ export class Wysiwyg extends Component {
             },
             onRequest: {
                 get_start_time: () => this._startCollaborationTime,
-                get_client_name: () => session.name,
-                get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`,
+                get_client_name: () => user.name,
+                get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`,
                 get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
                 get_history_from_snapshot: () => this._getHistorySnapshot(),
                 get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
@@ -2939,7 +2940,7 @@ export class Wysiwyg extends Component {
         });
     }
     _getCollaborationClientAvatarUrl() {
-        return `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`
+        return `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`
     }
     _stopPeerToPeer() {
         this._joiningPtp = false;
@@ -3462,7 +3463,7 @@ export class Wysiwyg extends Component {
         }
         if (params && params.kwargs) {
             params.kwargs.context = {
-                ...this.env.services.user.context,
+                ...user.context,
                 ...params.kwargs.context,
             };
         }

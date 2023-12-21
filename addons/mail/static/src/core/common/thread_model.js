@@ -2,6 +2,7 @@
 
 import { AND, Record } from "@mail/core/common/record";
 
+import { user } from "@web/core/user";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -322,10 +323,10 @@ export class Thread extends Record {
             return this.custom_channel_name || this.correspondent.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
-            const listFormatter = new Intl.ListFormat(
-                this._store.env.services["user"].lang?.replace("_", "-"),
-                { type: "conjunction", style: "long" }
-            );
+            const listFormatter = new Intl.ListFormat(user.lang?.replace("_", "-"), {
+                type: "conjunction",
+                style: "long",
+            });
             return listFormatter.format(
                 this.channelMembers.map((channelMember) => channelMember.persona.name)
             );

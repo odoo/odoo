@@ -3,10 +3,12 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { session } from "@web/session";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import {
+    makeFakeNotificationService,
+    patchUserContextWithCleanup,
+} from "@web/../tests/helpers/mock_services";
 import {
     mockDownload,
     nextTick,
@@ -185,7 +187,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "/report/check_wkhtmltopdf",
                 "notify",
                 // context={"lang":'en',"uid":7,"tz":'taht'}
-                "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%7D",
+                "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22tz%22%3A%22taht%22%2C%22uid%22%3A7%7D",
             ]);
         }
     );
@@ -205,7 +207,7 @@ QUnit.module("ActionManager", (hooks) => {
                 () => {}
             )
         );
-        patchWithCleanup(session.user_context, { some_key: 2 });
+        patchUserContextWithCleanup({ some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
             if (route.includes("/report/html/some_report")) {
@@ -231,7 +233,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             // context={"lang":'en',"uid":7,"tz":'taht',"some_key":2}
-            "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%2C%22some_key%22%3A2%7D",
+            "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22tz%22%3A%22taht%22%2C%22uid%22%3A7%2C%22some_key%22%3A2%7D",
         ]);
     });
 
@@ -331,7 +333,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step(options.url);
             assert.deepEqual(
                 options.data.context,
-                `{"lang":"en","uid":7,"tz":"taht","rabbia":"E Tarantella","active_ids":[99]}`
+                `{"lang":"en","tz":"taht","uid":7,"rabbia":"E Tarantella","active_ids":[99]}`
             );
             assert.deepEqual(JSON.parse(options.data.data), [
                 "/report/pdf/ennio.morricone/99",
@@ -373,7 +375,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await doAction(webClient, action);
         assert.verifySteps([
-            "/report/html/ennio.morricone/99?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%7D",
+            "/report/html/ennio.morricone/99?context=%7B%22lang%22%3A%22en%22%2C%22tz%22%3A%22taht%22%2C%22uid%22%3A7%7D",
         ]);
         await click(
             target.querySelector(

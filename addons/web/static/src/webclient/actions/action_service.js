@@ -7,6 +7,7 @@ import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
@@ -240,11 +241,11 @@ function makeActionManager(env) {
         } catch {
             // do nothing, the action might simply not be serializable
         }
-        action.context = makeContext([context, action.context], env.services.user.context);
+        action.context = makeContext([context, action.context], user.context);
         const domain = action.domain || [];
         action.domain =
             typeof domain === "string"
-                ? evaluateExpr(domain, Object.assign({}, env.services.user.context, action.context))
+                ? evaluateExpr(domain, Object.assign({}, user.context, action.context))
                 : domain;
         if (action.help) {
             const htmlHelp = document.createElement("div");
@@ -371,8 +372,8 @@ function makeActionManager(env) {
             }
         }
         // If no action => falls back on the user default action (if any).
-        if (!actionRequest && env.services.user.home_action_id) {
-            actionRequest = env.services.user.home_action_id;
+        if (!actionRequest && user.homeActionId) {
+            actionRequest = user.homeActionId;
         }
         return actionRequest ? { actionRequest, options } : null;
     }
@@ -1017,7 +1018,7 @@ function makeActionManager(env) {
             name: action.name,
             report_file: action.report_file,
             report_name: action.report_name,
-            report_url: getReportUrl(action, "html", env.services.user.context),
+            report_url: getReportUrl(action, "html", user.context),
             context: Object.assign({}, action.context),
         });
 
@@ -1057,7 +1058,7 @@ function makeActionManager(env) {
             let success, message;
             env.services.ui.block();
             try {
-                const downloadContext = { ...env.services.user.context };
+                const downloadContext = { ...user.context };
                 if (action.context) {
                     Object.assign(downloadContext, action.context);
                 }
@@ -1103,7 +1104,7 @@ function makeActionManager(env) {
     async function _executeServerAction(action, options) {
         const runProm = rpc("/web/action/run", {
             action_id: action.id,
-            context: makeContext([env.services.user.context, action.context]),
+            context: makeContext([user.context, action.context]),
         });
         let nextAction = await keepLast.add(runProm);
         if (nextAction.help) {
@@ -1422,7 +1423,7 @@ function makeActionManager(env) {
 }
 
 export const actionService = {
-    dependencies: ["effect", "localization", "notification", "router", "title", "ui", "user"],
+    dependencies: ["effect", "localization", "notification", "router", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

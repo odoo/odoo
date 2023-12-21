@@ -20,7 +20,6 @@ import {
     makeFakeRouterService,
     makeFakeHTTPService,
     makeFakeBarcodeService,
-    makeFakeUserService,
 } from "../helpers/mock_services";
 import { getFixture, mount, nextTick } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
@@ -75,7 +74,6 @@ export function setupWebClientRegistries() {
         router: () => makeFakeRouterService(),
         title: () => fakeTitleService,
         ui: () => uiService,
-        user: () => makeFakeUserService(),
         view: () => viewService,
         company: () => fakeCompanyService,
         datetime_picker: () => datetimePickerService,

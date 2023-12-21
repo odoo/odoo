@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quick_create";
@@ -15,32 +16,37 @@ export class AttendeeCalendarController extends CalendarController {
     setup() {
         super.setup();
         this.actionService = useService("action");
-        this.user = useService("user");
         this.orm = useService("orm");
         onWillStart(async () => {
-            this.isSystemUser = await this.user.hasGroup('base.group_system');
+            this.isSystemUser = await user.hasGroup("base.group_system");
         });
     }
 
     onClickAddButton() {
-        this.actionService.doAction({
-            type: 'ir.actions.act_window',
-            res_model: 'calendar.event',
-            views: [[false, 'form']],
-        }, {
-            additionalContext: this.props.context,
-        });
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "calendar.event",
+                views: [[false, "form"]],
+            },
+            {
+                additionalContext: this.props.context,
+            }
+        );
     }
 
-    goToFullEvent (resId, additionalContext) {
-        this.actionService.doAction({
-            type: 'ir.actions.act_window',
-            res_model: 'calendar.event',
-            views: [[false, 'form']],
-            res_id: resId || false,
-        }, {
-            additionalContext
-        });
+    goToFullEvent(resId, additionalContext) {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "calendar.event",
+                views: [[false, "form"]],
+                res_id: resId || false,
+            },
+            {
+                additionalContext,
+            }
+        );
     }
 
     getQuickCreateFormViewProps(record) {
@@ -54,9 +60,9 @@ export class AttendeeCalendarController extends CalendarController {
             goToFullEvent: (contextData) => {
                 const fullContext = {
                     ...props.context,
-                    ...contextData
+                    ...contextData,
                 };
-                this.goToFullEvent(false, fullContext)
+                this.goToFullEvent(false, fullContext);
             },
             onRecordSaved: () => onDialogClosed(),
         };
@@ -74,7 +80,10 @@ export class AttendeeCalendarController extends CalendarController {
      * If the event is deleted by the organizer, the event is deleted, otherwise it is declined.
      */
     deleteRecord(record) {
-        if (this.user.partnerId === record.attendeeId && this.user.partnerId === record.rawRecord.partner_id[0]) {
+        if (
+            user.partnerId === record.attendeeId &&
+            user.partnerId === record.rawRecord.partner_id[0]
+        ) {
             if (record.rawRecord.recurrency) {
                 this.openRecurringDeletionWizard(record);
             } else {
@@ -82,42 +91,43 @@ export class AttendeeCalendarController extends CalendarController {
             }
         } else {
             // Decline event
-            this.orm.call(
-                "calendar.attendee",
-                "do_decline",
-                [record.calendarAttendeeId],
-            ).then(this.model.load.bind(this.model));
+            this.orm
+                .call("calendar.attendee", "do_decline", [record.calendarAttendeeId])
+                .then(this.model.load.bind(this.model));
         }
     }
 
     openRecurringDeletionWizard(record) {
-        this.actionService.doAction({
-            type: 'ir.actions.act_window',
-            res_model: 'calendar.popover.delete.wizard',
-            views: [[false, 'form']],
-            view_mode: "form",
-            name: 'Delete Recurring Event',
-            context: {'default_record': record.id},
-            target: 'new'
-        }, {
-            onClose: () => {
-                location.reload();
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "calendar.popover.delete.wizard",
+                views: [[false, "form"]],
+                view_mode: "form",
+                name: "Delete Recurring Event",
+                context: { default_record: record.id },
+                target: "new",
             },
-        });
+            {
+                onClose: () => {
+                    location.reload();
+                },
+            }
+        );
     }
 
     configureCalendarProviderSync(providerName) {
         this.actionService.doAction({
-            name: _t('Connect your Calendar'),
-            type: 'ir.actions.act_window',
-            res_model: 'calendar.provider.config',
+            name: _t("Connect your Calendar"),
+            type: "ir.actions.act_window",
+            res_model: "calendar.provider.config",
             views: [[false, "form"]],
             view_mode: "form",
-            target: 'new',
+            target: "new",
             context: {
-                'default_external_calendar_provider': providerName,
-                'dialog_size': 'medium',
-            }
+                default_external_calendar_provider: providerName,
+                dialog_size: "medium",
+            },
         });
     }
 }

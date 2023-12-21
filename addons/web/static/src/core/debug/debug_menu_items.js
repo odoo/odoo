@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 
 function activateAssetsDebugging({ env }) {
     return {
@@ -32,10 +33,7 @@ export function regenerateAssets({ env }) {
         type: "item",
         description: _t("Regenerate Assets Bundles"),
         callback: async () => {
-            await env.services.orm.call(
-                "ir.attachment",
-                "regenerate_assets_bundles",
-            );
+            await env.services.orm.call("ir.attachment", "regenerate_assets_bundles");
             browser.location.reload();
         },
         sequence: 430,
@@ -47,7 +45,7 @@ function becomeSuperuser({ env }) {
     return {
         type: "item",
         description: _t("Become Superuser"),
-        hide: !env.services.user.isAdmin,
+        hide: !user.isAdmin,
         href: becomeSuperuserURL,
         callback: () => {
             browser.open(becomeSuperuserURL, "_self");

@@ -9,6 +9,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import {
     changeScale,
     clickEvent,
@@ -18,9 +19,6 @@ import {
 } from "@web/../tests/views/calendar/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { userService } from "@web/core/user_service";
-const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -45,7 +43,6 @@ async function selectTimeStart(target, startDateTime) {
     await nextTick();
 }
 
-
 QUnit.module("CalendarView", ({ beforeEach }) => {
     beforeEach(() => {
         // 2016-12-12 08:00:00
@@ -59,20 +56,11 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
         target = getFixture();
         setupViewRegistries();
 
-        serviceRegistry.add(
-            "user",
-            {
-                ...userService,
-                start() {
-                    const fakeUserService = userService.start(...arguments);
-                    Object.defineProperty(fakeUserService, "userId", {
-                        get: () => uid,
-                    });
-                    return fakeUserService;
-                },
+        patchUserWithCleanup({
+            get userId() {
+                return uid;
             },
-            { force: true }
-        );
+        });
 
         serverData = {
             models: {
@@ -302,14 +290,20 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                 }
             },
         });
-        await changeScale(target, 'week');
+        await changeScale(target, "week");
         await selectTimeStart(target, "2016-12-15 15:00:00");
         await editInput(target, ".o-calendar-quick-create--input", "Event with new duration");
         await click(target, ".o-calendar-quick-create--create-btn");
         // This new event is the third
         await clickEvent(target, 3);
-        assert.strictEqual(target.querySelector('div[name="start"] div').textContent, "12/15/2016 15:00:00");
-        assert.strictEqual(target.querySelector('div[name="stop"] div').textContent, "12/15/2016 18:15:00", "The duration should be 3.25 hours");
+        assert.strictEqual(
+            target.querySelector('div[name="start"] div').textContent,
+            "12/15/2016 15:00:00"
+        );
+        assert.strictEqual(
+            target.querySelector('div[name="stop"] div').textContent,
+            "12/15/2016 18:15:00",
+            "The duration should be 3.25 hours"
+        );
     });
-
 });

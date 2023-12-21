@@ -3,6 +3,7 @@
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { user } from "@web/core/user";
 import { sortBy, groupBy } from "@web/core/utils/arrays";
 import { deepCopy } from "@web/core/utils/objects";
 import { SearchArchParser } from "./search_arch_parser";
@@ -169,10 +170,9 @@ export class SearchModel extends EventBus {
      */
     setup(services) {
         // services
-        const { field: fieldService, name: nameService, orm, user, view } = services;
+        const { field: fieldService, name: nameService, orm, view } = services;
         this.orm = orm;
         this.fieldService = fieldService;
-        this.userService = user;
         this.viewService = view;
 
         this.getDomainTreeDescription = useGetDomainTreeDescription(fieldService, nameService);
@@ -431,7 +431,7 @@ export class SearchModel extends EventBus {
     }
 
     get domainEvalContext() {
-        return Object.assign({}, this.globalContext, this.userService.context);
+        return Object.assign({}, this.globalContext, user.context);
     }
 
     /**
@@ -1573,7 +1573,7 @@ export class SearchModel extends EventBus {
      */
     _getContext() {
         const groups = this._getGroups();
-        const contexts = [this.userService.context];
+        const contexts = [user.context];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const context = this._getSearchItemContext(activeItem);
@@ -1997,7 +1997,7 @@ export class SearchModel extends EventBus {
             localOrderBy = gs.flatMap((g) => g());
         }
         const context = makeContext([this._getContext(), localContext]);
-        const userContext = this.userService.context;
+        const userContext = user.context;
         for (const key in context) {
             if (key in userContext || /^search(panel)?_default_/.test(key)) {
                 // clean search defaults and user context keys
@@ -2008,7 +2008,7 @@ export class SearchModel extends EventBus {
         const groupBys = this._getGroupBy();
         const comparison = this.getFullComparison();
         const orderBy = localOrderBy || this._getOrderBy();
-        const userId = isShared ? false : this.userService.userId;
+        const userId = isShared ? false : user.userId;
 
         const preFavorite = {
             description,
@@ -2198,7 +2198,7 @@ export class SearchModel extends EventBus {
             userId = irFilter.user_id[0];
         }
         const groupNumber = userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
-        const context = evaluateExpr(irFilter.context, this.userService.context);
+        const context = evaluateExpr(irFilter.context, user.context);
         let groupBys = [];
         if (context.group_by) {
             groupBys = context.group_by;

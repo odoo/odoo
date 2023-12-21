@@ -25,7 +25,6 @@ export class ImportAction extends Component {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.router = useService("router");
-        this.user = useService("user");
 
         this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
         this.resModel = this.props.action.params.model;

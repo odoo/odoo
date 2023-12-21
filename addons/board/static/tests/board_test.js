@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { BoardAction } from "@board/board_action";
+import { patchUserContextWithCleanup } from "@web/../tests/helpers/mock_services";
 import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 
 const serviceRegistry = registry.category("services");
 
@@ -585,7 +585,7 @@ QUnit.module("Board", (hooks) => {
 
     QUnit.test("Views should be loaded in the user's language", async function (assert) {
         assert.expect(2);
-        patchWithCleanup(session.user_context, { lang: "fr_FR" });
+        patchUserContextWithCleanup({ lang: "fr_FR" });
         serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
 
         await makeView({

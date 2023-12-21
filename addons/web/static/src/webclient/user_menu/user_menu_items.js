@@ -3,6 +3,7 @@
 import { Component, markup } from "@odoo/owl";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
@@ -78,7 +79,7 @@ export function preferencesItem(env) {
         description: _t("Preferences"),
         callback: async function () {
             const actionDescription = await env.services.orm.call("res.users", "action_get");
-            actionDescription.res_id = env.services.user.userId;
+            actionDescription.res_id = user.userId;
             env.services.action.doAction(actionDescription);
         },
         sequence: 50,

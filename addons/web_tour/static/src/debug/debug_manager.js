@@ -3,11 +3,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import ToursDialog from "@web_tour/debug/tour_dialog_component";
 import { tourState } from "../tour_service/tour_state";
 
 export function disableTours({ env }) {
-    if (!env.services.user.isSystem) {
+    if (!user.isSystem) {
         return null;
     }
     const activeTourNames = tourState.getActiveTourNames();
@@ -29,7 +30,7 @@ export function disableTours({ env }) {
 }
 
 export function startTour({ env }) {
-    if (!env.services.user.isSystem) {
+    if (!user.isSystem) {
         return null;
     }
     return {
