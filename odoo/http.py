@@ -1786,6 +1786,12 @@ class Request:
 
     def _transactioning(self, func, readonly):
         for readonly_cr in (True, False) if readonly else (False,):
+            threading.current_thread().cursor_mode = (
+                'ro' if readonly_cr
+                else 'ro->rw' if readonly
+                else 'rw'
+            )
+
             with contextlib.closing(self.registry.cursor(readonly=readonly_cr)) as cr:
                 self.env = self.env(cr=cr)
                 try:
@@ -2167,6 +2173,7 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        current_thread.cursor_mode = None
         if hasattr(current_thread, 'dbname'):
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):
