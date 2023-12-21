@@ -638,7 +638,9 @@
                 </div>
 
                 <div id="total" name="total" style="page-break-inside: avoid;">
-                    <t t-call="sale.sale_order_portal_content_totals_table"/>
+                    <div class="col-xs-7 col-md-5 ms-auto">
+                        <t t-call="sale.sale_order_portal_content_totals_table"/>
+                    </div>
                 </div>
             </section>
 
