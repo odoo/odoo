@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
+from collections import defaultdict
 from datetime import timedelta
 from functools import partial, lru_cache
 from itertools import groupby
-from collections import defaultdict
+from random import randrange
 
+import logging
 import psycopg2
 import pytz
 import re
@@ -152,8 +153,9 @@ class PosOrder(models.Model):
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order._generate_pos_order_invoice()
 
+        if pos_session._is_capture_system_activated():
+            pos_session._remove_capture_content(order)
         return pos_order.id
-
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
@@ -902,8 +904,12 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        order_names = [order['data']['name'] for order in orders]
+        sync_token = randrange(100000000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("Start PoS synchronisation #%d for PoS orders references: %s (draft: %s)", sync_token, order_names, draft)
         order_ids = []
         for order in orders:
+            order_name = order['data']['name']
             existing_draft_order = None
 
             if 'server_id' in order['data'] and order['data']['server_id']:
@@ -915,16 +921,23 @@ class PosOrder(models.Model):
                     continue
 
             if not existing_draft_order:
-                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, draft, existing_draft_order))
-            else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
-                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, draft, False))
-
-        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
