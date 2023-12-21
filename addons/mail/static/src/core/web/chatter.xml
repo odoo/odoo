@@ -21,8 +21,7 @@
                     Log note
                 </button>
                 <div class="flex-grow-1 d-flex">
-                    <button t-if="props.hasActivities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
-                        <i class="fa fa-clock-o me-1"/>
+                    <button t-if="props.hasActivities" class="o-mail-Chatter-activity btn btn-secondary ms-3 text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
                         <span>Activities</span>
                     </button>
                     <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
@@ -35,11 +34,11 @@
                         </t>
                     </FileUploader>
                     <t t-else="" t-call="mail.Chatter.attachFiles"/>
-                    <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
+                    <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
                         <t t-set-slot="toggler">
                             <i class="fa fa-user-o me-1" role="img"/>
                             <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <span t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
+                            <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
                         </t>
                         <t t-set-slot="default">
                             <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread"/>
@@ -51,9 +50,7 @@
                             <span class="d-flex invisible text-nowrap">
                                 <i class="me-1 fa fa-fw fa-eye-slash"/><t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
                             </span>
-                            <span class="position-absolute end-0 top-0" t-att-class="{ 'text-warning': unfollowHover.isHover }">
-                                <i class="me-1" t-att-class="{ 'fa fa-fw fa-times': unfollowHover.isHover, 'fa fa-fw fa-check': !unfollowHover.isHover }"/><span t-out="unfollowHover.isHover ? unfollowText : followingText"/>
-                            </span>
+                            <span class="o-mail-Chatter-follow position-absolute end-0 top-0" t-out="unfollowHover.isHover ? unfollowText : followingText"/>
                         </div>
                     </button>
                     <button t-if="!state.thread.selfFollower" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
@@ -152,7 +149,7 @@
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
         <i class="fa fa-paperclip fa-lg me-1"/>
-        <span t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>
