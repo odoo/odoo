@@ -38,6 +38,9 @@ class IrActionsReport(models.Model):
             # Determine which invoices need a QR.
             qr_inv_ids = []
             for invoice in invoices:
+                # avoid duplicating existing streams
+                if report.attachment_use and report.retrieve_attachment(invoice):
+                    continue
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
             # Render the additional reports.
