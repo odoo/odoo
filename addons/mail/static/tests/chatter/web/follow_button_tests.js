@@ -15,7 +15,7 @@ QUnit.test("base rendering not editable", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Chatter-follow");
+    await contains(".o-mail-Chatter-follow", { text: "Follow" });
 });
 
 QUnit.test("hover following button", async () => {
@@ -33,11 +33,9 @@ QUnit.test("hover following button", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".fa-check + span", { text: "Following" });
-    await contains(".fa-times + span", { count: 0, text: "Following" });
-    await triggerEvents("button .fa-check + span", ["mouseenter"], { text: "Following" });
-    await contains(".fa-times + span", { text: "Unfollow" });
-    await contains(".fa-check + span", { count: 0, text: "Unfollow" });
+    await contains(".o-mail-Chatter-follow", { text: "Following" });
+    await triggerEvents(".o-mail-Chatter-follow", ["mouseenter"], { text: "Following" });
+    await contains(".o-mail-Chatter-follow", { text: "Unfollow" });
 });
 
 QUnit.test('click on "follow" button', async () => {
@@ -88,6 +86,6 @@ QUnit.test('click on "unfollow" button', async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click(".fa-check + span", { text: "Following" });
+    await click(".o-mail-Chatter-follow", { text: "Following" });
     await contains("button", { text: "Follow" });
 });
