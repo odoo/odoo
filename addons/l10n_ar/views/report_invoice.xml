@@ -240,7 +240,7 @@
                 </t>
                 <t t-if="o.currency_id != o.company_id.currency_id">
                     <br/><strong>Currency: </strong><span t-out="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
-                    <br/><strong>Exchange rate: </strong> <span t-out="1 / o.invoice_currency_rate" t-options='{"widget": "float", "precision": 2}'/>
+                    <br/><span>1 <t t-out="o.currency_id.name"/> = <t t-out="1 / o.invoice_currency_rate" t-options='{"widget": "float", "precision": 2}'/> <t t-out="o.company_currency_id.name"/></span>
                 </t>
                 <!-- Show CBU for FACTURA DE CREDITO ELECTRONICA MiPyMEs and NOTA DE DEBITO ELECTRONICA MiPyMEs -->
                 <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211', '202', '207', '212'] and o.partner_bank_id">
