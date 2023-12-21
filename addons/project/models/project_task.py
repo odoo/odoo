@@ -1537,7 +1537,9 @@ class Task(models.Model):
                 return self.parent_id.get_portal_url()
             # The portal user has no access to the parent task, so normally the button should be invisible.
             return {}
-        action = self.action_open_parent_task()
+        action = self.with_context({
+            'search_view_ref': 'project.project_sharing_project_task_view_search',
+        }).action_open_parent_task()
         action['views'] = [(self.env.ref('project.project_sharing_project_task_view_form').id, 'form')]
         return action
 
