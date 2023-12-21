@@ -2,6 +2,7 @@
 
 import {
     click,
+    drag,
     getFixture,
     makeDeferred,
     nextTick,
@@ -3533,6 +3534,28 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_search_panel_sidebar").textContent,
             "asusteksilver"
+        );
+    });
+
+    QUnit.test("search panel should be resizable", async function (assert) {
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        const searchPanel = target.getElementsByClassName("o_search_panel")[0];
+        const resizeHandle = target.getElementsByClassName("o_search_panel_resize")[0];
+        const originalWidth = searchPanel.offsetWidth;
+
+        const { drop } = await drag(resizeHandle);
+        await drop(target, { x: 500 });
+
+        assert.ok(
+            searchPanel.offsetWidth - originalWidth > 0,
+            "width should be increased after resizing search panel"
         );
     });
 });
