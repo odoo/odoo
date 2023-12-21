@@ -16,7 +16,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         setup() {
             super.setup();
-            useListener('update-selected-orderline', this._updateSelectedOrderline);
+            useListener('update-selected-orderline', (...args) => {
+                if (!this.env.pos.tempScreenIsShown) this._updateSelectedOrderline(...args);
+            });
             useListener('select-line', this._selectLine);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);

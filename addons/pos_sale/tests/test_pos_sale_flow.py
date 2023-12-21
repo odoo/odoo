@@ -318,16 +318,17 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'uom_po_id': uom.id,
         })
         #create a sale order with product_a
-        self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.env.ref('base.res_partner_2').id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 3.5,
                 'product_uom': product_a.uom_id.id,
-                'price_unit': product_a.lst_price,
+                'price_unit': 8,  # manually set a different price than the lst_price
             })],
         })
+        self.assertEqual(sale_order.amount_total, 32.2)  # 3.5 * 8 * 1.15
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderNotGroupable', login="accountman")
 

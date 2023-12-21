@@ -464,29 +464,33 @@ class StockMove(models.Model):
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
-        debit_line_vals = {
+
+        line_vals = {
             'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
-            'balance': debit_value,
-            'account_id': debit_account_id,
         }
 
-        credit_line_vals = {
-            'name': description,
-            'product_id': self.product_id.id,
-            'quantity': qty,
-            'product_uom_id': self.product_id.uom_id.id,
-            'ref': description,
-            'partner_id': partner_id,
-            'balance': -credit_value,
-            'account_id': credit_account_id,
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
+        if svl.account_move_line_id.analytic_distribution:
+            line_vals['analytic_distribution'] = svl.account_move_line_id.analytic_distribution
+
+        rslt = {
+            'credit_line_vals': {
+                **line_vals,
+                'balance': -credit_value,
+                'account_id': credit_account_id,
+            },
+            'debit_line_vals': {
+                **line_vals,
+                'balance': debit_value,
+                'account_id': debit_account_id,
+            },
         }
 
-        rslt = {'credit_line_vals': credit_line_vals, 'debit_line_vals': debit_line_vals}
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
             diff_amount = debit_value - credit_value
