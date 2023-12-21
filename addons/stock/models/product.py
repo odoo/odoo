@@ -436,6 +436,10 @@ class Product(models.Model):
                     'title': _('Warning!'),
                     'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
 
+    @api.onchange('standard_price', 'type')
+    def onchange_standard_price(self):
+        return self.product_tmpl_id._get_cost_warning(self.standard_price)
+
     @api.model
     def view_header_get(self, view_id, view_type):
         res = super(Product, self).view_header_get(view_id, view_type)
@@ -856,6 +860,19 @@ class ProductTemplate(models.Model):
     @api.onchange('tracking')
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
+
+    @api.onchange('standard_price', 'type')
+    def onchange_standard_price(self):
+        return self._get_cost_warning(self.standard_price)
+
+    def _get_cost_warning(self, cost):
+        if self.type == 'product' and cost < 0:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _("The cost of a storable product should not be negative.")
+                },
+            }
 
     @api.onchange('type')
     def _onchange_type(self):

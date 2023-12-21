@@ -1274,6 +1274,16 @@ class PurchaseOrderLine(models.Model):
             packaging_uom_qty = self.product_uom._compute_quantity(self.product_qty, packaging_uom)
             self.product_packaging_qty = float_round(packaging_uom_qty / self.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
 
+    @api.onchange('product_id', 'price_unit')
+    def _onchange_price_unit(self):
+        if self.product_id.type == 'product' and self.price_unit < 0:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _("The unit price of a storable product should not be negative.")
+                },
+            }
+
     @api.onchange('product_packaging_qty')
     def _onchange_product_packaging_qty(self):
         if self.product_packaging_id:

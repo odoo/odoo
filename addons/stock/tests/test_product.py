@@ -340,3 +340,26 @@ class TestVirtualAvailable(TestStockCommon):
         product_form.type = 'service'
         product = product_form.save()
         self.assertEqual(product.tracking, 'none')
+
+    def test_positive_cost(self):
+        """"
+        Cost of storable product should be positive
+        """
+        err_msg = "The cost of a storable product should not be negative."
+        variant = self.product_1
+        template = variant.product_tmpl_id
+        template.write({
+            'type': 'product',
+            'standard_price': 1000,
+        })
+
+        with self.assertLogs(level="WARNING") as logger:
+            with Form(template) as template_form:
+                template_form.standard_price = -10
+        self.assertIn(err_msg, logger.output[0])
+
+        template.standard_price = 1000
+        with self.assertLogs(level="WARNING") as logger:
+            with Form(variant) as variant_form:
+                variant_form.standard_price = -10
+        self.assertIn(err_msg, logger.output[0])
