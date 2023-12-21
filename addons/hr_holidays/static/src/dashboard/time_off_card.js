@@ -5,7 +5,7 @@ const { Component } = owl;
 export class TimeOffCardPopover extends Component {}
 
 TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
-TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left'];
+TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left', 'usable'];
 
 export class TimeOffCard extends Component {}
 
