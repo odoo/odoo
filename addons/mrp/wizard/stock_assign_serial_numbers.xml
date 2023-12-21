@@ -24,7 +24,7 @@
                             </div>
                         </group>
                     </group>
-                    <span>Write one line per finished product to produce, with serial numbers as follows:</span><br/><br/>
+                    <span>"To document the consumption of your tracked components at the same time also, write one line per finished product and use the syntax documented below:"</span><br/><br/>
                     <field name="list_of_component" readonly="1"/>
                     <field class="form-control my-2" name="lot_numbers" placeholder="" widget="lot_numbers"/>
                     <footer class="d-flex justify-content-between">
@@ -39,7 +39,7 @@
     </record>
 
     <record id="act_assign_serial_numbers_production" model="ir.actions.act_window">
-        <field name="name">Assign Serial Numbers</field>
+        <field name="name">Production Details</field>
         <field name="res_model">stock.assign.serial</field>
         <field name="view_id" ref="view_assign_serial_numbers_production"/>
         <field name="view_mode">form</field>

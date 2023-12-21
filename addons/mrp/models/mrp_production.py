@@ -1774,6 +1774,7 @@ class MrpProduction(models.Model):
             production_ids.update(production.ids)
             production_ids.update(production_backorders.ids)
             index += number_of_backorder_created
+
         # Split the `stock.move` among new backorders.
         new_moves_vals = []
         moves = []
@@ -1914,7 +1915,8 @@ class MrpProduction(models.Model):
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
         self.env['stock.move.line'].create(move_lines_vals)
 
-        moves_to_consume.write({'picked': True})
+        if not self._context.get('sml_create'):
+            moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:
@@ -2222,9 +2224,9 @@ class MrpProduction(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
 
         tracking_product_ids = (self.product_id + self.move_raw_ids.product_id).filtered(lambda p: p.tracking != 'none')
-        list_of_component = ",".join(tracking_product_ids.mapped('name'))
+        list_of_component = "<strong>" + ",".join(tracking_product_ids.mapped('name')) + "</strong>"
         if self.move_raw_ids.product_id.filtered(lambda p: p.tracking == 'lot'):
-            list_of_component += "\nTo force a specifc quantity for a lot, use a semi-column: LOT001;3\nTo pick a component from multiple lots, use a pipe LOT1;2|LOT2;8"
+            list_of_component += "<br>To force a specifc quantity for a lot, use a semi-column: LOT001;3<br>To pick a component from multiple lots, use a pipe LOT1;2|LOT2;8"
 
         action['context'] = {
             'default_production_id': self.id,

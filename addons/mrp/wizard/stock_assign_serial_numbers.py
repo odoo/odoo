@@ -22,7 +22,7 @@ class StockAssignSerialNumbers(models.TransientModel):
     multiple_lot_components_names = fields.Text() # Names of components with multiple lots, used to show warning
     mark_as_done = fields.Boolean("Valide all the productions after the split")
     lot_numbers = fields.Text("components enter by user")
-    list_of_component = fields.Text(string="list of component")
+    list_of_component = fields.Html(string="list of component")
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:
@@ -124,7 +124,16 @@ class StockAssignSerialNumbers(models.TransientModel):
                                 sml['quantity'] = 1
                                 if sml['lot_id']:
                                     preapre_comp_dict.append(sml)
-                            continue
+                                else:
+                                    prepare_stock_lot_values = {
+                                        'product_id': move.product_id.id,
+                                        'company_id': move.company_id.id,
+                                        'name': prepare_component.get(move.product_id.id)[comp][i],
+                                    }
+                                    sml['lot_id'] = self.env['stock.lot'].create(prepare_stock_lot_values).id
+                                    sml['quantity'] = 1
+                                    preapre_comp_dict.append(sml)
+
                     if move.product_id.tracking == 'lot':
                         move_line_count = min(len(prepare_component.get(move.product_id.id)[comp]), int(move.product_uom_qty))
                         for i in range(move_line_count):
@@ -135,6 +144,15 @@ class StockAssignSerialNumbers(models.TransientModel):
                                         sml['lot_id'] = self.env['stock.lot'].search([('product_id', '=', move.product_id.id), ('name', '=', item[0])]).id
                                         sml['quantity'] = item[1]
                                         if sml['lot_id']:
+                                            preapre_comp_dict.append(sml)
+                                        else:
+                                            prepare_stock_lot_values = {
+                                                'product_id': move.product_id.id,
+                                                'company_id': move.company_id.id,
+                                                'name': item[0],
+                                            }
+                                            sml['lot_id'] = self.env['stock.lot'].create(prepare_stock_lot_values).id
+                                            sml['quantity'] = item[1]
                                             preapre_comp_dict.append(sml)
                 comp = comp + 1
             self.env['stock.move.line'].create(preapre_comp_dict)
