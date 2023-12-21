@@ -329,7 +329,7 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}" t-cache="channel if is_public_user else None">
+    <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}" t-cache="channel if is_public_user and not search_tags else None">
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" style="height:120px">
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100">
