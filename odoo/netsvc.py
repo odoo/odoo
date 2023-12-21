@@ -82,8 +82,12 @@ LEVEL_COLOR_MAPPING = {
 }
 
 class PerfFilter(logging.Filter):
+
     def format_perf(self, query_count, query_time, remaining_time):
         return ("%d" % query_count, "%.3f" % query_time, "%.3f" % remaining_time)
+
+    def format_cursor_mode(self, cursor_mode):
+        return cursor_mode or '-'
 
     def filter(self, record):
         if hasattr(threading.current_thread(), "query_count"):
@@ -92,8 +96,13 @@ class PerfFilter(logging.Filter):
             perf_t0 = threading.current_thread().perf_t0
             remaining_time = time.time() - perf_t0 - query_time
             record.perf_info = '%s %s %s' % self.format_perf(query_count, query_time, remaining_time)
+            if tools.config['db_replica_host'] is not False:
+                cursor_mode = threading.current_thread().cursor_mode
+                record.perf_info = f'{record.perf_info} {self.format_cursor_mode(cursor_mode)}'
             delattr(threading.current_thread(), "query_count")
         else:
+            if tools.config['db_replica_host'] is not False:
+                record.perf_info = "- - - -"
             record.perf_info = "- - -"
         return True
 
@@ -108,8 +117,17 @@ class ColoredPerfFilter(PerfFilter):
         return (
             colorize_time(query_count, "%d", 100, 1000),
             colorize_time(query_time, "%.3f", 0.1, 3),
-            colorize_time(remaining_time, "%.3f", 1, 5)
+            colorize_time(remaining_time, "%.3f", 1, 5),
             )
+
+    def format_cursor_mode(self, cursor_mode):
+        cursor_mode = super().format_cursor_mode(cursor_mode)
+        cursor_mode_color = (
+            RED if cursor_mode == 'ro->rw'
+            else YELLOW if cursor_mode == 'rw'
+            else GREEN
+        )
+        return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
 
 class DBFormatter(logging.Formatter):
     def format(self, record):
