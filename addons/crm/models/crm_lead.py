@@ -1400,7 +1400,7 @@ class Lead(models.Model):
         if max_length and len(self.ids) > max_length and not self.env.is_superuser():
             raise UserError(_(
                 "Data safety alert! To prevent any disappearing act, Leads and Opportunities can only be "
-                "merged in groups of %(max_length)s. So gather your fantastic group!", max_length=max_length))
+                "merged in groups of %(max_length)s.", max_length=max_length))
 
         opportunities = self._sort_by_confidence_level(reverse=True)
 

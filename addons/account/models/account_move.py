@@ -1856,10 +1856,8 @@ class AccountMove(models.Model):
                 move = self.browse(move_id)
                 error_msg += _(
                     '\n\n'
-                    'Unbalanced move alert! The move %(move)s is feeling a bit unbalanced, with %(total_debit)s on '
-                    'the debit side and %(total_credit)s on the credit side. We need some equilibrium here!\n\n'
-                    'Consider adding a default account on the journal \"%(journal)s\" to '
-                    'automatically balance each move and restore order to the accounting universe!',
+                    'Unbalanced move alert! The move %(move)s is feeling a bit unbalanced, with %(total_debit)s on the debit side and %(total_credit)s on the credit side. We need some equilibrium here!\n\n'
+                    'Consider adding a default account on the journal \"%(journal)s\" to automatically balance each move and restore order to the accounting universe!',
                     move=move.display_name,
                     total_debit=format_amount(self.env, sum_debit, move.company_id.currency_id),
                     total_credit=format_amount(self.env, sum_credit, move.company_id.currency_id),

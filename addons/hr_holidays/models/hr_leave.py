@@ -1137,7 +1137,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         # Do not check the state in case we are redirected from the dashboard
         if check_state and any(holiday.state != 'confirm' for holiday in self):
-            raise UserError(_('You can only confirm time off requests that are in state “To approve”'))
+            raise UserError(_('You can only confirm time off requests that are in the “To approve” state'))
 
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})

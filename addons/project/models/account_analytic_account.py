@@ -24,7 +24,7 @@ class AccountAnalyticAccount(models.Model):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
         has_tasks = self.env['project.task'].search_count([('project_id', 'in', projects.ids)])
         if has_tasks:
-            raise UserError(_("Before we can bid farewell to those accounts, you need to tidy up projects linked to these accounts by removing existing tasks in these projects!"))
+            raise UserError(_("Before we can bid farewell to those accounts, you need to tidy up the projects linked to these accounts by removing their existing tasks!"))
 
     def action_view_projects(self):
         kanban_view_id = self.env.ref('project.view_project_kanban').id
