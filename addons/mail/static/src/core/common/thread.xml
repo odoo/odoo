@@ -19,7 +19,7 @@
                 </t>
                 <t t-if="state.mountedAndLoaded" t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
                     <t t-if="msg.dateDay !== currentDay and props.showDates">
-                        <DateSection date="msg.dateDay" className="'pt-4'"/>
+                        <DateSection date="msg.dateDay" className="'pt-2'"/>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
                     <Transition t-if="props.thread.model === 'discuss.channel'"  visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
