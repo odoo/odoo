@@ -332,7 +332,7 @@ function cardToTable(editable) {
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
-            if (isBlock(child)) {
+            if (!['IMG', 'A'].includes(child.nodeName) && isBlock(child)) {
                 for (const attr of child.attributes) {
                     col.setAttribute(attr.name, attr.value);
                 }
@@ -357,7 +357,10 @@ function cardToTable(editable) {
             superCol.append(subTable);
             superRow.append(superCol);
             table.append(superRow);
-            if (child.classList && child.classList.contains('card-img-top')) {
+            const hasImgTop = [child, ...child.querySelectorAll('.card-img-top')].some(node => (
+                node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
+            ));
+            if (hasImgTop) {
                 // Collect .card-img-top superRows to manipulate their heights.
                 cardImgTopSuperRows.push(superRow);
             }
