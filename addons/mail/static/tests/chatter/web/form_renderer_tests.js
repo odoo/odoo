@@ -113,7 +113,7 @@ QUnit.test(
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
         await click(".o_pager_next");
-        await contains("button[aria-label='Attach files']:not(:has(span))");
+        await contains("button[aria-label='Attach files']:not(:has(sup))");
         // Simulate unlinking attachment 1 from Partner 1.
         pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
         await click(".o_pager_previous");
