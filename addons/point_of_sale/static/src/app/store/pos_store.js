@@ -1077,10 +1077,160 @@ export class PosStore extends Reactive {
 
         let taxes = product.taxes_id;
 
+<<<<<<< HEAD
         // Fiscal position.
         const order = this.get_order();
         if (order && order.fiscal_position_id) {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
+||||||| parent of 5aee6d26f3b2 (temp)
+    // Send validated orders to the backend.
+    // Resolves to the backend ids of the synced orders.
+    async _flush_orders(orders, options = {}) {
+        try {
+            const server_ids = await this._save_to_server(orders, options);
+            for (let i = 0; i < server_ids.length; i++) {
+                this.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
+                    server_ids[i].id;
+            }
+            return server_ids;
+        } catch (error) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
+                for (const order of orders) {
+                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
+                    reactiveOrder.finalized = false;
+                    this.db.remove_order(reactiveOrder.uid);
+                    this.db.save_unpaid_order(reactiveOrder);
+                }
+            }
+            throw error;
+        } finally {
+            this._after_flush_orders(orders);
+        }
+    }
+    /**
+     * Hook method after _flush_orders resolved or rejected.
+     * It aims to:
+     *   - remove the refund orderlines from toRefundLines
+     *   - invalidate cache of refunded synced orders
+     */
+    _after_flush_orders(orders) {
+        const refundedOrderIds = new Set();
+        for (const order of orders) {
+            for (const line of order.data.lines) {
+                const refundDetail = this.toRefundLines[line[2].refunded_orderline_id];
+                if (!refundDetail) {
+                    continue;
+                }
+                // Collect the backend id of the refunded orders.
+                refundedOrderIds.add(refundDetail.orderline.orderBackendId);
+                // Reset the refund detail for the orderline.
+                delete this.toRefundLines[refundDetail.orderline.id];
+            }
+        }
+        this._invalidateSyncedOrdersCache([...refundedOrderIds]);
+    }
+    _invalidateSyncedOrdersCache(ids) {
+        for (const id of ids) {
+            delete this.TICKET_SCREEN_STATE.syncedOrders.cache[id];
+        }
+    }
+
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        return this.context || {};
+    }
+    // send an array of orders to the server
+    // available options:
+    // - timeout: timeout for the rpc call in ms
+    // returns a promise that resolves with the list of
+    // server generated ids for the sent orders
+    async _save_to_server(orders, options) {
+        if (!orders || !orders.length) {
+            return Promise.resolve([]);
+        }
+        options = options || {};
+        for (const order of orders) {
+            order.to_invoice = options.to_invoice || false;
+=======
+    // Send validated orders to the backend.
+    // Resolves to the backend ids of the synced orders.
+    async _flush_orders(orders, options = {}) {
+        try {
+            const server_ids = await this._save_to_server(orders, options);
+            for (let i = 0; i < server_ids.length; i++) {
+                this.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
+                    server_ids[i].id;
+            }
+            return server_ids;
+        } catch (error) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
+                for (const order of orders) {
+                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
+                    reactiveOrder.finalized = false;
+                    this.db.remove_order(reactiveOrder.uid);
+                    this.db.save_unpaid_order(reactiveOrder);
+                }
+            }
+            throw error;
+        } finally {
+            this._after_flush_orders(orders);
+        }
+    }
+    /**
+     * Hook method after _flush_orders resolved or rejected.
+     * It aims to:
+     *   - remove the refund orderlines from toRefundLines
+     *   - invalidate cache of refunded synced orders
+     */
+    _after_flush_orders(orders) {
+        const refundedOrderIds = new Set();
+        for (const order of orders) {
+            for (const line of order.data.lines) {
+                const refundDetail = this.toRefundLines[line[2].refunded_orderline_id];
+                if (!refundDetail) {
+                    continue;
+                }
+                // Collect the backend id of the refunded orders.
+                refundedOrderIds.add(refundDetail.orderline.orderBackendId);
+                // Reset the refund detail for the orderline.
+                delete this.toRefundLines[refundDetail.orderline.id];
+            }
+        }
+        this._invalidateSyncedOrdersCache([...refundedOrderIds]);
+    }
+    _invalidateSyncedOrdersCache(ids) {
+        for (const id of ids) {
+            delete this.TICKET_SCREEN_STATE.syncedOrders.cache[id];
+        }
+    }
+
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        const orderContext = this.context || {};
+        if (options.printedOrders !== undefined) {
+            orderContext.is_receipt_printed = options.printedOrders;
+        }
+        return orderContext;
+    }
+    // send an array of orders to the server
+    // available options:
+    // - timeout: timeout for the rpc call in ms
+    // returns a promise that resolves with the list of
+    // server generated ids for the sent orders
+    async _save_to_server(orders, options) {
+        if (!orders || !orders.length) {
+            return Promise.resolve([]);
+        }
+        options = options || {};
+        for (const order of orders) {
+            order.to_invoice = options.to_invoice || false;
+>>>>>>> 5aee6d26f3b2 (temp)
         }
 
         // Taxes computation.

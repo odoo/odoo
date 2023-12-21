@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
-from datetime import datetime
-from markupsafe import Markup
-from itertools import groupby
 from collections import defaultdict
+from datetime import datetime
+<<<<<<< HEAD
+from markupsafe import Markup
+||||||| parent of 5aee6d26f3b2 (temp)
+from markupsafe import Markup
+from functools import partial
+=======
+from functools import partial
+>>>>>>> 5aee6d26f3b2 (temp)
+from itertools import groupby
+from markupsafe import Markup
+from random import randrange
 
+import base64
+import logging
 import psycopg2
 import pytz
 import re
@@ -14,7 +24,6 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
-import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -117,6 +126,10 @@ class PosOrder(models.Model):
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+
+        if pos_session._is_capture_system_activated():
+            pos_session._remove_capture_content(order)
+
         return pos_order._process_saved_order(draft)
 
     def _prepare_combo_line_uuids(self, order_vals):
@@ -915,14 +928,25 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        order_names = [order['data']['name'] for order in orders]
+        sync_token = randrange(100000000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("Start PoS synchronisation #%d for PoS orders references: %s (draft: %s)", sync_token, order_names, draft)
         order_ids = []
         for order in orders:
+<<<<<<< HEAD
             existing_draft_order = self.env["pos.order"].search(
                 ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
+||||||| parent of 5aee6d26f3b2 (temp)
+            existing_draft_order = None
+=======
+            order_name = order['data']['name']
+            existing_draft_order = None
+>>>>>>> 5aee6d26f3b2 (temp)
 
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
+<<<<<<< HEAD
             if existing_draft_order:
                 order_ids.append(self._process_order(order, existing_draft_order))
             else:
@@ -940,6 +964,54 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
+||||||| parent of 5aee6d26f3b2 (temp)
+            if 'server_id' in order['data'] and order['data']['server_id']:
+                # if the server id exists, it must only search based on the id
+                existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
+
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order:
+                    continue
+
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+
+            if existing_draft_order:
+                order_ids.append(self._process_order(order, draft, existing_draft_order))
+            else:
+                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
+                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                    order_ids.append(self._process_order(order, draft, False))
+
+        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+=======
+            if 'server_id' in order['data'] and order['data']['server_id']:
+                # if the server id exists, it must only search based on the id
+                existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
+
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order:
+                    continue
+
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
+
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
+>>>>>>> 5aee6d26f3b2 (temp)
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['payment_ids']]
