@@ -4035,7 +4035,7 @@ class BaseModel(metaclass=MetaModel):
                 corecord = record.sudo()[name]
                 if corecord:
                     domain = corecord._check_company_domain(company)
-                    if domain and not corecord.filtered_domain(domain):
+                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
                         inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
@@ -4046,7 +4046,7 @@ class BaseModel(metaclass=MetaModel):
                 corecord = record.sudo()[name]
                 if corecord:
                     domain = corecord._check_company_domain(company)
-                    if domain and not corecord.filtered_domain(domain):
+                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
                         inconsistencies.append((record, name, corecord))
 
         if inconsistencies:
