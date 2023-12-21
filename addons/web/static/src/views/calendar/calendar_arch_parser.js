@@ -87,7 +87,8 @@ export class CalendarArchParser {
                         canDelete = archParseBoolean(node.getAttribute("delete"), true);
                     }
                     if (node.hasAttribute("quick_create")) {
-                        quickCreate = archParseBoolean(node.getAttribute("quick_create"), true);
+                        // Don't use archParseBoolean from `utils.js` because it does not interpret integers
+                        quickCreate = !/^(false|0)$/i.test(node.getAttribute("quick_add"));
                         if (quickCreate && node.hasAttribute("quick_create_view_id")) {
                             quickCreateViewId = parseInt(
                                 node.getAttribute("quick_create_view_id"),

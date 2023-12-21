@@ -89,6 +89,7 @@ QUnit.test("hasEditDialog", (assert) => {
 });
 
 QUnit.test("quickCreate", (assert) => {
+<<<<<<< HEAD
     check(assert, "quick_create", "", "quickCreate", true);
     check(assert, "quick_create", "true", "quickCreate", true);
     check(assert, "quick_create", "True", "quickCreate", true);
@@ -115,6 +116,26 @@ QUnit.test("quickCreateViewId", (assert) => {
     arch = parseArch(`<calendar date_start="start_date" quick_create="1"/>`);
     assert.strictEqual(arch.quickCreate, true);
     assert.strictEqual(arch.quickCreateViewId, null);
+||||||| parent of e2ca0e9bfdd0 (temp)
+    check(assert, "quick_add", "", "quickCreate", true);
+    check(assert, "quick_add", "true", "quickCreate", true);
+    check(assert, "quick_add", "True", "quickCreate", true);
+    check(assert, "quick_add", "1", "quickCreate", true);
+    check(assert, "quick_add", "false", "quickCreate", false);
+    check(assert, "quick_add", "False", "quickCreate", false);
+    check(assert, "quick_add", "0", "quickCreate", false);
+    check(assert, "quick_add", "12", "quickCreate", 12);
+=======
+    check(assert, "quick_add", "", "quickCreate", true);
+    check(assert, "quick_add", "true", "quickCreate", true);
+    check(assert, "quick_add", "True", "quickCreate", true);
+    check(assert, "quick_add", "1", "quickCreate", true);
+    check(assert, "quick_add", "false", "quickCreate", false);
+    check(assert, "quick_add", "False", "quickCreate", false);
+    check(assert, "quick_add", "0", "quickCreate", false);
+    check(assert, "quick_add", "12", "quickCreate", 12);
+    check(assert, "quick_add", "390", "quickCreate", 390);
+>>>>>>> e2ca0e9bfdd0 (temp)
 });
 
 QUnit.test("isDateHidden", (assert) => {
