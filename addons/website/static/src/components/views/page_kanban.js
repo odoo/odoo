@@ -19,6 +19,7 @@ export class PageKanbanRenderer extends PageRendererMixin(kanbanView.Renderer) {
 PageKanbanRenderer.props = [
     ...kanbanView.Renderer.props,
     "activeWebsite",
+    "firstLoad",
 ];
 PageKanbanRenderer.template = 'website.PageKanbanRenderer';
 

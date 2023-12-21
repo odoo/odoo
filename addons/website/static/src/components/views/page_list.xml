@@ -15,6 +15,7 @@
 <t t-name="website.PageListView" t-inherit="web.ListView" owl="1">
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
+        <attribute name="firstLoad">state.firstLoad</attribute>
     </xpath>
     <xpath expr="//Layout" position="inside">
         <t t-set-slot="control-panel-website-extra-actions">
