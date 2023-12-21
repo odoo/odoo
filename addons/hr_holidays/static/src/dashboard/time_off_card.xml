@@ -26,10 +26,31 @@
             <t t-else="">
                 taken
             </t>
+<<<<<<< HEAD
             <span t-if="show_popover"
                 t-att-class="'o_timeoff_info fa' + (warning ? ' fa-exclamation-triangle' : ' fa-question-circle-o')"
             />
         </span>
+||||||| parent of c68745355137 (temp)
+            <t t-if="show_popover">
+                <TimeOffCardPopover
+                    allocated="data.max_leaves"
+                    approved="data.leaves_approved"
+                    planned="data.leaves_requested"
+                    left="data.virtual_remaining_leaves" />
+            </t>
+        </div>
+=======
+            <t t-if="show_popover">
+                <TimeOffCardPopover
+                    allocated="data.max_leaves"
+                    approved="data.leaves_approved"
+                    planned="data.leaves_requested"
+                    left="data.virtual_remaining_leaves"
+                    usable="data.usable_remaining_leaves" />
+            </t>
+        </div>
+>>>>>>> c68745355137 (temp)
         <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
             <t t-if="data.closest_allocation_remaining != data.virtual_remaining_leaves">
                 (<t t-esc="data.closest_allocation_remaining"/> <t t-if="data.request_unit == 'hour'">hours</t><t t-else="">days</t>
@@ -55,6 +76,7 @@
         </span>
     </t>
 
+<<<<<<< HEAD
     <t t-name="hr_holidays.TimeOffCardPopover">
         <ul class="list-unstyled p-3 mb-0">
             <li class="d-flex justify-content-between">
@@ -81,6 +103,36 @@
                 The leaves planned in the future are exceeding the maximum value of the allocation.
                 It will not be possible to take all of them.
             </span>
+||||||| parent of c68745355137 (temp)
+    <t t-name="hr_holidays.TimeOffCardPopover" owl="1">
+        <div class="o_timeoff_info">
+            <Popover position="'right'" popoverClass="'o_timeoff_popover'">
+                <span class="fa fa-question-circle-o"/>
+                <t t-set="opened">
+                    <ul>
+                        <li>Allocated: <span t-esc="props.allocated"/></li>
+                        <li>Approved: <span t-esc="props.approved"/></li>
+                        <li style="border-bottom: 1px solid gray;">Planned: <span t-esc="props.planned"/></li>
+                        <li>Left: <span t-esc="props.left"/></li>
+                    </ul>
+                </t>
+            </Popover>
+=======
+    <t t-name="hr_holidays.TimeOffCardPopover" owl="1">
+        <div class="o_timeoff_info">
+            <Popover position="'right'" popoverClass="'o_timeoff_popover'">
+                <span class="fa fa-question-circle-o"/>
+                <t t-set="opened">
+                    <ul>
+                        <li>Allocated: <span t-esc="props.allocated"/></li>
+                        <li>Approved: <span t-esc="props.approved"/></li>
+                        <li style="border-bottom: 1px solid gray;">Planned: <span t-esc="props.planned"/></li>
+                        <li>Left: <span t-esc="props.left"/></li>
+                        <li t-if="props.left != props.usable">Usable: <span t-esc="props.usable"/></li>
+                    </ul>
+                </t>
+            </Popover>
+>>>>>>> c68745355137 (temp)
         </div>
     </t>
 </templates>

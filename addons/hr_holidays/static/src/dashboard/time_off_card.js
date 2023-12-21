@@ -6,6 +6,7 @@ import { Component, onWillRender } from "@odoo/owl";
 
 export class TimeOffCardPopover extends Component {}
 
+<<<<<<< HEAD
 TimeOffCardPopover.template = "hr_holidays.TimeOffCardPopover";
 TimeOffCardPopover.props = [
     "allocated",
@@ -22,6 +23,13 @@ TimeOffCardPopover.props = [
     "max_allowed_negative",
     "onClickNewAllocationRequest?",
 ];
+||||||| parent of c68745355137 (temp)
+TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
+TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left'];
+=======
+TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
+TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left', 'usable'];
+>>>>>>> c68745355137 (temp)
 
 export class TimeOffCard extends Component {
     setup() {
