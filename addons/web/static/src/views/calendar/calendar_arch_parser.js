@@ -84,7 +84,8 @@ export class CalendarArchParser extends XMLParser {
                         canDelete = archParseBoolean(node.getAttribute("delete"), true);
                     }
                     if (node.hasAttribute("quick_add")) {
-                        hasQuickCreate = archParseBoolean(node.getAttribute("quick_add"), true);
+                        // Don't use archParseBoolean from `utils.js` because it does not interpret integers
+                        hasQuickCreate =  !/^(false|0)$/i.test(node.getAttribute("quick_add"));
                     }
                     if (node.hasAttribute("event_open_popup")) {
                         hasEditDialog = archParseBoolean(node.getAttribute("event_open_popup"));
