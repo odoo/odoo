@@ -7,8 +7,9 @@ import { parseMonetary } from "../parsers";
 import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
+import { nbsp } from "@web/core/utils/strings";
 
-import { Component } from "@odoo/owl";
+import { Component, useState, useEffect } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
 
 export class MonetaryField extends Component {
@@ -27,8 +28,15 @@ export class MonetaryField extends Component {
     };
 
     setup() {
-        useInputField(this.inputOptions);
+        this.inputRef = useInputField(this.inputOptions);
+        this.state = useState({ value: undefined });
+        this.nbsp = nbsp;
         useNumpadDecimal();
+        useEffect(() => {
+            if (this.inputRef?.el) {
+                this.state.value = this.inputRef.el.value;
+            }
+        });
     }
 
     get inputOptions() {
@@ -81,6 +89,10 @@ export class MonetaryField extends Component {
             currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
         });
+    }
+
+    onInput(ev) {
+        this.state.value = ev.target.value;
     }
 }
 
