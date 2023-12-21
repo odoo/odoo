@@ -96,11 +96,21 @@ class Contract(models.Model):
 
     @api.depends('company_id')
     def _compute_structure_type_id(self):
-        structure_type_id = self.env['hr.payroll.structure.type'].search([('country_id', '=', self.company_id.country_id.id)], limit=1)
-        if not structure_type_id:
-            structure_type_id = self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
+
+        default_structure_by_country = {}
+
+        def _default_salary_structure(country_id):
+            default_structure = default_structure_by_country.get(country_id)
+            if default_structure is None:
+                default_structure = default_structure_by_country[country_id] = (
+                    self.env['hr.payroll.structure.type'].search([('country_id', '=', country_id)], limit=1)
+                    or self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
+                )
+            return default_structure
+
         for contract in self:
-            contract.structure_type_id = structure_type_id
+            if not contract.structure_type_id or contract.structure_type_id.country_id != contract.company_id.country_id:
+                contract.structure_type_id = _default_salary_structure(contract.company_id.country_id.id)
 
     @api.onchange('structure_type_id')
     def _onchange_structure_type_id(self):
