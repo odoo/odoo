@@ -28,11 +28,13 @@
                 <button name="action_put_in_queue" type="object"
                     string="Send" class="oe_highlight" data-hotkey="v"
                     invisible="mailing_type == 'mail' or state in ('in_queue', 'sending', 'processing', 'done') or sms_force_send"
-                    confirm="This will send SMS to all recipients. Do you still want to proceed?"/>
+                    confirm="Once you send these text messages, they'll be making a grand entrance in all pockets, creating quite the bzzzzz!"
+                    confirm-title="Ready to unleash your text messages?" confirm-label="Send to all"/>
                 <button name="action_send_mail" type="object"
                     string="Send Now" class="oe_highlight" data-hotkey="g"
                     invisible="mailing_type == 'mail' or state in ('in_queue', 'processing', 'done') or schedule_type == 'scheduled' or not sms_force_send"
-                    confirm="This will send SMS to all recipients now. Do you still want to proceed?"/>
+                    confirm="Once you send these text messages, they'll be making a grand entrance in all pockets, creating quite the bzzzzz!"
+                    confirm-title="Ready to unleash your text messages?" confirm-label="Send to all"/>
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
