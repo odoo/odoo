@@ -594,6 +594,7 @@ class StockMove(models.Model):
                 move_to_unreserve = self.filtered(
                     lambda m: m.state not in ['draft', 'done', 'cancel'] and float_compare(m.reserved_availability, vals.get('product_uom_qty'), precision_rounding=m.product_uom.rounding) == 1
                 )
+                move_to_unreserve.move_line_ids.package_level_id.filtered(lambda p: not p.move_ids).unlink()
                 move_to_unreserve._do_unreserve()
                 (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
                 # When editing the initial demand, directly run again action assign on receipt moves.
