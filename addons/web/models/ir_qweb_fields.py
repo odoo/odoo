@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+import re
 from collections import OrderedDict
 from werkzeug.urls import url_quote
 from markupsafe import Markup
@@ -71,7 +72,21 @@ class Image(models.AbstractModel):
         aclasses += options.get('class', '').split()
         classes = ' '.join(map(escape, aclasses))
 
-        src, src_zoom = self._get_src_urls(record, field_name, options)
+        if options.get('default_preview_image') and not record[options.get('preview_image', field_name)]:
+            # Use the specified default_preview_image if the image field is False
+            src = options['default_preview_image']
+            src_zoom = options.get('zoom', None)
+            if options.get('resize') and re.match(r'^\d+x\d+$', options['resize']):
+                size = re.findall(r'\d+', options['resize'])
+                max_width, max_height = size[0], size[1]
+            else:
+                max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
+            if max_width or max_height:
+                mw_style = f'max-width:{max_width}px;' if max_width else ''
+                mh_style = f'max-height:{max_height}px;' if max_height else ''
+                options['style'] = options.get('style', '') + mw_style + mh_style
+        else:
+            src, src_zoom = self._get_src_urls(record, field_name, options)
 
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
             alt = escape(record[options['alt-field']])
