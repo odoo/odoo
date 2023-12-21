@@ -78,7 +78,6 @@ import {
     getDeepestPosition,
     leftPos,
     isNotAllowedContent,
-    childNodeIndex,
     EMAIL_REGEX,
     prepareUpdate,
     boundariesOut,
@@ -4574,6 +4573,7 @@ export class OdooEditor extends EventTarget {
             const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
 
             if (lastWordMatch) {
+                const nodeForSelectionRestore = selection.anchorNode.splitText(selection.anchorOffset);
                 const matches = getUrlsInfosInString(textSliced);
                 const match = matches[matches.length - 1];
                 const range = this.document.createRange();
@@ -4581,10 +4581,7 @@ export class OdooEditor extends EventTarget {
                 range.setEnd(selection.anchorNode, match.index + match.length);
                 const link = this._createLink(range.extractContents().textContent, match.url);
                 range.insertNode(link);
-                const container = link.parentElement;
-                const offset = childNodeIndex(link) + 1;
-                setSelection(container, offset, container, offset, false);
-                selection.collapseToEnd();
+                setCursorStart(nodeForSelectionRestore, false);
             }
         }
     }
