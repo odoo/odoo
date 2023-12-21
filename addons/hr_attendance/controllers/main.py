@@ -9,7 +9,7 @@ import datetime
 class HrAttendance(http.Controller):
     @staticmethod
     def _get_company(token):
-        company = request.env['res.company'].sudo().search([('attendance_kiosk_key', '=', token)])
+        company = request.env['res.company'].sudo().search([('attendance_kiosk_key', '=', token)], limit=1)
         return company
 
     @staticmethod
