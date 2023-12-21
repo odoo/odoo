@@ -100,7 +100,7 @@
                                     </t>
                                 </td>
                                 <td t-if="groupby != 'stage_id'" class="text-end lh-1">
-                                    <span t-attf-class="badge rounded-pill #{'text-bg-success' if task.stage_id.fold else 'text-bg-primary'} fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
+                                    <span class="fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>
