@@ -95,6 +95,7 @@ QUnit.test("hasQuickCreate", (assert) => {
     check(assert, "quick_add", "false", "hasQuickCreate", false);
     check(assert, "quick_add", "False", "hasQuickCreate", false);
     check(assert, "quick_add", "0", "hasQuickCreate", false);
+    check(assert, "quick_add", "390", "hasQuickCreate", true);
 });
 
 QUnit.test("isDateHidden", (assert) => {
