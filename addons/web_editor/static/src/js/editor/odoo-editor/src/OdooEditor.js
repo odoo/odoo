@@ -323,9 +323,7 @@ export class OdooEditor extends EventTarget {
         // Alter the editable
         // -------------------
 
-        if (editable.innerHTML.trim() === '') {
-            editable.innerHTML = '<p><br></p>';
-        }
+        this.editable = editable;
         this.initElementForEdition(editable);
 
         // Convention: root node is ID root.
@@ -335,7 +333,6 @@ export class OdooEditor extends EventTarget {
             sanitize(editable);
             this.options.onPostSanitize(editable);
         }
-        this.editable = editable;
         this.editable.classList.add("odoo-editor-editable");
         this.editable.setAttribute('dir', this.options.direction);
 
@@ -4225,6 +4222,12 @@ export class OdooEditor extends EventTarget {
      * Initialize the provided element to be ready for edition.
      */
     initElementForEdition(element = this.editable) {
+        if (element === this.editable) {
+            element.querySelectorAll('.o_editable').forEach(this.initElementForEdition.bind(this));
+        }
+        if (isBlock(element) && element.innerHTML.trim() === '' && !paragraphRelatedElements.includes(element.nodeName)) {
+            element.innerHTML = '<p><br></p>';
+        }
         // Detect if the editable base element contain orphan inline nodes. If
         // so we transform the base element HTML to put those orphans inside
         // `<p>` containers.
