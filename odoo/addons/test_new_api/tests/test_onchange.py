@@ -1236,3 +1236,19 @@ class TestComputeOnchange2(common.TransactionCase):
         )
         with Form(record) as form:
             form.precision_rounding = 0.0001
+
+    def test_new_one2many_on_existing_record(self):
+        discussion = self.env['test_new_api.discussion'].create({
+            'messages': [Command.create({'body': 'Required Body', 'important': True})],
+            'name': 'Required field',
+            'participants': [Command.set(self.env.user.ids)],
+        })
+
+        with Form(discussion, 'test_new_api.discussion_form_2') as discussion_form:
+            self.assertEqual(len(discussion_form.messages), 1)
+            with discussion_form.messages.new() as message_form:
+                # this actually checks that during the onchange, the new message
+                # has access to its sibling messages through the discussion
+                self.assertEqual(message_form.has_important_sibling, True)
+                message_form.body = 'Required Body'
+            self.assertEqual(len(discussion_form.messages), 2)
