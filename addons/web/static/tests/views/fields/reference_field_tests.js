@@ -259,6 +259,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("ReferenceField respects no_quick_create", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="reference" options="{'no_quick_create': 1}" /></form>`,
+        });
+
+        await editSelect(target, "select", "partner");
+        await click(target, ".o_field_widget[name='reference'] input");
+        await editInput(target, ".o_field_widget[name='reference'] input", "new partner");
+        assert.containsOnce(
+            target,
+            ".ui-autocomplete .o_m2o_dropdown_option",
+            "Dropdown should be opened and have only one item"
+        );
+        assert.hasClass(
+            target.querySelector(".ui-autocomplete .o_m2o_dropdown_option"),
+            "o_m2o_dropdown_option_create_edit"
+        );
+    });
+
     QUnit.test("ReferenceField in modal readonly mode", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].trululu = 1;
