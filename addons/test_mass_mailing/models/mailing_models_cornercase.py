@@ -9,6 +9,7 @@ class MailingTestPartnerUnstored(models.Model):
     _description = 'Mailing Model without stored partner_id'
     _name = 'mailing.test.partner.unstored'
     _inherit = ['mail.thread.blacklist']
+    _business = True
     _primary_email = 'email_from'
 
     name = fields.Char()

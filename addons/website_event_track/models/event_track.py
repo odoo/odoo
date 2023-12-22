@@ -17,6 +17,7 @@ class Track(models.Model):
     _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
+    _business = True
 
     @api.model
     def _get_default_stage_id(self):

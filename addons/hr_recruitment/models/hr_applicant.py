@@ -29,6 +29,7 @@ class Applicant(models.Model):
                'mail.thread.phone',
                'mail.activity.mixin',
                'utm.mixin']
+    _business = True
     _mailing_enabled = True
     _primary_email = 'email_from'
 

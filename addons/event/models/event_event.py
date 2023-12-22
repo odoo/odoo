@@ -27,6 +27,7 @@ class EventType(models.Model):
     _name = 'event.type'
     _description = 'Event Template'
     _order = 'sequence, id'
+    _business = True
 
     def _default_event_mail_type_ids(self):
         return [(0, 0,

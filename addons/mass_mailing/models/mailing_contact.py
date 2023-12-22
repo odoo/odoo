@@ -15,6 +15,7 @@ class MassMailingContact(models.Model):
     _inherit = ['mail.thread.blacklist']
     _description = 'Mailing Contact'
     _order = 'name ASC, id DESC'
+    _business = True
     _mailing_enabled = True
 
     def default_get(self, fields_list):

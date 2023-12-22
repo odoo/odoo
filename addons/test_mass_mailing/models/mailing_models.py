@@ -10,6 +10,7 @@ class MailingCustomer(models.Model):
     _description = 'Mailing with partner'
     _name = 'mailing.test.customer'
     _inherit = ['mail.thread']
+    _business = True
 
     name = fields.Char()
     email_from = fields.Char(compute='_compute_email_from', readonly=False, store=True)
@@ -40,6 +41,7 @@ class MailingSimple(models.Model):
     _description = 'Simple Mailing'
     _name = 'mailing.test.simple'
     _inherit = ['mail.thread']
+    _business = True
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -51,6 +53,7 @@ class MailingUTM(models.Model):
     is caught and set on reply """
     _description = 'Mailing: UTM enabled to test UTM sync with mailing'
     _name = 'mailing.test.utm'
+    _business = True
     _inherit = ['mail.thread', 'utm.mixin']
 
     name = fields.Char()
@@ -62,6 +65,7 @@ class MailingBLacklist(models.Model):
     _name = 'mailing.test.blacklist'
     _inherit = ['mail.thread.blacklist']
     _order = 'name ASC, id DESC'
+    _business = True
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -89,6 +93,7 @@ class MailingOptOut(models.Model):
     _description = 'Mailing Blacklist / Optout Enabled'
     _name = 'mailing.test.optout'
     _inherit = ['mail.thread.blacklist']
+    _business = True
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -123,6 +128,7 @@ class MailingTestPartner(models.Model):
     _description = 'Mailing Model with partner_id'
     _name = 'mailing.test.partner'
     _inherit = ['mail.thread.blacklist']
+    _business = True
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -135,6 +141,7 @@ class MailingPerformance(models.Model):
     mailing performances. """
     _name = 'mailing.performance'
     _description = 'Mailing: base performance'
+    _business = True
     _inherit = ['mail.thread']
 
     name = fields.Char()
@@ -146,6 +153,7 @@ class MailingPerformanceBL(models.Model):
     _name = 'mailing.performance.blacklist'
     _description = 'Mailing: blacklist performance'
     _inherit = ['mail.thread.blacklist']
+    _business = True
     _primary_email = 'email_from'  # blacklist field to check
 
     name = fields.Char()
