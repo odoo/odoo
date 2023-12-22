@@ -11560,6 +11560,62 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "reorder one2many with many2many_tags in list and list in form",
+        async function (assert) {
+            assert.expect(3);
+
+            serverData.models.partner.records[0].p = [2, 4];
+            serverData.models.partner.records[0].p = [1, 4];
+
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="int_field" widget="handle"/>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="p" widget="many2many_tags"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            assert.containsOnce(target, ".modal");
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal [name='display_name']")].map(
+                    (el) => el.textContent
+                ),
+
+                ["aaa", "first record"]
+            );
+
+            await dragAndDrop(".modal tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal [name='display_name']")].map(
+                    (el) => el.textContent
+                ),
+
+                ["first record", "aaa"]
+            );
+        }
+    );
+
     QUnit.test("nested one2many, onchange, no command value", async function (assert) {
         // This test ensures that we always send all values to onchange rpcs for nested
         // one2manys, even if some field hasn't changed. In this particular test case,
