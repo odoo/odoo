@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
-import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";

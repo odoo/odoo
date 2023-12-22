@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
-import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
+import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText, scroll } from "@web/../tests/utils";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
