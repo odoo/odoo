@@ -1,0 +1,32 @@
+<odoo>
+
+<record id="hospital_class_form_view" model="ir.ui.view">
+<field name="name">hospital.patient.form</field>
+<field name="model">hospital.patient</field>
+<field name="arch" type="xml">
+<form string="Patient">
+<sheet>
+<group>
+<group>
+<field name="name">
+<field name="patient_id">
+<field name="division">
+</group>
+</group>
+</sheet>
+</field>
+</record>
+
+<record id="action_patient" model="ir.action.act_window">
+<field name="name">patient</field>
+<field name="res_model">hospital.patient</field>
+<field name="view_mode">kanban,tree,form</field>
+<field name="help" type="html">
+<p class="o_view_nocontent_smiling_face">Create Hospital details</p>
+</field>
+</record>
+
+<menuitem id="hospital_menu" name="Hospital"/>
+<menuitem id="hospital_exams_menu" parent="hospital_menu" name="Hospital" action="action_hospital" sequence="6"/>
+
+</odoo>
