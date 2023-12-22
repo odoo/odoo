@@ -689,13 +689,13 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
-    def profile(self, description='', **kwargs):
+    def profile(self, description='', db=..., **kwargs):
         test_method = getattr(self, '_testMethodName', 'Unknown test method')
         if not hasattr(self, 'profile_session'):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            db=self.env.cr.dbname,
+            db=self.env.cr.dbname if db is ... else db,
             profile_session=self.profile_session,
             **kwargs)
 
