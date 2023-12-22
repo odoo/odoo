@@ -9,3 +9,4 @@ class ResCompany(models.Model):
 
     l10n_de_stnr = fields.Char(string="St.-Nr.", help="Steuernummer. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 https://de.wikipedia.org/wiki/Steuernummer")
     l10n_de_widnr = fields.Char(string="W-IdNr.", help="Wirtschafts-Identifikationsnummer.")
+    l10n_de_ceo_id = fields.Many2one("res.users", string="CEO", help="Geschäftsführer")

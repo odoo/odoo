@@ -149,6 +149,7 @@
                                             <span t-else="" t-field="company.vat"/>
                                         </li>
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
+                                        <li t-if="company.l10n_de_ceo_id">CEO: <span t-field="company.l10n_de_ceo_id"/></li>
                                     </ul>
                                 </td>
                                 <td>
