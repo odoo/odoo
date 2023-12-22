@@ -53,6 +53,19 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.l10n_it_edi_transaction):
             move.show_reset_to_draft_button = False
 
+    def _extend_with_attachments(self, attachments, new=False):
+        result = False
+        # Prediction is an enterprise feature.
+        if self.env['account.edi.format']._is_prediction_enabled():
+            # Italy needs a custom order in prediction, since prediction generally deduces taxes
+            # from products, while in Italian EDI, taxes are generally explicited in the XML file
+            # while the product may not be labelled exactly the same as in the database
+            l10n_it_attachments = attachments.filtered(lambda rec: self.env['account.edi.format']._check_filename_is_fattura_pa(rec.name))
+            if l10n_it_attachments:
+                attachments = attachments - l10n_it_attachments
+                result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
+        return result or super()._extend_with_attachments(attachments, new)
+
     def invoice_generate_xml(self):
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)

@@ -673,12 +673,16 @@ class AccountEdiFormat(models.Model):
         for message in message_to_log:
             invoice.message_post(body=message)
 
+    @api.model
+    def _is_prediction_enabled(self):
+        return self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+
     def _import_fattura_pa_line(self, element, invoice_line_form, extra_info=None):
         extra_info = extra_info or {}
         company = invoice_line_form.company_id
         partner = invoice_line_form.partner_id
         message_to_log = []
-        predict_enabled = self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+        predict_enabled = self._is_prediction_enabled()
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
