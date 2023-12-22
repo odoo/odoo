@@ -14,15 +14,9 @@ List of contributors:
 
 Dominik Kertys dominik.kertys@26house.com https://github.com/dominikkertys
 
-Peter Dovičovič peter.dovicovic@26house.com https://github.com/peterdovicovic
-
-Patrik Fejda patrik.fejda@gmail.com https://github.com/patrikfejda
-
 Andrej Nagy andrej.nagy@vdp.sk https://github.com/AndrejNagy
 
-Tomáš Mačaj tomas.macaj@26house.com https://github.com/tom-m-26h 
-
-Martin Širáň matosiro4@gmail.com https://github.com/MartinSiran
+Tomáš Mačaj tomas.macaj@26house.com https://github.com/tom-m-26h
 
 Shared account github@26house.com https://github.com/26houseRobot
 
