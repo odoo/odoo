@@ -1414,3 +1414,20 @@ class PropertiesCase(TransactionCase):
         value = self.env.cr.fetchone()
         self.assertTrue(value and value[0])
         return value[0]
+
+    def test_properties_inherits(self):
+        email = self.env['test_new_api.emailmessage'].create({
+            'discussion': self.discussion_1.id,
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'type': 'char',
+                'string': 'Color Code',
+                'default': 'blue',
+                'value': 'red',
+            }],
+        })
+
+        values = email.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')
+        values = email.message.read(['attributes'])
+        self.assertEqual(values[0]['attributes'][0]['value'], 'red')
