@@ -47,6 +47,8 @@ class PrivacyLookupWizard(models.TransientModel):
         name = "%s" % (self.name.strip())
         email = "%%%s%%" % pycompat.to_text(self.email.strip())
         email_normalized = tools.email_normalize(self.email.strip())
+        if not email_normalized:
+            raise UserError("Invalid email %s" % self.email.strip())
 
         # Step 1: Retrieve users/partners liked to email address or name
         query = """
