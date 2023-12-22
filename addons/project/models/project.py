@@ -2263,7 +2263,7 @@ class Task(models.Model):
                 assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
                 assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
                 task.message_notify(
-                    subject=_('You have been assigned to %s', task.display_name),
+                    subject=self._prepare_task_description(task),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     record_name=task.display_name,
@@ -2271,6 +2271,9 @@ class Task(models.Model):
                     model_description=task_model_description,
                     mail_auto_delete=False,
                 )
+
+    def _prepare_task_description(self, task):
+        return _('You have been assigned to %s', task.display_name)
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         if 'user_ids' not in updated_values:
