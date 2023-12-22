@@ -1450,7 +1450,6 @@ class Integer(Field):
         return value
 
     def _update(self, records, value):
-        # special case, when an integer field is used as inverse for a one2many
         cache = records.env.cache
         for record in records:
             cache.set(record, self, value.id or 0)
@@ -4154,9 +4153,8 @@ class _RelationalMulti(_Relational):
         if value:
             cache = records.env.cache
             for record in records:
-                if cache.contains(record, self):
-                    val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                    cache.set(record, self, val)
+                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
+                cache.set(record, self, val)
             records.modified([self.name])
 
     def convert_to_cache(self, value, record, validate=True):
