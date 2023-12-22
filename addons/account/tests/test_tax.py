@@ -1178,3 +1178,32 @@ class TestTax(TestTaxCommon):
             [x[0] for x in self.env["account.tax"].name_search("Ten \"tix\"")],
             ten_fixed_tax_tix.ids,
         )
+
+    def test_division_taxes_for_l10n_br(self):
+        """ Test a special case for l10n_br_avatax where 5 division price-included taxes are applied on the same base amount. """
+        taxes = self.env['account.tax'].create([
+            {
+                'name': f"division_{amount}",
+                'amount_type': 'division',
+                'amount': amount,
+                'price_include': True,
+                'include_base_amount': False,
+            }
+            for amount in (5, 3, 0.65, 9, 15)
+        ])
+
+        self._check_compute_all_results(
+            48.0,   # 'total_included'
+            32.33,  # 'total_excluded'
+            [
+                # base, amount
+                # ---------------
+                (48.0, 2.4),
+                (48.0, 1.44),
+                (48.0, 0.31),
+                (48.0, 4.32),
+                (48.0, 7.2),
+                # ---------------
+            ],
+            taxes.compute_all(48.0),
+        )

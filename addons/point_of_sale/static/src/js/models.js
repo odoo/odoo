@@ -1213,6 +1213,9 @@ class PosGlobalState extends PosModel {
             sign = -1;
         }
 
+        const divisionTaxes = taxes.filter(x => x.amount_type === "division");
+        const specialBrDivisionNeeded = divisionTaxes.every(x => x.price_include && !x.include_base_amount);
+
         var total_included_checkpoints = {};
         var i = taxes.length - 1;
         var store_included_tax_total = true;
@@ -1222,6 +1225,7 @@ class PosGlobalState extends PosModel {
         var incl_division_amount = 0.0;
 
         var cached_tax_amounts = {};
+        var cached_tax_base_amounts = {};
         if (handle_price_include){
             _(taxes.reverse()).each(function(tax){
                 if(tax.include_base_amount){
@@ -1236,6 +1240,11 @@ class PosGlobalState extends PosModel {
                         incl_percent_amount += tax.amount;
                     else if(tax.amount_type === 'division')
                         incl_division_amount += tax.amount;
+                        if(specialBrDivisionNeeded){
+                            tax_amount = (base - (base * (1 - (tax.amount / 100))));
+                            cached_tax_amounts[i] = tax_amount;
+                            cached_tax_base_amounts[i] = base;
+                        }
                     else if(tax.amount_type === 'fixed')
                         incl_fixed_amount += Math.abs(quantity) * tax.amount
                     else{
@@ -1265,7 +1274,10 @@ class PosGlobalState extends PosModel {
         i = 0;
         var cumulated_tax_included_amount = 0;
         _(taxes.reverse()).each(function(tax){
-            if(tax.price_include || tax.is_base_affected)
+
+            if(cached_tax_base_amounts[i] !== undefined){
+                var tax_base_amount = cached_tax_base_amounts[i];
+            }else if(tax.price_include || tax.is_base_affected)
                 var tax_base_amount = base;
             else
                 var tax_base_amount = total_excluded;
@@ -1273,6 +1285,8 @@ class PosGlobalState extends PosModel {
             if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
+            }else if(cached_tax_amounts[i] !== undefined){
+                var tax_amount = cached_tax_amounts[i];
             }else
                 var tax_amount = self._compute_all(tax, tax_base_amount, quantity, true);
 

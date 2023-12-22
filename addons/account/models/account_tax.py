@@ -571,6 +571,10 @@ class AccountTax(models.Model):
             sign = -1
             base = -base
 
+        # Check the config.
+        division_taxes = taxes.filtered(lambda tax: tax.amount_type == 'division')
+        special_br_division_needed = all(tax.price_include and not tax.include_base_amount for tax in division_taxes)
+
         # Store the totals to reach when using price_include taxes (only the last price included in row)
         total_included_checkpoints = {}
         i = len(taxes) - 1
@@ -579,6 +583,7 @@ class AccountTax(models.Model):
         incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
         # Store the tax amounts we compute while searching for the total_excluded
         cached_tax_amounts = {}
+        cached_tax_base_amounts = {}
         if handle_price_include:
             for tax in reversed(taxes):
                 tax_repartition_lines = (
@@ -597,6 +602,10 @@ class AccountTax(models.Model):
                         incl_percent_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'division':
                         incl_division_amount += tax.amount * sum_repartition_factor
+                        if special_br_division_needed:
+                            tax_amount = (base - (base * (1 - (tax.amount / 100)))) * sum_repartition_factor
+                            cached_tax_amounts[i] = tax_amount
+                            cached_tax_base_amounts[i] = base
                     elif tax.amount_type == 'fixed':
                         incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
                     else:
@@ -638,7 +647,9 @@ class AccountTax(models.Model):
         for tax in taxes:
             price_include = self._context.get('force_price_include', tax.price_include)
 
-            if price_include or tax.is_base_affected:
+            if i in cached_tax_base_amounts:
+                tax_base_amount = cached_tax_base_amounts[i]
+            elif price_include or tax.is_base_affected:
                 tax_base_amount = base
             else:
                 tax_base_amount = total_excluded
@@ -651,6 +662,8 @@ class AccountTax(models.Model):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
+            elif i in cached_tax_amounts:
+                tax_amount = cached_tax_amounts[i]
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
