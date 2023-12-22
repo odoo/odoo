@@ -259,7 +259,7 @@
             <div class="text-center mt-5 py-2">
                 <h2 class="mb-0" t-if="attendee" t-field="attendee.name"/>
                 <h2 class="mb-0" t-elif="not attendee"><span>John Doe</span> <span t-if="attendee_number" t-out="attendee_number + 1"/></h2>
-                <h4 t-if="attendee and attendee.company_id" class="o_event_badge_font_faded" t-field="attendee.company_id.name"/>
+                <h4 t-if="attendee and attendee.company_name" class="o_event_badge_font_faded" t-field="attendee.company_name"/>
                 <h4 t-elif="not attendee"><span class="o_event_badge_font_faded">My Placeholder Company</span></h4>
             </div>
             <div class="position-absolute bottom-0 w-100 text-center">
