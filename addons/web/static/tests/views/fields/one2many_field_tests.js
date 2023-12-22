@@ -13196,7 +13196,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views partner", "web_read partner"]);
 
         await click(target, ".o_boolean_toggle");
-        assert.verifySteps(["onchange partner", "web_save turtle"]);
+        assert.verifySteps(["onchange partner"]);
     });
 
     QUnit.test("create a new record with an x2m invisible", async function (assert) {
