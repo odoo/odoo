@@ -111,6 +111,32 @@ class TestCreateEvents(TestCommon):
         self.assertEqual(len(new_records), 1)
         self.assert_odoo_event(new_records, expected_event)
 
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_create_simple_event_from_outlook_attendee_calendar_where_email_addresses_are_capitalized(self, mock_get_events):
+        """
+        An event has been created in Outlook and synced in the Odoo attendee calendar.
+        The email addresses of the attendee and the organizer are in different case than in Odoo.
+        """
+
+        # arrange
+        outlook_event = dict(self.simple_event_from_outlook_attendee, organizer={
+            'emailAddress': {'address': "Mike@organizer.com", 'name': "Mike Organizer"},
+        }, attendees=[{'type': 'required', 'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'},
+                       'emailAddress': {'name': 'John Attendee', 'address': 'John@attendee.com'}}])
+
+        mock_get_events.return_value = (MicrosoftEvent([outlook_event]), None)
+        existing_records = self.env["calendar.event"].search([])
+
+        # act
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        records = self.env["calendar.event"].search([])
+        new_records = (records - existing_records)
+        self.assertEqual(len(new_records), 1)
+        self.assert_odoo_event(new_records, self.expected_odoo_event_from_outlook)
+        self.assertEqual(new_records.user_id, self.organizer_user)
+
     @patch.object(MicrosoftCalendarService, 'insert')
     def test_create_recurrent_event_without_sync(self, mock_insert):
         """
