@@ -386,7 +386,7 @@ class AccountTax(models.Model):
                 name += ' (%s)' % type_tax_use.get(record.type_tax_use)
             if record.tax_scope:
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
-            if record.country_id != record.company_id.account_fiscal_country_id:
+            if record.country_id != record.company_id._accessible_branches()[:1].account_fiscal_country_id:
                 name += ' (%s)' % record.country_code
             record.display_name = name
 
