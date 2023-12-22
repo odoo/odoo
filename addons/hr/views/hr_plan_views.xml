@@ -44,7 +44,7 @@
                                     <field name="activity_type_id"/>
                                     <field name="summary"/>
                                     <field name="responsible"/>
-                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
+                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}" domain="[('share', '=', False)]"/>
                                 </tree>
                             </field>
                         </group>
