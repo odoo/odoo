@@ -46,3 +46,14 @@ class TestTodoUi(HttpCase):
         # name and that clicking on this category opens the correct view where only
         # records of this category are listed.
         self.start_tour("/web", 'project_task_activities_split', login="admin")
+
+    def test_tour_todo_main_ui_functions(self):
+        """ This test ensure that the main ui functionalities are working including:
+        - Create a personal stage from the kanban view
+        - Moving a personal stage in the kanban view
+        - Create a personal task from the kanban view
+        - Opening the form view of a task from the kanban view
+        - Mark a task as done from the todo form view
+        - Convert a todo to a task
+        """
+        self.start_tour("/web", 'project_todo_main_functions', login='admin')
