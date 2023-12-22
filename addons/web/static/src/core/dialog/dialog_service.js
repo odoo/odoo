@@ -71,7 +71,13 @@ export const dialogService = {
             return close;
         }
 
-        return { add };
+        function closeAll() {
+            for (const id in dialogs) {
+                dialogs[id].dialogData.close();
+            }
+        }
+
+        return { add, closeAll };
     },
 };
 
