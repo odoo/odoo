@@ -149,11 +149,18 @@ class Message(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
     active = fields.Boolean(default=True)
+    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
 
     attributes = fields.Properties(
         string='Properties',
         definition='discussion.attributes_definition',
     )
+
+    @api.depends('discussion.messages.important')
+    def _compute_has_important_sibling(self):
+        for record in self:
+            siblings = record.discussion.messages - record
+            record.has_important_sibling = any(siblings.mapped('important'))
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
