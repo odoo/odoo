@@ -34,6 +34,7 @@ class SaleOrder(models.Model):
     _order = 'date_order desc, id desc'
     _business = True
     _check_company_auto = True
+    _mailing_enabled = True
 
     _sql_constraints = [
         ('date_order_conditional_required',
