@@ -9,7 +9,7 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _, _lt
 from odoo.http import request
-from odoo.tools import plaintext2html
+from odoo.tools import html_escape, plaintext2html
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
@@ -175,7 +175,10 @@ class WebsiteForm(http.Controller):
             # If it's a known field
             elif field_name in authorized_fields:
                 try:
-                    input_filter = self._input_filters[authorized_fields[field_name]['type']]
+                    field_type = authorized_fields[field_name]['type']
+                    if field_type == 'html':
+                        field_value = html_escape(field_value)
+                    input_filter = self._input_filters[field_type]
                     data['record'][field_name] = input_filter(self, field_name, field_value)
                 except ValueError:
                     error_fields.append(field_name)
@@ -191,6 +194,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name not in ('context', 'website_form_signature'):
+                field_value = html_escape(field_value)
                 custom_fields.append((field_name, field_value))
 
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
