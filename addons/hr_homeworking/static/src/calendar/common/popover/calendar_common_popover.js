@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 import { Field } from "@web/views/fields/field"
@@ -33,10 +34,10 @@ patch(AttendeeCalendarCommonPopover.prototype, {
         return this.props.record['resModel'] === 'hr.employee.location';
     },
     get hasFooter() {
-        return !this.isWorkLocationEvent() || this.props.record.userId === this.user.userId
+        return !this.isWorkLocationEvent() || this.props.record.userId === user.userId
     },
     isCurrentUserIsOwnerWorklocation(){
-        return this.isWorkLocationEvent() && this.props.record.userId === this.slot.record.model.user.userId;
+        return this.isWorkLocationEvent() && this.props.record.userId === user.userId;
     },
     get isEventEditable() {
         return ('resModel' in this.props.record) || super.isEventEditable;

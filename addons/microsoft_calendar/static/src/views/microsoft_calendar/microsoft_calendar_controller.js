@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller";
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -17,7 +18,7 @@ patch(AttendeeCalendarController.prototype, {
         await this.orm.call(
             "res.users",
             "restart_microsoft_synchronization",
-            [[this.user.userId]],
+            [[user.userId]],
         );
         const syncResult = await this.model.syncMicrosoftCalendar();
         if (syncResult.status === "need_auth") {
@@ -51,7 +52,7 @@ patch(AttendeeCalendarController.prototype, {
                 await this.orm.call(
                     "res.users",
                     "stop_microsoft_synchronization",
-                    [[this.user.userId]],
+                    [[user.userId]],
                 );
                 this.notification.add(
                     _t("The synchronization with Outlook calendar was successfully stopped."),
