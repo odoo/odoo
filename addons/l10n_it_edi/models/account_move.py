@@ -160,6 +160,19 @@ class AccountMove(models.Model):
         self.write({'l10n_it_edi_header': False})
         return super()._post(soft)
 
+    def _extend_with_attachments(self, attachments, new=False):
+        result = False
+        # Prediction is an enterprise feature.
+        if self._is_prediction_enabled():
+            # Italy needs a custom order in prediction, since prediction generally deduces taxes
+            # from products, while in Italian EDI, taxes are generally explicited in the XML file
+            # while the product may not be labelled exactly the same as in the database
+            l10n_it_attachments = attachments.filtered(lambda rec: rec._is_l10n_it_edi_import_file())
+            if l10n_it_attachments:
+                attachments = attachments - l10n_it_attachments
+                result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
+        return result or super()._extend_with_attachments(attachments, new)
+
     # -------------------------------------------------------------------------
     # Business actions
     # -------------------------------------------------------------------------
@@ -894,12 +907,16 @@ class AccountMove(models.Model):
             self.sudo().message_post(body=message)
         return self
 
+    @api.model
+    def _is_prediction_enabled(self):
+        return self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+
     def _l10n_it_edi_import_line(self, element, move_line, extra_info=None):
         extra_info = extra_info or {}
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
-        predict_enabled = self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+        predict_enabled = self._is_prediction_enabled()
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
