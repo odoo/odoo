@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 

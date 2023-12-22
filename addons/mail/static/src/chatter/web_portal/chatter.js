@@ -9,8 +9,8 @@ import { Activity } from "@mail/core/web/activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
-import { RecipientList } from "./recipient_list";
-import { FollowerList } from "./follower_list";
+import { RecipientList } from "@mail/core/web/recipient_list";
+import { FollowerList } from "@mail/core/web/follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 
 import {
