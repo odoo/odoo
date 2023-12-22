@@ -299,6 +299,7 @@ class EventMailRegistration(models.Model):
 
             email_values = {
                 'author_id': author.id,
+                'is_notification': True,
             }
             if not reg_mail.scheduler_id.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
