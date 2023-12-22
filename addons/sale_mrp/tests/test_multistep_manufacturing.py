@@ -94,6 +94,7 @@ class TestMultistepManufacturing(TestMrpCommon):
             ('origin', '=', self.sale_order.name),
             ('product_id', '=', self.product_manu.id),
         ])
+        self.sale_order.invalidate_recordset(['mrp_production_ids'])
         self.assertEqual(self.sale_order.action_view_mrp_production()['res_id'], mo.id)
         self.assertEqual(mo_procurement.location_src_id.id, self.warehouse.pbm_loc_id.id, "Source loction does not match.")
         self.assertEqual(mo_procurement.location_dest_id.id, self.warehouse.lot_stock_id.id, "Destination location does not match.")
@@ -151,6 +152,7 @@ class TestMultistepManufacturing(TestMrpCommon):
             ('origin', '=', self.sale_order.name),
             ('product_id', '=', self.product_manu.id),
         ])
+        self.sale_order.invalidate_recordset(['mrp_production_count'])
 
         self.assertEqual(self.sale_order.mrp_production_count, 1)
         self.assertEqual(mo.sale_order_count, 1)

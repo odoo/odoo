@@ -73,7 +73,7 @@ class StockRule(models.Model):
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
-             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
+             "If there is no stock available, the system will try to find a rule to bring the missing products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -274,12 +274,7 @@ class StockRule(models.Model):
         # Prepare the move values, adapt the `procure_method` if needed.
         procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].product_uom.rounding) > 0)
         for procurement, rule in procurements:
-            procure_method = rule.procure_method
-            if rule.procure_method == 'mts_else_mto':
-                procure_method = 'make_to_stock'
-
             move_values = rule._get_stock_move_values(*procurement)
-            move_values['procure_method'] = procure_method
             moves_values_by_company[procurement.company_id.id].append(move_values)
 
         for company_id, moves_values in moves_values_by_company.items():
@@ -322,9 +317,11 @@ class StockRule(models.Model):
         # a new move with the correct qty
         qty_left = product_qty
 
+        procure_method = self.procure_method if self.procure_method != 'mts_else_mto' else 'make_to_stock'
         move_dest_ids = []
-        if not self.location_dest_id.should_bypass_reservation():
-            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+        if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():
+            # make_to_stock moves MAY have dest moves but SHOULD NOT have orig moves, in other words, a make_to_stock move CAN NOT be a destination move
+            move_dest_ids = [(4, m.id) for m in values['move_dest_ids'] if m.procure_method != 'make_to_stock']
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
         if not partner and move_dest_ids:
@@ -350,7 +347,7 @@ class StockRule(models.Model):
             'location_final_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
-            'procure_method': self.procure_method,
+            'procure_method': procure_method,
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,

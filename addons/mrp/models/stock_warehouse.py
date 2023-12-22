@@ -17,7 +17,7 @@ class StockWarehouse(models.Model):
     manufacture_mto_pull_id = fields.Many2one(
         'stock.rule', 'Manufacture MTO Rule', copy=False)
     pbm_mto_pull_id = fields.Many2one(
-        'stock.rule', 'Picking Before Manufacturing MTO Rule', copy=False)
+        'stock.rule', 'Picking Before Manufacturing MTSO Rule', copy=False)
     sam_rule_id = fields.Many2one(
         'stock.rule', 'Stock After Manufacturing Rule', copy=False)
     manu_type_id = fields.Many2one(
@@ -144,7 +144,7 @@ class StockWarehouse(models.Model):
             'pbm_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',

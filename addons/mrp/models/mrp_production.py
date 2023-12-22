@@ -1229,6 +1229,12 @@ class MrpProduction(models.Model):
                 # procurement and assigning is now run in write
                 move.write({'product_uom_qty': new_qty})
                 update_info.append((move, old_qty, new_qty))
+                if move.created_production_id:
+                    mo = move.created_production_id
+                    self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
+                        'mo_id': mo.id,
+                        'product_qty': mo.product_id.uom_id._compute_quantity(mo.product_qty + new_qty - old_qty, mo.product_uom_id)
+                    }).change_prod_qty()
         return update_info
 
     @api.ondelete(at_uninstall=False)
@@ -2500,6 +2506,7 @@ class MrpProduction(models.Model):
     @api.model
     def _prepare_procurement_group_vals(self, values):
         return {'name': values['name']}
+        # TODO : extend to use MTSO (ahead of manufacture) if set on product....
 
     def _get_quantity_to_backorder(self):
         self.ensure_one()

@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.tools import float_compare
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
 
@@ -255,17 +255,18 @@ class StockRule(models.Model):
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
 
         res = {
-            'product_qty': line.product_qty + procurement_uom_po_qty,
+            'product_qty': max(line.product_qty + procurement_uom_po_qty, 0),
             'price_unit': price_unit,
-            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
+        if values.get('move_dest_ids'):
+            res['move_dest_ids'] = [Command.link(x.id) for x in values['move_dest_ids'].filtered(lambda m: m.procure_method != 'make_to_stock')]
         orderpoint_id = values.get('orderpoint_id')
         if orderpoint_id:
             res['orderpoint_id'] = orderpoint_id.id
         return res
 
     def _prepare_purchase_order(self, company_id, origins, values):
-        """ Create a purchase order for procuremets that share the same domain
+        """ Create a purchase order for procurements that share the same domain
         returned by _make_po_get_domain.
         params values: values of procurements
         params origins: procuremets origins to write on the PO
@@ -281,9 +282,7 @@ class StockRule(models.Model):
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
-        gpo = self.group_propagation_option
-        group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
+        group = self._prepare_purchase_order_group(values)
 
         return {
             'partner_id': partner.id,
@@ -296,13 +295,20 @@ class StockRule(models.Model):
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos.id,
-            'group_id': group
+            'group_id': group.id if group else False,
         }
 
-    def _make_po_get_domain(self, company_id, values, partner):
+    def _prepare_purchase_order_group(self, values):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
+                (gpo == 'propagate' and values.get('group_id') and values['group_id']) or False
+        return group
+
+    def _make_po_get_domain(self, company_id, values, partner):
+        if self.procure_method != 'mts_else_mto':
+            gpo = self.group_propagation_option
+            group = (gpo == 'fixed' and self.group_id) or \
+                    (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
 
         domain = (
             ('partner_id', '=', partner.id),

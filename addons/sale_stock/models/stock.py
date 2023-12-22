@@ -65,6 +65,11 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def _action_done(self, cancel_backorder=False):
+        super()._action_done(cancel_backorder)
+        mtso_moves_to_update = self.group_id.sale_ids.picking_ids.move_ids.filtered(lambda m: m.rule_id.procure_method == 'mts_else_mto')
+        mtso_moves_to_update._action_assign()
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
@@ -76,7 +81,7 @@ class StockMoveLine(models.Model):
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
+    sale_ids = fields.Many2many('sale.order', string='Sale Orders')
 
 
 class StockRule(models.Model):
@@ -91,7 +96,7 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, index='btree_not_null')
+    sale_id = fields.Many2one('sale.order', compute='_compute_sale_id', string="Sales Order", store=True, index='btree_not_null')
 
     def _auto_init(self):
         """
@@ -138,6 +143,16 @@ class StockPicking(models.Model):
         if sale_order_lines_vals:
             self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
         return res
+
+    @api.depends('group_id')
+    def _compute_sale_id(self):
+        so_per_pg = self.env['sale.order']._read_group([('procurement_group_id', 'in', self.group_id.ids)], groupby=['procurement_group_id'], aggregates=['id:recordset'])
+        so_per_pg = {pg.id: so[0] for pg, so in so_per_pg}
+        for picking in self:
+            group_id = picking.group_id
+            if not group_id:
+                continue
+            picking.sale_id = so_per_pg.get(group_id.id, self.env['sale.order'])
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The

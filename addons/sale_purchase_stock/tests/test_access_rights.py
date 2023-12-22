@@ -73,4 +73,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'order_line': [(1, so_line.id, {'product_uom_qty': 0.9})]
         })
 
-        self.assertIn(so.name, po.activity_ids.note)
+        self.assertAlmostEqual(so_line.product_uom_qty, po.order_line[0].product_uom_qty)
+
+        # self.assertIn(so.name, po.activity_ids.note) #FIXME : en mtso, decrease est propagé plutot que notifié
+        # Extend test to Received PO (not only confirmed)

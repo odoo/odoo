@@ -1437,12 +1437,17 @@ Please change the quantity done or the rounding precision of your unit of measur
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
                 to_assign[key].add(move.id)
 
-        move_create_proc, move_to_confirm, move_waiting = self.browse(move_create_proc), self.browse(move_to_confirm), self.browse(move_waiting)
+        move_create_proc, move_waiting = self.browse(move_create_proc), self.browse(move_waiting)
 
         # create procurements for make to order moves
         procurement_requests = []
         procurement_quantities = move_create_proc._prepare_procurement_qty()
         for move, quantity in zip(move_create_proc, procurement_quantities):
+            if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
+                move_to_confirm.add(move.id)
+                continue
+            elif float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) > 0 and float_compare(quantity, move.product_qty, precision_rounding=move.product_uom.rounding) < 0:
+                move._action_assign(force_qty=move.product_qty - quantity)  # Can't batch on whole procurements' moves as we need the force_qty arg
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
@@ -1451,6 +1456,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 origin, move.company_id, values))
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
+        move_to_confirm = self.browse(move_to_confirm)
+        move_create_proc -= move_to_confirm
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
         # procure_method sometimes changes with certain workflows so just in case, apply to all moves
@@ -1515,32 +1522,36 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _prepare_procurement_qty(self):
         quantities = []
-        mtso_products_by_locations = defaultdict(list)
+        mtso_products_by_locations = defaultdict(set)
         mtso_moves = self.env['stock.move']
         for move in self:
             if move.rule_id and move.rule_id.procure_method == 'mts_else_mto':
                 mtso_moves |= move
-                mtso_products_by_locations[move.location_id].append(move.product_id.id)
+                mtso_products_by_locations[move.location_id].add(move.product_id.id)
 
         # Get the forecasted quantity for the `mts_else_mto` procurement.
         forecasted_qties_by_loc = {}
         for location, product_ids in mtso_products_by_locations.items():
             products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
+            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}  # virtual_available
 
         for move in self:
-            if move not in mtso_moves or float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0:
+            if move not in mtso_moves or (float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0):  # and float_compare(move.product_id.free_qty, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0):
                 quantities.append(move.product_uom_qty)
                 continue
             free_qty = forecasted_qties_by_loc[move.location_id][move.product_id.id]
-            quantity = max(move.product_qty - free_qty, 0)
+            if float_compare(free_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                quantity = 0
+                forecasted_qties_by_loc[move.location_id][move.product_id.id] -= move.product_qty
+            else:
+                quantity = move.product_qty - free_qty
+                forecasted_qties_by_loc[move.location_id][move.product_id.id] = 0
             product_uom_qty = move.product_uom._compute_quantity(quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             quantities.append(product_uom_qty)
-            forecasted_qties_by_loc[move.location_id][move.product_id.id] -= quantity
         return quantities
 
     def _prepare_procurement_values(self):
-        """ Prepare specific key for moves or other componenets that will be created from a stock rule
+        """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a stock move. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
@@ -1551,7 +1562,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 group_id = self.rule_id.group_id
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
-
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}
         if self.location_id.warehouse_id and self.location_id.warehouse_id.lot_stock_id.parent_path in self.location_id.parent_path:
@@ -2149,15 +2159,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
         """
-        # Prepare the MTSO variables. They are needed since MTSO moves are handled separately.
-        # We need 2 dicts:
-        # - needed quantity per location per product
-        # - forecasted quantity per location per product
-        mtso_products_by_locations = defaultdict(list)
-        mtso_needed_qties_by_loc = defaultdict(dict)
-        mtso_free_qties_by_loc = {}
-        mtso_moves = self.env['stock.move']
-
         for move in self:
             product_id = move.product_id
             domain = [
@@ -2170,31 +2171,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if rules.procure_method in ['make_to_order', 'make_to_stock']:
                     move.procure_method = rules.procure_method
                 else:
-                    # Get the needed quantity for the `mts_else_mto` moves.
-                    mtso_needed_qties_by_loc[rules.location_src_id].setdefault(product_id.id, 0)
-                    mtso_needed_qties_by_loc[rules.location_src_id][product_id.id] += move.product_qty
-
-                    # This allow us to get the forecasted quantity in batch later on
-                    mtso_products_by_locations[rules.location_src_id].append(product_id.id)
-                    mtso_moves |= move
+                    move.rule_id = rules
             else:
                 move.procure_method = 'make_to_stock'
-
-        # Get the forecasted quantity for the `mts_else_mto` moves.
-        for location, product_ids in mtso_products_by_locations.items():
-            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            mtso_free_qties_by_loc[location] = {product.id: product.free_qty for product in products}
-
-        # Now that we have the needed and forecasted quantity per location and per product, we can
-        # choose whether the mtso_moves need to be MTO or MTS.
-        for move in mtso_moves:
-            needed_qty = move.product_qty
-            forecasted_qty = mtso_free_qties_by_loc[move.location_id][move.product_id.id]
-            if float_compare(needed_qty, forecasted_qty, precision_rounding=move.product_uom.rounding) <= 0:
-                move.procure_method = 'make_to_stock'
-                mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
-            else:
-                move.procure_method = 'make_to_order'
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """

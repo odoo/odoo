@@ -111,7 +111,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(len(move_raw_ids), 1)
         self.assertEqual(move_raw_ids.product_id, self.raw_product)
         self.assertEqual(move_raw_ids.picking_type_id, self.warehouse.manu_type_id)
-        pbm_move = move_raw_ids.move_orig_ids
+        pbm_move = move_raw_ids.move_orig_ids  # FIXME : MTSO
         self.assertEqual(len(pbm_move), 1)
         self.assertEqual(pbm_move.location_id, self.warehouse.lot_stock_id)
         self.assertEqual(pbm_move.location_dest_id, self.warehouse.pbm_loc_id)

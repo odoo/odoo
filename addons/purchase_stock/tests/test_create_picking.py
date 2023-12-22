@@ -602,7 +602,13 @@ class TestCreatePicking(common.TestProductCommon):
 
         # Create procurement to increase quantity on the initial move that will create a new move and a new RFQ for missing demand.
         create_run_procurement(product, 5.00)
-        self.assertEqual(customer_move.product_uom_qty, 35, 'The demand on the initial move should not have been increased since it should be a new move.')
+        self.assertEqual(customer_move.product_uom_qty, 40, 'The demand on the initial move should have been increased since there\'s still enough virtual_available quantity.')
+        self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
+        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertEqual(len(purchase_orders), 1, 'The current Purchase Order should fulfill the last procurement demand.')
+
+        create_run_procurement(product, 10.00)
+        self.assertEqual(customer_move.product_uom_qty, 40, 'The demand on the initial move should not have been increased since it should be a new move.')
         self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
         purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         self.assertEqual(len(purchase_orders), 2, 'A new RFQ should have been created for missing demand.')

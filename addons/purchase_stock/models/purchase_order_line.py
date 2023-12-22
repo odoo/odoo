@@ -320,12 +320,14 @@ class PurchaseOrderLine(models.Model):
         # This way, we shoud not lose any valuable information.
         if line_description and product_id.name != line_description:
             res['name'] += '\n' + line_description
-        res['date_planned'] = values.get('date_planned')
-        res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
-        res['location_final_id'] = location_dest_id.id
-        res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
-        res['propagate_cancel'] = values.get('propagate_cancel')
-        res['product_description_variants'] = values.get('product_description_variants')
+        res.update({
+            'date_planned': values.get('date_planned'),
+            'move_dest_ids': 'move_dest_ids' in values and [(4, x.id) for x in values['move_dest_ids'].filtered(lambda m: m.procure_method != 'make_to_stock')] or False,
+            'location_final_id': location_dest_id.id,
+            'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
+            'propagate_cancel': values.get('propagate_cancel'),
+            'product_description_variants': values.get('product_description_variants'),
+        })
         return res
 
     def _create_stock_moves(self, picking):
