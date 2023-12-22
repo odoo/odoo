@@ -14,6 +14,7 @@ export class ProjectTaskRecord extends Record {
     setup() {
         super.setup(...arguments);
         this.displaySubtasks = false;
+        this.canSaveOnUpdate = true;
     }
 
     async toggleSubtasksList() {
