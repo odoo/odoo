@@ -655,7 +655,7 @@ class O2MForm(Form):
                 self._get_modifier(field_name, 'column_invisible')
                 or self._get_modifier(field_name, 'invisible')
             ):
-                assert values[field_name] is not False, "{fname!r} is a required field"
+                assert values[field_name] is not False, f"{field_name!r} is a required field"
 
         return values
 
