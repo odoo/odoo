@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import os
-from glob import glob
+from fnmatch import fnmatchcase
 from logging import getLogger
 from werkzeug import urls
 
@@ -45,8 +45,48 @@ def is_wildcard_glob(path):
 
 
 def _glob_static_file(pattern):
-    files = glob(pattern, recursive=True)
-    return sorted((file, os.path.getmtime(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    # simplified glob support (fnmatch is not precise enough)
+    # the purpose of this algo is to be as fast as possible.
+    # faster than pathlib.glob, glob.glob, other_obscure_glob,...
+    cache = odoo.service.server._static_file_cache
+    assert pattern[0] == '/'
+    parts = pattern.split('/')[1:]
+    nb_parts = len(parts)
+    stack = [(cache, 0, [''])]
+    results = []
+
+    while stack:
+        cache, index, file_path = stack.pop()
+        if not isinstance(cache, dict):
+            if index == nb_parts:
+                results.append((os.sep.join(file_path), cache))
+        elif index != nb_parts:
+            part = parts[index]
+            if part == "*":
+                for directory, directory_cache in cache.items():
+                    stack.append((directory_cache, index + 1, file_path + [directory]))
+            elif part == "**":
+                stack.append((cache, index + 1, file_path))  # ** can match empty
+                for directory, directory_cache in cache.items():
+                    stack.append((directory_cache, index, file_path + [directory]))  # ** can match multiple directory
+                    if index + 1 == nb_parts:
+                        stack.append((directory_cache, index + 1, file_path + [directory]))  # can match a file
+            elif is_wildcard_glob(part):
+                if part.startswith('*') and not is_wildcard_glob(part[1:]):
+                    for directory, directory_cache in cache.items():
+                        if directory.endswith(part[1:]):
+                            stack.append((directory_cache, index + 1, file_path + [directory]))
+                else:
+                    for directory, directory_cache in cache.items():
+                        if fnmatchcase(directory, part):
+                            stack.append((directory_cache, index + 1, file_path + [directory]))
+            else:
+                directory = part
+                if directory in cache:
+                    directory_cache = cache[directory]
+                    stack.append((directory_cache, index + 1, file_path + [directory]))
+    return sorted(results)
+
 
 
 class IrAsset(models.Model):
