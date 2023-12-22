@@ -33,6 +33,7 @@ export class Record extends DataPoint {
         this._manuallyAdded = options.manuallyAdded === true;
         this._onUpdate = options.onUpdate || (() => {});
         this._parentRecord = options.parentRecord;
+        this.canSaveOnUpdate = !options.parentRecord;
         this._virtualId = options.virtualId || false;
         this._isEvalContextReady = false;
 
@@ -245,11 +246,11 @@ export class Record extends DataPoint {
 
     update(changes, { save } = {}) {
         if (this.model._urgentSave) {
-            return this._update(changes, { save: false }); // save is already scheduled
+            return this._update(changes);
         }
         return this.model.mutex.exec(async () => {
             await this._update(changes, { withoutOnchange: save });
-            if (save) {
+            if (save && this.canSaveOnUpdate) {
                 return this._save();
             }
         });

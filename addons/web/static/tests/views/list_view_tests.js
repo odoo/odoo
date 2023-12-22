@@ -2892,8 +2892,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("editable list view: line with no active element", async function (assert) {
-        assert.expect(4);
-
         serverData.models.bar = {
             fields: {
                 titi: { string: "Char", type: "char" },
@@ -2922,7 +2920,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 if (args.method === "web_save") {
-                    assert.deepEqual(args.args[1], { grosminet: false });
+                    assert.step("web_save");
                 }
             },
         });
@@ -2933,6 +2931,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
         assert.containsOnce(target.querySelectorAll(".o_data_cell")[0], ".o_readonly_modifier");
         await click(target.querySelectorAll(".o_data_cell")[1], ".o_boolean_toggle input");
+        assert.verifySteps([]);
     });
 
     QUnit.test(

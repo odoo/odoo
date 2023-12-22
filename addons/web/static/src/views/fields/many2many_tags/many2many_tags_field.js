@@ -289,7 +289,7 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         }
     }
 
-    onTagVisibilityChange(isHidden, tag) {
+    async onTagVisibilityChange(isHidden, tag) {
         const tagRecord = this.props.record.data[this.props.name].records.find(
             (record) => record.id === tag.id
         );
@@ -299,15 +299,17 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         const changes = {
             [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
         };
-        tagRecord.update(changes, { save: true });
+        await tagRecord.update(changes);
+        await tagRecord.save();
         this.popover.close();
     }
 
-    switchTagColor(colorIndex, tag) {
+    async switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.record.data[this.props.name].records.find(
             (record) => record.id === tag.id
         );
-        tagRecord.update({ [this.props.colorField]: colorIndex }, { save: true });
+        await tagRecord.update({ [this.props.colorField]: colorIndex });
+        await tagRecord.save();
         this.popover.close();
     }
 }
