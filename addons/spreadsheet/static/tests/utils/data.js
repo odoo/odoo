@@ -227,11 +227,12 @@ export function getBasicData() {
             fields: {
                 name: { string: "Name", type: "char" },
                 spreadsheet_data: { string: "Spreadsheet Data", type: "text" },
+                file_name: { string: "File Name", type: "char" },
                 thumbnail: { string: "Thumbnail", type: "binary" },
             },
             records: [
-                { id: 1, name: "Template 1", spreadsheet_data: {} },
-                { id: 2, name: "Template 2", spreadsheet_data: {} },
+                { id: 1, name: "Template 1", spreadsheet_data: {}, file_name: "Template 1.osheet.json" },
+                { id: 2, name: "Template 2", spreadsheet_data: {}, file_name: "Template 2.osheet.json" },
             ],
         },
         "res.currency": {
