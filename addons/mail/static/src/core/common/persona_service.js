@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
@@ -45,19 +46,10 @@ export class PersonaService {
     getRecentChatPartnerIds() {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.type === "chat")
-            .sort((a, b) => {
-                const [a_dt, b_dt] = [a.lastInterestDateTime, b.lastInterestDateTime];
-                if (!a_dt && !b_dt) {
-                    return 0;
-                }
-                if (a_dt && !b_dt) {
-                    return -1;
-                }
-                if (!a_dt && b_dt) {
-                    return 1;
-                }
-                return b_dt.ts - a_dt.ts;
-            })
+            .sort(
+                (a, b) =>
+                    compareDatetime(b.lastInterestDateTime, a.lastInterestDateTime) || b.id - a.id
+            )
             .map((thread) => thread.correspondent?.id);
     }
 }

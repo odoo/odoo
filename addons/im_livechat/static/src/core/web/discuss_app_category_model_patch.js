@@ -2,6 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { DiscussAppCategory } from "@mail/core/common/discuss_app_category_model";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 patch(DiscussAppCategory.prototype, {
     /**
@@ -10,7 +11,9 @@ patch(DiscussAppCategory.prototype, {
      */
     sortThreads(t1, t2) {
         if (this.id === "livechat") {
-            return t2.lastInterestDateTime?.ts - t1.lastInterestDateTime?.ts;
+            return (
+                compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
+            );
         }
         return super.sortThreads(t1, t2);
     },
