@@ -114,17 +114,12 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
 QUnit.test("Channel subscription is renewed when channel is left", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Sales" });
-    const { env, openDiscuss } = await start();
-    patchWithCleanup(env.services["bus_service"], {
-        forceUpdateChannels() {
-            assert.step("update-channels");
-        },
-    });
+    const { openDiscuss } = await start();
+    await waitUntilSubscribe();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await waitUntilSubscribe();
-    assert.verifySteps(["update-channels"]);
 });
 
 QUnit.test("Adding attachments", async () => {
