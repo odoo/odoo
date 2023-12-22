@@ -174,3 +174,24 @@ class TestPortalWizard(MailCommon):
         portal_user.with_company(company_1).action_grant_access()
 
         self.assertEqual(portal_user.user_id.company_id, company_2, 'Must create the user in the same company as the partner.')
+
+    @users('admin')
+    def test_portal_wizard_email_uniqueness(self):
+        """Test to grant the access to a partner with valid but similar email.
+
+        Should create a new user with a different email.
+        """
+        
+        distinct_emails = [self.portal_user.email.replace("_", valid_token) for valid_token in ('', '.', r'%')]
+        test_partners = self.env["res.partner"]
+        for i, email in enumerate(distinct_emails, start=1):
+            test_partners |= test_partners.create(
+                {
+                    "name": f'Portal user {i}',
+                    "email": email,
+                })
+        
+        portal_wizard = self.env['portal.wizard'].with_context(default_partner_ids=test_partners.ids).create({})
+        for user in portal_wizard.user_ids:
+            result = user.action_grant_access()
+            self.assertTrue(bool(result), 'Must have granted access to user.')
