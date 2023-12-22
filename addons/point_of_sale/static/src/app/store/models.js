@@ -1436,14 +1436,20 @@ export class Order extends PosModel {
         var paymentlines = json.statement_ids;
         for (i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = new Payment(
-                { env: this.env },
-                { pos: this.pos, order: this, json: paymentline }
-            );
-            this.paymentlines.add(newpaymentline);
-
-            if (i === paymentlines.length - 1) {
+            try {
+                const newpaymentline = new Payment(
+                    { env: this.env },
+                    { pos: this.pos, order: this, json: paymentline }
+                );
+                this.paymentlines.add(newpaymentline);
                 this.select_paymentline(newpaymentline);
+            } catch {
+                this.pos.env.services.popup.add(ErrorPopup, {
+                    title: _t("Payment method selected missing"),
+                    body: _t(
+                        "Payments with missing payment method are not added in the loaded orders."
+                    ),
+                });
             }
         }
 
