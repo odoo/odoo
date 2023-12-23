@@ -171,6 +171,7 @@
             'website/static/src/js/widget_iframe.js',
             'website/static/src/js/theme_preview_kanban.js',
             'website/static/src/js/theme_preview_form.js',
+            'website/static/src/xml/website.xml',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
