@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from odoo.tests.common import TransactionCase, HttpCase
 from odoo import Command
@@ -353,16 +353,27 @@ class MockSmtplibCase:
         self.testing_smtp_session = TestingSMTPSession()
 
         IrMailServer = self.env['ir.mail_server']
-        connect_origin = IrMailServer.connect
-        find_mail_server_origin = IrMailServer._find_mail_server
+        connect_origin = type(IrMailServer).connect
+        find_mail_server_origin = type(IrMailServer)._find_mail_server
+
+        # custom mock to avoid losing context
+        def mock_function(func):
+            mock = Mock()
+
+            def _call(*args, **kwargs):
+                mock(*args[1:], **kwargs)
+                return func(*args, **kwargs)
+
+            _call.mock = mock
+            return _call
 
         with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
-             patch.object(type(IrMailServer), 'connect', wraps=IrMailServer, side_effect=connect_origin) as connect_mocked, \
-             patch.object(type(IrMailServer), '_find_mail_server', side_effect=find_mail_server_origin) as find_mail_server_mocked:
-            self.connect_mocked = connect_mocked
-            self.find_mail_server_mocked = find_mail_server_mocked
+             patch.object(type(IrMailServer), 'connect', mock_function(connect_origin)) as connect_mocked, \
+             patch.object(type(IrMailServer), '_find_mail_server', mock_function(find_mail_server_origin)) as find_mail_server_mocked:
+            self.connect_mocked = connect_mocked.mock
+            self.find_mail_server_mocked = find_mail_server_mocked.mock
             yield
 
     def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
@@ -391,11 +402,24 @@ class MockSmtplibCase:
             self.emails,
         )
 
+        debug_info = ''
         matching_emails_count = len(list(matching_emails))
-
-        self.assertTrue(
-            matching_emails_count == emails_count,
-            msg='Emails not sent, %i emails match the condition but %i are expected' % (matching_emails_count, emails_count),
+        if matching_emails_count != emails_count:
+            emails_from = []
+            for email in self.emails:
+                from_found = next((
+                    line.split('From:')[1].strip() for line in email['message'].splitlines()
+                    if line.startswith('From:')), '')
+                emails_from.append(from_found)
+            debug_info = '\n'.join(
+                f"SMTP-From: {email['smtp_from']}, SMTP-To: {email['smtp_to_list']}, Msg-From: {email_msg_from}, From_filter: {email['from_filter']})"
+                for email, email_msg_from in zip(self.emails, emails_from)
+            )
+        self.assertEqual(
+            matching_emails_count, emails_count,
+            msg=f'Incorrect emails sent: {matching_emails_count} found, {emails_count} expected'
+                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from}, From_filter: {from_filter}'
+                f'\nNot found in\n{debug_info}'
         )
 
     @classmethod
@@ -424,18 +448,22 @@ class MockSmtplibCase:
             {
                 'name': 'Domain based server',
                 'from_filter': 'test.com',
+                'sequence': 0,
                 ** ir_mail_server_values,
             }, {
                 'name': 'User specific server',
                 'from_filter': 'specific_user@test.com',
+                'sequence': 1,
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
                 'from_filter': 'notifications@test.com',
+                'sequence': 2,
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server No From Filter',
                 'from_filter': False,
+                'sequence': 3,
                 ** ir_mail_server_values,
             },
         ])

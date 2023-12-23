@@ -67,22 +67,12 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
 
     def setUp(self):
         super(TestMessagePostCommon, self).setUp()
-        # send tracking and messages + patch registry to simulate a ready environment
-        # purpose is to avoid nondeterministic tests, notably because tracking is
-        # accumulated and sent at flush -> we want to test only the result of a
-        # given test, not setup + test
-        self.flush_tracking()
         # see ``_message_auto_subscribe_notify``
         self.patch(self.env.registry, 'ready', True)
 
 
 @tagged('mail_post')
 class TestMailNotifyAPI(TestMessagePostCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._activate_multi_company()
 
     @mute_logger('odoo.models.unlink')
     @users('employee')
@@ -590,11 +580,6 @@ class TestMessageLog(TestMessagePostCommon):
 @tagged('mail_post')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._activate_multi_company()
-
     def test_assert_initial_values(self):
         """ Be sure of what we are testing """
         self.assertFalse(self.test_record.message_ids)
@@ -778,9 +763,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                                 },
                             },
                             'mail_mail_values': {
-                                'headers': repr({
+                                'headers': {
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
-                                }),
+                                },
                             },
                             'message_values': {
                                 'author_id': self.user_erp_manager.partner_id,
@@ -1511,7 +1496,6 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
-        cls._activate_multi_company()
         cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)
 
         cls.partner_2.write({'lang': 'es_ES'})

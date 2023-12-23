@@ -320,8 +320,6 @@ class TestTrackingMonetary(TestMailCommon):
     def setUp(self):
         super(TestTrackingMonetary, self).setUp()
 
-        self._activate_multi_company()
-
         record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
             'company_id': self.user_employee.company_id.id,
         })

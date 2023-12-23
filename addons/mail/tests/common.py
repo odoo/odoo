@@ -6,6 +6,7 @@ import email
 import email.policy
 import time
 
+from ast import literal_eval
 from collections import defaultdict
 from contextlib import contextmanager
 from functools import partial
@@ -91,10 +92,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.alias_catchall = 'catchall.test'
         cls.alias_bounce = 'bounce.test'
         cls.default_from = 'notifications'
+        cls.default_from_filter = False
         cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
+        cls.env['ir.config_parameter'].set_param('mail.default.from_filter', cls.default_from_filter)
+
+        # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}'))
 
     @classmethod
@@ -402,12 +407,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self.assertTrue(bool(mail))
         if content:
             self.assertIn(content, mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            with self.subTest(fname=fname, fvalue=fvalue):
-                self.assertEqual(
-                    mail[fname], fvalue,
-                    'Mail: expected %s for %s, got %s' % (fvalue, fname, mail[fname])
-                )
+        for fname, expected_fvalue in (fields_values or {}).items():
+            with self.subTest(fname=fname, expected_fvalue=expected_fvalue):
+                if fname == 'headers':
+                    fvalue = literal_eval(mail[fname])
+                    self.assertDictEqual(fvalue, expected_fvalue)
+                else:
+                    self.assertEqual(
+                        mail[fname], expected_fvalue,
+                        'Mail: expected %s for %s, got %s' % (expected_fvalue, fname, mail[fname])
+                    )
         if status == 'sent':
             if email_to_recipients:
                 recipients = email_to_recipients  # already formatted
@@ -693,6 +702,13 @@ class MailCase(MockEmail):
         'mail_notrack': True,
         'no_reset_password': True,
     }
+
+    def setUp(self):
+        super().setUp()
+        # purpose is to avoid nondeterministic tests, notably because tracking is
+        # accumulated and sent at flush -> we want to test only the result of a
+        # given test, not setup + test
+        self.flush_tracking()
 
     @classmethod
     def _reset_mail_context(cls, record):
@@ -1157,9 +1173,7 @@ class MailCommon(common.TransactionCase, MailCase):
     @classmethod
     def setUpClass(cls):
         super(MailCommon, cls).setUpClass()
-        # give default values for all email aliases and domain
-        cls._init_mail_gateway()
-        cls._init_outgoing_gateway()
+
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_admin.write({
@@ -1174,6 +1188,14 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.user_root = cls.env.ref('base.user_root')
         cls.partner_root = cls.user_root.partner_id
 
+        # setup MC environment
+        cls._activate_multi_company()
+
+        # give default values for all email aliases and domain
+        cls._init_mail_gateway()
+        cls._init_mail_servers()
+
+        # by default avoid rendering restriction complexity
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
 
         # test standard employee

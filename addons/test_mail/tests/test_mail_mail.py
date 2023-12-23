@@ -25,7 +25,6 @@ class TestMailMail(TestMailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
-        cls._init_mail_servers()
 
         cls.server_domain_2 = cls.env['ir.mail_server'].create({
             'name': 'Server 2',

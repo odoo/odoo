@@ -55,8 +55,6 @@ class TestMailListCommon(TestMailCommon):
         })
         cls.test_group_valid_members = cls.test_group_member_1 + cls.test_group_member_2 + cls.test_group_member_4_emp
 
-        cls._init_mail_gateway()
-
         # Create some messages
         cls.test_group_msg_1_pending = cls.env['mail.group.message'].create({
             'subject': 'Test message pending',

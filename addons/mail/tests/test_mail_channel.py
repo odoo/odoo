@@ -560,7 +560,6 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
 
     def test_multi_company_chat(self):
-        self._activate_multi_company()
         self.assertEqual(self.env.user.company_id, self.company_admin)
 
         with self.with_user('employee'):
