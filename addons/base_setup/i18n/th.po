@@ -24,6 +24,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-users\" aria-"
+"label=\"จำนวนผู้ใช้งานที่ใช้งานอยู่\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -35,6 +37,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; '1'\">\n"
+"                                        ผู้ใช้ที่ใช้งานอยู่\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= '1'\">\n"
+"                                        ผู้ใช้ที่ใช้งานอยู่\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -47,6 +55,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; '1'\">\n"
+"                                        บริษัท\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= '1'\">\n"
+"                                        บริษัท\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -58,6 +73,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; '1'\">\n"
+"                                            ภาษา\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= '1'\">\n"
+"                                            ภาษา\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -74,12 +95,14 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"<strong>บันทึก</strong>หน้านี้และกลับมาที่นี่เพื่อตั้งค่าเทคโนโลยีกั้นทางเข้าออกของ"
+" Cloudflare"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
-msgstr ""
+msgstr "<strong>บันทึก</strong>หน้านี้และกลับมาที่นี่เพื่อตั้งค่า reCaptcha"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -98,6 +121,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"คีย์ API อนุญาตให้ผู้ใช้ของคุณเข้าถึง Odoo ด้วยเครื่องมือภายนอก "
+"เมื่อเปิดใช้งานการยืนยันแบบหลายขั้นตอน"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -124,7 +149,7 @@ msgstr "เพิ่มข้อเสนอแนะที่สนุกสน
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr ""
+msgstr "อนุญาตให้รวมเข้ากับปลั๊กอินเมล"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -134,7 +159,7 @@ msgstr "อนุญาตให้ผู้ใช้เชื่อมโยง
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr ""
+msgstr "อนุญาตให้ผู้ใช้ซิงโครไนซ์ปฏิทินกับปฏิทิน Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -195,7 +220,7 @@ msgstr "บริษัท"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "รหัสประเทศของบริษัท"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -247,12 +272,12 @@ msgstr "สิทธิการเข้าถึงเริ่มต้น"
 #: code:addons/base_setup/models/res_config_settings.py:0
 #, python-format
 msgid "Default User Template not found."
-msgstr ""
+msgstr "ไม่พบเทมเพลตผู้ใช้เริ่มต้น"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "เค้าโครงเอกสาร"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -275,6 +300,8 @@ msgid ""
 "Enable the profiling tool. Profiling may impact performance while being "
 "active."
 msgstr ""
+"เปิดใช้งานเครื่องมือสร้างโปรไฟล์ "
+"การทำโปรไฟล์อาจส่งผลกระทบต่อประสิทธิภาพในขณะที่ใช้งานอยู่"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -310,7 +337,7 @@ msgstr "GeoLocalize คู่ค้าของคุณ"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
 msgid "Get product pictures using barcode"
-msgstr ""
+msgstr "รับรูปภาพผลิตภัณฑ์โดยใช้บาร์โค้ด"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -330,7 +357,7 @@ msgstr "นำเข้า & ส่งออก"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrate with mail client plugins"
-msgstr ""
+msgstr "ผสานรวมกับปลั๊กอินไคลเอนต์เมล"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -345,7 +372,7 @@ msgstr "ธุรกรรมระหว่าง บริษัท"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "เป็นบริษัทแม่"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -366,12 +393,12 @@ msgstr "เลย์เอาต์"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Mail Plugin"
-msgstr ""
+msgstr "ปลั๊กอินเมล"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr ""
+msgstr "จัดการคีย์ API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -451,7 +478,7 @@ msgstr "ประสิทธิภาพ"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr ""
+msgstr "สิทธิ์"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -461,22 +488,22 @@ msgstr "ดูตัวอย่างเอกสาร"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr ""
+msgstr "เปิดใช้งานโปรไฟล์จนถึง"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "แอปพลิเคชันเว็บแบบก้าวหน้า"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr ""
+msgstr "ป้องกันแบบฟอร์มของคุณจากสแปมและการละเมิด"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "ปกป้องแบบฟอร์มของคุณด้วย CF Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -511,7 +538,7 @@ msgstr "ซิงโครไนซ์ปฏิทินของคุณกั
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "ซิงโครไนซ์ปฏิทินของคุณกับ Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
@@ -527,7 +554,7 @@ msgstr ""
 msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
-msgstr ""
+msgstr "ชื่อนี้จะใช้สำหรับแอปพลิเคชันเมื่อมีการติดตั้ง Odoo ผ่านเบราว์เซอร์"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -584,4 +611,4 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

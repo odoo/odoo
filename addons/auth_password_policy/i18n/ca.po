@@ -1,31 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-#
+# 
 # Translators:
-# jabelchi, 2022
-# Martin Trigaux, 2022
-# Arnau Ros, 2022
-# Ivan Espinola, 2022
-#
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Martin Trigaux, 2023
+# Ivan Espinola, 2023
+# Arnau Ros, 2023
+# Josep Anton Belchi, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Josep Anton Belchi, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
+msgstr "Paràmetres de configuració"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -34,24 +35,28 @@ msgstr "Longitud mínima del mot clau"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
-msgid "Minimum number of characters passwords must contain, set to 0 to disable."
-msgstr "El nombre mínim de caràcters que ha de contenir un mot clau, deixar en 0 per deshabilitar. "
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"El nombre mínim de caràcters que ha de contenir un mot clau, deixar en 0 per"
+" deshabilitar. "
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_field.js:0
 #, python-format
 msgid "Password"
 msgstr "Contrasenya"
 
 #. module: auth_password_policy
+#. odoo-python
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
 msgstr "Les contrasenyes han de tenir com al menys %d caràcters, en té %d."
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid ""
@@ -69,29 +74,22 @@ msgid "User"
 msgstr "Usuari"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
 msgstr "com a mínim %s classes de caràcter"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s characters"
 msgstr "com a mínim %s caràcters"
 
 #. module: auth_password_policy
-#. openerp-web
+#. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s words"
 msgstr "com a mínim %s paraules"
-
-#. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/password_meter.js:0
-#, python-format
-msgid "no requirements"
-msgstr "Sense requeriments "

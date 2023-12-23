@@ -1062,7 +1062,7 @@ msgstr ""
 "Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
 "  - Manual: la cantidad se establece de forma manual en la línea\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
-"  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
+"  - Hojas de asistencia: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
 #. module: sale
@@ -1303,7 +1303,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
 msgid "At cost"
-msgstr "A costo"
+msgstr "A coste"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
@@ -1456,6 +1456,14 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"No se puede crear una factura. No hay artículos disponibles para facturar.\n"
+"\n"
+"Para solucionar este problema, asegúrese de que:\n"
+"   • Se entregaron los productos antes de intentar facturarlos.\n"
+"   • La política de facturación del producto tiene la configuración correcta.\n"
+"Si desea facturar por cantidades ordenadas:\n"
+"   • En caso de productos consumibles o almacenables, abra el producto, vaya a la pestaña \"Información general\" y cambie la política de facturación de \"Cantidades entregadas\" a \"Cantidades ordenadas\".\n"
+"   • En caso de servicios y otros productos, cambie la política de facturación a \"Prepago/precio fijo\".\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1481,6 +1489,9 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Cambiar la empresa de un presupuesto existente podría requerir algunos "
+"ajustes manuales en los detalles de las líneas. Podría considerar la "
+"actualización de los precios."
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -1564,7 +1575,7 @@ msgstr "Calcular los costes de envío y enviar con FedEx"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Calcular costos de envío y enviar con Sendcloud"
+msgstr "Calcular costes de envío y enviar con Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1718,6 +1729,8 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
+"Cree una factura para todas las órdenes relacionadas al mismo cliente y a la"
+" misma dirección de facturación"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1905,7 +1918,7 @@ msgstr "Validez de presupuesto por defecto"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Producto por defecto utilizado para los descuentos"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
@@ -1916,7 +1929,7 @@ msgstr "Producto por defecto utilizado para los anticipos."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "Valores por defecto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1924,6 +1937,8 @@ msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
 msgstr ""
+"Valores por defecto utilizados al crear nuevos presupuestos. Aún pueden "
+"modificarse en cada presupuesto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2082,12 +2097,12 @@ msgstr "Descuentos y tarjetas de lealtad y regalo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Mostrar advertencia de borrador de factura"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "Mostrar advertencia de importe de la factura"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -2307,7 +2322,7 @@ msgstr "Importe fijo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Siga, vea o pague sus órdenes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2877,8 +2892,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
-"Gestione promociones, cupones, tarjetas de lealtad, tarjetas de regalo y "
-"monedero electrónico"
+"Gestione promociones, cupones, tarjetas de fidelidad, tarjetas de regalo y "
+"monederos electrónicos"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3132,7 +3147,7 @@ msgstr "Cantidad de ventas a facturar"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "En todas las líneas de la orden"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -4115,7 +4130,7 @@ msgstr "Análisis de ventas por cliente"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Análisis de ventas por comerciales"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4248,7 +4263,7 @@ msgid ""
 msgstr ""
 "Artículo en la orden de venta al que se añadirá el tiempo empleado para "
 "facturarlo a su cliente. Elimine el artículo para que la entrada de la hoja "
-"de horas no sea facturable."
+"de asistencia no sea facturable."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4884,7 +4899,7 @@ msgid ""
 " in their detail form."
 msgstr ""
 "El margen se calcula como la suma de los precios de venta del producto menos"
-" el costo establecido en su forma detallada."
+" el coste establecido en su forma detallada."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5524,6 +5539,7 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr ""
+"No puede cancelar una orden bloqueada. Por favor, desbloquéela primero."
 
 #. module: sale
 #. odoo-python
@@ -5554,6 +5570,9 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"No puede establecer un número negativo para la validez del presupuesto por "
+"defecto, deje el campo vacío (o en 0) para deshabilitar el vencimiento "
+"automático de los presupuestos."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5649,6 +5668,8 @@ msgid ""
 "selected\n"
 "                    quotations?"
 msgstr ""
+"presupuestos\n"
+"                    seleccionados?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document

@@ -1,25 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-#
+# Martin Trigaux, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_tax_python
@@ -37,19 +36,18 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Vergi Grubları: Vergi bir dizi alt vergidir.\n"
+"    - Vergi Grubu: Vergi bir dizi alt vergidir.\n"
 "    - Sabit: Vergi tutarı, fiyat ne olursa olsun aynı kalır.\n"
 "    - Fiyatın Yüzdesi: Vergi tutarı fiyatın yüzdesidir:\n"
-"        Örneğin 100 * 10% = 110 (fiyat dahil değil)\n"
-"        Örneğin 110 / (1 + 10%) = 100 (fiyata dahil)\n"
+"        örn. 100 * (1+10%) = 110 (fiyata dahil değil)\n"
+"        örn. 110 / (1 + 10%) = 100 (fiyata dahil)\n"
 "    - Vergi Dahil Fiyat Yüzdesi: Vergi tutarı fiyatın bir bölümüdür:\n"
-"        ör. 180 / (1 - 10%) = 200 (fiyat dahil değil)\n"
-"        ör. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
+"        örn. 180 / (1 - 10%) = 200 (fiyata dahil değil)\n"
+"        örn. 200 * (1 - 10%) = 180 (fiyata dahil)\n"
 "        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Uygulanabilirlik Kodu"
 
@@ -75,25 +73,6 @@ msgstr ""
 ": Param partner: res.partner kayıt kümesi singleton veya yok"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"'Sonuç' değişkenini ayarlayarak vergi tutarını hesaplayın.\n"
-"\n"
-": Param base_amount: float, verginin uygulanacağı gerçek tutar\n"
-": Param fiyat_birimi: float\n"
-": Param miktarı: float\n"
-": Param ürün: product.product kayıt grubu tek veya hiçbiri\n"
-": Param partner: res.partner kayıt kümesi singleton veya yok"
-
-#. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
@@ -113,27 +92,8 @@ msgstr ""
 ": Param partner: res.partner kayıt kümesi singleton veya yok"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"'Result' değişkenini True veya False olarak ayarlayarak vergi uygulanıp uygulanmayacağını belirleyin.\n"
-"\n"
-": Param fiyat_birimi: float\n"
-": Param miktarı: float\n"
-": Param ürün: product.product kayıt grubu tek veya hiçbiri\n"
-": Param partner: res.partner kayıt kümesi singleton veya yok"
-
-#. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Python Kodu"
 
@@ -144,11 +104,16 @@ msgstr "Vergi"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "Vergi Hesaplaması"
 
 #. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Vergi Şablonları"
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""

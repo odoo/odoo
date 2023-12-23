@@ -9,6 +9,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Pablo Rojas <rojaspablo88@gmail.com>, 2023
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -67,7 +68,7 @@ msgstr "%(pos_name)s (no usado)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr "%s Pago de PdV %s en %s"
+msgstr "%s Pago de TPV %s en %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -281,7 +282,7 @@ msgid ""
 "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first "
 "session.</p>"
 msgstr ""
-"<p> ¿Listo para echar un vistazo a la <b>interfaz POS</b>? Comencemos "
+"<p> ¿Listo para echar un vistazo a la <b>interfaz TPV</b>? Comencemos "
 "nuestra primera sesión. </p>"
 
 #. module: point_of_sale
@@ -396,7 +397,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Un identificador único global para esta configuración del POS, usado para "
+"Un identificador único global para esta configuración del TPV, usado para "
 "prevenir conflictos en datos generados por el cliente."
 
 #. module: point_of_sale
@@ -476,7 +477,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "ALL POS"
-msgstr "TODOS LOS PUNTOS DE VENTA"
+msgstr "TODOS LOS TPV"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -566,8 +567,8 @@ msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
 msgstr ""
-"Diario contable utilizado para publicar asientos de diario de sesiones de "
-"PdV y pagos de factura de PdV."
+"Diario contable utilizado para publicar los asientos de sesiones y pagos de "
+"TPV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
@@ -860,8 +861,8 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr ""
-"Un error ocurrió cargando los precios de los productos. Asegurate que todas "
-"las tarifas esten disponibles en el Punto de Venta."
+"Ocurrió un error cargando los precios de los productos. Asegúrese de que "
+"todas las tarifas estén disponibles en la configuración del TPV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -978,7 +979,7 @@ msgstr "Disponible"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "Categorías de productos disponibles en el TPV"
+msgstr "Categorías de productos TPV disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1597,7 +1598,7 @@ msgstr "Combinaciones"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Combine %s POS payments from %s"
-msgstr " %s pagos combinados de TPV de  %s"
+msgstr "Pagos combinados de TPV de %s desde %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo_line__combo_id
@@ -2318,7 +2319,7 @@ msgstr "Diferencia"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr "Diferencia al cerrar la sesión del TPV"
+msgstr "Diferencia al cerrar la sesión de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -2515,6 +2516,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Cada impresora de órdenes tiene una dirección IP que define el proxy\n"
+"                de la caja IoT/Hardware en el que se puede encontrar la impresora, así como una lista de categorías de producto.\n"
+"               Una impresora de órdenes solo imprimirá actualizaciones para productos que pertenezcan\n"
+"                a una de sus categorías."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2815,7 +2820,7 @@ msgstr "Nombre completo de producto"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_unique_code
 msgid "Generate a code on ticket"
-msgstr ""
+msgstr "Generar un código en el ticket"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3168,7 +3173,7 @@ msgstr "Nombre de la factura"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Invoice Request"
-msgstr ""
+msgstr "Solicitud de factura"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3428,7 +3433,7 @@ msgstr "Cuero"
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.xml:0
 #, python-format
 msgid "Leave a reason here"
-msgstr ""
+msgstr "Escriba un motivo aquí"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -3896,6 +3901,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu,"
 " and install one from the Invoicing tab."
 msgstr ""
+"No hay un plan contable configurado. Vaya al menú \"configuración / "
+"ajustes\" e instale uno desde la pestaña Facturación."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4013,7 +4020,7 @@ msgstr "Número de pedidos reembolsados"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
 msgid "Number of Rescue Session"
-msgstr ""
+msgstr "Número de sesión de rescate"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -4117,8 +4124,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Solo los usuarios con derechos de acceso de administrador pueden modificar "
-"los precios de los productos en los pedidos."
+"Solo los usuarios con permiso de responsable de TPV pueden modificar los "
+"precios de los productos en los pedidos."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4468,7 +4475,7 @@ msgstr "Método de pago de TPV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
 msgid "POS Printer"
-msgstr "Impresora POS"
+msgstr "Impresora TPV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
@@ -4919,12 +4926,12 @@ msgstr "Interfaz TPV"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS Order"
-msgstr "Orden del PdV"
+msgstr "Pedido TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
-msgstr "Línea de la orden del PdV"
+msgstr "Línea de pedido TPV"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5115,17 +5122,17 @@ msgstr "URL de acceso al portal"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_allowed_pricelist_ids
 msgid "Pos Allowed Pricelist"
-msgstr "Lista de precios permitida en PdV"
+msgstr "Lista de precios permitida en TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr "Configuración del punto de venta"
+msgstr "Configuración del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr "Pos es la impresora de pedidos"
+msgstr "Es la impresora de pedidos TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -5165,7 +5172,7 @@ msgstr "Categorías TPV de producto"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr "Factura reembolsada del pdV"
+msgstr "Factura rectificada del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
@@ -5176,7 +5183,7 @@ msgstr "Categoría seleccionable en TPV"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr "Sesión de Punto de Venta"
+msgstr "Sesión de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -5186,12 +5193,12 @@ msgstr "Duración de la Sesión de TPV"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr "Estado de la sesión del punto de venta"
+msgstr "Estado de la sesión del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr "Nombre de usuario de la sesión del punto de venta"
+msgstr "Nombre de usuario de la sesión del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
@@ -5201,7 +5208,7 @@ msgstr "Sesiones de TPV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_daily_sales_reports_wizard
 msgid "Pos session"
-msgstr "sesión de Punto de Venta"
+msgstr "Sesión de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -6192,7 +6199,7 @@ msgstr "Seleccionar posición fiscal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
-msgstr "Seleccione el PdV para empezar a compartir órdenes"
+msgstr "Seleccione el TPV para empezar a compartir pedidos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6494,7 +6501,7 @@ msgstr "Mostrar pantalla de inicio de sesión de empleado"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr "Mostrar márgenes y costos en la información del producto"
+msgstr "Mostrar márgenes y costes en la información del producto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -7014,8 +7021,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
-"La posición fiscal que se uso en la orden original no se cargó. Asegúrese de"
-" que cargue antes de agregarla a la configuración del PdV."
+"La posición fiscal usada en el pedido original no está cargada. Asegúrese de"
+" que se carga agregándola a la configuración del TPV."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7067,7 +7074,7 @@ msgstr "El nombre de las monedas/billetes ha de ser un número."
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
-msgstr "¡El nombre de esta sesión de PdV debe ser único!"
+msgstr "¡El nombre de esta sesión de TPV debe ser único!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
@@ -7108,7 +7115,7 @@ msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
 "El método de pago seleccionado no está permitido en la configuración de la "
-"sesión de POS."
+"sesión de TPV."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7250,6 +7257,10 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"La sesión ya ha sido cerrada por otro usuario. Todas las ventas realizadas "
+"mientras tanto se han guardado en una Sesión de Rescate, que puede revisarse"
+" en cualquier momento y contabilizarse en Contabilidad desde el tablero del "
+"Punto de Venta."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7579,7 +7590,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Those settings are common to all PoS."
-msgstr ""
+msgstr "Estas configuraciones son comunes a todos los TPV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
@@ -7793,7 +7804,7 @@ msgstr "Albarán"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Trusted POS"
-msgstr "PdV de confianza"
+msgstr "TPV de confianza"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__trusted_config_ids
@@ -7854,7 +7865,7 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
-"No se puede cambiar esta configuración de POS %s mientras una sesión está "
+"No se puede cambiar esta configuración de TPV %s mientras una sesión está "
 "abierta."
 
 #. module: point_of_sale
@@ -8068,7 +8079,7 @@ msgstr "Almacén"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr "Almacén (PdV)"
+msgstr "Almacén (TPV)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
@@ -8186,8 +8197,7 @@ msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
 msgstr ""
-"Solo puede desvincular líneas de órdenes del PdV relacionadas con órdenes en"
-" estado nuevo o cancelado."
+"Solo puede eliminar líneas de pedidos del TPV en estado nuevo o cancelado."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8228,7 +8238,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr "No puede cerrar el POS cuando los pedidos aún están en borrador"
+msgstr "No puede cerrar el TPV mientras aún haya pedidos en borrador"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8391,7 +8401,7 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
-"Su sesión de POS está abierta desde %(date)s, le recomendamos que la cierre "
+"Su sesión de TPV está abierta desde %(date)s, le recomendamos que la cierre "
 "y cree una nueva."
 
 #. module: point_of_sale

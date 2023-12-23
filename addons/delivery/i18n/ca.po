@@ -1,34 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Sandra Franch <sandra.franch@upc.edu>, 2022
-# jabelchi, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Harcogourmet, 2022
-# Jonatan Gk, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Martin Trigaux, 2022
-# marcescu, 2022
-# Arnau Ros, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Ivan Espinola, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
-#
+# Pere Martínez, 2023
+# Carles Antoli <carlesantoli@hotmail.com>, 2023
+# jabiri7, 2023
+# Sandra Franch <sandra.franch@upc.edu>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Arnau Ros, 2023
+# marcescu, 2023
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
+# Martin Trigaux, 2023
+# Josep Anton Belchi, 2023
+# Harcogourmet, 2023
+# Quim - eccit <quim@eccit.com>, 2023
+# Ivan Espinola, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ivan Espinola, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -87,8 +87,14 @@ msgstr "<strong>Descripció d'enviament:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "Una descripció del mètode de lliurament que voleu comunicar als vostres clients en el correu electrònic de confirmació de vendes i comanda de vendes.P. ex. instruccions perquè els clients les segueixin."
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Una descripció del mètode de lliurament que voleu comunicar als vostres "
+"clients en el correu electrònic de confirmació de vendes i comanda de "
+"vendes.P. ex. instruccions perquè els clients les segueixin."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -130,8 +136,12 @@ msgstr "Import"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Import de la comanda que és beneficiaria d'una entrega gratuïta, expressada en la moneda de la companyia."
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Import de la comanda que és beneficiaria d'una entrega gratuïta, expressada "
+"en la moneda de la companyia."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -219,7 +229,7 @@ msgstr "Divisa"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
 msgid "Customer"
-msgstr "Client"
+msgstr "Client/a"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
@@ -335,7 +345,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -352,6 +362,7 @@ msgstr "Entorn"
 
 #. module: delivery
 #. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -376,8 +387,12 @@ msgstr "Empleni aquest camp si facturarà l'enviament basat en la recol·lecció
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "Aquest formulari li permet filtrar els transportistes segons la direcció d'entrega del seu client."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Aquest formulari li permet filtrar els transportistes segons la direcció "
+"d'entrega del seu client."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -432,8 +447,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Si l'import total de la comanda (excloent-hi l'enviament) és superior o igual a aquest valor, el client es beneficia amb un enviament gratuït. "
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Si l'import total de la comanda (excloent-hi l'enviament) és superior o "
+"igual a aquest valor, el client es beneficia amb un enviament gratuït. "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -544,7 +563,7 @@ msgstr "Operador"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
 msgid "Order"
-msgstr "Comanda"
+msgstr "Ordre"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -563,8 +582,17 @@ msgstr "El prefix ja existeix!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "Prefixos de codis zip als quals s'aplica aquest operador. Tingueu en compte que les expressions regulars es poden utilitzar per donar suport a països amb diferents longituds de codi postal, és a dir, es pot afegir «$» al final del prefix per a coincidir amb el zip exacte (p. ex. «100$» només coincidirà amb «100» i no amb «1000»)"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Prefixos de codis zip als quals s'aplica aquest operador. Tingueu en compte "
+"que les expressions regulars es poden utilitzar per donar suport a països "
+"amb diferents longituds de codi postal, és a dir, es pot afegir «$» al final"
+" del prefix per a coincidir amb el zip exacte (p. ex. «100$» només "
+"coincidirà amb «100» i no amb «1000»)"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -624,7 +652,7 @@ msgstr "Preu de venda"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Comanda de venda"
+msgstr "Comanda"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -645,7 +673,9 @@ msgstr "Producte del servei"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Establiu a verdader si les vostres credencials estan certificades per producció."
+msgstr ""
+"Establiu a verdader si les vostres credencials estan certificades per "
+"producció."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -668,13 +698,22 @@ msgstr "Pes de l'enviament"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "L'assegurança d'enviament és un servei que pot reemborsar als remitents les parcel·les dels quals es perden, es roben i/o es danyen en trànsit."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"L'assegurança d'enviament és un servei que pot reemborsar als remitents les "
+"parcel·les dels quals es perden, es roben i/o es danyen en trànsit."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "Detalls del mètode d'enviament que s'inclouran a les comandes de venda inferiors i els seus correus electrònics de confirmació. P. ex. Instruccions perquè els clients les segueixin."
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Detalls del mètode d'enviament que s'inclouran a les comandes de venda "
+"inferiors i els seus correus electrònics de confirmació. P. ex. Instruccions"
+" perquè els clients les segueixin."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -700,8 +739,10 @@ msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
-msgstr "El client pot descarregar l'etiqueta de retorn des del portal del client."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr ""
+"El client pot descarregar l'etiqueta de retorn des del portal del client."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
@@ -718,7 +759,8 @@ msgstr "L'assegurança de navegació ha de ser un percentatge entre 0 i 100."
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "L'enviament és gratuït ja que l'import de la comanda és superior %.2f."
+msgstr ""
+"L'enviament és gratuït ja que l'import de la comanda és superior %.2f."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form

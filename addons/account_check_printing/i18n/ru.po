@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
-# Irina Fedulova <istartlin@gmail.com>, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Martin Trigaux, 2022
-#
+# Alena Vlasova, 2023
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2023
+# alenafairy, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Martin Trigaux, 2023
+# Irina Fedulova <istartlin@gmail.com>, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_check_printing
@@ -38,8 +40,12 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
-msgstr "Выровнить поля генерируемого чека, в соответсвии с настройками Вашего принтера"
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr ""
+"Выровнить поля генерируемого чека, в соответсвии с настройками Вашего "
+"принтера"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -100,7 +106,9 @@ msgstr "Номера чеков могут состоять только из ц
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Проверьте эту опцию, если ваши предварительно напечатанные чеки не пронумерованы."
+msgstr ""
+"Проверьте эту опцию, если ваши предварительно напечатанные чеки не "
+"пронумерованы."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -148,7 +156,7 @@ msgstr "Контакт"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
@@ -158,10 +166,11 @@ msgstr "Дата создания"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Показывать название"
 
 #. module: account_check_printing
 #. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
@@ -176,8 +185,12 @@ msgstr "Идентификатор"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "Для того, чтобы распечатать несколько чеков одновременно, они должны принадлежать одному банковскому журналу."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"Для того, чтобы распечатать несколько чеков одновременно, они должны "
+"принадлежать одному банковскому журналу."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -239,7 +252,7 @@ msgstr "Номер следующего чека должен содержать
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
 msgid "None"
-msgstr "Нет"
+msgstr "Отсутствует"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
@@ -262,13 +275,21 @@ msgstr "Платежи"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "Платежи к печати в виде чеков должны иметь способ оплаты 'Чек' и не должны быть уже согласованы"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"Платежи к печати в виде чеков должны иметь способ оплаты 'Чек' и не должны "
+"быть уже согласованы"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "Пожалуйста, введите сперва номер предпечатного чека, который вы собираетесь напечатать."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
+msgstr ""
+"Пожалуйста, введите сперва номер предпечатного чека, который вы собираетесь "
+"напечатать."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -280,8 +301,15 @@ msgstr "Предпочтительный способ оплаты"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "Предпочтительный способ оплаты при оплате этому поставщику. Это используется для фильтрации счетов поставщиков по предпочтительному способу оплаты для массовой регистрации платежей. Варианты использования: создание банковских файлов для пакетных переводов, проведение чеков."
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
+msgstr ""
+"Предпочтительный способ оплаты при оплате этому поставщику. Это используется"
+" для фильтрации счетов поставщиков по предпочтительному способу оплаты для "
+"массовой регистрации платежей. Варианты использования: создание банковских "
+"файлов для пакетных переводов, проведение чеков."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -352,8 +380,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "Что-то пошло не так с макетом чека, выберите другой макет в настройках Актирования / Бухгалтерского учета и повторите попытку."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"Что-то пошло не так с макетом чека, выберите другой макет в настройках "
+"Актирования / Бухгалтерского учета и повторите попытку."
 
 #. module: account_check_printing
 #. odoo-python
@@ -370,19 +402,33 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "Последний номер чека был %s. Для того, чтобы избежать отклонение чека банком, вы можете использовать только большее число."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"Последний номер чека был %s. Для того, чтобы избежать отклонение чека "
+"банком, вы можете использовать только большее число."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "Выбранный журнал настроен на печать номера чеков. Если заранее отпечатанные бумажные чеки уже имеют номера или если текущая нумерация ошибочна, вы можете изменить ее на странице конфигурации журнала."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"Выбранный журнал настроен на печать номера чеков. Если заранее отпечатанные "
+"бумажные чеки уже имеют номера или если текущая нумерация ошибочна, вы "
+"можете изменить ее на странице конфигурации журнала."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "Эта опция позволяет Вам напечатать подробности чека (корешок) на нескольких страницах, если они не вмещаются на одной странице."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"Эта опция позволяет Вам напечатать подробности чека (корешок) на нескольких "
+"страницах, если они не вмещаются на одной странице."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -396,7 +442,8 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr "Это позволит сэкономить на количестве платежей соответствующего чека."
 
 #. module: account_check_printing
@@ -413,5 +460,9 @@ msgstr "Недействительный чек"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "Вы должны выбрать макет чека. Для этого перейдите в настройки Актирования / Бухгалтерского учета, найдите «Макет чеков» и установите его."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"Вы должны выбрать макет чека. Для этого перейдите в настройки Актирования / "
+"Бухгалтерского учета, найдите «Макет чеков» и установите его."

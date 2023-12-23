@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Simon S, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
-# Martin Trigaux, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-#
+# Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2023
+# Simon S, 2023
+# Robin Calvin, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Simon Nilsson, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: bus
@@ -54,7 +56,7 @@ msgstr "Skapad av"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -93,7 +95,7 @@ msgstr "Senast uppdaterad av"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -108,7 +110,7 @@ msgstr "Modeller"
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
-msgstr "Offline"
+msgstr "Frånvarande"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
@@ -117,6 +119,7 @@ msgstr "Uppkopplad"
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
 msgid "Refresh"
@@ -148,10 +151,13 @@ msgstr "Användare"
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
 #, python-format
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "websocket meddelandehantering"

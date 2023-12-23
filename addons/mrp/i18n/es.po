@@ -1260,7 +1260,7 @@ msgstr "Subproductos"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "By-products cost shares must be positive."
-msgstr "Los repartos de costos de subproductos deben ser positivos."
+msgstr "Los repartos de costes de subproductos deben ser positivos."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_byproduct
@@ -1603,13 +1603,13 @@ msgstr "Copiar las operaciones seleccionadas"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost Breakdown of Products"
-msgstr "Desglose de costos de productos"
+msgstr "Desglose de costes de productos"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
 msgid "Cost Share (%)"
-msgstr "Reparto de costos (%)"
+msgstr "Reparto de costes (%)"
 
 #. module: mrp
 #. odoo-javascript
@@ -1625,7 +1625,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #, python-format
 msgid "Cost from product form"
-msgstr "Costo del formulario del producto"
+msgstr "Coste del formulario del producto"
 
 #. module: mrp
 #. odoo-javascript
@@ -1633,7 +1633,7 @@ msgstr "Costo del formulario del producto"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost of Components per unit"
-msgstr "Costo de los componentes por unidad"
+msgstr "Coste de los componentes por unidad"
 
 #. module: mrp
 #. odoo-javascript
@@ -1641,7 +1641,7 @@ msgstr "Costo de los componentes por unidad"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost of Operations per unit"
-msgstr "Costo de las operaciones por unidad"
+msgstr "Coste de las operaciones por unidad"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -2565,7 +2565,7 @@ msgstr "Tiene un mensaje"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
-msgstr ""
+msgstr "Tiene líneas de enrutamiento"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -3403,7 +3403,7 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
 "Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se compone de\n"
-"                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear capacidad, etc."
+"                trabajadores y/o maquinaria, se utilizan para calcular costes, programar actividades, planear capacidad, etc."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -3413,7 +3413,7 @@ msgid ""
 "                They can be defined via the configuration menu."
 msgstr ""
 "Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se puede componer de\n"
-"                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear la capacidad, etc.\n"
+"                trabajadores y/o maquinaria, se utilizan para calcular costes, programar actividades, planear la capacidad, etc.\n"
 "                Se pueden definir a través del menú de configuración."
 
 #. module: mrp
@@ -4140,7 +4140,7 @@ msgstr "Ordenes planificadas"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_with_components_availability
 msgid "Plan based on Components Availability"
-msgstr ""
+msgstr "Planificar según disponibilidad de componentes"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4177,7 +4177,7 @@ msgstr "Lámina de plástico"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "Establezca el primer número de serie o una secuencia por defecto"
 
 #. module: mrp
 #. odoo-python
@@ -4279,7 +4279,7 @@ msgstr "Defecto en el proceso"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr ""
+msgstr "Procesar órdenes de fabricación desde la aplicación Código de barras"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5215,6 +5215,9 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process?"
 msgstr ""
+"Algunos movimientos de productos ya se han confirmado, esta orden de "
+"fabricación no se puede cancelar por completo. ¿Todavía está seguro de que "
+"quiere procesar? "
 
 #. module: mrp
 #. odoo-python
@@ -5225,6 +5228,9 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
+"Algunas órdenes de trabajo ya están hechas, por lo que no se puede anular la planificación de esta orden de fabricación.\n"
+"\n"
+"Sería una pena desperdiciar todo ese progreso, ¿no lo cree?"
 
 #. module: mrp
 #. odoo-python
@@ -5235,6 +5241,9 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
+"Ya se empezaron a hacer algunas órdenes de trabajo, por lo que no se puede anular la planificación de esta orden de fabricación.\n"
+"\n"
+"Sería una pena desperdiciar todo ese progreso, ¿no lo cree?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -5617,8 +5626,8 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"El porcentaje del costo de producción final para esta línea de subproducto "
-"(dividido entre la cantidad producida). El total de reparto de costos de "
+"El porcentaje del coste de producción final para esta línea de subproducto "
+"(dividido entre la cantidad producida). El total de reparto de costes de "
 "subproductos debe ser menor o igual a 100."
 
 #. module: mrp
@@ -5627,8 +5636,8 @@ msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
 msgstr ""
-"El porcentaje del costo de producción final para este subproducto. El total "
-"de reparto de costos de subproductos debe ser menor o igual a 100."
+"El porcentaje del coste de producción final para este subproducto. El total "
+"de reparto de costes de subproductos debe ser menor o igual a 100."
 
 #. module: mrp
 #. odoo-python
@@ -5675,7 +5684,7 @@ msgstr "¡La cantidad a producir debe ser positiva!"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr ""
+msgstr "¡La cantidad a desmantelar debe ser positiva!"
 
 #. module: mrp
 #. odoo-python
@@ -5710,7 +5719,7 @@ msgstr "El nombre de etiqueta debe ser único."
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
-"El reparto de costos total para los subproductos de una lista de materiales "
+"El reparto de costes total para los subproductos de una lista de materiales "
 "no puede ser mayor a 100."
 
 #. module: mrp
@@ -5721,7 +5730,7 @@ msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
 msgstr ""
-"El reparto de costos total para los subproductos de una orden de fabricación"
+"El reparto de costes total para los subproductos de una orden de fabricación"
 " no puede ser mayor a 100."
 
 #. module: mrp
@@ -6179,7 +6188,7 @@ msgstr "Unidad"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Unit Cost"
-msgstr "Costo unitario"
+msgstr "Coste unitario"
 
 #. module: mrp
 #. odoo-javascript
@@ -6373,7 +6382,7 @@ msgstr "Variante"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Vendor ABC"
-msgstr ""
+msgstr "Proveedor ABC"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__3
@@ -7144,7 +7153,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "it is added as a component in a manufacturing order"
-msgstr ""
+msgstr "se añadió como componente en una orden de fabricación "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -7152,6 +7161,8 @@ msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
 msgstr ""
+"se movió a través de un traslado, como un recibo o una orden de entrega, por"
+" ejemplo."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

@@ -1,28 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_profile
-#
+# 
 # Translators:
-# Sergey Vilizhanin, 2022
-# Irina Fedulova <istartlin@gmail.com>, 2022
-# Collex100, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# ILMIR <karamov@it-projects.info>, 2022
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Martin Trigaux, 2022
-#
+# Sergey Vilizhanin, 2023
+# Irina Fedulova <istartlin@gmail.com>, 2023
+# Collex100, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# Alena Vlasova, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_profile
@@ -39,12 +40,24 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid ". Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks."
+msgid ""
+". Collect points on the forum or on the eLearning platform. Those points "
+"will make you reach new ranks."
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-close me-1\"/>Cancel"
 msgstr ""
 
 #. module: website_profile
@@ -55,6 +68,11 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr ""
 
 #. module: website_profile
@@ -124,7 +142,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Public profile</span>"
+msgid "<span class=\"fw-bold\">Public Profile</span>"
 msgstr ""
 
 #. module: website_profile
@@ -154,7 +172,9 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "<span id=\"email_validated_message\">Congratulations! Your email has just been validated.</span>"
+msgid ""
+"<span id=\"email_validated_message\">Congratulations! Your email has just "
+"been validated.</span>"
 msgstr ""
 
 #. module: website_profile
@@ -292,6 +312,11 @@ msgid "Badges"
 msgstr "Значки"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
@@ -410,9 +435,20 @@ msgid "No user found for"
 msgstr ""
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+#, python-format
+msgid "Not have enough karma to view other users' profile."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Please enter a valid email address in order to receive notifications from answers or comments."
-msgstr "Пожалуйста, введите действительный адрес электронной почты, чтобы получать уведомления об ответах или комментариях."
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr ""
+"Пожалуйста, введите действительный адрес электронной почты, чтобы получать "
+"уведомления об ответах или комментариях."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -420,7 +456,7 @@ msgid "Ranks"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
 msgstr ""
 
@@ -428,11 +464,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "Поиск"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "Search courses"
-msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -455,7 +486,9 @@ msgid "This month"
 msgstr "В этом месяце"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+#, python-format
 msgid "This profile is private!"
 msgstr "Это приватный профиль!"
 
@@ -471,6 +504,7 @@ msgid "Unpublished"
 msgstr "Не опубликовано"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Update"
 msgstr "Обновить"
@@ -516,6 +550,12 @@ msgid "When you finish a course or reach milestones, you're awarded badges."
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "Write a few words about yourself..."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "XP"
@@ -523,7 +563,10 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum."
+msgid ""
+"You can score more points by answering quizzes at the end of each course "
+"content. Points can also be earned on the forum. Follow this link to the "
+"guidelines of the forum."
 msgstr ""
 
 #. module: website_profile
@@ -542,7 +585,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
-msgstr "хлебные крошки"
+msgstr "строка навигации"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -588,7 +631,9 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
-msgid "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
 msgstr ""
 
 #. module: website_profile

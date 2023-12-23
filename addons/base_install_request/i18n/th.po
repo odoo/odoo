@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,13 +45,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> ได้ขอเปิดใช้งานโมดูล <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span> โมดูลนี้รวมอยู่ในการสมัครของคุณ <span style=\"color: #875A7B; font-weight: bold;\">ไม่มีค่าใช้จ่ายเพิ่มเติม</span> แต่ต้องมีเจ้าหน้าที่ผู้ดูแลระบบจึงจะเปิดใช้งานได้\n"
+"        <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"        <br><br>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">คำขอตรวจสอบ</a>\n"
+"        <br><br>\n"
+"        ขอขอบคุณ\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
+msgstr "คำขอเปิดใช้งาน \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -78,7 +100,7 @@ msgstr "สร้างเมื่อ"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr ""
+msgstr "แอปที่ขึ้นต่อกัน"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -95,7 +117,7 @@ msgstr "ไอดี"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr ""
+msgstr "ติดตั้งแอป"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
@@ -112,7 +134,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr ""
+msgstr "จดหมาย: คำขอติดตั้ง"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -124,62 +146,62 @@ msgstr "โมดูล"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr ""
+msgstr "คำขอเปิดใช้งานโมดูล"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
+msgstr "คำขอเปิดใช้งานโมดูลสำหรับ \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr ""
+msgstr "ตรวจสอบการเปิดใช้งานโมดูล"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr ""
+msgstr "คำอธิบายโมดูล"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "ไม่มีค่าใช้จ่ายเพิ่มเติม แอปพลิเคชั่นนี้ฟรี"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
-msgstr ""
+msgstr "ไม่ได้เลือกโมดูล"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr ""
+msgstr "ขอสิทธิ์เข้าถึง"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr ""
+msgstr "ขอเปิดใช้งาน"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
-msgstr ""
+msgstr "ส่งถึง:"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
 msgid "The following apps will be installed:"
-msgstr ""
+msgstr "แอปต่อไปนี้จะถูกติดตั้ง:"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr ""
+msgstr "โมดูลได้รับการติดตั้งแล้ว"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -187,6 +209,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"แอปนี้ได้รวมอยู่ในการสมัครของคุณแล้ว สามารถเปิดใช้งานได้ฟรี "
+"แต่ว่ามีเพียงแค่ผู้ดูแลระบบเท่านั้นที่สามารถทำได้ "
+"กรอกแบบฟอร์มนี้เพื่อส่งคำขอเปิดใช้งาน"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -196,19 +221,19 @@ msgstr "ผู้ใช้"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Why do you need this module?"
-msgstr ""
+msgstr "ทำไมคุณถึงต้องการโมดูลนี้?"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr ""
+msgstr "คุณกำลังจะติดตั้งแอปพลิเคชันเพิ่มเติม"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr ""
+msgstr "คำขอของคุณถูกส่งเรียบร้อยแล้ว"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -216,3 +241,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
+"เช่น ฉันต้องการใช้โมดูลการตลาดผ่าน SMS "
+"เพื่อจัดระเบียบการโปรโมทกิจกรรมภายในบริษัทและการจัดงานนิทรรศการของเรา "
+"ฉันต้องการสิทธิ์เข้าถึงสำหรับ 3 คนในทีมของฉัน"

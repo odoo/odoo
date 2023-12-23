@@ -795,9 +795,9 @@ msgid ""
 "title=\"The email address is unknown on the partner\" invisible=\"not "
 "send_mail_readonly\"/>"
 msgstr ""
-"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
-"title=\"The email address is unknown on the partner\" invisible=\"not "
-"send_mail_readonly\"/>"
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-"
+"label=\"Waarschuwing\" title=\"Het e-mailadres is onbekend bij de relatie\" "
+"invisible=\"not send_mail_readonly\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1550,7 +1550,7 @@ msgstr "Een afschrift mag alleen regels uit hetzelfde dagboek bevatten."
 msgid ""
 "A tag with the same name and applicability already exists in this country."
 msgstr ""
-"Er bestaat al een tag met dezelfde naam en toepasbaarheid voor dit land."
+"Er bestaat al een label met dezelfde naam en toepasbaarheid voor dit land."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2494,7 +2494,7 @@ msgstr "Hiermee kun je Storno-accounting gebruiken."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "Stelt je in staat kostenplaatsen te gebruiken."
+msgstr "Stelt je in staat analytische boekhouding te gebruiken."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2679,11 +2679,10 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"Een grootboekrekening is onderdeel van een grootboek wat je bedrijf\n"
-"in staat stelt om allerlei debet- en creditboekingen te registreren.\n"
-"Bedrijven moeten de volgende jaarstukken voorleggen: de balans en\n"
-"de winst- en verliesrekening. Deze jaarstukken bieden een bepaalde\n"
-"hoeveelheid informatie over het bedrijf en zijn een wettelijke  verplichting."
+"Een rekening maakt deel uit van een grootboek waarmee je bedrijf een registratie kan maken van allerlei debet- en credittransacties.\n"
+"Bedrijven presenteren hun jaarrekening in twee hoofddelen: de\n"
+"balans en de resultatenrekening (winst en verliesrekening). De jaarrekening van een bedrijf is wettelijk verplicht\n"
+"om een bepaalde hoeveelheid informatie vrij te geven."
 
 #. module: account
 #. odoo-python
@@ -2716,7 +2715,7 @@ msgstr "Kostenplaats"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Kostenplaatsen"
+msgstr "Analytische boekhouding"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
@@ -3165,7 +3164,7 @@ msgstr "Bankrekening %s met nummer %s verwijderd"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank Account Name"
-msgstr "Naam Rekeninghouder"
+msgstr "Naam rekeninghouder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -4388,13 +4387,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_open_sale_payment_items
 msgid "Cool, it looks like you don't have any customer credit notes to pay."
 msgstr ""
-"Cool, het lijkt erop dat je geen klantcreditnota's hebt om te betalen."
+"Cool, het lijkt erop dat je geen klantcreditfacturen hebt om te betalen."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
 msgid "Cool, it looks like you don't have any vendor bills to pay."
 msgstr ""
-"Cool, het lijkt erop dat je geen leveranciersrekeningen hoeft te betalen."
+"Cool, het lijkt erop dat je geen leveranciersfacturen hoeft te betalen."
 
 #. module: account
 #. odoo-python
@@ -5092,7 +5091,7 @@ msgstr "Klantfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_id
 msgid "Customer Invoices Discounts Account"
-msgstr "Klantfacturen Kortingenrekening"
+msgstr "Klantfacturen kortingsrekening"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -7429,7 +7428,7 @@ msgid ""
 "report"
 msgstr ""
 "Indien geactiveerd kunnen op dit rapport door de gebruiker gedefinieerde "
-"filters op journaalitems worden geselecteerd"
+"filters op boekingsregels worden geselecteerd"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -9487,7 +9486,7 @@ msgstr "Methode"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Misc. Operations"
-msgstr "Diversen Activiteiten"
+msgstr "Memoriaalboekingen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -10823,7 +10822,7 @@ msgstr "Kredietlimiet"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
 msgid "Payable and receivable"
-msgstr "Betaalbaar en te ontvangen"
+msgstr "Debiteuren en crediteuren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -10892,7 +10891,7 @@ msgstr "Betalingsverschil afhandeling"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Payment Items"
-msgstr "Betaalartikelen"
+msgstr "Betaalregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_line_id
@@ -12229,7 +12228,7 @@ msgstr "Salariskosten"
 #. module: account
 #: model:account.account,name:account.1_salary_payable
 msgid "Salary Payable"
-msgstr "Salaris betaalbaar"
+msgstr "Salaris crediteurenrekening"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -12743,7 +12742,7 @@ msgstr "Aparte rekening voor kostenkorting"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_income_allocation_id
 msgid "Separate account for income discount"
-msgstr "Aparte rekening voor inkomenskorting"
+msgstr "Aparte rekening voor omzetkorting"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13643,7 +13642,7 @@ msgstr "Toe te passen BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
 msgid "Tax used"
-msgstr "Belasting gebruikt"
+msgstr "BTW gebruikt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14374,9 +14373,9 @@ msgid ""
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
 "De mapping maakt gebruik van reguliere expressies.\n"
-"- Om de tekst aan het begin van de regel af te stemmen (in label of notities), vul je gewoon je tekst in.\n"
-"- Om de tekst waar dan ook overeen te laten komen (in label of notities), plaats je je tekst tussen. *\n"
-"bijv .: .*N°48748 abc123.*"
+"- Om de tekst aan het begin van de regel (in label of notities) te matchen, vul je eenvoudig je tekst in.\n"
+"- Om de tekst overal te matchen (in label of notities), plaatst je je tekst tussen .*\n"
+"bijv.: .*N°48748 abc123.*"
 
 #. module: account
 #. odoo-python
@@ -14473,7 +14472,7 @@ msgid ""
 "The partners on the following invoices have no email address, so those "
 "invoices will not be sent: %s"
 msgstr ""
-"De partners op de volgende facturen hebben geen e-mailadres, dus deze "
+"De relaties op de volgende facturen hebben geen e-mailadres, dus deze "
 "facturen worden niet verzonden: %s"
 
 #. module: account
@@ -14833,8 +14832,8 @@ msgid ""
 "The tax named %s has already been used, you cannot add nor delete its tax "
 "repartition lines."
 msgstr ""
-"De belasting met de naam %s is al gebruikt. Je kunt de "
-"belastingaangifteregels niet toevoegen of verwijderen."
+"De BTW met de naam %s is al gebruikt. Je kunt de BTW-aangifteregels niet "
+"toevoegen of verwijderen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -14966,7 +14965,7 @@ msgstr "Dit kwartaal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
-msgstr "Dit belastingtijdvak"
+msgstr "Dit BTW-tijdvak"
 
 #. module: account
 #. odoo-python
@@ -15276,8 +15275,8 @@ msgid ""
 "This tax has been used in transactions. For that reason, it is forbidden to "
 "modify this field."
 msgstr ""
-"Deze belasting is gebruikt bij transacties. Om die reden is het verboden dit"
-" veld te wijzigen."
+"Deze BTW is gebruikt bij transacties. Om die reden is het verboden dit veld "
+"te wijzigen."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15941,7 +15940,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Use in tax closing"
-msgstr "Gebruik bij belastingafsluiting"
+msgstr "Gebruik bij BTW-afsluiting"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_template_id
@@ -16166,7 +16165,7 @@ msgstr "Leveranciersfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_income_allocation_id
 msgid "Vendor Bills Discounts Account"
-msgstr "Leveranciersrekeningen Kortingenrekening"
+msgstr "Leveranciersrekeningen kortingsrekening"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -16650,8 +16649,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"Je kunt een geboekt journaalitem niet verwijderen. Speel geen spelletjes met"
-" je boekhouding; stel de boeking opnieuw in op concept voordat je deze "
+"Je kunt een geboekte boekingsregel niet verwijderen. Speel geen spelletjes "
+"met je boekhouding; stel de boeking opnieuw in op concept voordat je deze "
 "verwijdert."
 
 #. module: account
@@ -17267,7 +17266,7 @@ msgstr "Je moet dit document bijwerken om je T&C weer te geven."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Your Invoices"
-msgstr "Ontvangen facturen"
+msgstr "Jouw facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

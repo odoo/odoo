@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# Mads Søndergaard, 2022
-# Martin Trigaux, 2022
-# Sanne Kristensen <sanne@vkdata.dk>, 2022
-#
+# Mads Søndergaard, 2023
+# Mads Søndergaard, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
@@ -39,7 +41,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr ""
 
 #. module: base_import
@@ -67,8 +71,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "Der opstod et ukendt problem under import (muligvis en tabt forbindelse, overstigning af data begrænsning, eller overstigning af hukommelses begrænsninger). Vær venlig at forsøge igen, i tilfælde af at problemet er forbigående. Hvis problemet stadig forekommer, kan du prøve at dele filen, i stedet for at importere det hele på én gang."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Der opstod et ukendt problem under import (muligvis en tabt forbindelse, "
+"overstigning af data begrænsning, eller overstigning af hukommelses "
+"begrænsninger). Vær venlig at forsøge igen, i tilfælde af at problemet er "
+"forbigående. Hvis problemet stadig forekommer, kan du prøve at dele filen, i"
+" stedet for at importere det hele på én gang."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -90,7 +103,7 @@ msgstr "Standard import forbinding"
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Batch"
-msgstr ""
+msgstr "Parti"
 
 #. module: base_import
 #. odoo-javascript
@@ -142,6 +155,8 @@ msgstr "Kolonne navn"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Komma"
@@ -157,8 +172,11 @@ msgstr "Bemærkninger"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
-msgstr "Kunne ikke hente URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Kunne ikke hente URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -181,6 +199,7 @@ msgstr "Oprettet den"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -216,6 +235,7 @@ msgstr "Vis navn"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "Prik"
@@ -250,6 +270,24 @@ msgid "Error at row %s: \"%s\""
 msgstr ""
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
@@ -272,6 +310,7 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -307,6 +346,7 @@ msgstr "Fil type"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "Filstørrelse overstiger det angivne maksimum (%s bytes)"
@@ -328,7 +368,9 @@ msgstr ""
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr "Du kan blive nødt til at vælge den korrekte separator i forhold til CSV filer."
+msgstr ""
+"Du kan blive nødt til at vælge den korrekte separator i forhold til CSV "
+"filer."
 
 #. module: base_import
 #. odoo-javascript
@@ -341,8 +383,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr "Fandt ugyldig billeddata, billede bør importeres enten som URL eller base64-indkodet data."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Fandt ugyldig billeddata, billede bør importeres enten som URL eller "
+"base64-indkodet data."
 
 #. module: base_import
 #. odoo-javascript
@@ -386,7 +432,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
 
 #. module: base_import
@@ -430,13 +477,6 @@ msgstr ""
 #, python-format
 msgid "Import records"
 msgstr "Importer datasæt"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#, python-format
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-msgstr "Import udløb. Prøv venligst igen. Hvis du fortsat støder på dette problem, kan filen være for stor til systemets konfiguration; prøv at dele den (importer færre datasæt per fil)."
 
 #. module: base_import
 #. odoo-javascript
@@ -490,7 +530,7 @@ msgstr "Loader fil..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 #, python-format
 msgid "Loading..."
-msgstr ""
+msgstr "Indlæser..."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -570,7 +610,7 @@ msgstr "Res model"
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Resume"
-msgstr "Genoptag"
+msgstr "CV"
 
 #. module: base_import
 #. odoo-javascript
@@ -645,6 +685,7 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr ""
@@ -672,6 +713,7 @@ msgstr "Start på linje"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -772,8 +814,11 @@ msgstr "Kunne ikke indlæse \"{extension}\" fil: kræver Python modulet \"{modna
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Uunderstøttet fil format \"{}\", import understøtter kun CSV, ODS, XLS og XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Uunderstøttet fil format \"{}\", import understøtter kun CSV, ODS, XLS og "
+"XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -800,14 +845,21 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
@@ -833,8 +885,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "Du kan ikke importere billede via URL, tjek årsagen med din administrator eller support."
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Du kan ikke importere billede via URL, tjek årsagen med din administrator "
+"eller support."
 
 #. module: base_import
 #. odoo-javascript
@@ -883,7 +939,7 @@ msgstr "minutter"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "flere"
 
 #. module: base_import
 #. odoo-javascript
@@ -897,7 +953,7 @@ msgstr ""
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "seconds"
-msgstr ""
+msgstr "sekunder"
 
 #. module: base_import
 #. odoo-python

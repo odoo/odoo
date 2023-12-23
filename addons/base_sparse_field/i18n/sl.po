@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-#
+# 
 # Translators:
-# laznikd <laznik@mentis.si>, 2022
-# matjaz k <matjaz@mentis.si>, 2022
-# Martin Trigaux, 2022
-# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
-#
+# laznikd <laznik@mentis.si>, 2023
+# Jasmina Macur <jasmina@hbs.si>, 2023
+# Martin Trigaux, 2023
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# matjaz k <matjaz@mentis.si>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: matjaz k <matjaz@mentis.si>, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
-"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: base_sparse_field
@@ -30,9 +31,10 @@ msgstr "Osnova"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
 msgid "Boolean"
-msgstr "Logična vrednost"
+msgstr "Boolean"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
@@ -85,18 +87,19 @@ msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "Če nastavljeno, bo to polje shranjeno v razširjeno strukturo serializacijskega polja, namesto, da bi imelo svoj lasten stolpec podatkovne baze. Po nastanku se tega ne da spremeniti."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Če nastavljeno, bo to polje shranjeno v razširjeno strukturo "
+"serializacijskega polja, namesto, da bi imelo svoj lasten stolpec podatkovne"
+" baze. Po nastanku se tega ne da spremeniti."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Celo število"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Zadnjič spremenjeno"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -119,6 +122,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
@@ -135,6 +139,7 @@ msgid "Serialization Field"
 msgstr "Polje številčenja"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Serialization field %r not found for sparse field %s!"

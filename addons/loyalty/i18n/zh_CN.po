@@ -468,12 +468,12 @@ msgstr ""
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    最少购买 <t t-out=\"rule.minimum_qty or ''\">10</t>件产品\n"
+"                    最少采购 <t t-out=\"rule.minimum_qty or ''\">10</t>件产品\n"
 "                </span><br>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    购买额高于<t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>有效\n"
+"                    采购额高于<t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>有效\n"
 "                </span><br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -1020,7 +1020,7 @@ msgstr "显示为"
 msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
-msgstr "当客户在您的商店中购买商品时，通过发送唯一的一次性优惠券代码来推动重复购买，以便下次购买。"
+msgstr "当客户在您的商店中采购商品时，通过发送唯一的一次性优惠券代码来推动重复采购，以便下次采购。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1762,7 +1762,7 @@ msgstr "选定的客户"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr "销售礼品卡，可用于购买产品"
+msgstr "销售礼品卡，可用于采购产品"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1774,7 +1774,7 @@ msgstr "发送"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr "下单后发送优惠券，下次购买可以使用"
+msgstr "下单后发送优惠券，下次采购可以使用"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
