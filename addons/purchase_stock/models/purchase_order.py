@@ -86,13 +86,13 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
-        res = super(PurchaseOrder, self).write(vals)
+                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.order_line}
+        res = super().write(vals)
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
+                    if pre_order_line_qty.get(order_line) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
@@ -110,7 +110,7 @@ class PurchaseOrder(models.Model):
         return action
 
     def button_approve(self, force=False):
-        result = super(PurchaseOrder, self).button_approve(force=force)
+        result = super().button_approve(force=force)
         self._create_picking()
         return result
 
@@ -147,12 +147,16 @@ class PurchaseOrder(models.Model):
         return self._get_action_view_picking(self.picking_ids)
 
     def _get_action_view_picking(self, pickings):
-        """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
-        """
+        """ This function returns an action that display existing picking orders of given purchase
+        order ids. When only one found, show the picking immediately."""
         self.ensure_one()
         result = self.env["ir.actions.actions"]._for_xml_id('stock.action_picking_tree_all')
         # override the context to get rid of the default filtering on operation type
-        result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': self.name, 'default_picking_type_id': self.picking_type_id.id}
+        result['context'] = {
+            'default_origin': self.name,
+            'default_partner_id': self.partner_id.id,
+            'default_picking_type_id': self.picking_type_id.id,
+        }
         # choose the view_mode accordingly
         if not pickings or len(pickings) > 1:
             result['domain'] = [('id', 'in', pickings.ids)]
@@ -175,9 +179,7 @@ class PurchaseOrder(models.Model):
     def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
 
         def _keys_in_groupby(move):
-            """ group by picking and the responsible for the product the
-            move.
-            """
+            """ Group the moves by picking and product's responsible."""
             return (move.picking_id, move.product_id.responsible_id)
 
         def _render_note_exception_quantity_po(order_exceptions):
@@ -195,9 +197,8 @@ class PurchaseOrder(models.Model):
         documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_groupby)
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
-            if parent._name == 'stock.picking':
-                if parent.state in ['cancel', 'done']:
-                    continue
+            if parent._name == 'stock.picking' and parent.state in ['cancel', 'done']:
+                continue
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
 
@@ -235,32 +236,31 @@ class PurchaseOrder(models.Model):
         }
 
     def _create_picking(self):
-        StockPicking = self.env['stock.picking']
-        for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
-            if any(product.type in ['product', 'consu'] for product in order.order_line.product_id):
-                order = order.with_company(order.company_id)
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date):
-                    seq += 5
-                    move.sequence = seq
-                moves._action_assign()
-                # Get following pickings (created by push rules) to confirm them as well.
-                forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
-                (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_source(
-                    'mail.message_origin_link',
-                    render_values={'self': picking, 'origin': order},
-                    subtype_xmlid='mail.mt_note',
-                )
+        for order in self:
+            if order.state not in ('purchase', 'done') or\
+               not any(product.type in ['product', 'consu'] for product in order.order_line.product_id):
+                continue
+            order = order.with_company(order.company_id)
+            pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            if not pickings:
+                picking_vals = order._prepare_picking()
+                pickings = self.env['stock.picking'].with_user(SUPERUSER_ID).create(picking_vals)
+            picking = pickings[0]
+            moves = order.order_line._create_stock_moves(picking)
+            moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
+            seq = 0
+            for move in sorted(moves, key=lambda move: move.date):
+                seq += 5
+                move.sequence = seq
+            moves._action_assign()
+            # Get following pickings (created by push rules) to confirm them as well.
+            forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
+            (pickings | forward_pickings).action_confirm()
+            picking.message_post_with_source(
+                'mail.message_origin_link',
+                render_values={'self': picking, 'origin': order},
+                subtype_xmlid='mail.mt_note',
+            )
         return True
 
     def _add_picking_info(self, activity):

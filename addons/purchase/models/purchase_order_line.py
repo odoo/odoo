@@ -158,7 +158,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         if self._context.get('accrual_entry_date'):
             return self.invoice_lines.filtered(
-                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
+                lambda line: line.move_id.invoice_date and line.move_id.invoice_date <= self._context['accrual_entry_date']
             )
         else:
             return self.invoice_lines
@@ -226,7 +226,7 @@ class PurchaseOrderLine(models.Model):
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
-        return super(PurchaseOrderLine, self).write(values)
+        return super().write(values)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase_or_done(self):
@@ -249,10 +249,8 @@ class PurchaseOrderLine(models.Model):
            :return: desired Schedule Date for the PO line
         """
         date_order = po.date_order if po else self.order_id.date_order
-        if date_order:
-            return date_order + relativedelta(days=seller.delay if seller else 0)
-        else:
-            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
+        date_order = date_order or datetime.today()
+        return date_order + relativedelta(days=seller.delay if seller else 0)
 
     @api.depends('product_id', 'order_id.partner_id')
     def _compute_analytic_distribution(self):
@@ -277,7 +275,6 @@ class PurchaseOrderLine(models.Model):
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
-
         self._suggest_quantity()
 
     def _product_id_change(self):
@@ -316,6 +313,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Price')
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
                 continue
@@ -330,6 +328,7 @@ class PurchaseOrderLine(models.Model):
             if seller or not line.date_planned:
                 line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
+            precision_digits = max(line.currency_id.decimal_places, decimal_precision)
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
                 unavailable_seller = line.product_id.seller_ids.filtered(
@@ -352,23 +351,24 @@ class PurchaseOrderLine(models.Model):
                     line.date_order or fields.Date.context_today(line),
                     False
                 )
-                line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.price_unit = float_round(price_unit, precision_digits=precision_digits)
                 continue
 
             price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
             price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-            price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+            price_unit = float_round(price_unit, precision_digits=precision_digits)
             line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
             line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
             default_names = []
             vendors = line.product_id._prepare_sellers({})
+            lang = get_lang(line.env, line.partner_id.lang).code
             for vendor in vendors:
-                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                product_ctx = {'seller_id': vendor.id, 'lang': lang}
                 default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
             if not line.name or line.name in default_names:
-                product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                product_ctx = {'seller_id': seller.id, 'lang': lang}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
     @api.depends('product_id', 'product_qty', 'product_uom')
@@ -389,18 +389,15 @@ class PurchaseOrderLine(models.Model):
         if self.product_packaging_id and self.product_qty:
             newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
             if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom.name
-                        ),
-                    },
-                }
+                message = _(
+                    "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
+                    pack_size=self.product_packaging_id.qty,
+                    pack_name=self.product_id.uom_id.name,
+                    quantity=newqty,
+                    unit=self.product_uom.name
+                )
+                warning = {'title': _('Warning'), 'message': message}
+                return {'warning': warning}
 
     @api.depends('product_packaging_id', 'product_uom', 'product_qty')
     def _compute_product_packaging_qty(self):
@@ -458,9 +455,8 @@ class PurchaseOrderLine(models.Model):
         return action
 
     def _suggest_quantity(self):
-        '''
-        Suggest a minimal quantity based on the seller
-        '''
+        """ Suggest a minimal quantity based on the seller."""
+        self.ensure_one()
         if not self.product_id:
             return
         seller_min_qty = self.product_id.seller_ids\
@@ -550,7 +546,7 @@ class PurchaseOrderLine(models.Model):
         date = move and move.date or fields.Date.today()
         res = {
             'display_type': self.display_type or 'product',
-            'name': '%s: %s' % (self.order_id.name, self.name),
+            'name': f'{self.order_id.name}: {self.name}',
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,

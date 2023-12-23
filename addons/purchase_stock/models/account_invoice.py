@@ -124,7 +124,7 @@ class AccountMove(models.Model):
                 continue
             if invoice.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
                 valued_lines |= invoice.invoice_line_ids.filtered(
-                    lambda l: l.product_id and l.product_id.cost_method != 'standard')
+                    lambda line: line.product_id and line.product_id.cost_method != 'standard')
         if valued_lines:
             svls, _amls = valued_lines._apply_price_difference()
             stock_valuation_layers |= svls
@@ -151,11 +151,11 @@ class AccountMove(models.Model):
     def _stock_account_get_last_step_stock_moves(self):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
-        rslt = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
+        rslt = super()._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.move_type == 'in_invoice'):
-            rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
+            rslt += invoice.invoice_line_ids.purchase_line_id.move_ids.filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
         for invoice in self.filtered(lambda x: x.move_type == 'in_refund'):
-            rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
+            rslt += invoice.invoice_line_ids.purchase_line_id.move_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt
 
     @api.depends('purchase_id')

@@ -19,7 +19,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
         distinct_fields += ['purchase_line_id', 'created_purchase_line_ids']
         return distinct_fields
 
@@ -40,7 +40,7 @@ class StockMove(models.Model):
         """ Returns the unit price for the move"""
         self.ensure_one()
         if self._should_ignore_pol_price():
-            return super(StockMove, self)._get_price_unit()
+            return super()._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
         order = line.order_id
@@ -53,11 +53,11 @@ class StockMove(models.Model):
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             receipt_value = 0
             if move_layer:
-                receipt_value += sum(move_layer.mapped(lambda l: l.currency_id._convert(
-                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+                receipt_value += sum(move_layer.mapped(lambda svl: svl.currency_id._convert(
+                    svl.value, order.currency_id, order.company_id, svl.create_date, round=False)))
             if invoiced_layer:
-                receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
-                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+                receipt_value += sum(invoiced_layer.mapped(lambda svl: svl.currency_id._convert(
+                    svl.value, order.currency_id, order.company_id, svl.create_date, round=False)))
             invoiced_value = 0
             invoiced_qty = 0
             for invoice_line in line.sudo().invoice_lines:
@@ -88,7 +88,7 @@ class StockMove(models.Model):
         """
         self.ensure_one()
 
-        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
+        rslt = super()._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
         purchase_currency = self.purchase_line_id.currency_id
         company_currency = self.company_id.currency_id
         if not self.purchase_line_id or purchase_currency == company_currency:
@@ -142,18 +142,18 @@ class StockMove(models.Model):
         return rslt
 
     def _prepare_extra_move_vals(self, qty):
-        vals = super(StockMove, self)._prepare_extra_move_vals(qty)
+        vals = super()._prepare_extra_move_vals(qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         vals['created_purchase_line_ids'] = [Command.set(self.created_purchase_line_ids.ids)]
         return vals
 
     def _prepare_move_split_vals(self, uom_qty):
-        vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
+        vals = super()._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
     def _clean_merged(self):
-        super(StockMove, self)._clean_merged()
+        super()._clean_merged()
         self.write({'created_purchase_line_ids': [Command.clear()]})
 
     def _get_upstream_documents_and_responsibles(self, visited):
@@ -163,12 +163,12 @@ class StockMove(models.Model):
         elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
-            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+            return super()._get_upstream_documents_and_responsibles(visited)
 
     def _get_related_invoices(self):
         """ Overridden to return the vendor bills related to this stock move.
         """
-        rslt = super(StockMove, self)._get_related_invoices()
+        rslt = super()._get_related_invoices()
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
@@ -179,12 +179,12 @@ class StockMove(models.Model):
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total = 0
         valuation_total_qty = 0
-        for val_stock_move in self:
-            # In case val_stock_move is a return move, its valuation entries have been made with the
+        for move in self:
+            # In case move is a return move, its valuation entries have been made with the
             # currency rate corresponding to the original stock move
-            valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(
-                lambda l: l.quantity)
+            valuation_date = move.origin_returned_move_id.date or move.date
+            svl = move.with_context(active_test=False).stock_valuation_layer_ids\
+                      .filtered(lambda svl: svl.quantity)
             layers_qty = sum(svl.mapped('quantity'))
             layers_values = sum(svl.mapped('value'))
             valuation_price_unit_total += related_aml.company_currency_id._convert(

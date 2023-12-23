@@ -32,7 +32,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def get_import_templates(self):
-        res = super(ProductTemplate, self).get_import_templates()
+        res = super().get_import_templates()
         if self.env.context.get('purchase_product_template'):
             return [{
                 'label': _('Import Template for Products'),

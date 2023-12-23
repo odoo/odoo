@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
@@ -47,10 +47,6 @@ class res_partner(models.Model):
                 if partner.id in self_ids:
                     partner.supplier_invoice_count += count
                 partner = partner.parent_id
-
-    @api.model
-    def _commercial_fields(self):
-        return super(res_partner, self)._commercial_fields()
 
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,

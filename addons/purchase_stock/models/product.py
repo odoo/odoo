@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -97,8 +97,7 @@ class SupplierInfo(models.Model):
         self.last_purchase_date = False
         purchases = self.env['purchase.order'].search([
             ('state', 'in', ('purchase', 'done')),
-            ('order_line.product_id', 'in',
-             self.product_tmpl_id.product_variant_ids.ids),
+            ('order_line.product_id', 'in', self.product_tmpl_id.product_variant_ids.ids),
             ('partner_id', 'in', self.partner_id.ids),
         ], order='date_order')
         for supplier in self:
@@ -135,7 +134,7 @@ class SupplierInfo(models.Model):
             replenish.supplier_id = self
             return {
                 'type': 'ir.actions.act_window',
-                'name': 'Replenish',
+                'name': _('Replenish'),
                 'res_model': 'product.replenish',
                 'res_id': replenish.id,
                 'target': 'new',

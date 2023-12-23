@@ -53,9 +53,8 @@ class AccountMoveLine(models.Model):
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list), self.env['account.move.line'].sudo().create(aml_vals_list)
 
     def _generate_price_difference_vals(self, layers):
-        """
-        The method will determine which layers are impacted by the AML (`self`) and, in case of a price difference, it
-        will then return the values of the new AMLs and SVLs
+        """ The method will determine which layers are impacted by the AML (`self`) and, in case of
+        a price difference, it will then return the values of the new AMLs and SVLs.
         """
         self.ensure_one()
         po_line = self.purchase_line_id
@@ -270,7 +269,7 @@ class AccountMoveLine(models.Model):
             'unit_cost': 0,
             'remaining_qty': 0,
             'remaining_value': 0,
-            'description': self.move_id.name and '%s - %s' % (self.move_id.name, self.product_id.name) or self.product_id.name,
+            'description': self.move_id.name and f'{self.move_id.name} - {self.product_id.name}' or self.product_id.name,
         }
         return {
             **self.product_id._prepare_in_svl_vals(quantity, unit_cost),
