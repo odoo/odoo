@@ -13,5 +13,6 @@ export class ActionPanel extends Component {
     static props = {
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        asAttachment: { type: Boolean, optional: true },
     };
 }

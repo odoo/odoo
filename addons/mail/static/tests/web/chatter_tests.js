@@ -213,6 +213,7 @@ QUnit.test("chatter: drop attachments", async () => {
     await contains(".o-mail-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
     await dropFiles(".o-mail-Dropzone", files);
+    await click(".o-mail-Attachment-file");
     await contains(".o-mail-AttachmentCard", { count: 2 });
     const extraFiles = [
         await createFile({

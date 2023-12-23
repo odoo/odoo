@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
@@ -45,6 +46,7 @@ export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = {
         AttachmentList,
+        AttachmentPanel,
         Dropdown,
         Thread,
         Composer,
@@ -377,7 +379,7 @@ export class Chatter extends Component {
     }
 
     onClickAddAttachments() {
-        if (this.attachments.length === 0) {
+        if (this.attachmentCount === 0) {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
@@ -415,5 +417,14 @@ export class Chatter extends Component {
             return this.recipientsPopover.close();
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
+    }
+
+    get attachmentCount() {
+        const { thread } = this.state;
+        return (
+            (thread?.attachments.length || 0) +
+            (thread?.messages.reduce((count, message) => count + message.linkPreviews?.length, 0) ||
+                0)
+        );
     }
 }
