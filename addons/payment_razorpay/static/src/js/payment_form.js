@@ -1,8 +1,8 @@
 /** @odoo-module **/
 /* global Razorpay */
 
-import { _t } from "@web/core/l10n/translation";
-import { loadJS } from "@web/core/assets";
+import { _t } from '@web/core/l10n/translation';
+import { loadJS } from '@web/core/assets';
 import paymentForm from '@payment/js/payment_form';
 
 paymentForm.include({

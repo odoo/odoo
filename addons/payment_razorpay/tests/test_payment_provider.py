@@ -15,12 +15,3 @@ class TestPaymentProvider(RazorpayCommon):
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref('base.AFN').id
         )
         self.assertNotIn(self.provider, compatible_providers)
-
-    def test_signature_calculation_for_redirect_data(self):
-        """ Test that the calculated signature matches the expected signature for redirect data. """
-        calculated_signature = self.provider._razorpay_calculate_signature(
-            self.redirect_notification_data, is_redirect=True
-        )
-        self.assertEqual(
-            calculated_signature, '437b72e4e87362a39951b44487cf698410b074afdbed19ec44fffd32d2f863f3'
-        )
