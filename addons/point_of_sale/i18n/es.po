@@ -141,7 +141,7 @@ msgid ""
 "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first "
 "session.</p>"
 msgstr ""
-"<p> ¿Listo para echar un vistazo a la <b>interfaz POS</b>? Comencemos "
+"<p> ¿Listo para echar un vistazo a la <b>interfaz TPV</b>? Comencemos "
 "nuestra primera sesión. </p>"
 
 #. module: point_of_sale
@@ -288,7 +288,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Un identificador único global para esta configuración del POS, usado para "
+"Un identificador único global para esta configuración del TPV, usado para "
 "prevenir conflictos en datos generados por el cliente."
 
 #. module: point_of_sale
@@ -320,7 +320,7 @@ msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
 msgstr ""
-"Actualmente hay una sesión abierta para este POS. Algunas configuraciones "
+"Actualmente hay una sesión abierta para este TPV. Algunas configuraciones "
 "solo se pueden cambiar después de que se cierra la sesión."
 
 #. module: point_of_sale
@@ -591,8 +591,8 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr ""
-"Un error ocurrió cargando los precios de los productos. Asegurate que todas "
-"las tarifas esten disponibles en el Punto de Venta."
+"Ocurrió un error cargando los precios de los productos. Asegúrese de que "
+"todas las tarifas estén disponibles en la configuración del TPV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -669,7 +669,7 @@ msgstr "Abrir automáticamente la caja registradora."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "Categorías de productos PoS disponibles"
+msgstr "Categorías de productos TPV disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1210,7 +1210,7 @@ msgstr "¿Confirmar?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
-msgstr "Conecte dispositivos a su POS directamente sin una caja de IoT"
+msgstr "Conecte dispositivos a su TPV directamente sin una IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1610,7 +1610,7 @@ msgstr "Diferencia"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr "Diferencia al cerrar la sesión de POS"
+msgstr "Diferencia al cerrar la sesión de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -2998,8 +2998,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Solo los usuarios con derechos de acceso de administrador pueden modificar "
-"los precios de los productos en los pedidos."
+"Solo los usuarios con permiso de responsable de TPV pueden modificar los "
+"precios de los productos en los pedidos."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3563,7 +3563,7 @@ msgstr "Categoría TPV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr "Interfaz PoS"
+msgstr "Interfaz TPV"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -3720,7 +3720,7 @@ msgstr "Punto de Venta Grupo de Usuario"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr "Configuración del punto de venta"
+msgstr "Configuración del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -3751,7 +3751,7 @@ msgstr "Categorías TPV de producto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr "Sesión de Punto de Venta"
+msgstr "Sesión de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -3761,12 +3761,12 @@ msgstr "Duración de la Sesión de TPV"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr "Estado de la sesión del punto de venta"
+msgstr "Estado de la sesión del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr "Nombre de usuario de la sesión del punto de venta"
+msgstr "Nombre de usuario de la sesión del TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
@@ -5070,7 +5070,7 @@ msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
 "El método de pago seleccionado no está permitido en la configuración de la "
-"sesión de POS."
+"sesión de TPV."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5650,7 +5650,7 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
-"No se puede cambiar esta configuración de POS %s mientras una sesión está "
+"No se puede cambiar esta configuración de TPV %s mientras una sesión está "
 "abierta."
 
 #. module: point_of_sale
@@ -5992,7 +5992,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr "No puede cerrar el POS cuando los pedidos aún están en borrador"
+msgstr "No puede cerrar el TPV mientras aún haya pedidos en borrador"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6140,7 +6140,7 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
-"Su sesión de POS está abierta desde %(date)s, le recomendamos que la cierre "
+"Su sesión de TPV está abierta desde %(date)s, le recomendamos que la cierre "
 "y cree una nueva."
 
 #. module: point_of_sale
