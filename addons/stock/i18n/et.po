@@ -22,8 +22,8 @@
 # JanaAvalah, 2023
 # Anna, 2023
 # Nimesh Parmar, 2023
-# Leaanika Randmets, 2023
 # Mihkel avalah, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Mihkel avalah, 2023\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1309,7 +1309,7 @@ msgid ""
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
 "Vaikimis süsteem võtab lähteasukohast ja passiivselt ootab saadavust. Teine "
-"võimalus on luua hankimine lähteasukohta (ignoreerides laoseisu) korje "
+"võimalus on luua hankimine lähteasukohta (ignoreerides laoseisu) siire "
 "teostamiseks. Kui soovitakse siirded kokku ühendada ja oodata eelmise siirde"
 " lõppemist, tuleks valida teine võimalus."
 
@@ -2780,12 +2780,12 @@ msgstr "Meili teel kinnitamine"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "E-kirja kinnitus korjel"
+msgstr "E-kirja kinnitus siirdel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "Korje kinnitamise e-kirja mall"
+msgstr "Siirde kinnitamise e-kirja mall"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2802,7 +2802,7 @@ msgid ""
 msgstr ""
 "Nautige kiiret kogemust Odoo triipkoodi mooduliga. See töötab kiiresti ja ka"
 " ilma stabiilse interneti ühenduseta. See toetab kõiki töövoogusid: "
-"inventuurid, koondatud korjed, partiide või kaubaaluste liigutamine, "
+"inventuurid, koondatud siirded, partiide või kaubaaluste liigutamine, "
 "madalate varude kontrollimine, jne.  Avage \"Rakendused\" menüü ja "
 "aktiveerige triipkoodide liidestus."
 
@@ -2840,7 +2840,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Korjel esinesid erandid"
+msgstr "Siirdel esines(id) erand(id)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3474,8 +3474,8 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-"Kui korje pole lukustatud, saab muuta algset nõudlust (mustankorjel) või "
-"Tehtud kogust (Tehtud staatusega korjel)."
+"Kui siire pole lukustatud, saab muuta algset nõudlust (Mustand staatuses "
+"siirdel) või Tehtud kogust (Tehtud staatusega siirdel)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
@@ -3715,7 +3715,7 @@ msgstr "Tootekood"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "Ühendusesisene ülekanne"
+msgstr "Sisemine siire"
 
 #. module: stock
 #. odoo-python
@@ -4682,7 +4682,7 @@ msgstr "Sõnumi edastamise veateade"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Sõnum laokorjele"
+msgstr "Sõnum laosiirdele"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_ids
@@ -5095,7 +5095,7 @@ msgstr "Märkus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
-msgstr "Märkused"
+msgstr "Märkmed"
 
 #. module: stock
 #. odoo-python
@@ -5731,7 +5731,7 @@ msgstr "Nopi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "Laokorje"
+msgstr "Siirde tüüp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__picking_ids
@@ -5762,7 +5762,7 @@ msgstr "Laolehe tüüp"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr "Korje tüübi koodi domeen"
+msgstr "Siirde tüübi koodi domeen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -5796,7 +5796,7 @@ msgstr "Planeerimisprobleemid"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
-msgstr "Palun lisage \"Tehtud\" kogused korjele uue paki loomiseks."
+msgstr "Uue paki loomiseks lisage \"Tehtud\" kogused siirdele."
 
 #. module: stock
 #. odoo-python
@@ -7359,7 +7359,7 @@ msgstr "Pakkimise järjestus"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "Korjete järjestus"
+msgstr "Siirete järjestus"
 
 #. module: stock
 #. odoo-python
@@ -8415,7 +8415,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"See on vaikimisi sihtasukoht kui te loote korje käsitsi selle tegevuse "
+"See on vaikimisi sihtasukoht kui te loote siire käsitsi selle tegevuse "
 "tüübiga. Seda on võimalik muuta, või muuta marsruuti, et panna teise "
 "asukohta. Kui see on tühi siis kontrollib süsteem partneri asukohta partneri"
 " kaardil. "
@@ -8755,7 +8755,7 @@ msgstr "Reserveeritud kogus kokku"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
 msgid "Total routes"
-msgstr "Kogu marsruudid"
+msgstr "Kõik marsruudid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8890,7 +8890,7 @@ msgstr "Siirded gruppidele"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
-msgstr "Siirded, mis on planeeritud ajast hilisemad või üks korjetest hilineb"
+msgstr "Siirded, mis on planeeritud ajast hilisemad või üks siiretest hilineb"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -10023,14 +10023,14 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "Te saate tagastada ainult Tehtud korjeid."
+msgstr "Saate tagastada ainult Tehtud staatuses siirdeid."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "Te saate tagastada ainult ühe korje korraga."
+msgstr "Te saate tagastada ainult ühe siire korraga."
 
 #. module: stock
 #. odoo-python
@@ -10085,7 +10085,7 @@ msgstr "Peaksite seda dokumenti värskendama, et see kajastaks T&amp;C."
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr "Teil on endiselt käimasolevad toimingud korje tüüpidele %s laos %s"
+msgstr "Teil on endiselt käimasolevad toimingud siirde tüüpidele %s laos %s"
 
 #. module: stock
 #. odoo-python
