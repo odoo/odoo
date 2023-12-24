@@ -5520,6 +5520,36 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Este módulo agrega características para la localización ecuatoriana, que\n"
+"representa los requerimientos mínimos para operar un negocio en Ecuador en conformidad\n"
+"con los organismos reguladores como la autoridad fiscal de Ecuador (SRI) y la \n"
+"Super Intendencia de Compañías\n"
+"-\n"
+"\n"
+"Siga los siguientes pasos de configuración:\n"
+"1. Vaya a su empresa y configura su país como Ecuador\n"
+"2. Instale el módulo de facturación o el de contabilidad, todo se hará automáticamente\n"
+"\n"
+"Detalles importantes:\n"
+"* El plan contable ecuatoriano se instalará automáticamente, todo se basa en el ejemplo proporcionado por la Super Intendencia de Compañías\n"
+"* También se instalará la lista de impuestos (incluyendo las retenciones), puede desactivar los impuestos que su empresa no usa\n"
+"* Asimismo, se instalarán los tipos de documentos, listas de bancos locales, listas de estados locales, etc.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"Datos técnicos:\n"
+"* Plan contable basado en la recomendación de Super Cías\n"
+"* Impuestos, comprobantes de impuestos y grupos de impuestos de Ecuador\n"
+"* Posiciones fiscales ecuatorianas\n"
+"* Tipos de documento (hay alrededor de 41 tipos de documentos de compra en Ecuador)\n"
+"*Tipos de identificación\n"
+"* Bancos de Ecuador\n"
+"* Contactos: Consumidor Final, SRI, IESS y también validación de IVA básicos\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -6112,6 +6142,8 @@ msgid ""
 "\n"
 "Keeps track of all appointments related to applicants.\n"
 msgstr ""
+"\n"
+"Mantiene un registro de todas las citas relacionadas con los solicitantes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_bik
@@ -9600,6 +9632,10 @@ msgid ""
 "\n"
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
+"\n"
+"Este módulo es el enlace entre las aplicaciones de recolección por lotes y transportista.\n"
+"\n"
+"Permite preparar lotes dependiendo del transportista\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -15469,7 +15505,7 @@ msgstr "Acción cliente"
 #: model:ir.ui.menu,name:base.menu_ir_client_actions_report
 #: model_terms:ir.ui.view,arch_db:base.view_client_action_tree
 msgid "Client Actions"
-msgstr ""
+msgstr "Acciones de cliente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
@@ -17298,7 +17334,7 @@ msgstr "Gastos de envío"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
-msgstr ""
+msgstr "Recolección por lotes del stock de entrega"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -18208,7 +18244,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
 msgid "Electronic Delivery Note for Peru (OSE method) and UBL 2.1"
-msgstr ""
+msgstr "Nota electrónica de entrega para Perú (método OSE) y UBL 2.1"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_exports
@@ -18295,7 +18331,7 @@ msgstr "Salario por hora del empleado"
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
 #: model:ir.module.module,summary:base.module_hr_hourly_cost
 msgid "Employee Hourly Wage"
-msgstr ""
+msgstr "Salario por hora del empleado"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
@@ -22371,7 +22407,7 @@ msgstr "Precio en muelle en la orden de fabricación"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subonctracting_landed_costs
 msgid "Landed Costs With Subcontracting order"
-msgstr ""
+msgstr "Coste en destino con una orden de subcontratación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
@@ -26107,6 +26143,115 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo Punto de venta\n"
+"-----------------------------\n"
+"\n"
+"El <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Punto de venta</a>\n"
+"de Odoo introduce una interfaz extremadamente estética que no requiere instalación y que funciona\n"
+"en hardwares modernos tanto en línea como sin conexión a internet.\n"
+"\n"
+"Gracias a que está completamente integrado con el inventario de la empresa y con contabilidad, tendrá estadísticas\n"
+"en tiempo real y habrá consolidación entre todas las tiendas sin tener que pasar por el problema de\n"
+"integrar varias aplicaciones.\n"
+"\n"
+"Trabaje con el hardware que ya tiene\n"
+"---------------------------------------\n"
+"\n"
+"### En su navegador \n"
+"\n"
+"El PdV de Odoo es una aplicación que funciona en cualquier dispositivo que pueda mostrar\n"
+"sitios web y no tendrá que instalar nada.\n"
+"\n"
+"### ¿Pantalla táctil o teclado?\n"
+"\n"
+"El Punto de venta funciona perfectamente en cualquier dispositivo táctil, ya sea\n"
+"una tableta táctil como un iPad o terminales de pantalla táctil resistiva\n"
+"sin teclado.\n"
+"\n"
+"### Básculas e impresoras\n"
+"\n"
+"Los lectores de código de barras y las impresoras son compatibles sin necesidad de\n"
+"configurarlas. Las básculas, cajas registradoras y otros periféricos se pueden usar con el proxy\n"
+"de la API.\n"
+"\n"
+"En línea y sin conexión\n"
+"------------------\n"
+"\n"
+"### El PdV siempre será confiable, incluso si su conexión no lo es\n"
+"\n"
+"Muestre nuevas tiendas solo con conexión a internet: **sin instalación, sin\n"
+"hardware específico requerido**. Funciona en cualquier **iPad, tableta PC, laptop** o \n"
+"una máquina de PdV industrial.\n"
+"\n"
+"Aunque requiere una conexión a internet para iniciar el Punto de venta, este se mantendrá\n"
+"en línea incluso si se desconecta por completo.\n"
+"\n"
+"\n"
+"Una interfaz extremadamente limpia\n"
+"----------------------------\n"
+"\n"
+"### Simple y llamativa\n"
+"\n"
+"Despídase de los softwares de PdV feos y anticuados. Disfrute la interfaz web de Odoo\n"
+"que está diseñada para vendedores modernos.\n"
+"\n"
+"### Diseñado para la productividad\n"
+"\n"
+"Ya sea para un restaurante o una tienda, puede activar varias órdenes\n"
+"en paralelo para que no haga esperar a sus clientes.\n"
+"\n"
+"### Una búsqueda increíblemente rápida\n"
+"\n"
+"Escanee productos, navegue por categorías jerárquicas u obtenga información rápida\n"
+"acerca de los productos con un filtro increíblemente rápido en todos sus productos.\n"
+"\n"
+"Gestión de inventarios integrada\n"
+"-------------------------------\n"
+"\n"
+"Consolide a todos sus equipos de venta en tiempo real: tiendas, comercio electrónico, equipos\n"
+"de venta. Tendrá control en tiempo real de su inventario y un pronóstico preciso para gestionar\n"
+"adquisiciones.\n"
+"\n"
+"Tendrá un sistema de gestión de almacén al alcance de sus manos: obtenga información acerca\n"
+"de las disponibilidades de los productos, activación de solicitudes de adquisiciones, etc.\n"
+"\n"
+"Brinde servicio al cliente dentro de la tienda\n"
+"----------------------------------\n"
+"\n"
+"Integre servicios para clientes dentro de la tienda para que sus clientes tengan una experiencia\n"
+"excelente. Gestione reparaciones, monitoree garantías, de seguimiento a los reclamos de los clientes, planee\n"
+"órdenes de entrega, etc.\n"
+"\n"
+"Integración de facturación y contabilidad\n"
+"----------------------------------\n"
+"\n"
+"Cree facturas de clientes en solo unos clics. Controle las ventas y el efectivo en tiempo\n"
+"real y use las herramientas de reportes de Odoo para tomar decisiones más inteligentes y mejorar\n"
+"la eficacia de su tienda.\n"
+"\n"
+"Ya no tendrá que integrar softwares: publique todas sus operaciones\n"
+"de venta e inventario en su libro mayor general automáticamente.\n"
+"\n"
+"Unifique la información de todas las tiendas\n"
+"------------------------------\n"
+"\n"
+"Obtenga nuevos productos, estrategias de fijación de precios y promociones que automáticamente se aplican a\n"
+"tiendas seleccionadas. Trabaje en una base de datos de clientes unificada. No necesita una base de datos\n"
+"con interfaz compleja para dirigir una estrategia global en todas sus tiendas.\n"
+"\n"
+"Con el backend de Odoo tendrá un sistema que es perfecto para\n"
+"tiendas pequeñas o multinacionales.\n"
+"\n"
+"Conozca a sus clientes - tanto dentro como fuera de la tienda\n"
+"--------------------------------------\n"
+"\n"
+"Las marcas exitosas integran todas las relaciones de sus clientes a través de\n"
+"todos sus canales para desarrollar un perfil de cliente preciso. También así se podrá comunicar con clientes\n"
+"cuando tomen decisiones de compra, ya sea en línea o en la tienda física.\n"
+"\n"
+"Con Odoo tendrá una vista completa, incluyendo ventas intracanales,\n"
+"interacción con el historial, perfiles y más.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -32640,7 +32785,7 @@ msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inic
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
-msgstr ""
+msgstr "El %s de una subsidiaria debe ser el mismo que el de la empresa raíz."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -34914,6 +35059,8 @@ msgid ""
 "Use discounts, gift card, eWallets and loyalty programs in different sales "
 "channels"
 msgstr ""
+"Use descuentos, tarjetas de regalo, monederos electrónicos y programas de "
+"fidelidad en diferentes canales de venta"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
@@ -35182,7 +35329,7 @@ msgstr "Los usuarios de este grupo heredan automáticamente esos grupos"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uses_default_logo
 msgid "Uses Default Logo"
-msgstr ""
+msgstr "Usa el logotipo por defecto"
 
 #. module: base
 #. odoo-python
