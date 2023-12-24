@@ -71,6 +71,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"เกิดปัญหาโดยไม่ทราบสาเหตุในระหว่างการนำเข้า (การเชื่อมต่ออาจขาดหาย "
+"เกินขีดจำกัดข้อมูล หรือเกินขีดจำกัดหน่วยความจำ) "
+"โปรดลองอีกครั้งในกรณีที่ปัญหาเกิดขึ้นชั่วคราว หากปัญหายังคงเกิดขึ้น "
+"ให้ลองแยกไฟล์แทนที่จะนำเข้าพร้อมกัน"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -85,14 +89,14 @@ msgstr "การนำเข้าฐาน"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "การแมปการนำเข้าฐาน"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "ขีดจำกัดแบทช์"
 
 #. module: base_import
 #. openerp-web
@@ -119,18 +123,18 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "คอลัมน์ %s มีค่าที่ไม่ถูกต้อง (ค่า: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "คอลัมน์ %s มีค่าที่ไม่ถูกต้อง เกิดข้อผิดพลาดในรายการ %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "ชื่อคอลัมน์"
 
 #. module: base_import
 #. openerp-web
@@ -147,6 +151,8 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"ไม่สามารถเรียกข้อมูล URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
@@ -225,14 +231,14 @@ msgstr "ID ของฐานข้อมูล"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "รูปแบบวันที่:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "รูปแบบวันที่และเวลา:"
 
 #. module: base_import
 #. openerp-web
@@ -275,7 +281,7 @@ msgstr "ไม่นำเข้า"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "จุด"
 
 #. module: base_import
 #. openerp-web
@@ -308,14 +314,14 @@ msgstr "ชุดรหัสภาษา:"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการแยกวิเคราะห์วันที่ [%s:L%d]: %s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "ทุกอย่างดูเหมือนถูกต้อง"
 
 #. module: base_import
 #. openerp-web
@@ -349,7 +355,7 @@ msgstr "ชื่อไฟล์"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr ""
+msgstr "ประเภทไฟล์"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -361,14 +367,14 @@ msgstr "ขนาดไฟล์เกินค่าสูงสุดที่
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "ไฟล์ที่จะตรวจสอบและ/หรือนำเข้า ไบนารีแบบดิบ (ไม่ใช่ base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "สำหรับไฟล์ CSV คุณอาจต้องเลือกตัวคั่นที่ถูกต้อง"
 
 #. module: base_import
 #. openerp-web
@@ -384,13 +390,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"พบข้อมูลรูปภาพที่ไม่ถูกต้อง ควรนำเข้ารูปภาพเป็น URL หรือข้อมูลที่เข้ารหัส "
+"base64"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "นี่คือจุดเริ่มต้นของไฟล์ที่เราไม่สามารถนำเข้าได้:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -446,7 +454,7 @@ msgstr "นำเข้า"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "นำเข้าคำถามที่พบบ่อย"
 
 #. module: base_import
 #. openerp-web
@@ -467,7 +475,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import records"
-msgstr ""
+msgstr "นำเข้าบันทึก"
 
 #. module: base_import
 #. openerp-web
@@ -483,7 +491,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
+msgstr "ค่าเซลล์ไม่ถูกต้องที่แถว %(row)s คอลัมน์ %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -554,7 +562,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "โหลดไฟล์"
 
 #. module: base_import
 #. openerp-web
@@ -586,14 +594,14 @@ msgstr "ชื่อ"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "ต้องการความช่วยเหลือ?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "ไม่มีตัวแยก"
 
 #. module: base_import
 #. openerp-web
@@ -617,7 +625,7 @@ msgstr "แม่"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "ฟิลด์ความสัมพันธ์"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -644,7 +652,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "ดูค่าที่เป็นไปได้"
 
 #. module: base_import
 #. openerp-web
@@ -659,7 +667,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "แผ่นงานที่เลือก:"
 
 #. module: base_import
 #. openerp-web
@@ -699,14 +707,14 @@ msgstr "สเปซ"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "เริ่มที่บรรทัด"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr ""
+msgstr "แท็บ"
 
 #. module: base_import
 #. openerp-web
@@ -795,7 +803,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "ตัวคั่นข้อความ:"
 
 #. module: base_import
 #. openerp-web
@@ -825,27 +833,27 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "ตัวคั่นหลักพัน:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "ติดตามประวัติระหว่างการนำเข้า"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
+msgstr "ไม่สามารถโหลดไฟล์ \"{extension}\" ได้: ต้องใช้โมดูล Python \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
+msgstr "รูปแบบไฟล์ที่ไม่รองรับ \"{}\" การนำเข้ารองรับเฉพาะ CSV, ODS, XLS และ XLSX"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -890,19 +898,21 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"คุณไม่สามารถนำเข้ารูปภาพผ่าน URL ได้ "
+"โปรดตรวจสอบเหตุผลกับผู้ดูแลระบบหรือฝ่ายสนับสนุนของคุณ"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr ""
+msgstr "คุณสามารถทดสอบหรือโหลดไฟล์ซ้ำก่อนที่จะดำเนินการนำเข้าต่อ"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "คุณต้องกำหนดค่าอย่างน้อยหนึ่งฟิลด์ที่จะนำเข้า"
 
 #. module: base_import
 #. openerp-web
@@ -929,4 +939,4 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "รหัสข้อผิดพลาดที่ไม่รู้จัก %s"
