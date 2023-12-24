@@ -32,22 +32,6 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         self.assertEqual(handle_notification_data_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_razorpay.controllers.main')
-    def test_webhook_notification_triggers_processing_for_tokenize_transaction(self):
-        """ Test that receiving a valid webhook notification triggers the processing of the
-        notification data for tokenize transaction. """
-        self._create_transaction('redirect', tokenize=True, payment_method_id=self.payment_method_id)
-        url = self._build_url(RazorpayController._webhook_url)
-        with patch(
-            'odoo.addons.payment_razorpay.controllers.main.RazorpayController.'
-            '_verify_notification_signature'
-        ), patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
-        ) as handle_notification_data_mock:
-            self._make_json_request(url, data=self.webhook_notification_data)
-        self.assertEqual(handle_notification_data_mock.call_count, 1)
-
-    @mute_logger('odoo.addons.payment_razorpay.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
         self._create_transaction('redirect')

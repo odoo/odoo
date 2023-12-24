@@ -363,7 +363,7 @@ class PaymentTransaction(models.Model):
 
         if 'id' in notification_data:  # We have the full entity data (S2S request or webhook).
             entity_data = notification_data
-        else:  # The payment data are not complete (redirect from checkout).
+        else:  # The payment data are not complete (Payments made by a token).
             # Fetch the full payment data.
             entity_data = self.provider_id._razorpay_make_request(
                 f'payments/{notification_data["razorpay_payment_id"]}', method='GET'
@@ -398,7 +398,7 @@ class PaymentTransaction(models.Model):
                 self._set_authorized()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
             if self.tokenize:
-                self._razorpay_tokenize_from_notification_data(notification_data)
+                self._razorpay_tokenize_from_notification_data(entity_data)
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing
