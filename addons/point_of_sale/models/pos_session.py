@@ -1978,6 +1978,8 @@ class PosSession(models.Model):
             for product in products:
                 product['lst_price'] = self.company_id.currency_id._convert(product['lst_price'], self.config_id.currency_id,
                                                                             self.company_id, fields.Date.today())
+                product['standard_price'] = self.company_id.currency_id._convert(product['standard_price'], self.config_id.currency_id,
+                                                                            self.company_id, fields.Date.today())
         categories = self._get_pos_ui_product_category(self._loader_params_product_category())
         product_category_by_id = {category['id']: category for category in categories}
         for product in products:
