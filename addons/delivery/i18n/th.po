@@ -113,7 +113,7 @@ msgstr "<strong>HS โค้ด</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>คำอธิบายการจัดส่ง:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -164,6 +164,8 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"คำอธิบายวิธีจัดส่งที่คุณต้องการสื่อสารกับลูกค้าในใบสั่งขายและอีเมลยืนยันการขายเช่น"
+" คำแนะนำให้ลูกค้าปฏิบัติตาม"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -263,7 +265,7 @@ msgstr "โค้ดผู้ให้บริการ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "คำอธิบายผู้ให้บริการ"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
@@ -408,7 +410,7 @@ msgstr "ชุดจัดส่ง"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "คำนำหน้าไปรษณีย์ในการจัดส่ง"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -598,7 +600,7 @@ msgstr "ติดตั้งผู้ให้บริการเพิ่ม
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "เปอร์เซ็นต์ประกันภัย"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -647,7 +649,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "จัดส่งในพื้นที่"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -657,7 +659,7 @@ msgstr "บันทึกคำขอเพื่อความสะดวก
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "จัดการคำนำหน้ารหัสไปรษณีย์ในการจัดส่ง"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -689,7 +691,7 @@ msgstr "ชื่อ"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "ผู้ให้บริการรายใหม่"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -762,7 +764,7 @@ msgstr "อักษรนำ"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "คำนำหน้ามีอยู่แล้ว!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -772,6 +774,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"คำนำหน้าของรหัสไปรษณีย์ที่ผู้ให้บริการรายนี้ใช้ "
+"โปรดทราบว่าสามารถใช้ตัวสั่งงานทั่วไปเพื่อสนับสนุนประเทศที่มีความยาวรหัสไปรษณีย์ต่างกันได้"
+" เช่น สามารถเพิ่ม \"$\" ที่ส่วนท้ายของคำนำหน้าเพื่อให้ตรงกับรหัสไปรษณีย์ "
+"(เช่น \"100$\" จะตรงกับ \"100\" เท่านั้น ไม่ใช่ \"1000\")"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -961,6 +967,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"การประกันการจัดส่งเป็นบริการที่อาจคืนเงินให้กับผู้ส่งที่พัสดุสูญหาย ถูกขโมย "
+"และ/หรือเสียหายระหว่างการขนส่ง"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -968,6 +976,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"รายละเอียดวิธีจัดส่งจะรวมอยู่ในใบสั่งขายด้านล่างและอีเมลยืนยัน เช่น "
+"คำแนะนำให้ลูกค้าปฏิบัติตาม"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -997,7 +1007,7 @@ msgstr "ประเภทของสต๊อกบรรจุภัณฑ์
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "รองรับการประกันภัยการขนส่ง"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
@@ -1051,7 +1061,7 @@ msgstr "ฉลากส่งคืนจะถูกสร้างขึ้น
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "การประกันของการจัดส่งต้องเป็นเปอร์เซ็นต์ระหว่าง 0 ถึง 100"
 
 #. module: delivery
 #. odoo-python
@@ -1104,7 +1114,7 @@ msgstr "เปอร์เซ็นต์นี้จะถูกเพิ่ม
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "น้ำหนักการสั่งซื้อทั้งหมด"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
@@ -1215,7 +1225,7 @@ msgstr "น้ำหนัก * ปริมาตร"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "ชื่อหน่วยน้ำหนัก"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -1278,7 +1288,7 @@ msgstr "คำนำหน้า Zip"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "คำนำหน้ารหัสไปรษณีย์"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
