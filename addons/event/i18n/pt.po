@@ -17,6 +17,7 @@
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Manuela Silva <mmsrs@sky.com>, 2023
+# Vasco Rodrigues, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
+"Last-Translator: Vasco Rodrigues, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,35 +42,35 @@ msgstr "# Eventos"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "Enviado"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s lugares restantes)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (Esgotado)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)slugares restantes)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (Esgotado)"
 
 #. module: event
 #. odoo-python
@@ -84,11 +85,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"\"Crachá dobrável - %s - %s\" % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "\"Crachá dobrável - %s\" % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -96,18 +99,22 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"\"Bilhete em página inteira - %s - %s\" % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"\"Bilhete em página inteira - %s\" % (object.name or "
+"'Event').replace('/','')"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": Faltam %(nb_too_many)i lugares."
 
 #. module: event
 #. odoo-python
@@ -117,26 +124,28 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- o bilhete \"%(ticket_name)s\" (%(event_name)s): Faltam %(nb_too_many)i "
+"lugares."
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
-msgstr ""
+msgstr "10–14"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
 msgid "15-18"
-msgstr ""
+msgstr "15–18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_4
 msgid "18+"
-msgstr ""
+msgstr "+18"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
 msgid "5-10"
-msgstr ""
+msgstr "5–10"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -144,6 +153,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Espaço Empresarial</b> – Para conversar sobre metodologias de "
+"implementação, melhores práticas de vendas, etc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -151,6 +162,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Espaço Técnico</b> – Um para programadores avançados do Odoo, um para "
+"novos programadores."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -158,6 +171,9 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>A Feira de Design é precedida por dois dias de sessões de treinamento "
+"para especialistas!</b><br> Propomos três sessões de treinamento diferentes,"
+" cada uma de dois dias."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -166,6 +182,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>As sessões plenárias da manhã serão mais curtas</b> e daremos mais tempo "
+"para reuniões temáticas, conferências, workshops e sessões de tutoriais no "
+"período da tarde."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -176,11 +195,16 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Todo o evento é aberto ao público!</b> <br>Pedimos uma taxa de "
+"participação de 49,50€ para os custos dos três dias (coffee breaks, "
+"refeições, bebidas, happy hour e um show surpreendente).<br> Para quem não "
+"quiser contribuir, há opção de ingresso gratuito que não inclui alimentação "
+"e acesso a eventos noturnos."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "</b>Espaço de Workshop</b> – Principalmente para programadores."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -188,6 +212,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Transmita suas faixas online por meio de uma integração com o Youtube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -195,6 +221,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Compartilhe um questionário com seus participantes assim que a trilha terminar</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge

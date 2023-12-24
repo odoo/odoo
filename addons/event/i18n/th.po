@@ -39,28 +39,28 @@ msgstr "# ส่งแล้ว"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s ที่นั่งที่เหลืออยู่)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (ขายหมดแล้ว)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s ที่นั่งที่เหลืออยู่)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (ขายหมดแล้ว)"
 
 #. module: event
 #. odoo-python
@@ -87,6 +87,8 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'ตั๋วหน้าเต็ม - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -98,7 +100,7 @@ msgstr "'ทิกเก็ตเต็มหน้า - %s' % (object.name or '
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": ขาด %(nb_too_many)i ที่นั่ง"
 
 #. module: event
 #. odoo-python
@@ -107,7 +109,7 @@ msgstr ""
 msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
-msgstr ""
+msgstr "- ตั๋ว \"%(ticket_name)s\" (%(event_name)s): ไม่มีที่นั่ง %(nb_too_many)i"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -265,6 +267,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle "
+"me-2\"></i>กิจกรรมนี้และการประชุมทั้งหมดเป็น<b>ภาษาอังกฤษ</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -310,6 +314,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">ผู้บรรยาย</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -847,7 +853,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "เพิ่มบันทึกภายใน (รายการสิ่งที่ต้องทำ ข้อมูลการติดต่อ ...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -905,7 +911,7 @@ msgstr "ประกาศ"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "ใช้การเปลี่ยนแปลง"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -916,7 +922,7 @@ msgstr "เก็บถาวรแล้ว"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "มีการเปิดตัวการขาย"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1129,7 +1135,7 @@ msgstr "หมวดหมู่"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "ลำดับหมวดหมู่"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
