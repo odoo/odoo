@@ -104,20 +104,20 @@ msgstr "Cancelada"
 #: code:addons/account_peppol/models/account_move.py:0
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr ""
+msgstr "No se puede cancelar un asiento que ya se envió a PEPPOL"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr "No puede registrar a un usuario con una solicitud %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Checked on"
-msgstr ""
+msgstr "Verificado el"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
@@ -181,7 +181,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "Diario de facturas entrantes"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
@@ -192,7 +192,7 @@ msgstr "Asiento contable"
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr ""
+msgstr "Última verificación del punto de conexión de Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -247,7 +247,7 @@ msgstr "Elegible para PEPPOL"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr ""
+msgstr "Validez del punto de conexión PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -314,7 +314,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully"
-msgstr ""
+msgstr "Se recibió el documento Peppol con éxito"
 
 #. module: account_peppol
 #. odoo-python
@@ -322,6 +322,7 @@ msgstr ""
 #, python-format
 msgid "Peppol document has been received successfully. Sender endpoint: %s"
 msgstr ""
+"Se recibió el documento Peppol con éxito. Punto de conexión del emisor: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -333,7 +334,7 @@ msgstr "Dirección electrónica de Peppol (EAS)"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 msgid "Peppol endpoint validity"
-msgstr ""
+msgstr "Validez del punto de conexión Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -384,7 +385,7 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
-msgstr ""
+msgstr "Verifique la configuración del contacto en su configuración."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -422,6 +423,7 @@ msgstr "Enviar mediante PEPPOL"
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
 msgstr ""
+"El documento se envió al punto de conexion de Peppol para su procesamiento"
 
 #. module: account_peppol
 #. odoo-python
@@ -439,6 +441,9 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
+"Los siguientes contactos no están configurados de forma adecuada para "
+"recibir documentos Peppol. Compruebe y verifique el punto de conexión Peppol"
+" y el formato de facturación electrónica: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -446,12 +451,13 @@ msgstr ""
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
 msgstr ""
+"El contacto no tiene Peppol EAS o un identificador del punto de conexión."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "The partner's EAS code and PEPPOL endpoint are valid"
-msgstr ""
+msgstr "El código EAS del contacto y el punto de conexión PEPPOL son válidos"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -494,7 +500,7 @@ msgstr "Verificar"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "Verificar el punto de conexión PEPPOL del contacto"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
