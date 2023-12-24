@@ -263,7 +263,7 @@ msgstr "Adyen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
 msgid "Allow Express Checkout"
-msgstr ""
+msgstr "Permitir el pago exprés"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
@@ -278,12 +278,12 @@ msgstr "Permitir guardar métodos de pago"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Ya capturado "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Ya está anulado "
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
@@ -306,7 +306,7 @@ msgstr "Cantidad máxima"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "Importe a capturar"
 
 #. module: payment
 #. odoo-javascript
@@ -318,7 +318,7 @@ msgstr "Se produjo un error al procesar este pago"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "An error occurred during the processing of your payment."
-msgstr ""
+msgstr "Occurió un error al procesar su pago."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -370,7 +370,7 @@ msgstr "Authorized"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "Importe autorizado "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -450,7 +450,7 @@ msgstr "Operaciones canceladas"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "Capturar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -786,12 +786,12 @@ msgstr "Error: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
+msgstr "Plantilla de formulario de pago exprés"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
-msgstr ""
+msgstr "Pago rápido compatible"
 
 #. module: payment
 #. odoo-javascript
@@ -1044,6 +1044,7 @@ msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
 msgstr ""
+"No es posible hacer una solicitud al proveedor porque está desactivado."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1613,7 +1614,7 @@ msgstr "Error en servidor:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
 msgid "Show Allow Express Checkout"
-msgstr ""
+msgstr "Mostrar el botón \"Permitir el pago exprés\""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
@@ -1875,7 +1876,7 @@ msgstr "La ruta del usuario se redirecciona a después de la transacción"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "La transacción origen de las transacciones secundarias relacionadas"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1897,6 +1898,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
 msgstr ""
+"La plantilla que representa el formulario de los métodos de pago rápido."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -2016,6 +2018,8 @@ msgid ""
 "This partner has no email, which may cause issues with some payment providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
+"Este partner no tiene correo electrónico, lo que puede ocasionar problemas con algunos proveedores de pago.\n"
+"                     Se recomienda configurar un correo electrónico para este partner."
 
 #. module: payment
 #. odoo-javascript
@@ -2042,6 +2046,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"Esta transacción ha sido confirmada tras el procesamiento de sus "
+"transacciones de captura parcial y anulación parcial (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2124,7 +2130,7 @@ msgstr "Verificado"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Anular el importe restante"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

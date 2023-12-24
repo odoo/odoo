@@ -59,6 +59,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                Agregar direcciones a la lista de Permitidos\n"
+"            </p><p>\n"
+"                Para protegerle del spam y de las respuestas en bucle, Odoo bloquea automáticamente correos electrónicos\n"
+"                que llegan a su puerta de enlace más allá del umbral de <b>%(threshold)i</b> correos electrónicos cada <b>%(minutes)i</b>\n"
+"                minutos. En caso de que necesite recibir actualizaciones frecuentes de parte de algunas direcciones\n"
+"                puede agregarlas a continuación y Odoo las dejará pasar.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -2429,6 +2438,7 @@ msgstr "Cerrado"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
 msgstr ""
+"Recopilar respuestas en una dirección de correo electrónico específica"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2631,6 +2641,8 @@ msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
 msgstr ""
+"Contenido que sustituirá automáticamente el acceso directo que usted elija. "
+"Aún se puede cambiar este contenido antes de enviar su mensaje."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -4587,6 +4599,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
+"Si esta opción está activada, el gerente de colas enviará el correo "
+"electrónico después de la fecha. Si no está activada, el correo electrónico "
+"se enviará lo antes posible. Puede utilizar expresiones dinámicas."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4687,6 +4702,9 @@ msgid ""
 "if sent, send emails after that date. This date is considered as being in "
 "UTC timezone."
 msgstr ""
+"En modo comentario: si se establece, pospone el envío de notificaciones. En "
+"el modo de correo masivo: si se establece, envía los correos electrónicos "
+"después de esa fecha. Esta fecha se considera en la zona horaria UTC."
 
 #. module: mail
 #. odoo-python
@@ -5471,7 +5489,7 @@ msgstr "Última actualización el"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__last_seen_dt
 msgid "Last seen date"
-msgstr ""
+msgstr "Fecha de la última visita"
 
 #. module: mail
 #. odoo-javascript
@@ -5751,12 +5769,12 @@ msgstr "Diseño del correo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_main_attachment
 msgid "Mail Main Attachment management"
-msgstr ""
+msgstr "Gestión de los principales archivos adjuntos del correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
-msgstr ""
+msgstr "Int ID del mensaje de correo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_rtc_session
@@ -5813,6 +5831,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
+"El compositor de correo en modo comentario debe ejecutarse en al menos un "
+"registro. No se han encontrado registros (modelo %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -5858,6 +5878,8 @@ msgid ""
 "Mailing or posting with a source should not be called with an empty "
 "%(source_type)s"
 msgstr ""
+"El envío por correo o la publicación con una fuente no debe llamarse con un "
+"%(source_type)s vacío"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -6672,7 +6694,7 @@ msgstr "No confirmado"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "No probado"
 
 #. module: mail
 #. odoo-javascript
@@ -6738,6 +6760,8 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
+"Las notificaciones deben recibir contactos asignados como una lista de IDs "
+"(recibió %(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8079,7 +8103,7 @@ msgstr "Responder a"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr ""
+msgstr "Dirección de correo electrónico de respuesta"
 
 #. module: mail
 #. odoo-javascript
@@ -8372,7 +8396,7 @@ msgstr "Fecha prevista"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Mensaje programado"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_message_schedule_action
@@ -8380,7 +8404,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr ""
+msgstr "Mensajes programados"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
@@ -8790,6 +8814,9 @@ msgid ""
 "messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
 "use in your messages."
 msgstr ""
+"Acceso directo que se sustituirá automáticamente por un contenido más largo "
+"en sus mensajes. Escriba ':' seguido del nombre de su acceso directo (por "
+"ejemplo, :hola) para utilizarlo en sus mensajes."
 
 #. module: mail
 #. odoo-javascript
@@ -8858,7 +8885,7 @@ msgstr "Mostrar barra lateral"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Show video participants only"
-msgstr ""
+msgstr "Mostrar solo a los participantes del vídeo"
 
 #. module: mail
 #. odoo-javascript
@@ -9305,6 +9332,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
+"El renderizado de plantillas sólo admite inline_template, qweb o qweb_view "
+"(vista o bruto); %(engine)sen cambio, recibió"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9466,7 +9495,7 @@ msgstr "El usuario interno a cargo de este contacto."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
+msgstr "El último mensaje recibido en este alias ha provocado un error."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -10066,6 +10095,8 @@ msgstr ""
 #, python-format
 msgid "Unable to send message, please configure the sender's email address."
 msgstr ""
+"No se puede enviar el mensaje, configure la dirección de correo electrónico "
+"del remitente."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -10230,6 +10261,8 @@ msgstr "Usar un servidor de Gmail"
 #, python-format
 msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
+"Utilice un script local para obtener sus correos electrónicos y crear nuevos"
+" registros."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10595,7 +10628,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
 msgid "Whether to display all the recipients or only the important ones."
-msgstr ""
+msgstr "Si desea mostrar todos los destinatarios o solo los importantes."
 
 #. module: mail
 #. odoo-javascript
@@ -10739,7 +10772,7 @@ msgstr "Solo puede abrir el perfil de usuarios existentes."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "You can safely ignore this message"
-msgstr ""
+msgstr "Puede ignorar sin problemas este mensaje"
 
 #. module: mail
 #. odoo-python
@@ -10869,7 +10902,7 @@ msgstr ""
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Your account login has been updated"
-msgstr ""
+msgstr "Se ha actualizado el inicio de sesión de su cuenta"
 
 #. module: mail
 #. odoo-python
@@ -34408,7 +34441,7 @@ msgstr "cinta de vídeo"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "view"
-msgstr ""
+msgstr "vista "
 
 #. module: mail
 #. odoo-javascript
