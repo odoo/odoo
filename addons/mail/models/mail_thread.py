@@ -1404,6 +1404,10 @@ class MailThread(models.AbstractModel):
                     part.set_charset('utf-8')
                 encoding = part.get_content_charset()  # None if attachment
 
+                # Correcting MIME type for PDF files
+                if part.get('Content-Type', '').startswith('pdf;'):
+                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
+
                 content = part.get_content()
                 info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment

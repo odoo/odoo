@@ -40,6 +40,7 @@ odoo.define('website.s_website_form', function (require) {
         selector: '.s_website_form form, form.s_website_form', // !compatibility
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
+            'submit': 'send',
         },
 
         /**

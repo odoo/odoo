@@ -1197,7 +1197,7 @@ msgstr "Автоматично, жодних кроків не додано"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
 #, python-format
 msgid "Available"
-msgstr "В наявності"
+msgstr "Доступно"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -1211,7 +1211,7 @@ msgstr "Наявні товари"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
-msgstr "Кількість в наявності"
+msgstr "Доступна кількість"
 
 #. module: stock
 #. odoo-python
@@ -3167,12 +3167,12 @@ msgstr "Вільний склад"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Вільне використання кількостей"
+msgstr "Доступне використання кількостей"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Безкоштовне використання"
+msgstr "Доступна кількість"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -7442,13 +7442,6 @@ msgid "Sequence return"
 msgstr "Послідовність повернення"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Послідовності %s вже існують."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Серійні номери"
@@ -8701,6 +8694,17 @@ msgstr "Цей запис вже існує."
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Цей звіт не може застосовуватися до виконаних і не виконаних %s одночасно"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

@@ -233,24 +233,26 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
-            message.append(_("\n- Street required min 3 and max 100 characters"))
+            message.append(_("- Street required min 3 and max 100 characters"))
         if partner.street2 and not re.match("^.{3,100}$", partner.street2):
-            message.append(_("\n- Street2 should be min 3 and max 100 characters"))
+            message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
-            message.append(_("\n- City required min 3 and max 100 characters"))
+            message.append(_("- City required min 3 and max 100 characters"))
         if not re.match("^.{3,50}$", partner.state_id.name or ""):
-            message.append(_("\n- State required min 3 and max 50 characters"))
+            message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
-            message.append(_("\n- Zip code required 6 digits"))
+            message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
             self._l10n_in_edi_extract_digits(partner.phone)
         ):
-            message.append(_("\n- Mobile number should be minimum 10 or maximum 12 digits"))
+            message.append(_("- Mobile number should be minimum 10 or maximum 12 digits"))
         if partner.email and (
             not re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
             or not re.match("^.{6,100}$", partner.email)
         ):
-            message.append(_("\n- Email address should be valid and not more then 100 characters"))
+            message.append(_("- Email address should be valid and not more then 100 characters"))
+        if message:
+            message.insert(0, "%s" %(partner.display_name))
         return message
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):

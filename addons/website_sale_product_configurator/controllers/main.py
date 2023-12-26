@@ -17,7 +17,10 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         kw.pop('pricelist_id')
         product = request.env['product.product'].browse(int(product_id))
         combination = request.env['product.template.attribute.value'].browse(variant_values)
-        has_optional_products = product.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))
+        has_optional_products = product.optional_product_ids.filtered(
+            lambda p: p._is_add_to_cart_possible(combination)
+                      and (not request.website.prevent_zero_price_sale or p._get_contextual_price())
+        )
         force_dialog = kw.get('force_dialog')
 
         if not force_dialog and not has_optional_products and (product.product_variant_count <= 1 or variant_values):

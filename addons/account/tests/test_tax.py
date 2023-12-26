@@ -13,6 +13,16 @@ class TestTaxCommon(AccountTestInvoicingCommon):
         cls.currency_data['currency'].rounding = 1.0
         cls.currency_no_decimal = cls.currency_data['currency']
         cls.company_data_2 = cls.setup_company_data('company_2', currency_id=cls.currency_no_decimal.id)
+
+        cls.currency_5_round = cls.env['res.currency'].create({
+            'name': 'Platinum Coin',
+            'symbol': 'P$',
+            'rounding': 0.05,
+            'position': 'after',
+            'currency_unit_label': 'Platinum',
+            'currency_subunit_label': 'Palladium',
+        })
+        cls.company_data_3 = cls.setup_company_data('company_3', currency_id=cls.currency_5_round.id)
         cls.env.user.company_id = cls.company_data['company']
 
         cls.fixed_tax = cls.env['account.tax'].create({
@@ -119,7 +129,7 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
         })
 
-        cls.tax_5_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
+        cls.tax_5_percent = cls.env['account.tax'].with_company(cls.company_data_3['company']).create({
             'name': "test_5_percent",
             'amount_type': 'percent',
             'amount': 5,

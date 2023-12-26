@@ -430,20 +430,18 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
     if (img.dataset.originalSrc || !src) {
         return;
     }
+    // In order to be robust to absolute, relative and protocol relative URLs,
+    // the src of the img is first converted to an URL object. To do so, the URL
+    // of the document in which the img is located is used as a base to build
+    // the URL object if the src of the img is a relative or protocol relative
+    // URL. The original attachment linked to the img is then retrieved thanks
+    // to the path of the built URL object.
+    const srcUrl = new URL(src, img.ownerDocument.defaultView.location.href);
+    const relativeSrc = srcUrl.pathname;
 
-    // Only consider the "relative" part of the URL. Needed because some
-    // relative URLs were wrongly converted to absolute URLs at some point and
-    // user domains could have been changed meanwhile.
-    let relativeSrc;
-    try {
-        const srcUrl = new URL(src);
-        relativeSrc = srcUrl.pathname;
-    } catch {
-        relativeSrc = src;
-    }
     const {original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: relativeSrc.split(/[?#]/)[0]},
+        params: {src: relativeSrc},
     });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing

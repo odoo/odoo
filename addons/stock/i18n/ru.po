@@ -7512,13 +7512,6 @@ msgid "Sequence return"
 msgstr "Возврат последовательности"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Последовательности %s уже существует."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Серийные номера"
@@ -8776,6 +8769,17 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Этот отчет не может быть использован одновременно для выполненных и "
 "невыполненных %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

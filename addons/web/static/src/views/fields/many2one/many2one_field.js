@@ -304,10 +304,13 @@ Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
 
 Many2OneField.extractProps = ({ attrs, field }) => {
+    const hasCreatePermission = attrs.can_create ? Boolean(JSON.parse(attrs.can_create)) : true;
+    const hasWritePermission = attrs.can_write ? Boolean(JSON.parse(attrs.can_write)) : true;
+
     const noOpen = Boolean(attrs.options.no_open);
     const noCreate = Boolean(attrs.options.no_create);
-    const canCreate = noCreate ? false : attrs.can_create && Boolean(JSON.parse(attrs.can_create));
-    const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
+    const canCreate = hasCreatePermission && !noCreate;
+    const canWrite = hasWritePermission;
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);
     const canScanBarcode = Boolean(attrs.options.can_scan_barcode);

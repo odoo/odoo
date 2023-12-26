@@ -2106,7 +2106,8 @@ var BasicModel = AbstractModel.extend({
             case 'CREATE':
                 var createOptions = _.extend({
                     context: command.context,
-                    position: command.position
+                    position: command.position,
+                    allowWarning: command.allowWarning,
                 }, options || {});
                 createOptions.viewType = fieldInfo.mode;
 

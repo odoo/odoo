@@ -209,6 +209,8 @@ class AccountMove(models.Model):
             ('active', '=', True),
         ])
 
+        if not company_ids:
+            return []
         return [
             ('move_type', populate.randomize(
                 ['entry', 'in_invoice', 'out_invoice', 'in_refund', 'out_refund', 'in_receipt', 'out_receipt'],

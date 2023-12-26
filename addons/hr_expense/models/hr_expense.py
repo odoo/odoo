@@ -909,7 +909,7 @@ class HrExpenseSheet(models.Model):
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True)
     payment_state = fields.Selection(
-        selection=lambda self: self.env["account.move"]._fields["payment_state"].selection,
+        lambda self: self.env["account.move"]._fields["payment_state"]._description_selection(self.env),
         string="Payment Status",
         store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
@@ -1264,10 +1264,16 @@ class HrExpenseSheet(models.Model):
         }
 
     def action_unpost(self):
-        draft_moves = self.account_move_id.filtered(lambda _move: _move.state == 'draft')
+        self = self.with_context(clean_context(self.env.context))
+        moves = self.account_move_id
+        draft_moves = moves.filtered(lambda m: m.state == 'draft')
+        non_draft_moves = moves - draft_moves
+        non_draft_moves._reverse_moves(default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves], cancel=True)
+        self.write({
+            'account_move_id': False,
+            'state': 'draft',
+        })
         draft_moves.unlink()
-        moves = self.account_move_id - draft_moves
-        moves._reverse_moves(default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in moves], cancel=True)
         self.reset_expense_sheets()
 
     def action_get_attachment_view(self):

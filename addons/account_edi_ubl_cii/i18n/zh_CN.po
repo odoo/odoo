@@ -158,6 +158,12 @@ msgstr "每个发票行应有且只有一项税款."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr "每个发票行应该有一个产品或一个标签。"
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -335,6 +341,15 @@ msgstr "这字段%s在%s上是必需的。"
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "收款银行需要填写“已净化帐号”字段。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr "不支持发票中包含具有负单位价格的行。您需要设置一个负数值来替代。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

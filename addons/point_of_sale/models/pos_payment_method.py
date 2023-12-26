@@ -90,3 +90,7 @@ class PosPaymentMethod(models.Model):
             raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
         return super(PosPaymentMethod, self).write(vals)
+
+    def copy(self, default=None):
+        default = dict(default or {}, config_ids=[(5, 0, 0)])
+        return super().copy(default)

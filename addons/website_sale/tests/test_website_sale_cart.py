@@ -1,14 +1,15 @@
 # coding: utf-8
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import tagged
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleCart(TransactionCase):
+class WebsiteSaleCart(TransactionCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
@@ -90,7 +91,7 @@ class WebsiteSaleCart(TransactionCase):
             'lst_price': 1000.0,
             'standard_price': 800.0,
         })
-        portal_user = self.env.ref('base.demo_user0')
+        portal_user = self.user_portal
         website = self.website.with_user(portal_user)
 
         SaleOrderLine = self.env['sale.order.line']

@@ -36,6 +36,7 @@ import {
     isHtmlContentSupported,
     rgbToHex,
     isFontAwesome,
+    ICON_SELECTOR,
     getInSelection,
     getDeepRange,
     getRowIndex,
@@ -368,6 +369,8 @@ export class OdooEditor extends EventTarget {
             });
         });
         // Create the table UI.
+        this._tableUiContainer = this.document.createElement('div');
+        this._tableUiContainer.classList.add('o_table_ui_container');
         const parser = new DOMParser();
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
@@ -431,8 +434,9 @@ export class OdooEditor extends EventTarget {
             this.addDomListener(uiMenu.querySelector('.o_reset_table_size'), 'click', () => this.execCommand('resetSize', this._tableUiTarget));
 
             this[`_${direction}Ui`] = ui;
-            this.document.body.append(ui);
+            this._tableUiContainer.append(ui);
             this.addDomListener(ui.querySelector('.o_table_ui_menu_toggler'), 'click', this._onTableMenuTogglerClick);
+            this.editable.before(this._tableUiContainer);
         }
 
         // --------
@@ -580,7 +584,7 @@ export class OdooEditor extends EventTarget {
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
                         html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>';
+                        html += '</span>\u200B';
                         this.execCommand('insert', parseHTML(html));
                     },
                 },
@@ -593,7 +597,7 @@ export class OdooEditor extends EventTarget {
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
                         html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>';
+                        html += '</span>\u200B';
                         this.execCommand('insert', parseHTML(html));
                     },
                 },
@@ -637,6 +641,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
+        this.addDomListener(this.document, 'scroll', this._onScroll, true);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -771,10 +776,10 @@ export class OdooEditor extends EventTarget {
         this.options.onPostSanitize(target);
     }
 
-    addDomListener(element, eventName, callback) {
+    addDomListener(element, eventName, callback, useCapture) {
         const boundCallback = callback.bind(this);
         this._domListeners.push([element, eventName, boundCallback]);
-        element.addEventListener(eventName, boundCallback);
+        element.addEventListener(eventName, boundCallback, useCapture);
     }
 
     _generateId() {
@@ -1330,12 +1335,12 @@ export class OdooEditor extends EventTarget {
                         }
                         this.idSet(nodeToRemove);
                     }
-                    if (mutation.nextId && this.idFind(mutation.nextId)) {
-                        const node = this.idFind(mutation.nextId);
-                        node && node.before(nodeToRemove);
-                    } else if (mutation.previousId && this.idFind(mutation.previousId)) {
-                        const node = this.idFind(mutation.previousId);
-                        node && node.after(nodeToRemove);
+                    const next = mutation.nextId && this.idFind(mutation.nextId);
+                    const previous = !(next && next.isConnected) && mutation.previousId && this.idFind(mutation.previousId);
+                    if (next && next.isConnected) {
+                        next && next.before(nodeToRemove);
+                    } else if (previous && previous.isConnected) {
+                        previous && previous.after(nodeToRemove);
                     } else {
                         const node = this.idFind(mutation.parentId);
                         node && node.append(nodeToRemove);
@@ -1807,13 +1812,9 @@ export class OdooEditor extends EventTarget {
             for (const link of links) {
                 if (
                     link &&
-                    !isBlock(link) &&
-                    link.textContent !== '' &&
-                    !(
-                        // Ignore links wrapped around a single image.
-                        link.children.length === 1 &&
-                        link.firstElementChild.nodeName === 'IMG'
-                    )
+                    link.textContent.trim() !== '' &&
+                    // Only add the ZWS for simple (possibly styled) text links.
+                    ![link, ...link.querySelectorAll('*')].some(isBlock)
                 ) {
                     this._insertLinkZws('start', link);
                     // Only add the ZWS at the end if the link is in selection.
@@ -2133,6 +2134,7 @@ export class OdooEditor extends EventTarget {
         } else if (fullySelectedTables.length) {
             fullySelectedTables.forEach(table => table.remove());
         }
+        this._toggleTableUi();
         return false;
     }
 
@@ -2686,16 +2688,11 @@ export class OdooEditor extends EventTarget {
      * @param {HTMLTableRowElement|HTMLTableCellElement} element
      */
     _positionTableUi(element) {
+        const tableUiContainerRect = this._tableUiContainer.getBoundingClientRect();
         const isRow = element.nodeName === 'TR';
         const ui = isRow ? this._rowUi : this._columnUi;
         const elementRect = element.getBoundingClientRect();
-        const tableRect = closestElement(element, 'table').getBoundingClientRect();
         const wrappedUi = ui.firstElementChild;
-        const togglerRect = ui.querySelector('.o_table_ui_menu_toggler').getBoundingClientRect();
-        const props = {
-            xy: {left: 'x', top: 'y'},
-            size: {left: 'width', top: 'height'}
-        };
         const table = getInSelection(this.document, 'table');
         const resetTableSize = ui.querySelector('.o_reset_table_size');
         if (table && !table.hasAttribute('style')) {
@@ -2703,15 +2700,10 @@ export class OdooEditor extends EventTarget {
         } else {
             resetTableSize.classList.remove('d-none');
         }
-        const side1 = isRow ? 'left' : 'top';
-        ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
-        ui.style[props.size[side1]] = !isRow && togglerRect[props.size[side1]] + 'px';
+        ui.style.left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0) + 'px';
+        ui.style.top = elementRect.top - tableUiContainerRect.top - (isRow ? 0 : wrappedUi.clientHeight) + 'px';
+        wrappedUi.style[isRow ? 'height' : 'width'] = elementRect[isRow ? 'height' : 'width'] + 'px';
 
-        const side2 = isRow ? 'top' : 'left';
-        wrappedUi.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
-        ui.style[side2] = tableRect[props.xy[side2]] + 'px';
-        wrappedUi.style[side2] = elementRect[side2] - tableRect[side2] - 1 + 'px';
-        ui.style[props.size[side2]] = tableRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -3547,7 +3539,8 @@ export class OdooEditor extends EventTarget {
                         td.remove();
                     }
                 }
-                for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                const trsWithoutTd = Array.from(tableClone.querySelectorAll('tr')).filter(row => !row.querySelector('td'));
+                for (const tr of trsWithoutTd) {
                     if (closestElement(tr, 'table') === tableClone) { // ignore nested
                         tr.remove();
                     }
@@ -3569,6 +3562,19 @@ export class OdooEditor extends EventTarget {
             rangeContent.lastChild.remove();
         }
 
+        const commonAncestorElement = closestElement(range.commonAncestorContainer);
+        if (commonAncestorElement && !isBlock(rangeContent.firstChild)) {
+            // Get the list of ancestor elements starting from the provided
+            // commonAncestorElement up to the block-level element.
+            const blockEl = closestBlock(commonAncestorElement);
+            const ancestorsList = [commonAncestorElement, ...ancestors(commonAncestorElement, blockEl)];
+            // Wrap rangeContent with clones of their ancestors to keep the styles.
+            for (const ancestor of ancestorsList) {
+                const clone = ancestor.cloneNode();
+                clone.append(...rangeContent.childNodes);
+                rangeContent.appendChild(clone);
+            }
+        }
         const dataHtmlElement = document.createElement('data');
         dataHtmlElement.append(rangeContent);
         const odooHtml = dataHtmlElement.innerHTML;
@@ -3865,9 +3871,6 @@ export class OdooEditor extends EventTarget {
             //    wasn't changed.
             this._setLinkZws();
 
-            if (this.options.onCollaborativeSelectionChange) {
-                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
-            }
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
@@ -3899,6 +3902,13 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
+        }
+        if (
+            selection.rangeCount &&
+            selection.getRangeAt(0) &&
+            this.options.onCollaborativeSelectionChange
+        ) {
+            this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
         }
     }
 
@@ -4090,8 +4100,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // Remove Zero Width Spaces on Font awesome elements
-        const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
-        for (const el of element.querySelectorAll(faSelector)) {
+        for (const el of element.querySelectorAll(ICON_SELECTOR)) {
             cleanZWS(el);
         }
 
@@ -4165,7 +4174,7 @@ export class OdooEditor extends EventTarget {
         const content = block && block.innerHTML.trim();
         if (
             block &&
-            (content === '' || content === '<br>') &&
+            content === '<br>' &&
             !block.querySelector('T[t-out]') &&
             ancestors(block, this.editable).includes(this.editable)
         ) {
@@ -4350,6 +4359,15 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    _onScroll(ev) {
+        if (this._rowUiTarget && !this._rowUi.classList.contains('o_open')) {
+            this._positionTableUi(this._rowUiTarget);
+        }
+        if (this._columnUiTarget && !this._columnUi.classList.contains('o_open')) {
+            this._positionTableUi(this._columnUiTarget);
+        }
+    }
+
     _onDocumentKeydown(ev) {
         const canUndoRedo = !['INPUT', 'TEXTAREA'].includes(this.document.activeElement.tagName);
 
@@ -4504,7 +4522,7 @@ export class OdooEditor extends EventTarget {
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
                 const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
-                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
                 // A url cannot be transformed inside an existing link.
@@ -4562,11 +4580,11 @@ export class OdooEditor extends EventTarget {
                             name: this.options._t('Embed Youtube Video'),
                             description: this.options._t('Embed the youtube video in the document.'),
                             fontawesome: 'fa-youtube-play',
-                            callback: () => {
+                            callback: async () => {
                                 revertTextInsertion();
                                 let videoElement;
                                 if (this.options.getYoutubeVideoElement) {
-                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                    videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
                                 } else {
                                     videoElement = document.createElement('iframe');
                                     videoElement.setAttribute('width', '560');

@@ -195,3 +195,12 @@ class SaleOrder(models.Model):
             'promo_code_success': promo_code_success,
             'promo_code_error': promo_code_error,
         }
+
+    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+        """ Override to filter out reward lines from the cart lines.
+
+        These are handled by the _update_programs_and_rewards and _auto_apply_rewards methods.
+        """
+        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
+        lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
+        return lines

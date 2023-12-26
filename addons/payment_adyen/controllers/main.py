@@ -125,9 +125,9 @@ class AdyenController(http.Controller):
             'recurringProcessingModel': 'CardOnFile',  # Most susceptible to trigger a 3DS check
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'Ecommerce',
-            'shopperEmail': tx_sudo.partner_email,
+            'shopperEmail': tx_sudo.partner_email or "",
             'shopperName': adyen_utils.format_partner_name(tx_sudo.partner_name),
-            'telephoneNumber': tx_sudo.partner_phone,
+            'telephoneNumber': tx_sudo.partner_phone or "",
             'storePaymentMethod': tx_sudo.tokenize,  # True by default on Adyen side
             'additionalData': {
                 'allow3DS2': True

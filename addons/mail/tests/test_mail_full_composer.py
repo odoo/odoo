@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import tagged, HttpCase
 from odoo import Command
 
 
 @tagged('-at_install', 'post_install', 'mail_composer')
-class TestMailFullComposer(HttpCase):
+class TestMailFullComposer(MailCommon, HttpCase):
 
     def test_full_composer_tour(self):
         self.env['mail.template'].create({
@@ -16,11 +17,15 @@ class TestMailFullComposer(HttpCase):
             'auto_delete': True,
             'model_id': self.ref('base.model_res_partner'),
         })
-        testuser = self.env['res.users'].create({
+        user = self.env['res.users'].create({
             'email': 'testuser@testuser.com',
             'groups_id': [Command.set([self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
             'name': 'Test User',
             'login': 'testuser',
             'password': 'testuser',
         })
-        self.start_tour("/web#id=%d&model=res.partner" % testuser.partner_id, 'mail/static/tests/tours/mail_full_composer_test_tour.js', login='testuser')
+        partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
+        with self.mock_mail_app():
+            self.start_tour(f"/web#id={partner.id}&model=res.partner", 'mail/static/tests/tours/mail_full_composer_test_tour.js', login='testuser')
+        message = self._new_msgs.filtered(lambda message: message.author_id == user.partner_id)
+        self.assertEqual(len(message), 1)

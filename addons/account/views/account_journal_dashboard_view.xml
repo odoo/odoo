@@ -59,8 +59,11 @@
                     </t>
 
                     <t t-name="HasSequenceHoles">
-                        <a t-if="dashboard.has_sequence_holes" name="show_sequence_holes" type="object" class="text-warning">
-                            <i class="fa fa-exclamation-triangle"/>
+                        <a t-if="dashboard.has_sequence_holes"
+                           name="show_sequence_holes"
+                           type="object"
+                           class="text-warning"
+                           title="Gaps due to canceled invoices, deleted entries or manual errors in open period.">
                             Gaps in the sequence
                         </a>
                     </t>

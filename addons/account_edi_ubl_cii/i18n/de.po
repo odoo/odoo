@@ -163,6 +163,14 @@ msgstr "Jede Rechnungszeile darf nur eine einzige Steuer enthalten."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
+msgstr ""
+"Jede Rechnungszeile sollte mindestens ein Produkt und eine Bezeichnung "
+"enthalten."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -352,6 +360,18 @@ msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
 "Das Feld „Bereinigte Kontonummer“ ist für die Empfängerbank erforderlich."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid ""
+"The invoice contains line(s) with a negative unit price, which is not "
+"allowed. You might need to set a negative quantity instead."
+msgstr ""
+"Die Rechnung enthält eine oder mehrere Zeilen mit einem negativen "
+"Einzelpreis, was nicht erlaubt ist. Möglicherweise müssen Sie stattdessen "
+"eine negative Menge angeben."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

@@ -242,3 +242,19 @@ ProductScreen.do.clickDisplayedProduct('Product A');
 ProductScreen.check.totalAmountIs('50.00');
 
 Tour.register('PosLoyaltyTour8', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.do.clickDisplayedProduct('Product A');
+PosLoyalty.do.clickRewardButton();
+ProductScreen.check.totalAmountIs('205.00');
+PosLoyalty.do.clickRewardButton();
+ProductScreen.check.totalAmountIs('200.00');
+
+Tour.register('PosLoyaltyTour9', { test: true, url: '/pos/web' }, getSteps());

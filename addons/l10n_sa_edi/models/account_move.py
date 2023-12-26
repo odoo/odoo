@@ -101,7 +101,7 @@ class AccountMove(models.Model):
             seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
             seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, journal_id.company_id.vat.encode())
             timestamp_enc = self._l10n_sa_get_qr_code_encoding(3,
-                                                               invoice_datetime.strftime("%Y-%m-%dT%H:%M:%SZ").encode())
+                                                               invoice_datetime.strftime("%Y-%m-%dT%H:%M:%S").encode())
             amount_total_enc = self._l10n_sa_get_qr_code_encoding(4, float_repr(abs(amount_total), 2).encode())
             amount_tax_enc = self._l10n_sa_get_qr_code_encoding(5, float_repr(abs(amount_tax), 2).encode())
             invoice_hash_enc = self._l10n_sa_get_qr_code_encoding(6, invoice_hash)
@@ -202,3 +202,22 @@ class AccountMove(models.Model):
         """
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    @api.depends('price_subtotal', 'price_total')
+    def _compute_tax_amount(self):
+        super()._compute_tax_amount()
+        taxes_vals_by_move = {}
+        for record in self:
+            move = record.move_id
+            if move.country_code == 'SA':
+                taxes_vals = taxes_vals_by_move.get(move.id)
+                if not taxes_vals:
+                    taxes_vals = move._prepare_invoice_aggregated_taxes(
+                        filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention
+                    )
+                    taxes_vals_by_move[move.id] = taxes_vals
+                record.l10n_gcc_invoice_tax_amount = abs(taxes_vals.get('tax_details_per_record', {}).get(record, {}).get('tax_amount_currency', 0))

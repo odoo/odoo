@@ -141,6 +141,9 @@ export function patchWithCleanup(obj, patchValue, options) {
  * @returns {HTMLElement}
  */
 export function getFixture() {
+    if (!window.QUnit) {
+        return document;
+    }
     if (QUnit.config.debug) {
         return document.body;
     } else {
@@ -173,7 +176,11 @@ export function findElement(el, selector) {
 }
 
 function keyboardEventBubble(args) {
-    return Object.assign({}, args, { bubbles: true, keyCode: args.which, cancelable: true });
+    return Object.assign({}, args, {
+        bubbles: true,
+        keyCode: args.which,
+        cancelable: true,
+    });
 }
 
 function mouseEventMapping(args) {
@@ -230,13 +237,22 @@ function onlyBubble(args) {
 const EVENT_TYPES = {
     auxclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
     click: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    contextmenu: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    contextmenu: {
+        constructor: MouseEvent,
+        processParameters: mouseEventMapping,
+    },
     dblclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
     mousedown: { constructor: MouseEvent, processParameters: mouseEventMapping },
     mouseup: { constructor: MouseEvent, processParameters: mouseEventMapping },
     mousemove: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mouseenter: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
-    mouseleave: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
+    mouseenter: {
+        constructor: MouseEvent,
+        processParameters: mouseEventNoBubble,
+    },
+    mouseleave: {
+        constructor: MouseEvent,
+        processParameters: mouseEventNoBubble,
+    },
     mouseover: { constructor: MouseEvent, processParameters: mouseEventMapping },
     mouseout: { constructor: MouseEvent, processParameters: mouseEventMapping },
     focus: { constructor: FocusEvent, processParameters: noBubble },
@@ -245,8 +261,14 @@ const EVENT_TYPES = {
     cut: { constructor: ClipboardEvent, processParameters: onlyBubble },
     copy: { constructor: ClipboardEvent, processParameters: onlyBubble },
     paste: { constructor: ClipboardEvent, processParameters: onlyBubble },
-    keydown: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
-    keypress: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
+    keydown: {
+        constructor: KeyboardEvent,
+        processParameters: keyboardEventBubble,
+    },
+    keypress: {
+        constructor: KeyboardEvent,
+        processParameters: keyboardEventBubble,
+    },
     keyup: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
     drag: { constructor: DragEvent, processParameters: onlyBubble },
     dragend: { constructor: DragEvent, processParameters: onlyBubble },
@@ -256,16 +278,31 @@ const EVENT_TYPES = {
     dragover: { constructor: DragEvent, processParameters: onlyBubble },
     drop: { constructor: DragEvent, processParameters: onlyBubble },
     input: { constructor: InputEvent, processParameters: onlyBubble },
-    compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
-    compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
+    compositionstart: {
+        constructor: CompositionEvent,
+        processParameters: onlyBubble,
+    },
+    compositionend: {
+        constructor: CompositionEvent,
+        processParameters: onlyBubble,
+    },
 };
 
 if (typeof TouchEvent === "function") {
     Object.assign(EVENT_TYPES, {
-        touchstart: { constructor: TouchEvent, processParameters: touchEventMapping },
+        touchstart: {
+            constructor: TouchEvent,
+            processParameters: touchEventMapping,
+        },
         touchend: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchmove: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchcancel: { constructor: TouchEvent, processParameters: touchEventCancelMapping },
+        touchmove: {
+            constructor: TouchEvent,
+            processParameters: touchEventMapping,
+        },
+        touchcancel: {
+            constructor: TouchEvent,
+            processParameters: touchEventCancelMapping,
+        },
     });
 }
 
@@ -796,7 +833,13 @@ export async function clickDropdown(target, fieldName) {
 }
 
 export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
-    const dropdownItems = target.querySelectorAll(`[name='${fieldName}'] .dropdown ul li`);
+    const dropdowns = target.querySelectorAll(`[name='${fieldName}'] .dropdown .dropdown-menu`);
+    if (dropdowns.length === 0) {
+        throw new Error(`No dropdown found for field ${fieldName}`);
+    } else if (dropdowns.length > 1) {
+        throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
+    }
+    const dropdownItems = dropdowns[0].querySelectorAll("li");
     const indexToClick = Array.from(dropdownItems)
         .map((html) => html.textContent)
         .indexOf(itemContent);

@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tools import mute_logger
 from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
+class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAngloSaxonValuationPurchaseMRP, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         cls.vendor01 = cls.env['res.partner'].create({'name': "Super Vendor"})
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
@@ -88,9 +88,14 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         Update the cost shares
         Return the delivery
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_location = self.env['stock.location'].search([
+            ('company_id', '=', self.env.company.id),
+            ('name', '=', 'Stock'),
+        ])
         customer_location = self.env.ref('stock.stock_location_customers')
-        type_out = self.env.ref('stock.picking_type_out')
+        type_out = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('name', '=', 'Delivery Orders')])
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_litre = self.env.ref('uom.product_uom_litre')
 
@@ -200,8 +205,14 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         # Setup Currency
         usd = self.env.ref('base.USD')
         eur = self.env.ref('base.EUR')
-        self.env['res.currency.rate'].create({'currency_id': usd.id, 'rate': 1})
-        self.env['res.currency.rate'].create({'currency_id': eur.id, 'rate': 2})
+        self.env['res.currency.rate'].create({
+            'name': Datetime.today(),
+            'currency_id': usd.id,
+            'rate': 1})
+        self.env['res.currency.rate'].create({
+            'name': Datetime.today(),
+            'currency_id': eur.id,
+            'rate': 2})
 
         # Create Purchase
         po_form = Form(self.env['purchase.order'])

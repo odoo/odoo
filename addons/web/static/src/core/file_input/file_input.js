@@ -51,8 +51,8 @@ export class FileInput extends Component {
     }
 
     async uploadFiles(params) {
-        if (params.ufile.length) {
-            const fileSize = params.ufile[0].size;
+        if ((params.ufile && params.ufile.length) || params.file) {
+            const fileSize = (params.ufile && params.ufile[0].size) || params.file.size;
             if (!checkFileSize(fileSize, this.env.services.notification)) {
                 // FIXME
                 // Note that the notification service is not added as a

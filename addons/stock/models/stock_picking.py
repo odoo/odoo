@@ -32,7 +32,7 @@ class PickingType(models.Model):
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one(
         'ir.sequence', 'Reference Sequence',
-        check_company=True, copy=True)
+        check_company=True, copy=False)
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
@@ -136,6 +136,12 @@ class PickingType(models.Model):
                     })
         return super(PickingType, self).write(vals)
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'sequence_code' not in default and 'sequence_id' not in default:
+            default.update(sequence_code=_("%s (copy)") % self.sequence_code)
+        return super().copy(default)
+
     @api.depends('code')
     def _compute_hide_reservation_method(self):
         for rec in self:
@@ -222,6 +228,23 @@ class PickingType(models.Model):
         if self.show_operations and self.code != 'incoming':
             self.show_reserved = True
 
+    @api.onchange('sequence_code')
+    def _onchange_sequence_code(self):
+        if not self.sequence_code:
+            return
+        domain = [('sequence_code', '=', self.sequence_code), '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)]
+        if self._origin.id:
+            domain += [('id', '!=', self._origin.id)]
+        picking_type = self.env['stock.picking.type'].search(domain, limit=1)
+        if picking_type and picking_type.sequence_id != self.sequence_id:
+            return {
+                'warning': {
+                    'message': _(
+                        "This sequence prefix is already being used by another operation type. It is recommended that you select a unique prefix "
+                        "to avoid issues and/or repeated reference values or assign the existing reference sequence to this operation type.")
+                }
+            }
+
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
         for record in self:
@@ -267,18 +290,6 @@ class PickingType(models.Model):
     def get_stock_picking_action_picking_type(self):
         return self._get_action('stock.stock_picking_action_picking_type')
 
-    @api.constrains('sequence_id')
-    def _check_sequence_code(self):
-        domain = expression.OR([[('company_id', '=', record.company_id.id), ('name', '=', record.sequence_id.name)]
-                                for record in self])
-        record_counts = self.env['ir.sequence']._read_group(
-            domain, ['company_id', 'name'], ['company_id', 'name'], lazy=False)
-        duplicate_records = list(filter(
-            lambda r: r['__count'] > 1, record_counts))
-        if duplicate_records:
-            duplicate_names = list(map(lambda r: r['name'], duplicate_records))
-            raise UserError(_("Sequences %s already exist.",
-                            ', '.join(duplicate_names)))
 
 class Picking(models.Model):
     _name = "stock.picking"
@@ -1243,13 +1254,13 @@ class Picking(models.Model):
                     'move_line_ids': [],
                     'backorder_id': picking.id
                 })
-                picking.message_post(
-                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
-                )
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+                picking.message_post(
+                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
+                )
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
         if bo_to_assign:

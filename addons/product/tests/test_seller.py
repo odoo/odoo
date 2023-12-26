@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import first, Command
 from odoo.tests import tagged, TransactionCase
 from odoo.tools import float_compare
 
@@ -120,3 +121,23 @@ class TestSeller(TransactionCase):
         price = product._select_seller(partner_id=self.res_partner_4, quantity=3.0).price
         msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % price
         self.assertEqual(float_compare(price, 785, precision_digits=2), 0, msg)
+
+    def test_40_seller_min_qty_precision(self):
+        """Test that the min_qty has the precision of Product UoM."""
+        # Arrange: Change precision digits
+        uom_precision = self.env.ref("product.decimal_product_uom")
+        uom_precision.digits = 3
+        product = self.product_service
+        product.seller_ids = [
+            Command.create({
+                'partner_id': self.asustec.id,
+            }),
+        ]
+        supplier_info = first(product.seller_ids)
+        precise_value = 1.234
+
+        # Act: Set a value for the increased precision
+        supplier_info.min_qty = precise_value
+
+        # Assert: The set value is kept
+        self.assertEqual(supplier_info.min_qty, precise_value)

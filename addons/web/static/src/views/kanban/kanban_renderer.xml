@@ -4,6 +4,7 @@
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer o_renderer d-flex"
             t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }} {{ props.archInfo.className or '' }}"
+            t-att-class="{ 'o_kanban_has_nocontent': showNoContentHelper }"
             t-ref="root"
         >
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">

@@ -167,7 +167,7 @@ class LoyaltyProgram(models.Model):
     def _compute_payment_program_discount_product_id(self):
         for program in self:
             if program.is_payment_program:
-                program.payment_program_discount_product_id = program.reward_ids[0].discount_line_product_id
+                program.payment_program_discount_product_id = program.reward_ids[:1].discount_line_product_id
             else:
                 program.payment_program_discount_product_id = False
 

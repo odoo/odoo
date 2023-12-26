@@ -16,6 +16,7 @@ class TestSnippets(odoo.tests.HttpCase):
         self.assertIn("hello@world.com", emails)
 
     def test_02_newsletter_block_edition(self):
+        self.env.ref('base.user_admin').email = 'admin@yourcompany.example.com'
         admin_email = self.env.ref('base.user_admin').email
         # Get contacts with this email
         mass_mailing_contacts = self.env['mailing.contact'].search([('email', '=', admin_email)])

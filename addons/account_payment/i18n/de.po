@@ -504,7 +504,7 @@ msgid ""
 "posted: %(link)s"
 msgstr ""
 "Die Zahlung in Zusammenhang mit der Transaktion mit Referenz %(ref)s wurde "
-"gebuucht: %(link)s"
+"gebucht: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -543,6 +543,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr "Fehler beim Verarbeiten Ihrer Zahlung: ungültige Kreditkarten-ID."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the outgoing payments tab defined on the bank journal."
+msgstr ""
+"Um dieses Modul zu deinstallieren, entfernen Sie bitte zuerst die "
+"entsprechende Zahlungsmethodenzeile im Reiter Zahlungsausgänge, die im "
+"Bankjournal definiert ist."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids

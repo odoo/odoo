@@ -7,6 +7,7 @@
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16312,6 +16313,8 @@ msgid ""
 "Invalid value for %s.%s: %s is out of bounds (integers should be between "
 "-2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"قيمة غير صحيحة لـ %s.%s: %s خارج الحدود (يجب أن يكون العدد الصحيح بين "
+"-2,147,483,648 و 2,147,483,647) "
 
 #. module: base
 #. odoo-python
@@ -22266,7 +22269,7 @@ msgstr "مزود الدفع: طرق الدفع المخصصة "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_demo
 msgid "Payment Provider: Demo"
-msgstr "مزود الدفع: Demo "
+msgstr "مزود الدفع: تجريبي "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_flutterwave
@@ -24497,6 +24500,19 @@ msgstr "أرسل رسائل نصية عند حركة المخزون الأخير
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
 msgstr "أرسل الرسائل النصية عندما تتحرك مرحلة مهمة/مشروع "
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "أرسل شحناتك عبر UPS وتتبعها عبر الإنترنت "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -27341,6 +27357,16 @@ msgstr "النوع:"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - أنشطة المنظمات والكيانات الإقليمية الإضافية "
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "شحن UPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

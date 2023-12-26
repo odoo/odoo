@@ -533,6 +533,9 @@
                                 <field name="display_type"/>
                                 <field name="tax_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
+                                <field name="product_updatable" invisible="1"/>
+                                <field name="qty_invoiced" invisible="1"/>
+                                <field name="product_uom_readonly" invisible="1"/>
                                 <templates>
                                     <t t-name="kanban-box">
                                         <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">

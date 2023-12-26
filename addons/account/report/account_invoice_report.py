@@ -45,8 +45,9 @@ class AccountInvoiceReport(models.Model):
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
     price_subtotal = fields.Float(string='Untaxed Total', readonly=True)
-    price_total = fields.Float(string='Total', readonly=True)
+    price_total = fields.Float(string='Total in Currency', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
     _depends = {
         'account.move': [
@@ -67,21 +68,7 @@ class AccountInvoiceReport(models.Model):
 
     @property
     def _table_query(self):
-        return '%s %s %s %s' % (self._with(), self._select(), self._from(), self._where())
-
-    @api.model
-    def _with(self):
-        return f'''
-            WITH company_currencies
-            AS MATERIALIZED
-                 -- The table res_currency_rate only contains the individual dates where the currency rates changes (start date).
-                 -- The following table is similar but i.e. also contains an end date  for each rate (the start date of the next rate
-                 -- or NULL if it is the last rate change).
-                 -- It is used to convert the value line.price_total to currency line.company_currency_id with conversion date line.date
-                 (SELECT *
-                  FROM ({self.env['res.currency']._select_companies_rates()}) AS all_company_currencies
-                  WHERE currency_id IN (SELECT id FROM res_currency currency WHERE currency.active))
-        '''
+        return '%s %s %s' % (self._select(), self._from(), self._where())
 
     @api.model
     def _select(self):
@@ -109,14 +96,7 @@ class AccountInvoiceReport(models.Model):
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance * currency_table.rate                         AS price_subtotal,
-                -- line.price_total needs to be converted to line.company_currency_id (using the rate at the time of the invoice),
-                -- get the correct sign and be converted to the currency of the active company (using the rate from today)
-                ROUND(line.price_total
-                          * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                          * COALESCE(company_currency_conversion.rate, 1.0)
-                          / COALESCE(line_currency_conversion.rate, 1.0)
-                      , company_currency.decimal_places)
-                    * currency_table.rate
+                line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS price_total,
                 -COALESCE(
                    -- Average line price
@@ -124,7 +104,8 @@ class AccountInvoiceReport(models.Model):
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * currency_table.rate                               AS price_average,
-                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
+                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
+                line.currency_id                                            AS currency_id
         '''
 
     @api.model
@@ -140,17 +121,6 @@ class AccountInvoiceReport(models.Model):
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
                 JOIN {currency_table} ON currency_table.company_id = line.company_id
-                LEFT JOIN company_currencies line_currency_conversion ON
-                      line.currency_id = line_currency_conversion.currency_id
-                  AND line.company_id = line_currency_conversion.company_id
-                  AND COALESCE(line.date, NOW()) >= line_currency_conversion.date_start
-                  AND (line_currency_conversion.date_end IS NULL OR line_currency_conversion.date_end > COALESCE(line.date, NOW()))
-                LEFT JOIN company_currencies company_currency_conversion ON
-                      line.company_currency_id = company_currency_conversion.currency_id
-                  AND line.company_id = company_currency_conversion.company_id
-                  AND COALESCE(line.date, NOW()) >= company_currency_conversion.date_start
-                  AND (company_currency_conversion.date_end IS NULL OR company_currency_conversion.date_end > COALESCE(line.date, NOW()))
-                LEFT JOIN res_currency company_currency ON company_currency.id = line.company_currency_id
         '''.format(
             currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
         )

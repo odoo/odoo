@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import HttpCase, tagged
+
+import logging
+
+from odoo.tests import HttpCase, tagged, loaded_demo_data
 from odoo.addons.website.tools import MockRequest
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install', 'website_snippets')
 class TestSnippets(HttpCase):
 
     def test_01_snippet_products_edition(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.start_tour('/', 'website_sale.snippet_products', login='admin')
 
     def test_02_snippet_products_remove(self):

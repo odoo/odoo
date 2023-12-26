@@ -34,7 +34,7 @@
                 </li>
                 <li t-if="field.domain" data-item="domain">
                     <span class="o-tooltip--technical--title">Domain:</span>
-                    <t t-esc="field.domain"/>
+                    <t t-esc="field.domain.length === 0 ? '[]' : field.domain"/>
                 </li>
                 <li t-if="field.modifiers" data-item="modifiers">
                     <span class="o-tooltip--technical--title">Modifiers:</span>

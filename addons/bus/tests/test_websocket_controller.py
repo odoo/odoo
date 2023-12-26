@@ -2,10 +2,10 @@
 
 import json
 
-from odoo.tests import common
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-class TestWebsocketController(common.HttpCase):
+class TestWebsocketController(HttpCaseWithUserDemo):
     def _make_rpc(self, route, params, headers=None):
         data = json.dumps({
             'id': 0,

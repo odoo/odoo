@@ -21,7 +21,11 @@ class TestSMSPost(TestMassMailCommon):
             })
 
         # tracking info
-        cls.utm_c = cls.env.ref('utm.utm_campaign_fall_drive')
+        cls.utm_c = cls.env['utm.campaign'].create({
+            'name': 'UTM C',
+            'stage_id': cls.env.ref('utm.default_utm_stage').id,
+            'is_auto_campaign': True,
+        })
         cls.utm_m = cls.env.ref('mass_mailing_sms.utm_medium_sms')
         cls.tracker_values = {
             'campaign_id': cls.utm_c.id,
