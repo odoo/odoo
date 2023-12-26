@@ -128,10 +128,10 @@ patch(ThreadService.prototype, {
     async insertSuggestedRecipients(thread, dataList) {
         const recipients = [];
         for (const data of dataList) {
-            const [partner_id, emailInfo, lang, reason, customerInfo] = data;
+            const [partner_id, emailInfo, lang, reason, defaultCreateValues] = data;
             let [name, email] = emailInfo ? parseEmail(emailInfo) : [];
-            if ((!name || name === email) && customerInfo?.name) {
-                name = customerInfo.name;
+            if ((!name || name === email) && defaultCreateValues?.name) {
+                name = defaultCreateValues.name;
             }
             recipients.push({
                 id: nextId++,
@@ -141,6 +141,7 @@ patch(ThreadService.prototype, {
                 reason,
                 persona: partner_id ? { type: "partner", id: partner_id } : false,
                 checked: true,
+                defaultCreateValues,
             });
         }
         thread.suggestedRecipients = recipients;
