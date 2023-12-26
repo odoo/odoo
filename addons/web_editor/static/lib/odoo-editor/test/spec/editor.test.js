@@ -2968,6 +2968,11 @@ X[]
                         stepFunction: pressEnter,
                         contentAfter: '<div><a>ab</a><br>[]cd</div>',
                     });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<ul><li><div><a style="display: block;">ab[]</a></div></li></ul>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<ul><li><div><a style="display: block;">ab</a>[]<br></div></li></ul>',
+                    });
                 });
             });
             describe('With attributes', () => {
