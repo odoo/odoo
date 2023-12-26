@@ -170,11 +170,7 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
-        base_domain = [
-            ('auto_apply', '=', True),
-            ('vat_required', '=', vat_required),
-            ('company_id', 'in', [self.env.company.id, False]),
-        ]
+        base_domain = self._prepare_fpos_base_domain(vat_required)
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
@@ -206,6 +202,13 @@ class AccountFiscalPosition(models.Model):
             # Fallback on catchall (no country, no group)
             fpos = self.search(base_domain + null_country_dom, limit=1)
         return fpos
+
+    def _prepare_fpos_base_domain(self, vat_required):
+        return [
+            ('auto_apply', '=', True),
+            ('vat_required', '=', vat_required),
+            ('company_id', 'in', [self.env.company.id, False]),
+        ]
 
     @api.model
     def _get_fiscal_position(self, partner, delivery=None):
