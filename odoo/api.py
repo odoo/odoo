@@ -1020,8 +1020,7 @@ class Cache(object):
             if record.pool.field_depends_context[field]:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
-                context_none = dict.fromkeys(record.pool.field_depends_context[field])
-                record = record.with_env(record.env(context=context_none))
+                record = record.with_env(record.env(context={}))
                 field_cache = self._set_field_cache(record, field)
                 field_cache[record._ids[0]] = value
         elif record.id in self._dirty.get(field, ()):
@@ -1068,8 +1067,7 @@ class Cache(object):
             if records.pool.field_depends_context[field]:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
-                context_none = dict.fromkeys(records.pool.field_depends_context[field])
-                records = records.with_env(records.env(context=context_none))
+                records = records.with_env(records.env(context={}))
                 field_cache = self._set_field_cache(records, field)
                 field_cache.update(zip(records._ids, values))
         else:
