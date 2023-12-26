@@ -219,7 +219,7 @@
                                 <div class="col-12 col-md-9">
                                     <div class="d-flex align-items-center gap-2">
                                         <t t-call="project.portal_my_tasks_priority_widget_template">
-                                            <t t-set="classes">fs-4</t>
+                                            <t t-set="classes" t-translation="off">fs-4</t>
                                         </t>
                                         <h3 t-field="task.name" class="text-truncate my-0"/>
                                         <small class="text-muted d-none d-md-inline align-self-end">(#<span t-field="task.id"/>)</small>

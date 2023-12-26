@@ -159,7 +159,7 @@
             <nav class="navbar navbar-light rounded">
                 <div t-if="question_and_page_data" class="justify-content-between w-100">
                     <ul class="nav o_survey_results_topbar_dropdown_filters">
-                        <t t-set="dropdown_item_classes">dropdown-item d-flex align-items-center justify-content-between</t>
+                        <t t-set="dropdown_item_classes" t-translation="off">dropdown-item d-flex align-items-center justify-content-between</t>
                         <li class="nav-item dropdown me-2 my-1">
                             <a href="#" role="button" data-bs-toggle="dropdown"
                                t-attf-class="btn btn-outline-primary dropdown-toggle #{'active' if search_finished else ''}">
