@@ -164,3 +164,43 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         picking.with_user(self.res_users_stock_user).button_validate()
 
         self.assertEqual(picking.state, 'done', 'Transfer should be in the DONE state')
+
+    def test_bill_before_reciept(self):
+        """ Check unit price of recieved product that has been invoiced already """
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'purchase_method': 'purchase',
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+
+        bill.invoice_date = time.strftime('%Y-%m-%d')
+        bill.invoice_line_ids[0].price_unit = 100.0
+        bill.button_cancel()
+
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[1]
+
+        bill.invoice_date = time.strftime('%Y-%m-%d')
+        bill.invoice_line_ids[0].price_unit = 300.0
+        bill.invoice_line_ids[0].quantity = 1.0
+        bill.action_post()
+
+        picking = purchase_order.picking_ids[0]
+        picking.button_validate()
+
+        self.assertEqual(avco_product.avg_cost, 300)
