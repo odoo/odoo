@@ -117,3 +117,50 @@ class ImageUrlConverter(models.AbstractModel):
     def _get_src_urls(self, record, field_name, options):
         image_url = record[options.get('preview_image', field_name)]
         return image_url, options.get("zoom", None)
+
+
+class File(models.AbstractModel):
+    """
+    Widget options:
+
+    ``class``
+        set as attribute on the generated <a> tag
+    """
+    _name = 'ir.qweb.field.file'
+    _description = 'Qweb Field Image'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def record_to_html(self, record, field_name, options):
+        if record[field_name]:
+
+            aclasses = ['btn', 'btn-link', 'lh-1']
+            aclasses += options.get('class', '').split()
+            classes = ' '.join(map(escape, aclasses))
+
+            href = '/web/content/%s/%s/%s/%s?download=true' % (record._name, record.id, field_name.replace("_filename", ""), record[field_name])
+
+            itemprop = None
+            if options.get('itemprop'):
+                itemprop = options['itemprop']
+
+            atts = OrderedDict()
+            atts["href"] = href
+            atts["class"] = classes
+            atts["itemprop"] = itemprop
+            atts["data-tooltip"] = "Download"
+            atts["aria-label"] = "Download"
+
+            atts = self.env['ir.qweb']._post_processing_att('a', atts)
+
+            download_btn = [record[field_name], "<a"]
+            for name, value in atts.items():
+                if value:
+                    download_btn.append(' ')
+                    download_btn.append(escape(pycompat.to_text(name)))
+                    download_btn.append('="')
+                    download_btn.append(escape(pycompat.to_text(value)))
+                    download_btn.append('"')
+            download_btn.append('><i class="fa fa-download"></i></a>')
+
+            return Markup(''.join(download_btn))
