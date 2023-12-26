@@ -532,18 +532,11 @@ class IrAttachment(models.Model):
         # apply, so we must remove attachments for which the user cannot access
         # the linked document. For the sake of performance, fetch the fields to
         # determine those permissions within the same SQL query.
-        self.flush_model(['res_model', 'res_id', 'res_field', 'public', 'create_uid'])
+        fnames_to_read = ['id', 'res_model', 'res_id', 'res_field', 'public', 'create_uid']
         query = super()._search(domain, offset, limit, order, access_rights_uid)
-        query_str, params = query.select(
-            f'"{self._table}"."id"',
-            f'"{self._table}"."res_model"',
-            f'"{self._table}"."res_id"',
-            f'"{self._table}"."res_field"',
-            f'"{self._table}"."public"',
-            f'"{self._table}"."create_uid"',
-        )
-        self.env.cr.execute(query_str, params)
-        rows = self.env.cr.fetchall()
+        rows = self.env.execute_query(query.select(
+            *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
+        ))
 
         # determine permissions based on linked records
         all_ids = []

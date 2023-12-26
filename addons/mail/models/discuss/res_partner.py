@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import SQL
 
 
 class ResPartner(models.Model):
@@ -41,9 +42,10 @@ class ResPartner(models.Model):
             domain = expression.AND([domain, [("channel_ids", "not in", channel.id)]])
             if channel.group_public_id:
                 domain = expression.AND([domain, [("user_ids.groups_id", "in", channel.group_public_id.id)]])
-        query = self.env["res.partner"]._search(domain, order="name, id")
-        query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()
-        query.limit = int(limit)
+
+        query = self._search(domain, limit=limit)
+        # bypass lack of support for case insensitive order in search()
+        query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, 'name'))
         return {
             "count": self.env["res.partner"].search_count(domain),
             "partners": list(self.env["res.partner"].browse(query).mail_partner_format().values()),

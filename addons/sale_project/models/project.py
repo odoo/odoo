@@ -272,9 +272,8 @@ class Project(models.Model):
         query = self._get_sale_order_items_query(domain_per_model)
         query.limit = limit
         query.offset = offset
-        query_str, params = query.select('DISTINCT sale_line_id')
-        self._cr.execute(query_str, params)
-        return [row[0] for row in self._cr.fetchall()]
+        rows = self.env.execute_query(query.select('DISTINCT sale_line_id'))
+        return [row[0] for row in rows]
 
     def _get_sale_orders(self):
         return self._get_sale_order_items().order_id
@@ -331,10 +330,9 @@ class Project(models.Model):
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
-        query = Query(self._cr, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
+        return Query(self.env, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
-        return query
 
     def get_panel_data(self):
         panel_data = super().get_panel_data()

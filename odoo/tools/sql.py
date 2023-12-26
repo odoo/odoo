@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # pylint: disable=sql-injection
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 import enum
 import json
@@ -9,7 +10,10 @@ import logging
 import re
 from binascii import crc32
 from collections import defaultdict
-from typing import Iterable, Union
+
+if TYPE_CHECKING:
+    from odoo.fields import Field
+    from collections.abc import Iterator, Iterable
 
 import psycopg2
 
@@ -58,11 +62,15 @@ class SQL:
     if ``code`` is a string literal (not a dynamic string), then the SQL object
     made with ``code`` is guaranteed to be safe, provided the SQL objects
     within its parameters are themselves safe.
+
+    The wrapper may also contain some metadata ``to_flush``.  If not ``None``,
+    its value is a field which the SQL code depends on.  The metadata of a
+    wrapper and its parts can be accessed by the iterator ``sql.to_flush``.
     """
-    __slots__ = ('__code', '__args')
+    __slots__ = ('__code', '__args', '__to_flush')
 
     # pylint: disable=keyword-arg-before-vararg
-    def __new__(cls, code: (str | SQL) = "", /, *args, **kwargs):
+    def __new__(cls, code: (str | SQL) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
         if isinstance(code, SQL):
             return code
 
@@ -77,7 +85,19 @@ class SQL:
         self = object.__new__(cls)
         self.__code = code
         self.__args = args
+        self.__to_flush = to_flush
         return self
+
+    @property
+    def to_flush(self) -> Iterator[Field]:
+        """ Return an iterator on the fields to flush in the metadata of
+        ``self`` and all of its parts.
+        """
+        if self.__to_flush is not None:
+            yield self.__to_flush
+        for arg in self.__args:
+            if isinstance(arg, SQL):
+                yield from arg.to_flush
 
     @property
     def code(self) -> str:
@@ -135,13 +155,13 @@ class SQL:
         return SQL("%s" * len(items), *items)
 
     @classmethod
-    def identifier(cls, name: str, subname: (str | None) = None) -> SQL:
+    def identifier(cls, name: str, subname: (str | None) = None, to_flush: (Field | None) = None) -> SQL:
         """ Return an SQL object that represents an identifier. """
         assert IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
         if subname is None:
-            return cls(f'"{name}"')
+            return cls(f'"{name}"', to_flush=to_flush)
         assert IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
-        return cls(f'"{name}"."{subname}"')
+        return cls(f'"{name}"."{subname}"', to_flush=to_flush)
 
 
 def existing_tables(cr, tablenames):
@@ -171,7 +191,7 @@ class TableKind(enum.Enum):
     Other = None
 
 
-def table_kind(cr, tablename: str) -> Union[TableKind, None]:
+def table_kind(cr, tablename: str) -> TableKind | None:
     """ Return the kind of a table, if ``tablename`` is a regular or foreign
     table, or a view (ignores indexes, sequences, toast tables, and partitioned
     tables; unlogged tables are considered regular)

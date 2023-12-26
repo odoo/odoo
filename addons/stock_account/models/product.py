@@ -419,7 +419,7 @@ class ProductProduct(models.Model):
         all_candidates = self.env['stock.valuation.layer'].sudo().search(domain)
 
         for svl_to_vacuum in svls_to_vacuum:
-            # We don't use search to avoid executing _flush_search and to decrease interaction with DB
+            # We don't use search to avoid flushing and to decrease interaction with DB
             candidates = all_candidates.filtered(
                 lambda r: r.create_date > svl_to_vacuum.create_date
                 or r.create_date == svl_to_vacuum.create_date

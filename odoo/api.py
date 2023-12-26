@@ -822,6 +822,28 @@ class Environment(Mapping):
             self._cache_key[field] = result
             return result
 
+    def flush_query(self, query: SQL):
+        """ Flush all the fields in the metadata of ``query``. """
+        fields_to_flush = tuple(query.to_flush)
+        if not fields_to_flush:
+            return
+
+        fnames_to_flush = defaultdict(OrderedSet)
+        for field in fields_to_flush:
+            fnames_to_flush[field.model_name].add(field.name)
+        for model_name, field_names in fnames_to_flush.items():
+            self[model_name].flush_model(field_names)
+
+    def execute_query(self, query: SQL) -> list[tuple]:
+        """ Execute the given query, fetch its result and it as a list of tuples
+        (or an empty list if no result to fetch).  The method automatically
+        flushes all the fields in the metadata of the query.
+        """
+        assert isinstance(query, SQL)
+        self.flush_query(query)
+        self.cr.execute(query)
+        return self.cr.fetchall() if self.cr.rowcount > 0 else []
+
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
@@ -1261,7 +1283,7 @@ class Cache(object):
                 return
 
             # select the column for the given ids
-            query = Query(env.cr, model._table, model._table_query)
+            query = Query(env, model._table, model._table_sql)
             sql_id = SQL.identifier(model._table, 'id')
             sql_field = model._field_to_sql(model._table, field.name, query)
             if field.type == 'binary' and (

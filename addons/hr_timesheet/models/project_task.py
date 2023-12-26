@@ -9,6 +9,7 @@ from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 PROJECT_TASK_READABLE_FIELDS = {
     'allow_timesheets',
     'analytic_account_active',
+    'analytic_account_id',  # To compute `analytic_account_active`
     'effective_hours',
     'encode_uom_in_days',
     'allocated_hours',

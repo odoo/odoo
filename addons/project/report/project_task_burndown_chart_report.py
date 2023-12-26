@@ -64,8 +64,8 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         # Build the query on `project.task` with the domain fields that are linked to that model. This is done in order
         # to be able to reduce the number of treated records in the query by limiting them to the one corresponding to
         # the ids that are returned from this sub query.
-        self.env['project.task']._flush_search(task_specific_domain, fields=self.task_specific_fields)
         project_task_query = self.env['project.task']._where_calc(task_specific_domain)
+        self.env.flush_query(project_task_query.subselect())
         project_task_from_clause, project_task_where_clause, project_task_where_clause_params = project_task_query.get_sql()
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join

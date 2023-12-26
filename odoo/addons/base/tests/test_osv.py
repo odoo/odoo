@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import BaseCase, TransactionCase
-from odoo.tools import Query
+from odoo.tools import Query, SQL
 
 
 class QueryTestCase(BaseCase):
@@ -86,17 +86,17 @@ class QueryTestCase(BaseCase):
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause, '"foo"')
 
-        query = Query(None, 'bar', 'SELECT id FROM foo')
+        query = Query(None, 'bar', SQL('(SELECT id FROM foo)'))
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo')
-        query.add_table('bar', 'SELECT id FROM foo')
+        query.add_table('bar', SQL('(SELECT id FROM foo)'))
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause, '"foo", (SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo')
-        query.join('foo', 'bar_id', 'SELECT id FROM foo', 'id', 'bar')
+        query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
