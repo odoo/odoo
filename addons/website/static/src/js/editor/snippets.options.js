@@ -655,7 +655,12 @@ options.Class.include({
     custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
-    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
+    specialCheckAndReloadMethodsNames: [
+        "customizeWebsiteViews",
+        "customizeWebsiteVariable",
+        "customizeWebsiteColor",
+        "customizeWebsiteColorOrGradient",
+    ],
 
     /**
      * @override
@@ -707,6 +712,12 @@ options.Class.include({
      */
     async customizeWebsiteAssets(previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'assets');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeWebsiteColorOrGradient(previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, "colorOrGradient");
     },
 
     //--------------------------------------------------------------------------
@@ -780,6 +791,16 @@ options.Class.include({
             case 'customizeWebsiteAssets': {
                 return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
+            case "customizeWebsiteColorOrGradient": {
+                let gradientValue = weUtils.getCSSVariableValue(params.colorGradient);
+                if (gradientValue) {
+                    if (gradientValue.startsWith("'") && gradientValue.endsWith("'")) {
+                        gradientValue = gradientValue.substring(1, gradientValue.length - 1);
+                    }
+                    return gradientValue;
+                }
+                return weUtils.getCSSVariableValue(params.color);
+            }
         }
         return this._super(...arguments);
     },
@@ -814,6 +835,11 @@ options.Class.include({
                 break;
             case 'assets':
                 await this._customizeWebsiteData(widgetValue, params, false);
+                break;
+            case "colorOrGradient":
+                await this._customizeWebsiteColorOrGradient(widgetValue, params);
+                break;
+            case "reloadOnly":
                 break;
             default:
                 if (params.customCustomization) {
@@ -853,6 +879,18 @@ options.Class.include({
     /**
      * @private
      */
+    async _customizeWebsiteColorOrGradient(color, params) {
+        if (weUtils.isColorGradient(color)) {
+            await this._customizeWebsiteVariable(color, {variable: params.colorGradient});
+            await this._customizeWebsiteColors({[params.color]: ""}, params);
+        } else {
+            await this._customizeWebsiteColors({[params.color]: color}, params);
+            await this._customizeWebsiteVariable(null, {variable: params.colorGradient});
+        }
+    },
+    /**
+     * @private
+     */
      async _customizeWebsiteColors(colors, params) {
         colors = colors || {};
 
@@ -886,9 +924,9 @@ options.Class.include({
      *
      * @private
      * @param {Object} values: value per key variable
-     * @param {string} nullValue: string that represent null
+     * @param {string} nullValue: string that represents null
      */
-    _customizeWebsiteVariables: async function (values, nullValue) {
+    async _customizeWebsiteVariables(values, nullValue) {
         await this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values, nullValue);
         await this._refreshBundles();
     },
@@ -1262,7 +1300,13 @@ options.registry.BackgroundVideo = options.Class.extend({
     },
 });
 
-options.registry.OptionsTab = options.Class.extend({
+options.registry.OptionsTab = options.Class.extend(options.BackgroundPositionMixin, {
+    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
+        .concat([
+            "customizeBodyBg",
+            "toggleBodyBgImage",
+        ]),
+
     GRAY_PARAMS: {EXTRA_SATURATION: "gray-extra-saturation", HUE: "gray-hue"},
 
     /**
@@ -1273,6 +1317,7 @@ options.registry.OptionsTab = options.Class.extend({
         this.grayParams = {};
         this.grays = {};
         this.orm = this.bindService("orm");
+        this.$target = $(this.ownerDocument.body).find("#wrapwrap");
     },
 
     //--------------------------------------------------------------------------
@@ -1395,26 +1440,32 @@ options.registry.OptionsTab = options.Class.extend({
         });
     },
     /**
-     * @see this.selectClass for parameters
-     */
-    async customizeBodyBgType(previewMode, widgetValue, params) {
-        if (widgetValue === 'NONE') {
-            this.bodyImageType = 'image';
-            return this.customizeBodyBg(previewMode, '', params);
-        }
-        // TODO improve: hack to click on external image picker
-        this.bodyImageType = widgetValue;
-        const widget = this._requestUserValueWidgets(params.imagepicker)[0];
-        widget.enable();
-    },
-    /**
      * @override
      */
     async customizeBodyBg(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
+        // Customize several variables at the same time.
         await this._customizeWebsiteVariables({
-            'body-image-type': this.bodyImageType,
+            "body-image-type": "image",
+            "body-image-repeat-size": null,
+            "body-image-position": null,
             'body-image': widgetValue ? `'${widgetValue}'` : '',
         }, params.nullValue);
+        await this._customizeWebsite(previewMode, widgetValue, params, "reloadOnly");
+    },
+    /**
+     * Toggles background image on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    async toggleBodyBgImage(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this._requestUserValueWidgets("body_bg_image_opt")[0].enable();
+        } else {
+            await this.customizeBodyBg(previewMode, "", {});
+        }
     },
     async openCustomCodeDialog(previewMode, widgetValue, params) {
         return new Promise(resolve => {
@@ -1548,12 +1599,9 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'customizeBodyBgType') {
-            const bgImage = getComputedStyle(this.ownerDocument.querySelector('#wrapwrap'))['background-image'];
-            if (bgImage === 'none') {
-                return "NONE";
-            }
-            return weUtils.getCSSVariableValue('body-image-type');
+        if (methodName === "toggleBodyBgImage") {
+            const bgImageParts = weUtils.backgroundImageCssToParts(getComputedStyle(this.$target[0])["background-image"]);
+            return !!bgImageParts.url;
         }
         if (methodName === 'customizeGray') {
             // See updateUI override
@@ -1570,9 +1618,6 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'body_bg_image_opt') {
-            return false;
-        }
         if (params.param === this.GRAY_PARAMS.HUE) {
             return this.grayHueIsDefined;
         }
@@ -1583,6 +1628,32 @@ options.registry.OptionsTab = options.Class.extend({
             return !!font;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _applyPosition(position) {
+        await options.BackgroundPositionMixin._applyPosition.apply(this, arguments);
+        await this.customizeWebsiteVariable(false, position, {variable: "body-image-position"});
+    },
+    /**
+     * @override
+     */
+    _getOverlaySize() {
+        const style = getComputedStyle(this.$target[0]);
+        return {
+            width: parseInt(style.width) + parseInt(style.paddingLeft) + parseInt(style.paddingRight),
+            height: parseInt(style.height) + parseInt(style.paddingTop) + parseInt(style.paddingBottom),
+        };
+    },
+    /**
+     * @override
+     */
+    _toggleBgOverlay(activate) {
+        options.BackgroundPositionMixin._toggleBgOverlay.apply(this, arguments);
+        if (activate) {
+            this.$bgDragger[0].style.backgroundAttachment = "scroll";
+        }
     },
 });
 
@@ -2928,116 +2999,33 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
 });
 
 /**
- * Allows edition of 'cover_properties' in website models which have such
- * fields (blogs, posts, events, ...).
+ * Base class for all cover updaters.
  */
-options.registry.CoverProperties = options.Class.extend({
+const CoverUpdaterMixin = {
     /**
      * @constructor
      */
-    init: function () {
+    init() {
         this._super.apply(this, arguments);
 
-        this.$image = this.$target.find('.o_record_cover_image');
-        this.$filter = this.$target.find('.o_record_cover_filter');
+        this.$image = this.$target.closest('.o_record_cover_container').find('.o_record_cover_image');
     },
     /**
-     * @override
-     */
-    start: function () {
-        this.$filterValueOpts = this.$el.find('[data-filter-value]');
-
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Handles a background change.
+     * Mark cover-specific dirty for options that are not cover-only.
      *
-     * @see this.selectClass for parameters
-     */
-    background: async function (previewMode, widgetValue, params) {
-        if (widgetValue === '') {
-            this.$image.css('background-image', '');
-            this.$target.removeClass('o_record_has_cover');
-        } else {
-            this.$image.css('background-image', `url('${widgetValue}')`);
-            this.$target.addClass('o_record_has_cover');
-            const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
-            $defaultSizeBtn.click();
-            $defaultSizeBtn.closest('we-select').click();
-        }
-
-        if (!previewMode) {
-            this._updateSavingDataset();
-        }
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    filterValue: function (previewMode, widgetValue, params) {
-        this.$filter.css('opacity', widgetValue || 0);
-        this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
-
-        if (!previewMode) {
-            this._updateSavingDataset();
-        }
-    },
-    /**
      * @override
      */
-    selectStyle: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-
-        if (!previewMode) {
-            this._updateSavingDataset(widgetValue);
-        }
-    },
-    /**
-     * @override
-     */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-
+    onOptionUsed(previewMode, widget) {
         if (!previewMode) {
             this._updateSavingDataset();
         }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'filterValue': {
-                return parseFloat(this.$filter.css('opacity')).toFixed(1);
-            }
-            case 'background': {
-                const background = this.$image.css('background-image');
-                if (background && background !== 'none') {
-                    return background.match(/^url\(["']?(.+?)["']?\)$/)[1];
-                }
-                return '';
-            }
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeWidgetVisibility: function (widgetName, params) {
-        if (params.coverOptName) {
-            return this.$target.data(`use_${params.coverOptName}`) === 'True';
-        }
-        return this._super(...arguments);
-    },
     /**
      * @private
      */
@@ -3051,13 +3039,14 @@ options.registry.CoverProperties = options.Class.extend({
      * @private
      */
     _updateSavingDataset(colorValue) {
+        const target = this.$target[0].closest('.o_record_cover_container');
         const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
         // TODO: `o_record_has_cover` should be handled using model field, not
         // resize_class to avoid all of this.
         // Get values from DOM (selected values in options are only available
         // after updateUI)
         const sizeOptValues = sizeWidget.getMethodsParams('selectClass').possibleValues;
-        let coverClass = [...this.$target[0].classList].filter(
+        let coverClass = [...target.classList].filter(
             value => sizeOptValues.includes(value)
         ).join(' ');
         const bg = this.$image.css('background-image');
@@ -3065,15 +3054,15 @@ options.registry.CoverProperties = options.Class.extend({
             coverClass += " o_record_has_cover";
         }
         const textAlignOptValues = textAlignWidget.getMethodsParams('selectClass').possibleValues;
-        const textAlignClass = [...this.$target[0].classList].filter(
+        const textAlignClass = [...target.classList].filter(
             value => textAlignOptValues.includes(value)
         ).join(' ');
-        const filterEl = this.$target[0].querySelector('.o_record_cover_filter');
+        const filterEl = target.querySelector('.o_record_cover_filter');
         const filterValue = filterEl && filterEl.style.opacity;
         // Update saving dataset
-        this.$target[0].dataset.coverClass = coverClass;
-        this.$target[0].dataset.textAlignClass = textAlignClass;
-        this.$target[0].dataset.filterValue = filterValue || 0.0;
+        target.dataset.coverClass = coverClass;
+        target.dataset.textAlignClass = textAlignClass;
+        target.dataset.filterValue = filterValue || 0.0;
         // TODO there is probably a better way and this should be refactored to
         // use more standard colorpicker+imagepicker structure
         const ccValue = colorPickerWidget._ccValue;
@@ -3092,7 +3081,93 @@ options.registry.CoverProperties = options.Class.extend({
             isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
         this._updateColorDataset(bgColorStyle, bgColorClass);
     },
+};
+
+/**
+ * Allows edition of 'cover_properties' in website models which have such
+ * fields (blogs, posts, events, ...).
+ */
+options.registry.CoverProperties = options.Class.extend(CoverUpdaterMixin).extend({
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.$filter = this.$target.find('.o_record_cover_filter');
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$filterValueOpts = this.$el.find('[data-filter-value]');
+
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles background image on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgImage: async function (previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this._requestUserValueWidgets("bg_image_opt")[0].enable();
+        } else {
+            this.$image.css('background-image', '');
+            this.$target.removeClass('o_record_has_cover');
+        }
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    filterValue: function (previewMode, widgetValue, params) {
+        this.$filter.css('opacity', widgetValue || 0);
+        this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
+            case 'filterValue': {
+                return parseFloat(this.$filter.css('opacity')).toFixed(1);
+            }
+            case "toggleBgImage": {
+                const background = this.$image[0].style.backgroundImage;
+                return background && background !== "none";
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility: function (widgetName, params) {
+        if (params.coverOptName) {
+            return this.$target.data(`use_${params.coverOptName}`) === 'True';
+        }
+        return this._super(...arguments);
+    },
 });
+
+/**
+ * Cover version of BackgroundImage.
+ */
+options.registry.CoverBackgroundImage = options.registry.BackgroundImage.extend(CoverUpdaterMixin);
+
+/**
+ * Cover version of BackgroundPosition.
+ */
+options.registry.CoverBackgroundPosition = options.registry.BackgroundPosition.extend(CoverUpdaterMixin);
 
 options.registry.ScrollButton = options.Class.extend({
     /**

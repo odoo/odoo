@@ -50,10 +50,10 @@
         consumeEvent: 'mouseup',
         run: "text",
     }, {
-        trigger: "we-button[data-background]:nth(1)",
+        trigger: "we-button[data-toggle-bg-image]",
         extra_trigger: "iframe #wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: markup(_t("Set a blog post <b>cover</b>.")),
-        position: "top",
+        position: "left",
     }, {
         trigger: ".o_select_media_dialog .o_we_search",
         content: _t("Search for an image. (eg: type \"business\")"),

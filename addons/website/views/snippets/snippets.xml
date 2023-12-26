@@ -1328,12 +1328,21 @@
                 <t t-set="with_color_combinations" t-value="True"/>
                 <t t-set="with_gradients" t-value="True"/>
             </t>
-            <we-button-group class="ms-auto">
-                <we-imagepicker title="Image" data-background="" data-button-style="true"/>
-                <we-button class="fa fa-fw fa-ban" title="None" data-background="">
-                </we-button>
-            </we-button-group>
+            <we-button title="Image" class="ms-auto fa fa-fw fa-camera" data-name="bg_image_toggle_opt"
+                    data-toggle-bg-image="true" data-no-preview="true"/>
         </we-row>
+    </div>
+    <div data-js="CoverBackgroundImage" data-selector=".o_record_cover_container"
+            data-target=".o_record_cover_image" data-no-check="true">
+        <t t-call="web_editor.snippet_options_image_selection_widgets"/>
+    </div>
+    <div data-js="CoverBackgroundPosition" data-selector=".o_record_cover_container"
+            data-target=".o_record_cover_image" data-no-check="true">
+        <t t-call="web_editor.snippet_options_image_position_widgets">
+            <t t-set="bg_image_dependencies" t-valuef="bg_image_toggle_opt"/>
+        </t>
+    </div>
+    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-select string="Size" data-name="size_opt" data-cover-opt-name="size">
             <we-button data-select-class="o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_half_screen_height">Half Screen</we-button>
@@ -1730,7 +1739,7 @@
         <we-collapse class="o_we_theme_presets_collapse" string="Color Presets">
         </we-collapse>
     </div>
-    <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">
+    <div data-js="OptionsTab" data-selector="website-settings" data-dragger-transparent="true" data-no-check="true">
         <we-row string="Theme">
             <we-button data-switch-theme="" data-no-preview="true" class="o_we_bg_brand_primary">Switch Theme</we-button>
         </we-row>
@@ -1738,27 +1747,35 @@
             <we-button data-add-language="" data-no-preview="true" class="o_we_bg_brand_primary">Add a Language</we-button>
         </we-row>
         <we-select string="Page Layout" data-variable="layout">
-            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
-            <we-button data-customize-website-variable="'framed'">Framed</we-button>
-            <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
+            <t t-set="page_layout_full_label">Full</t>
+            <t t-set="page_layout_boxed_label">Boxed</t>
+            <t t-set="page_layout_framed_label">Framed</t>
+            <t t-set="page_layout_postcard_label">Postcard</t>
+            <we-button t-att-data-select-label="page_layout_full_label" data-customize-website-variable="'full'" data-name="layout_full_opt" data-img="/website/static/src/img/snippets_options/page_layout_full.svg">Full</we-button>
+            <we-button t-att-data-select-label="page_layout_boxed_label" data-customize-website-variable="'boxed'" data-img="/website/static/src/img/snippets_options/page_layout_boxed.svg">Boxed</we-button>
+            <we-button t-att-data-select-label="page_layout_framed_label" data-customize-website-variable="'framed'" data-img="/website/static/src/img/snippets_options/page_layout_framed.svg">Framed</we-button>
+            <we-button t-att-data-select-label="page_layout_postcard_label" data-customize-website-variable="'postcard'" data-img="/website/static/src/img/snippets_options/page_layout_postcard.svg">Postcard</we-button>
         </we-select>
-        <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
+        <we-row string="Background" class="o_we_sublevel_1 o_we_full_row" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
-                            data-customize-website-color=""
-                            data-color="body"/>
-            <we-button-group data-imagepicker="body_bg_image_opt">
-                <we-button title="Image" class="fa fa-fw fa-camera"
-                           data-customize-body-bg-type="'image'"/>
-                <we-button title="Pattern" class="fa fa-fw fa-th"
-                           data-customize-body-bg-type="'pattern'"/>
-                <we-button title="None" class="fa fa-fw fa-ban"
-                           data-customize-body-bg-type="NONE"/>
-            </we-button-group>
-            <!-- Hidden imagepicker enabled by above button-group -->
-            <we-imagepicker data-name="body_bg_image_opt"
-                            data-customize-body-bg=""/>
+                    data-with-gradients="True" data-color-gradient="body-gradient"
+                    data-customize-website-color-or-gradient="" data-color="body"/>
+            <we-button title="Image" class="ms-auto fa fa-fw fa-camera" data-name="bg_image_toggle_opt"
+                    data-toggle-body-bg-image="true" data-no-preview="true"/>
         </we-row>
+        <we-row string="Image" class="o_we_sublevel_2">
+            <we-imagepicker title="Edit image" data-dependencies="bg_image_toggle_opt" data-name="body_bg_image_opt" data-customize-body-bg=""/>
+        </we-row>
+        <t t-call="web_editor.snippet_options_image_position_widgets">
+            <t t-set="bg_image_dependencies" t-valuef="bg_image_toggle_opt"/>
+            <t t-set="type_method" t-valuef="data-customize-website-variable"/>
+            <t t-set="type_method_value_quote" t-valuef="'"/>
+            <t t-set="type_param" t-valuef="data-variable"/>
+            <t t-set="type_param_value" t-valuef="body-image-type"/>
+            <t t-set="size_method" t-valuef="data-customize-website-variable"/>
+            <t t-set="size_param" t-valuef="data-variable"/>
+            <t t-set="size_param_value" t-valuef="body-image-repeat-size"/>
+        </t>
     </div>
     <div data-js="OptionsTab" data-selector="theme-paragraph" data-no-check="true">
         <we-collapse>

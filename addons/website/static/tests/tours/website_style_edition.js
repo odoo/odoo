@@ -98,8 +98,7 @@ wTourUtils.goToTheme(),
 wTourUtils.goToTheme(),
 {
     content: "Click on the Background Image selection",
-    trigger: '[data-customize-body-bg-type="\'image\'"]:not(.active)',
-    extra_trigger: '[data-customize-body-bg-type="NONE"].active',
+    trigger: '[data-name="bg_image_toggle_opt"]',
 }, {
     content: "The media dialog should open",
     trigger: '.o_select_media_dialog',

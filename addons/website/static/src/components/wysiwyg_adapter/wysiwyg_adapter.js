@@ -844,9 +844,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }
         this.__savedCovers[resModel].push(resID);
 
-        var cssBgImage = $(el.querySelector('.o_record_cover_image')).css('background-image');
-        var coverProps = {
+        const bgImageEl = el.querySelector(".o_record_cover_image");
+        const cssBgImage = window.getComputedStyle(bgImageEl).backgroundImage;
+        const coverProps = {
             'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),
+            'background-position': bgImageEl.style.backgroundPosition,
+            'background-repeat': bgImageEl.style.backgroundRepeat,
+            'background-size': bgImageEl.style.backgroundSize,
             'background_color_class': el.dataset.bgColorClass,
             'background_color_style': el.dataset.bgColorStyle,
             'opacity': el.dataset.filterValue,

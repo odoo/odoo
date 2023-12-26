@@ -179,16 +179,22 @@ $-seen-urls: ();
 
 #wrapwrap {
     @if o-website-value('body-image') {
-        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
-        background-position: center;
+        @if o-website-value('body-gradient') and o-website-value('layout') != 'full' {
+            background-image: url("/#{str-slice(o-website-value('body-image'), 2)}"), o-website-value('body-gradient');
+        } @else {
+            background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+        }
+        background-position: o-website-value('body-image-position') or center;
         background-attachment: fixed;
         @if o-website-value('body-image-type') == 'pattern' {
-            background-size: auto;
+            background-size: o-website-value('body-image-repeat-size') or auto;
             background-repeat: repeat;
         } @else {
             background-size: cover;
             background-repeat: no-repeat;
         }
+    } @else if o-website-value('body-gradient') and o-website-value('layout') != 'full' {
+        background-image: o-website-value('body-gradient');
     }
 
     @if o-website-value('layout') != 'full' {
