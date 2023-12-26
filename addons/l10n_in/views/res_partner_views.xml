@@ -14,7 +14,7 @@
                 <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" />
+                <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" />
             </xpath>
         </field>
     </record>
