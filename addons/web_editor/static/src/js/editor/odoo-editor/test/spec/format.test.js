@@ -778,7 +778,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<h1>[ab</h1><p>]cd</p>',
                 stepFunction: setFontSize('36px'),
-                contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
+                contentAfter: '<h1 style="font-size: 36px;">[ab]</h1><p>cd</p>',
             });
         });
         it('should get ready to type with a different font size', async () => {
@@ -865,21 +865,21 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p>]</td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
                 stepFunction: setFontSize('48px'),
-                contentAfter: '<table><tbody><tr><td><p><span style="font-size: 48px;">[]<br></span></p></td><td><p><span style="font-size: 48px;"><br></span></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
+                contentAfter: '<table><tbody><tr><td><p style="font-size: 48px;">[]<br></p></td><td><p style="font-size: 48px;"><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
             });
         });
         it('should add font size in all table cells', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p></td></tr><tr><td class="o_selected_td"><p><br></p></td><td class="o_selected_td"><p><br>]</p></td></tr></tbody></table>',
                 stepFunction: setFontSize('36px'),
-                contentAfter: '<table><tbody><tr><td><p><span style="font-size: 36px;">[]<br></span></p></td><td><p><span style="font-size: 36px;"><br></span></p></td></tr><tr><td><p><span style="font-size: 36px;"><br></span></p></td><td><p><span style="font-size: 36px;"><br></span></p></td></tr></tbody></table>',
+                contentAfter: '<table><tbody><tr><td><p style="font-size: 36px;">[]<br></p></td><td><p style="font-size: 36px;"><br></p></td></tr><tr><td><p style="font-size: 36px;"><br></p></td><td><p style="font-size: 36px;"><br></p></td></tr></tbody></table>',
             });
         });
         it('should add font size in selected table cells with h1 as first child', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td class="o_selected_td"><h1>[<br></h1></td><td class="o_selected_td"><h1><br>]</h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
                 stepFunction: setFontSize('18px'),
-                contentAfter: '<table><tbody><tr><td><h1><span style="font-size: 18px;">[]<br></span></h1></td><td><h1><span style="font-size: 18px;"><br></span></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
+                contentAfter: '<table><tbody><tr><td><h1 style="font-size: 18px;">[]<br></h1></td><td><h1 style="font-size: 18px;"><br></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
             });
         });
     });

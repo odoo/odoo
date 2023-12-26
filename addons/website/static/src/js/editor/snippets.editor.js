@@ -326,6 +326,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _addToolbar() {
         this._super(...arguments);
+        const editedEl = this._getSelection().anchorNode?.parentNode;
+        wUtils.handleTextStyleVisibility(editedEl, this.el.querySelector("#style"))
+
         this.$('#o_we_editor_toolbar_container > we-title > span').after($(`
             <we-button class="fa fa-fw o_we_link o_we_highlight_animated_text d-none
                 ${this.$body.hasClass('o_animated_text_highlighted') ? 'fa-eye text-success' : 'fa-eye-slash'}"

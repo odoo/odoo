@@ -967,12 +967,12 @@ const formatsSpecs = {
         isFormatted: hasClass,
         hasStyle: (node, props) => FONT_SIZE_CLASSES
             .find(cls => node.classList.contains(cls)),
-        addStyle: (node, props) => node.classList.add(props.className),
+        addStyle: (node, props) => {
+            node.classList.add(props.className);
+            node.style.removeProperty("font-size");
+        },
         removeStyle: (node) => {
             node.classList.remove(...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
-            if (node.classList.length === 0) {
-                node.removeAttribute("class");
-            }
         },
     },
     switchDirection: {
@@ -1115,8 +1115,16 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                     tag.remove();
                     formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
                 }
-            } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
-                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+            } else {
+                let stylableEl;
+                if (inlineAncestors.length === 0
+                        && parentNode.textContent === selectedTextNode.textContent) {
+                    stylableEl = parentNode;
+                    removeFormat(stylableEl, formatSpec);
+                } else {
+                    stylableEl = getOrCreateSpan(selectedTextNode, inlineAncestors);
+                }
+                formatSpec.addStyle(stylableEl, formatProps);
             }
         }
     }
