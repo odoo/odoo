@@ -132,7 +132,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center w-100 mb-3">
             <h4 class="mb-0">Tickets</h4>
             <t t-call="website_event.registration_configure_tickets_button" t-if="request.env.user.has_group('event.group_event_manager')">
-                <t t-set="linkClasses">ms-2</t>
+                <t t-set="linkClasses" t-translation="off">ms-2</t>
             </t>
         </div>
         <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
@@ -149,7 +149,7 @@
                     </em>
                     <t t-call="website_event.registration_configure_tickets_button"
                         t-if="request.env.user.has_group('event.group_event_manager')">
-                            <t t-set="linkClasses">alert-link my-3</t>
+                            <t t-set="linkClasses" t-translation="off">alert-link my-3</t>
                     </t>
                 </div>
                 <button class="btn btn-danger" disabled="1">Registrations not yet open</button>
