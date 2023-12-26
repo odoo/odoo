@@ -484,16 +484,16 @@ Fields:
     @mute_logger('odoo.models')
     def test_check_field_access_rights_domain(self):
         with self.assertRaises(AccessError):
-            self.record.search([('forbidden3', '=like', 'blu%')])
+            self.record.search([('forbidden3', '=', 58)])
 
         with self.assertRaises(AccessError):
-            self.record.search([('parent_id.forbidden3', '=like', 'blu%')])
+            self.record.search([('parent_id.forbidden3', '=', 58)])
 
         with self.assertRaises(AccessError):
-            self.record.search([('parent_id', 'any', [('forbidden3', '=like', 'blu%')])])
+            self.record.search([('parent_id', 'any', [('forbidden3', '=', 58)])])
 
         with self.assertRaises(AccessError):
-            self.inherits_record.search([('forbidden3', '=like', 'blu%')])
+            self.inherits_record.search([('forbidden3', '=', 58)])
 
     @mute_logger('odoo.models')
     def test_check_field_access_rights_order(self):
@@ -513,10 +513,10 @@ Fields:
         self.record._read_group([], ['val'], [])
 
         with self.assertRaises(AccessError):
-            self.record._read_group([('forbidden3', '=like', 'blu%')], ['val'])
+            self.record._read_group([('forbidden3', '=', 58)], ['val'])
 
         with self.assertRaises(AccessError):
-            self.record._read_group([('parent_id.forbidden3', '=like', 'blu%')], ['val'])
+            self.record._read_group([('parent_id.forbidden3', '=', 58)], ['val'])
 
         with self.assertRaises(AccessError):
             self.record._read_group([], ['forbidden3'])

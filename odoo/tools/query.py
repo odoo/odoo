@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools.sql import make_identifier, SQL, IDENT_RE
+from odoo.tools.sql import make_identifier, SQL
 
 
-def _sql_table(table: str | SQL | None) -> SQL | None:
-    """ Wrap an optional table as an SQL object. """
-    if isinstance(table, str):
-        return SQL.identifier(table) if IDENT_RE.match(table) else SQL(f"({table})")
-    return table
-
-
-def _sql_from_table(alias: str, table: SQL | None) -> SQL:
+def _sql_from_table(alias: str, table: SQL) -> SQL:
     """ Return a FROM clause element from ``alias`` and ``table``. """
-    if table is None:
-        return SQL.identifier(alias)
-    return SQL("%s AS %s", table, SQL.identifier(alias))
+    if (alias_identifier := SQL.identifier(alias)) == table:
+        return table
+    return SQL("%s AS %s", table, alias_identifier)
 
 
 def _sql_from_join(kind: SQL, alias: str, table: SQL | None, condition: SQL) -> SQL:
@@ -49,25 +42,26 @@ def _generate_table_alias(src_table_alias, link):
     return make_identifier(f"{src_table_alias}__{link}")
 
 
-class Query(object):
+class Query:
     """ Simple implementation of a query object, managing tables with aliases,
     join clauses (with aliases, condition and parameters), where clauses (with
     parameters), order, limit and offset.
 
-    :param cr: database cursor (for lazy evaluation)
+    :param env: model environment (for lazy evaluation)
     :param alias: name or alias of the table
     :param table: a table expression (``str`` or ``SQL`` object), optional
     """
 
-    def __init__(self, cr, alias: str, table: (str | SQL | None) = None):
+    def __init__(self, env, alias: str, table: (SQL | None) = None):
         # database cursor
-        self._cr = cr
+        self._env = env
 
-        # tables {alias: table(SQL|None)}
-        self._tables = {alias: _sql_table(table)}
+        self._tables: dict[str, SQL] = {
+            alias: table if table is not None else SQL.identifier(alias),
+        }
 
-        # joins {alias: (kind(SQL), table(SQL|None), condition(SQL))}
-        self._joins = {}
+        # joins {alias: (kind(SQL), table(SQL), condition(SQL))}
+        self._joins: dict[str, tuple[SQL, SQL, SQL]] = {}
 
         # holds the list of WHERE conditions (to be joined with 'AND')
         self._where_clauses = []
@@ -84,10 +78,10 @@ class Query(object):
         """ Return an alias based on ``alias`` and ``link``. """
         return _generate_table_alias(alias, link)
 
-    def add_table(self, alias: str, table: (str | SQL | None) = None):
+    def add_table(self, alias: str, table: (SQL | None) = None):
         """ Add a table with a given alias to the from clause. """
         assert alias not in self._tables and alias not in self._joins, f"Alias {alias!r} already in {self}"
-        self._tables[alias] = _sql_table(table)
+        self._tables[alias] = table if table is not None else SQL.identifier(alias)
         self._ids = None
 
     def add_join(self, kind: str, alias: str, table: str | SQL | None, condition: SQL):
@@ -95,7 +89,9 @@ class Query(object):
         sql_kind = _SQL_JOINS.get(kind.upper())
         assert sql_kind is not None, f"Invalid JOIN type {kind!r}"
         assert alias not in self._tables, f"Alias {alias!r} already used"
-        table = _sql_table(table)
+        table = table or alias
+        if isinstance(table, str):
+            table = SQL.identifier(table)
 
         if alias in self._joins:
             assert self._joins[alias] == (sql_kind, table, condition)
@@ -108,7 +104,7 @@ class Query(object):
         self._where_clauses.append(SQL(where_clause, *where_params))
         self._ids = None
 
-    def join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str):
+    def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str):
         """
         Perform a join between a table already present in the current Query object and
         another table.  This method is essentially a shortcut for methods :meth:`~.make_alias`
@@ -221,8 +217,7 @@ class Query(object):
         is memoized for future use, which avoids making the same query twice.
         """
         if self._ids is None:
-            self._cr.execute(self.select())
-            self._ids = tuple(row[0] for row in self._cr.fetchall())
+            self._ids = tuple(id_ for id_, in self._env.execute_query(self.select()))
         return self._ids
 
     def set_result_ids(self, ids, ordered=True):
@@ -267,8 +262,7 @@ class Query(object):
                 sql = SQL("SELECT COUNT(*) FROM (%s) t", self.select(""))
             else:
                 sql = self.select('COUNT(*)')
-            self._cr.execute(sql)
-            return self._cr.fetchone()[0]
+            return self._env.execute_query(sql)[0][0]
         return len(self.get_result_ids())
 
     def __iter__(self):

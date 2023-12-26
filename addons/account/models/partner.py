@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -816,13 +817,16 @@ class ResPartner(models.Model):
                     vat_prefix_regex = f'({country_prefix})?'
                 else:
                     vat_prefix_regex = '([A-z]{2})?'
-                query = self.env['res.partner']._search(extra_domain + [('active', '=', True)], limit=1)
-                query.add_where("res_partner.vat ~ %s", ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
-                query_str, params = query.select()
-                self._cr.execute(query_str, params)
-                partner_row = self._cr.fetchone()
+                Partner = self.env['res.partner']
+                query = Partner._search(extra_domain + [('active', '=', True)], limit=1)
+                query.add_where(SQL(
+                    "%s ~ %s",
+                    Partner._field_to_sql(Partner._table, 'vat'),
+                    f'^{vat_prefix_regex}0*{vat_only_numeric}$',
+                ))
+                partner_row = list(query)
                 if partner_row:
-                    partner = self.env['res.partner'].browse(partner_row[0])
+                    partner = Partner.browse(partner_row[0])
 
         return partner
 
