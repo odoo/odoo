@@ -1492,18 +1492,6 @@ class Request:
         :returns: The merged key-value pairs.
         :rtype: dict
         """
-        if self.env:
-            ICP = self.env['ir.config_parameter'].sudo()
-            try:
-                key = 'web.max_file_upload_size'
-                self.httprequest.max_content_length = int(ICP.get_param(
-                    key, DEFAULT_MAX_CONTENT_LENGTH
-                ))
-            except ValueError:  # better not crash on ALL requests
-                _logger.error("invalid %s: %r, use %s instead",
-                    key, ICP.get_param(key), self.httprequest.max_content_length,
-                )
-
         params = {
             **self.httprequest.args,
             **self.httprequest.form,
@@ -1813,6 +1801,9 @@ class Dispatcher(ABC):
             set_header('Access-Control-Allow-Headers',
                        'Origin, X-Requested-With, Content-Type, Accept, Authorization')
             werkzeug.exceptions.abort(Response(status=204))
+
+        if 'max_content_length' in routing:
+            self.request.httprequest.max_content_length = routing['max_content_length']
 
     @abstractmethod
     def dispatch(self, endpoint, args):
