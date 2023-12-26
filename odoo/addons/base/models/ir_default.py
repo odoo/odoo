@@ -164,9 +164,11 @@ class IrDefault(models.Model):
             records.
         """
         json_vals = [json.dumps(id) for id in records.ids]
-        domain = [('field_id.ttype', '=', 'many2one'),
-                  ('field_id.relation', '=', records._name),
-                  ('json_value', 'in', json_vals)]
+        subquery_fields_ids = self.env['ir.model.fields']._search([
+            ('ttype', '=', 'many2one'),
+            ('relation', '=', records._name),
+        ])
+        domain = [('field_id', 'in', subquery_fields_ids), ('json_value', 'in', json_vals)]
         return self.search(domain).unlink()
 
     @api.model
