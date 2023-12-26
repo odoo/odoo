@@ -165,6 +165,10 @@ class PrinterDriver(Driver):
     def print_raw(self, data):
         process = subprocess.Popen(["lp", "-d", self.device_identifier], stdin=subprocess.PIPE)
         process.communicate(data)
+        if process.returncode != 0:
+            # The stderr isn't meaningful so we don't log it ('No such file or directory')
+            _logger.error('Printing failed: printer with the identifier "%s" could not be found',
+                          self.device_identifier)
 
     def print_receipt(self, data):
         receipt = b64decode(data['receipt'])
