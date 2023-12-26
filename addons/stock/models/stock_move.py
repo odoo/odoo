@@ -1833,21 +1833,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_todo = self.browse(moves_ids_todo)
         moves_todo._check_company()
         if not cancel_backorder:
-            # Split moves where necessary and move quants
-            backorder_moves_vals = []
-            for move in moves_todo:
-                # To know whether we need to create a backorder or not, round to the general product's
-                # decimal precision and not the product's UOM.
-                rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-                if float_compare(move.quantity, move.product_uom_qty, precision_digits=rounding) < 0:
-                    # Need to do some kind of conversion here
-                    qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-                    new_move_vals = move._split(qty_split)
-                    backorder_moves_vals += new_move_vals
-            backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
-            # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
-            # ones as it could messed up the result_package_id of the moves being currently validated
-            backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
+            moves_todo._create_backorder()
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
@@ -1882,6 +1868,24 @@ Please change the quantity done or the rounding precision of your unit of measur
             if any([m.state == 'assigned' for m in backorder.move_ids]):
                 backorder._check_entire_pack()
         return moves_todo
+
+    def _create_backorder(self):
+        # Split moves where necessary and move quants
+        backorder_moves_vals = []
+        for move in self:
+            # To know whether we need to create a backorder or not, round to the general product's
+            # decimal precision and not the product's UOM.
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(move.quantity, move.product_uom_qty, precision_digits=rounding) < 0:
+                # Need to do some kind of conversion here
+                qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                new_move_vals = move._split(qty_split)
+                backorder_moves_vals += new_move_vals
+        backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
+        # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
+        # ones as it could messed up the result_package_id of the moves being currently validated
+        backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
+        return backorder_moves
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):

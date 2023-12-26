@@ -1165,6 +1165,19 @@ class Picking(models.Model):
             }
         return True
 
+    def action_split_transfer(self):
+        if all(float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in self.move_ids):
+            raise UserError(_("%s: Nothing to split. Fill the quantities you want in a new transfer in the done quantities", self.display_name))
+        if all(float_compare(m.quantity, m.product_uom_qty, precision_rounding=m.product_uom.rounding) == 0 for m in self.move_ids):
+            raise UserError(_("%s: Nothing to split, all demand is done. For split you need at least one line not fully fulfilled", self.display_name))
+        if any(float_compare(m.quantity, m.product_uom_qty, precision_rounding=m.product_uom.rounding) > 0 for m in self.move_ids):
+            raise UserError(_("%s: Can't split: quantities done can't be above demand", self.display_name))
+
+        moves = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity != 0)
+        backorder_moves = moves._create_backorder()
+        backorder_moves += self.move_ids.filtered(lambda m: m.quantity == 0)
+        self._create_backorder(backorder_moves=backorder_moves)
+
     def _pre_action_done_hook(self):
         for picking in self:
             has_quantity = False
@@ -1248,14 +1261,17 @@ class Picking(models.Model):
         to_confirm = self.move_ids.filtered(lambda m: m.state == 'draft' and m.quantity)
         to_confirm._action_confirm()
 
-    def _create_backorder(self):
+    def _create_backorder(self, backorder_moves=None):
         """ This method is called when the user chose to create a backorder. It will create a new
         picking, the backorder, and move the stock.moves that are not `done` or `cancel` into it.
         """
         backorders = self.env['stock.picking']
         bo_to_assign = self.env['stock.picking']
         for picking in self:
-            moves_to_backorder = picking.move_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            if backorder_moves:
+                moves_to_backorder = backorder_moves.filtered(lambda m: m.picking_id == picking)
+            else:
+                moves_to_backorder = picking.move_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_backorder._recompute_state()
             if moves_to_backorder:
                 backorder_picking = picking.copy({

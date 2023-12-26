@@ -1671,3 +1671,49 @@ class TestPacking(TestPackingCommon):
         (picking1 | picking2).with_context(default_picking_type_id=self.ref('stock.picking_type_out'))._compute_hide_picking_type()
         self.assertTrue(picking1.hide_picking_type)
         self.assertFalse(picking2.hide_picking_type)
+
+    def test_action_split_transfer(self):
+        """ Check Split Picking if quantity `0 <= done < demand`
+        """
+        loc_1 = self.env['stock.location'].create({
+            'name': 'Location A',
+            'location_id': self.stock_location.id,
+        })
+        loc_2 = self.env['stock.location'].create({
+            'name': 'Location B',
+            'location_id': self.stock_location.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, loc_1, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc_1, 10)
+        picking = self.env['stock.picking'].create({
+            'location_id': loc_1.id,
+            'location_dest_id': loc_2.id,
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'state': 'draft',
+            'move_ids': [
+                Command.create({
+                    'name': self.productA.name,
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 10,
+                    'location_id': loc_1.id,
+                    'location_dest_id': loc_2.id,
+                    'quantity': 8,
+                }),
+                Command.create({
+                    'name': self.productB.name,
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 10,
+                    'location_id': loc_1.id,
+                    'location_dest_id': loc_2.id,
+                    'quantity': 0,
+                }),
+            ]
+        })
+        picking.action_confirm()
+        picking.action_split_transfer()
+        self.assertEqual(len(picking.move_ids), 1)
+        self.assertEqual(picking.move_ids[0].product_uom_qty, 8)
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(len(backorder.move_ids), 2)
+        self.assertEqual(backorder.move_ids[0].product_uom_qty, 2)
+        self.assertEqual(backorder.move_ids[1].product_uom_qty, 10)
