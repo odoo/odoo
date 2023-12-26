@@ -356,6 +356,12 @@ img, .media_iframe_video, .o_image {
             position: relative;
         }
     }
+
+    .o_portal_sidebar_content {
+        @include media-breakpoint-up(lg) {
+            @include o-position-sticky($top: $spacer * 5);
+        }
+    }
 }
 
 // ------------------------------------------------------------

@@ -151,7 +151,7 @@
                 </t>
             </t>
 
-            <div class="row mt16 o_project_portal_sidebar">
+            <div class="row o_project_portal_sidebar">
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none'"/>
 
@@ -251,14 +251,14 @@
                             </div>
 
                             <div class="row" t-if="task.description or task.attachment_ids">
-                                <div t-if="not is_html_empty(task.description)" t-attf-class="col-12 col-lg-7 mb-4 mb-md-0 {{'col-lg-7' if task.attachment_ids else 'col-lg-12'}}">
+                                <div t-if="not is_html_empty(task.description)" t-attf-class="col-12 mb-4 mb-md-0 {{'col-lg-6' if task.attachment_ids else 'col-lg-12'}}">
                                     <hr class="mb-1"/>
                                     <div class="d-flex my-2">
                                         <h5>Description</h5>
                                     </div>
                                     <div class="py-1 px-2 bg-100 small" t-field="task.description"/>
                                 </div>
-                                <div t-if="task.attachment_ids" t-attf-class="col-12 col-lg-5 o_project_portal_attachments {{'col-lg-5' if task.description else 'col-lg-12'}}">
+                                <div t-if="task.attachment_ids" t-attf-class="col-12 o_project_portal_attachments {{'col-lg-6' if task.description else 'col-lg-12'}}">
                                     <hr class="mb-1 d-none d-lg-block"/>
                                     <strong class="d-block mb-2">Attachments</strong>
                                     <div class="row">
